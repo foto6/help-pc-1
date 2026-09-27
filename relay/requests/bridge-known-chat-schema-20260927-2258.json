@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-known-chat-schema-20260927-2258",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$cfg='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; $c=Get-Content $cfg -Raw|ConvertFrom-Json; $i=0; foreach($k in @($c.knownProjectChats)){ if($i -ge 9){break}; Write-Output ('OBJ'+$i+'|'+($k|ConvertTo-Json -Compress -Depth 6)); $i++ }; foreach($p in @($c.managedProjects)){ Write-Output ('PROJ|'+($p|ConvertTo-Json -Compress -Depth 6)) }"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
