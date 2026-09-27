@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; if(Test-Path $p){ $j=Get-Content $p -Raw | ConvertFrom-Json; @($j.managedChats) | ForEach-Object { [pscustomobject]@{id=$_.id;name=$_.name;enabled=$_.enabled;repository=$_.repository;branch=$_.branch;gitHead=$_.gitHead;projectId=$_.projectId} | ConvertTo-Json -Compress } } else { Write-Output 'CONFIG_MISSING' }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"chat-6ab6703e-b760-83eb-ae7e-686637c7de67\",\"name\":\"A4\",\"enabled\":true,\"repository\":\"\",\"branch\":\"\",\"gitHead\":\"\",\"projectId\":\"\"}\r\n{\"id\":\"chat-6ab66b08-a90c-83eb-80d8-a7567d24352d\",\"name\":\"SpectraTrack Agent Watch (secondary)\",\"enabled\":true,\"repository\":\"\",\"branch\":\"\",\"gitHead\":\"\",\"projectId\":\"\"}\r\n{\"id\":\"chat-6ab67022-ae5c-83ed-a654-5dcc82c3b351\",\"name\":\"A2\",\"enabled\":true,\"repository\":\"\",\"branch\":\"\",\"gitHead\":\"\",\"projectId\":\"\"}\r\n{\"id\":\"chat-6ab67031-7290-83eb-965e-8cd7c16b3504\",\"name\":\"A3\",\"enabled\":true,\"repository\":\"\",\"branch\":\"\",\"gitHead\":\"\",\"projectId\":\"\"}\r\n{\"id\":\"chat-6ab67052-1ae8-83eb-b5bc-60ddae15aa6f\",\"name\":\"A5\",\"enabled\":true,\"repository\":\"\",\"branch\":\"\",\"gitHead\":\"\",\"projectId\":\"\"}\r\n{\"id\":\"chat-6ab67007-81fc-83eb-94e1-9511ab086c08\",\"name\":\"A1\",\"enabled\":true,\"repository\":\"\",\"branch\":\"\",\"gitHead\":\"\",\"projectId\":\"\"}\r\n{\"id\":\"chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c\",\"name\":\"SpectraTrack Round2 Watch\",\"enabled\":true,\"repository\":\"\",\"branch\":\"\",\"gitHead\":\"\",\"projectId\":\"\"}\r\n{\"id\":\"chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e\",\"name\":\"SpectraTrack Agent Watch (supervisor)\",\"enabled\":true,\"repository\":\"\",\"branch\":\"\",\"gitHead\":\"\",\"projectId\":\"\"}\r\n{\"id\":\"agent-pc-executor\",\"name\":\"PC Executor\",\"enabled\":true,\"repository\":\"\",\"branch\":\"agent/pc-executor\",\"gitHead\":\"606074456ca00681fac30a40ee28f7bb0f67c79c\",\"projectId\":\"\"}\r\n",
+      "stdout_bytes": 1349,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:02:50.684Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:02:50.668Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-managed-chat-list-safe-20260927-2119"
+    },
+    "request_id": "bridge-managed-chat-list-safe-20260927-2119",
+    "started_at": "2026-09-27T14:02:50.290Z",
+    "status": "completed"
+  },
+  "id": "bridge-managed-chat-list-safe-20260927-2119",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
