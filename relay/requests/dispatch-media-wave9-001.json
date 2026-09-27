@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "dispatch-media-wave9-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$xs=Invoke-RestMethod 'http://127.0.0.1:17410/json/list'; $t=$xs|Where-Object {$_.url -like '*6ab8b24f-9c40-83eb-9b7b-766af74defe0*'}|Select-Object -First 1; if(-not $t){Write-Error 'target_not_found'; exit 3}; Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=$($t.id) --prompt=E:\\pc-github-relay\\relay\\prompts\\media-wave9-pin-leases.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Dispatch Media Wave9 external artifact pin leases."
+}
