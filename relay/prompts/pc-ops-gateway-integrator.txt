@@ -1,0 +1,66 @@
+EXECUTE NOW — PC OPS GATEWAY INTEGRATOR / READY-TO-USE CONTROL SURFACE. Do not acknowledge readiness.
+
+Repository: foto6/help-pc-2
+Branch: agent/pc-ops-gateway
+Base exact SHA: f082a7e837392240788d7474123c90095891e153
+Do not modify agent/pc-control-plane.
+
+Mission:
+Build one coherent PC Operations Gateway v1 for the coordinator. It must expose stable high-level tools to read/change files, read logs, manage long-running commands/processes, inspect system state and use the existing UI/vision stack, while preserving Control Plane durable orchestration and Executor safety.
+
+Producer relationships:
+- Current Executor: foto6/help-pc-1 agent/pc-executor @ 2cc1e40f792a3d74560b726a0d246c90b7f077e9, CI green.
+- New producer work: foto6/help-pc-1 agent/pc-relay-hardening is adding hardened transport + structured fs/log/process/session actions. Re-read its current head as it advances; consume only exact-head green fixture packs, never sibling imports.
+- Vision: foto6/vision-2 agent/vision @ 51b96fb41cb72cdfc4a03129d14b9afc5fe750fd, CI green.
+- Existing Control Plane Wave8 is green; Wave9 may advance agent/pc-control-plane separately. Do not overwrite it.
+
+Required gateway surface:
+1. Versioned pc_ops.gateway.v1 tool catalog with stable names:
+   health.get
+   capabilities.get
+   shell.run
+   shell.session.start/read/write_stdin/terminate
+   fs.list/stat/read_text/read_bytes/hash/find
+   fs.write_text/append_text/mkdir/copy/move/delete
+   log.tail/read_since/search
+   process.list/inspect/start/status/read_output/terminate
+   windows.list
+   screenshot.capture
+   uia.snapshot/inspect/invoke/focus/set_value
+   clipboard.get/set
+   action.preflight
+   outcome.lookup
+   plus read-only system.info/resources.
+2. Gateway MUST NOT implement effects itself. It maps to Control/Executor actions and preserves request IDs, preflight, context binding, outcome journal, restart reconciliation, cancellation and audit evidence.
+3. Add a durable managed-operation model for long-running processes/sessions with cursor-based output reads and no duplicate starts after restart.
+4. Path policy contract exposed centrally to clients: E:\manhwa protected; path normalization/resolution semantics explicit; clients cannot request safety bypass.
+5. Tool metadata should classify read-only vs effectful, destructive level, preflight requirement, restart/replay semantics and output limits.
+6. Plugin-facing contract:
+   - machine-readable tool manifest suitable for our personal ChatGPT PC Control plugin;
+   - concise tool descriptions that let an assistant choose structured actions before raw shell;
+   - shell.run remains fallback, not default for ordinary file/log/process operations.
+7. Local bootstrap design:
+   one documented command/service to start the gateway on Windows;
+   health heartbeat;
+   implementation SHA;
+   executor SHA;
+   queue/transport status;
+   last request/result;
+   no secrets printed.
+8. Transport abstraction:
+   support hardened GitHub relay first;
+   keep interface ready for direct MCP/local tunnel later without changing pc_ops.gateway.v1 semantics.
+9. End-to-end fixture scenarios:
+   read file -> expected-hash edit -> verify;
+   tail log -> start process -> read output -> terminate;
+   long PowerShell session with cursor reads;
+   Git repo status through safe structured/process primitives;
+   screenshot/UIA observation;
+   restart at every durable boundary;
+   protected-path rejection;
+   unknown outcome reconciliation.
+10. Produce a READY_TO_MIGRATE report only when exact producer fixture packs are green. Until then, keep producer-dependent tests pinned/pending rather than fabricating support.
+11. Full tests/CI, deterministic manifests/hashes.
+12. No merge/release, no live migration, never touch E:\manhwa.
+
+Final evidence: exact SHA, exact CI, tool catalog hash, E2E report hash, producer SHA matrix, and one-page operator bootstrap.
