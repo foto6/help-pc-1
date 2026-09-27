@@ -546,3 +546,18 @@ def test_shell_adapter_still_rejects_protected_cwd_portably() -> None:
     adapter = SafeShellAdapter(allow_executables=set(RELAY_SHELL_EXECUTABLES))
     with pytest.raises(SafetyViolation, match="protected path"):
         adapter.validate(["powershell.exe", "-NoProfile", "-Command", "Write-Output ok"], cwd=r"E:\manhwa")
+
+
+def test_health_only_cycle_does_not_process_requests(tmp_path: Path) -> None:
+    relay, queue, executor = _relay(tmp_path)
+    raw = _request("health-only-do-not-dispatch")
+    _write_request(queue, raw)
+
+    relay.health_cycle()
+
+    assert executor.execute_calls == 0
+    assert queue.results == {}
+    assert queue.heartbeats[-1]["relay_alive"] is True
+    assert queue.heartbeats[-1]["queue_reachable"] is True
+    assert queue.heartbeats[-1]["queue_integrity"] == "ok"
+    assert queue.heartbeats[-1]["last_processed_request"] is None

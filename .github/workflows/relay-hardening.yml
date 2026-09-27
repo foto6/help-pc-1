@@ -32,6 +32,8 @@ jobs:
       - run: python -m pip install -e ".[test]"
       - name: Relay fault matrix
         run: python -m pytest tests/test_pc_relay.py
+      - name: Migration safety suite
+        run: python -m pytest tests/test_pc_relay_migration.py
       - name: Full pc-executor suite
         run: python -m pytest
 

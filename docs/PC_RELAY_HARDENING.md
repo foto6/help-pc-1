@@ -121,25 +121,65 @@ The focused suite covers:
 
 All eleven requested operational fault categories are covered. The suite also includes separate force-push, result-conflict, redaction, allowlist, heartbeat, request-size, and transport-policy checks.
 
-## Migration checklist — instructions only
+## Automated zero-loss migration
 
-Do **not** switch the running prototype in place. Perform this checklist during a controlled migration window:
+The safe migration steps are automated by `tools/pc_relay_migrate.py`. The helper never starts the live relay, never deletes the prototype checkout or history, never force-pushes, and refuses protected paths such as `E:\manhwa`.
 
-- [ ] Record the exact current `agent/pc-github-relay` remote SHA.
-- [ ] Stop only the prototype relay process so no new result commit can race the snapshot; do not alter its branch history.
-- [ ] Fetch the prototype ref and verify its working tree is clean.
-- [ ] Inventory every `relay/results/*.json` ID and SHA-256 and every queued request ID.
-- [ ] Verify every already-published result has a unique request ID; preserve those result bytes as historical evidence.
-- [ ] Create `agent/pc-relay-queue` as the dedicated mutable queue ref from the frozen prototype snapshot or from a filtered queue-only snapshot that preserves all published request/result bytes. Do not base it on the hardening implementation history merely to obtain code.
-- [ ] Clone/worktree that queue ref into a path separate from the implementation checkout.
-- [ ] Keep `agent/pc-relay-hardening` checked out separately at its CI-proven exact SHA.
-- [ ] For legacy v1 requests that already have results, leave them historical and do not replay them.
-- [ ] For any legacy v1 request without a result, explicitly convert it to v2 with the same semantic action/params and a new migration-recorded v2 digest before enabling live dispatch; never silently reinterpret v1 bytes.
-- [ ] Compare the queue result inventory against the prototype inventory and require exact preservation of every already-published result before proceeding.
-- [ ] Start the hardened relay in dry-run/`--once` mode and verify heartbeat: queue reachable, Executor available, expected implementation SHA, no force-push warning.
-- [ ] Verify no request is dispatched merely because local relay state is empty; already-published result IDs must be skipped.
-- [ ] Enable `--live` only after the inventory and heartbeat checks pass.
-- [ ] Keep the old prototype branch unchanged as audit history until the hardened queue has processed a bounded validation request and its result is verified.
-- [ ] Never merge or release as part of this migration.
+Before running the mutating migration command, stop only the currently-running prototype relay process during a controlled migration window. This freezes the local/remote prototype SHA while the helper inventories the queue. The helper itself does not stop that process.
 
-This migration intentionally separates implementation CI provenance from mutable queue traffic while preserving all already-published results.
+The Windows-first defaults are:
+
+- prototype checkout: `E:\pc-github-relay`
+- implementation checkout: `E:\pc-relay-hardening`
+- queue checkout: `E:\pc-relay-queue`
+- repository: `https://github.com/foto6/help-pc-1.git`
+- prototype ref: `agent/pc-github-relay`
+- implementation ref: `agent/pc-relay-hardening`
+- queue ref: `agent/pc-relay-queue`
+
+Always pin the exact CI-proven implementation SHA. First run the no-mutation plan:
+
+~~~powershell
+py tools\pc_relay_migrate.py --expected-implementation-sha <EXACT_GREEN_SHA> --plan
+~~~
+
+Then run the safe migration checks:
+
+~~~powershell
+py tools\pc_relay_migrate.py --expected-implementation-sha <EXACT_GREEN_SHA>
+~~~
+
+Repository URL, remote name, refs, checkout paths, and report path all have explicit CLI overrides. `--dry-run` is an alias for `--plan`.
+
+The helper performs these operations fail-closed:
+
+1. verifies the prototype is a clean dedicated checkout with the expected remote;
+2. fetches the prototype ref and requires local HEAD to equal the exact remote SHA;
+3. records every request/result path, byte length, SHA-256, logical id, version, and action;
+4. detects duplicate logical IDs;
+5. verifies the requested implementation SHA is exactly the current implementation-ref SHA and clones/reuses a separate clean implementation checkout;
+6. creates `agent/pc-relay-queue` from the frozen prototype SHA with a normal non-force push, or verifies/reuses an existing descendant queue ref;
+7. creates/reuses a separate clean queue checkout and allows only fast-forward reconciliation;
+8. verifies request and result inventories byte-for-byte against the prototype snapshot;
+9. records unresolved legacy `pc_relay.request.v1` requests without results as a conversion plan; it never rewrites or silently converts those requests;
+10. runs `pc_relay.py --once --health-only` in dry-run mode, so queue/executor health is checked without dispatching queued requests;
+11. validates heartbeat schema, queue reachability, executor availability, queue-integrity state, queue ref, and exact implementation SHA;
+12. re-verifies published result bytes after the health check and writes the durable migration report outside all three worktrees.
+
+The migration report defaults to `%LOCALAPPDATA%\pc-relay-hardening\migration-report.json` on Windows. Reruns are idempotent only when the frozen prototype snapshot, refs, expected implementation SHA, existing checkouts, and report identity still match. Any mismatch fails closed.
+
+If unresolved legacy v1 requests remain, the helper prints a conversion plan and exits with live cutover blocked. The operator must manually create reviewed v2 requests with new request digests, then rerun the helper. No live-start command is emitted while that blocker exists.
+
+When every check passes, the helper prints exactly one final live-start command. It does not execute it. The command format is:
+
+~~~powershell
+py E:\pc-relay-hardening\tools\pc_relay.py --implementation-repo E:\pc-relay-hardening --queue-repo E:\pc-relay-queue --queue-ref agent/pc-relay-queue --live
+~~~
+
+### Rollback
+
+Before live cutover, rollback is simply to leave the hardened relay stopped. The prototype checkout, prototype ref, historical request/result bytes, and queue ref are retained unchanged; do not delete or rewrite them.
+
+After a live validation run, stop the hardened relay before changing transport ownership. Preserve the dedicated queue ref and its results as audit evidence. Reconcile all results produced since the frozen prototype snapshot before directing any producer back to the prototype transport. Never reset or force-push either history as a rollback mechanism.
+
+No merge or release is part of migration.

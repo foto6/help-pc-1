@@ -1000,6 +1000,22 @@ class Relay:
         )
         self._last_heartbeat_monotonic = now
 
+    def health_cycle(self) -> None:
+        """Sync queue state and publish health without processing any request."""
+        try:
+            self.queue_remote_sha = self.queue.sync()
+            self.queue_reachable = True
+            self.queue_integrity = "ok"
+        except QueueForcePushError:
+            self.queue_reachable = True
+            self.queue_integrity = "force_push_detected"
+            raise
+        except QueueIntegrityError:
+            self.queue_reachable = False
+            self.queue_integrity = "degraded"
+            raise
+        self._maybe_publish_heartbeat(alive=True, force=True)
+
     def cycle(self) -> int:
         try:
             self.queue_remote_sha = self.queue.sync()
@@ -1086,6 +1102,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--once", action="store_true")
     parser.add_argument(
+        "--health-only",
+        action="store_true",
+        help="with --once, sync and publish heartbeat without processing requests",
+    )
+    parser.add_argument(
         "--disable-action",
         action="append",
         default=[],
@@ -1096,6 +1117,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     args = build_parser().parse_args()
+    if args.health_only and (not args.once or args.live):
+        raise SystemExit("--health-only requires --once and cannot be combined with --live")
     implementation_repo = Path(args.implementation_repo).resolve()
     queue_repo = Path(args.queue_repo).resolve()
     if implementation_repo == queue_repo:
@@ -1140,7 +1163,10 @@ def main() -> int:
             pass
 
     if args.once:
-        relay.cycle()
+        if args.health_only:
+            relay.health_cycle()
+        else:
+            relay.cycle()
         return 0
     relay.run_forever(args.poll_seconds)
     return 0
