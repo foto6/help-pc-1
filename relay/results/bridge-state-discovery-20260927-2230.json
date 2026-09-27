@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$root='E:\\WebAIBridge'; Get-ChildItem $root -Recurse -File -Include *.json,*.jsonl -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\node_modules\\\\' } | ForEach-Object { try { $m=Select-String -Path $_.FullName -Pattern 'managedChats|agentAssignments|bridge-integration|vnext-tracking|creator-orchestrator' -SimpleMatch -ErrorAction Stop | Select-Object -First 1; if($m){ Write-Output ('MATCH|'+$_.FullName) } } catch {} } | Select-Object -First 80"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:19:19.400Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:19:19.379Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-state-discovery-20260927-2230"
+    },
+    "request_id": "bridge-state-discovery-20260927-2230",
+    "started_at": "2026-09-27T15:19:17.370Z",
+    "status": "completed"
+  },
+  "id": "bridge-state-discovery-20260927-2230",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
