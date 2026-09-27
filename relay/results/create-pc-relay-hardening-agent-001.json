@@ -1,0 +1,11 @@
+{
+  "action": null,
+  "error": "CalledProcessError: Command '['git', 'pull', '--rebase', 'origin', 'agent/pc-github-relay']' returned non-zero exit status 128.",
+  "executor_result": null,
+  "id": "create-pc-relay-hardening-agent-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "relay_error",
+  "version": "pc_relay.result.v1"
+}
