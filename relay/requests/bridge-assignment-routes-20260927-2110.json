@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-assignment-routes-20260927-2110",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "git -C E:\\WebAIBridge grep -n -E \"batch-assignments|agent-assignments/dry-run|managed-chats/.*/assignments\" -- app/server.js app/*.js app/docs/*.md | Select-Object -First 80"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
