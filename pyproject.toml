@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pc-executor"
+version = "0.1.0"
+description = "Safe Windows execution layer for local computer-use agents"
+requires-python = ">=3.11"
+dependencies = [
+  "Pillow>=10.0",
+  "uiautomation>=2.0; platform_system == 'Windows'",
+  "pyautogui>=0.9.54; platform_system == 'Windows'",
+  "pyperclip>=1.9; platform_system == 'Windows'",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0"]
+
+[project.scripts]
+pc-executor = "pc_executor.__main__:main"
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
