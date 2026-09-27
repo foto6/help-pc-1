@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-high-config-20260927-2330",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$c=Get-Content 'E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json' -Raw|ConvertFrom-Json; Write-Output ('HIGH|enforce='+$c.enforceHighMode+'|strategy='+$c.highModeStrategy+'|profile='+$c.profileId+'|port='+$c.debugPort)"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
