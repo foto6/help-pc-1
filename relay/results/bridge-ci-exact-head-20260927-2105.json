@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$branches=@('agent/bridge-security-boundaries','agent/bridge-observability','agent/bridge-integration'); foreach($b in $branches){ Write-Output ('BRANCH|'+$b); gh run list --repo foto6/WebAIBridge --branch $b --limit 5 --json databaseId,headSha,status,conclusion,event,workflowName,createdAt 2>&1 }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "BRANCH|agent/bridge-security-boundaries\r\n[{\"conclusion\":\"success\",\"createdAt\":\"2026-09-27T11:26:39Z\",\"databaseId\":36315747820,\"event\":\"push\",\"headSha\":\"7027510e3577741f0fa9e7f507910445ce5578da\",\"status\":\"completed\",\"workflowName\":\"Test\"}]\nBRANCH|agent/bridge-observability\r\n[{\"conclusion\":\"success\",\"createdAt\":\"2026-09-27T11:28:04Z\",\"databaseId\":36315821982,\"event\":\"push\",\"headSha\":\"358d1991b47f2019d7eb0d5bfdff77aae0be83d1\",\"status\":\"completed\",\"workflowName\":\"Test\"}]\nBRANCH|agent/bridge-integration\r\n[{\"conclusion\":\"success\",\"createdAt\":\"2026-09-27T10:54:03Z\",\"databaseId\":36314007268,\"event\":\"push\",\"headSha\":\"a270c3de8f0b3b81c43cd4805a1c40bed0336775\",\"status\":\"completed\",\"workflowName\":\"Test\"}]\n",
+      "stdout_bytes": 703,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T13:59:29.922Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T13:59:29.904Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-ci-exact-head-20260927-2105"
+    },
+    "request_id": "bridge-ci-exact-head-20260927-2105",
+    "started_at": "2026-09-27T13:59:26.605Z",
+    "status": "completed"
+  },
+  "id": "bridge-ci-exact-head-20260927-2105",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
