@@ -57,13 +57,34 @@ def test_windows_process_listing_uses_native_snapshot_not_tasklist(
 ) -> None:
     import pc_executor.operations as operations_module
 
-    def forbidden_subprocess_run(*args, **kwargs):
-        raise AssertionError("Windows process listing used an external command")
+    original_run = operations_module.subprocess.run
+    original_snapshot = operations_module.LocalOperations._windows_process_entries
+    snapshot_calls = 0
+
+    def guarded_subprocess_run(args, *run_args, **run_kwargs):
+        parts = args if isinstance(args, (list, tuple)) else [args]
+        command = " ".join(str(part) for part in parts).casefold()
+        forbidden = ("tasklist", "wmic", "get-process", "ps -eo")
+        if any(marker in command for marker in forbidden):
+            raise AssertionError(
+                f"Windows process listing used an external enumerator: {command}"
+            )
+        return original_run(args, *run_args, **run_kwargs)
+
+    def observed_snapshot(self):
+        nonlocal snapshot_calls
+        snapshot_calls += 1
+        return original_snapshot(self)
 
     monkeypatch.setattr(
         operations_module.subprocess,
         "run",
-        forbidden_subprocess_run,
+        guarded_subprocess_run,
+    )
+    monkeypatch.setattr(
+        operations_module.LocalOperations,
+        "_windows_process_entries",
+        observed_snapshot,
     )
     executor = _executor(tmp_path)
     listed = executor.execute(
@@ -74,6 +95,7 @@ def test_windows_process_listing_uses_native_snapshot_not_tasklist(
         )
     )
     assert listed.ok
+    assert snapshot_calls == 1
     assert listed.data["count"] == 1
     assert listed.data["processes"][0]["pid"] == os.getpid()
 
