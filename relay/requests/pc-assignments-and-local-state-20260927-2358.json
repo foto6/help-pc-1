@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-assignments-and-local-state-20260927-2358",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Write-Output '=== ASSIGNMENTS ==='; curl.exe -sS --max-time 8 http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments; Write-Output ''; Write-Output '=== RELAY STATUS ==='; git -C E:\\pc-github-relay status --porcelain=v1 -b;"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
