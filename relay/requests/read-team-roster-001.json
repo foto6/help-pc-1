@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "read-team-roster-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='E:\\WebAIBridge\\app\\data\\PERMANENT_TEAM_ROSTER.local.json'; $j=Get-Content -Raw $p | ConvertFrom-Json; $j.agents | Select-Object id,role,repo,branch,targetId,url,lifecycle | ConvertTo-Json -Depth 5"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 15000,
+  "note": "Read canonical permanent agent roster to restore old chats."
+}
