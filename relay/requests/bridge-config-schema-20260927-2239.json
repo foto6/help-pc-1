@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-config-schema-20260927-2239",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$cfg='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; if(Test-Path $cfg){$c=Get-Content $cfg -Raw|ConvertFrom-Json; $c.PSObject.Properties | ForEach-Object { $v=$_.Value; $t=if($null -eq $v){'null'}else{$v.GetType().Name}; $n=if($v -is [System.Collections.ICollection]){$v.Count}else{''}; Write-Output ('KEY|'+$_.Name+'|type='+$t+'|count='+$n) }}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
