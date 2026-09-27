@@ -705,6 +705,9 @@ def test_system_read_only_surface(tmp_path: Path) -> None:
     assert info.ok and resources.ok and paths.ok
     assert "cpu_count" in info.data
     assert resources.data["disk"]["total_bytes"] > 0
+    assert "cpu_usage_percent" in resources.data
+    if resources.data["cpu_usage_percent"] is not None:
+        assert 0.0 <= resources.data["cpu_usage_percent"] <= 100.0
     assert paths.data["requested"]["parent_exists"] is True
 
 

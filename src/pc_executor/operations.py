@@ -18,7 +18,7 @@ import time
 from collections import deque
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import Any, Callable, Mapping, Sequence
 from uuid import uuid4
 
 from .cancellation import CancellationToken
@@ -1018,8 +1018,15 @@ class LocalOperations:
                 raise SafetyViolation(
                     f"source exceeds structured copy/move bound: {source.stat().st_size} bytes"
                 )
-            if destination.exists() and not params.get("overwrite", False):
-                raise SafetyViolation(f"destination exists and overwrite=false: {destination}")
+            if destination.exists():
+                if not destination.is_file():
+                    raise SafetyViolation(
+                        f"destination must be a regular file when it exists: {destination}"
+                    )
+                if not params.get("overwrite", False):
+                    raise SafetyViolation(
+                        f"destination exists and overwrite=false: {destination}"
+                    )
             expected = params.get("expected_source_hash")
             if expected is not None and _sha256_file(source, max_bytes=MAX_HASH_BYTES) != expected:
                 raise SafetyViolation("source changed: expected_source_hash mismatch")
@@ -1335,7 +1342,14 @@ class LocalOperations:
                 return {"path": str(root), "pattern": pattern, "results": results, "count": len(results), "truncated": True}
         return {"path": str(root), "pattern": pattern, "results": results, "count": len(results), "truncated": False}
 
-    def _atomic_replace(self, path: Path, payload: bytes, token: CancellationToken) -> None:
+    def _atomic_replace(
+        self,
+        path: Path,
+        payload: bytes,
+        token: CancellationToken,
+        *,
+        before_replace: Callable[[], None] | None = None,
+    ) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
         ensure_resolved_path_allowed(path.parent)
         fd, temp_name = tempfile.mkstemp(prefix=".pc-executor-", dir=str(path.parent))
@@ -1347,6 +1361,9 @@ class LocalOperations:
                     handle.write(payload[offset : offset + 64 * 1024])
                 handle.flush()
                 os.fsync(handle.fileno())
+            token.raise_if_cancelled()
+            if before_replace is not None:
+                before_replace()
             token.raise_if_cancelled()
             os.replace(temp, path)
         finally:
@@ -1362,6 +1379,8 @@ class LocalOperations:
         destination: Path,
         suffix: bytes,
         token: CancellationToken,
+        *,
+        before_replace: Callable[[], None] | None = None,
     ) -> int:
         destination.parent.mkdir(parents=True, exist_ok=True)
         ensure_resolved_path_allowed(destination.parent)
@@ -1388,6 +1407,9 @@ class LocalOperations:
                 output.flush()
                 os.fsync(output.fileno())
             token.raise_if_cancelled()
+            if before_replace is not None:
+                before_replace()
+            token.raise_if_cancelled()
             os.replace(temp, destination)
             return total
         finally:
@@ -1403,7 +1425,14 @@ class LocalOperations:
         payload = params["text"].encode(_encoding(params))
         if len(payload) > MAX_TEXT_READ_BYTES:
             raise SafetyViolation("fs.write_text encoded payload exceeds byte bound")
-        self._atomic_replace(path, payload, token)
+        self._atomic_replace(
+            path,
+            payload,
+            token,
+            before_replace=lambda: self._preflight_path_action(
+                "fs.write_text", params
+            ),
+        )
         return {
             "path": str(path),
             "bytes": len(payload),
@@ -1428,6 +1457,9 @@ class LocalOperations:
             path,
             addition,
             token,
+            before_replace=lambda: self._preflight_path_action(
+                "fs.append_text", params
+            ),
         )
         digest = _sha256_file(path, max_bytes=MAX_COPY_BYTES, token=token)
         return {
@@ -1440,6 +1472,7 @@ class LocalOperations:
 
     def _fs_mkdir(self, params: Mapping[str, Any]) -> dict[str, Any]:
         path = ensure_resolved_path_allowed(params["path"], for_creation=True)
+        self._preflight_path_action("fs.mkdir", params)
         path.mkdir(
             parents=bool(params.get("parents", False)),
             exist_ok=bool(params.get("exist_ok", False)),
@@ -1450,7 +1483,15 @@ class LocalOperations:
         source = ensure_resolved_path_allowed(params["source"])
         destination = ensure_resolved_path_allowed(params["destination"], for_creation=True)
         self._preflight_path_action("fs.copy", params)
-        total = self._atomic_copy_with_suffix(source, destination, b"", token)
+        total = self._atomic_copy_with_suffix(
+            source,
+            destination,
+            b"",
+            token,
+            before_replace=lambda: self._preflight_path_action(
+                "fs.copy", params
+            ),
+        )
         return {
             "source": str(source),
             "destination": str(destination),
@@ -1471,6 +1512,8 @@ class LocalOperations:
             raise SafetyViolation(f"fs.move identity check failed: {exc}") from exc
         if source_device != destination_device:
             raise SafetyViolation("fs.move requires source/destination on the same filesystem")
+        self._preflight_path_action("fs.move", params)
+        token.raise_if_cancelled()
         os.replace(source, destination)
         return {"source": str(source), "destination": str(destination), "atomic_move": True}
 
@@ -1582,8 +1625,6 @@ class LocalOperations:
     def _build_env(self, params: Mapping[str, Any]) -> dict[str, str] | None:
         supplied = params.get("env")
         inherit = bool(params.get("inherit_env", True))
-        if supplied is None and inherit:
-            return None
         env = (
             {
                 key: value
@@ -1614,12 +1655,25 @@ class LocalOperations:
             stderr=subprocess.PIPE,
             bufsize=0,
         )
-        item = self.registry.register(
-            process,
-            kind=kind,
-            executable=Path(str(argv[0]).replace("\\", "/")).name.lower(),
-            output_limit=output_limit,
-        )
+        try:
+            item = self.registry.register(
+                process,
+                kind=kind,
+                executable=Path(str(argv[0]).replace("\\", "/")).name.lower(),
+                output_limit=output_limit,
+            )
+        except Exception:
+            try:
+                if process.poll() is None:
+                    process.terminate()
+                    process.wait(timeout=1.0)
+            except Exception:
+                try:
+                    if process.poll() is None:
+                        process.kill()
+                except Exception:
+                    pass
+            raise
         return {
             "version": PROCESS_HANDLE_VERSION,
             "handle_id": item.handle_id,
@@ -1789,6 +1843,69 @@ class LocalOperations:
             "cpu_count": os.cpu_count(),
         }
 
+    def _cpu_times_sample(self) -> tuple[int, int] | None:
+        if os.name == "nt":
+            try:
+                import ctypes
+
+                class FileTime(ctypes.Structure):
+                    _fields_ = [
+                        ("dwLowDateTime", ctypes.c_ulong),
+                        ("dwHighDateTime", ctypes.c_ulong),
+                    ]
+
+                idle = FileTime()
+                kernel = FileTime()
+                user = FileTime()
+                if not ctypes.windll.kernel32.GetSystemTimes(
+                    ctypes.byref(idle),
+                    ctypes.byref(kernel),
+                    ctypes.byref(user),
+                ):
+                    return None
+
+                def value(item: FileTime) -> int:
+                    return int(item.dwLowDateTime) | (
+                        int(item.dwHighDateTime) << 32
+                    )
+
+                idle_ticks = value(idle)
+                total_ticks = value(kernel) + value(user)
+                return idle_ticks, total_ticks
+            except Exception:
+                return None
+
+        proc_stat = Path("/proc/stat")
+        if proc_stat.exists():
+            try:
+                first = proc_stat.read_text(encoding="ascii").splitlines()[0]
+                parts = first.split()
+                if not parts or parts[0] != "cpu":
+                    return None
+                values = [int(value) for value in parts[1:9]]
+                if len(values) < 4:
+                    return None
+                idle_ticks = values[3] + (values[4] if len(values) > 4 else 0)
+                return idle_ticks, sum(values)
+            except (OSError, UnicodeError, ValueError, IndexError):
+                return None
+        return None
+
+    def _cpu_usage_percent(self) -> float | None:
+        first = self._cpu_times_sample()
+        if first is None:
+            return None
+        time.sleep(0.05)
+        second = self._cpu_times_sample()
+        if second is None:
+            return None
+        idle_delta = second[0] - first[0]
+        total_delta = second[1] - first[1]
+        if total_delta <= 0:
+            return None
+        busy = max(0, total_delta - max(0, idle_delta))
+        return round(min(100.0, max(0.0, busy * 100.0 / total_delta)), 2)
+
     def _system_resources(self, params: Mapping[str, Any]) -> dict[str, Any]:
         target = ensure_resolved_path_allowed(params.get("path") or os.getcwd())
         disk = shutil.disk_usage(target if target.exists() else target.parent)
@@ -1800,6 +1917,7 @@ class LocalOperations:
         memory = self._memory_info()
         return {
             "cpu_count": os.cpu_count(),
+            "cpu_usage_percent": self._cpu_usage_percent(),
             "load_average": load,
             "memory": memory,
             "disk": {
