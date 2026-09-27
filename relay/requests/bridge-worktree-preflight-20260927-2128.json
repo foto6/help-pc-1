@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-worktree-preflight-20260927-2128",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$r='E:\\WebAIBridge'; Write-Output ('TARGET_EXISTS|'+(Test-Path 'C:\\agentwork\\WebAIBridge-integration-final')); git -C $r worktree list --porcelain"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
