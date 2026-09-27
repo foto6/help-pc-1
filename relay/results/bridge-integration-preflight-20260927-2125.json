@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$r='E:\\WebAIBridge'; git -C $r fetch origin --prune; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; Write-Output ('INTEGRATION|'+(git -C $r rev-parse origin/agent/bridge-integration)); foreach($c in @('8cee868','f3f24a8','3aaa4bc','556baf1','358d199')){ git -C $r merge-base --is-ancestor $c origin/agent/bridge-integration; Write-Output ('ANCESTOR|'+$c+'|'+$LASTEXITCODE) }; Write-Output 'INTEGRATION_LOG'; git -C $r log --oneline --decorate -12 origin/agent/bridge-integration"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "INTEGRATION|a270c3de8f0b3b81c43cd4805a1c40bed0336775\r\nANCESTOR|8cee868|1\r\nANCESTOR|f3f24a8|1\r\nANCESTOR|3aaa4bc|1\r\nANCESTOR|556baf1|1\r\nANCESTOR|358d199|1\r\nINTEGRATION_LOG\r\na270c3d (origin/agent/bridge-integration) bridge-integration-candidate\n2610f36 Fix restart validation after baseline refresh\ndd7330e Add assignment scheduler chaos model checks\n5af9957 Add live bridge runtime reload control\n6ad5f33 Harden provider stream and rate-limit recovery\n8d14903 Harden assignment Git and CI evidence\n28fef7a (HEAD -> agent/webbridge-dev, origin/agent/webbridge-dev) Complete Wave4 assignment cutover hardening\n26bb4ed (agent/bridge-rate-limit-recovery, agent/bridge-observability, agent/bridge-evidence-engine, agent/bridge-assignment-chaos) Cut over managed agents to durable assignments\n5332f35 Add evidence-gated managed agent control plane\n2925775 Fix watchdog source regression matcher\n8877674 Harden watchdog multi-tab generation consensus\ndc505d7 Add bounded integration task metadata\n",
+      "stdout_bytes": 988,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:03:51.928Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:03:51.911Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-integration-preflight-20260927-2125"
+    },
+    "request_id": "bridge-integration-preflight-20260927-2125",
+    "started_at": "2026-09-27T14:03:49.636Z",
+    "status": "completed"
+  },
+  "id": "bridge-integration-preflight-20260927-2125",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
