@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-live-managed-health-20260927-2241",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$cfg='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; $ms='E:\\WebAIBridge\\app\\data\\managed-chat-status.json'; if(Test-Path $cfg){$c=Get-Content $cfg -Raw|ConvertFrom-Json; Write-Output ('ROOT|profileId='+$c.profileId+'|debugPort='+$c.debugPort+'|enabled='+$c.enabled+'|autoContinue='+$c.autoContinueEnabled+'|allowAutonomousSend='+$c.allowAutonomousSend); foreach($p in @($c.managedProjects)){Write-Output ('PROJECT|'+$p.id+'|'+$p.name+'|repo='+$p.repository+'|branch='+$p.branch+'|agents='+(@($p.agents|ForEach-Object{$_.id})-join ','))}}; if(Test-Path $ms){$m=Get-Content $ms -Raw|ConvertFrom-Json; foreach($x in @($m)){Write-Output ('STATUS|'+$x.id+'|'+$x.name+'|generating='+$x.generating+'|high='+$x.highMode+'|draft='+$x.hasDraft+'|profile='+$x.profileId+'|url='+$x.url)}} else {Write-Output 'NO_STATUS'}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
