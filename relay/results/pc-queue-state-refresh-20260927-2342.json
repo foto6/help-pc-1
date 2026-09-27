@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$st='E:\\WebAIBridge\\app\\data\\state.json'; if(Test-Path $st){$s=Get-Content $st -Raw|ConvertFrom-Json; foreach($id in @('2ba64468-e4e8-4272-b63e-e00e491b4ee4','949d8e95-6591-45b6-a5c3-a633bb28b120','28c0666c-dfde-43b3-856a-8581cfc65857','814c957a-efb7-4401-9675-bf7997fdc278')){$a=@($s.agentAssignments)|Where-Object{$_.id -eq $id}|Select-Object -First 1;if($a){Write-Output ('A|'+$id+'|state='+$a.state+'|target='+$a.targetChatId+'|dispatch='+$a.dispatchCount+'|diag='+$a.lastDiagnostic+'|current='+$a.currentHead+'|ci='+$a.ciConclusion)}}}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "A|2ba64468-e4e8-4272-b63e-e00e491b4ee4|state=blocked|target=agent-pc-executor|dispatch=0|diag=replacement_policy_unavailable|current=58bad1bc60f7d4d26d03223c8f0bea5f138f49a6|ci=\r\nA|949d8e95-6591-45b6-a5c3-a633bb28b120|state=queued|target=agent-pc-executor|dispatch=0|diag=active_generation|current=732f0f5e6482f6bb96f0dfa582dc1c0fe2ea712e|ci=\r\nA|28c0666c-dfde-43b3-856a-8581cfc65857|state=queued|target=chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e|dispatch=0|diag=active_generation|current=5495c320304860bf190476833177f716fe9ad960|ci=\r\nA|814c957a-efb7-4401-9675-bf7997fdc278|state=blocked|target=chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c|dispatch=0|diag=replacement_policy_unavailable|current=e1871ae37e6b1a7c457297b214d5c8b129252df7|ci=\r\n",
+      "stdout_bytes": 736,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T16:17:17.159Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T16:17:17.131Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-queue-state-refresh-20260927-2342"
+    },
+    "request_id": "pc-queue-state-refresh-20260927-2342",
+    "started_at": "2026-09-27T16:17:16.394Z",
+    "status": "completed"
+  },
+  "id": "pc-queue-state-refresh-20260927-2342",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
