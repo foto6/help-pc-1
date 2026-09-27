@@ -310,6 +310,29 @@ def validate_result(raw: Mapping[str, Any]) -> dict[str, Any]:
         raise QueueConflictError("result id is invalid")
     if not isinstance(raw["request_sha256"], str) or not SHA256_RE.fullmatch(raw["request_sha256"]):
         raise QueueConflictError("result request_sha256 is invalid")
+    if raw["relay_status"] not in {
+        "completed",
+        "reconciled_completed",
+        "reconciliation_required",
+        "relay_error",
+        "rejected",
+    }:
+        raise QueueConflictError("result relay_status is invalid")
+    if not isinstance(raw["live"], bool) or not isinstance(raw["reexecuted"], bool):
+        raise QueueConflictError("result live/reexecuted fields must be booleans")
+    for key in ("executor_result", "reconciliation"):
+        if raw[key] is not None and not isinstance(raw[key], dict):
+            raise QueueConflictError(f"result {key} must be object or null")
+    if raw["error"] is not None and not isinstance(raw["error"], str):
+        raise QueueConflictError("result error must be string or null")
+    if not isinstance(raw["implementation_sha"], str) or not raw["implementation_sha"]:
+        raise QueueConflictError("result implementation_sha is invalid")
+    if raw["queue_head_at_receive"] is not None and not isinstance(
+        raw["queue_head_at_receive"], str
+    ):
+        raise QueueConflictError("result queue_head_at_receive must be string or null")
+    if not isinstance(raw["published_at"], str) or not raw["published_at"]:
+        raise QueueConflictError("result published_at is invalid")
     claimed = raw["result_sha256"]
     if not isinstance(claimed, str) or not SHA256_RE.fullmatch(claimed):
         raise QueueConflictError("result_sha256 is invalid")
@@ -436,12 +459,39 @@ class GitQueue:
             },
         )
 
-    def _assert_clean(self) -> None:
+    def _prepare_clean_checkout(self) -> None:
         status = _run_git(self.repo, "status", "--porcelain").stdout.strip()
-        if status:
+        if not status:
+            return
+        allowed_prefixes = (
+            "relay/results/",
+            "relay/heartbeat/",
+            "relay/quarantine/",
+        )
+        dirty_paths: list[str] = []
+        for line in status.splitlines():
+            if len(line) < 4:
+                raise QueueConflictError("unparseable queue checkout status")
+            raw_path = line[3:].strip().replace("\\", "/")
+            if " -> " in raw_path:
+                raw_path = raw_path.split(" -> ", 1)[1]
+            dirty_paths.append(raw_path)
+        if not dirty_paths or not all(
+            path.startswith(allowed_prefixes) for path in dirty_paths
+        ):
             raise QueueConflictError(
-                "queue checkout contains uncommitted changes; dedicated relay checkout required"
+                "queue checkout contains non-transport uncommitted changes"
             )
+        _run_git(self.repo, "reset", "--hard", "HEAD")
+        _run_git(
+            self.repo,
+            "clean",
+            "-fd",
+            "--",
+            "relay/results",
+            "relay/heartbeat",
+            "relay/quarantine",
+        )
 
     def _local_only_paths_are_transport_owned(self, remote: str) -> bool:
         diff = _run_git(
@@ -580,6 +630,8 @@ class GitQueue:
         path = self.results_dir / f"{request_id}.json"
         if not path.exists():
             return None
+        if path.stat().st_size > MAX_RESULT_BYTES:
+            raise QueueConflictError(f"result {request_id} exceeds transport size limit")
         raw = json.loads(path.read_text(encoding="utf-8"))
         if not isinstance(raw, dict):
             raise QueueConflictError(f"result {request_id} is not an object")
