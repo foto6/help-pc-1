@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bootstrap-capabilities",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 5000,
+  "note": "Safe read-only bootstrap request. Expected to run in dry-run or live relay mode."
+}
