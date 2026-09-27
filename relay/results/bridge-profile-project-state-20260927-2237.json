@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$cfg='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; if(Test-Path $cfg){$c=Get-Content $cfg -Raw|ConvertFrom-Json; foreach($p in @($c.aiProfiles)){Write-Output ('PROFILE|'+$p.id+'|'+$p.name+'|provider='+$p.provider+'|port='+$p.debugPort+'|enabled='+$p.enabled)}; foreach($p in @($c.managedProjects)){Write-Output ('PROJECT|'+$p.id+'|'+$p.name+'|agents='+(@($p.agentIds)-join ','))}}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "PROFILE|||provider=|port=|enabled=\r\nPROJECT|project-g-p-6ab839fa4f8c81919adad01c4a5497dc|sv|agents=\r\n",
+      "stdout_bytes": 101,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:20:14.917Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:20:14.897Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-profile-project-state-20260927-2237"
+    },
+    "request_id": "bridge-profile-project-state-20260927-2237",
+    "started_at": "2026-09-27T15:20:14.550Z",
+    "status": "completed"
+  },
+  "id": "bridge-profile-project-state-20260927-2237",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
