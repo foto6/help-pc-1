@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "a1-r2-poll-002",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$out='E:\\SpectraTrack-data\\runs\\a1-nightowls-r2-ea1234-run2'; $pidv=[int](Get-Content ($out+'\\pid.txt')); $p=Get-Process -Id $pidv -ErrorAction SilentlyContinue; Write-Output ('RUNNING='+[bool]$p); Write-Output ('RESULT_EXISTS='+(Test-Path ($out+'\\r2-result.json'))); if(Test-Path ($out+'\\stderr.txt')){Write-Output 'STDERR'; Get-Content -Tail 20 ($out+'\\stderr.txt')}; if(Test-Path ($out+'\\stdout.txt')){Write-Output 'STDOUT'; Get-Content -Tail 20 ($out+'\\stdout.txt')}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Observe locked A1 R2 run only; no mutation."
+}
