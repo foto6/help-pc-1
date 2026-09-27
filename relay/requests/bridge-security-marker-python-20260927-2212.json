@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-security-marker-python-20260927-2212",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "py -3 -c \"from pathlib import Path; fs=[r'C:\\agentwork\\WebAIBridge-integration-final\\app\\agent-execution-control.js',r'C:\\agentwork\\WebAIBridge-integration-final\\app\\server.js',r'C:\\agentwork\\WebAIBridge-integration-final\\app\\supervisor-control.js']; [(print('=== '+f+' ==='),print('\\n'.join(str(i+1)+': '+x for i,x in enumerate(Path(f).read_text(encoding='utf-8').splitlines()) if x.startswith(('<<<<<<<','=======','>>>>>>>'))))) for f in fs]\""
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000
+}
