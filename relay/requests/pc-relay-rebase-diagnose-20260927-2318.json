@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-relay-rebase-diagnose-20260927-2318",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$r='E:\\pc-github-relay'; Write-Output 'STATUS'; git -C $r status --porcelain=v2 -b; Write-Output 'REBASE'; if(Test-Path \"$r\\.git\\rebase-merge\"){Get-ChildItem \"$r\\.git\\rebase-merge\" | Select-Object -ExpandProperty Name}else{Write-Output 'none'}; Write-Output 'HEADS'; git -C $r rev-parse HEAD; git -C $r rev-parse origin/agent/pc-github-relay; Write-Output 'AHEAD_BEHIND'; git -C $r rev-list --left-right --count HEAD...origin/agent/pc-github-relay; Write-Output 'LOG'; git -C $r log --oneline --decorate -8"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
