@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-integration-preflight-20260927-2125",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$r='E:\\WebAIBridge'; git -C $r fetch origin --prune; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; Write-Output ('INTEGRATION|'+(git -C $r rev-parse origin/agent/bridge-integration)); foreach($c in @('8cee868','f3f24a8','3aaa4bc','556baf1','358d199')){ git -C $r merge-base --is-ancestor $c origin/agent/bridge-integration; Write-Output ('ANCESTOR|'+$c+'|'+$LASTEXITCODE) }; Write-Output 'INTEGRATION_LOG'; git -C $r log --oneline --decorate -12 origin/agent/bridge-integration"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
