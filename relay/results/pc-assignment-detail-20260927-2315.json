@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$st='E:\\WebAIBridge\\app\\data\\state.json'; $s=Get-Content $st -Raw|ConvertFrom-Json; $ids=@('2ba64468-e4e8-4272-b63e-e00e491b4ee4','cb7f85d3-226e-4c87-8be2-53ba473bc48d','8664aaf2-0e58-482e-9b39-6dc71e89da1e','2d7c4aae-8565-45c2-9751-42dd950c347e','31091def-1cb4-4431-9c58-a6e1b87b6a45'); foreach($id in $ids){$a=@($s.agentAssignments)|Where-Object{$_.id -eq $id}|Select-Object -First 1; if($a){Write-Output ('A|'+$id+'|state='+$a.state+'|target='+$a.targetChatId+'|dispatch='+$a.dispatchCount+'|diag='+$a.lastDiagnostic+'|repo='+$a.repository+'|branch='+$a.branch)}else{Write-Output ('MISSING|'+$id)}}; Write-Output 'VISION'; foreach($a in @($s.agentAssignments)|Where-Object{$_.targetChatId -eq 'agent-vision'}|Select-Object -Last 5){Write-Output ('V|'+$a.id+'|state='+$a.state+'|diag='+$a.lastDiagnostic+'|repo='+$a.repository+'|branch='+$a.branch)}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "A|2ba64468-e4e8-4272-b63e-e00e491b4ee4|state=queued|target=agent-pc-executor|dispatch=0|diag=active_generation|repo=foto6/help-pc-1|branch=agent/pc-relay-hardening\r\nA|cb7f85d3-226e-4c87-8be2-53ba473bc48d|state=blocked|target=chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c|dispatch=0|diag=replacement_policy_unavailable|repo=foto6/help-pc-2|branch=agent/pc-ops-gateway\r\nA|8664aaf2-0e58-482e-9b39-6dc71e89da1e|state=failed|target=chat-6ab66b08-a90c-83eb-80d8-a7567d24352d|dispatch=0|diag=Managed assignment draft verification failed; refusing submit|repo=foto6/help-pc-2|branch=agent/pc-control-mcp-gateway\r\nA|2d7c4aae-8565-45c2-9751-42dd950c347e|state=failed|target=chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e|dispatch=0|diag=Managed assignment draft verification failed; refusing submit|repo=foto6/help-pc-2|branch=agent/pc-control-mcp-gateway\r\nA|31091def-1cb4-4431-9c58-a6e1b87b6a45|state=failed|target=chat-6ab6703e-b760-83eb-ae7e-686637c7de67|dispatch=0|diag=Managed assignment draft verification failed; refusing submit|repo=foto6/help-pc-2|branch=agent/pc-ops-chaos\r\nVISION\r\n",
+      "stdout_bytes": 1073,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T16:10:14.660Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T16:10:14.634Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-assignment-detail-20260927-2315"
+    },
+    "request_id": "pc-assignment-detail-20260927-2315",
+    "started_at": "2026-09-27T16:10:13.855Z",
+    "status": "completed"
+  },
+  "id": "pc-assignment-detail-20260927-2315",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
