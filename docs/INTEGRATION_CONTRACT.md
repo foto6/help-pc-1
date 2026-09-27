@@ -20,19 +20,21 @@ Consumers must treat observation ids/timestamps as provenance. A later action sh
 
 ## Failure and retry contract
 
-Every failed action includes `error_kind`.
+Every failed action includes `error_kind`. Every side-effecting action also emits versioned `pc_executor.action_outcome.v1` evidence describing whether the effect is proven `not_started`, proven `completed`, or `unknown` and therefore requires reconciliation.
 
 | error_kind | Meaning | Retry guidance |
 |---|---|---|
-| transient | runtime condition may clear | bounded retry after re-observation |
+| transient | runtime condition may clear | execution retry only when outcome is `not_started`; `unknown` reconciles instead |
 | stale_target | selector no longer resolves | re-observe and re-ground |
 | ambiguous_target | selector resolves to multiple controls | refine selector; do not guess |
 | policy_blocked | safety/capability boundary | do not auto-retry around policy |
-| timeout | bounded operation deadline expired | re-observe before bounded retry |
+| timeout | bounded operation deadline expired | retry execution only when outcome is `not_started`; post-dispatch `unknown` reconciles |
 | cancelled | caller cancelled work | do not auto-retry |
-| executor_failure | unexpected adapter/runtime failure | diagnose; retry only with evidence |
+| executor_failure | unexpected adapter/runtime failure | retry only with `not_started` evidence; otherwise reconcile/diagnose |
 
 Round-1 status compatibility is preserved: policy blocks return `status="blocked"`; unexpected executor failures return `status="error"`.
+
+Outcome evidence changes retry authority: `not_started` only proves duplicate-effect safety and still obeys `error_kind`; `completed` must never be re-executed; `unknown` must enter verification/reconciliation and may retry observation only. A transport/process loss after side-effect dispatch must be treated as `unknown`, not as an execution retry. The exact transport is documented in `docs/ACTION_OUTCOME_V1.md`.
 
 ## Boundary rules
 

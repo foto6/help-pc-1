@@ -53,6 +53,12 @@ Failures expose `error_kind`:
 
 For Round-1 compatibility, `policy_blocked` uses result `status="blocked"` and `executor_failure` uses `status="error"`; the other structured kinds are also the status value.
 
+## Side-effect outcome evidence
+
+Side-effecting actions carry strict `pc_executor.action_outcome.v1` evidence. The executor records a provisional `unknown` audit event immediately before live adapter dispatch, then finalizes the result as `completed`, `not_started`, or `unknown`. Structured stale/ambiguous/policy failures prove no effect; timeout/cancellation/transient/unexpected failure after dispatch remain unknown. `unknown` is deliberately non-retry-safe and requires downstream verification/reconciliation.
+
+This evidence layer is orthogonal to UIA resolution, cancellation, and verification logic: it does not duplicate Vision semantics or Control Plane state machines. It only reports what the local Executor can prove about its own side-effect attempt.
+
 ## Safety invariants
 
 - Default mode is dry-run.

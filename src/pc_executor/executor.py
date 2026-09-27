@@ -8,6 +8,7 @@ from .capture import PillowScreenCapture, ScreenshotProvider, screenshot_payload
 from .errors import ExecutorError, ExecutorFailureError, PolicyBlockedError
 from .input import InputAdapter, WindowsInputAdapter
 from .models import ActionRequest, ActionResult, AuditEvent, ElementQuery, utc_now_iso
+from .outcome import ActionOutcomeEvidence, SIDE_EFFECTING_ACTIONS
 from .safety import SafetyViolation, ensure_not_sensitive_text
 from .shell import SafeShellAdapter
 from .uia import AccessibilityAdapter, WindowsUIAutomationAdapter
@@ -15,6 +16,19 @@ from .vision_target import GroundedTargetContractError, parse_grounded_target_v1
 from .windows import Win32WindowEnumerator, WindowEnumerator
 
 T = TypeVar("T")
+
+
+class _OutcomeTracker:
+    def __init__(self, action: str) -> None:
+        self.side_effecting = action in SIDE_EFFECTING_ACTIONS
+        self.dispatch_started = False
+        self.completed = False
+
+    def mark_dispatch(self) -> None:
+        self.dispatch_started = True
+
+    def mark_completed(self) -> None:
+        self.completed = True
 
 
 class Executor:
@@ -52,10 +66,17 @@ class Executor:
         started = utc_now_iso()
         effective_dry_run = self.dry_run if request.dry_run is None else bool(request.dry_run)
         token = cancellation or CancellationToken()
+        tracker = _OutcomeTracker(request.action)
         self._audit(request, "start", effective_dry_run)
         try:
             token.raise_if_cancelled()
-            data = self._dispatch(request, effective_dry_run, token)
+            data = self._dispatch(request, effective_dry_run, token, tracker)
+            outcome_evidence = self._outcome_evidence(
+                request,
+                tracker,
+                dry_run=effective_dry_run,
+                success=True,
+            )
             result = ActionResult(
                 request_id=request.request_id,
                 action=request.action,
@@ -65,8 +86,18 @@ class Executor:
                 finished_at=utc_now_iso(),
                 data=data,
                 dry_run=effective_dry_run,
+                outcome_evidence=outcome_evidence,
             )
-            self._audit(request, "finish", effective_dry_run, outcome=result.status, details=data)
+            audit_details = dict(data)
+            if outcome_evidence is not None:
+                audit_details["outcome_evidence"] = outcome_evidence.to_dict()
+            self._audit(
+                request,
+                "finish",
+                effective_dry_run,
+                outcome=result.status,
+                details=audit_details,
+            )
             return result
         except SafetyViolation as exc:
             return self._error_result(
@@ -74,15 +105,23 @@ class Executor:
                 started,
                 effective_dry_run,
                 PolicyBlockedError(str(exc)),
+                tracker,
             )
         except ExecutorError as exc:
-            return self._error_result(request, started, effective_dry_run, exc)
+            return self._error_result(
+                request,
+                started,
+                effective_dry_run,
+                exc,
+                tracker,
+            )
         except (KeyError, TypeError, ValueError) as exc:
             return self._error_result(
                 request,
                 started,
                 effective_dry_run,
                 PolicyBlockedError(f"invalid request: {exc}"),
+                tracker,
             )
         except Exception as exc:
             return self._error_result(
@@ -90,6 +129,7 @@ class Executor:
                 started,
                 effective_dry_run,
                 ExecutorFailureError(f"{type(exc).__name__}: {exc}"),
+                tracker,
             )
 
     def _error_result(
@@ -98,11 +138,19 @@ class Executor:
         started: str,
         dry_run: bool,
         exc: ExecutorError,
+        tracker: _OutcomeTracker,
     ) -> ActionResult:
         status = {
             "policy_blocked": "blocked",
             "executor_failure": "error",
         }.get(exc.kind, exc.kind)
+        outcome_evidence = self._outcome_evidence(
+            request,
+            tracker,
+            dry_run=dry_run,
+            success=False,
+            error_kind=exc.kind,
+        )
         result = ActionResult(
             request_id=request.request_id,
             action=request.action,
@@ -113,15 +161,91 @@ class Executor:
             error=str(exc),
             error_kind=exc.kind,
             dry_run=dry_run,
+            outcome_evidence=outcome_evidence,
         )
+        details = {"error": result.error, "error_kind": result.error_kind}
+        if outcome_evidence is not None:
+            details["outcome_evidence"] = outcome_evidence.to_dict()
         self._audit(
             request,
             "finish",
             dry_run,
             outcome=status,
-            details={"error": result.error, "error_kind": result.error_kind},
+            details=details,
         )
         return result
+
+    def _outcome_evidence(
+        self,
+        request: ActionRequest,
+        tracker: _OutcomeTracker,
+        *,
+        dry_run: bool,
+        success: bool,
+        error_kind: str | None = None,
+    ) -> ActionOutcomeEvidence | None:
+        if not tracker.side_effecting:
+            return None
+        if dry_run:
+            state = "not_started"
+            reason = "dry_run" if success else (error_kind or "executor_failure")
+        elif success and tracker.completed:
+            state, reason = "completed", "completed"
+        elif not tracker.dispatch_started:
+            state, reason = "not_started", error_kind or "executor_failure"
+        elif error_kind in {"stale_target", "ambiguous_target", "policy_blocked"}:
+            state, reason = "not_started", error_kind
+        else:
+            state, reason = "unknown", error_kind or "executor_failure"
+        return ActionOutcomeEvidence.create(
+            request_id=request.request_id,
+            action=request.action,
+            effect_state=state,
+            dispatch_started=tracker.dispatch_started,
+            reason=reason,
+        )
+
+    def _effectful(
+        self,
+        request: ActionRequest,
+        dry_run: bool,
+        tracker: _OutcomeTracker,
+        operation: Callable[[], T],
+    ) -> T:
+        tracker.mark_dispatch()
+        provisional = ActionOutcomeEvidence.create(
+            request_id=request.request_id,
+            action=request.action,
+            effect_state="unknown",
+            dispatch_started=True,
+            reason="dispatch_started",
+        )
+        self._audit(
+            request,
+            "effect_dispatch",
+            dry_run,
+            outcome="unknown",
+            details={"outcome_evidence": provisional.to_dict()},
+        )
+        result = operation()
+        tracker.mark_completed()
+        return result
+
+    def _bounded_effectful(
+        self,
+        request: ActionRequest,
+        dry_run: bool,
+        token: CancellationToken,
+        tracker: _OutcomeTracker,
+        label: str,
+        operation: Callable[[], T],
+    ) -> T:
+        return self._effectful(
+            request,
+            dry_run,
+            tracker,
+            lambda: self._bounded(request, token, label, operation),
+        )
 
     def _timeout(self, request: ActionRequest) -> float:
         if request.timeout_ms is None:
@@ -153,6 +277,7 @@ class Executor:
         request: ActionRequest,
         dry_run: bool,
         token: CancellationToken,
+        tracker: _OutcomeTracker,
     ) -> dict[str, Any]:
         action = request.action
         p = request.params
@@ -196,9 +321,11 @@ class Executor:
             query = ElementQuery(automation_id=automation_id)
             if dry_run:
                 return {"would_execute": action, "query": {"automation_id": automation_id}}
-            element = self._bounded(
+            element = self._bounded_effectful(
                 request,
+                dry_run,
                 token,
+                tracker,
                 action,
                 lambda: self.accessibility.invoke(query),
             )
@@ -214,12 +341,26 @@ class Executor:
             if action == "uia.invoke":
                 if dry_run:
                     return {"would_execute": action, "query": p.get("query", {})}
-                element = self._bounded(request, token, action, lambda: self.accessibility.invoke(query))
+                element = self._bounded_effectful(
+                    request,
+                    dry_run,
+                    token,
+                    tracker,
+                    action,
+                    lambda: self.accessibility.invoke(query),
+                )
                 return {"element": element.to_dict()}
             if action == "uia.focus":
                 if dry_run:
                     return {"would_execute": action, "query": p.get("query", {})}
-                element = self._bounded(request, token, action, lambda: self.accessibility.focus(query))
+                element = self._bounded_effectful(
+                    request,
+                    dry_run,
+                    token,
+                    tracker,
+                    action,
+                    lambda: self.accessibility.focus(query),
+                )
                 return {"element": element.to_dict()}
             if action == "uia.set_value":
                 value = str(p.get("value", ""))
@@ -228,11 +369,17 @@ class Executor:
                     raise PolicyBlockedError("credential/sensitive text entry is not supported")
                 if dry_run:
                     return {"would_execute": action, "query": p.get("query", {}), "value_length": len(value)}
-                element = self._bounded(
+                element = self._bounded_effectful(
                     request,
+                    dry_run,
                     token,
+                    tracker,
                     action,
-                    lambda: self.accessibility.set_value(query, value, sensitive=sensitive),
+                    lambda: self.accessibility.set_value(
+                        query,
+                        value,
+                        sensitive=sensitive,
+                    ),
                 )
                 return {"element": element.to_dict(), "value_length": len(value)}
             raise PolicyBlockedError(f"unsupported UIA action: {action}")
@@ -244,14 +391,28 @@ class Executor:
             button = str(p.get("button", "left"))
             if dry_run:
                 return {"would_execute": action, "x": x, "y": y, "button": button}
-            self._bounded(request, token, action, lambda: self.input.click(x, y, button=button))
+            self._bounded_effectful(
+                request,
+                dry_run,
+                token,
+                tracker,
+                action,
+                lambda: self.input.click(x, y, button=button),
+            )
             return {"x": x, "y": y, "button": button}
 
         if action == "keyboard.press":
             key = str(p["key"])
             if dry_run:
                 return {"would_execute": action, "key": key}
-            self._bounded(request, token, action, lambda: self.input.press(key))
+            self._bounded_effectful(
+                request,
+                dry_run,
+                token,
+                tracker,
+                action,
+                lambda: self.input.press(key),
+            )
             return {"key": key}
 
         if action == "keyboard.type_text":
@@ -260,7 +421,14 @@ class Executor:
             ensure_not_sensitive_text(is_password=False, sensitive=sensitive)
             if dry_run:
                 return {"would_execute": action, "text_length": len(text)}
-            self._bounded(request, token, action, lambda: self.input.type_text(text))
+            self._bounded_effectful(
+                request,
+                dry_run,
+                token,
+                tracker,
+                action,
+                lambda: self.input.type_text(text),
+            )
             return {"text_length": len(text)}
 
         if action == "clipboard.get":
@@ -275,7 +443,14 @@ class Executor:
                 raise PolicyBlockedError("credential/sensitive clipboard entry is not supported")
             if dry_run:
                 return {"would_execute": action, "text_length": len(value)}
-            self._bounded(request, token, action, lambda: self.input.clipboard_set(value))
+            self._bounded_effectful(
+                request,
+                dry_run,
+                token,
+                tracker,
+                action,
+                lambda: self.input.clipboard_set(value),
+            )
             return {"text_length": len(value)}
 
         if action == "shell.run":
@@ -284,11 +459,16 @@ class Executor:
             validated = self.shell.validate(argv, cwd=cwd)
             if dry_run:
                 return {"would_execute": action, "argv": validated, "cwd": cwd}
-            result = self.shell.run(
-                validated,
-                cwd=cwd,
-                timeout_seconds=self._timeout(request),
-                cancellation=token,
+            result = self._effectful(
+                request,
+                dry_run,
+                tracker,
+                lambda: self.shell.run(
+                    validated,
+                    cwd=cwd,
+                    timeout_seconds=self._timeout(request),
+                    cancellation=token,
+                ),
             )
             return result.to_dict()
 

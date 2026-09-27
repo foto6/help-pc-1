@@ -1,0 +1,12 @@
+{
+  "contract_version": "pc_executor.action_outcome.v1",
+  "request_id": "action-1",
+  "action": "vision.target.invoke",
+  "effect_state": "completed",
+  "dispatch_started": true,
+  "completion_observed": true,
+  "reexecution_safe": false,
+  "reconciliation_required": false,
+  "observed_at": "2026-09-27T08:00:00.000Z",
+  "reason": "completed"
+}

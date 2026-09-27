@@ -1,0 +1,12 @@
+{
+  "contract_version": "pc_executor.action_outcome.v1",
+  "request_id": "action-not-started",
+  "action": "keyboard.press",
+  "effect_state": "not_started",
+  "dispatch_started": false,
+  "completion_observed": false,
+  "reexecution_safe": true,
+  "reconciliation_required": false,
+  "observed_at": "2026-09-27T08:00:01.000Z",
+  "reason": "dry_run"
+}

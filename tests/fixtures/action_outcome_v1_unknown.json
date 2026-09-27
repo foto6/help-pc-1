@@ -1,0 +1,12 @@
+{
+  "contract_version": "pc_executor.action_outcome.v1",
+  "request_id": "action-unknown",
+  "action": "keyboard.press",
+  "effect_state": "unknown",
+  "dispatch_started": true,
+  "completion_observed": false,
+  "reexecution_safe": false,
+  "reconciliation_required": true,
+  "observed_at": "2026-09-27T08:00:02.000Z",
+  "reason": "timeout"
+}

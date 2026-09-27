@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from typing import Any, Iterable
 from uuid import uuid4
 
+from .outcome import ActionOutcomeEvidence
+
 
 def utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="milliseconds").replace("+00:00", "Z")
@@ -64,9 +66,13 @@ class ActionResult:
     error: str | None = None
     error_kind: str | None = None
     dry_run: bool = False
+    outcome_evidence: ActionOutcomeEvidence | None = None
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        raw = asdict(self)
+        if self.outcome_evidence is None:
+            raw.pop("outcome_evidence")
+        return raw
 
 
 @dataclass(slots=True)

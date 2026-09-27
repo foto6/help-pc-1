@@ -40,11 +40,25 @@ Input is one JSON object per line. `request_id` is optional; `dry_run` can overr
   "data":{},
   "error":"UIA automation_id not found: save",
   "error_kind":"stale_target",
-  "dry_run":false
+  "dry_run":false,
+  "outcome_evidence":{
+    "contract_version":"pc_executor.action_outcome.v1",
+    "request_id":"uuid",
+    "action":"uia.invoke",
+    "effect_state":"not_started",
+    "dispatch_started":true,
+    "completion_observed":false,
+    "reexecution_safe":true,
+    "reconciliation_required":false,
+    "observed_at":"...Z",
+    "reason":"stale_target"
+  }
 }
 ~~~
 
 `error_kind` is one of `transient`, `stale_target`, `ambiguous_target`, `policy_blocked`, `timeout`, `cancelled`, or `executor_failure`.
+
+Live/dry-run side-effecting actions additionally emit strict `pc_executor.action_outcome.v1` evidence. `not_started` is duplicate-effect safe, `completed` must not be re-executed, and `unknown` requires verification/reconciliation rather than execution retry. Read-only results preserve the legacy shape and omit `outcome_evidence`. See `docs/ACTION_OUTCOME_V1.md`.
 
 ## Shell result metadata
 
