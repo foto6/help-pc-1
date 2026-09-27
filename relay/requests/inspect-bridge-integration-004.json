@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "inspect-bridge-integration-004",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$xs=Invoke-RestMethod 'http://127.0.0.1:17410/json/list'; $t=$xs|Where-Object {$_.url -like '*6ab9011f-1798-83eb-9dc2-5df9382d9ddb*'}|Select-Object -First 1; if(-not $t){Write-Error 'target_not_found'; exit 3}; Set-Location E:\\WebAIBridge\\app\\data; node .\\inspect_target.js $($t.id)"
+    ],
+    "cwd": "E:\\WebAIBridge\\app\\data"
+  },
+  "timeout_ms": 15000,
+  "note": "Inspect 6ab9011f-1798-83eb-9dc2-5df9382d9ddb current chat state only."
+}
