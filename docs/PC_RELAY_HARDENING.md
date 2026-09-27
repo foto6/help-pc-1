@@ -119,7 +119,7 @@ The focused suite covers:
 11. Windows PowerShell stdout/stderr truncation;
 12. force-push detection and credential/CAPTCHA transport blocking.
 
-The first ten correspond to the required operational fault matrix; the suite also includes separate force-push, redaction, allowlist, heartbeat, and Windows live-path checks.
+All eleven requested operational fault categories are covered. The suite also includes separate force-push, result-conflict, redaction, allowlist, heartbeat, request-size, and transport-policy checks.
 
 ## Migration checklist — instructions only
 
