@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-direct-target-urls-20260927-2352",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='E:\\WebAIBridge\\app\\data\\managed-chat-status.json'; $j=Get-Content $p -Raw|ConvertFrom-Json; foreach($cid in @('agent-vision','agent-pc-executor','chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c','chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e')){$x=$j.chats.PSObject.Properties[$cid].Value; if($x){Write-Output ('C|'+$cid+'|url='+$x.url+'|gen='+$x.generating+'|high='+$x.highMode+'|name='+$x.name)}}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
