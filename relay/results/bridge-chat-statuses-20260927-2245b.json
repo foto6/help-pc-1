@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p='E:\\WebAIBridge\\app\\data\\managed-chat-status.json'; $j=Get-Content $p -Raw|ConvertFrom-Json; foreach($prop in $j.chats.PSObject.Properties){$x=$prop.Value; Write-Output ('STATUS|'+$prop.Name+'|name='+$x.name+'|generating='+$x.generating+'|high='+$x.highMode+'|draft='+$x.hasDraft+'|lastSeen='+$x.lastSeenAt+'|lastError='+$x.lastError)}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "STATUS|chat-6ab6703e-b760-83eb-ae7e-686637c7de67|name=A4|generating=False|high=False|draft=|lastSeen=|lastError=\r\nSTATUS|chat-6ab66b08-a90c-83eb-80d8-a7567d24352d|name=SpectraTrack Agent Watch (secondary)|generating=False|high=False|draft=|lastSeen=|lastError=\r\nSTATUS|chat-6ab67022-ae5c-83ed-a654-5dcc82c3b351|name=A2|generating=False|high=False|draft=|lastSeen=|lastError=\r\nSTATUS|chat-6ab67031-7290-83eb-965e-8cd7c16b3504|name=A3|generating=False|high=False|draft=|lastSeen=|lastError=\r\nSTATUS|chat-6ab67052-1ae8-83eb-b5bc-60ddae15aa6f|name=A5|generating=False|high=False|draft=|lastSeen=|lastError=\r\nSTATUS|chat-6ab67007-81fc-83eb-94e1-9511ab086c08|name=A1|generating=False|high=False|draft=|lastSeen=|lastError=\r\nSTATUS|chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c|name=SpectraTrack Round2 Watch|generating=False|high=True|draft=|lastSeen=2026-09-27T09:55:25.683Z|lastError=\r\nSTATUS|chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e|name=SpectraTrack Agent Watch (supervisor)|generating=False|high=True|draft=|lastSeen=2026-09-27T08:37:48.393Z|lastError=\r\nSTATUS|agent-webbridge-dev|name=WebAIBridge Dev|generating=False|high=False|draft=|lastSeen=2026-09-27T08:00:13.572Z|lastError=\r\nSTATUS|agent-pc-executor|name=PC Executor|generating=False|high=True|draft=|lastSeen=2026-09-27T10:52:03.867Z|lastError=\r\nSTATUS|agent-vision|name=Vision|generating=False|high=True|draft=|lastSeen=2026-09-27T08:00:13.588Z|lastError=\r\n",
+      "stdout_bytes": 1413,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:21:46.973Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:21:46.951Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-chat-statuses-20260927-2245b"
+    },
+    "request_id": "bridge-chat-statuses-20260927-2245b",
+    "started_at": "2026-09-27T15:21:46.586Z",
+    "status": "completed"
+  },
+  "id": "bridge-chat-statuses-20260927-2245b",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
