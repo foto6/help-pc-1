@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$paths=@('E:\\pc-github-relay','E:\\SpectraTrack','E:\\help-pc-1','E:\\help-pc-2','E:\\vision-2','E:\\video1','E:\\video2','E:\\video3','E:\\WebAIBridge','E:\\boss'); foreach($p in $paths){ if(Test-Path (Join-Path $p '.git')){ Push-Location $p; try { $b=(git branch --show-current); $h=(git rev-parse HEAD); $s=@(git status --porcelain=v1 -uno); Write-Output ('REPO|'+$p+'|'+$b+'|'+$h+'|dirty='+$s.Count) } finally { Pop-Location } } else { Write-Output ('MISSING|'+$p) } }; Get-CimInstance Win32_Process | Where-Object { $_.Name -in @('python.exe','py.exe','node.exe','powershell.exe') } | ForEach-Object { $role='other'; if($_.CommandLine -match 'github_relay\\.py'){ $role='github-relay' } elseif($_.CommandLine -match 'WebAIBridge|webbridge|bridge'){ $role='bridge' } elseif($_.CommandLine -match 'executor|pc.?control'){ $role='pc-control' }; if($role -ne 'other'){ Write-Output ('PROC|'+$role+'|pid='+$_.ProcessId+'|name='+$_.Name) } }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "REPO|E:\\pc-github-relay|agent/pc-github-relay|37d5f8874f4e8f7a9cd4ebbd590f284d722ec4b6|dirty=0\r\nMISSING|E:\\SpectraTrack\r\nMISSING|E:\\help-pc-1\r\nMISSING|E:\\help-pc-2\r\nMISSING|E:\\vision-2\r\nMISSING|E:\\video1\r\nMISSING|E:\\video2\r\nMISSING|E:\\video3\r\nREPO|E:\\WebAIBridge|agent/webbridge-dev|28fef7aa556a49a933d9a2ae73fc033c262ffa7e|dirty=0\r\nMISSING|E:\\boss\r\nPROC|bridge|pid=11384|name=node.exe\r\nPROC|bridge|pid=11560|name=node.exe\r\nPROC|bridge|pid=11532|name=node.exe\r\nPROC|bridge|pid=5360|name=node.exe\r\nPROC|github-relay|pid=15868|name=py.exe\r\nPROC|bridge|pid=5640|name=powershell.exe\r\n",
+      "stdout_bytes": 580,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T13:55:39.509Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T13:55:39.494Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-local-snapshot-20260927-2056"
+    },
+    "request_id": "coord-local-snapshot-20260927-2056",
+    "started_at": "2026-09-27T13:55:38.851Z",
+    "status": "completed"
+  },
+  "id": "coord-local-snapshot-20260927-2056",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
