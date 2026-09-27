@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "Set-Location E:\\WebAIBridge\\app; node .\\data\\create_project_agent_chat.js E:\\pc-github-relay\\relay\\prompts\\pc-ops-chaos.txt"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "READY {\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc/project\",\"title\":\"ChatGPT - sv\",\"high\":true,\"stop\":false,\"composer\":true,\"draft\":\"\\n\",\"label\":\"Новый чат в sv\"}\nLAUNCHED {\"id\":\"76A25E937044F1774AFBD1C9050D855E\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/local-chatgpt%3A4bc3e195-b9d4-44d4-b04a-54647c82e9c3\",\"title\":\"EXECUTE NOW — PC OPS CHAOS / FAILURE & RECOVERY VALIDATION. Do not acknowledge readiness. Repository: foto6/help-pc-2 Branch: agent/pc-ops-chaos Base exact SHA: f082a7e837392240788d7474123c90095891e153 Do not modify agent/pc-control-plane or agent/pc-ops-gateway. Purpose: Independently validate the coming PC Operations Gateway v1 and hardened relay under failures. You are QA/chaos only; do not become the implementation owner. Producer dependencies to re-read as they advance: foto6/help-pc-1 agent/pc-relay-hardening foto6/help-pc-2 agent/pc-ops-gateway foto6/help-pc-1 agent/pc-executor @ current green head Use exact-head fixtures only; no sibling runtime imports. Build a deterministic failure harness for the planned tool families: fs., log., process., shell.session., system.*, plus existing shell.run/outcome/preflight/window/UIA operations. Required: Fault matrix: Git queue advance during local result commit; failed rebase/push with stale rebase metadata; relay restart between dispatch and result publication; duplicate request id same payload / different payload; malformed request/version/schema; large stdout/stderr truncation; long-running process exits before read; process hangs; shell session restart; stale output cursor; fs expected-hash race; append/write crash boundary; file deleted/moved between stat/read/write; protected path aliases/traversal/junction escape; log rotation/truncation; concurrent readers/writers; gateway/control restart at every durable boundary. Invariants: no duplicate side effect after uncertain boundary; unknown/completed outcome never blind replayed; protected E:\\\\manhwa never touched; credentials/CAPTCHA remain blocked; output bounded; no action silently falls back to raw coordinates; read-only retries can be repeated safely; request/result provenance hashes stable. Prepare reusable contract-level harness now; bind to producer fixtures only when exact-head green evidence exists. Add model/property tests for idempotency, cursor monotonicity, expected-hash semantics and restart recovery. Produce machine-readable CHAOS_MATRIX.v1 with PASS/PENDING/BLOCKED by producer capability. Do not edit production implementations to make tests pass. File precise blockers. CI exact-head required. No merge/release, never touch E:\\\\manhwa. Final exact SHA + CI + matrix hash + blocker list.\",\"high\":true,\"stop\":true,\"composer\":true,\"draft\":\"\\n\",\"label\":\"Спросить ChatGPT\"}\n",
+      "stdout_bytes": 2810,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:52:41.485Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:52:41.461Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "create-pc-ops-chaos-agent-001"
+    },
+    "request_id": "create-pc-ops-chaos-agent-001",
+    "started_at": "2026-09-27T14:52:23.615Z",
+    "status": "completed"
+  },
+  "id": "create-pc-ops-chaos-agent-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
