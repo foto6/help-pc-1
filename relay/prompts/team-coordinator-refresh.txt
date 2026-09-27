@@ -1,0 +1,49 @@
+EXECUTE NOW — TEAM COORDINATOR / CURRENT STATE REFRESH + RELAY INFRASTRUCTURE. Do not acknowledge readiness.
+
+Repository: foto6/boss
+Branch: agent/team-coordinator
+Start from CURRENT remote head; re-read all implementation heads/CI yourself before recording them. Writable only foto6/boss coordination artifacts.
+
+Current important facts to independently verify:
+- SpectraTrack:
+  A1 agent/vnext-detection 9362d0db5fd5eca74f2384d93cbb1faf8ebfb612 (new R2-lock work active now)
+  A2 agent/vnext-tracking d73b5d5a8268586ee963df9de901d3fd6ff6fcca (new canonical replay-pack task active)
+  A3 agent/vnext-enhancement 993c4a6574d0a6298774a7937ba3daeca8bc2e30 (new R2-lock work active)
+  A5 a339da324ea0df682179097d7d6810b6fc250240
+  A6 1a63c0a981c21e57dbe679e388046eaaaa0d5577
+  A7 9773947b06edad1c44c20773092f75c212ad517b
+  A8 agent/vnext-perf-tracking-gate d4a1f061b0d2f4303d418cbf6a51eb14c2e13d87 / CI 36317581936 SUCCESS.
+  A8 current decision is STOP_INSUFFICIENT_QUALITY_EVIDENCE and waits specifically on A2 reproducible canonical contiguous replay/GT payload. No larger tracking replay yet.
+- PC Executor agent/pc-executor 2cc1e40f792a3d74560b726a0d246c90b7f077e9 / CI 36318986551 SUCCESS.
+- PC Control agent/pc-control-plane f082a7e837392240788d7474123c90095891e153 / CI 36317766821 SUCCESS; Wave9 context+epoch consumer work has been dispatched.
+- Vision agent/vision 51b96fb41cb72cdfc4a03129d14b9afc5fe750fd / CI 36317785328 SUCCESS.
+- Creator agent/creator-orchestrator 1bbb88ef4c168e460cddaa1693c3c84a0aad7517 / CI 36314343258 SUCCESS; Media-artifact release-binding task is already generating.
+- Media agent/media-engine 4290379ea51d512eeab6b1897353e4cf130908f2 / CI 36317561407 SUCCESS.
+- Growth agent/growth-analytics c644c206a30b2a04c0c81148702b3e3c516d0eb3 / CI 36317976245 SUCCESS.
+- Bridge all-specialist integration chat is active on agent/bridge-integration; current known branch head remains a270c3de8f0b3b81c43cd4805a1c40bed0336775 until it pushes a new commit.
+- Live PC transport now exists and has been proven:
+  prototype queue branch foto6/help-pc-1 agent/pc-github-relay;
+  local live relay E:\pc-github-relay;
+  ChatGPT->private GitHub queue->pc_executor.Executor->PowerShell/result;
+  live smoke completed returncode 0 with outcome evidence completed.
+  Treat this as OPERATIONS INFRASTRUCTURE, not a release candidate branch because runtime request/result commits continuously advance it.
+- Clean implementation branch created: foto6/help-pc-1 agent/pc-relay-hardening from PC Executor 2cc1e40...; a new specialist chat is being created. Do not claim work complete until a non-empty code delta + exact-head CI appears.
+
+Canonical chats to add/refresh:
+- Bridge Integration:
+  https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab9011f-1798-83eb-9dc2-5df9382d9ddb
+- SpectraTrack A8:
+  https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab902d9-69f0-83ed-883b-dd6bc40a2547
+Preserve all existing canonical URLs/history and retired duplicates.
+
+Required:
+1. Refresh TEAM_ROSTER(.md/.json), TEAM_CHAT_REGISTRY(.md/.json), INTEGRATION_QUEUE and future-task/dependency records from ACTUAL current remote evidence.
+2. Add A8 as permanent specialist role, dependency A2 replay-pack -> A8 quality scoring.
+3. Add Bridge Integration as a permanent integration role distinct from Bridge primary.
+4. Record relay prototype vs relay-hardening distinction. Runtime queue/result commits must never be mistaken for implementation evidence.
+5. Preserve R1 -> locked hypothesis -> blind R2 -> holdout4200 -> full5000-characterization methodology.
+6. Mark A1/A2/A3/PC-Control/Creator/Bridge-Integration tasks ACTIVE only as assignments; do not claim completion from chat state.
+7. Record exact CI only when tied to exact head.
+8. No implementation edits, no merge/release, never touch E:\manhwa.
+
+Commit/push only agent/team-coordinator. Final exact SHA + concise changed-record summary.
