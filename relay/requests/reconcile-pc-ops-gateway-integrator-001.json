@@ -1,0 +1,12 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "reconcile-pc-ops-gateway-integrator-001",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "create-pc-ops-gateway-integrator-001",
+    "action": "shell.run",
+    "execution_attempt": 1
+  },
+  "timeout_ms": 10000,
+  "note": "Reconcile timed-out PC Ops Gateway integrator creation before any retry."
+}
