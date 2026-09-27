@@ -33,7 +33,7 @@ from pc_remote_transport.executor_adapter import TOOL_REGISTRY_DIGEST
 from pc_remote_transport.protocol import FRAME_VERSION, decode_frame, digest_json, encode_frame
 
 
-EXPECTED_INTEGRATED_REGISTRY_DIGEST = "5026d563fa3a0ee4aa55ae09f2c1df9baef1677e1ed48dab338b3dc1733fbaa5"
+EXPECTED_INTEGRATED_REGISTRY_DIGEST = "839a65771f6f1fbc25da07a6fb64145a2e3df0a8c7403b4295704050864e636d"
 _SENTINEL = object()
 
 

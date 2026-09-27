@@ -6,6 +6,7 @@ on:
       - agent/pc-executor
       - agent/pc-native-tool-parity
       - agent/pc-native-stack-integrated
+      - agent/pc-native-full-dc-parity
   workflow_dispatch:
 
 jobs:
@@ -24,14 +25,19 @@ jobs:
           python-version: "3.11"
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e ".[test]"
-      - name: Canonical stack lineage and diff audit
-        run: python tools/audit_native_stack_integration.py
+      - name: Fetch parity provenance commits
+        shell: bash
+        run: git fetch origin a4596e6f9cef8eed8161425217939282a3b52509 603d7a5791d6e0fc145e65e6b14ad031a5b2cf75
+      - name: Canonical full DC parity lineage audit
+        run: python tools/audit_native_full_dc_parity.py
       - name: Wave 6 focused preflight suite
         run: python -m pytest tests/test_preflight.py
       - name: Wave 7 focused context-binding suite
         run: python -m pytest tests/test_execution_context_binding.py
       - name: Native desktop parity focused suite
-        run: python -m pytest tests/test_pc_operations.py tests/test_native_tool_parity.py
+        run: python -m pytest tests/test_pc_operations.py tests/test_native_tool_parity.py tests/test_full_dc_core_parity.py
+      - name: Stateful search lifecycle suite
+        run: python -m pytest tests/test_search_sessions.py
       - name: Native schema reproducibility
         shell: bash
         run: |
@@ -43,8 +49,10 @@ jobs:
         run: python tools/native_remote_harness.py
       - name: Native remote Executor adapter suite
         run: python -m pytest tests/test_native_remote_executor_adapter.py tests/test_native_remote_executor_adapter_recovery.py tests/test_native_stack_integration.py
-      - name: Windows native adapter suite
+      - name: Native Windows device service suite
+        run: python -m pytest tests/test_native_device_service.py
+      - name: Windows native parity and search suite
         if: runner.os == 'Windows'
-        run: python -m pytest tests/windows/test_native_windows_ops.py
+        run: python -m pytest tests/windows/test_native_windows_ops.py tests/windows/test_search_sessions_windows.py
       - name: Full test suite
         run: python -m pytest

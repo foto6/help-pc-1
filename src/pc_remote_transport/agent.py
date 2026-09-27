@@ -64,6 +64,7 @@ class DispatchResult:
     payload: dict[str, Any]
     stream_data: bytes | None = None
     stream_kind: str | None = None
+    shutdown_agent: bool = False
 
     def __post_init__(self) -> None:
         if not isinstance(self.payload, dict):
@@ -75,6 +76,8 @@ class DispatchResult:
                 raise TypeError("stream_kind is required when stream_data is present")
         elif self.stream_kind is not None:
             raise TypeError("stream_kind requires stream_data")
+        if not isinstance(self.shutdown_agent, bool):
+            raise TypeError("shutdown_agent must be boolean")
 
 
 @dataclass(frozen=True)
@@ -122,6 +125,11 @@ class DeviceAgent:
         self.max_chunk_bytes = max_chunk_bytes
         self.max_stream_bytes = max_stream_bytes
         self.session_epoch_factory = session_epoch_factory or (lambda: uuid.uuid4().hex)
+        self._shutdown_requested = False
+
+    @property
+    def shutdown_requested(self) -> bool:
+        return self._shutdown_requested
 
     async def run_session(self, connection: PersistentConnection) -> None:
         epoch = self.session_epoch_factory()
@@ -180,7 +188,7 @@ class DeviceAgent:
         }:
             raise ProtocolError("invalid welcome payload")
 
-        while True:
+        while not self._shutdown_requested:
             try:
                 if self.heartbeat_seconds > 0:
                     raw = await asyncio.wait_for(connection.recv(), timeout=self.heartbeat_seconds)
@@ -327,6 +335,8 @@ class DeviceAgent:
             })
             return
 
+        if result.shutdown_agent:
+            self._shutdown_requested = True
         await self._send_completed(completed, send)
 
     async def _send_reconcile(
@@ -386,7 +396,7 @@ class DeviceAgent:
         sleep: Callable[[float], Awaitable[None]] = asyncio.sleep,
     ) -> None:
         failure_count = 0
-        while enabled():
+        while enabled() and not self._shutdown_requested:
             connection: PersistentConnection | None = None
             try:
                 connection = await connector.open()
@@ -402,5 +412,5 @@ class DeviceAgent:
                         await connection.close()
                     except Exception:
                         pass
-            if enabled():
+            if enabled() and not self._shutdown_requested:
                 await sleep(backoff.delay(failure_count))

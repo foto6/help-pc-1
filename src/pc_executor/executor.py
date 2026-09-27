@@ -137,6 +137,8 @@ class Executor:
             state_root=operations_state_root,
         )
         self.audit = audit or InMemoryAuditSink()
+        if hasattr(self.operations, "set_audit_provider"):
+            self.operations.set_audit_provider(self.audit)
         self.outcome_journal = outcome_journal
         self.context_observer = context_observer or SystemExecutionContextObserver()
         self.dry_run = dry_run

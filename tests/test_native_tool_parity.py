@@ -95,6 +95,10 @@ def test_capabilities_publish_exact_native_contract_versions(
         "fs.mkdir",
         "fs.stat",
         "fs.search",
+        "search.start",
+        "search.read",
+        "search.list",
+        "search.stop",
         "process.start",
         "process.read_output",
         "process.managed.list",
@@ -399,8 +403,11 @@ def test_device_health_and_config_are_read_only(tmp_path: Path) -> None:
     assert device.ok and health.ok and config.ok
     assert device.data["transport"] == "native_local"
     assert health.data["status"] == "ok"
-    assert config.data["mutable"] is False
+    assert config.data["mutable"] is True
+    assert config.data["mutable_keys"] == ["allowed_roots", "read_many_max_bytes"]
+    assert config.data["admin_config_revision"]
     assert config.data["search_cursor_version"].endswith(".v1")
+    assert config.data["search_session_version"].endswith(".v1")
 
 
 def test_generated_schemas_freeze_exact_action_inventory() -> None:
@@ -456,7 +463,11 @@ def test_desktop_commander_mapping_fixture_covers_reference_surface() -> None:
         "list_devices",
         "ping",
         "get_config",
+        "set_config_value",
+        "who_am_i",
+        "shutdown",
         "read_file",
+        "read_multiple_files",
         "write_file",
         "edit_block",
         "list_directory",
@@ -465,6 +476,8 @@ def test_desktop_commander_mapping_fixture_covers_reference_surface() -> None:
         "get_file_info",
         "start_search",
         "get_more_search_results",
+        "stop_search",
+        "list_searches",
         "start_process",
         "read_process_output",
         "interact_with_process",
@@ -472,10 +485,25 @@ def test_desktop_commander_mapping_fixture_covers_reference_surface() -> None:
         "force_terminate",
         "list_processes",
         "kill_process",
+        "get_usage_stats",
+        "get_recent_tool_calls",
+        "write_pdf",
     }
     assert required <= set(mapped)
     assert mapped["kill_process"]["candidate"] == ["system.process.kill"]
     assert mapped["edit_block"]["candidate"] == ["fs.edit_text"]
+    assert mapped["start_search"]["candidate"] == ["search.start"]
+    assert mapped["get_more_search_results"]["candidate"] == ["search.read"]
+    assert mapped["stop_search"]["candidate"] == ["search.stop"]
+    assert mapped["list_searches"]["candidate"] == ["search.list"]
+    assert mapped["read_multiple_files"]["candidate"] == ["fs.read_many"]
+    assert mapped["set_config_value"]["candidate"] == ["config.set"]
+    assert mapped["who_am_i"]["candidate"] == ["identity.get"]
+    assert mapped["shutdown"]["candidate"] == ["device.shutdown"]
+    assert mapped["get_usage_stats"]["candidate"] == ["metrics.get"]
+    assert mapped["get_recent_tool_calls"]["candidate"] == ["audit.history"]
+    assert mapped["write_pdf"]["status"] == "unsupported_hard_gap"
+    assert mapped["write_pdf"]["candidate"] == []
 
 
 def test_directory_listing_pagination_is_explicit(tmp_path: Path) -> None:

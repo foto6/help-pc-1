@@ -2,9 +2,10 @@
 
 ## Scope
 
-Wave 1 adds a native local operations surface behind `pc_executor.Executor`.
-It is intended to replace the Desktop Commander operations used by the
-coordinator without bypassing Executor policy. The existing
+PC Core exposes a native operations surface behind `pc_executor.Executor`.
+This milestone covers the installed Desktop Commander 0.2.51 core operation
+semantics without bypassing Executor policy. PDF create/modify remains an
+explicit hard capability gap. The existing
 `pc_executor.capabilities.v1`, action preflight, execution-context binding,
 audit, `pc_executor.action_outcome.v1`, and `OutcomeJournal` remain the
 authority for execution.
@@ -49,10 +50,19 @@ arguments and stdin remain blocked by the inherited policy.
 ## Native actions
 
 Filesystem reads: `fs.list`, `fs.stat`, `fs.read_text`,
-`fs.read_bytes`, `fs.hash`, `fs.find`, `fs.glob`, and `fs.search`.
-Text reads support absolute line ranges or bounded tail reads. Binary reads use
-absolute byte offsets. Search is deterministic and stateless; continuation is
-represented by `pc_executor.search_cursor.v1`.
+`fs.read_many`, `fs.read_bytes`, `fs.hash`, `fs.find`, `fs.glob`,
+and `fs.search`. Text reads support absolute line ranges or bounded tail
+reads. `fs.read_many` is a true deterministic batch primitive with per-file
+success/error, a per-file byte bound, and a configured aggregate byte bound.
+Binary reads use absolute byte offsets. The legacy `fs.search` remains a
+deterministic bounded one-shot/cursor primitive and shares safe traversal with
+the stateful search layer.
+
+Stateful Desktop Commander search parity is provided by `search.start`,
+`search.read`, `search.list`, and `search.stop`, with handle metadata
+versioned as `pc_executor.search_session.v1`. `search.start` and
+`search.stop` mutate managed lifecycle state and therefore use the existing
+Executor outcome journal; `search.read` and `search.list` are read-only.
 
 Filesystem mutations: `fs.write_text`, `fs.append_text`, `fs.edit_text`,
 `fs.mkdir`, `fs.copy`, `fs.move`, and `fs.delete`. Direct filesystem
@@ -76,14 +86,26 @@ shell. `system.process.kill` requires both PID and expected executable name.
 It rechecks executable identity on the opened Windows process handle before
 calling `TerminateProcess`.
 
-Device/system discovery: `device.info`, `health.get`, `config.get`,
-`system.info`, `system.resources`, and `system.paths`. Configuration is
-read-only through this surface.
+Device/system discovery: `device.info`, `identity.get`, `health.get`,
+`config.get`, `audit.history`, `metrics.get`, `system.info`,
+`system.resources`, and `system.paths`. `identity.get` exposes only
+non-sensitive controller/device/session metadata. `audit.history` and
+`metrics.get` return bounded sanitized metadata and never raw arguments,
+results, or audit details.
+
+`config.set` is a journaled side effect restricted to the explicit mutable
+key allowlist. Updates are revision-aware and atomically persisted with
+rollback on verification failure. `allowed_roots=[]` means deny all
+filesystem access; it never means unrestricted access. `device.shutdown`
+is a journaled current-device/current-session action that gracefully stops
+the authenticated device agent. It is not an OS shutdown/power action.
 
 ## Bounded output and pagination
 
 `fs.read_text` uses `start_line/end_line` or `tail_lines`, with
-`max_bytes`. `fs.read_bytes` returns `next_offset` and explicit
+`max_bytes`. `fs.read_many` preserves input order and enforces both
+per-file and aggregate output bytes while returning deterministic per-file
+error codes. `fs.read_bytes` returns `next_offset` and explicit
 `truncated`. `log.tail` returns explicit truncation; `log.read_since`
 returns an identity-bound cursor and `has_more`.
 
@@ -93,8 +115,13 @@ total bytes observed, and explicit `*_truncated_before_cursor` flags. Data
 loss from buffer eviction is therefore never silent.
 
 `fs.search` returns a versioned stateless cursor with root/query digests and
-an absolute result offset. Content search is bounded by result count, depth,
-per-file text size and aggregate scanned bytes.
+an absolute result offset. Stateful searches execute in a bounded worker pool
+with bounded result memory, timeout and cancellation checkpoints. Results are
+kept in deterministic traversal order. `search.read` uses an absolute
+zero-based result offset and defaults to 100 results; a negative offset reads
+that many results from the tail and ignores length. Completed, cancelled,
+timed-out, and max-result searches remain readable for 300 seconds by default,
+then are garbage-collected.
 
 ## Desktop Commander mapping
 
@@ -102,19 +129,22 @@ per-file text size and aggregate scanned bytes.
 | --- | --- | --- |
 | `list_devices` | `device.info` | Local authorized device only |
 | `ping` | `health.get` | Direct |
-| `get_config` | `config.get` | Read-only |
-| `set_config_value` | — | Intentionally unsupported |
+| `get_config` | `config.get` | Direct, includes revisioned admin config |
+| `set_config_value` | `config.set` | Explicit allowlist + atomic revisioned update |
+| `who_am_i` | `identity.get` | Non-sensitive controller/device/session metadata |
+| `shutdown` | `device.shutdown` | Current authenticated agent/session only |
 | `read_file` | `fs.read_text`, `fs.read_bytes`, `log.tail` | Direct |
-| `read_multiple_files` | composed bounded `fs.read_*` calls | Composed |
+| `read_multiple_files` | `fs.read_many` | True bounded deterministic batch |
 | `write_file` | `fs.write_text`, `fs.append_text` | Direct |
 | `edit_block` | `fs.edit_text` | Hash + replacement CAS |
 | `list_directory` | `fs.list` | Direct |
 | `move_file` | `fs.move` | Direct |
 | `create_directory` | `fs.mkdir` | Direct |
 | `get_file_info` | `fs.stat`, `fs.hash` | Direct |
-| `start_search` | `fs.search`, `fs.find`, `fs.glob`, `log.search` | Direct |
-| `get_more_search_results` | `fs.search` cursor / `log.read_since` | Cursor |
-| `stop_search` / `list_searches` | — | Not needed; search is stateless |
+| `start_search` | `search.start` | Stateful handle |
+| `get_more_search_results` | `search.read` | Absolute/tail pagination |
+| `stop_search` | `search.stop` | Cancel addressed current-generation handle |
+| `list_searches` | `search.list` | Active/recent current-generation handles |
 | `start_process` | `process.start`, `shell.session.start` | Direct |
 | `read_process_output` | `process.read_output`, `shell.session.read` | Direct |
 | `interact_with_process` | `shell.session.write_stdin` | Direct |
@@ -122,10 +152,9 @@ per-file text size and aggregate scanned bytes.
 | `force_terminate` | `process.terminate` | Managed current-generation handle |
 | `list_processes` | `process.list`, `process.inspect` | Direct |
 | `kill_process` | `system.process.kill` | PID + executable identity |
-| `write_pdf` | — | Outside Wave 1 |
-| `shutdown` | — | Outside Wave 1 |
-| `who_am_i` | — | Identity disclosure not required |
-| `get_recent_tool_calls` | existing Executor audit/outcome journals | Existing authority |
+| `get_usage_stats` | `metrics.get` | Sanitized bounded operation metrics, not billing |
+| `get_recent_tool_calls` | `audit.history` | Sanitized bounded audit metadata |
+| `write_pdf` | — | **Hard gap:** PDF create/modify not implemented |
 
 The canonical machine-readable mapping is
 `tests/fixtures/native_tool_parity_v1/desktop_commander_mapping.json`.
@@ -143,11 +172,22 @@ and result schemas freeze the native action inventory. Capability discovery
 also publishes the existing preflight/context/cursor/handle versions used by
 the implementation.
 
-## Intentionally unsupported edges
+## Remaining capability gaps and non-core commands
 
-Wave 1 does not implement remote multi-device routing, device shutdown,
-mutable safety configuration, credential/account identity disclosure, PDF
-generation, or server-side search handles. These exclusions prevent a
-duplicate policy plane or unbounded transport semantics. Higher layers may
-compose bounded reads or document generation while native side effects remain
-inside Executor.
+PDF create/modify remains a hard explicit PC Core capability gap; this
+milestone does not claim full Desktop Commander parity while that action is
+absent. Remote multi-device brokering is also outside PC Core: the transport
+binds one authenticated device agent/session at a time. The implemented
+`device.shutdown` action stops that agent/session and does not power off the
+operating system.
+
+Vendor onboarding, prompt/help, and feedback commands such as
+`give_feedback_to_desktop_commander` and `get_prompts` are not core
+execution actions and are intentionally excluded from the native capability
+registry.
+
+Search handles are scoped to the current Executor/device generation. A restart
+makes persisted prior-generation IDs explicitly stale; they cannot be read,
+stopped, or silently rebound. Reconnects that retain the same generation keep
+the handle valid. Protected roots are rejected before traversal, and
+symlink/reparse traversal is skipped fail-closed.

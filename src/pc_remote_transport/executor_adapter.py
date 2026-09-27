@@ -53,11 +53,17 @@ class NativeTool:
 
 _TOOLS = (
     NativeTool("device.info", "device.info", "read_only"),
+    NativeTool("device.identity", "identity.get", "read_only"),
     NativeTool("device.health", "health.get", "read_only"),
     NativeTool("device.get_config", "config.get", "read_only"),
+    NativeTool("device.set_config", "config.set", "side_effect"),
+    NativeTool("device.shutdown", "device.shutdown", "side_effect"),
+    NativeTool("audit.recent", "audit.history", "read_only"),
+    NativeTool("metrics.get", "metrics.get", "read_only"),
     NativeTool("file.list", "fs.list", "read_only", True),
     NativeTool("file.info", "fs.stat", "read_only"),
     NativeTool("file.read", "fs.read_text", "read_only", True),
+    NativeTool("file.read_many", "fs.read_many", "read_only", True),
     NativeTool("file.read_bytes", "fs.read_bytes", "read_only", True),
     NativeTool("file.hash", "fs.hash", "read_only"),
     NativeTool("file.search", "fs.find", "read_only", True),
@@ -73,6 +79,10 @@ _TOOLS = (
     NativeTool("log.tail", "log.tail", "read_only", True),
     NativeTool("log.read_since", "log.read_since", "read_only", True),
     NativeTool("log.search", "log.search", "read_only", True),
+    NativeTool("search.start", "search.start", "side_effect"),
+    NativeTool("search.read", "search.read", "read_only", True),
+    NativeTool("search.list", "search.list", "read_only"),
+    NativeTool("search.stop", "search.stop", "side_effect"),
     NativeTool("process.start", "process.start", "side_effect", handle_mode="create"),
     NativeTool("process.read", "process.read_output", "read_only", True, "use"),
     NativeTool("process.status", "process.status", "read_only", handle_mode="use"),
@@ -390,6 +400,20 @@ class ExecutorRemoteDispatcher:
                 category="tool",
             )
         arguments = _mapping(envelope.get("arguments", {}), "arguments")
+        if tool.executor_action in {"device.shutdown", "identity.get"}:
+            expected_context = {
+                "device_id": context.device_id,
+                "session_epoch": context.session_epoch,
+            }
+            for key, expected in expected_context.items():
+                supplied = arguments.get(key)
+                if supplied is not None and supplied != expected:
+                    raise NativeAdapterError(
+                        f"{key} does not match authenticated transport context",
+                        code="STALE_SESSION",
+                        category="session",
+                    )
+                arguments[key] = expected
         if _has_protected_path(arguments):
             raise NativeAdapterError(
                 "Protected path is outside native remote dispatch scope",
@@ -735,11 +759,24 @@ class ExecutorRemoteDispatcher:
                         code="PROVIDER_BOUNDS_VIOLATION",
                         category="bounds",
                     )
+            response_data = data
+            if tool.executor_action == "fs.read_many" and stream_data is not None:
+                response_data = {
+                    key: data[key]
+                    for key in (
+                        "count",
+                        "returned_bytes",
+                        "max_total_bytes",
+                        "max_bytes_per_file",
+                    )
+                    if key in data
+                }
+                response_data["stream_contains"] = "full_batch_result_json"
             response = _response(
                 request_id=request_id,
                 session_id=session_id,
                 status="completed",
-                data=data,
+                data=response_data,
                 stream=None
                 if stream_data is None
                 else {
@@ -752,6 +789,7 @@ class ExecutorRemoteDispatcher:
                 payload=response,
                 stream_data=stream_data,
                 stream_kind=stream_kind,
+                shutdown_agent=tool.executor_action == "device.shutdown",
             )
         except UnknownDispatchOutcome:
             raise

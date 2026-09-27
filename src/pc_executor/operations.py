@@ -21,6 +21,11 @@ from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 from uuid import uuid4
 
+from .admin_config import (
+    MAX_READ_MANY_BYTES,
+    MUTABLE_CONFIG_KEYS,
+    AdminConfigStore,
+)
 from .cancellation import CancellationToken
 from .errors import OperationCancelledError, OperationTimeoutError, PolicyBlockedError
 from .safety import (
@@ -30,6 +35,20 @@ from .safety import (
     ensure_resolved_path_allowed,
 )
 from .shell import SafeShellAdapter
+from .search_sessions import (
+    DEFAULT_SEARCH_RETENTION_SECONDS,
+    DEFAULT_SEARCH_TIMEOUT_MS,
+    DEFAULT_SEARCH_WORKERS,
+    MAX_SEARCH_CONTEXT_CHARS,
+    MAX_SEARCH_CONTEXT_LINES,
+    MAX_RETAINED_SEARCH_SESSIONS,
+    MAX_SEARCH_PAGE_LENGTH,
+    MAX_SEARCH_RESULTS,
+    MAX_SEARCH_TIMEOUT_MS,
+    SEARCH_SESSION_VERSION,
+    SearchSession,
+    SearchSessionManager,
+)
 
 
 OPS_CONTRACT_VERSION = "pc_executor.ops.v1"
@@ -60,12 +79,15 @@ MAX_READ_OUTPUT_BYTES = 64 * 1024
 MAX_SESSION_INPUT_BYTES = 64 * 1024
 MAX_ENV_ENTRIES = 128
 MAX_ENV_VALUE_BYTES = 16 * 1024
+MAX_READ_MANY_FILES = 64
+MAX_AUDIT_HISTORY_RESULTS = 200
 
 FS_READ_ACTIONS = frozenset(
     {
         "fs.list",
         "fs.stat",
         "fs.read_text",
+        "fs.read_many",
         "fs.read_bytes",
         "fs.hash",
         "fs.find",
@@ -85,6 +107,8 @@ FS_WRITE_ACTIONS = frozenset(
     }
 )
 LOG_ACTIONS = frozenset({"log.tail", "log.read_since", "log.search"})
+SEARCH_READ_ACTIONS = frozenset({"search.read", "search.list"})
+SEARCH_SIDE_EFFECT_ACTIONS = frozenset({"search.start", "search.stop"})
 PROCESS_READ_ACTIONS = frozenset(
     {
         "process.list",
@@ -108,15 +132,19 @@ SYSTEM_ACTIONS = frozenset(
         "device.info",
         "health.get",
         "config.get",
+        "identity.get",
+        "audit.history",
+        "metrics.get",
         "system.info",
         "system.resources",
         "system.paths",
     }
 )
-SYSTEM_SIDE_EFFECT_ACTIONS = frozenset({"system.process.kill"})
+SYSTEM_SIDE_EFFECT_ACTIONS = frozenset({"system.process.kill", "config.set", "device.shutdown"})
 OPS_READ_ONLY_ACTIONS = frozenset(
     FS_READ_ACTIONS
     | LOG_ACTIONS
+    | SEARCH_READ_ACTIONS
     | PROCESS_READ_ACTIONS
     | SESSION_READ_ACTIONS
     | SYSTEM_ACTIONS
@@ -124,6 +152,7 @@ OPS_READ_ONLY_ACTIONS = frozenset(
 )
 OPS_SIDE_EFFECT_ACTIONS = frozenset(
     FS_WRITE_ACTIONS
+    | SEARCH_SIDE_EFFECT_ACTIONS
     | PROCESS_WRITE_ACTIONS
     | SESSION_WRITE_ACTIONS
     | SYSTEM_SIDE_EFFECT_ACTIONS
@@ -392,6 +421,10 @@ def validate_ops_params(action: str, params: Mapping[str, Any]) -> None:
             },
             {"path"},
         ),
+        "fs.read_many": (
+            {"paths", "encoding", "max_bytes_per_file", "max_total_bytes"},
+            {"paths"},
+        ),
         "fs.read_bytes": ({"path", "offset", "max_bytes"}, {"path"}),
         "fs.hash": ({"path", "max_bytes"}, {"path"}),
         "fs.find": (
@@ -411,6 +444,23 @@ def validate_ops_params(action: str, params: Mapping[str, Any]) -> None:
             },
             {"path", "query"},
         ),
+        "search.start": (
+            {
+                "path",
+                "search_type",
+                "pattern",
+                "literal_search",
+                "ignore_case",
+                "context_lines",
+                "include_hidden",
+                "max_results",
+                "timeout_ms",
+            },
+            {"path", "pattern"},
+        ),
+        "search.read": ({"search_id", "offset", "length"}, {"search_id"}),
+        "search.list": (set(), set()),
+        "search.stop": ({"search_id"}, {"search_id"}),
         "fs.write_text": (
             {
                 "path",
@@ -499,6 +549,11 @@ def validate_ops_params(action: str, params: Mapping[str, Any]) -> None:
         "device.info": (set(), set()),
         "health.get": (set(), set()),
         "config.get": (set(), set()),
+        "config.set": ({"key", "value", "expected_revision"}, {"key", "value"}),
+        "device.shutdown": ({"device_id", "session_epoch"}, {"device_id", "session_epoch"}),
+        "identity.get": ({"device_id", "session_epoch"}, set()),
+        "audit.history": ({"limit"}, set()),
+        "metrics.get": (set(), set()),
         "system.info": (set(), set()),
         "system.resources": ({"path"}, set()),
         "system.paths": ({"path"}, set()),
@@ -532,6 +587,25 @@ def validate_ops_params(action: str, params: Mapping[str, Any]) -> None:
             raise ValueError("fs.read_text end_line must be >= start_line")
         _integer(params.get("max_bytes", 256 * 1024), "fs.read_text max_bytes", minimum=1, maximum=MAX_TEXT_READ_BYTES)
         _encoding(params)
+    elif action == "fs.read_many":
+        paths = params["paths"]
+        if not isinstance(paths, list) or not (1 <= len(paths) <= MAX_READ_MANY_FILES):
+            raise ValueError(f"fs.read_many paths must contain 1..{MAX_READ_MANY_FILES} entries")
+        for index, value in enumerate(paths):
+            _nonempty(value, f"fs.read_many paths[{index}]", max_length=4096)
+        _encoding(params)
+        _integer(
+            params.get("max_bytes_per_file", 256 * 1024),
+            "fs.read_many max_bytes_per_file",
+            minimum=1,
+            maximum=MAX_TEXT_READ_BYTES,
+        )
+        _integer(
+            params.get("max_total_bytes", 4 * 1024 * 1024),
+            "fs.read_many max_total_bytes",
+            minimum=1,
+            maximum=MAX_READ_MANY_BYTES,
+        )
     elif action == "fs.read_bytes":
         _integer(params.get("offset", 0), "fs.read_bytes offset", minimum=0)
         _integer(params.get("max_bytes", 256 * 1024), "fs.read_bytes max_bytes", minimum=1, maximum=MAX_BINARY_READ_BYTES)
@@ -555,6 +629,28 @@ def validate_ops_params(action: str, params: Mapping[str, Any]) -> None:
         _integer(params.get("max_depth", 8), "fs.search max_depth", minimum=0, maximum=MAX_FIND_DEPTH)
         if params.get("cursor") is not None:
             _validate_search_cursor(params["cursor"])
+    elif action == "search.start":
+        search_type = params.get("search_type", "files")
+        if search_type not in {"files", "content"}:
+            raise ValueError("search.start search_type must be files or content")
+        pattern = _nonempty(params["pattern"], "search.start pattern", max_length=512)
+        literal = _optional_bool(params.get("literal_search"), "search.start literal_search")
+        ignore_case = _optional_bool(params.get("ignore_case"), "search.start ignore_case", default=True)
+        _optional_bool(params.get("include_hidden"), "search.start include_hidden")
+        _integer(params.get("context_lines", 5), "search.start context_lines", minimum=0, maximum=MAX_SEARCH_CONTEXT_LINES)
+        _integer(params.get("max_results", 100), "search.start max_results", minimum=1, maximum=MAX_SEARCH_RESULTS)
+        _integer(params.get("timeout_ms", DEFAULT_SEARCH_TIMEOUT_MS), "search.start timeout_ms", minimum=1, maximum=MAX_SEARCH_TIMEOUT_MS)
+        if not literal:
+            try:
+                re.compile(pattern, re.IGNORECASE if ignore_case else 0)
+            except re.error as exc:
+                raise ValueError(f"search.start invalid regular expression: {exc}") from exc
+    elif action == "search.read":
+        _nonempty(params["search_id"], "search.read search_id", max_length=128)
+        _integer(params.get("offset", 0), "search.read offset", minimum=-1000000, maximum=1000000)
+        _integer(params.get("length", 100), "search.read length", minimum=1, maximum=MAX_SEARCH_PAGE_LENGTH)
+    elif action == "search.stop":
+        _nonempty(params["search_id"], "search.stop search_id", max_length=128)
     elif action == "fs.write_text":
         _text(params["text"], "fs.write_text text", max_length=MAX_TEXT_READ_BYTES)
         _encoding(params)
@@ -616,6 +712,39 @@ def validate_ops_params(action: str, params: Mapping[str, Any]) -> None:
                 re.compile(params["pattern"])
             except re.error as exc:
                 raise ValueError(f"invalid log.search regex: {exc}") from exc
+    elif action == "config.set":
+        key = _nonempty(params["key"], "config.set key", max_length=128)
+        if key not in MUTABLE_CONFIG_KEYS:
+            raise ValueError(f"config key is not mutable: {key}")
+        revision = params.get("expected_revision")
+        if revision is not None and (
+            not isinstance(revision, str)
+            or not re.fullmatch(r"[0-9a-f]{64}", revision)
+        ):
+            raise ValueError("config.set expected_revision must be lowercase SHA-256 or null")
+        value = params["value"]
+        if key == "allowed_roots":
+            if not isinstance(value, list) or any(not isinstance(item, str) for item in value):
+                raise ValueError("config.set allowed_roots must be a string array")
+            if len(value) > 32:
+                raise ValueError("config.set allowed_roots contains too many entries")
+        elif isinstance(value, bool) or not isinstance(value, int):
+            raise ValueError("config.set read_many_max_bytes must be an integer")
+    elif action == "device.shutdown":
+        _nonempty(params["device_id"], "device.shutdown device_id", max_length=128)
+        _nonempty(params["session_epoch"], "device.shutdown session_epoch", max_length=128)
+    elif action == "identity.get":
+        if params.get("device_id") is not None:
+            _nonempty(params["device_id"], "identity.get device_id", max_length=128)
+        if params.get("session_epoch") is not None:
+            _nonempty(params["session_epoch"], "identity.get session_epoch", max_length=128)
+    elif action == "audit.history":
+        _integer(
+            params.get("limit", 50),
+            "audit.history limit",
+            minimum=1,
+            maximum=MAX_AUDIT_HISTORY_RESULTS,
+        )
     elif action == "process.list":
         if params.get("pid") is not None:
             _integer(params["pid"], "process.list pid", minimum=1)
@@ -810,6 +939,111 @@ def _validate_search_cursor(value: Any) -> dict[str, Any]:
             raise ValueError(f"search cursor {key} is invalid")
     _integer(value["offset"], "search cursor offset", minimum=0)
     return dict(value)
+
+
+def _is_reparse_or_symlink(path: Path) -> bool:
+    try:
+        if path.is_symlink():
+            return True
+        stat = os.lstat(path)
+    except OSError:
+        return True
+    reparse_flag = getattr(stat_module, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
+    return bool(getattr(stat, "st_file_attributes", 0) & reparse_flag)
+
+
+def _is_hidden_entry(path: Path) -> bool:
+    if path.name.startswith("."):
+        return True
+    if os.name != "nt":
+        return False
+    try:
+        stat = os.stat(path, follow_symlinks=False)
+    except OSError:
+        return True
+    hidden_flag = getattr(stat_module, "FILE_ATTRIBUTE_HIDDEN", 0x2)
+    return bool(getattr(stat, "st_file_attributes", 0) & hidden_flag)
+
+
+def _walk_safe_tree(
+    root: Path,
+    *,
+    max_depth: int,
+    include_hidden: bool,
+    token: CancellationToken,
+    checkpoint: Callable[[], None] | None = None,
+):
+    root_parts = len(root.parts)
+
+    def onerror(_error: OSError) -> None:
+        return None
+
+    for current, dirs, files in os.walk(
+        root,
+        topdown=True,
+        followlinks=False,
+        onerror=onerror,
+    ):
+        token.raise_if_cancelled()
+        if checkpoint is not None:
+            checkpoint()
+        current_path = Path(current)
+        depth = len(current_path.parts) - root_parts
+        resolved_dirs: list[Path] = []
+        safe_dir_names: list[str] = []
+        if depth < max_depth:
+            for name in sorted(dirs, key=lambda value: (value.casefold(), value)):
+                candidate = current_path / name
+                if not include_hidden and _is_hidden_entry(candidate):
+                    continue
+                if _is_reparse_or_symlink(candidate):
+                    continue
+                try:
+                    resolved = ensure_resolved_path_allowed(candidate)
+                    if not resolved.is_dir():
+                        continue
+                except (OSError, SafetyViolation):
+                    continue
+                safe_dir_names.append(name)
+                resolved_dirs.append(resolved)
+        dirs[:] = safe_dir_names
+        resolved_files: list[Path] = []
+        for name in sorted(files, key=lambda value: (value.casefold(), value)):
+            candidate = current_path / name
+            if not include_hidden and _is_hidden_entry(candidate):
+                continue
+            if _is_reparse_or_symlink(candidate):
+                continue
+            try:
+                resolved = ensure_resolved_path_allowed(candidate)
+                if not resolved.is_file():
+                    continue
+            except (OSError, SafetyViolation):
+                continue
+            resolved_files.append(resolved)
+        yield current_path, resolved_dirs, resolved_files
+
+
+def _compile_search_matcher(
+    pattern: str,
+    *,
+    literal: bool,
+    ignore_case: bool,
+) -> Callable[[str], bool]:
+    if literal:
+        needle = pattern.casefold() if ignore_case else pattern
+
+        def literal_match(value: str) -> bool:
+            haystack = value.casefold() if ignore_case else value
+            return needle in haystack
+
+        return literal_match
+    expression = re.compile(pattern, re.IGNORECASE if ignore_case else 0)
+    return lambda value: expression.search(value) is not None
+
+
+def _bounded_search_line(value: str) -> str:
+    return value.rstrip("\r\n")[:MAX_SEARCH_CONTEXT_CHARS]
 
 
 @dataclass
@@ -1049,15 +1283,38 @@ class LocalOperations:
         *,
         shell: SafeShellAdapter,
         state_root: str | Path | None = None,
+        search_retention_seconds: float = DEFAULT_SEARCH_RETENTION_SECONDS,
+        search_max_workers: int = DEFAULT_SEARCH_WORKERS,
     ) -> None:
         self.shell = shell
         root = Path(state_root) if state_root is not None else self.default_state_root()
         self.state_root = root
         self.generation_id = str(uuid4())
+        self.admin_config = AdminConfigStore(root)
+        self.audit_provider: Any | None = None
         self.registry = ManagedProcessRegistry(
             root / "managed-processes.v1.json",
             generation_id=self.generation_id,
         )
+        self.searches = SearchSessionManager(
+            root / "search-sessions.v1.json",
+            generation_id=self.generation_id,
+            retention_seconds=search_retention_seconds,
+            max_workers=search_max_workers,
+        )
+
+    def set_audit_provider(self, provider: Any) -> None:
+        self.audit_provider = provider
+
+    def _resolve_path(
+        self,
+        value: str | os.PathLike[str],
+        *,
+        for_creation: bool = False,
+    ) -> Path:
+        resolved = ensure_resolved_path_allowed(value, for_creation=for_creation)
+        self.admin_config.assert_allowed(resolved)
+        return resolved
 
     @staticmethod
     def default_state_root() -> Path:
@@ -1092,6 +1349,7 @@ class LocalOperations:
                 "stream_cursor": CURSOR_VERSION,
                 "log_cursor": LOG_CURSOR_VERSION,
                 "search_cursor": SEARCH_CURSOR_VERSION,
+                "search_session": SEARCH_SESSION_VERSION,
                 "process_handle": PROCESS_HANDLE_VERSION,
             },
             "actions": actions,
@@ -1105,6 +1363,20 @@ class LocalOperations:
                 "max_binary_read_bytes": MAX_BINARY_READ_BYTES,
                 "max_log_bytes": MAX_LOG_BYTES,
                 "max_process_output_bytes": MAX_PROCESS_OUTPUT_BYTES,
+                "max_search_results": MAX_SEARCH_RESULTS,
+                "max_search_timeout_ms": MAX_SEARCH_TIMEOUT_MS,
+                "max_retained_search_sessions": MAX_RETAINED_SEARCH_SESSIONS,
+                "search_retention_seconds": self.searches.retention_seconds,
+                "max_read_many_files": MAX_READ_MANY_FILES,
+                "max_read_many_bytes": MAX_READ_MANY_BYTES,
+                "mutable_config_keys": sorted(MUTABLE_CONFIG_KEYS),
+                "allowed_roots_policy": (
+                    "protected_only"
+                    if self.admin_config.load().allowed_roots is None
+                    else "deny_all"
+                    if not self.admin_config.load().allowed_roots
+                    else "explicit_allowlist"
+                ),
             },
         }
         digest = hashlib.sha256(
@@ -1159,7 +1431,7 @@ class LocalOperations:
 
     def _start_context(self, action: str, params: Mapping[str, Any]) -> dict[str, Any]:
         argv = self.shell.validate(params["argv"], cwd=params.get("cwd"))
-        cwd = ensure_resolved_path_allowed(params.get("cwd") or os.getcwd())
+        cwd = self._resolve_path(params.get("cwd") or os.getcwd())
         device, inode = _file_identity(cwd)
         body: dict[str, Any] = {
             "contract_version": OPS_CONTEXT_VERSION,
@@ -1178,8 +1450,23 @@ class LocalOperations:
         validate_ops_params(action, params)
         if action in {"ops.capabilities.get", "ops.preflight"}:
             return
+        if action == "fs.read_many":
+            configured = self.admin_config.load().read_many_max_bytes
+            requested = int(params.get("max_total_bytes", configured))
+            if requested > configured:
+                raise SafetyViolation(
+                    f"fs.read_many aggregate bound exceeds configured limit: {requested} > {configured}"
+                )
+            return
         if action.startswith("fs.") or action.startswith("log."):
             self._preflight_path_action(action, params)
+        elif action == "search.start":
+            root = self._resolve_path(params["path"])
+            _ensure_dir(root)
+        elif action in {"search.read", "search.stop"}:
+            self.searches.assert_current(params["search_id"])
+        elif action == "search.list":
+            return
         elif action in {"process.start", "shell.session.start"}:
             validated = self.shell.validate(params["argv"], cwd=params.get("cwd"))
             _validate_structured_command(action, validated)
@@ -1199,9 +1486,15 @@ class LocalOperations:
         elif action.startswith("shell.session.") and action != "shell.session.start":
             self.registry.get(params["session_id"], kind="session")
         elif action == "system.paths" and params.get("path") is not None:
-            ensure_resolved_path_allowed(params["path"])
+            self._resolve_path(params["path"])
         elif action == "system.resources" and params.get("path") is not None:
-            ensure_resolved_path_allowed(params["path"])
+            self._resolve_path(params["path"])
+        elif action == "config.set":
+            self.admin_config.validate_update(
+                key=params["key"],
+                value=params["value"],
+                expected_revision=params.get("expected_revision"),
+            )
         elif action == "system.process.kill":
             self._assert_system_kill_target(
                 params["pid"],
@@ -1210,12 +1503,12 @@ class LocalOperations:
 
     def _preflight_path_action(self, action: str, params: Mapping[str, Any]) -> None:
         if action in {"fs.copy", "fs.move"}:
-            _assert_mutation_leaf_not_reparse(params["source"])
-            _assert_mutation_leaf_not_reparse(params["destination"])
-            source = ensure_resolved_path_allowed(params["source"])
-            destination = ensure_resolved_path_allowed(
+            source = self._resolve_path(params["source"])
+            destination = self._resolve_path(
                 params["destination"], for_creation=True
             )
+            _assert_mutation_leaf_not_reparse(params["source"])
+            _assert_mutation_leaf_not_reparse(params["destination"])
             _ensure_file(source)
             _assert_nonsensitive_path(source)
             if source.stat().st_size > MAX_COPY_BYTES:
@@ -1236,12 +1529,12 @@ class LocalOperations:
                 raise SafetyViolation("source changed: expected_source_hash mismatch")
             return
 
-        if action in FS_WRITE_ACTIONS:
-            _assert_mutation_leaf_not_reparse(params["path"])
-        path = ensure_resolved_path_allowed(
+        path = self._resolve_path(
             params["path"],
             for_creation=action in {"fs.write_text", "fs.append_text", "fs.mkdir"},
         )
+        if action in FS_WRITE_ACTIONS:
+            _assert_mutation_leaf_not_reparse(params["path"])
         if action in FS_READ_ACTIONS or action in LOG_ACTIONS:
             if action in {"fs.list", "fs.find", "fs.glob", "fs.search"}:
                 _ensure_dir(path)
@@ -1320,12 +1613,26 @@ class LocalOperations:
             return {"capabilities": self.capabilities_snapshot()}
         if action == "ops.preflight":
             return {"preflight": self.preflight_contract(params)}
+        if action == "search.start":
+            return self._search_start(params)
+        if action == "search.read":
+            return self.searches.read(
+                params["search_id"],
+                offset=int(params.get("offset", 0)),
+                length=int(params.get("length", 100)),
+            )
+        if action == "search.list":
+            return self.searches.list()
+        if action == "search.stop":
+            return self.searches.stop(params["search_id"])
         if action == "fs.list":
             return self._fs_list(params, token)
         if action == "fs.stat":
             return self._fs_stat(params)
         if action == "fs.read_text":
             return self._fs_read_text(params, token)
+        if action == "fs.read_many":
+            return self._fs_read_many(params, token)
         if action == "fs.read_bytes":
             return self._fs_read_bytes(params)
         if action == "fs.hash":
@@ -1406,6 +1713,16 @@ class LocalOperations:
             return self._health()
         if action == "config.get":
             return self._config()
+        if action == "config.set":
+            return self._config_set(params)
+        if action == "device.shutdown":
+            return self._device_shutdown(params)
+        if action == "identity.get":
+            return self._identity(params)
+        if action == "audit.history":
+            return self._audit_history(params)
+        if action == "metrics.get":
+            return self._metrics()
         if action == "system.info":
             return self._system_info()
         if action == "system.resources":
@@ -1420,8 +1737,103 @@ class LocalOperations:
             )
         raise ValueError(f"unsupported structured operation: {action}")
 
+    def _search_start(self, params: Mapping[str, Any]) -> dict[str, Any]:
+        root = self._resolve_path(params["path"])
+        _ensure_dir(root)
+        return self.searches.start(
+            search_type=str(params.get("search_type", "files")),
+            pattern=str(params["pattern"]),
+            path=str(root),
+            literal_search=bool(params.get("literal_search", False)),
+            ignore_case=bool(params.get("ignore_case", True)),
+            context_lines=int(params.get("context_lines", 5)),
+            include_hidden=bool(params.get("include_hidden", False)),
+            max_results=int(params.get("max_results", 100)),
+            timeout_ms=int(params.get("timeout_ms", DEFAULT_SEARCH_TIMEOUT_MS)),
+            runner=self._run_search_session,
+        )
+
+    def _run_search_session(
+        self,
+        session: SearchSession,
+        emit: Callable[[dict[str, Any]], bool],
+    ) -> str:
+        root = self._resolve_path(session.path)
+        _ensure_dir(root)
+        matcher = _compile_search_matcher(
+            session.pattern,
+            literal=session.literal_search,
+            ignore_case=session.ignore_case,
+        )
+        for _current, _dirs, files in _walk_safe_tree(
+            root,
+            max_depth=MAX_FIND_DEPTH,
+            include_hidden=session.include_hidden,
+            token=session.cancellation,
+            checkpoint=session.checkpoint,
+        ):
+            for candidate in files:
+                session.checkpoint()
+                try:
+                    _assert_nonsensitive_path(candidate)
+                except SafetyViolation:
+                    continue
+                if session.search_type == "files":
+                    if not matcher(candidate.name):
+                        continue
+                    if not emit(
+                        {
+                            "path": str(candidate),
+                            "name": candidate.name,
+                            "kind": "file",
+                        }
+                    ):
+                        return "max_results"
+                    continue
+
+                try:
+                    size = candidate.stat().st_size
+                    if size > MAX_TEXT_READ_BYTES:
+                        continue
+                    with candidate.open(
+                        "r",
+                        encoding="utf-8",
+                        errors="strict",
+                        newline=None,
+                    ) as handle:
+                        lines = handle.readlines()
+                except (OSError, UnicodeError):
+                    continue
+                for index, line in enumerate(lines):
+                    session.checkpoint()
+                    if not matcher(line):
+                        continue
+                    start = max(0, index - session.context_lines)
+                    end = min(len(lines), index + session.context_lines + 1)
+                    before = [
+                        _bounded_search_line(value)
+                        for value in lines[start:index]
+                    ]
+                    after = [
+                        _bounded_search_line(value)
+                        for value in lines[index + 1 : end]
+                    ]
+                    if not emit(
+                        {
+                            "path": str(candidate),
+                            "name": candidate.name,
+                            "kind": "content",
+                            "line_number": index + 1,
+                            "text": _bounded_search_line(line),
+                            "context_before": before,
+                            "context_after": after,
+                        }
+                    ):
+                        return "max_results"
+        return "completed"
+
     def _fs_list(self, params: Mapping[str, Any], token: CancellationToken) -> dict[str, Any]:
-        path = ensure_resolved_path_allowed(params["path"])
+        path = self._resolve_path(params["path"])
         offset = int(params.get("offset", 0))
         limit = int(params.get("max_entries", 200))
         include_hidden = bool(params.get("include_hidden", False))
@@ -1433,7 +1845,7 @@ class LocalOperations:
             if not include_hidden and child.name.startswith("."):
                 continue
             try:
-                resolved = ensure_resolved_path_allowed(child)
+                resolved = self._resolve_path(child)
             except SafetyViolation:
                 continue
             if eligible < offset:
@@ -1467,7 +1879,7 @@ class LocalOperations:
     def _fs_stat(self, params: Mapping[str, Any]) -> dict[str, Any]:
         raw = Path(params["path"])
         symlink = raw.is_symlink()
-        path = ensure_resolved_path_allowed(params["path"])
+        path = self._resolve_path(params["path"])
         stat = path.stat()
         return {
             "path": str(path),
@@ -1480,8 +1892,109 @@ class LocalOperations:
             "symlink": symlink,
         }
 
+    def _fs_read_many(
+        self,
+        params: Mapping[str, Any],
+        token: CancellationToken,
+    ) -> dict[str, Any]:
+        config = self.admin_config.load()
+        aggregate_limit = int(params.get("max_total_bytes", config.read_many_max_bytes))
+        if aggregate_limit > config.read_many_max_bytes:
+            raise SafetyViolation(
+                f"fs.read_many aggregate bound exceeds configured limit: "
+                f"{aggregate_limit} > {config.read_many_max_bytes}"
+            )
+        per_file = int(params.get("max_bytes_per_file", 256 * 1024))
+        encoding = _encoding(params)
+        results: list[dict[str, Any]] = []
+        total = 0
+        for raw_path in params["paths"]:
+            token.raise_if_cancelled()
+            remaining = aggregate_limit - total
+            if remaining <= 0:
+                results.append(
+                    {
+                        "path": raw_path,
+                        "ok": False,
+                        "error": {"code": "AGGREGATE_LIMIT_EXHAUSTED"},
+                    }
+                )
+                continue
+            try:
+                item = self._fs_read_text(
+                    {
+                        "path": raw_path,
+                        "encoding": encoding,
+                        "max_bytes": min(per_file, remaining),
+                    },
+                    token,
+                )
+                returned = int(item.get("returned_bytes", 0))
+                if returned < 0 or returned > remaining:
+                    raise SafetyViolation("fs.read_many provider exceeded aggregate bound")
+                total += returned
+                results.append(
+                    {
+                        "path": raw_path,
+                        "ok": True,
+                        "text": item["text"],
+                        "encoding": item["encoding"],
+                        "returned_bytes": returned,
+                        "file_bytes": item["file_bytes"],
+                        "truncated": bool(item["truncated"]),
+                        "sha256": item["sha256"],
+                    }
+                )
+            except SafetyViolation:
+                results.append(
+                    {
+                        "path": raw_path,
+                        "ok": False,
+                        "error": {"code": "POLICY_BLOCKED"},
+                    }
+                )
+            except FileNotFoundError:
+                results.append(
+                    {
+                        "path": raw_path,
+                        "ok": False,
+                        "error": {"code": "NOT_FOUND"},
+                    }
+                )
+            except (IsADirectoryError, NotADirectoryError):
+                results.append(
+                    {
+                        "path": raw_path,
+                        "ok": False,
+                        "error": {"code": "INVALID_TYPE"},
+                    }
+                )
+            except UnicodeError:
+                results.append(
+                    {
+                        "path": raw_path,
+                        "ok": False,
+                        "error": {"code": "DECODE_ERROR"},
+                    }
+                )
+            except OSError:
+                results.append(
+                    {
+                        "path": raw_path,
+                        "ok": False,
+                        "error": {"code": "IO_ERROR"},
+                    }
+                )
+        return {
+            "results": results,
+            "count": len(results),
+            "returned_bytes": total,
+            "max_total_bytes": aggregate_limit,
+            "max_bytes_per_file": per_file,
+        }
+
     def _fs_read_text(self, params: Mapping[str, Any], token: CancellationToken) -> dict[str, Any]:
-        path = ensure_resolved_path_allowed(params["path"])
+        path = self._resolve_path(params["path"])
         _assert_nonsensitive_path(path)
         encoding = _encoding(params)
         max_bytes = int(params.get("max_bytes", 256 * 1024))
@@ -1544,7 +2057,7 @@ class LocalOperations:
         }
 
     def _fs_read_bytes(self, params: Mapping[str, Any]) -> dict[str, Any]:
-        path = ensure_resolved_path_allowed(params["path"])
+        path = self._resolve_path(params["path"])
         _assert_nonsensitive_path(path)
         offset = int(params.get("offset", 0))
         max_bytes = int(params.get("max_bytes", 256 * 1024))
@@ -1565,7 +2078,7 @@ class LocalOperations:
         }
 
     def _fs_hash(self, params: Mapping[str, Any], token: CancellationToken) -> dict[str, Any]:
-        path = ensure_resolved_path_allowed(params["path"])
+        path = self._resolve_path(params["path"])
         _assert_nonsensitive_path(path)
         maximum = int(params.get("max_bytes", MAX_HASH_BYTES))
         return {
@@ -1576,44 +2089,40 @@ class LocalOperations:
         }
 
     def _fs_find(self, params: Mapping[str, Any], token: CancellationToken) -> dict[str, Any]:
-        root = ensure_resolved_path_allowed(params["path"])
+        root = self._resolve_path(params["path"])
         needle = str(params.get("name_contains") or "").casefold()
         limit = int(params.get("max_results", 200))
         max_depth = int(params.get("max_depth", 8))
         results: list[str] = []
-        root_parts = len(root.parts)
-        for current, dirs, files in os.walk(root, followlinks=False):
-            token.raise_if_cancelled()
-            current_path = Path(current)
-            depth = len(current_path.parts) - root_parts
-            if depth >= max_depth:
-                dirs[:] = []
-            safe_dirs = []
-            for name in dirs:
-                candidate = current_path / name
-                if candidate.is_symlink():
+        for _current, dirs, files in _walk_safe_tree(
+            root,
+            max_depth=max_depth,
+            include_hidden=True,
+            token=token,
+        ):
+            for candidate in sorted(
+                [*dirs, *files],
+                key=lambda path: (path.name.casefold(), path.name),
+            ):
+                if needle and needle not in candidate.name.casefold():
                     continue
-                try:
-                    ensure_resolved_path_allowed(candidate)
-                except SafetyViolation:
-                    continue
-                safe_dirs.append(name)
-            dirs[:] = safe_dirs
-            for name in sorted([*dirs, *files], key=str.casefold):
-                if needle and needle not in name.casefold():
-                    continue
-                candidate = current_path / name
-                try:
-                    resolved = ensure_resolved_path_allowed(candidate)
-                except SafetyViolation:
-                    continue
-                results.append(str(resolved))
+                results.append(str(candidate))
                 if len(results) >= limit:
-                    return {"path": str(root), "results": results, "count": len(results), "truncated": True}
-        return {"path": str(root), "results": results, "count": len(results), "truncated": False}
+                    return {
+                        "path": str(root),
+                        "results": results,
+                        "count": len(results),
+                        "truncated": True,
+                    }
+        return {
+            "path": str(root),
+            "results": results,
+            "count": len(results),
+            "truncated": False,
+        }
 
     def _fs_glob(self, params: Mapping[str, Any], token: CancellationToken) -> dict[str, Any]:
-        root = ensure_resolved_path_allowed(params["path"])
+        root = self._resolve_path(params["path"])
         pattern = params["pattern"]
         limit = int(params.get("max_results", 200))
         results: list[str] = []
@@ -1622,7 +2131,7 @@ class LocalOperations:
             if candidate.is_symlink():
                 continue
             try:
-                resolved = ensure_resolved_path_allowed(candidate)
+                resolved = self._resolve_path(candidate)
             except SafetyViolation:
                 continue
             results.append(str(resolved))
@@ -1635,7 +2144,7 @@ class LocalOperations:
         params: Mapping[str, Any],
         token: CancellationToken,
     ) -> dict[str, Any]:
-        root = ensure_resolved_path_allowed(params["path"])
+        root = self._resolve_path(params["path"])
         query = params["query"]
         case_sensitive = bool(params.get("case_sensitive", False))
         content = bool(params.get("content", False))
@@ -1673,33 +2182,26 @@ class LocalOperations:
         scanned_files = 0
         scanned_bytes = 0
         bounded = False
-        root_parts = len(root.parts)
-        for current, dirs, files in os.walk(root, followlinks=False):
-            token.raise_if_cancelled()
-            current_path = Path(current)
-            depth = len(current_path.parts) - root_parts
-            dirs[:] = sorted(dirs, key=str.casefold)
-            files = sorted(files, key=str.casefold)
-            if depth >= max_depth:
-                dirs[:] = []
-            dirs[:] = [
-                name
-                for name in dirs
-                if not (current_path / name).is_symlink()
-            ]
-            candidates = files if content else [*dirs, *files]
-            for name in candidates:
+        for _current, dirs, files in _walk_safe_tree(
+            root,
+            max_depth=max_depth,
+            include_hidden=True,
+            token=token,
+        ):
+            candidates = (
+                files
+                if content
+                else sorted(
+                    [*dirs, *files],
+                    key=lambda path: (path.name.casefold(), path.name),
+                )
+            )
+            for resolved in candidates:
                 token.raise_if_cancelled()
-                candidate = current_path / name
-                try:
-                    resolved = ensure_resolved_path_allowed(candidate)
-                except SafetyViolation:
-                    continue
+                name = resolved.name
                 line_number = None
                 matched_text = None
                 if content:
-                    if not resolved.is_file() or resolved.is_symlink():
-                        continue
                     try:
                         _assert_nonsensitive_path(resolved)
                         size = resolved.stat().st_size
@@ -1717,11 +2219,7 @@ class LocalOperations:
                             "r", encoding="utf-8", errors="strict"
                         ) as handle:
                             for number, line in enumerate(handle, start=1):
-                                haystack = (
-                                    line
-                                    if case_sensitive
-                                    else line.casefold()
-                                )
+                                haystack = line if case_sensitive else line.casefold()
                                 if needle in haystack:
                                     line_number = number
                                     matched_text = line[:4096]
@@ -1738,13 +2236,7 @@ class LocalOperations:
                 if matched >= offset and len(results) < max_results:
                     item = {
                         "path": str(resolved),
-                        "kind": (
-                            "directory"
-                            if resolved.is_dir()
-                            else "file"
-                            if resolved.is_file()
-                            else "other"
-                        ),
+                        "kind": "directory" if resolved.is_dir() else "file",
                     }
                     if line_number is not None:
                         item["line_number"] = line_number
@@ -1791,7 +2283,7 @@ class LocalOperations:
         before_replace: Callable[[], None] | None = None,
     ) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
-        ensure_resolved_path_allowed(path.parent)
+        self._resolve_path(path.parent)
         fd, temp_name = tempfile.mkstemp(prefix=".pc-executor-", dir=str(path.parent))
         temp = Path(temp_name)
         try:
@@ -1823,7 +2315,7 @@ class LocalOperations:
         before_replace: Callable[[], None] | None = None,
     ) -> int:
         destination.parent.mkdir(parents=True, exist_ok=True)
-        ensure_resolved_path_allowed(destination.parent)
+        self._resolve_path(destination.parent)
         fd, temp_name = tempfile.mkstemp(prefix=".pc-executor-", dir=str(destination.parent))
         temp = Path(temp_name)
         total = 0
@@ -1860,7 +2352,7 @@ class LocalOperations:
                 pass
 
     def _fs_write_text(self, params: Mapping[str, Any], token: CancellationToken) -> dict[str, Any]:
-        path = ensure_resolved_path_allowed(params["path"], for_creation=True)
+        path = self._resolve_path(params["path"], for_creation=True)
         self._preflight_path_action("fs.write_text", params)
         payload = params["text"].encode(_encoding(params))
         if len(payload) > MAX_TEXT_READ_BYTES:
@@ -1881,7 +2373,7 @@ class LocalOperations:
         }
 
     def _fs_append_text(self, params: Mapping[str, Any], token: CancellationToken) -> dict[str, Any]:
-        path = ensure_resolved_path_allowed(params["path"], for_creation=True)
+        path = self._resolve_path(params["path"], for_creation=True)
         self._preflight_path_action("fs.append_text", params)
         encoding = _encoding(params)
         expected = params.get("expected_current_hash")
@@ -1911,7 +2403,7 @@ class LocalOperations:
         }
 
     def _fs_mkdir(self, params: Mapping[str, Any]) -> dict[str, Any]:
-        path = ensure_resolved_path_allowed(params["path"], for_creation=True)
+        path = self._resolve_path(params["path"], for_creation=True)
         self._preflight_path_action("fs.mkdir", params)
         path.mkdir(
             parents=bool(params.get("parents", False)),
@@ -1920,8 +2412,8 @@ class LocalOperations:
         return {"path": str(path), "created": True}
 
     def _fs_copy(self, params: Mapping[str, Any], token: CancellationToken) -> dict[str, Any]:
-        source = ensure_resolved_path_allowed(params["source"])
-        destination = ensure_resolved_path_allowed(params["destination"], for_creation=True)
+        source = self._resolve_path(params["source"])
+        destination = self._resolve_path(params["destination"], for_creation=True)
         self._preflight_path_action("fs.copy", params)
         total = self._atomic_copy_with_suffix(
             source,
@@ -1941,8 +2433,8 @@ class LocalOperations:
         }
 
     def _fs_move(self, params: Mapping[str, Any], token: CancellationToken) -> dict[str, Any]:
-        source = ensure_resolved_path_allowed(params["source"])
-        destination = ensure_resolved_path_allowed(params["destination"], for_creation=True)
+        source = self._resolve_path(params["source"])
+        destination = self._resolve_path(params["destination"], for_creation=True)
         self._preflight_path_action("fs.move", params)
         token.raise_if_cancelled()
         try:
@@ -1958,7 +2450,7 @@ class LocalOperations:
         return {"source": str(source), "destination": str(destination), "atomic_move": True}
 
     def _fs_delete(self, params: Mapping[str, Any]) -> dict[str, Any]:
-        path = ensure_resolved_path_allowed(params["path"])
+        path = self._resolve_path(params["path"])
         self._preflight_path_action("fs.delete", params)
         if params["classification"] == "file":
             path.unlink()
@@ -1971,7 +2463,7 @@ class LocalOperations:
         params: Mapping[str, Any],
         token: CancellationToken,
     ) -> dict[str, Any]:
-        path = ensure_resolved_path_allowed(params["path"])
+        path = self._resolve_path(params["path"])
         self._preflight_path_action("fs.edit_text", params)
         encoding = _encoding(params)
         raw = path.read_bytes()
@@ -2011,7 +2503,7 @@ class LocalOperations:
         }
 
     def _log_tail(self, params: Mapping[str, Any]) -> dict[str, Any]:
-        path = ensure_resolved_path_allowed(params["path"])
+        path = self._resolve_path(params["path"])
         _assert_nonsensitive_path(path)
         max_bytes = int(params.get("max_bytes", 256 * 1024))
         max_lines = int(params.get("max_lines", 200))
@@ -2033,7 +2525,7 @@ class LocalOperations:
         }
 
     def _log_read_since(self, params: Mapping[str, Any]) -> dict[str, Any]:
-        path = ensure_resolved_path_allowed(params["path"])
+        path = self._resolve_path(params["path"])
         _assert_nonsensitive_path(path)
         stat = path.stat()
         device, inode = int(stat.st_dev), int(stat.st_ino)
@@ -2069,7 +2561,7 @@ class LocalOperations:
         }
 
     def _log_search(self, params: Mapping[str, Any], token: CancellationToken) -> dict[str, Any]:
-        path = ensure_resolved_path_allowed(params["path"])
+        path = self._resolve_path(params["path"])
         _assert_nonsensitive_path(path)
         max_bytes = int(params.get("max_bytes", 512 * 1024))
         max_matches = int(params.get("max_matches", 100))
@@ -2412,16 +2904,23 @@ class LocalOperations:
         stale = sum(
             1 for item in handles if not item["owned_by_current_gateway"]
         )
+        searches = self.searches.list()["searches"]
+        running_searches = sum(
+            1 for item in searches if item["status"] == "running"
+        )
         return {
             "contract_version": OPS_CONTRACT_VERSION,
             "status": "ok",
             "generation_id": self.generation_id,
             "managed_processes_live": live,
             "managed_processes_stale": stale,
+            "managed_searches_running": running_searches,
+            "managed_searches_recent": len(searches),
             "state_root": str(self.state_root),
         }
 
     def _config(self) -> dict[str, Any]:
+        admin = self.admin_config.load()
         return {
             "contract_version": OPS_CONTRACT_VERSION,
             "native_tool_parity_version": NATIVE_TOOL_PARITY_VERSION,
@@ -2434,6 +2933,7 @@ class LocalOperations:
             "stream_cursor_version": CURSOR_VERSION,
             "log_cursor_version": LOG_CURSOR_VERSION,
             "search_cursor_version": SEARCH_CURSOR_VERSION,
+            "search_session_version": SEARCH_SESSION_VERSION,
             "process_handle_version": PROCESS_HANDLE_VERSION,
             "protected_windows_roots": list(PROTECTED_WINDOWS_ROOTS),
             "limits": {
@@ -2442,11 +2942,91 @@ class LocalOperations:
                 "max_list_results": MAX_LIST_RESULTS,
                 "max_process_output_bytes": MAX_PROCESS_OUTPUT_BYTES,
                 "max_read_output_bytes": MAX_READ_OUTPUT_BYTES,
+                "max_search_results": MAX_SEARCH_RESULTS,
+                "max_search_timeout_ms": MAX_SEARCH_TIMEOUT_MS,
+                "max_search_page_length": MAX_SEARCH_PAGE_LENGTH,
+                "max_retained_search_sessions": MAX_RETAINED_SEARCH_SESSIONS,
+                "search_retention_seconds": self.searches.retention_seconds,
+                "max_read_many_files": MAX_READ_MANY_FILES,
+                "max_read_many_bytes": MAX_READ_MANY_BYTES,
             },
-            "mutable": False,
+            "mutable": True,
+            "mutable_keys": sorted(MUTABLE_CONFIG_KEYS),
+            "admin_config": admin.to_dict(),
+            "admin_config_revision": self.admin_config.revision(admin),
         }
 
+    def _config_set(self, params: Mapping[str, Any]) -> dict[str, Any]:
+        updated = self.admin_config.update_key(
+            key=params["key"],
+            value=params["value"],
+            expected_revision=params.get("expected_revision"),
+        )
+        return {
+            "contract_version": updated.contract_version,
+            "key": params["key"],
+            "config": updated.to_dict(),
+            "revision": self.admin_config.revision(updated),
+        }
+
+    def _device_shutdown(self, params: Mapping[str, Any]) -> dict[str, Any]:
+        return {
+            "contract_version": OPS_CONTRACT_VERSION,
+            "shutdown_requested": True,
+            "device_id": params["device_id"],
+            "session_epoch": params["session_epoch"],
+            "scope": "current_device_agent",
+        }
+
+    def _identity(self, params: Mapping[str, Any]) -> dict[str, Any]:
+        return {
+            "contract_version": OPS_CONTRACT_VERSION,
+            "controller": "pc_executor",
+            "device_id": params.get("device_id") or "local",
+            "session_epoch": params.get("session_epoch"),
+            "transport": "native_remote" if params.get("device_id") else "native_local",
+            "platform": platform.system() or "unknown",
+            "architecture": platform.machine() or "unknown",
+            "generation_id": self.generation_id,
+        }
+
+    def _audit_history(self, params: Mapping[str, Any]) -> dict[str, Any]:
+        provider = self.audit_provider
+        reader = getattr(provider, "recent_sanitized", None)
+        if not callable(reader):
+            return {
+                "contract_version": "pc_executor.audit_history.v1",
+                "available": False,
+                "events": [],
+            }
+        events = reader(limit=int(params.get("limit", 50)))
+        return {
+            "contract_version": "pc_executor.audit_history.v1",
+            "available": True,
+            "events": events,
+            "count": len(events),
+            "sanitized": True,
+        }
+
+    def _metrics(self) -> dict[str, Any]:
+        provider = self.audit_provider
+        reader = getattr(provider, "usage_metrics", None)
+        if not callable(reader):
+            return {
+                "contract_version": "pc_executor.usage_metrics.v1",
+                "available": False,
+                "window_events": 0,
+                "completed_calls": 0,
+                "actions": {},
+                "outcomes": {},
+            }
+        payload = dict(reader())
+        payload["available"] = True
+        payload["sanitized"] = True
+        return payload
+
     def _assert_system_kill_target(
+
         self,
         pid: int,
         expected_name: str,
@@ -2626,7 +3206,7 @@ class LocalOperations:
         return round(min(100.0, max(0.0, busy * 100.0 / total_delta)), 2)
 
     def _system_resources(self, params: Mapping[str, Any]) -> dict[str, Any]:
-        target = ensure_resolved_path_allowed(params.get("path") or os.getcwd())
+        target = self._resolve_path(params.get("path") or os.getcwd())
         disk = shutil.disk_usage(target if target.exists() else target.parent)
         load = None
         try:
@@ -2687,7 +3267,7 @@ class LocalOperations:
             return None
 
     def _system_paths(self, params: Mapping[str, Any]) -> dict[str, Any]:
-        cwd = ensure_resolved_path_allowed(os.getcwd())
+        cwd = self._resolve_path(os.getcwd())
         requested = params.get("path")
         result: dict[str, Any] = {
             "cwd": str(cwd),
@@ -2695,7 +3275,7 @@ class LocalOperations:
             "path_separator": os.pathsep,
         }
         if requested is not None:
-            resolved = ensure_resolved_path_allowed(requested, for_creation=True)
+            resolved = self._resolve_path(requested, for_creation=True)
             result["requested"] = {
                 "path": str(resolved),
                 "exists": resolved.exists(),

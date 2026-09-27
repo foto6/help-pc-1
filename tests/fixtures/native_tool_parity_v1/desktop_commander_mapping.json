@@ -22,26 +22,32 @@
       "candidate": [
         "config.get"
       ],
-      "status": "read_only",
-      "note": "Safety limits and contract versions only."
+      "status": "direct",
+      "note": "Returns immutable contract limits plus revisioned mutable admin config."
     },
     {
       "reference": "set_config_value",
-      "candidate": [],
-      "status": "unsupported",
-      "note": "Runtime mutation of safety policy is intentionally unsupported."
+      "candidate": [
+        "config.set"
+      ],
+      "status": "allowlisted_atomic",
+      "note": "Only explicit mutable keys are accepted; updates validate atomically with optional revision conflict detection. allowed_roots=[] is deny-all, never unrestricted."
     },
     {
       "reference": "who_am_i",
-      "candidate": [],
-      "status": "unsupported",
-      "note": "OS/account identity disclosure is not required for native parity."
+      "candidate": [
+        "identity.get"
+      ],
+      "status": "non_sensitive",
+      "note": "Returns controller/device/session metadata only; no account secrets or credentials."
     },
     {
       "reference": "shutdown",
-      "candidate": [],
-      "status": "unsupported",
-      "note": "Device shutdown is outside Wave 1."
+      "candidate": [
+        "device.shutdown"
+      ],
+      "status": "session_bound",
+      "note": "Gracefully stops the current authenticated device agent/session; this is not an OS power-off action."
     },
     {
       "reference": "read_file",
@@ -55,11 +61,10 @@
     {
       "reference": "read_multiple_files",
       "candidate": [
-        "fs.read_text",
-        "fs.read_bytes"
+        "fs.read_many"
       ],
-      "status": "composed",
-      "note": "Caller issues independent bounded reads; no unbounded multi-read RPC."
+      "status": "direct_batch",
+      "note": "True deterministic bounded batch read with per-file success/error and aggregate byte limits."
     },
     {
       "reference": "write_file",
@@ -72,8 +77,8 @@
     {
       "reference": "write_pdf",
       "candidate": [],
-      "status": "unsupported",
-      "note": "Binary document generation remains a higher-layer concern."
+      "status": "unsupported_hard_gap",
+      "note": "PDF create/modify is not implemented in PC Core; document mutation remains an explicit capability gap."
     },
     {
       "reference": "edit_block",
@@ -115,33 +120,34 @@
     {
       "reference": "start_search",
       "candidate": [
-        "fs.search",
-        "fs.find",
-        "fs.glob",
-        "log.search"
+        "search.start"
       ],
-      "status": "direct"
+      "status": "stateful",
+      "note": "Creates a generation-scoped pc_executor.search_session.v1 handle with bounded background execution."
     },
     {
       "reference": "get_more_search_results",
       "candidate": [
-        "fs.search",
-        "log.read_since"
+        "search.read"
       ],
-      "status": "cursor",
-      "note": "Versioned stateless cursors replace server-side search handles."
+      "status": "stateful",
+      "note": "Reads an existing search handle by absolute result offset; negative offsets provide tail semantics."
     },
     {
       "reference": "stop_search",
-      "candidate": [],
-      "status": "not_needed",
-      "note": "Search is stateless and bounded; there is no server search to stop."
+      "candidate": [
+        "search.stop"
+      ],
+      "status": "stateful",
+      "note": "Cancels only the addressed search handle; final results remain readable during bounded retention."
     },
     {
       "reference": "list_searches",
-      "candidate": [],
-      "status": "not_needed",
-      "note": "Search is stateless and bounded."
+      "candidate": [
+        "search.list"
+      ],
+      "status": "stateful",
+      "note": "Enumerates active and retained current-generation search handles with lifecycle metadata."
     },
     {
       "reference": "start_process",
@@ -201,16 +207,18 @@
     {
       "reference": "get_usage_stats",
       "candidate": [
-        "health.get"
+        "metrics.get"
       ],
-      "status": "partial",
-      "note": "Health exposes gateway state, not connector billing/usage telemetry."
+      "status": "sanitized",
+      "note": "Returns bounded operation counts/outcomes only; it is not connector billing telemetry."
     },
     {
       "reference": "get_recent_tool_calls",
-      "candidate": [],
-      "status": "external_audit",
-      "note": "Use the existing Executor audit/outcome journals rather than a duplicate tool log."
+      "candidate": [
+        "audit.history"
+      ],
+      "status": "sanitized",
+      "note": "Returns bounded audit metadata only; raw arguments/results/details are never exposed."
     }
   ],
   "pagination": {
@@ -218,6 +226,11 @@
     "bytes": "fs.read_bytes offset/max_bytes",
     "log": "log.tail or log.read_since cursor",
     "process": "process.read_output/shell.session.read cursor or tail_bytes",
-    "search": "fs.search cursor/max_results"
-  }
+    "search": "search.read offset/length; negative offset tails retained results and ignores length"
+  },
+  "excluded_non_core_commands": [
+    "give_feedback_to_desktop_commander",
+    "get_prompts",
+    "vendor onboarding/help commands"
+  ]
 }
