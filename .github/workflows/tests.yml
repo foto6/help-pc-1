@@ -5,6 +5,7 @@ on:
     branches:
       - agent/pc-executor
       - agent/pc-native-tool-parity
+      - agent/pc-native-full-stack
   workflow_dispatch:
 
 jobs:
@@ -37,5 +38,9 @@ jobs:
       - name: Windows native adapter suite
         if: runner.os == 'Windows'
         run: python -m pytest tests/windows/test_native_windows_ops.py
+      - name: Native remote transport focused suite
+        run: python -m pytest tests/test_native_remote_transport.py tests/test_remote_protocol.py
+      - name: Native remote transport harness
+        run: python tools/native_remote_harness.py
       - name: Full test suite
         run: python -m pytest
