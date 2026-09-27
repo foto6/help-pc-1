@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "a1-r2-local-preexposure-tests-20260927-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$repo='C:\\agentwork\\SpectraTrack-a1'; git -C $repo fetch origin agent/vnext-detection; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; git -C $repo merge --ff-only origin/agent/vnext-detection; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; git -C $repo rev-parse HEAD; & $repo\\.venv\\Scripts\\python.exe -m pytest -q $repo\\pc\\tests\\test_vnext_detection_r2_validation.py $repo\\pc\\tests\\test_vnext_detection_hypothesis_lock.py"
+    ],
+    "cwd": "C:\\agentwork\\SpectraTrack-a1"
+  },
+  "timeout_ms": 30000,
+  "note": "Pre-exposure A1 R2 implementation tests only; does not read R2 data."
+}
