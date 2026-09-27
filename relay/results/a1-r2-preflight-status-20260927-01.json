@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$repo='C:\\agentwork\\SpectraTrack-a1'; Write-Output ('REPO_EXISTS='+(Test-Path $repo)); if(Test-Path $repo){git -C $repo status --short; git -C $repo rev-parse HEAD}; $r2='E:\\SpectraTrack-data\\imports\\nightowls-public-smoke400-r2'; Write-Output ('R2_DIR='+(Test-Path $r2)); if(Test-Path $r2){Get-ChildItem -LiteralPath $r2 -File | Select-Object Name,Length | ConvertTo-Json -Compress}; Write-Output ('MODEL='+(Test-Path 'E:\\SpectraTrack\\yolo11x.onnx'))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "REPO_EXISTS=True\r\n9362d0db5fd5eca74f2384d93cbb1faf8ebfb612\nR2_DIR=True\r\n[{\"Name\":\"nightowls-public-smoke400-r2.hashes.json\",\"Length\":999},{\"Name\":\"nightowls-public-smoke400-r2.jsonl\",\"Length\":245453},{\"Name\":\"nightowls-public-smoke400-r2.manifest.json\",\"Length\":14533},{\"Name\":\"nightowls-public-smoke400-r2.qa-validation.json\",\"Length\":3261},{\"Name\":\"nightowls-public-smoke400-r2.selection-proof.json\",\"Length\":347957},{\"Name\":\"qa-validation.stdout.txt\",\"Length\":6524}]\r\nMODEL=True\r\n",
+      "stdout_bytes": 483,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T13:59:05.630Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T13:59:05.619Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "a1-r2-preflight-status-20260927-01"
+    },
+    "request_id": "a1-r2-preflight-status-20260927-01",
+    "started_at": "2026-09-27T13:59:05.188Z",
+    "status": "completed"
+  },
+  "id": "a1-r2-preflight-status-20260927-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
