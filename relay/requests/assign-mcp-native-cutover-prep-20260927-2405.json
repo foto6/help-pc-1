@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "assign-mcp-native-cutover-prep-20260927-2405",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$body=@'\\n{\"text\":\"EXECUTE NOW — NATIVE PC MCP CUTOVER PREPARATION, NO CUTOVER YET.\\n\\nRepo: foto6/help-pc-2\\nBranch: agent/pc-control-mcp-gateway\\nExpected HEAD: 5495c320304860bf190476833177f716fe9ad960\\n\\nGoal: make the MCP gateway technically ready to become the ChatGPT PC backend once PC Ops says READY_TO_MIGRATE. Do not switch the live plugin/transport yet.\\n\\nRequired:\\n1. Re-read current Control Plane and pc-ops-gateway contracts. Integrate the structured PC Ops v1 catalog into the MCP surface without bypassing Control Plane/Executor safety.\\n2. Structured fs/log/process/shell.session/system/UI observation tools must be first-class; raw shell.run remains fallback, argv-only, policy-gated.\\n3. Add a machine-readable readiness/health payload binding exact Control Plane, Executor, Vision, Relay/PC-Ops producer SHAs and the pc-ops READY_TO_MIGRATE report digest.\\n4. Refuse live native structured side effects unless the migration gate is proven green and explicit live feature gate is enabled. Dry-run/read-only remains default.\\n5. Preserve protected paths, credential/CAPTCHA prohibition, context binding, durable outcome lookup/reconciliation, and no blind retry.\\n6. Prepare the connector/backend registration contract needed by the current private ChatGPT PC Control plugin, but DO NOT replace its working GitHub relay transport yet.\\n7. Add focused integration tests and exact-head CI; push a non-empty commit and report exact SHA + CI. No merge/release/live cutover.\",\"repository\":\"foto6/help-pc-2\",\"branch\":\"agent/pc-control-mcp-gateway\",\"expectedHead\":\"5495c320304860bf190476833177f716fe9ad960\",\"idempotencyKey\":\"pc-only-mcp-native-prep-v1\",\"evidenceTimeoutMinutes\":120,\"priority\":950,\"supervisorVerificationRequired\":true}\\n'@; try{$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ab66b08-a90c-83eb-80d8-a7567d24352d/assignments' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 10; Write-Output ('OK|id='+$r.id+'|state='+$r.state+'|chat='+$r.targetChatId)}catch{Write-Output ('ERR|'+$_.Exception.Message); exit 1}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
