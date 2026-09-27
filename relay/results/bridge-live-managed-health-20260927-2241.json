@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$cfg='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; $ms='E:\\WebAIBridge\\app\\data\\managed-chat-status.json'; if(Test-Path $cfg){$c=Get-Content $cfg -Raw|ConvertFrom-Json; Write-Output ('ROOT|profileId='+$c.profileId+'|debugPort='+$c.debugPort+'|enabled='+$c.enabled+'|autoContinue='+$c.autoContinueEnabled+'|allowAutonomousSend='+$c.allowAutonomousSend); foreach($p in @($c.managedProjects)){Write-Output ('PROJECT|'+$p.id+'|'+$p.name+'|repo='+$p.repository+'|branch='+$p.branch+'|agents='+(@($p.agents|ForEach-Object{$_.id})-join ','))}}; if(Test-Path $ms){$m=Get-Content $ms -Raw|ConvertFrom-Json; foreach($x in @($m)){Write-Output ('STATUS|'+$x.id+'|'+$x.name+'|generating='+$x.generating+'|high='+$x.highMode+'|draft='+$x.hasDraft+'|profile='+$x.profileId+'|url='+$x.url)}} else {Write-Output 'NO_STATUS'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "ROOT|profileId=ef72920c-cfe7-4824-a79b-7a0e0943ce7e|debugPort=17410|enabled=True|autoContinue=True|allowAutonomousSend=True\r\nPROJECT|project-g-p-6ab839fa4f8c81919adad01c4a5497dc|sv|repo=|branch=|agents=\r\nSTATUS|||generating=|high=|draft=|profile=|url=\r\n",
+      "stdout_bytes": 253,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:21:00.531Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:21:00.512Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-live-managed-health-20260927-2241"
+    },
+    "request_id": "bridge-live-managed-health-20260927-2241",
+    "started_at": "2026-09-27T15:21:00.168Z",
+    "status": "completed"
+  },
+  "id": "bridge-live-managed-health-20260927-2241",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
