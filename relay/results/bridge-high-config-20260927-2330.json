@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$c=Get-Content 'E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json' -Raw|ConvertFrom-Json; Write-Output ('HIGH|enforce='+$c.enforceHighMode+'|strategy='+$c.highModeStrategy+'|profile='+$c.profileId+'|port='+$c.debugPort)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "HIGH|enforce=True|strategy=verify_only|profile=ef72920c-cfe7-4824-a79b-7a0e0943ce7e|port=17410\r\n",
+      "stdout_bytes": 96,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:31:05.961Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:31:05.938Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-high-config-20260927-2330"
+    },
+    "request_id": "bridge-high-config-20260927-2330",
+    "started_at": "2026-09-27T15:31:05.609Z",
+    "status": "completed"
+  },
+  "id": "bridge-high-config-20260927-2330",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
