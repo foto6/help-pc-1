@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$f='E:\\WebAIBridge\\app\\server.js'; Select-String -Path $f -Pattern '/kick','kick','continuationText','protected-draft','allowAutonomousSend','sendProtectedDraft','supervisor-watchdog/continue','resume' -SimpleMatch -Context 1,3 | Select-Object -First 240 | ForEach-Object{$_.ToString()}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "  E:\\WebAIBridge\\app\\server.js:1268:        connected = true;\r\n> E:\\WebAIBridge\\app\\server.js:1269:        client.resume();\r\n  E:\\WebAIBridge\\app\\server.js:1270:      } catch (error) {\r\n  E:\\WebAIBridge\\app\\server.js:1271:        fail(error);\r\n  E:\\WebAIBridge\\app\\server.js:1272:      }\r\n  E:\\WebAIBridge\\app\\server.js:5295:    fixes.push('������ \"�த������ ��।�\" ��� \"��稭��� ���\".');\r\n> E:\\WebAIBridge\\app\\server.js:5296:    addAction('resume_queue', '�த������ ��।�');\r\n  E:\\WebAIBridge\\app\\server.js:5297:    addAction('repair', '��稭��� ���');\r\n  E:\\WebAIBridge\\app\\server.js:5298:  }\r\n  E:\\WebAIBridge\\app\\server.js:5299:  if (!chat.enabled) {\r\n  E:\\WebAIBridge\\app\\server.js:5740:\r\n> E:\\WebAIBridge\\app\\server.js:5741:function emergencyResume() {\r\n  E:\\WebAIBridge\\app\\server.js:5742:  state.settings.paused = false;\r\n  E:\\WebAIBridge\\app\\server.js:5743:  state.settings.emergencyStopped = false;\r\n> E:\\WebAIBridge\\app\\server.js:5744:  addEvent('emergency_resume', {\r\n  E:\\WebAIBridge\\app\\server.js:5745:    message: '��।� ᭮�� ����祭� ��᫥ ��᭮� ������.',\r\n  E:\\WebAIBridge\\app\\server.js:5746:  });\r\n  E:\\WebAIBridge\\app\\server.js:5747:  saveState();\r\n  E:\\WebAIBridge\\app\\server.js:12874:    'supervisorChatTitlePattern',\r\n> E:\\WebAIBridge\\app\\server.js:12875:    'continuationText',\r\n  E:\\WebAIBridge\\app\\server.js:12876:    'pollSeconds',\r\n  E:\\WebAIBridge\\app\\server.js:12877:    'idleMinutes',\r\n> E:\\WebAIBridge\\app\\server.js:12878:    'kickCooldownMinutes',\r\n> E:\\WebAIBridge\\app\\server.js:12879:    'maxConsecutiveKicks',\r\n  E:\\WebAIBridge\\app\\server.js:12880:    'autoDetectProfile',\r\n  E:\\WebAIBridge\\app\\server.js:12881:    'autoDetectChat',\r\n  E:\\WebAIBridge\\app\\server.js:12882:    'enforceHighMode',\r\n  E:\\WebAIBridge\\app\\server.js:12884:    'openExistingChatIfMissing',\r\n> E:\\WebAIBridge\\app\\server.js:12885:    'freshVerifyBeforeKick',\r\n  E:\\WebAIBridge\\app\\server.js:12886:    'freshVerifySettleSeconds',\r\n  E:\\WebAIBridge\\app\\server.js:12887:    'freshVerifyLoadTimeoutSeconds',\r\n  E:\\WebAIBridge\\app\\server.js:12888:    'generationActivityGraceSeconds',\r\n  E:\\WebAIBridge\\app\\server.js:12893:    'autoContinueEnabled',\r\n> E:\\WebAIBridge\\app\\server.js:12894:    'sendProtectedDraftEnabled',\r\n  E:\\WebAIBridge\\app\\server.js:12895:    'allowProfileRecovery',\r\n> E:\\WebAIBridge\\app\\server.js:12896:    'allowAutonomousSend',\r\n  E:\\WebAIBridge\\app\\server.js:12897:    'closeChatDuringProviderBackoff',\r\n  E:\\WebAIBridge\\app\\server.js:12898:    'knownProjectChats',\r\n  E:\\WebAIBridge\\app\\server.js:12899:    'managedProjects',\r\n  E:\\WebAIBridge\\app\\server.js:15568:\r\n> E:\\WebAIBridge\\app\\server.js:15569:  if (req.method === 'POST' && url.pathname === '/api/system/emergency-resume') {\r\n> E:\\WebAIBridge\\app\\server.js:15570:    json(res, 200, emergencyResume());\r\n  E:\\WebAIBridge\\app\\server.js:15571:    return;\r\n  E:\\WebAIBridge\\app\\server.js:15572:  }\r\n  E:\\WebAIBridge\\app\\server.js:15573:\r\n",
+      "stdout_bytes": 2934,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T16:14:17.886Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T16:14:17.860Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-kick-route-scan-20260927-2327"
+    },
+    "request_id": "bridge-kick-route-scan-20260927-2327",
+    "started_at": "2026-09-27T16:14:17.351Z",
+    "status": "completed"
+  },
+  "id": "bridge-kick-route-scan-20260927-2327",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
