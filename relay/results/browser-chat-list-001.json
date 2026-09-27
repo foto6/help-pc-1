@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$xs=Invoke-RestMethod 'http://127.0.0.1:17410/json/list'; $xs | Where-Object {$_.url -like 'https://chatgpt.com/*'} | Select-Object id,title,url | ConvertTo-Json -Depth 4"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[\r\n    {\r\n        \"id\":  \"4B785DBA56F054B253D936269339E5C9\",\r\n        \"title\":  \"�஢�ઠ � ����� ����⮢\",\r\n        \"url\":  \"https://chatgpt.com/c/6ab8c94d-c338-83ed-a4d7-85271820e1d3\"\r\n    },\r\n    {\r\n        \"id\":  \"110CF70F3956B1D3C861C4C894428717\",\r\n        \"title\":  \"Agent Supervision\",\r\n        \"url\":  \"https://chatgpt.com/c/6ab871a0-cac4-83eb-a15a-7c49c66833fa\"\r\n    }\r\n]\r\n",
+      "stdout_bytes": 383,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T13:25:33.340Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T13:25:33.329Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "browser-chat-list-001"
+    },
+    "request_id": "browser-chat-list-001",
+    "started_at": "2026-09-27T13:25:32.985Z",
+    "status": "completed"
+  },
+  "id": "browser-chat-list-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
