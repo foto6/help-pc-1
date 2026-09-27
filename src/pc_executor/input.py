@@ -33,6 +33,8 @@ class WindowsInputAdapter:
         self._pyautogui().click(x=x, y=y, button=button)
 
     def press(self, key: str) -> None:
+        if not key or len(key) > 64:
+            raise SafetyViolation("keyboard key must be a short non-empty name")
         self._pyautogui().press(key)
 
     def type_text(self, text: str) -> None:

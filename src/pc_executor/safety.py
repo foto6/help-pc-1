@@ -37,10 +37,25 @@ def _normalize_windows_path(value: str) -> str:
 def ensure_path_allowed(value: str | None) -> None:
     if not value:
         return
-    normalized = _normalize_windows_path(value)
+    raw = str(value).strip().strip('"').replace("/", "\\")
+    normalized = _normalize_windows_path(raw)
+    raw_folded = raw.casefold()
     for protected in PROTECTED_WINDOWS_ROOTS:
         protected_norm = _normalize_windows_path(protected)
-        if normalized == protected_norm or normalized.startswith(protected_norm + "\\"):
+        protected_folded = protected.replace("/", "\\").casefold()
+        index = raw_folded.find(protected_folded)
+        embedded_protected = False
+        while index >= 0:
+            after = index + len(protected_folded)
+            if after == len(raw_folded) or raw_folded[after] in {"\\", '"', "'"}:
+                embedded_protected = True
+                break
+            index = raw_folded.find(protected_folded, index + 1)
+        if (
+            normalized == protected_norm
+            or normalized.startswith(protected_norm + "\\")
+            or embedded_protected
+        ):
             raise SafetyViolation(f"protected path is not accessible: {protected}")
 
 

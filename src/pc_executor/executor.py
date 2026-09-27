@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Callable, TypeVar
 
 from .audit import AuditSink, InMemoryAuditSink
+from .cancellation import CancellationToken, run_bounded
 from .capture import PillowScreenCapture, ScreenshotProvider, screenshot_payload
+from .errors import ExecutorError, ExecutorFailureError, PolicyBlockedError
 from .input import InputAdapter, WindowsInputAdapter
 from .models import ActionRequest, ActionResult, AuditEvent, ElementQuery, utc_now_iso
 from .safety import SafetyViolation, ensure_not_sensitive_text
@@ -11,6 +13,8 @@ from .shell import SafeShellAdapter
 from .uia import AccessibilityAdapter, WindowsUIAutomationAdapter
 from .vision_target import GroundedTargetContractError, parse_grounded_target_v1
 from .windows import Win32WindowEnumerator, WindowEnumerator
+
+T = TypeVar("T")
 
 
 class Executor:
@@ -27,6 +31,7 @@ class Executor:
         audit: AuditSink | None = None,
         dry_run: bool = True,
         allow_coordinate_fallback: bool = False,
+        operation_timeout_seconds: float = 5.0,
     ) -> None:
         self.screenshot = screenshot or PillowScreenCapture()
         self.windows = windows or Win32WindowEnumerator()
@@ -36,13 +41,21 @@ class Executor:
         self.audit = audit or InMemoryAuditSink()
         self.dry_run = dry_run
         self.allow_coordinate_fallback = allow_coordinate_fallback
+        self.operation_timeout_seconds = operation_timeout_seconds
 
-    def execute(self, request: ActionRequest) -> ActionResult:
+    def execute(
+        self,
+        request: ActionRequest,
+        *,
+        cancellation: CancellationToken | None = None,
+    ) -> ActionResult:
         started = utc_now_iso()
         effective_dry_run = self.dry_run if request.dry_run is None else bool(request.dry_run)
+        token = cancellation or CancellationToken()
         self._audit(request, "start", effective_dry_run)
         try:
-            data = self._dispatch(request, effective_dry_run)
+            token.raise_if_cancelled()
+            data = self._dispatch(request, effective_dry_run, token)
             result = ActionResult(
                 request_id=request.request_id,
                 action=request.action,
@@ -56,109 +69,189 @@ class Executor:
             self._audit(request, "finish", effective_dry_run, outcome=result.status, details=data)
             return result
         except SafetyViolation as exc:
-            result = ActionResult(
-                request_id=request.request_id,
-                action=request.action,
-                ok=False,
-                status="blocked",
-                started_at=started,
-                finished_at=utc_now_iso(),
-                error=str(exc),
-                dry_run=effective_dry_run,
+            return self._error_result(
+                request,
+                started,
+                effective_dry_run,
+                PolicyBlockedError(str(exc)),
             )
-            self._audit(request, "finish", effective_dry_run, outcome="blocked", details={"error": str(exc)})
-            return result
+        except ExecutorError as exc:
+            return self._error_result(request, started, effective_dry_run, exc)
+        except (KeyError, TypeError, ValueError) as exc:
+            return self._error_result(
+                request,
+                started,
+                effective_dry_run,
+                PolicyBlockedError(f"invalid request: {exc}"),
+            )
         except Exception as exc:
-            result = ActionResult(
-                request_id=request.request_id,
-                action=request.action,
-                ok=False,
-                status="error",
-                started_at=started,
-                finished_at=utc_now_iso(),
-                error=f"{type(exc).__name__}: {exc}",
-                dry_run=effective_dry_run,
+            return self._error_result(
+                request,
+                started,
+                effective_dry_run,
+                ExecutorFailureError(f"{type(exc).__name__}: {exc}"),
             )
-            self._audit(request, "finish", effective_dry_run, outcome="error", details={"error": result.error})
-            return result
 
-    def _dispatch(self, request: ActionRequest, dry_run: bool) -> dict[str, Any]:
+    def _error_result(
+        self,
+        request: ActionRequest,
+        started: str,
+        dry_run: bool,
+        exc: ExecutorError,
+    ) -> ActionResult:
+        status = {
+            "policy_blocked": "blocked",
+            "executor_failure": "error",
+        }.get(exc.kind, exc.kind)
+        result = ActionResult(
+            request_id=request.request_id,
+            action=request.action,
+            ok=False,
+            status=status,
+            started_at=started,
+            finished_at=utc_now_iso(),
+            error=str(exc),
+            error_kind=exc.kind,
+            dry_run=dry_run,
+        )
+        self._audit(
+            request,
+            "finish",
+            dry_run,
+            outcome=status,
+            details={"error": result.error, "error_kind": result.error_kind},
+        )
+        return result
+
+    def _timeout(self, request: ActionRequest) -> float:
+        if request.timeout_ms is None:
+            return self.operation_timeout_seconds
+        return request.timeout_ms / 1000.0
+
+    def _bounded(
+        self,
+        request: ActionRequest,
+        token: CancellationToken,
+        label: str,
+        operation: Callable[[], T],
+    ) -> T:
+        return run_bounded(
+            operation,
+            timeout_seconds=self._timeout(request),
+            cancellation=token,
+            label=label,
+        )
+
+    def _query(self, raw: object) -> ElementQuery:
+        try:
+            return ElementQuery.from_dict(dict(raw or {}))
+        except (TypeError, ValueError) as exc:
+            raise PolicyBlockedError(f"invalid UIA query: {exc}") from exc
+
+    def _dispatch(
+        self,
+        request: ActionRequest,
+        dry_run: bool,
+        token: CancellationToken,
+    ) -> dict[str, Any]:
         action = request.action
         p = request.params
 
         if action == "screenshot.capture":
             if dry_run:
                 return {"would_execute": action}
-            return screenshot_payload(self.screenshot.capture_png())
+            png = self._bounded(request, token, action, self.screenshot.capture_png)
+            return screenshot_payload(png)
 
         if action == "windows.list":
             if dry_run:
                 return {"would_execute": action}
-            return {"windows": [window.to_dict() for window in self.windows.list_windows()]}
+            windows = self._bounded(request, token, action, self.windows.list_windows)
+            return {"windows": [window.to_dict() for window in windows]}
+
+        if action == "uia.snapshot":
+            window_title = p.get("window_title")
+            if window_title is not None and not isinstance(window_title, str):
+                raise PolicyBlockedError("uia.snapshot window_title must be a string or null")
+            if dry_run:
+                return {"would_execute": action, "window_title": window_title}
+            snapshot = self._bounded(
+                request,
+                token,
+                action,
+                lambda: self.accessibility.snapshot(window_title=window_title),
+            )
+            return {"snapshot": snapshot.to_dict(), "canonical_json": snapshot.to_json()}
 
         if action == "vision.target.invoke":
             try:
                 target = parse_grounded_target_v1(p.get("target"))
             except GroundedTargetContractError as exc:
-                raise SafetyViolation(f"invalid vision target contract: {exc}") from exc
-
+                raise PolicyBlockedError(f"invalid vision target contract: {exc}") from exc
             automation_id = target.automation_id
             if "uia" not in target.sources or not automation_id or not automation_id.strip():
-                raise SafetyViolation(
-                    "vision target is not actionable through UIA; "
-                    "non-empty automation_id is required"
+                raise PolicyBlockedError(
+                    "vision target is not actionable through UIA; non-empty automation_id is required"
                 )
-
             query = ElementQuery(automation_id=automation_id)
             if dry_run:
-                return {
-                    "would_execute": action,
-                    "query": {"automation_id": automation_id},
-                }
-            return {"element": self.accessibility.invoke(query).to_dict()}
+                return {"would_execute": action, "query": {"automation_id": automation_id}}
+            element = self._bounded(
+                request,
+                token,
+                action,
+                lambda: self.accessibility.invoke(query),
+            )
+            return {"element": element.to_dict()}
 
         if action.startswith("uia."):
-            query = ElementQuery.from_dict(dict(p.get("query") or {}))
+            query = self._query(p.get("query"))
             if action == "uia.inspect":
                 if dry_run:
                     return {"would_execute": action, "query": p.get("query", {})}
-                return {"element": self.accessibility.inspect(query).to_dict()}
+                element = self._bounded(request, token, action, lambda: self.accessibility.inspect(query))
+                return {"element": element.to_dict()}
             if action == "uia.invoke":
                 if dry_run:
                     return {"would_execute": action, "query": p.get("query", {})}
-                return {"element": self.accessibility.invoke(query).to_dict()}
+                element = self._bounded(request, token, action, lambda: self.accessibility.invoke(query))
+                return {"element": element.to_dict()}
             if action == "uia.focus":
                 if dry_run:
                     return {"would_execute": action, "query": p.get("query", {})}
-                return {"element": self.accessibility.focus(query).to_dict()}
+                element = self._bounded(request, token, action, lambda: self.accessibility.focus(query))
+                return {"element": element.to_dict()}
             if action == "uia.set_value":
                 value = str(p.get("value", ""))
                 sensitive = bool(p.get("sensitive", False))
+                if sensitive:
+                    raise PolicyBlockedError("credential/sensitive text entry is not supported")
                 if dry_run:
-                    if sensitive:
-                        raise SafetyViolation("credential/sensitive text entry is not supported")
                     return {"would_execute": action, "query": p.get("query", {}), "value_length": len(value)}
-                return {
-                    "element": self.accessibility.set_value(query, value, sensitive=sensitive).to_dict(),
-                    "value_length": len(value),
-                }
-            raise SafetyViolation(f"unsupported UIA action: {action}")
+                element = self._bounded(
+                    request,
+                    token,
+                    action,
+                    lambda: self.accessibility.set_value(query, value, sensitive=sensitive),
+                )
+                return {"element": element.to_dict(), "value_length": len(value)}
+            raise PolicyBlockedError(f"unsupported UIA action: {action}")
 
         if action == "mouse.click":
             if not self.allow_coordinate_fallback:
-                raise SafetyViolation("raw coordinate fallback is disabled; use UI Automation first")
+                raise PolicyBlockedError("raw coordinate fallback is disabled; use UI Automation first")
             x, y = int(p["x"]), int(p["y"])
             button = str(p.get("button", "left"))
             if dry_run:
                 return {"would_execute": action, "x": x, "y": y, "button": button}
-            self.input.click(x, y, button=button)
+            self._bounded(request, token, action, lambda: self.input.click(x, y, button=button))
             return {"x": x, "y": y, "button": button}
 
         if action == "keyboard.press":
             key = str(p["key"])
             if dry_run:
                 return {"would_execute": action, "key": key}
-            self.input.press(key)
+            self._bounded(request, token, action, lambda: self.input.press(key))
             return {"key": key}
 
         if action == "keyboard.type_text":
@@ -167,22 +260,22 @@ class Executor:
             ensure_not_sensitive_text(is_password=False, sensitive=sensitive)
             if dry_run:
                 return {"would_execute": action, "text_length": len(text)}
-            self.input.type_text(text)
+            self._bounded(request, token, action, lambda: self.input.type_text(text))
             return {"text_length": len(text)}
 
         if action == "clipboard.get":
             if dry_run:
                 return {"would_execute": action}
-            value = self.input.clipboard_get()
+            value = self._bounded(request, token, action, self.input.clipboard_get)
             return {"text": value}
 
         if action == "clipboard.set":
             value = str(p.get("text", ""))
             if bool(p.get("sensitive", False)):
-                raise SafetyViolation("credential/sensitive clipboard entry is not supported")
+                raise PolicyBlockedError("credential/sensitive clipboard entry is not supported")
             if dry_run:
                 return {"would_execute": action, "text_length": len(value)}
-            self.input.clipboard_set(value)
+            self._bounded(request, token, action, lambda: self.input.clipboard_set(value))
             return {"text_length": len(value)}
 
         if action == "shell.run":
@@ -191,9 +284,15 @@ class Executor:
             validated = self.shell.validate(argv, cwd=cwd)
             if dry_run:
                 return {"would_execute": action, "argv": validated, "cwd": cwd}
-            return self.shell.run(validated, cwd=cwd).to_dict()
+            result = self.shell.run(
+                validated,
+                cwd=cwd,
+                timeout_seconds=self._timeout(request),
+                cancellation=token,
+            )
+            return result.to_dict()
 
-        raise SafetyViolation(f"unsupported action: {action}")
+        raise PolicyBlockedError(f"unsupported action: {action}")
 
     def _audit(
         self,
