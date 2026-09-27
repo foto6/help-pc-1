@@ -1,0 +1,37 @@
+EXECUTE NOW — PRIMARY GROWTH WAVE 11 / AUDIT-BOUND DECISION HANDOFF TO CREATOR. Do not acknowledge readiness.
+
+Repository: foto6/video3
+Branch: agent/growth-analytics
+Expected current HEAD: c644c206a30b2a04c0c81148702b3e3c516d0eb3
+Exact-head CI 36317976245 SUCCESS.
+
+Preserve CreatorFeedback 1.0 bytes, experiment_registry.v1, experiment_integrity.v1, multiplicity controls and experiment_audit_bundle.v1.
+
+Goal:
+Create a safe, machine-readable handoff from analytics to Creator that cannot silently turn uncertain/invalid experiments into production decisions.
+
+Required:
+1. New versioned growth.decision_handoff.v1 bound to exact audit bundle digest.
+2. Explicit classification:
+   confirmatory_supported / confirmatory_not_supported / exploratory_only / invalid_integrity / insufficient_evidence.
+3. Include primary metric effect/uncertainty, guardrails, multiplicity decision, integrity status, sample/window provenance, registry hypothesis id and audit bundle hash.
+4. Separate recommendation text/data from authority:
+   auto_publish=false;
+   external_mutation=false;
+   handoff never authorizes release/publish by itself.
+5. Invalid integrity or exploratory-only evidence must not emit a confirmatory recommendation.
+6. Preserve raw metrics even when recommendation is blocked.
+7. Add Creator-facing canonical fixtures without importing sibling runtime code.
+8. Tests:
+   strong-looking effect + invalid integrity;
+   multiplicity-adjusted non-support;
+   exploratory metric looks best;
+   guardrail regression;
+   missing audit component;
+   reordered equivalent evidence;
+   duplicate handoff replay.
+9. Property: weaker evidence cannot yield a stronger classification.
+10. Full deterministic tests/CI; no provider writes.
+
+Commit/push only agent/growth-analytics. No merge/release; never touch E:\manhwa.
+Final exact SHA + CI + handoff fixture hash.
