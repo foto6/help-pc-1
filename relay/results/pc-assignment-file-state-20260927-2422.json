@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$st='E:\\WebAIBridge\\app\\data\\state.json'; if(Test-Path $st){$s=Get-Content $st -Raw|ConvertFrom-Json; $ids=@('b32b9f52-c203-47dd-890e-7914ff9c3b23','2ba64468-e4e8-4272-b63e-e00e491b4ee4','8664aaf2-0e58-482e-9b39-6dc71e89da1e'); foreach($id in $ids){$a=@($s.agentAssignments)|Where-Object{$_.id -eq $id}|Select-Object -First 1; if($a){Write-Output ('A|'+$id+'|state='+$a.state+'|dispatch='+$a.dispatchCount+'|current='+$a.currentHead+'|ci='+$a.ciConclusion+'|diag='+$a.lastDiagnostic+'|target='+$a.targetChatId)}else{Write-Output ('A|'+$id+'|MISSING')}}}; $ms='E:\\WebAIBridge\\app\\data\\managed-chat-status.json'; if(Test-Path $ms){$m=Get-Content $ms -Raw|ConvertFrom-Json; foreach($cid in @('chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e','agent-pc-executor','chat-6ab66b08-a90c-83eb-80d8-a7567d24352d')){$x=$m.chats.PSObject.Properties[$cid].Value; if($x){Write-Output ('C|'+$cid+'|generating='+$x.generating+'|high='+$x.highMode+'|lastError='+$x.lastError)}}}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "A|b32b9f52-c203-47dd-890e-7914ff9c3b23|state=queued|dispatch=0|current=732f0f5e6482f6bb96f0dfa582dc1c0fe2ea712e|ci=|diag=active_generation|target=chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e\r\nA|2ba64468-e4e8-4272-b63e-e00e491b4ee4|state=queued|dispatch=0|current=58bad1bc60f7d4d26d03223c8f0bea5f138f49a6|ci=|diag=active_generation|target=agent-pc-executor\r\nA|8664aaf2-0e58-482e-9b39-6dc71e89da1e|state=failed|dispatch=0|current=5495c320304860bf190476833177f716fe9ad960|ci=|diag=Managed assignment draft verification failed; refusing submit|target=chat-6ab66b08-a90c-83eb-80d8-a7567d24352d\r\nC|chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e|generating=False|high=True|lastError=\r\nC|agent-pc-executor|generating=True|high=True|lastError=\r\nC|chat-6ab66b08-a90c-83eb-80d8-a7567d24352d|generating=False|high=False|lastError=\r\n",
+      "stdout_bytes": 812,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:54:41.812Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:54:41.788Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-assignment-file-state-20260927-2422"
+    },
+    "request_id": "pc-assignment-file-state-20260927-2422",
+    "started_at": "2026-09-27T15:54:41.069Z",
+    "status": "completed"
+  },
+  "id": "pc-assignment-file-state-20260927-2422",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
