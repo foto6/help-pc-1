@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - agent/pc-executor
+      - agent/pc-executor-powershell
   workflow_dispatch:
 
 jobs:
