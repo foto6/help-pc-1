@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pc_relay.heartbeat.v1",
+  "title": "PC Relay Heartbeat v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "relay_alive", "queue_reachable", "executor_available", "queue_integrity", "last_processed_request", "implementation_sha", "queue_ref", "queue_remote_sha", "generated_at"],
+  "properties": {
+    "version": {"const": "pc_relay.heartbeat.v1"},
+    "relay_alive": {"type": "boolean"},
+    "queue_reachable": {"type": "boolean"},
+    "executor_available": {"type": "boolean"},
+    "queue_integrity": {"enum": ["ok", "degraded", "force_push_detected"]},
+    "last_processed_request": {"type": ["string", "null"]},
+    "implementation_sha": {"type": "string"},
+    "queue_ref": {"type": "string"},
+    "queue_remote_sha": {"type": ["string", "null"]},
+    "generated_at": {"type": "string"}
+  }
+}
