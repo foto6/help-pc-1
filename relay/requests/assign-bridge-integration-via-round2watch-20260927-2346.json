@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "assign-bridge-integration-via-round2watch-20260927-2346",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$body=@'\n{\"text\":\"EXECUTE NOW — WEBAIBRIDGE ALL-SPECIALIST RECONCILIATION. Do not acknowledge readiness and do not stop at a plan.\\n\\nRepository: foto6/WebAIBridge\\nBranch: agent/bridge-integration\\nExpected current HEAD: a270c3de8f0b3b81c43cd4805a1c40bed0336775\\n\\nRequired specialist heads to reconcile exactly:\\n- agent/bridge-rate-limit-recovery @ 391a6fefc56e5feb7ab938974d875167aa6aa688\\n- agent/bridge-live-deploy @ 40d99b96314c663fae0c6e35d6ae0fdea38a3dc7\\n- agent/bridge-assignment-chaos @ dbed14ddf25fa74074228d80b6ba869a12e5faed\\n- agent/bridge-evidence-engine @ 3c69450d2dbc406cd0417dd6feae8bd378e9057c\\n- agent/bridge-security-boundaries @ 7027510e3577741f0fa9e7f507910445ce5578da\\n- agent/bridge-observability @ 358d1991b47f2019d7eb0d5bfdff77aae0be83d1\\n\\nThe previous a270 candidate predates the now-green security/observability heads and does NOT complete this assignment.\\n\\nRequired:\\n1. Re-read primary architecture and all six specialist deltas. Reconcile them into one new non-empty integration head; preserve project-native assignment semantics and current safety boundaries.\\n2. Resolve conflicts minimally; do not rewrite the primary architecture or reintroduce legacy responder/task APIs.\\n3. Verify assignment idempotency/evidence, rate-limit recovery, live deploy/reload, security boundaries, and observability all coexist.\\n4. Add/update durable integration evidence listing exact consumed SHAs.\\n5. Run focused tests and full exact-head CI.\\n6. Push a new commit on agent/bridge-integration.\\n\\nCompletion evidence: new SHA after a270c3d..., durable exact consumed-head evidence, exact-head green CI. No merge/release.\",\"repository\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-integration\",\"expectedHead\":\"a270c3de8f0b3b81c43cd4805a1c40bed0336775\",\"idempotencyKey\":\"coord-bridge-all-specialist-reconcile-20260927-v1\",\"evidenceTimeoutMinutes\":90,\"priority\":850,\"supervisorVerificationRequired\":true}\n'@; Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c/assignments' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 10 | ConvertTo-Json -Depth 10 -Compress"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
