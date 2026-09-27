@@ -231,8 +231,14 @@ def test_real_executor_manifest_advertises_parity_operations(tmp_path: Path) -> 
         "process.terminate",
         "process.list",
         "system.process.kill",
+        "search.start",
+        "search.read",
+        "search.list",
+        "search.stop",
     }
     assert required <= advertised
+    registry_tools = {item["name"] for item in manifest["tools"]}
+    assert {"search.start", "search.read", "search.list", "search.stop"} <= registry_tools
     assert manifest["executor"]["operations_digest"] == (
         executor.operations.capabilities_snapshot()["attestation"]["digest"]
     )
@@ -340,6 +346,80 @@ async def test_real_process_lifecycle_traverses_transport_adapter_executor(tmp_p
                 )
             except Exception:
                 pass
+        await harness.close()
+
+
+@pytest.mark.asyncio
+async def test_real_search_lifecycle_traverses_transport_adapter_executor(tmp_path: Path) -> None:
+    root = tmp_path / "search-root"
+    root.mkdir()
+    (root / "Alpha.txt").write_text("first\nTARGET value\nlast\n", encoding="utf-8")
+    (root / "other.txt").write_text("nothing\n", encoding="utf-8")
+    executor = make_executor(tmp_path)
+    harness = TransportHarness(executor, tmp_path)
+    await harness.start()
+    try:
+        started, _ = await harness.request(
+            "search-start-real-1",
+            "search.start",
+            {
+                "path": str(root),
+                "pattern": "target",
+                "search_type": "content",
+                "literal_search": True,
+                "ignore_case": True,
+                "context_lines": 1,
+                "max_results": 20,
+            },
+            side_effecting=True,
+        )
+        assert started["status"] == "completed"
+        search_id = started["data"]["search_id"]
+
+        terminal = None
+        for index in range(50):
+            read, stream = await harness.request(
+                f"search-read-real-{index}",
+                "search.read",
+                {"search_id": search_id, "offset": 0, "length": 100},
+            )
+            assert read["status"] == "completed"
+            assert stream is not None
+            terminal = read["data"]
+            if terminal["status"] != "running":
+                break
+            await asyncio.sleep(0.01)
+        assert terminal is not None
+        assert terminal["status"] == "completed"
+        assert terminal["result_count"] == 1
+        assert terminal["results"][0]["line_number"] == 2
+        assert terminal["results"][0]["text"] == "TARGET value"
+
+        listed, _ = await harness.request(
+            "search-list-real-1",
+            "search.list",
+            {},
+        )
+        assert listed["status"] == "completed"
+        assert [item["search_id"] for item in listed["data"]["searches"]] == [search_id]
+
+        stopped, _ = await harness.request(
+            "search-stop-real-1",
+            "search.stop",
+            {"search_id": search_id},
+            side_effecting=True,
+        )
+        assert stopped["status"] == "completed"
+        assert stopped["data"]["already_finished"] is True
+
+        final, _ = await harness.request(
+            "search-read-final-real-1",
+            "search.read",
+            {"search_id": search_id, "offset": -1, "length": 100},
+        )
+        assert final["status"] == "completed"
+        assert len(final["data"]["results"]) == 1
+    finally:
         await harness.close()
 
 

@@ -33,7 +33,7 @@ from pc_remote_transport.executor_adapter import TOOL_REGISTRY_DIGEST
 from pc_remote_transport.protocol import FRAME_VERSION, decode_frame, digest_json, encode_frame
 
 
-EXPECTED_HELP_PC_2_REGISTRY_DIGEST = "58b2bde8c6a49825747dcd7010f105dad0b6d548c7e8341cdafb32d2319f6dcd"
+EXPECTED_HELP_PC_2_REGISTRY_DIGEST = "6d8f150c2c2edb188581f8ecd2989c31db2591dd4232aa48f09e2a7b849417e3"
 _SENTINEL = object()
 
 
@@ -464,6 +464,133 @@ async def test_process_handle_is_bound_to_transport_epoch_and_process_output_str
     assert stale.payload["status"] == "error"
     assert stale.payload["error"]["code"] == "STALE_PROCESS_HANDLE"
     assert executor.execute_calls == 2
+
+
+@pytest.mark.asyncio
+async def test_search_handle_binds_epoch_and_capability_digest_and_stop_keeps_results_readable() -> None:
+    executor = SpyExecutor(
+        {
+            "search.start": True,
+            "search.read": False,
+            "search.list": False,
+            "search.stop": True,
+        }
+    )
+    executor.results["search.start"] = {
+        "search_id": "search:remote-1",
+        "status": "running",
+        "result_count": 0,
+    }
+    executor.results["search.read"] = {
+        "search_id": "search:remote-1",
+        "status": "completed",
+        "results": [{"path": "C:/fixture/match.txt"}],
+        "result_count": 1,
+    }
+    executor.results["search.stop"] = {
+        "search_id": "search:remote-1",
+        "status": "cancelled",
+        "already_finished": False,
+        "result_count": 1,
+    }
+    executor.results["search.list"] = {
+        "searches": [
+            {
+                "search_id": "search:remote-1",
+                "status": "completed",
+                "result_count": 1,
+            }
+        ],
+        "count": 1,
+    }
+    dispatcher = ExecutorRemoteDispatcher(executor)
+    context1 = manifest_context(dispatcher, epoch="epoch-search-0001")
+
+    started = await dispatcher.dispatch(
+        request_version=NATIVE_CONTROL_PROTOCOL_V1,
+        request_id="search-start-1",
+        body=envelope(
+            "search-start-1",
+            "search.start",
+            {"path": "C:/fixture", "pattern": "match", "search_type": "files"},
+        ),
+        transport_context=context1,
+    )
+    assert started.payload["status"] == "completed"
+
+    read = await dispatcher.dispatch(
+        request_version=NATIVE_CONTROL_PROTOCOL_V1,
+        request_id="search-read-1",
+        body=envelope(
+            "search-read-1",
+            "search.read",
+            {"search_id": "search:remote-1", "offset": 0, "length": 100},
+        ),
+        transport_context=context1,
+    )
+    assert read.payload["status"] == "completed"
+
+    stopped = await dispatcher.dispatch(
+        request_version=NATIVE_CONTROL_PROTOCOL_V1,
+        request_id="search-stop-1",
+        body=envelope(
+            "search-stop-1",
+            "search.stop",
+            {"search_id": "search:remote-1"},
+        ),
+        transport_context=context1,
+    )
+    assert stopped.payload["status"] == "completed"
+
+    final_read = await dispatcher.dispatch(
+        request_version=NATIVE_CONTROL_PROTOCOL_V1,
+        request_id="search-read-final",
+        body=envelope(
+            "search-read-final",
+            "search.read",
+            {"search_id": "search:remote-1", "offset": -10, "length": 1},
+        ),
+        transport_context=context1,
+    )
+    assert final_read.payload["status"] == "completed"
+
+    stale_epoch = await dispatcher.dispatch(
+        request_version=NATIVE_CONTROL_PROTOCOL_V1,
+        request_id="search-read-stale-epoch",
+        body=envelope(
+            "search-read-stale-epoch",
+            "search.read",
+            {"search_id": "search:remote-1"},
+        ),
+        transport_context=manifest_context(dispatcher, epoch="epoch-search-0002"),
+    )
+    assert stale_epoch.payload["status"] == "error"
+    assert stale_epoch.payload["error"]["code"] == "STALE_SEARCH_HANDLE"
+
+    executor.digest = "b" * 64
+    changed_context = manifest_context(dispatcher, epoch="epoch-search-0001")
+    stale_digest = await dispatcher.dispatch(
+        request_version=NATIVE_CONTROL_PROTOCOL_V1,
+        request_id="search-read-stale-digest",
+        body=envelope(
+            "search-read-stale-digest",
+            "search.read",
+            {"search_id": "search:remote-1"},
+        ),
+        transport_context=changed_context,
+    )
+    assert stale_digest.payload["status"] == "error"
+    assert stale_digest.payload["error"]["code"] == "STALE_SEARCH_HANDLE"
+
+    listed = await dispatcher.dispatch(
+        request_version=NATIVE_CONTROL_PROTOCOL_V1,
+        request_id="search-list-new-digest",
+        body=envelope("search-list-new-digest", "search.list"),
+        transport_context=changed_context,
+    )
+    assert listed.payload["status"] == "completed"
+    assert listed.payload["data"]["searches"] == []
+    assert listed.payload["data"]["count"] == 0
 
 
 @pytest.mark.asyncio

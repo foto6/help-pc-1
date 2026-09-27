@@ -122,33 +122,34 @@
     {
       "reference": "start_search",
       "candidate": [
-        "fs.search",
-        "fs.find",
-        "fs.glob",
-        "log.search"
+        "search.start"
       ],
-      "status": "direct"
+      "status": "stateful",
+      "note": "Creates a generation-scoped pc_executor.search_session.v1 handle with bounded background execution."
     },
     {
       "reference": "get_more_search_results",
       "candidate": [
-        "fs.search",
-        "log.read_since"
+        "search.read"
       ],
-      "status": "cursor",
-      "note": "Versioned stateless cursors replace server-side search handles."
+      "status": "stateful",
+      "note": "Reads an existing search handle by absolute result offset; negative offsets provide tail semantics."
     },
     {
       "reference": "stop_search",
-      "candidate": [],
-      "status": "not_needed",
-      "note": "Search is stateless and bounded; there is no server search to stop."
+      "candidate": [
+        "search.stop"
+      ],
+      "status": "stateful",
+      "note": "Cancels only the addressed search handle; final results remain readable during bounded retention."
     },
     {
       "reference": "list_searches",
-      "candidate": [],
-      "status": "not_needed",
-      "note": "Search is stateless and bounded."
+      "candidate": [
+        "search.list"
+      ],
+      "status": "stateful",
+      "note": "Enumerates active and retained current-generation search handles with lifecycle metadata."
     },
     {
       "reference": "start_process",

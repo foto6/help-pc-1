@@ -1,45 +1,56 @@
-# Canonical native full-stack integration
+# Canonical full-stack + stateful search integration
 
-This branch is the integration-only `help-pc-1` lineage that combines the current native Desktop tool parity Executor with the canonical native remote transport and remote Executor adapter. It does not merge or release any producer branch.
+This branch is the integration-only `agent/pc-native-full-stack-search` lineage for
+`foto6/help-pc-1`. It adds the green stateful search lifecycle to the current
+native PC full stack without merging or releasing producer branches.
 
 ## Exact provenance
 
-- Primary authoritative base: `18a6496b24520bade8246dae0759306a00a5a372` (`agent/pc-native-tool-parity`).
-- Remote transport + adapter source: `9254fe113f474a1108cacff97f5bccfd5107f06c`.
-- Exact common base of those heads: `2cc1e40f792a3d74560b726a0d246c90b7f077e9`.
-- Source-only commits ported without merging source history:
-  - `e47908e2c734984a872f3cc087731f4690d1c82c` — canonical native transport.
-  - `9254fe113f474a1108cacff97f5bccfd5107f06c` — canonical remote Executor adapter.
+- Primary base: `3a07382fa98f3e02a3d1ffbb4cc3c61b806e2e63`.
+- Search source: `603d7a5791d6e0fc145e65e6b14ad031a5b2cf75`.
+- Search source parent: `18a6496b24520bade8246dae0759306a00a5a372`.
+- Existing remote transport/adapter source already present in the base:
+  `9254fe113f474a1108cacff97f5bccfd5107f06c`.
 
-The old GitHub-relay branch/history is not merged. `8df29aad32a6cb142dff6721f92fca74a080e441` and `992c66335c9e6c40d150bc10c086e97ea7600d48` remain non-ancestors.
+The search source is applied as a three-way commit delta only. Its older parity
+parent is not merged. Search-native files are carried byte-for-byte from the
+green source except the CI workflow, which retains the current full-stack jobs.
 
-## Conflict resolution
+## Search lifecycle
 
-`.github/workflows/tests.yml` was the only cherry-pick conflict. The parity workflow stayed authoritative: parity focused tests, schema reproducibility, and the Windows native adapter job were retained. Remote transport and adapter focused jobs were added, and the integration branch trigger is `agent/pc-native-full-stack`; obsolete producer-branch trigger names were not carried.
-No file under `src/pc_executor/**` is changed relative to the parity base. Its Executor, LocalOperations, safety, outcome, and native capability contracts remain authoritative.
+The native operations surface exposes `search.start`, `search.read`,
+`search.list`, and `search.stop` using
+`pc_executor.search_session.v1`. Search supports files/content modes,
+regex-by-default or literal matching, ignore-case by default, bounded context,
+hidden-file control, max-results, timeout, absolute pagination, negative-tail
+reads, cancellation, retained terminal results, and retention GC.
 
-`src/pc_remote_transport/executor_adapter.py` is the only carried source implementation intentionally changed after the selective port. The external `pc.native.tool_registry.v1` registry and digest remain unchanged. Transport glue now:
+Search IDs are opaque and generation-scoped. Executor restart makes persisted
+IDs stale and fail-closed. Protected/sensitive paths are rejected before
+traversal, and reparse/symlink escapes are not followed.
 
-- advertises the union of the legacy Executor action map and `LocalOperations.capabilities_snapshot()` actions;
-- includes the native operations capability digest in the authenticated hello manifest, so operations-contract drift changes the session capability digest;
-- resolves stable native tool names to parity actions such as `fs.search`, `process.read_output`, `process.managed.list`, `process.list`, and the parity shell-session action names;
-- translates stable process/session handle arguments to parity `handle_id` / `session_id` fields;
-- uses the capability digest belonging to the resolved action for preflight and preserves the resolved action identity through outcome lookup, preflight, execution, audit, and result validation.
+## Remote full-stack binding
 
-## Integration evidence
+The existing authenticated transport and Executor adapter remain authoritative.
+The adapter adds only the four search lifecycle tools. Existing tool names and
+semantics are preserved.
 
-`tests/test_native_full_stack_integration.py` uses the authenticated frame transport and `DeviceAgent`, not a mock dispatcher shortcut. With a real parity `Executor` and `LocalOperations`, it proves:
+A remote search handle is bound to the control session, device ID, authenticated
+transport epoch, and hello-time capability-manifest digest. A changed epoch or
+capability digest fails closed with `STALE_SEARCH_HANDLE`. `search.list`
+filters out handles from other epochs/digests. `search.stop` does not close the
+handle, so final results remain readable for the native retention window.
 
-- `fs.write_text` through `file.write`;
-- `fs.edit_text` through `file.edit`;
-- `fs.read_text` through `file.read`, including the transport stream;
-- `process.start`, `process.read_output`, `process.managed.list`, and `process.terminate` through the stable process tools;
-- parity native actions and the operations digest are present in the advertised manifest;
-- operations capability-digest drift after hello fails closed as `CAPABILITY_DRIFT`.
+The hello manifest advertises the native search actions through the current
+operations capability snapshot and pins the evolved tool-registry digest.
 
-Existing adapter tests continue to cover durable request IDs, result-loss replay behavior, `UNKNOWN_RECONCILE`, stale transport epochs, and stale process handles. The protected `E:\\manhwa` test remains spy-only and verifies rejection before Executor preflight or execution.
-## Deterministic diff audit
+## Verification
 
-`tools/audit_full_stack_integration.py` compares the integration head against both exact source heads. It verifies the exact common base, parity-base ancestry, non-ancestry of the remote source and obsolete relay history, byte identity for every carried remote-source path except the documented workflow and adapter divergences, zero `src/pc_executor/**` drift, no relay path/import, and `git diff --check`.
+`tools/audit_full_stack_integration.py` verifies the exact base/source pins,
+single-commit topology, byte identity of the search delta, absence of old relay
+history, restricted remote transport drift, workflow coverage, and
+`git diff --check`.
 
-CI runs the full-stack audit and real integration suite on both Ubuntu and Windows, in addition to parity focused tests, remote transport/adapter focused tests, Windows native tests, and the complete test suite.
+CI runs search lifecycle tests, native parity/schema checks, Windows search
+fixtures, remote transport/adapter tests, the real full-stack integration suite,
+and the complete test suite on Ubuntu and Windows.
