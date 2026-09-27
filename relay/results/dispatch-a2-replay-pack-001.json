@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$xs=Invoke-RestMethod 'http://127.0.0.1:17410/json/list'; $t=$xs|Where-Object {$_.url -like '*6ab8f4bb-069c-83eb-9bba-7add1eb57fab*'}|Select-Object -First 1; if(-not $t){Write-Error 'target_not_found'; exit 3}; Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=$($t.id) --prompt=E:\\pc-github-relay\\relay\\prompts\\a2-replay-pack.txt"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Error: High mode not confirmed\n    at E:\\WebAIBridge\\app\\data\\direct_send_existing_agent.js:13:21\n",
+      "stderr_bytes": 98,
+      "stderr_truncated": false,
+      "stdout": "PRE {\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8f4bb-069c-83eb-9bba-7add1eb57fab\",\"title\":\"ChatGPT\",\"high\":false,\"stop\":false,\"composer\":false,\"draft\":\"\"}\n",
+      "stdout_bytes": 187,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T13:34:27.783Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T13:34:27.769Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "dispatch-a2-replay-pack-001"
+    },
+    "request_id": "dispatch-a2-replay-pack-001",
+    "started_at": "2026-09-27T13:34:27.272Z",
+    "status": "completed"
+  },
+  "id": "dispatch-a2-replay-pack-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
