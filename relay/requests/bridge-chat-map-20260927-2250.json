@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-chat-map-20260927-2250",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$cfg='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; $c=Get-Content $cfg -Raw|ConvertFrom-Json; foreach($m in @($c.managedChats)){ Write-Output ('M|'+$m.id+'|name='+$m.name+'|url='+$m.url+'|project='+$m.projectId+'|profile='+$m.profileId+'|branch='+$m.branch+'|repo='+$m.repository+'|enabled='+$m.enabled) }; foreach($k in @($c.knownProjectChats)){ Write-Output ('K|'+$k.id+'|name='+$k.name+'|url='+$k.url+'|project='+$k.projectId+'|profile='+$k.profileId) }"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
