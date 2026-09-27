@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "type C:\\agentwork\\WebAIBridge-integration-final\\app\\package.json"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\n  \"name\": \"web-ai-bridge\",\n  \"version\": \"0.4.1\",\n  \"private\": false,\n  \"description\": \"Local browser-based AI gateway with an OpenAI-compatible API.\",\n  \"license\": \"UNLICENSED\",\n  \"type\": \"commonjs\",\n  \"engines\": {\n    \"node\": \">=18\"\n  },\n  \"scripts\": {\n    \"start\": \"node server.js\",\n    \"reload\": \"node live-reload.js\",\n    \"reload:plan\": \"node live-reload.js --dry-run\",\n    \"doctor\": \"node doctor.js\",\n<<<<<<< HEAD\n    \"test\": \"node bridge-core.test.js && node model-contract.test.js && node model-selection.test.js && node result-images.test.js && node provider-chat-cleanup.test.js && node provider-response.test.js && node page-visibility.test.js && node worker-timeouts.test.js && node worker-completion.test.js && node project-browser.test.js && node project-control.test.js && node supervisor-control.test.js && node supervisor-watchdog.test.js && node --test supervisor-watchdog-consensus.test.js && node --test provider-execution-state.test.js && node --test agent-execution-control.test.js && node --test agent-evidence-collector.test.js && node --test agent-project-native-dry-run.test.js && node --test assignment-store.test.js && node --test agent-assignment-chaos.test.js && node --test bridge-integration-candidate.test.js && node agent-assignment-restart-harness.js && node supervisor-watchdog-consensus-harness.js --incident && node --test live-reload-core.test.js && node ui-static.test.js && node security-regression.test.js\",\n=======\n    \"test\": \"node bridge-core.test.js && node model-contract.test.js && node model-selection.test.js && node result-images.test.js && node provider-chat-cleanup.test.js && node provider-response.test.js && node page-visibility.test.js && node worker-timeouts.test.js && node worker-completion.test.js && node project-browser.test.js && node project-control.test.js && node supervisor-control.test.js && node supervisor-watchdog.test.js && node --test supervisor-watchdog-consensus.test.js && node --test agent-execution-control.test.js && node --test agent-security-boundaries.test.js && node --test agent-evidence-collector.test.js && node agent-assignment-restart-harness.js && node supervisor-watchdog-consensus-harness.js --incident && node ui-static.test.js && node security-regression.test.js\",\n>>>>>>> 8cee868 (Harden managed agent trust boundaries)\n    \"test:outbox\": \"node tests/outbox-public-api.test.js\",\n    \"test:completion\": \"node worker-completion.test.js\",\n    \"test:watchdog\": \"node supervisor-watchdog.test.js && node --test supervisor-watchdog-consensus.test.js && node supervisor-watchdog-consensus-harness.js --incident\",\n    \"test:supervisor\": \"node supervisor-control.test.js && node supervisor-watchdog.test.js && node --test supervisor-watchdog-consensus.test.js\",\n    \"test:agent-control\": \"node --test agent-execution-control.test.js && node --test agent-evidence-collector.test.js\",\n    \"test:agent-chaos\": \"node --test assignment-store.test.js && node --test agent-assignment-chaos.test.js\",\n    \"test:agent-cutover\": \"node --test agent-execution-control.test.js && node --test agent-evidence-collector.test.js && node --test agent-project-native-dry-run.test.js && node agent-assignment-restart-harness.js\",\n    \"test:agent-project-native\": \"node supervisor-control.test.js && node --test agent-project-native-dry-run.test.js\",\n    \"dry-run:agent-project-native\": \"node agent-project-native-dry-run.js\",\n    \"test:live-reload\": \"node --test live-reload-core.test.js\"\n  },\n  \"keywords\": [\n    \"ai\",\n    \"openai-compatible\",\n    \"chatgpt\",\n    \"gemini\",\n    \"browser-automation\",\n    \"local-api\"\n  ]\n}\n",
+      "stdout_bytes": 3589,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:15:03.339Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:15:03.324Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-security-package-read-20260927-2155"
+    },
+    "request_id": "bridge-security-package-read-20260927-2155",
+    "started_at": "2026-09-27T14:15:03.271Z",
+    "status": "completed"
+  },
+  "id": "bridge-security-package-read-20260927-2155",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
