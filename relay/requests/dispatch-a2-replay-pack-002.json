@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "dispatch-a2-replay-pack-002",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Start-Sleep -Seconds 8; $xs=Invoke-RestMethod 'http://127.0.0.1:17410/json/list'; $t=$xs|Where-Object {$_.url -like '*6ab8f4bb-069c-83eb-9bba-7add1eb57fab*'}|Select-Object -First 1; if(-not $t){Write-Error 'target_not_found'; exit 3}; Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=$($t.id) --prompt=E:\\pc-github-relay\\relay\\prompts\\a2-replay-pack.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Retry A2 dispatch after page load; prior attempt clicked nothing."
+}
