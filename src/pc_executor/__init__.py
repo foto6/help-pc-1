@@ -6,6 +6,22 @@ from .capabilities import (
     build_capabilities,
     validate_capabilities,
 )
+from .context_binding import (
+    CONTRACT_VERSION as EXECUTION_CONTEXT_BINDING_CONTRACT_VERSION,
+    VALIDATION_CONTRACT_VERSION as EXECUTION_CONTEXT_VALIDATION_CONTRACT_VERSION,
+    ContextMismatchBlockedError,
+    ExecutionContextBinding,
+    ExecutionContextBindingError,
+    ForegroundContext,
+    SystemExecutionContextObserver,
+    binding_from_foreground,
+    binding_from_shell,
+    binding_from_uia_element,
+    derive_execution_context_binding,
+    parse_execution_context_binding,
+    validate_execution_context_binding,
+    validate_bound_execution_context,
+)
 from .executor import Executor
 from .models import ActionRequest, ActionResult, AuditEvent, UIObservationSnapshot
 from .preflight import (
@@ -43,6 +59,20 @@ __all__ = [
     "CAPABILITIES_CONTRACT_VERSION",
     "build_capabilities",
     "validate_capabilities",
+    "EXECUTION_CONTEXT_BINDING_CONTRACT_VERSION",
+    "EXECUTION_CONTEXT_VALIDATION_CONTRACT_VERSION",
+    "ExecutionContextBinding",
+    "ExecutionContextBindingError",
+    "ContextMismatchBlockedError",
+    "ForegroundContext",
+    "SystemExecutionContextObserver",
+    "binding_from_foreground",
+    "binding_from_shell",
+    "binding_from_uia_element",
+    "derive_execution_context_binding",
+    "parse_execution_context_binding",
+    "validate_execution_context_binding",
+    "validate_bound_execution_context",
     "ACTION_PREFLIGHT_CONTRACT_VERSION",
     "PreflightRequest",
     "PreflightResult",

@@ -8,10 +8,11 @@ The upstream planner/vision component proposes intent and selectors; PC Executor
 2. Use `screenshot.capture`, `windows.list`, and/or read-only `uia.snapshot` to observe current state.
 3. Vision/planner identifies a target.
 4. Use `action.preflight` for the exact logical request before side-effect dispatch when Control needs a current feasibility gate. `ready` is not an execution guarantee.
-5. Prefer UIA targeting. For `vision.grounded_target.v1`, call `vision.target.invoke`; the frozen transport remains unchanged and the executor re-resolves only by non-empty UIA `automation_id`.
-6. Use `uia.invoke`, `uia.focus`, or `uia.set_value` for non-Vision UIA actions when supported.
-7. Re-observe after the action.
-8. Generic coordinate fallback remains separately gated. `vision.target.invoke` never uses `bounds_screen` or `click_point_screen` for input.
+5. When last-observed process/window/target provenance must be preserved across the preflight-to-execute gap, attach optional `pc_executor.execution_context_binding.v1` to the execution request. Executor revalidates it immediately before dispatch.
+6. Prefer UIA targeting. For `vision.grounded_target.v1`, call `vision.target.invoke`; the frozen transport remains unchanged and the executor re-resolves only by non-empty UIA `automation_id`.
+7. Use `uia.invoke`, `uia.focus`, or `uia.set_value` for non-Vision UIA actions when supported.
+8. Re-observe after the action.
+9. Generic coordinate fallback remains separately gated. `vision.target.invoke` never uses `bounds_screen` or `click_point_screen` for input.
 
 ## Observation correlation
 
@@ -22,6 +23,12 @@ Consumers must treat observation ids/timestamps as provenance. A later action sh
 ## Preflight contract
 
 `pc_executor.action_preflight.v1` returns `ready`, `blocked`, `unsupported`, `stale_observation`, `ambiguous_target`, or `invalid_request` plus the current `pc_executor.capabilities.v1` attestation digest. Preflight is side-effect-free: UIA checks use only read-only observation and shell checks use only allowlist/path validation. Control must not interpret `ready` as proof that execution later succeeded, nor as retry/replay authority. See `docs/PREFLIGHT_V1.md`.
+
+## Execution context binding
+
+The optional binding is carried as top-level `execution_context_binding` on an execution request. A context mismatch is checked before adapter dispatch, returns `status="blocked"`, and includes `data.execution_context_validation.reason="context_mismatch"`. Because no side-effect adapter was entered, frozen action-outcome evidence remains proven `not_started` and re-execution-safe. Once adapter dispatch begins, ordinary outcome/journal reconciliation rules apply; context validation never converts post-dispatch uncertainty into retry safety.
+
+See `docs/EXECUTION_CONTEXT_BINDING_V1.md`.
 
 ## Failure and retry contract
 

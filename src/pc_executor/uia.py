@@ -15,7 +15,12 @@ from .models import (
     canonical_json,
 )
 from .safety import ensure_not_sensitive_text
-from .windows import display_for_rect, list_display_geometries
+from .windows import (
+    display_for_rect,
+    list_display_geometries,
+    process_start_epoch_ms,
+    root_window_handle,
+)
 
 
 class AccessibilityAdapter(Protocol):
@@ -99,7 +104,22 @@ class WindowsUIAutomationAdapter:
         except Exception:
             return False
 
-    def _info(self, control) -> ElementInfo:
+    @staticmethod
+    def _runtime_id(control) -> tuple[int, ...] | None:
+        try:
+            raw = control.GetRuntimeId()
+            if raw is None:
+                return None
+            return tuple(int(value) for value in raw)
+        except Exception:
+            return None
+
+    def _info(
+        self,
+        control,
+        *,
+        include_execution_identity: bool = False,
+    ) -> ElementInfo:
         bounds = self._rect(control)
         native_handle = int(getattr(control, "NativeWindowHandle", 0) or 0) or None
         process_id = int(getattr(control, "ProcessId", 0) or 0) or None
@@ -112,12 +132,24 @@ class WindowsUIAutomationAdapter:
             native_handle=native_handle,
             bounds=bounds,
             display_id=display_for_rect(bounds),
-            window_handle=native_handle,
+            window_handle=(
+                root_window_handle(native_handle)
+                if include_execution_identity
+                else native_handle
+            ),
             process_id=process_id,
             class_name=getattr(control, "ClassName", None),
             is_offscreen=bool(getattr(control, "IsOffscreen", False)),
             supports_invoke=self._supports_pattern(control, "GetInvokePattern"),
             supports_value=self._supports_pattern(control, "GetValuePattern"),
+            process_start_epoch_ms=(
+                process_start_epoch_ms(process_id)
+                if include_execution_identity and process_id is not None
+                else None
+            ),
+            runtime_id=(
+                self._runtime_id(control) if include_execution_identity else None
+            ),
         )
 
     @staticmethod
@@ -161,36 +193,39 @@ class WindowsUIAutomationAdapter:
         return candidates[0][2]
 
     def inspect(self, query: ElementQuery) -> ElementInfo:
-        return self._info(self._find(query))
+        return self._info(
+            self._find(query),
+            include_execution_identity=True,
+        )
 
     def invoke(self, query: ElementQuery) -> ElementInfo:
         control = self._find(query)
-        info = self._info(control)
+        info = self._info(control, include_execution_identity=True)
         if not info.is_enabled or info.is_offscreen:
             raise PolicyBlockedError("UIA target is not currently actionable")
         if not info.supports_invoke:
             raise PolicyBlockedError("UIA target does not expose a deterministic invoke capability")
         control.GetInvokePattern().Invoke()
-        return self._info(control)
+        return self._info(control, include_execution_identity=True)
 
     def focus(self, query: ElementQuery) -> ElementInfo:
         control = self._find(query)
-        info = self._info(control)
+        info = self._info(control, include_execution_identity=True)
         if not info.is_enabled or info.is_offscreen:
             raise PolicyBlockedError("UIA target cannot be focused safely")
         control.SetFocus()
-        return self._info(control)
+        return self._info(control, include_execution_identity=True)
 
     def set_value(self, query: ElementQuery, value: str, *, sensitive: bool = False) -> ElementInfo:
         control = self._find(query)
-        info = self._info(control)
+        info = self._info(control, include_execution_identity=True)
         ensure_not_sensitive_text(is_password=info.is_password, sensitive=sensitive)
         if not info.is_enabled or info.is_offscreen:
             raise PolicyBlockedError("UIA target is not currently actionable")
         if not info.supports_value:
             raise PolicyBlockedError("UIA target does not support deterministic value setting")
         control.GetValuePattern().SetValue(value)
-        return self._info(control)
+        return self._info(control, include_execution_identity=True)
 
     def snapshot(self, *, window_title: str | None = None) -> UIObservationSnapshot:
         root = self._root(window_title)
