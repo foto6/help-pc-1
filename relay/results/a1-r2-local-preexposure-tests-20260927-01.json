@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$repo='C:\\agentwork\\SpectraTrack-a1'; git -C $repo fetch origin agent/vnext-detection; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; git -C $repo merge --ff-only origin/agent/vnext-detection; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; git -C $repo rev-parse HEAD; & $repo\\.venv\\Scripts\\python.exe -m pytest -q $repo\\pc\\tests\\test_vnext_detection_r2_validation.py $repo\\pc\\tests\\test_vnext_detection_hypothesis_lock.py"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "From https://github.com/foto6/SpectraTrack\n * branch            agent/vnext-detection -> FETCH_HEAD\n   9362d0d..76aec31  agent/vnext-detection -> origin/agent/vnext-detection\n",
+      "stderr_bytes": 175,
+      "stderr_truncated": false,
+      "stdout": "Updating 9362d0d..76aec31\nFast-forward\n .../vnext/detection/r2_hypothesis_lock.v1.json     | 226 ++++++\n .../research/vnext_detection_hypothesis_lock.py    | 186 +++++\n .../research/vnext_detection_r2_validation.py      | 839 +++++++++++++++++++++\n pc/tests/test_vnext_detection_hypothesis_lock.py   | 121 +++\n pc/tests/test_vnext_detection_r2_validation.py     | 263 +++++++\n 5 files changed, 1635 insertions(+)\n create mode 100644 pc/benchmarks/vnext/detection/r2_hypothesis_lock.v1.json\n create mode 100644 pc/spectratrack/research/vnext_detection_hypothesis_lock.py\n create mode 100644 pc/spectratrack/research/vnext_detection_r2_validation.py\n create mode 100644 pc/tests/test_vnext_detection_hypothesis_lock.py\n create mode 100644 pc/tests/test_vnext_detection_r2_validation.py\n76aec312f03dbc0cbb0f9c2905842f7838134eed\n...............                                                          [100%]\r\n15 passed in 0.69s\r\n",
+      "stdout_bytes": 926,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T13:59:51.282Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T13:59:51.268Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "a1-r2-local-preexposure-tests-20260927-01"
+    },
+    "request_id": "a1-r2-local-preexposure-tests-20260927-01",
+    "started_at": "2026-09-27T13:59:47.761Z",
+    "status": "completed"
+  },
+  "id": "a1-r2-local-preexposure-tests-20260927-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
