@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$xs=Invoke-RestMethod 'http://127.0.0.1:17410/json/list'; $t=$xs | Where-Object {$_.url -like '*6ab9011f-1798-83eb-9dc2-5df9382d9ddb*'} | Select-Object -First 1; if(-not $t){Write-Error 'target_not_found'; exit 3}; Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=$($t.id) --prompt=E:\\WebAIBridge\\app\\data\\bridge_all_specialist_integration.txt"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Error: chat is generating\n    at E:\\WebAIBridge\\app\\data\\direct_send_existing_agent.js:13:76\n",
+      "stderr_bytes": 93,
+      "stderr_truncated": false,
+      "stdout": "PRE {\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab9011f-1798-83eb-9dc2-5df9382d9ddb\",\"title\":\"EXECUTE NOW — BRIDGE INTEGRATION WAVE / ALL-SPECIALIST RECONCILIATION. Do not acknowledge readiness. Repository: foto6/WebAIBridge Branch: agent/bridge-integration Expected current HEAD: a270c3de8f0b3b81c43cd4805a1c40bed0336775 Current primary source head: agent/webbridge-dev @ 28fef7aa556a49a933d9a2ae73fc033c262ffa7e All six specialist heads now have exact-head CI SUCCESS: assignment chaos: dbed14ddf25fa74074228d80b6ba869a12e5faed / CI 36312661977 SUCCESS Git+CI evidence: 3c69450d2dbc406cd0417dd6feae8bd378e9057c / CI 36313112797 SUCCESS live deploy/reload: 40d99b96314c663fae0c6e35d6ae0fdea38a3dc7 / CI 36313099151 SUCCESS rate-limit/stream recovery: 391a6fefc56e5feb7ab938974d875167aa6aa688 / CI 36312973259 SUCCESS security boundaries: 7027510e3577741f0fa9e7f507910445ce5578da / CI 36315747820 SUCCESS observability: 358d1991b47f2019d7eb0d5bfdff77aae0be83d1 / CI 36315821982 SUCCESS Integrate them on agent/bridge-integration only. Do NOT touch agent/webbridge-dev, main, releases or live runtime. Required: Start from/reconcile current primary 28fef7aa exactly, then incorporate all six specialist deltas with explicit provenance. Resolve overlapping server.js / agent-execution-control / supervisor-control changes semantically; never choose ours/theirs blindly. Preserve all key invariants simultaneously: direct managed coding assignments never enter ordinary stateful responder path; durable idempotency and no duplicate dispatch across restart; exact-head Git+CI evidence required for completion; Project-native /g//c/ targeting works; rate-limit/recovery probe is scoped and cannot freeze unrelated agents; stale generating without Stop/semantic progress does not remain assistant-working forever; security URL/profile/draft/CAPTCHA/credential/redaction boundaries remain fail-closed; observability remains read-only and cannot dispatch/retry; live reload machinery never closes Chrome agent tabs. Run each specialist focused suite after reconciliation, then full npm test. Add combined integration regressions where two layers interact: rate-limit + scheduler fairness, evidence + restart, security + project-native URL, observability + zombie detection, reload + worker re-registration. Generate machine-readable integration manifest recording primary SHA, all six source SHAs, conflicts resolved, final hashes, test counts. Produce a SHA-bound DRY-RUN live cutover plan only. Do NOT actually restart live server/workers/watchdog yet. No credentials, no CAPTCHA automation, never touch E:\\\\manhwa. Commit/push only agent/bridge-integration. First response actual Git/conflict/test evidence. Final exact SHA + exact CI run/conclusion + integration manifest hash.\",\"high\":true,\"stop\":true,\"composer\":true,\"draft\":\"\\n\"}\n",
+      "stdout_bytes": 2860,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T13:32:18.344Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T13:32:18.333Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "dispatch-bridge-integration-001"
+    },
+    "request_id": "dispatch-bridge-integration-001",
+    "started_at": "2026-09-27T13:32:17.898Z",
+    "status": "completed"
+  },
+  "id": "dispatch-bridge-integration-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
