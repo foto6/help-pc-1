@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-state-discovery-20260927-2230",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$root='E:\\WebAIBridge'; Get-ChildItem $root -Recurse -File -Include *.json,*.jsonl -ErrorAction SilentlyContinue | Where-Object { $_.FullName -notmatch '\\\\node_modules\\\\' } | ForEach-Object { try { $m=Select-String -Path $_.FullName -Pattern 'managedChats|agentAssignments|bridge-integration|vnext-tracking|creator-orchestrator' -SimpleMatch -ErrorAction Stop | Select-Object -First 1; if($m){ Write-Output ('MATCH|'+$_.FullName) } } catch {} } | Select-Object -First 80"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
