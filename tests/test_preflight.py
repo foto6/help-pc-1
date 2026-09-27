@@ -701,8 +701,10 @@ def test_cross_repo_preflight_fixture_pack_and_manifest_are_exact():
     assert manifest["producer_repository"] == "foto6/help-pc-1"
     assert manifest["producer_branch"] == "agent/pc-executor"
     assert manifest["producer_base_head"] == "06217fe4246d0191ac3c93e69aac855bdd6e4136"
-    assert len(manifest["producer_source_head"]) == 40
-    int(manifest["producer_source_head"], 16)
+    assert (
+        manifest["producer_source_head"]
+        == "5b3db95222cdcea94ca72df976f45f3cd4e87391"
+    )
     assert manifest["consumer_repository"] == "foto6/help-pc-2"
     assert manifest["consumer_branch"] == "agent/pc-control-plane"
     assert (
@@ -715,9 +717,14 @@ def test_cross_repo_preflight_fixture_pack_and_manifest_are_exact():
         assert len(raw) == metadata["bytes"]
         assert hashlib.sha256(raw).hexdigest() == metadata["sha256"]
 
-    repo_root = Path(__file__).parents[1]
-    for name, expected_hash in manifest["source_provenance"]["files"].items():
-        assert hashlib.sha256((repo_root / name).read_bytes()).hexdigest() == expected_hash
+    source = manifest["source_provenance"]
+    source_head = "5b3db95222cdcea94ca72df976f45f3cd4e87391"
+    assert source["commit_sha"] == source_head
+    for name, expected_hash in source["files"].items():
+        committed = subprocess.check_output(
+            ["git", "show", f"{source_head}:{name}"]
+        )
+        assert hashlib.sha256(committed).hexdigest() == expected_hash
 
     frozen = manifest["frozen_action_outcome_fixture_sha256"]
     assert frozen == {
