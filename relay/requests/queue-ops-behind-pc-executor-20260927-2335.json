@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "queue-ops-behind-pc-executor-20260927-2335",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$body=[Uri]::UnescapeDataString('%7B%22text%22%3A%22EXECUTE%20AFTER%20CURRENT%20PC%20RELAY%20TASK.%20PC%20OPS%20MIGRATION%20GATE%20REFRESH.%20Repo%20foto6%2Fhelp-pc-2%20branch%20agent%2Fpc-ops-gateway%20expected%20HEAD%20732f0f5e6482f6bb96f0dfa582dc1c0fe2ea712e.%20Rebind%20conformance%20to%20exact-green%20relay%20producer%2058bad1bc60f7d4d26d03223c8f0bea5f138f49a6%20and%20the%20committed%20pc_ops_v1%20fixture%20bytes.%20Update%20producer%20pins%20and%20matrix%2C%20run%20the%20canonical%20E2E%20scenario%20pack%2C%20regenerate%20the%20gateway%20E2E%20report%20and%20digest%2C%20and%20set%20ready_to_migrate%3Dtrue%20only%20if%20every%20required%20gate%20is%20proven.%20Preserve%20existing%20protected-path%20and%20fail-closed%20reconciliation%20behavior.%20Add%20focused%20tests%2C%20push%20a%20non-empty%20commit%2C%20run%20exact-head%20CI%2C%20report%20SHA%20and%20CI.%20No%20merge%20release%20or%20live%20cutover.%22%2C%22repository%22%3A%22foto6%2Fhelp-pc-2%22%2C%22branch%22%3A%22agent%2Fpc-ops-gateway%22%2C%22expectedHead%22%3A%22732f0f5e6482f6bb96f0dfa582dc1c0fe2ea712e%22%2C%22idempotencyKey%22%3A%22pc-only-ops-gate-after-relay-v2%22%2C%22evidenceTimeoutMinutes%22%3A120%2C%22priority%22%3A900%2C%22supervisorVerificationRequired%22%3Atrue%7D'); try{$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-pc-executor/assignments' -Method Post -ContentType 'application/json; charset=utf-8' -Body $body -TimeoutSec 10; Write-Output ('OK|id='+$r.id+'|state='+$r.state+'|chat='+$r.targetChatId)}catch{Write-Output ('ERR|'+$_.Exception.Message); exit 1}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
