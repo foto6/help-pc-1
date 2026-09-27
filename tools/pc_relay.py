@@ -40,6 +40,7 @@ MAX_REQUEST_BYTES = 64 * 1024
 MAX_RESULT_BYTES = 512 * 1024
 SHELL_OUTPUT_LIMIT_BYTES = 64 * 1024
 MAX_TIMEOUT_MS = 120_000
+DEFAULT_HEARTBEAT_SECONDS = 30.0
 
 READ_ONLY_ACTIONS = {
     "capabilities.get",
@@ -665,8 +666,25 @@ class GitQueue:
         path = self.repo / "relay" / "quarantine" / f"{stem}.{digest[:16]}.json"
         payload = dict(metadata)
         encoded = (json.dumps(payload, sort_keys=True, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
-        if path.exists() and path.read_bytes() == encoded:
-            return
+        if path.exists():
+            existing = path.read_bytes()
+            if existing == encoded:
+                return
+            try:
+                previous = json.loads(existing.decode("utf-8"))
+            except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+                raise QueueConflictError(
+                    f"existing quarantine record is malformed: {path.name}"
+                ) from exc
+            if (
+                isinstance(previous, dict)
+                and previous.get("raw_sha256") == digest
+                and previous.get("source_name") == metadata.get("source_name")
+            ):
+                return
+            raise QueueConflictError(
+                f"quarantine identity conflict: {path.name}"
+            )
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(encoded)
         self._commit_and_push(path, f"relay quarantine {stem}", mutable=False)
@@ -690,6 +708,7 @@ class Relay:
         live: bool,
         allowed_actions: set[str] | frozenset[str] = DEFAULT_ALLOWED_ACTIONS,
         heartbeat_id: str = "default",
+        heartbeat_seconds: float = DEFAULT_HEARTBEAT_SECONDS,
     ) -> None:
         if not set(allowed_actions).issubset(MAX_ALLOWED_ACTIONS):
             raise ValueError("allowed_actions cannot exceed MAX_ALLOWED_ACTIONS")
@@ -700,6 +719,8 @@ class Relay:
         self.live = live
         self.allowed_actions = frozenset(allowed_actions)
         self.heartbeat_id = heartbeat_id
+        self.heartbeat_seconds = max(5.0, float(heartbeat_seconds))
+        self._last_heartbeat_monotonic: float | None = None
         self.state_dir = self.state_root / "requests"
         self.state_dir.mkdir(parents=True, exist_ok=True)
         self.last_processed_request: str | None = None
@@ -960,6 +981,25 @@ class Relay:
             "generated_at": _utc_now_iso(),
         }
 
+    def _maybe_publish_heartbeat(
+        self,
+        *,
+        alive: bool = True,
+        force: bool = False,
+    ) -> None:
+        now = time.monotonic()
+        due = (
+            self._last_heartbeat_monotonic is None
+            or now - self._last_heartbeat_monotonic >= self.heartbeat_seconds
+        )
+        if not force and not due:
+            return
+        self.queue.publish_heartbeat(
+            self.heartbeat_id,
+            self.heartbeat(alive=alive),
+        )
+        self._last_heartbeat_monotonic = now
+
     def cycle(self) -> int:
         try:
             self.queue_remote_sha = self.queue.sync()
@@ -982,7 +1022,7 @@ class Relay:
             self.process_request_path(path)
             if self.last_processed_request != before:
                 processed += 1
-        self.queue.publish_heartbeat(self.heartbeat_id, self.heartbeat(alive=True))
+        self._maybe_publish_heartbeat(alive=True)
         return processed
 
     def stop(self) -> None:
@@ -1001,7 +1041,7 @@ class Relay:
             self.stop_event.wait(max(0.5, poll_seconds))
         try:
             if self.queue_reachable:
-                self.queue.publish_heartbeat(self.heartbeat_id, self.heartbeat(alive=False))
+                self._maybe_publish_heartbeat(alive=False, force=True)
         except Exception:
             pass
 
@@ -1038,6 +1078,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--state-dir")
     parser.add_argument("--heartbeat-id", default="default")
     parser.add_argument("--poll-seconds", type=float, default=3.0)
+    parser.add_argument(
+        "--heartbeat-seconds",
+        type=float,
+        default=DEFAULT_HEARTBEAT_SECONDS,
+    )
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--once", action="store_true")
     parser.add_argument(
@@ -1082,6 +1127,7 @@ def main() -> int:
         live=args.live,
         allowed_actions=allowed,
         heartbeat_id=args.heartbeat_id,
+        heartbeat_seconds=max(5.0, args.heartbeat_seconds),
     )
 
     def _stop(_signum: int, _frame: Any) -> None:
