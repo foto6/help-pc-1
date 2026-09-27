@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $repo='C:\\agentwork\\SpectraTrack-a1'; git -C $repo fetch origin agent/vnext-detection; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; git -C $repo merge --ff-only origin/agent/vnext-detection; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; $head=(git -C $repo rev-parse HEAD).Trim(); if($head -ne 'ea1234e153a689811488e439429472c5b2a698ea'){Write-Error 'source_head_mismatch'; exit 4}; $out='E:\\SpectraTrack-data\\runs\\a1-nightowls-r2-ea1234'; if(Test-Path $out){Write-Error 'output_dir_already_exists'; exit 5}; New-Item -ItemType Directory -Path $out | Out-Null; $py=$repo+'\\.venv\\Scripts\\python.exe'; $args=@('-m','spectratrack.research.vnext_detection_r2_validation','run','--lock',$repo+'\\pc\\benchmarks\\vnext\\detection\\r2_hypothesis_lock.v1.json','--ground-truth','E:\\SpectraTrack-data\\imports\\nightowls-public-smoke400-r2\\nightowls-public-smoke400-r2.jsonl','--manifest','E:\\SpectraTrack-data\\imports\\nightowls-public-smoke400-r2\\nightowls-public-smoke400-r2.manifest.json','--selection-proof','E:\\SpectraTrack-data\\imports\\nightowls-public-smoke400-r2\\nightowls-public-smoke400-r2.selection-proof.json','--video-root','E:\\SpectraTrack-data\\public\\NightOwls','--model','E:\\SpectraTrack\\yolo11x.onnx','--source-commit','ea1234e153a689811488e439429472c5b2a698ea','--output',$out+'\\r2-result.json','--runtime-output',$out+'\\r2-runtime.json'); $p=Start-Process -FilePath $py -ArgumentList $args -WorkingDirectory ($repo+'\\pc') -RedirectStandardOutput ($out+'\\stdout.txt') -RedirectStandardError ($out+'\\stderr.txt') -PassThru; Set-Content -LiteralPath ($out+'\\pid.txt') -Value $p.Id; Write-Output ('PID='+$p.Id); Write-Output ('SOURCE_HEAD='+$head)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "From https://github.com/foto6/SpectraTrack\n * branch            agent/vnext-detection -> FETCH_HEAD\n   76aec31..ea1234e  agent/vnext-detection -> origin/agent/vnext-detection\n",
+      "stderr_bytes": 175,
+      "stderr_truncated": false,
+      "stdout": "Updating 76aec31..ea1234e\nFast-forward\n pc/spectratrack/research/vnext_detection_r2_validation.py | 2 +-\n 1 file changed, 1 insertion(+), 1 deletion(-)\nPID=19264\r\nSOURCE_HEAD=ea1234e153a689811488e439429472c5b2a698ea\r\n",
+      "stdout_bytes": 217,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:03:39.788Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:03:39.773Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "a1-r2-start-ea1234-20260927-01"
+    },
+    "request_id": "a1-r2-start-ea1234-20260927-01",
+    "started_at": "2026-09-27T14:03:37.561Z",
+    "status": "completed"
+  },
+  "id": "a1-r2-start-ea1234-20260927-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
