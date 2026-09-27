@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "reroute-mcp-native-prep-supervisor-20260927-2432",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$body=[Uri]::UnescapeDataString('%7B%22text%22%3A%22EXECUTE%20NOW%20%E2%80%94%20NATIVE%20PC%20MCP%20CUTOVER%20PREPARATION%2C%20NO%20CUTOVER.%5Cn%5CnRepo%3A%20foto6%2Fhelp-pc-2%5CnBranch%3A%20agent%2Fpc-control-mcp-gateway%5CnExpected%20HEAD%3A%205495c320304860bf190476833177f716fe9ad960%5Cn%5CnGoal%3A%20make%20MCP%20gateway%20technically%20ready%20to%20become%20the%20ChatGPT%20PC%20backend%20after%20PC%20Ops%20READY_TO_MIGRATE.%5Cn%5CnRequired%3A%5Cn1.%20Integrate%20structured%20PC%20Ops%20v1%20tools%20as%20first-class%20MCP%20surface%20without%20bypassing%20Control%20Plane%2FExecutor%20safety.%5Cn2.%20fs%2Flog%2Fprocess%2Fshell.session%2Fsystem%2FUI%20observation%20are%20first-class%3B%20shell.run%20remains%20argv-only%20bounded%20fallback.%5Cn3.%20Add%20machine-readable%20readiness%20binding%20exact%20Control%20Plane%2C%20Executor%2C%20Vision%2C%20Relay%2FOps%20SHAs%20and%20PC%20Ops%20report%20digest.%5Cn4.%20Live%20native%20side%20effects%20must%20fail%20closed%20until%20migration%20gate%20is%20green%20AND%20explicit%20live%20enable%20is%20set.%20Read-only%2Fdry-run%20default.%5Cn5.%20Preserve%20protected%20paths%2C%20credentials%2FCAPTCHA%20prohibition%2C%20context%20binding%2C%20durable%20outcome%20reconciliation%2C%20no%20blind%20retry.%5Cn6.%20Prepare%20connector%2Fbackend%20registration%20contract%20for%20current%20private%20ChatGPT%20PC%20Control%20plugin%2C%20but%20DO%20NOT%20replace%20working%20GitHub%20relay%20transport%20yet.%5Cn7.%20Add%20focused%20tests%2C%20full%20CI%2C%20non-empty%20commit%20and%20exact%20SHA%2Bexact-head%20CI.%20No%20merge%2Frelease%2Flive%20cutover.%22%2C%22repository%22%3A%22foto6%2Fhelp-pc-2%22%2C%22branch%22%3A%22agent%2Fpc-control-mcp-gateway%22%2C%22expectedHead%22%3A%225495c320304860bf190476833177f716fe9ad960%22%2C%22idempotencyKey%22%3A%22pc-only-mcp-native-prep-v1-reroute-supervisor%22%2C%22evidenceTimeoutMinutes%22%3A120%2C%22priority%22%3A980%2C%22supervisorVerificationRequired%22%3Atrue%7D'); try{$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e/assignments' -Method Post -ContentType 'application/json; charset=utf-8' -Body $body -TimeoutSec 10; Write-Output ('OK|id='+$r.id+'|state='+$r.state+'|chat='+$r.targetChatId)}catch{Write-Output ('ERR|'+$_.Exception.Message); exit 1}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
