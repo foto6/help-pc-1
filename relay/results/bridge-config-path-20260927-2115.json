@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "git -C E:\\WebAIBridge grep -n \"SUPERVISOR_CONFIG_PATH\" -- app/server.js | Select-Object -First 20"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "app/server.js:161:const SUPERVISOR_CONFIG_PATH = path.join(DATA, 'supervisor-watchdog.json');\r\napp/server.js:12612:  return normalizeSupervisorConfig(readSupervisorJson(SUPERVISOR_CONFIG_PATH, {}));\r\napp/server.js:12673:  const raw = readSupervisorJson(SUPERVISOR_CONFIG_PATH, {});\r\napp/server.js:12707:  if (changed) writeSupervisorJsonAtomic(SUPERVISOR_CONFIG_PATH, raw);\r\napp/server.js:13257:    ...readSupervisorJson(SUPERVISOR_CONFIG_PATH, {}),\r\napp/server.js:13260:  writeSupervisorJsonAtomic(SUPERVISOR_CONFIG_PATH, next);\r\napp/server.js:13609:  const rawConfig = readSupervisorJson(SUPERVISOR_CONFIG_PATH, {});\r\napp/server.js:13618:  writeSupervisorJsonAtomic(SUPERVISOR_CONFIG_PATH, next);\r\napp/server.js:14039:    ...readSupervisorJson(SUPERVISOR_CONFIG_PATH, {}),\r\napp/server.js:14042:  writeSupervisorJsonAtomic(SUPERVISOR_CONFIG_PATH,next);\r\napp/server.js:14362:    const rawConfig = readSupervisorJson(SUPERVISOR_CONFIG_PATH, {});\r\napp/server.js:14369:      writeSupervisorJsonAtomic(SUPERVISOR_CONFIG_PATH, normalizeSupervisorConfig({\r\napp/server.js:14613:    readSupervisorJson(SUPERVISOR_CONFIG_PATH, {}));\r\napp/server.js:14671:  const watchdogConfig = normalizeSupervisorConfig(readSupervisorJson(SUPERVISOR_CONFIG_PATH, {}));\r\napp/server.js:14823:    readSupervisorJson(SUPERVISOR_CONFIG_PATH, {}));\r\napp/server.js:15167:      const existing = readSupervisorJson(SUPERVISOR_CONFIG_PATH, {});\r\napp/server.js:15172:      writeSupervisorJsonAtomic(SUPERVISOR_CONFIG_PATH, next);\r\napp/server.js:15242:      const existing = readSupervisorJson(SUPERVISOR_CONFIG_PATH, {});\r\napp/server.js:15247:      writeSupervisorJsonAtomic(SUPERVISOR_CONFIG_PATH, next);\r\napp/server.js:15263:      const existing = readSupervisorJson(SUPERVISOR_CONFIG_PATH, {});\r\n",
+      "stdout_bytes": 1764,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:01:53.144Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:01:53.127Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-config-path-20260927-2115"
+    },
+    "request_id": "bridge-config-path-20260927-2115",
+    "started_at": "2026-09-27T14:01:52.814Z",
+    "status": "completed"
+  },
+  "id": "bridge-config-path-20260927-2115",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
