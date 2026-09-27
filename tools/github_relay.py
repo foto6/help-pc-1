@@ -55,6 +55,38 @@ def _run_git(repo: Path, *args: str, check: bool = True) -> subprocess.Completed
     )
 
 
+def _abort_stale_rebase(repo: Path) -> bool:
+    """Abort a rebase left behind by this dedicated relay checkout."""
+    for marker in ("rebase-merge", "rebase-apply"):
+        probe = _run_git(repo, "rev-parse", "--git-path", marker, check=False)
+        if probe.returncode != 0:
+            continue
+        raw = probe.stdout.strip()
+        if not raw:
+            continue
+        marker_path = Path(raw)
+        if not marker_path.is_absolute():
+            marker_path = repo / marker_path
+        if marker_path.exists():
+            _run_git(repo, "rebase", "--abort", check=False)
+            return True
+    return False
+
+
+def _rebase_onto_remote(repo: Path, branch: str) -> None:
+    # A failed pull/rebase from an earlier cycle must never poison all future cycles.
+    _abort_stale_rebase(repo)
+    _run_git(repo, "fetch", "origin", branch)
+    rebased = _run_git(repo, "rebase", f"origin/{branch}", check=False)
+    if rebased.returncode == 0:
+        return
+    _run_git(repo, "rebase", "--abort", check=False)
+    raise RuntimeError(
+        "relay branch rebase failed; manual reconciliation required: "
+        + (rebased.stderr.strip() or rebased.stdout.strip())
+    )
+
+
 def _atomic_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
@@ -141,7 +173,10 @@ class Relay:
         )
 
     def sync(self) -> None:
-        _run_git(self.repo, "fetch", "origin", self.branch)
+        # The remote queue may advance while this checkout creates local result commits.
+        # Rebase preserves those local result commits over newly queued remote requests
+        # and clears any stale relay-owned rebase state before trying again.
+        _rebase_onto_remote(self.repo, self.branch)
         status = _run_git(self.repo, "status", "--porcelain").stdout.strip()
         tracked_dirty = [
             line for line in status.splitlines()
@@ -149,21 +184,6 @@ class Relay:
         ]
         if tracked_dirty:
             raise RuntimeError(f"relay checkout has uncommitted tracked changes: {tracked_dirty[:5]}")
-        # The remote queue may advance while this checkout creates local result commits.
-        # Rebase preserves those local result commits over newly queued remote requests
-        # instead of deadlocking forever on an ff-only merge.
-        rebased = _run_git(
-            self.repo,
-            "rebase",
-            f"origin/{self.branch}",
-            check=False,
-        )
-        if rebased.returncode != 0:
-            _run_git(self.repo, "rebase", "--abort", check=False)
-            raise RuntimeError(
-                "relay branch rebase failed; manual reconciliation required: "
-                + (rebased.stderr.strip() or rebased.stdout.strip())
-            )
 
     def _state_path(self, request_id: str) -> Path:
         return self.state_dir / f"{request_id}.json"
@@ -281,7 +301,9 @@ class Relay:
             )
             if pushed.returncode == 0:
                 return
-            _run_git(self.repo, "pull", "--rebase", "origin", self.branch)
+            # Remote queue advanced between our commit and push. Rebase the local
+            # result commit over it, and always clean up failed rebase state.
+            _rebase_onto_remote(self.repo, self.branch)
         raise RuntimeError(f"failed to push relay result {request_id}")
 
     def _publish_pending_results(self) -> None:
