@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$body=@{text=\"EXECUTE NOW — A2 CANONICAL CONTIGUOUS REPLAY PACK. Do not acknowledge readiness; produce durable evidence.\\n\\nRepo: foto6/SpectraTrack\\nBranch: agent/vnext-tracking\\nExpected current HEAD: d73b5d5a8268586ee963df9de901d3fd6ff6fcca\\n\\nGoal: unblock A8 without changing tracker policy.\\n\\nRequired:\\n1. Commit reproducible canonical replay/GT/observation payload BYTES for the already-frozen MOT17-04 contiguous windows frames 0-199 and 400-599 only.\\n2. Include deterministic manifests/hashes/provenance sufficient for an independent consumer to reproduce A8 quality scoring.\\n3. Do NOT request or inspect a larger tracking replay. NightOwls is not tracking GT.\\n4. Preserve current tracker as CONTROL and do not revisit rejected wholesale tracker replacements.\\n5. Add focused validation/tests proving exact window identity, byte/hash stability, and no cross-window leakage.\\n6. Run focused tests and full relevant CI.\\n7. Commit and report exact SHA + test output + exact-head CI. An acknowledgement is not completion.\\n\\nDo not merge/release.\";repository='foto6/SpectraTrack';branch='agent/vnext-tracking';expectedHead='d73b5d5a8268586ee963df9de901d3fd6ff6fcca';idempotencyKey='coord-a2-canonical-replay-v1';supervisorVerificationRequired=$true}|ConvertTo-Json -Depth 8; try{$r=Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ab67022-ae5c-83ed-a654-5dcc82c3b351/assignments' -ContentType 'application/json' -Body $body; Write-Output ('OK|id='+$r.id+'|state='+$r.state+'|head='+$r.expectedHead)}catch{Write-Output ('ERR|'+$_.Exception.Response.StatusCode.value__+'|'+$_.Exception.Message); exit 1}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "OK|id=7fbad347-ed40-4d39-9b26-d2f5a8e90443|state=queued|head=d73b5d5a8268586ee963df9de901d3fd6ff6fcca\r\n",
+      "stdout_bytes": 103,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:34:02.083Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:34:02.059Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "assign-a2-canonical-replay-20260927-2302"
+    },
+    "request_id": "assign-a2-canonical-replay-20260927-2302",
+    "started_at": "2026-09-27T15:34:01.635Z",
+    "status": "completed"
+  },
+  "id": "assign-a2-canonical-replay-20260927-2302",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
