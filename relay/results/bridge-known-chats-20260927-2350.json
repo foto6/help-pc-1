@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$c=Get-Content 'E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json' -Raw|ConvertFrom-Json; foreach($x in @($c.knownProjectChats)){Write-Output ('KNOWN|'+$x.id+'|'+$x.name+'|'+$x.url+'|profile='+$x.profileId+'|branch='+$x.branch+'|head='+$x.gitHead)}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "KNOWN||||profile=|branch=|head=\r\nKNOWN||||profile=|branch=|head=\r\nKNOWN||||profile=|branch=|head=\r\nKNOWN||||profile=|branch=|head=\r\nKNOWN||||profile=|branch=|head=\r\nKNOWN||||profile=|branch=|head=\r\nKNOWN||||profile=|branch=|head=\r\nKNOWN||||profile=|branch=|head=\r\nKNOWN||||profile=|branch=|head=\r\n",
+      "stdout_bytes": 297,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:42:23.506Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:42:23.483Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-known-chats-20260927-2350"
+    },
+    "request_id": "bridge-known-chats-20260927-2350",
+    "started_at": "2026-09-27T15:42:23.123Z",
+    "status": "completed"
+  },
+  "id": "bridge-known-chats-20260927-2350",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
