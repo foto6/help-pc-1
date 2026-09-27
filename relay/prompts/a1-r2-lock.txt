@@ -1,0 +1,24 @@
+EXECUTE NOW — A1 R2 HYPOTHESIS LOCK ONLY / NO R2 INSPECTION OR SCORING. Do not acknowledge readiness.
+
+Repository: foto6/SpectraTrack
+Branch: agent/vnext-detection
+Expected current HEAD: 9362d0db5fd5eca74f2384d93cbb1faf8ebfb612
+
+Authoritative discovery evidence:
+A7 discovery @ 9773947b06edad1c44c20773092f75c212ad517b
+discovery digest sha256:ad51f9b7c3f4629155298215a52004092ea1b95bd220c4ed6a608e464971afec
+R1 baseline misses: 48 total, all low_contrast_night_darkness; 10 small-person; 17 occlusion/crowd.
+Rejected tile512: +1 TP but +75 FP and +162 prefusion duplicate pressure.
+
+A5 has frozen independent R2 and holdout4200. For this task you MUST NOT inspect R2 GT/images/results.
+
+Required:
+1. Use only R1 control/result artifacts + A7 discovery + already-known architecture/cost evidence.
+2. Propose at most ONE materially new detection hypothesis that addresses the R1 failure structure while avoiding the rejected global-smaller-tile duplicate-pressure failure. NO_CANDIDATE is acceptable.
+3. Freeze exact candidate id/version, algorithm/params, mechanism, A7 inspired_by clusters+digest, compute-call budget, predicted failure modes, hard reject/promote gates BEFORE any R2 scoring.
+4. Generic confidence-threshold search is forbidden. Do not revive candidates already rejected by frozen MOT17/CrowdHuman/dense-safety evidence.
+5. Add deterministic lock artifact + hash + immutability tests.
+6. Do NOT run R2 or FULL5000. Production/control unchanged.
+7. Commit/push only agent/vnext-detection. No merge/release; never touch E:\manhwa.
+
+Final: exact SHA + CI + candidate lock hash, or NO_CANDIDATE with evidence.
