@@ -1139,7 +1139,7 @@ class LocalOperations:
         used = 0
         truncated = False
         next_line = start
-        with path.open("r", encoding=encoding, errors="strict", newline="") as handle:
+        with path.open("r", encoding=encoding, errors="strict", newline=None) as handle:
             for number, line in enumerate(handle, start=1):
                 token.raise_if_cancelled()
                 if number < start:
@@ -1410,6 +1410,7 @@ class LocalOperations:
             handle.seek(start)
             raw = handle.read(max_bytes)
         text = raw.decode(_encoding(params), errors="strict")
+        text = text.replace("\r\n", "\n").replace("\r", "\n")
         lines = text.splitlines(keepends=True)[-max_lines:]
         return {
             "path": str(path),
