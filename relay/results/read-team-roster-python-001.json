@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json; p=r'E:\\WebAIBridge\\app\\data\\PERMANENT_TEAM_ROSTER.local.json'; d=json.load(open(p,encoding='utf-8')); keep={'bridge-primary','bridge-integration','pc-executor-primary','pc-control-primary','vision-primary','creator-primary','media-primary','growth-primary','team-coordinator','release-conformance','spectra-a1-detection','spectra-a2-tracking','spectra-a3-enhancement','spectra-a4-performance','spectra-a5-qa','spectra-a6-smoke-stats','spectra-a7-error-analysis','spectra-a8-perf-tracking'}; print(json.dumps([{k:a.get(k) for k in ('id','role','targetId','url','branch','lifecycle')} for a in d.get('agents',[]) if a.get('id') in keep],ensure_ascii=False))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\r\n  File \"<string>\", line 1, in <module>\r\n    import json; p=r'E:\\WebAIBridge\\app\\data\\PERMANENT_TEAM_ROSTER.local.json'; d=json.load(open(p,encoding='utf-8')); keep={'bridge-primary','bridge-integration','pc-executor-primary','pc-control-primary','vision-primary','creator-primary','media-primary','growth-primary','team-coordinator','release-conformance','spectra-a1-detection','spectra-a2-tracking','spectra-a3-enhancement','spectra-a4-performance','spectra-a5-qa','spectra-a6-smoke-stats','spectra-a7-error-analysis','spectra-a8-perf-tracking'}; print(json.dumps([{k:a.get(k) for k in ('id','role','targetId','url','branch','lifecycle')} for a in d.get('agents',[]) if a.get('id') in keep],ensure_ascii=False))\r\n                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\encodings\\cp1251.py\", line 19, in encode\r\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\r\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nUnicodeEncodeError: 'charmap' codec can't encode character '\\u2194' in position 4828: character maps to <undefined>\r\n",
+      "stderr_bytes": 1831,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T13:27:30.339Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T13:27:30.331Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "read-team-roster-python-001"
+    },
+    "request_id": "read-team-roster-python-001",
+    "started_at": "2026-09-27T13:27:30.214Z",
+    "status": "completed"
+  },
+  "id": "read-team-roster-python-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
