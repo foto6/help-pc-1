@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "open-canonical-agent-chats-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$urls=@('https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b661-258c-83eb-98c5-0764f594abc2','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab9011f-1798-83eb-9dc2-5df9382d9ddb','https://chatgpt.com/c/6ab8bed2-8d0c-83eb-b793-8e504335a57d','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b186-5414-83ed-b87a-1d7a901313fb','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b66d-c874-83eb-a448-594292c17d59','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b24f-9c40-83eb-9b7b-766af74defe0','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b25d-b630-83eb-bed7-7d6aa135e647','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8e9bb-77d4-83eb-a10c-24abd52018ae','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8e9a8-3464-83ed-9544-244b63bc0906','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8f4ad-224c-83ed-aa28-7a7277075fa1','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8f4d6-0de4-83eb-b451-1c1bc79d5359','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8f49f-a098-83eb-8390-979e53e97ebf','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8f596-d5a4-83eb-b677-161dd9b78f24','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8f5a6-c1b8-83eb-b3e6-d801d9857f97','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab902d9-69f0-83ed-883b-dd6bc40a2547'); foreach($u in $urls){$e=[uri]::EscapeDataString($u); try{Invoke-WebRequest -UseBasicParsing -Method Put -Uri (\"http://127.0.0.1:17410/json/new?\"+$e) | Out-Null}catch{Write-Output (\"ERR \"+$u+\" \"+$_.Exception.Message)}}; Write-Output (\"OPENED=\"+$urls.Count)"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000,
+  "note": "Open canonical old agent chats in the Bridge Chrome CDP instance."
+}
