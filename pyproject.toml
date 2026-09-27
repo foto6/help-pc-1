@@ -13,6 +13,7 @@ dependencies = [
   "uiautomation>=2.0; platform_system == 'Windows'",
   "pyautogui>=0.9.54; platform_system == 'Windows'",
   "pyperclip>=1.9; platform_system == 'Windows'",
+  "pywin32>=306; platform_system == 'Windows'",
 ]
 
 [project.optional-dependencies]
@@ -20,6 +21,7 @@ test = ["pytest>=8.0", "pytest-asyncio>=0.23"]
 
 [project.scripts]
 pc-executor = "pc_executor.__main__:main"
+pc-native-device-service = "pc_remote_transport.service_cli:main"
 
 [tool.pytest.ini_options]
 addopts = "-q"

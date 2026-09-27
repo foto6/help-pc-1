@@ -5,6 +5,7 @@ on:
     branches:
       - agent/pc-executor
       - agent/pc-native-integration-canonical
+      - agent/pc-native-device-service
   workflow_dispatch:
 
 jobs:
@@ -29,6 +30,8 @@ jobs:
         run: python -m pytest tests/test_execution_context_binding.py
       - name: Native remote transport focused suite
         run: python -m pytest tests/test_native_remote_transport.py tests/test_remote_protocol.py
+      - name: Native device service focused suite
+        run: python -m pytest tests/test_native_device_service.py
       - name: Native remote transport harness
         run: python tools/native_remote_harness.py
       - name: Full test suite
