@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$src='E:\\WebAIBridge'; $wt='C:\\agentwork\\WebAIBridge-integration-final'; if(Test-Path $wt){ Write-Output 'TARGET_ALREADY_EXISTS'; exit 10 }; git -C $src fetch origin --prune; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; git -C $src worktree add --detach $wt origin/agent/bridge-integration; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; Write-Output ('WT_HEAD|'+(git -C $wt rev-parse HEAD)); git -C $wt cherry-pick 8cee868; $rc=$LASTEXITCODE; Write-Output ('CHERRYPICK_RC|'+$rc); git -C $wt status --short; exit $rc"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Preparing worktree (detached HEAD a270c3d)\nerror: could not apply 8cee868... Harden managed agent trust boundaries\nhint: After resolving the conflicts, mark them with\nhint: \"git add/rm <pathspec>\", then run\nhint: \"git cherry-pick --continue\".\nhint: You can instead skip this commit with \"git cherry-pick --skip\".\nhint: To abort and get back to the state before \"git cherry-pick\",\nhint: run \"git cherry-pick --abort\".\nhint: Disable this message with \"git config set advice.mergeConflict false\"\n",
+      "stderr_bytes": 493,
+      "stderr_truncated": false,
+      "stdout": "HEAD is now at a270c3d bridge-integration-candidate\nWT_HEAD|a270c3de8f0b3b81c43cd4805a1c40bed0336775\r\nAuto-merging app/agent-execution-control.js\nCONFLICT (content): Merge conflict in app/agent-execution-control.js\nAuto-merging app/package.json\nCONFLICT (content): Merge conflict in app/package.json\nAuto-merging app/server.js\nCONFLICT (content): Merge conflict in app/server.js\nAuto-merging app/supervisor-control.js\nCONFLICT (content): Merge conflict in app/supervisor-control.js\nCHERRYPICK_RC|1\r\nUU app/agent-execution-control.js\nA  app/agent-security-boundaries.js\nA  app/agent-security-boundaries.test.js\nA  app/docs/AGENT_SECURITY_TRUST_BOUNDARIES.md\nUU app/package.json\nUU app/server.js\nUU app/supervisor-control.js\n",
+      "stdout_bytes": 723,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:07:29.176Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:07:29.160Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-integrate-security-start-20260927-2131"
+    },
+    "request_id": "bridge-integrate-security-start-20260927-2131",
+    "started_at": "2026-09-27T14:07:26.678Z",
+    "status": "completed"
+  },
+  "id": "bridge-integrate-security-start-20260927-2131",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
