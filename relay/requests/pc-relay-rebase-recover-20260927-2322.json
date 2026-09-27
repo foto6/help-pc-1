@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-relay-rebase-recover-20260927-2322",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$r='E:\\pc-github-relay'; \nWrite-Output 'BEFORE'; git -C $r status --porcelain=v2 -b;\nif((Test-Path \"$r\\.git\\rebase-merge\") -or (Test-Path \"$r\\.git\\rebase-apply\")){\n  Write-Output 'ABORTING_REBASE'; git -C $r rebase --abort; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}\n}else{Write-Output 'NO_REBASE_STATE'}\nWrite-Output 'AFTER_ABORT'; git -C $r status --porcelain=v2 -b;\n$dirty=(git -C $r status --porcelain);\nif($dirty){Write-Output 'DIRTY_WORKTREE_STOP'; $dirty; exit 3}\ngit -C $r fetch origin; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}\ngit -C $r pull --rebase origin agent/pc-github-relay; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}\nWrite-Output 'RECOVERED'; git -C $r status --porcelain=v2 -b; git -C $r rev-parse HEAD; git -C $r rev-list --left-right --count HEAD...origin/agent/pc-github-relay"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 60000
+}
