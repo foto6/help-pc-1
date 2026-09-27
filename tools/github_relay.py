@@ -246,7 +246,16 @@ class Relay:
         diff = _run_git(self.repo, "diff", "--cached", "--quiet", check=False)
         if diff.returncode == 0:
             return
-        _run_git(self.repo, "commit", "-m", f"relay result {request_id}")
+        _run_git(
+            self.repo,
+            "-c",
+            "user.name=PC GitHub Relay",
+            "-c",
+            "user.email=pc-relay@local.invalid",
+            "commit",
+            "-m",
+            f"relay result {request_id}",
+        )
 
         for attempt in range(3):
             pushed = _run_git(
@@ -261,7 +270,18 @@ class Relay:
             _run_git(self.repo, "pull", "--rebase", "origin", self.branch)
         raise RuntimeError(f"failed to push relay result {request_id}")
 
+    def _publish_pending_results(self) -> None:
+        # Recover results that were produced before a crash or Git commit failure.
+        # This is deliberately done before sync so a locally staged/untracked result
+        # can be committed and pushed instead of being mistaken for checkout dirt.
+        for result_path in sorted(self.results_dir.glob("*.json")):
+            result = _load_json(result_path)
+            request_id = result.get("id")
+            if isinstance(request_id, str) and REQUEST_ID_RE.fullmatch(request_id):
+                self.publish_result(result)
+
     def cycle(self) -> int:
+        self._publish_pending_results()
         self.sync()
         processed = 0
         for request_path in sorted(self.requests_dir.glob("*.json")):
