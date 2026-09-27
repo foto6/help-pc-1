@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ids=@('7fbad347-ed40-4d39-9b26-d2f5a8e90443','53560f30-896e-497c-8a25-818e6836e0a2','9c4bd28a-4a77-4b52-9323-891ba30d676f'); foreach($id in $ids){ try{$r=Invoke-RestMethod -Method Post -Uri ('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/'+$id+'/cancel') -TimeoutSec 5; Write-Output ('CANCEL|'+$id+'|'+$r.state)}catch{Write-Output ('CANCEL_ERR|'+$id+'|'+$_.Exception.Message)} }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "CANCEL|7fbad347-ed40-4d39-9b26-d2f5a8e90443|cancelled\r\nCANCEL|53560f30-896e-497c-8a25-818e6836e0a2|blocked\r\nCANCEL|9c4bd28a-4a77-4b52-9323-891ba30d676f|blocked\r\n",
+      "stdout_bytes": 161,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:48:42.081Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:48:42.057Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "cancel-nonpc-assignments-20260927-2402"
+    },
+    "request_id": "cancel-nonpc-assignments-20260927-2402",
+    "started_at": "2026-09-27T15:48:41.610Z",
+    "status": "completed"
+  },
+  "id": "cancel-nonpc-assignments-20260927-2402",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
