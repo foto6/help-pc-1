@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "relay-post-recovery-smoke-20260927-2350b",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Write-Output 'RELAY_OK'; git -C E:\\pc-github-relay status --porcelain=v1 -b; Write-Output ('NAME='+(git -C E:\\pc-github-relay config user.name)); Write-Output ('EMAIL='+(git -C E:\\pc-github-relay config user.email))"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
