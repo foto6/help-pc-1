@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "git -C E:\\WebAIBridge grep -n -E \"supervisor-watchdog.*config|managed-chats.*PATCH|managed-chats.*POST|save.*managed|normalizeManagedChats\" -- app/server.js app/supervisor-control.js | Select-Object -First 120"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "app/server.js:41:  normalizeManagedChats,\r\napp/server.js:13796:  const chats = normalizeManagedChats(config.managedChats, config.knownProjectChats);\r\napp/server.js:13945:  const registered = normalizeManagedChats(config.managedChats, config.knownProjectChats);\r\napp/server.js:14020:    ? normalizeManagedChats(baseManagedChats, [])\r\napp/server.js:14021:    : normalizeManagedChats(config.managedChats, config.knownProjectChats);\r\napp/server.js:14053:  const chats = normalizeManagedChats(config.managedChats, config.knownProjectChats);\r\napp/server.js:14183:  const chats = normalizeManagedChats(config.managedChats, config.knownProjectChats);\r\napp/server.js:15245:        managedChats:normalizeManagedChats(body.managedChats, []),\r\napp/supervisor-control.js:134:function normalizeManagedChats(rawManaged = [], legacyKnown = [], knownProjectIds = null) {\r\napp/supervisor-control.js:185:  return normalizeManagedChats(rows, []).map(item =>\r\napp/supervisor-control.js:259:  value.managedChats = normalizeManagedChats(\r\napp/supervisor-control.js:592:  normalizeManagedChats,\r\n",
+      "stdout_bytes": 1072,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:22:53.473Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:22:53.453Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-config-api-routes-20260927-2252"
+    },
+    "request_id": "bridge-config-api-routes-20260927-2252",
+    "started_at": "2026-09-27T15:22:53.156Z",
+    "status": "completed"
+  },
+  "id": "bridge-config-api-routes-20260927-2252",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
