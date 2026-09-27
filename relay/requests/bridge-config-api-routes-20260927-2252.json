@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-config-api-routes-20260927-2252",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "git -C E:\\WebAIBridge grep -n -E \"supervisor-watchdog.*config|managed-chats.*PATCH|managed-chats.*POST|save.*managed|normalizeManagedChats\" -- app/server.js app/supervisor-control.js | Select-Object -First 120"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
