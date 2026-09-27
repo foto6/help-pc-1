@@ -23,6 +23,13 @@ from .operations import (
     OPS_SIDE_EFFECT_ACTIONS,
     LocalOperations,
 )
+from .ops_outcome import (
+    LOOKUP_VERSION as OPS_LOOKUP_VERSION,
+    SOURCE as OPS_OUTCOME_SOURCE,
+    OpsActionOutcomeEvidence,
+    OpsOutcomeError,
+    OpsOutcomeJournal,
+)
 from .outcome import ActionOutcomeEvidence, SIDE_EFFECTING_ACTIONS
 from .outcome_journal import (
     ExecutionCorrelation,
@@ -85,7 +92,10 @@ def _sanitize_audit_details(value: Any) -> Any:
 
 class _OutcomeTracker:
     def __init__(self, action: str) -> None:
-        self.side_effecting = action in SIDE_EFFECTING_ACTIONS
+        self.side_effecting = (
+            action in SIDE_EFFECTING_ACTIONS
+            or action in OPS_SIDE_EFFECT_ACTIONS
+        )
         self.dispatch_started = False
         self.completed = False
         self.correlation: ExecutionCorrelation | None = None
@@ -117,6 +127,7 @@ class Executor:
         operations_state_root: str | Path | None = None,
         audit: AuditSink | None = None,
         outcome_journal: OutcomeJournal | None = None,
+        ops_outcome_journal: OpsOutcomeJournal | None = None,
         context_observer: ExecutionContextObserver | None = None,
         dry_run: bool = True,
         allow_coordinate_fallback: bool = False,
@@ -133,6 +144,7 @@ class Executor:
         )
         self.audit = audit or InMemoryAuditSink()
         self.outcome_journal = outcome_journal
+        self.ops_outcome_journal = ops_outcome_journal
         self.context_observer = context_observer or SystemExecutionContextObserver()
         self.dry_run = dry_run
         self.allow_coordinate_fallback = allow_coordinate_fallback
@@ -145,7 +157,6 @@ class Executor:
             accessibility=self.accessibility,
             input_adapter=self.input,
             shell=self.shell,
-            operations=self.operations,
             outcome_journal_configured=self.outcome_journal is not None,
             dry_run_default=self.dry_run,
             allow_coordinate_fallback=self.allow_coordinate_fallback,
@@ -171,7 +182,6 @@ class Executor:
             accessibility=self.accessibility,
             input_adapter=self.input,
             shell=self.shell,
-            operations=self.operations,
             default_timeout_ms=default_deadline_ms,
             allow_coordinate_fallback=self.allow_coordinate_fallback,
         )
@@ -355,10 +365,16 @@ class Executor:
         action: str,
         execution_attempt: int | None = None,
     ) -> dict[str, Any]:
-        if self.outcome_journal is None:
+        ops_action = action in OPS_SIDE_EFFECT_ACTIONS
+        journal = self.ops_outcome_journal if ops_action else self.outcome_journal
+        if journal is None:
             return {
-                "contract_version": LOOKUP_CONTRACT_VERSION,
-                "source": OUTCOME_JOURNAL_SOURCE,
+                "contract_version": (
+                    OPS_LOOKUP_VERSION if ops_action else LOOKUP_CONTRACT_VERSION
+                ),
+                "source": (
+                    OPS_OUTCOME_SOURCE if ops_action else OUTCOME_JOURNAL_SOURCE
+                ),
                 "request_id": request_id,
                 "requestId": request_id,
                 "action": action,
@@ -378,25 +394,31 @@ class Executor:
                     "corruption": None,
                 },
             }
-        return self.outcome_journal.lookup(
+        lookup = journal.lookup(
             request_id=request_id,
             action=action,
             execution_attempt=execution_attempt,
-        ).to_dict()
+        )
+        return lookup if isinstance(lookup, dict) else lookup.to_dict()
 
     def _journal_preflight(
         self,
         request: ActionRequest,
         tracker: _OutcomeTracker,
     ) -> None:
-        if not tracker.side_effecting or self.outcome_journal is None:
+        journal = (
+            self.ops_outcome_journal
+            if request.action in OPS_SIDE_EFFECT_ACTIONS
+            else self.outcome_journal
+        )
+        if not tracker.side_effecting or journal is None:
             return
         try:
-            self.outcome_journal.preflight_new_attempt(
+            journal.preflight_new_attempt(
                 request_id=request.request_id,
                 action=request.action,
             )
-        except OutcomeJournalError as exc:
+        except (OutcomeJournalError, OpsOutcomeError) as exc:
             tracker.journal_blocked = True
             raise PolicyBlockedError(
                 f"outcome journal blocked side-effect attempt: {exc}"
@@ -409,19 +431,22 @@ class Executor:
         *,
         raise_on_failure: bool,
     ) -> str | None:
-        if (
-            evidence is None
-            or self.outcome_journal is None
-            or tracker.journal_blocked
-        ):
+        if evidence is None or tracker.journal_blocked:
+            return None
+        journal = (
+            self.ops_outcome_journal
+            if evidence.action in OPS_SIDE_EFFECT_ACTIONS
+            else self.outcome_journal
+        )
+        if journal is None:
             return None
         try:
-            self.outcome_journal.append_terminal(
+            journal.append_terminal(
                 evidence,
                 correlation=tracker.correlation,
             )
             return None
-        except OutcomeJournalError as exc:
+        except (OutcomeJournalError, OpsOutcomeError) as exc:
             tracker.journal_blocked = True
             if raise_on_failure:
                 raise ExecutorFailureError(
@@ -437,7 +462,7 @@ class Executor:
         dry_run: bool,
         success: bool,
         error_kind: str | None = None,
-    ) -> ActionOutcomeEvidence | None:
+    ) -> ActionOutcomeEvidence | OpsActionOutcomeEvidence | None:
         if not tracker.side_effecting:
             return None
         if dry_run:
@@ -451,7 +476,12 @@ class Executor:
             state, reason = "not_started", error_kind
         else:
             state, reason = "unknown", error_kind or "executor_failure"
-        return ActionOutcomeEvidence.create(
+        evidence_type = (
+            OpsActionOutcomeEvidence
+            if request.action in OPS_SIDE_EFFECT_ACTIONS
+            else ActionOutcomeEvidence
+        )
+        return evidence_type.create(
             request_id=request.request_id,
             action=request.action,
             effect_state=state,
@@ -500,7 +530,12 @@ class Executor:
         self._validate_execution_context(request)
         if token is not None:
             token.raise_if_cancelled()
-        provisional = ActionOutcomeEvidence.create(
+        evidence_type = (
+            OpsActionOutcomeEvidence
+            if request.action in OPS_SIDE_EFFECT_ACTIONS
+            else ActionOutcomeEvidence
+        )
+        provisional = evidence_type.create(
             request_id=request.request_id,
             action=request.action,
             effect_state="unknown",
@@ -508,10 +543,15 @@ class Executor:
             reason="dispatch_started",
         )
         correlation = None
-        if self.outcome_journal is not None:
+        journal = (
+            self.ops_outcome_journal
+            if request.action in OPS_SIDE_EFFECT_ACTIONS
+            else self.outcome_journal
+        )
+        if journal is not None:
             try:
-                correlation = self.outcome_journal.start_dispatch(provisional)
-            except OutcomeJournalError as exc:
+                correlation = journal.start_dispatch(provisional)
+            except (OutcomeJournalError, OpsOutcomeError) as exc:
                 tracker.journal_blocked = True
                 raise PolicyBlockedError(
                     f"outcome journal blocked side-effect dispatch: {exc}"
@@ -793,6 +833,13 @@ class Executor:
                 lambda: self.input.clipboard_set(value),
             )
             return {"text_length": len(value)}
+
+        if action in {"ops.capabilities.get", "ops.preflight"}:
+            return self.operations.execute(
+                action,
+                p,
+                cancellation=token,
+            )
 
         if action in OPS_ACTIONS:
             self.operations.preflight(action, p)

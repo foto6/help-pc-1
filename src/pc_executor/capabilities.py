@@ -10,16 +10,6 @@ from typing import Any
 from .capture import PillowScreenCapture
 from .input import WindowsInputAdapter
 from .models import canonical_json
-from .operations import (
-    OPS_CONTRACT_VERSION,
-    OPS_READ_ONLY_ACTIONS,
-    OPS_SIDE_EFFECT_ACTIONS,
-    LocalOperations,
-    MAX_BINARY_READ_BYTES,
-    MAX_LOG_BYTES,
-    MAX_PROCESS_OUTPUT_BYTES,
-    MAX_TEXT_READ_BYTES,
-)
 from .safety import DEFAULT_SAFE_EXECUTABLES, PROTECTED_WINDOWS_ROOTS
 from .shell import SafeShellAdapter
 from .uia import WindowsUIAutomationAdapter
@@ -40,7 +30,6 @@ READ_ONLY_ACTIONS = frozenset(
         "uia.inspect",
         "clipboard.get",
     }
-    | set(OPS_READ_ONLY_ACTIONS)
 )
 SIDE_EFFECT_ACTIONS = frozenset(
     {
@@ -54,7 +43,6 @@ SIDE_EFFECT_ACTIONS = frozenset(
         "clipboard.set",
         "shell.run",
     }
-    | set(OPS_SIDE_EFFECT_ACTIONS)
 )
 SUPPORTED_ACTIONS = tuple(sorted(READ_ONLY_ACTIONS | SIDE_EFFECT_ACTIONS))
 
@@ -138,7 +126,6 @@ def build_capabilities(
     accessibility: object,
     input_adapter: object,
     shell: object,
-    operations: object,
     outcome_journal_configured: bool,
     dry_run_default: bool,
     allow_coordinate_fallback: bool,
@@ -183,11 +170,6 @@ def build_capabilities(
             methods=("validate", "run"),
             native_type=SafeShellAdapter,
         ),
-        "operations": _availability(
-            configured=operations,
-            methods=("preflight", "execute"),
-            native_type=LocalOperations,
-        ),
     }
 
     action_adapters = {
@@ -208,7 +190,6 @@ def build_capabilities(
         "clipboard.get": "clipboard",
         "clipboard.set": "clipboard",
         "shell.run": "shell",
-        **{action: "operations" for action in OPS_READ_ONLY_ACTIONS | OPS_SIDE_EFFECT_ACTIONS},
     }
     actions: dict[str, dict[str, Any]] = {}
     for action in SUPPORTED_ACTIONS:
@@ -249,13 +230,6 @@ def build_capabilities(
             "shell_output_limit_bytes": output_limit,
             "operation_timeout_ms": int(max(0.0, operation_timeout_seconds) * 1000),
             "outcome_journal_configured": bool(outcome_journal_configured),
-            "structured_ops_contract_version": OPS_CONTRACT_VERSION,
-            "structured_text_read_limit_bytes": MAX_TEXT_READ_BYTES,
-            "structured_binary_read_limit_bytes": MAX_BINARY_READ_BYTES,
-            "structured_log_limit_bytes": MAX_LOG_BYTES,
-            "managed_process_output_limit_bytes": MAX_PROCESS_OUTPUT_BYTES,
-            "process_termination_scope": "gateway_owned_current_generation_only",
-            "path_policy": "lexical_plus_resolved_target_and_existing_ancestors",
         },
     }
     digest = hashlib.sha256(canonical_json(body).encode("utf-8")).hexdigest()

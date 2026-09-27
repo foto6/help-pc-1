@@ -27,6 +27,9 @@ from .shell import SafeShellAdapter
 
 
 OPS_CONTRACT_VERSION = "pc_executor.ops.v1"
+OPS_CAPABILITIES_VERSION = "pc_executor.ops_capabilities.v1"
+OPS_PREFLIGHT_VERSION = "pc_executor.ops_preflight.v1"
+OPS_CONTEXT_VERSION = "pc_executor.ops_context_binding.v1"
 CURSOR_VERSION = "pc_executor.stream_cursor.v1"
 LOG_CURSOR_VERSION = "pc_executor.log_cursor.v1"
 PROCESS_HANDLE_VERSION = "pc_executor.process_handle.v1"
@@ -83,7 +86,12 @@ SESSION_WRITE_ACTIONS = frozenset(
 )
 SYSTEM_ACTIONS = frozenset({"system.info", "system.resources", "system.paths"})
 OPS_READ_ONLY_ACTIONS = frozenset(
-    FS_READ_ACTIONS | LOG_ACTIONS | PROCESS_READ_ACTIONS | SESSION_READ_ACTIONS | SYSTEM_ACTIONS
+    FS_READ_ACTIONS
+    | LOG_ACTIONS
+    | PROCESS_READ_ACTIONS
+    | SESSION_READ_ACTIONS
+    | SYSTEM_ACTIONS
+    | {"ops.capabilities.get", "ops.preflight"}
 )
 OPS_SIDE_EFFECT_ACTIONS = frozenset(
     FS_WRITE_ACTIONS | PROCESS_WRITE_ACTIONS | SESSION_WRITE_ACTIONS
@@ -241,6 +249,12 @@ def validate_ops_params(action: str, params: Mapping[str, Any]) -> None:
         raise ValueError(f"unsupported structured operation: {action}")
     if not isinstance(params, Mapping):
         raise ValueError(f"{action} params must be an object")
+    if action == "ops.capabilities.get":
+        _exact_params(action, params, set(), set())
+        return
+    if action == "ops.preflight":
+        _validate_ops_preflight_payload(params)
+        return
 
     schemas: dict[str, tuple[set[str], set[str]]] = {
         "fs.list": ({"path", "max_entries", "include_hidden"}, {"path"}),
@@ -304,7 +318,7 @@ def validate_ops_params(action: str, params: Mapping[str, Any]) -> None:
         "process.list": ({"pid", "name_contains", "max_results"}, set()),
         "process.inspect": ({"pid"}, {"pid"}),
         "process.start": (
-            {"argv", "cwd", "env", "inherit_env", "output_limit_bytes"},
+            {"argv", "cwd", "env", "inherit_env", "output_limit_bytes", "context_binding"},
             {"argv"},
         ),
         "process.status": ({"handle_id"}, {"handle_id"}),
@@ -474,6 +488,75 @@ def _validate_start_params(action: str, params: Mapping[str, Any]) -> None:
                 raise ValueError(f"{action} env value is invalid or too large")
     _optional_bool(params.get("inherit_env"), f"{action} inherit_env", default=True)
     _integer(params.get("output_limit_bytes", MAX_PROCESS_OUTPUT_BYTES), f"{action} output_limit_bytes", minimum=1024, maximum=MAX_PROCESS_OUTPUT_BYTES)
+    if params.get("context_binding") is not None:
+        _validate_ops_context_binding(params["context_binding"], action)
+
+
+def _validate_ops_preflight_payload(value: Any) -> dict[str, Any]:
+    if not isinstance(value, Mapping):
+        raise ValueError("ops.preflight payload must be an object")
+    if set(value) != {"contract_version", "request"}:
+        raise ValueError("ops.preflight payload keys mismatch")
+    if value["contract_version"] != OPS_PREFLIGHT_VERSION:
+        raise ValueError("unsupported ops.preflight contract_version")
+    request = value["request"]
+    if not isinstance(request, Mapping):
+        raise ValueError("ops.preflight request must be an object")
+    allowed = {"request_id", "action", "params", "timeout_ms"}
+    required = {"request_id", "action", "params"}
+    if set(request) - allowed or required - set(request):
+        raise ValueError("ops.preflight request keys mismatch")
+    _nonempty(request["request_id"], "ops.preflight request_id", max_length=128)
+    action = _nonempty(request["action"], "ops.preflight action", max_length=128)
+    if action in {"ops.preflight", "ops.capabilities.get"}:
+        raise ValueError("ops.preflight cannot target ops meta-actions")
+    if action not in OPS_ACTIONS:
+        raise ValueError(f"unsupported structured operation: {action}")
+    if not isinstance(request["params"], Mapping):
+        raise ValueError("ops.preflight params must be an object")
+    timeout = request.get("timeout_ms")
+    if timeout is not None:
+        _integer(timeout, "ops.preflight timeout_ms", minimum=1, maximum=120000)
+    return {
+        "request_id": request["request_id"],
+        "action": action,
+        "params": dict(request["params"]),
+        "timeout_ms": timeout,
+    }
+
+
+def _validate_ops_context_binding(value: Any, action: str) -> dict[str, Any]:
+    if not isinstance(value, Mapping):
+        raise ValueError("ops context_binding must be an object")
+    expected = {
+        "contract_version",
+        "action",
+        "executable",
+        "cwd_path_sha256",
+        "cwd_device",
+        "cwd_inode",
+        "context_digest",
+    }
+    if set(value) != expected:
+        raise ValueError("ops context_binding keys mismatch")
+    if value["contract_version"] != OPS_CONTEXT_VERSION or value["action"] != action:
+        raise ValueError("ops context_binding version/action mismatch")
+    for key in ("executable", "cwd_path_sha256", "context_digest"):
+        if not isinstance(value[key], str) or not value[key]:
+            raise ValueError(f"ops context_binding {key} is invalid")
+    if not re.fullmatch(r"[0-9a-f]{64}", value["cwd_path_sha256"]):
+        raise ValueError("ops context_binding cwd_path_sha256 is invalid")
+    for key in ("cwd_device", "cwd_inode"):
+        if value[key] is not None:
+            _integer(value[key], f"ops context_binding {key}", minimum=0)
+    body = dict(value)
+    claimed = body.pop("context_digest")
+    actual = hashlib.sha256(
+        json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    ).hexdigest()
+    if claimed != actual:
+        raise ValueError("ops context_binding digest mismatch")
+    return dict(value)
 
 
 def _validate_stream_cursor(value: Any, handle_id: str) -> dict[str, Any]:
@@ -720,14 +803,107 @@ class LocalOperations:
             )
         return root / "pc-executor" / "operations"
 
+    def capabilities_snapshot(self) -> dict[str, Any]:
+        actions = {
+            action: {
+                "side_effecting": action in OPS_SIDE_EFFECT_ACTIONS,
+                "supported": True,
+            }
+            for action in sorted(OPS_ACTIONS)
+        }
+        body = {
+            "contract_version": OPS_CAPABILITIES_VERSION,
+            "operations_contract_version": OPS_CONTRACT_VERSION,
+            "actions": actions,
+            "safety": {
+                "protected_path_policy": "lexical_plus_resolved_target_and_existing_ancestors",
+                "credential_entry_allowed": False,
+                "captcha_entry_allowed": False,
+                "process_termination_scope": "gateway_owned_current_generation_only",
+                "max_text_read_bytes": MAX_TEXT_READ_BYTES,
+                "max_binary_read_bytes": MAX_BINARY_READ_BYTES,
+                "max_log_bytes": MAX_LOG_BYTES,
+                "max_process_output_bytes": MAX_PROCESS_OUTPUT_BYTES,
+            },
+        }
+        digest = hashlib.sha256(
+            json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+        ).hexdigest()
+        return {**body, "attestation": {"algorithm": "sha256", "digest": digest}}
+
+    def preflight_contract(self, payload: Mapping[str, Any]) -> dict[str, Any]:
+        try:
+            parsed = _validate_ops_preflight_payload(payload)
+            self.preflight(parsed["action"], parsed["params"])
+            context = None
+            if parsed["action"] in {"process.start", "shell.session.start"}:
+                context = self._start_context(parsed["action"], parsed["params"])
+            return {
+                "contract_version": OPS_PREFLIGHT_VERSION,
+                "request_id": parsed["request_id"],
+                "action": parsed["action"],
+                "status": "ready",
+                "executable": True,
+                "side_effecting": parsed["action"] in OPS_SIDE_EFFECT_ACTIONS,
+                "reason": "ready",
+                "context_binding": context,
+            }
+        except SafetyViolation as exc:
+            request = payload.get("request") if isinstance(payload, Mapping) else None
+            return {
+                "contract_version": OPS_PREFLIGHT_VERSION,
+                "request_id": request.get("request_id") if isinstance(request, Mapping) else None,
+                "action": request.get("action") if isinstance(request, Mapping) else None,
+                "status": "blocked",
+                "executable": False,
+                "side_effecting": (
+                    isinstance(request, Mapping)
+                    and request.get("action") in OPS_SIDE_EFFECT_ACTIONS
+                ),
+                "reason": str(exc),
+                "context_binding": None,
+            }
+        except (KeyError, TypeError, ValueError) as exc:
+            request = payload.get("request") if isinstance(payload, Mapping) else None
+            return {
+                "contract_version": OPS_PREFLIGHT_VERSION,
+                "request_id": request.get("request_id") if isinstance(request, Mapping) else None,
+                "action": request.get("action") if isinstance(request, Mapping) else None,
+                "status": "invalid_request",
+                "executable": False,
+                "side_effecting": False,
+                "reason": str(exc),
+                "context_binding": None,
+            }
+
+    def _start_context(self, action: str, params: Mapping[str, Any]) -> dict[str, Any]:
+        argv = self.shell.validate(params["argv"], cwd=params.get("cwd"))
+        cwd = ensure_resolved_path_allowed(params.get("cwd") or os.getcwd())
+        device, inode = _file_identity(cwd)
+        body: dict[str, Any] = {
+            "contract_version": OPS_CONTEXT_VERSION,
+            "action": action,
+            "executable": Path(str(argv[0]).replace("\\", "/")).name.lower(),
+            "cwd_path_sha256": _path_digest(cwd),
+            "cwd_device": device,
+            "cwd_inode": inode,
+        }
+        body["context_digest"] = hashlib.sha256(
+            json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+        ).hexdigest()
+        return body
+
     def preflight(self, action: str, params: Mapping[str, Any]) -> None:
         validate_ops_params(action, params)
+        if action in {"ops.capabilities.get", "ops.preflight"}:
+            return
         if action.startswith("fs.") or action.startswith("log."):
             self._preflight_path_action(action, params)
         elif action in {"process.start", "shell.session.start"}:
-            self.shell.validate(params["argv"], cwd=params.get("cwd"))
-            if params.get("cwd") is not None:
-                ensure_resolved_path_allowed(params["cwd"])
+            current = self._start_context(action, params)
+            supplied = params.get("context_binding")
+            if supplied is not None and _validate_ops_context_binding(supplied, action) != current:
+                raise SafetyViolation("structured operation context changed since preflight")
         elif action in {
             "process.status",
             "process.read_output",
@@ -832,6 +1008,10 @@ class LocalOperations:
         token.raise_if_cancelled()
         self.preflight(action, params)
 
+        if action == "ops.capabilities.get":
+            return {"capabilities": self.capabilities_snapshot()}
+        if action == "ops.preflight":
+            return {"preflight": self.preflight_contract(params)}
         if action == "fs.list":
             return self._fs_list(params, token)
         if action == "fs.stat":

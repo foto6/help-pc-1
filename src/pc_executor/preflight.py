@@ -5,7 +5,6 @@ from typing import Any, Mapping
 
 from .errors import AmbiguousTargetError, PolicyBlockedError, StaleTargetError
 from .models import ElementInfo, ElementQuery
-from .operations import OPS_ACTIONS, validate_ops_params
 from .safety import SafetyViolation, ensure_not_sensitive_text
 from .vision_target import GroundedTargetContractError, parse_grounded_target_v1
 
@@ -205,7 +204,6 @@ def evaluate_preflight(
     accessibility: object,
     input_adapter: object,
     shell: object,
-    operations: object,
     default_timeout_ms: int,
     allow_coordinate_fallback: bool,
 ) -> PreflightResult:
@@ -234,49 +232,6 @@ def evaluate_preflight(
             code="adapter_unavailable",
             message=reason,
         )
-
-    if action in OPS_ACTIONS:
-        try:
-            validate_ops_params(action, params)
-        except SafetyViolation as exc:
-            return _result(
-                preflight,
-                status="blocked",
-                digest=digest,
-                deadline=deadline,
-                code="structured_operation_policy_blocked",
-                message=str(exc),
-            )
-        except ValueError as exc:
-            return _result(
-                preflight,
-                status="invalid_request",
-                digest=digest,
-                deadline=deadline,
-                code="invalid_action_params",
-                message=str(exc),
-            )
-        try:
-            operations.preflight(action, params)
-        except SafetyViolation as exc:
-            return _result(
-                preflight,
-                status="blocked",
-                digest=digest,
-                deadline=deadline,
-                code="structured_operation_policy_blocked",
-                message=str(exc),
-            )
-        except Exception as exc:
-            return _result(
-                preflight,
-                status="unsupported",
-                digest=digest,
-                deadline=deadline,
-                code="structured_operation_preflight_unavailable",
-                message=f"{type(exc).__name__}: {exc}",
-            )
-        return _ready(preflight, digest=digest, deadline=deadline)
 
     try:
         _validate_params(action, params)

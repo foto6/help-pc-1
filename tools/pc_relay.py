@@ -18,6 +18,7 @@ from pc_executor.audit import JsonlAuditSink
 from pc_executor.executor import Executor
 from pc_executor.models import ActionRequest
 from pc_executor.outcome_journal import OutcomeJournal
+from pc_executor.ops_outcome import OpsOutcomeJournal
 from pc_executor.operations import (
     OPS_READ_ONLY_ACTIONS,
     OPS_SIDE_EFFECT_ACTIONS,
@@ -1090,6 +1091,9 @@ def build_executor(state_root: Path, *, live: bool) -> Executor:
         operations=operations,
         audit=JsonlAuditSink(str(state_root / "audit.jsonl")),
         outcome_journal=OutcomeJournal(str(state_root / "outcome-journal-v1.jsonl")),
+        ops_outcome_journal=OpsOutcomeJournal(
+            str(state_root / "ops-outcome-journal-v1.jsonl")
+        ),
         dry_run=not live,
         allow_coordinate_fallback=False,
         operation_timeout_seconds=MAX_TIMEOUT_MS / 1000.0,

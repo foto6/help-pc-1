@@ -14,12 +14,12 @@ from pc_executor.executor import Executor
 from pc_executor.models import ActionRequest
 from pc_executor.operations import (
     OPS_ACTIONS,
-    OPS_READ_ONLY_ACTIONS,
+    OPS_CAPABILITIES_VERSION,
+    OPS_PREFLIGHT_VERSION,
     OPS_SIDE_EFFECT_ACTIONS,
     LocalOperations,
 )
-from pc_executor.outcome_journal import OutcomeJournal
-from pc_executor.preflight import CONTRACT_VERSION as PREFLIGHT_VERSION
+from pc_executor.ops_outcome import OpsOutcomeJournal
 from pc_executor.safety import SafetyViolation, ensure_resolved_path_allowed
 from pc_executor.shell import SafeShellAdapter
 
@@ -28,7 +28,7 @@ def make_executor(
     tmp_path: Path,
     *,
     live: bool = True,
-    journal: OutcomeJournal | None = None,
+    journal: OpsOutcomeJournal | None = None,
 ):
     executable = Path(sys.executable).name.lower()
     shell = SafeShellAdapter(
@@ -39,7 +39,7 @@ def make_executor(
     executor = Executor(
         shell=shell,
         operations=ops,
-        outcome_journal=journal,
+        ops_outcome_journal=journal,
         dry_run=not live,
         operation_timeout_seconds=5.0,
     )
@@ -57,7 +57,7 @@ def request(action: str, params: dict, request_id: str = "ops-1") -> ActionReque
 
 def preflight_payload(action: str, params: dict) -> dict:
     return {
-        "contract_version": PREFLIGHT_VERSION,
+        "contract_version": OPS_PREFLIGHT_VERSION,
         "request": {
             "request_id": "preflight-ops",
             "action": action,
@@ -81,16 +81,23 @@ def wait_for_exit(executor: Executor, handle_id: str, timeout: float = 5.0) -> d
     raise AssertionError("managed process did not exit")
 
 
-def test_action_inventory_is_exposed_in_capabilities(tmp_path: Path) -> None:
+def test_action_inventory_is_exposed_in_versioned_ops_capabilities(
+    tmp_path: Path,
+) -> None:
     executor, _ops = make_executor(tmp_path)
-    caps = executor.capabilities_snapshot()
+    result = executor.execute(
+        request("ops.capabilities.get", {}, "ops-capabilities")
+    )
+    caps = result.data["capabilities"]
 
-    assert OPS_ACTIONS.issubset(caps["actions"])
+    assert result.ok is True
+    assert caps["contract_version"] == OPS_CAPABILITIES_VERSION
+    assert set(caps["actions"]) == set(OPS_ACTIONS)
     assert all(
-        caps["actions"][name]["side_effecting"] is (name in OPS_SIDE_EFFECT_ACTIONS)
+        caps["actions"][name]["side_effecting"]
+        is (name in OPS_SIDE_EFFECT_ACTIONS)
         for name in OPS_ACTIONS
     )
-    assert caps["safety"]["structured_ops_contract_version"] == "pc_executor.ops.v1"
     assert caps["safety"]["process_termination_scope"] == (
         "gateway_owned_current_generation_only"
     )
@@ -194,8 +201,14 @@ def test_write_hash_preconditions_and_file_change_between_preflight_write(
         "expected_current_hash": before,
     }
 
-    ready = executor.preflight(preflight_payload("fs.write_text", params))
-    assert ready.status == "ready"
+    ready = executor.execute(
+        request(
+            "ops.preflight",
+            preflight_payload("fs.write_text", params),
+            "preflight-write",
+        )
+    )
+    assert ready.data["preflight"]["status"] == "ready"
     target.write_text("changed", encoding="utf-8")
 
     result = executor.execute(request("fs.write_text", params, "stale-write"))
@@ -274,7 +287,14 @@ def test_delete_race_and_explicit_classification(tmp_path: Path) -> None:
         "classification": "file",
         "expected_current_hash": digest,
     }
-    assert executor.preflight(preflight_payload("fs.delete", params)).status == "ready"
+    preflight = executor.execute(
+        request(
+            "ops.preflight",
+            preflight_payload("fs.delete", params),
+            "preflight-delete",
+        )
+    )
+    assert preflight.data["preflight"]["status"] == "ready"
     target.write_text("new", encoding="utf-8")
 
     result = executor.execute(request("fs.delete", params, "delete-race"))
@@ -537,37 +557,85 @@ def test_shell_session_io_and_restart_semantics(tmp_path: Path) -> None:
 
 def test_session_blocks_sensitive_or_captcha_stdin(tmp_path: Path) -> None:
     executor, _ops = make_executor(tmp_path)
-    result = executor.preflight(
-        preflight_payload(
+    result = executor.execute(
+        request(
+            "ops.preflight",
+            preflight_payload(
             "shell.session.write_stdin",
             {
                 "session_id": "session:any",
                 "text": "captcha=1234",
                 "sensitive": False,
             },
+        ),
+            "preflight-sensitive-session",
         )
     )
-    assert result.status == "blocked"
+    assert result.data["preflight"]["status"] == "blocked"
 
 
 def test_process_start_blocks_sensitive_environment(tmp_path: Path) -> None:
     executor, _ops = make_executor(tmp_path)
-    result = executor.preflight(
-        preflight_payload(
+    result = executor.execute(
+        request(
+            "ops.preflight",
+            preflight_payload(
             "process.start",
             {
                 "argv": [sys.executable, "-V"],
                 "env": {"API_TOKEN": "should-never-enter-transport"},
             },
+        ),
+            "preflight-sensitive-env",
         )
     )
+    assert result.data["preflight"]["status"] == "blocked"
+
+
+def test_process_start_preflight_context_binding_is_revalidated(
+    tmp_path: Path,
+) -> None:
+    cwd = tmp_path / "cwd"
+    cwd.mkdir()
+    executor, _ops = make_executor(tmp_path)
+    payload = preflight_payload(
+        "process.start",
+        {
+            "argv": [sys.executable, "-c", "print('should-not-run')"],
+            "cwd": str(cwd),
+        },
+    )
+    checked = executor.execute(
+        request("ops.preflight", payload, "ops-context-preflight")
+    )
+    preflight = checked.data["preflight"]
+    assert preflight["status"] == "ready"
+    binding = preflight["context_binding"]
+    assert binding["contract_version"] == "pc_executor.ops_context_binding.v1"
+
+    moved = tmp_path / "old-cwd"
+    cwd.rename(moved)
+    cwd.mkdir()
+    result = executor.execute(
+        request(
+            "process.start",
+            {
+                "argv": [sys.executable, "-c", "print('should-not-run')"],
+                "cwd": str(cwd),
+                "context_binding": binding,
+            },
+            "ops-context-start",
+        )
+    )
+
     assert result.status == "blocked"
+    assert result.outcome_evidence.effect_state == "not_started"
 
 
 def test_duplicate_side_effect_operation_id_is_blocked_by_outcome_journal(
     tmp_path: Path,
 ) -> None:
-    journal = OutcomeJournal(tmp_path / "outcomes.jsonl")
+    journal = OpsOutcomeJournal(tmp_path / "ops-outcomes.jsonl")
     executor, _ops = make_executor(tmp_path, journal=journal)
     target = tmp_path / "dup-dir"
     first = executor.execute(

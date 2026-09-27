@@ -21,7 +21,7 @@ UIA_ACTIONS = frozenset(
 FOREGROUND_ACTIONS = frozenset(
     {"mouse.click", "keyboard.press", "keyboard.type_text", "clipboard.set"}
 )
-SHELL_ACTIONS = frozenset({"shell.run", "process.start", "shell.session.start"})
+SHELL_ACTIONS = frozenset({"shell.run"})
 BOUND_ACTIONS = UIA_ACTIONS | FOREGROUND_ACTIONS | SHELL_ACTIONS
 
 AUTHORITY_BY_KIND = {
@@ -444,7 +444,7 @@ def derive_execution_context_binding(
         argv = params.get("argv")
         if not isinstance(argv, list) or not argv:
             raise ExecutionContextBindingError(
-                f"{action} argv must be a non-empty array"
+                "shell.run argv must be a non-empty array"
             )
         cwd = params.get("cwd")
         validated = shell_adapter.validate(argv, cwd=cwd)

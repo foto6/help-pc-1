@@ -7,6 +7,7 @@ import sys
 from .audit import JsonlAuditSink
 from .executor import Executor
 from .models import ActionRequest
+from .ops_outcome import OpsOutcomeJournal
 from .outcome_journal import OutcomeJournal
 
 
@@ -19,9 +20,22 @@ def build_parser() -> argparse.ArgumentParser:
         "--outcome-journal",
         default=None,
         help=(
-            "append-only outcome journal path; live mode defaults to the "
+            "append-only legacy outcome journal path; live mode defaults to the "
             "platform state directory"
         ),
+    )
+    parser.add_argument(
+        "--ops-outcome-journal",
+        default=None,
+        help=(
+            "append-only structured-operations outcome journal path; live mode "
+            "defaults to the platform state directory"
+        ),
+    )
+    parser.add_argument(
+        "--ops-state-dir",
+        default=None,
+        help="durable managed process/session state directory",
     )
     return parser
 
@@ -33,11 +47,19 @@ def main() -> int:
     if journal_path is None and args.live:
         journal_path = str(OutcomeJournal.default_path())
     outcome_journal = OutcomeJournal(journal_path) if journal_path else None
+    ops_journal_path = args.ops_outcome_journal
+    if ops_journal_path is None and args.live:
+        ops_journal_path = str(OpsOutcomeJournal.default_path())
+    ops_outcome_journal = (
+        OpsOutcomeJournal(ops_journal_path) if ops_journal_path else None
+    )
     executor = Executor(
         dry_run=not args.live,
         allow_coordinate_fallback=args.allow_coordinate_fallback,
         audit=audit,
         outcome_journal=outcome_journal,
+        ops_outcome_journal=ops_outcome_journal,
+        operations_state_root=args.ops_state_dir,
     )
     exit_code = 0
     for line in sys.stdin:
