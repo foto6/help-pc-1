@@ -1,0 +1,46 @@
+EXECUTE NOW — PRIMARY VISION WAVE 9 / ACTION-EFFECT ATTRIBUTION WITHOUT CAUSAL OVERCLAIM. Do not acknowledge readiness.
+
+Repository: foto6/vision-2
+Branch: agent/vision
+Expected current HEAD: 51b96fb41cb72cdfc4a03129d14b9afc5fe750fd
+Exact-head CI 36317785328 SUCCESS.
+
+Preserve perception_snapshot.v2, grounded_target.v1, semantic_ui_delta.v1, observation_consistency.v1, observation_epoch.v1 and post-action verification contracts.
+
+Goal:
+Distinguish UI changes consistent with the requested action from unrelated background churn, without pretending observational evidence proves causality.
+
+Required:
+1. New read-only versioned vision.action_effect_evidence.v1 bound to:
+   - before/after snapshot digests;
+   - semantic_ui_delta.v1 digest;
+   - observation_consistency.v1;
+   - observation_epoch.v1;
+   - optional action/request/target binding.
+2. Statuses such as:
+   target_consistent_effect / ambient_only / contradictory / insufficient / stale
+   with machine-readable reasons.
+3. Evidence rules:
+   - target-specific property/value/visibility/invocation-result change may support target_consistent_effect;
+   - unrelated UI churn alone => ambient_only;
+   - expected target unchanged while conflicting control appears => contradictory/insufficient as justified;
+   - epoch mismatch/stale capture => stale;
+   - never claim deterministic causality solely from temporal ordering.
+4. Bounded delayed-effect window: support a small ordered sequence of post-action observations; do not infinite-poll.
+5. Fixtures:
+   save button -> toast appears;
+   save button -> unrelated clock changes;
+   checkbox toggles;
+   modal opens after delay;
+   background notification only;
+   target replaced by app restart;
+   same target moves only;
+   unrelated list refresh;
+   conflicting error banner.
+6. Integrate optionally with PostActionVerifier: this evidence can strengthen VERIFIED/FAILED/INCONCLUSIVE but cannot grant side-effect authority.
+7. Property tests for irrelevant-churn invariance, provenance sensitivity, ordering, delayed-window determinism.
+8. Benchmark on 1k-node snapshots, no image-model inference required.
+9. Read-only only. No input/network/credentials.
+
+Commit/push only agent/vision. No merge/release; never touch E:\manhwa.
+Final exact SHA + CI + fixture/report hash.
