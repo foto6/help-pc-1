@@ -10,6 +10,7 @@ Input is one JSON object per line. `request_id` is optional; `dry_run` can overr
 
 | Action | Params | Notes |
 |---|---|---|
+| outcome.lookup | {"request_id":"...","action":"...","execution_attempt":1} | Read-only durable outcome-journal lookup; never invokes side-effect adapters. |
 | screenshot.capture | {} | Base64 PNG plus capture id, dimensions, display geometry, coordinate space and SHA-256. |
 | windows.list | {} | Visible top-level windows in deterministic order. |
 | uia.snapshot | {"window_title":"optional"} | Read-only canonical UIA observation snapshot. |
@@ -59,6 +60,8 @@ Input is one JSON object per line. `request_id` is optional; `dry_run` can overr
 `error_kind` is one of `transient`, `stale_target`, `ambiguous_target`, `policy_blocked`, `timeout`, `cancelled`, or `executor_failure`.
 
 Live/dry-run side-effecting actions additionally emit strict `pc_executor.action_outcome.v1` evidence. `not_started` is duplicate-effect safe, `completed` must not be re-executed, and `unknown` requires verification/reconciliation rather than execution retry. Read-only results preserve the legacy shape and omit `outcome_evidence`. See `docs/ACTION_OUTCOME_V1.md`.
+
+When an `OutcomeJournal` is configured, side-effect transitions are also persisted as `pc_executor.outcome_journal.record.v1`. `outcome.lookup` returns `pc_executor.outcome_journal.lookup.v1`, including `outcome`, `latest_valid_evidence`, complete matching history, integrity provenance and `replay_authorized=false`. See `docs/OUTCOME_JOURNAL_V1.md`.
 
 ## Shell result metadata
 

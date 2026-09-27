@@ -59,6 +59,12 @@ Side-effecting actions carry strict `pc_executor.action_outcome.v1` evidence. Th
 
 This evidence layer is orthogonal to UIA resolution, cancellation, and verification logic: it does not duplicate Vision semantics or Control Plane state machines. It only reports what the local Executor can prove about its own side-effect attempt.
 
+## Durable outcome journal
+
+`OutcomeJournal` persists the same frozen outcome evidence as canonical append-only JSONL. Before a live adapter call it appends and fsyncs provisional `unknown/dispatch_started`; after resolution it appends a terminal record with the same execution correlation. Records carry a contiguous sequence and SHA-256 chain. Corrupt or truncated tails force lookup to `unknown` and block further side-effect attempts until recovery is handled explicitly.
+
+`outcome.lookup` and `OutcomeJournal.read_evidence()` are read-only. They return history/provenance plus a Control-compatible outcome and always report `replay_authorized=false`; neither path can invoke UI/input/shell adapters. See `docs/OUTCOME_JOURNAL_V1.md`.
+
 ## Safety invariants
 
 - Default mode is dry-run.

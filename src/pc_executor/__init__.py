@@ -10,6 +10,17 @@ from .outcome import (
     parse_action_outcome,
     validate_action_outcome,
 )
+from .outcome_journal import (
+    LOOKUP_CONTRACT_VERSION as OUTCOME_JOURNAL_LOOKUP_CONTRACT_VERSION,
+    RECORD_CONTRACT_VERSION as OUTCOME_JOURNAL_RECORD_CONTRACT_VERSION,
+    ExecutionCorrelation,
+    OutcomeJournal,
+    OutcomeJournalConflictError,
+    OutcomeJournalIntegrityError,
+    OutcomeJournalLookup,
+    OutcomeJournalRecord,
+    OutcomeJournalReplayUnsafeError,
+)
 
 __all__ = [
     "Executor",
@@ -23,4 +34,13 @@ __all__ = [
     "ACTION_OUTCOME_CONTRACT_VERSION",
     "parse_action_outcome",
     "validate_action_outcome",
+    "OutcomeJournal",
+    "OutcomeJournalRecord",
+    "OutcomeJournalLookup",
+    "ExecutionCorrelation",
+    "OutcomeJournalIntegrityError",
+    "OutcomeJournalConflictError",
+    "OutcomeJournalReplayUnsafeError",
+    "OUTCOME_JOURNAL_RECORD_CONTRACT_VERSION",
+    "OUTCOME_JOURNAL_LOOKUP_CONTRACT_VERSION",
 ]

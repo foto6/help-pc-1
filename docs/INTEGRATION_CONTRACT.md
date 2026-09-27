@@ -36,6 +36,8 @@ Round-1 status compatibility is preserved: policy blocks return `status="blocked
 
 Outcome evidence changes retry authority: `not_started` only proves duplicate-effect safety and still obeys `error_kind`; `completed` must never be re-executed; `unknown` must enter verification/reconciliation and may retry observation only. A transport/process loss after side-effect dispatch must be treated as `unknown`, not as an execution retry. The exact transport is documented in `docs/ACTION_OUTCOME_V1.md`.
 
+For transport/process loss where no final `ActionResult` arrives, use the read-only outcome journal described in `docs/OUTCOME_JOURNAL_V1.md`. Current Control Plane `27ac92f38892605cdac0ca6cdc968757b1c9cb66` can consume the lookup's top-level `outcome` through its injected `readEvidence` boundary. Journal corruption or a provisional-only record must be treated as `unknown`; the journal never authorizes replay.
+
 ## Boundary rules
 
 - Do not send credentials, secrets, authentication codes, CAPTCHA answers, or password-field content.

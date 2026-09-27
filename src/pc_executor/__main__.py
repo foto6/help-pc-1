@@ -7,6 +7,7 @@ import sys
 from .audit import JsonlAuditSink
 from .executor import Executor
 from .models import ActionRequest
+from .outcome_journal import OutcomeJournal
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -14,16 +15,29 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--live", action="store_true", help="execute side effects; default is dry-run")
     parser.add_argument("--allow-coordinate-fallback", action="store_true")
     parser.add_argument("--audit-jsonl", default=None)
+    parser.add_argument(
+        "--outcome-journal",
+        default=None,
+        help=(
+            "append-only outcome journal path; live mode defaults to the "
+            "platform state directory"
+        ),
+    )
     return parser
 
 
 def main() -> int:
     args = build_parser().parse_args()
     audit = JsonlAuditSink(args.audit_jsonl) if args.audit_jsonl else None
+    journal_path = args.outcome_journal
+    if journal_path is None and args.live:
+        journal_path = str(OutcomeJournal.default_path())
+    outcome_journal = OutcomeJournal(journal_path) if journal_path else None
     executor = Executor(
         dry_run=not args.live,
         allow_coordinate_fallback=args.allow_coordinate_fallback,
         audit=audit,
+        outcome_journal=outcome_journal,
     )
     exit_code = 0
     for line in sys.stdin:
