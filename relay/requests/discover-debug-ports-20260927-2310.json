@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "discover-debug-ports-20260927-2310",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'chrome|msedge' -and $_.CommandLine -match 'remote-debugging-port' } | ForEach-Object { if($_.CommandLine -match '--remote-debugging-port[= ](\\d+)'){ Write-Output ('PORT|'+$matches[1]+'|pid='+$_.ProcessId) } } | Sort-Object -Unique"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
