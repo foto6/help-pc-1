@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "reroute-pc-ops-to-vision-20260927-2320",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$body=[Uri]::UnescapeDataString('%7B%22text%22%3A%22EXECUTE%20NOW.%20PC%20OPS%20MIGRATION%20GATE%20REFRESH.%20Repo%20foto6%2Fhelp-pc-2%2C%20branch%20agent%2Fpc-ops-gateway%2C%20expected%20HEAD%20732f0f5e6482f6bb96f0dfa582dc1c0fe2ea712e.%20Consume%20exact-green%20relay%20producer%20foto6%2Fhelp-pc-1%20agent%2Fpc-relay-hardening%20at%2058bad1bc60f7d4d26d03223c8f0bea5f138f49a6%2C%20CI%2036330545372%20SUCCESS.%20Rebind%20exact%20producer%20fixture%20bytes%20from%20tests%2Ffixtures%2Fpc_ops_v1%2C%20update%20producer%20pins%2Fmatrix%2C%20run%20canonical%20E2E%20scenarios%2C%20and%20regenerate%20conformance%2Freports%2Fpc-ops-gateway-e2e-v1.json%20plus%20digest.%20Set%20ready_to_migrate%3Dtrue%20only%20if%20every%20required%20gate%20is%20proven.%20Use%20disposable%20paths%20only.%20E%3A%5C%5Cmanhwa%20and%20descendants%20must%20never%20be%20accessed%3B%20protected-path%20test%20must%20reject%20before%20dispatch.%20Preserve%20structured-first%20and%20fail-closed%20reconciliation.%20No%20merge%2C%20release%2C%20or%20cutover.%20Add%20focused%20tests%2C%20full%20relevant%20CI%2C%20push%20non-empty%20commit%2C%20report%20exact%20SHA%20and%20exact-head%20CI.%22%2C%22repository%22%3A%22foto6%2Fhelp-pc-2%22%2C%22branch%22%3A%22agent%2Fpc-ops-gateway%22%2C%22expectedHead%22%3A%22732f0f5e6482f6bb96f0dfa582dc1c0fe2ea712e%22%2C%22idempotencyKey%22%3A%22pc-only-ops-gate-reroute-vision-v1%22%2C%22evidenceTimeoutMinutes%22%3A120%2C%22priority%22%3A1000%2C%22supervisorVerificationRequired%22%3Atrue%7D'); try{$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-vision/assignments' -Method Post -ContentType 'application/json; charset=utf-8' -Body $body -TimeoutSec 10; Write-Output ('OK|id='+$r.id+'|state='+$r.state+'|chat='+$r.targetChatId)}catch{Write-Output ('ERR|'+$_.Exception.Message); exit 1}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
