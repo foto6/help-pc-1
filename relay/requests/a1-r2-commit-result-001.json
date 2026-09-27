@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "a1-r2-commit-result-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $repo='C:\\agentwork\\SpectraTrack-a1'; $head=(git -C $repo rev-parse HEAD).Trim(); if($head -ne 'ea1234e153a689811488e439429472c5b2a698ea'){Write-Error ('unexpected_head='+$head); exit 4}; $src='E:\\SpectraTrack-data\\runs\\a1-nightowls-r2-ea1234-run2\\r2-result.json'; $dst=$repo+'\\pc\\benchmarks\\vnext\\detection\\r2_result.v1.json'; if(-not (Test-Path $src)){Write-Error 'result_missing'; exit 5}; Copy-Item -LiteralPath $src -Destination $dst; git -C $repo add -- 'pc/benchmarks/vnext/detection/r2_result.v1.json'; git -C $repo diff --cached --check; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; git -C $repo commit -m 'research(a1): record locked blind R2 result'; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; git -C $repo push origin HEAD:agent/vnext-detection; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; git -C $repo rev-parse HEAD"
+    ],
+    "cwd": "C:\\agentwork\\SpectraTrack-a1"
+  },
+  "timeout_ms": 120000,
+  "note": "Commit only completed deterministic A1 R2 result artifact; no candidate/control code changes."
+}
