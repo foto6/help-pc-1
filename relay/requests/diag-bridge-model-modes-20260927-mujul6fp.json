@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "diag-bridge-model-modes-20260927-mujul6fp",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $r=[ordered]@{}; $r.time=(Get-Date).ToString('o'); $r.repo=[ordered]@{head=(& git -C E:\\pc-github-relay rev-parse HEAD);branch=(& git -C E:\\pc-github-relay branch --show-current);status=(@(& git -C E:\\pc-github-relay status --short))}; $r.listeners=@(Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Where-Object { $_.LocalAddress -in @('127.0.0.1','::1','0.0.0.0','::') -and $_.LocalPort -gt 1024 } | Select-Object LocalAddress,LocalPort,OwningProcess); $r.processes=@(Get-Process chrome,firefox,node,python,pythonw -ErrorAction SilentlyContinue | Select-Object Id,ProcessName,MainWindowTitle); $r | ConvertTo-Json -Depth 5"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only diagnostics: verify live relay, browser/Bridge process IDs and listening ports. No credentials, no browser mutations."
+}
