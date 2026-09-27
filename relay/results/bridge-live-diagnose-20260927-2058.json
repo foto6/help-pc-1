@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$repo='E:\\WebAIBridge'; Push-Location $repo; try { Write-Output ('HEAD|'+(git branch --show-current)+'|'+(git rev-parse HEAD)); git fetch origin --prune | Out-Null; $p=(git rev-parse origin/agent/webbridge-dev); $i=(git rev-parse origin/agent/bridge-integration); Write-Output ('REMOTE|primary|'+$p); Write-Output ('REMOTE|integration|'+$i); Write-Output 'AGENT_CONTROL_MATCHES'; git grep -n \"agentControlHealth\" 2>$null | Select-Object -First 20; Write-Output 'MODEL_MATCHES'; git grep -n -E \"models|modelList|availableModels\" -- '*.js' '*.ts' '*.tsx' '*.json' 2>$null | Select-Object -First 40 } finally { Pop-Location }; $bp=@(Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'node.exe' -and $_.CommandLine -match 'WebAIBridge|webbridge|bridge' }); foreach($x in $bp){ $ports=@(Get-NetTCPConnection -State Listen -OwningProcess $x.ProcessId -ErrorAction SilentlyContinue | Select-Object -ExpandProperty LocalPort -Unique); Write-Output ('BRIDGE_PID|'+$x.ProcessId+'|PORTS='+($ports -join ',')) }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "HEAD|agent/webbridge-dev|28fef7aa556a49a933d9a2ae73fc033c262ffa7e\r\nREMOTE|primary|28fef7aa556a49a933d9a2ae73fc033c262ffa7e\r\nREMOTE|integration|a270c3de8f0b3b81c43cd4805a1c40bed0336775\r\nAGENT_CONTROL_MATCHES\r\napp/agent-assignment-restart-harness.js:131:    assert.equal(firstStatus.agentControlHealth.codeReloadRequiresServerRestart, true);\r\napp/agent-assignment-restart-harness.js:132:    const registration = firstStatus.agentControlHealth.workerRegistrations.find(\r\napp/docs/AGENT_EXECUTION_CONTROL.md:109:`agentControlHealth.codeReloadRequiresServerRestart=true`, the server start time,\r\napp/docs/AUTONOMY.md:64:`/api/status.agentControlHealth` for the server start time,\r\napp/server.js:866:function agentControlHealth() {\r\napp/server.js:15358:      agentControlHealth:agentControlHealth(),\r\ndocs/SUPERVISOR_WATCHDOG_WORKLOG.md:579:registration is transient after restart. `/api/status.agentControlHealth` exposes\r\nMODEL_MATCHES\r\napp/docs/openapi.json:358:    \"/models\": {\r\napp/server.js:10955:      'extended thinking is available only for Gemini web models',\r\napp/server.js:15360:      models: BUILTIN_MODELS.map(publicModel),\r\napp/server.js:16999:  if (req.method === 'GET' && url.pathname === '/v1/models') {\r\nBRIDGE_PID|11384|PORTS=17449,17448\r\nBRIDGE_PID|11560|PORTS=\r\nBRIDGE_PID|11532|PORTS=\r\nBRIDGE_PID|5360|PORTS=\r\n",
+      "stdout_bytes": 1327,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T13:56:22.824Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T13:56:22.808Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-live-diagnose-20260927-2058"
+    },
+    "request_id": "bridge-live-diagnose-20260927-2058",
+    "started_at": "2026-09-27T13:56:17.215Z",
+    "status": "completed"
+  },
+  "id": "bridge-live-diagnose-20260927-2058",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
