@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "locate-pc-ops-integrator-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$xs=Invoke-RestMethod 'http://127.0.0.1:17410/json/list'; $xs | Where-Object {($_.title -like '*PC OPS*') -or ($_.title -like '*Operations Gateway*') -or ($_.url -like '*local-chatgpt*')} | Select-Object id,title,url | ConvertTo-Json -Compress -Depth 4"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only browser check for possibly-created PC Ops Integrator chat after timed-out creation."
+}
