@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pc_relay.request.v2",
+  "title": "PC Relay Request v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "id", "action", "params", "timeout_ms", "request_sha256"],
+  "properties": {
+    "version": {"const": "pc_relay.request.v2"},
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{1,80}$"},
+    "action": {"type": "string", "minLength": 1, "maxLength": 80},
+    "params": {"type": "object"},
+    "timeout_ms": {"type": "integer", "minimum": 100, "maximum": 120000},
+    "note": {"type": ["string", "null"], "maxLength": 512},
+    "request_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
