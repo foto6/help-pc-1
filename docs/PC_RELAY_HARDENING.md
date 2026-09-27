@@ -78,7 +78,7 @@ Normal fast-forward queue updates are accepted. If a local transport publication
 
 SIGINT/SIGTERM requests clean shutdown. The final heartbeat is published with `relay_alive=false` when the queue is still reachable.
 
-Heartbeat fields let a coordinator distinguish relay process state, queue reachability, Executor availability, queue-history integrity, last processed request, current implementation SHA, queue ref, and queue remote SHA.
+Heartbeat fields let a coordinator distinguish relay process state, queue reachability, Executor availability, queue-history integrity, last processed request, current implementation SHA, queue ref, and queue remote SHA. Heartbeat publication is cadence-bounded to 30 seconds by default (`--heartbeat-seconds`) so the queue does not advance on every poll.
 
 ## Windows runbook after migration
 
