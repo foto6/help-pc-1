@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "assign-pc-ops-migration-gate-20260927-2405",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$body=@'\\n{\"text\":\"EXECUTE NOW — PC OPS MIGRATION GATE REFRESH. Do not acknowledge readiness; produce durable evidence.\\n\\nRepo: foto6/help-pc-2\\nBranch: agent/pc-ops-gateway\\nExpected HEAD: 732f0f5e6482f6bb96f0dfa582dc1c0fe2ea712e\\n\\nProducer facts:\\n- relay hardening exact-green: foto6/help-pc-1 agent/pc-relay-hardening @ 58bad1bc60f7d4d26d03223c8f0bea5f138f49a6, CI 36330545372 SUCCESS.\\n- structured contract/fixture pack exists under tests/fixtures/pc_ops_v1 (introduced at dd803270a80a7199918361abf1c52b01324745e0 and frozen cross-platform at 58bad1b).\\n- current pc-ops-gateway report is stale and still pins fcea28ec as if structured ops were absent.\\n\\nRequired:\\n1. Consume/copy exact producer bytes from the exact-green relay head into conformance provenance; verify blob/hash identity and update producer-fixture-pins + producer-matrix deterministically.\\n2. Run the canonical E2E scenario pack against those exact contracts for read-edit-verify, log/process lifecycle, long PowerShell session, structured git status, screenshot/UIA observation, restart durable boundaries, protected-path rejection, and unknown-outcome reconciliation.\\n3. Use only disposable test paths. E:\\\\manhwa and descendants are protected and must never be touched; rejection may be tested only before dispatch with zero filesystem access.\\n4. Update pc-ops-gateway-e2e-v1.json and its digest. Set ready_to_migrate=true ONLY if every required producer/scenario gate is actually proven. Otherwise record precise blockers; do not fabricate readiness.\\n5. Preserve structured-first behavior and fail-closed reconciliation semantics. No merge/release/cutover.\\n6. Add focused regression tests, run full relevant CI, push non-empty commit, report exact SHA + exact-head CI.\",\"repository\":\"foto6/help-pc-2\",\"branch\":\"agent/pc-ops-gateway\",\"expectedHead\":\"732f0f5e6482f6bb96f0dfa582dc1c0fe2ea712e\",\"idempotencyKey\":\"pc-only-ops-migration-gate-v1\",\"evidenceTimeoutMinutes\":120,\"priority\":950,\"supervisorVerificationRequired\":true}\\n'@; try{$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e/assignments' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 10; Write-Output ('OK|id='+$r.id+'|state='+$r.state+'|chat='+$r.targetChatId)}catch{Write-Output ('ERR|'+$_.Exception.Message); exit 1}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
