@@ -1,0 +1,23 @@
+EXECUTE NOW — A3 R2 HYPOTHESIS LOCK ONLY / NO R2 INSPECTION OR SCORING. Do not acknowledge readiness.
+
+Repository: foto6/SpectraTrack
+Branch: agent/vnext-enhancement
+Expected current HEAD: 993c4a6574d0a6298774a7937ba3daeca8bc2e30
+
+R1 evidence:
+A7 discovery digest sha256:ad51f9b7c3f4629155298215a52004092ea1b95bd220c4ed6a608e464971afec
+baseline: 48 FN, all low_contrast_night_darkness; 10 small; 17 occlusion/crowd.
+Rejected LIME: 0 recovered GT, 0 lost GT, FP 126->125, added enhanced+raw corroboration detector calls. Production ENHANCEMENT OFF remains authoritative.
+
+A5 has frozen independent R2/holdout. Do NOT inspect R2 GT/images/results in this task.
+
+Required:
+1. Decide whether R1 evidence justifies at most ONE materially different enhancement hypothesis from LIME. NO_NEW_CANDIDATE is acceptable.
+2. Any candidate must be mechanistically different, bounded, tied to A7 clusters/digest, with exact transform/router params and max added detector-call budget locked before R2.
+3. Predeclare strict reject/promote conditions incl. minimum recovered GT per added call and no meaningful precision collapse.
+4. No generic gamma/CLAHE/Retinex sweep. Mandatory raw corroboration/max one enhanced ROI per source frame unless a stronger safety argument is documented.
+5. Do NOT run R2/FULL5000. Do not enable production enhancement.
+6. Add deterministic candidate-lock artifact + hash + immutability tests.
+7. Commit/push only agent/vnext-enhancement. No merge/release; never touch E:\manhwa.
+
+Final: exact SHA + CI + lock hash, or NO_NEW_CANDIDATE.
