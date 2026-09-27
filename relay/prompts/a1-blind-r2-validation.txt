@@ -1,0 +1,57 @@
+EXECUTE NOW — A1 BLIND R2 VALIDATION / LOCKED CANDIDATE ONLY. Do not acknowledge readiness.
+
+Repository: foto6/SpectraTrack
+Branch: agent/vnext-detection
+Expected current HEAD: cdd22247129245e2da4605cce4c280c793c39e55
+Exact-head CI: 36323273470 SUCCESS
+
+Locked candidate:
+- id: a1-r2-conditional-crowd-microtile512-v1
+- lock digest: sha256:350d92339030c2f1fd781951f25c13f1b96aec5f0a607e3796df3ebf4e6e6cfc
+- lock file: pc/benchmarks/vnext/detection/r2_hypothesis_lock.v1.json
+- max extra ONNX calls/frame: 1
+- control thresholds/fusion/enhancement unchanged
+- global 512 tiling forbidden
+
+Blind R2 corpus from A5:
+- revision: nightowls-public-smoke400-r2
+- 400 frames, disjoint from R1 and holdout
+- corpus SHA-256: 9d145b4dda780052388f3b663203c519ded48f61457adef14654f84fb5549eff
+- GT SHA-256: 75eba2c9dc3b36d0a2389bfbb080a709621ef690680ae655d85d8732e7bc6097
+- manifest SHA-256: 9270d46c2776aa531e1b979a1a7ebc16eaed0f6483b2c1095da834af383c4e83
+- selection-proof SHA-256: df11e9dc6ca1f63019cba071ed82420de27c706b41d1d3b46df880bb3ce50faf
+
+A6 anti-leakage/stage policy:
+- branch agent/vnext-smoke-stats @ 1a63c0a981c21e57dbe679e388046eaaaa0d5577
+- CI 36317780050 SUCCESS
+
+This is the FIRST allowed R2 exposure for this A1 hypothesis.
+
+Required:
+1. Before scoring, verify the exact lock digest and exact A5 R2 corpus/GT/manifest/proof hashes. Abort on mismatch.
+2. Do not modify candidate config, thresholds, router, fusion, compute budget or control after R2 exposure begins.
+3. Run CONTROL and exactly the locked candidate on identical R2 frames only.
+4. Report at minimum:
+   - TP/FP/FN;
+   - precision/recall/F1;
+   - recall/FN by small-person and occlusion/crowd clusters where A7-compatible scoring exists;
+   - bbox localization/center metrics already supported;
+   - prefusion duplicate pressure;
+   - exact extra ONNX calls, activations and compute cost;
+   - result/config/provenance hashes.
+5. Apply the PRELOCKED gates from r2_hypothesis_lock.v1.json mechanically:
+   - hard reject conditions;
+   - promote_to_holdout4200 conditions;
+   - otherwise AMBIGUOUS.
+6. Decision must be exactly one of:
+   REJECT_R2
+   PROMOTE_TO_HOLDOUT4200_REQUEST
+   AMBIGUOUS_R2
+7. Do NOT inspect or score holdout4200.
+8. Do NOT run FULL5000.
+9. Do NOT retune based on R2.
+10. Keep production/control unchanged.
+11. Add deterministic R2 result artifact + lock/corpus provenance + tests that prove result references the exact frozen lock and R2 hashes.
+12. Commit/push only agent/vnext-detection; exact-head CI required.
+
+Final evidence: exact SHA + exact CI + result hash + decision + concise metric deltas.
