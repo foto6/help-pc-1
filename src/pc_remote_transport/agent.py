@@ -44,7 +44,15 @@ class Dispatcher(Protocol):
         request_version: str,
         request_id: str,
         body: dict[str, Any],
+        transport_context: "TransportDispatchContext | None" = None,
     ) -> "DispatchResult": ...
+
+
+@dataclass(frozen=True)
+class TransportDispatchContext:
+    device_id: str
+    session_epoch: str
+    session_capabilities_digest: str
 
 
 class UnknownDispatchOutcome(RuntimeError):
@@ -139,12 +147,13 @@ class DeviceAgent:
         caps = self.capabilities()
         if not isinstance(caps, dict):
             raise ProtocolError("capabilities provider must return an object")
+        session_capabilities_digest = digest_json(caps)
         hello_nonce = uuid.uuid4().hex
         await send("hello", {
             "protocol_version": FRAME_VERSION,
             "hello_nonce": hello_nonce,
             "capabilities": caps,
-            "capabilities_digest": digest_json(caps),
+            "capabilities_digest": session_capabilities_digest,
             "limits": {
                 "max_frame_bytes": self.max_frame_bytes,
                 "max_request_bytes": self.max_request_bytes,
@@ -201,7 +210,15 @@ class DeviceAgent:
                 await self._handle_token_rotation(payload, send)
                 continue
             if frame_type == "request":
-                await self._handle_request(payload, send)
+                await self._handle_request(
+                    payload,
+                    send,
+                    transport_context=TransportDispatchContext(
+                        device_id=self.device_id,
+                        session_epoch=epoch,
+                        session_capabilities_digest=session_capabilities_digest,
+                    ),
+                )
                 continue
             if frame_type == "error":
                 raise ProtocolError(f"relay error: {payload!r}")
@@ -225,6 +242,8 @@ class DeviceAgent:
         self,
         raw_payload: dict[str, Any],
         send: Callable[[str, dict[str, Any]], Awaitable[None]],
+        *,
+        transport_context: TransportDispatchContext | None = None,
     ) -> None:
         request = validate_request_payload(raw_payload, max_request_bytes=self.max_request_bytes)
         request_id = request["request_id"]
@@ -255,11 +274,21 @@ class DeviceAgent:
         )
 
         try:
-            result = self.dispatcher.dispatch(
-                request_version=request["request_version"],
-                request_id=request_id,
-                body=request["body"],
-            )
+            dispatch_kwargs: dict[str, Any] = {
+                "request_version": request["request_version"],
+                "request_id": request_id,
+                "body": request["body"],
+            }
+            parameters = inspect.signature(self.dispatcher.dispatch).parameters
+            if (
+                "transport_context" in parameters
+                or any(
+                    parameter.kind is inspect.Parameter.VAR_KEYWORD
+                    for parameter in parameters.values()
+                )
+            ):
+                dispatch_kwargs["transport_context"] = transport_context
+            result = self.dispatcher.dispatch(**dispatch_kwargs)
             if inspect.isawaitable(result):
                 result = await result
             if not isinstance(result, DispatchResult):
