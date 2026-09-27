@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-managed-live-inspect-20260927-2256",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "curl.exe -sS --max-time 15 \"http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1\""
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
