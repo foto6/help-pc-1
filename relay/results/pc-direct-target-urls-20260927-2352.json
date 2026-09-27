@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p='E:\\WebAIBridge\\app\\data\\managed-chat-status.json'; $j=Get-Content $p -Raw|ConvertFrom-Json; foreach($cid in @('agent-vision','agent-pc-executor','chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c','chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e')){$x=$j.chats.PSObject.Properties[$cid].Value; if($x){Write-Output ('C|'+$cid+'|url='+$x.url+'|gen='+$x.generating+'|high='+$x.highMode+'|name='+$x.name)}}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "C|agent-vision|url=https://chatgpt.com/c/6ab87005-53f8-83eb-9107-add9c7a48804|gen=False|high=True|name=Vision\r\nC|agent-pc-executor|url=https://chatgpt.com/c/6ab8bed2-8d0c-83eb-b793-8e504335a57d|gen=True|high=True|name=PC Executor\r\nC|chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c|url=https://chatgpt.com/c/6ab69af7-68c0-83ed-8552-f5f41d97a00c|gen=False|high=True|name=SpectraTrack Round2 Watch\r\nC|chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e|url=https://chatgpt.com/c/6ab77f2d-b9bc-83ed-906e-a0e35cca142e|gen=False|high=True|name=SpectraTrack Agent Watch (supervisor)\r\n",
+      "stdout_bytes": 561,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T16:19:07.259Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T16:19:07.228Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-direct-target-urls-20260927-2352"
+    },
+    "request_id": "pc-direct-target-urls-20260927-2352",
+    "started_at": "2026-09-27T16:19:06.786Z",
+    "status": "completed"
+  },
+  "id": "pc-direct-target-urls-20260927-2352",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
