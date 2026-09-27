@@ -18,6 +18,11 @@ from pc_executor.audit import JsonlAuditSink
 from pc_executor.executor import Executor
 from pc_executor.models import ActionRequest
 from pc_executor.outcome_journal import OutcomeJournal
+from pc_executor.operations import (
+    OPS_READ_ONLY_ACTIONS,
+    OPS_SIDE_EFFECT_ACTIONS,
+    LocalOperations,
+)
 from pc_executor.safety import (
     DEFAULT_SAFE_EXECUTABLES,
     SafetyViolation,
@@ -51,8 +56,10 @@ READ_ONLY_ACTIONS = {
     "uia.inspect",
     "screenshot.capture",
     "clipboard.get",
-}
-MAX_ALLOWED_ACTIONS = frozenset(READ_ONLY_ACTIONS | {"shell.run"})
+} | set(OPS_READ_ONLY_ACTIONS)
+MAX_ALLOWED_ACTIONS = frozenset(
+    READ_ONLY_ACTIONS | {"shell.run"} | set(OPS_SIDE_EFFECT_ACTIONS)
+)
 DEFAULT_ALLOWED_ACTIONS = frozenset(MAX_ALLOWED_ACTIONS)
 
 RELAY_SHELL_EXECUTABLES = frozenset(
@@ -1074,8 +1081,13 @@ def build_executor(state_root: Path, *, live: bool) -> Executor:
         timeout_seconds=MAX_TIMEOUT_MS / 1000.0,
         output_limit_bytes=SHELL_OUTPUT_LIMIT_BYTES,
     )
+    operations = LocalOperations(
+        shell=shell,
+        state_root=state_root / "operations",
+    )
     return Executor(
         shell=shell,
+        operations=operations,
         audit=JsonlAuditSink(str(state_root / "audit.jsonl")),
         outcome_journal=OutcomeJournal(str(state_root / "outcome-journal-v1.jsonl")),
         dry_run=not live,

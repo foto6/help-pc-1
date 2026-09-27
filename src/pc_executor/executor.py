@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any, Callable, TypeVar
 
 from .audit import AuditSink, InMemoryAuditSink
@@ -17,6 +18,11 @@ from .capture import PillowScreenCapture, ScreenshotProvider, screenshot_payload
 from .errors import ExecutorError, ExecutorFailureError, PolicyBlockedError
 from .input import InputAdapter, WindowsInputAdapter
 from .models import ActionRequest, ActionResult, AuditEvent, ElementQuery, utc_now_iso
+from .operations import (
+    OPS_ACTIONS,
+    OPS_SIDE_EFFECT_ACTIONS,
+    LocalOperations,
+)
 from .outcome import ActionOutcomeEvidence, SIDE_EFFECTING_ACTIONS
 from .outcome_journal import (
     ExecutionCorrelation,
@@ -39,6 +45,42 @@ from .vision_target import GroundedTargetContractError, parse_grounded_target_v1
 from .windows import Win32WindowEnumerator, WindowEnumerator
 
 T = TypeVar("T")
+
+
+_AUDIT_REDACT_KEYS = frozenset(
+    {
+        "text",
+        "value",
+        "content",
+        "data_base64",
+        "stdout",
+        "stderr",
+        "lines",
+        "matches",
+        "env",
+    }
+)
+
+
+def _sanitize_audit_details(value: Any) -> Any:
+    if isinstance(value, dict):
+        output: dict[str, Any] = {}
+        for key, item in value.items():
+            if str(key).casefold() in _AUDIT_REDACT_KEYS:
+                if isinstance(item, str):
+                    output[str(key) + "_redacted_bytes"] = len(item.encode("utf-8"))
+                elif isinstance(item, (bytes, bytearray, list, tuple, dict)):
+                    output[str(key) + "_redacted"] = True
+                else:
+                    output[str(key)] = "[REDACTED]"
+            else:
+                output[str(key)] = _sanitize_audit_details(item)
+        return output
+    if isinstance(value, list):
+        return [_sanitize_audit_details(item) for item in value]
+    if isinstance(value, tuple):
+        return [_sanitize_audit_details(item) for item in value]
+    return value
 
 
 class _OutcomeTracker:
@@ -71,6 +113,8 @@ class Executor:
         accessibility: AccessibilityAdapter | None = None,
         input_adapter: InputAdapter | None = None,
         shell: SafeShellAdapter | None = None,
+        operations: LocalOperations | None = None,
+        operations_state_root: str | Path | None = None,
         audit: AuditSink | None = None,
         outcome_journal: OutcomeJournal | None = None,
         context_observer: ExecutionContextObserver | None = None,
@@ -83,6 +127,10 @@ class Executor:
         self.accessibility = accessibility or WindowsUIAutomationAdapter()
         self.input = input_adapter or WindowsInputAdapter()
         self.shell = shell or SafeShellAdapter()
+        self.operations = operations or LocalOperations(
+            shell=self.shell,
+            state_root=operations_state_root,
+        )
         self.audit = audit or InMemoryAuditSink()
         self.outcome_journal = outcome_journal
         self.context_observer = context_observer or SystemExecutionContextObserver()
@@ -97,6 +145,7 @@ class Executor:
             accessibility=self.accessibility,
             input_adapter=self.input,
             shell=self.shell,
+            operations=self.operations,
             outcome_journal_configured=self.outcome_journal is not None,
             dry_run_default=self.dry_run,
             allow_coordinate_fallback=self.allow_coordinate_fallback,
@@ -122,6 +171,7 @@ class Executor:
             accessibility=self.accessibility,
             input_adapter=self.input,
             shell=self.shell,
+            operations=self.operations,
             default_timeout_ms=default_deadline_ms,
             allow_coordinate_fallback=self.allow_coordinate_fallback,
         )
@@ -736,6 +786,34 @@ class Executor:
             )
             return {"text_length": len(value)}
 
+        if action in OPS_ACTIONS:
+            self.operations.preflight(action, p)
+            if dry_run:
+                return {"would_execute": action}
+            if action in OPS_SIDE_EFFECT_ACTIONS:
+                return self._bounded_effectful(
+                    request,
+                    dry_run,
+                    token,
+                    tracker,
+                    action,
+                    lambda: self.operations.execute(
+                        action,
+                        p,
+                        cancellation=token,
+                    ),
+                )
+            return self._bounded(
+                request,
+                token,
+                action,
+                lambda: self.operations.execute(
+                    action,
+                    p,
+                    cancellation=token,
+                ),
+            )
+
         if action == "shell.run":
             argv = [str(x) for x in p.get("argv", [])]
             cwd = p.get("cwd")
@@ -767,10 +845,7 @@ class Executor:
         outcome: str | None = None,
         details: dict[str, Any] | None = None,
     ) -> None:
-        safe_details = dict(details or {})
-        if request.action in {"keyboard.type_text", "clipboard.set", "uia.set_value"}:
-            safe_details.pop("text", None)
-            safe_details.pop("value", None)
+        safe_details = _sanitize_audit_details(dict(details or {}))
         self.audit.emit(
             AuditEvent(
                 request_id=request.request_id,
