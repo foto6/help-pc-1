@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "assign-relay-self-heal-20260927-2413",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$body=[Uri]::UnescapeDataString('%7B%22text%22%3A%22EXECUTE%20NOW%20%E2%80%94%20RELAY%20REBASE%2FIDENTITY%20SELF-HEALING.%20Do%20not%20stop%20at%20a%20plan.%5Cn%5CnRepo%3A%20foto6%2Fhelp-pc-1%5CnBranch%3A%20agent%2Fpc-relay-hardening%5CnExpected%20HEAD%3A%2058bad1bc60f7d4d26d03223c8f0bea5f138f49a6%5Cn%5CnObserved%20real%20failure%20on%20dedicated%20relay%20worktree%20E%3A%5C%5Cpc-github-relay%3A%5Cn-%20pull%20--rebase%20could%20leave%20.git%2Frebase-merge%20and%20wedge%20future%20cycles.%5Cn-%20rebase%20failed%20at%20Rebasing%20(1%2F1)%20with%20%5C%22Committer%20identity%20unknown%5C%22.%5Cn-%20after%20repository-local%20user.name%3Dfoto6%20and%20user.email%3Dfoto6%40users.noreply.github.com%2C%20recovery%20succeeded%20and%20request%E2%86%92result%20smoke%20passed.%5Cn-%20concurrent%20remote%20queue%20commits%20also%20create%20normal%20branch-head%20races.%5Cn%5CnRequired%3A%5Cn1.%20Harden%20startup%2Fsync%20so%20this%20class%20of%20failure%20is%20detected%20before%20processing%20side%20effects.%5Cn2.%20Never%20blindly%20delete%20arbitrary%20rebase%20state.%20Recover%20automatically%20only%20when%20ownership%2Fprovenance%20proves%20relay%20created%20interrupted%20operation%3B%20otherwise%20fail%20closed%20with%20exact%20reconciliation%20evidence.%5Cn3.%20Add%20repository-local%20Git%20identity%20preflight%20with%20configurable%20values%2Factionable%20failure.%20Never%20mutate%20global%20Git%20config.%5Cn4.%20Serialize%2Flock%20fetch-rebase-commit-push%20so%20concurrent%20queue%20movement%20cannot%20corrupt%2Fwedge%20worktree.%5Cn5.%20Preserve%20every%20request%2Fresult%20and%20outcome-journal%20invariant%3B%20never%20replay%20completed%2Funknown%20side%20effects.%5Cn6.%20Add%20Windows%20fault%20tests%3A%20missing%20identity%2C%20owned%20interrupted%20rebase%2C%20foreign%20rebase%20state%2C%20remote%20head%20race%2C%20restart%20mid-sync%2C%20dirty%20worktree.%5Cn7.%20Run%20focused%20%2B%20full%20CI%2C%20push%20non-empty%20commit%2C%20report%20exact%20SHA%20and%20exact-head%20CI.%20No%20merge%2Frelease.%22%2C%22repository%22%3A%22foto6%2Fhelp-pc-1%22%2C%22branch%22%3A%22agent%2Fpc-relay-hardening%22%2C%22expectedHead%22%3A%2258bad1bc60f7d4d26d03223c8f0bea5f138f49a6%22%2C%22idempotencyKey%22%3A%22pc-only-relay-self-heal-v1%22%2C%22evidenceTimeoutMinutes%22%3A120%2C%22priority%22%3A950%2C%22supervisorVerificationRequired%22%3Atrue%7D'); try{$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-pc-executor/assignments' -Method Post -ContentType 'application/json; charset=utf-8' -Body $body -TimeoutSec 10; Write-Output ('OK|id='+$r.id+'|state='+$r.state+'|chat='+$r.targetChatId)}catch{Write-Output ('ERR|'+$_.Exception.Message); exit 1}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
