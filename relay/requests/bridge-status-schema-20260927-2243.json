@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-status-schema-20260927-2243",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='E:\\WebAIBridge\\app\\data\\managed-chat-status.json'; if(Test-Path $p){$j=Get-Content $p -Raw|ConvertFrom-Json; $j.PSObject.Properties|ForEach-Object{ $v=$_.Value; $t=if($null -eq $v){'null'}else{$v.GetType().Name}; Write-Output ('KEY|'+$_.Name+'|type='+$t); if($_.Name -match 'chat|status|managed'){ if($v -is [System.Array]){foreach($x in $v|Select-Object -First 20){Write-Output ('ITEM|'+($x|ConvertTo-Json -Compress -Depth 4))}}}}}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
