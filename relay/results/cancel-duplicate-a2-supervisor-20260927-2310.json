@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "try{$r=Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/53560f30-896e-497c-8a25-818e6836e0a2/cancel' -TimeoutSec 10; Write-Output ('OK|id='+$r.id+'|state='+$r.state)}catch{Write-Output ('ERR|'+$_.Exception.Message); exit 1}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "OK|id=53560f30-896e-497c-8a25-818e6836e0a2|state=blocked\r\n",
+      "stdout_bytes": 58,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:42:26.554Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:42:26.531Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "cancel-duplicate-a2-supervisor-20260927-2310"
+    },
+    "request_id": "cancel-duplicate-a2-supervisor-20260927-2310",
+    "started_at": "2026-09-27T15:42:26.161Z",
+    "status": "completed"
+  },
+  "id": "cancel-duplicate-a2-supervisor-20260927-2310",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
