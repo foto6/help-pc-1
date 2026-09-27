@@ -1,0 +1,43 @@
+EXECUTE NOW — PRIMARY MEDIA WAVE 9 / EXTERNAL ARTIFACT PIN LEASES FOR SAFE GC. Do not acknowledge readiness.
+
+Repository: foto6/video2
+Branch: agent/media-engine
+Expected current HEAD: 4290379ea51d512eeab6b1897353e4cf130908f2
+Exact-head CI 36317561407 SUCCESS.
+
+Preserve media.artifact_manifest.v1 and artifact_retention.v1 semantics.
+
+Goal:
+Make external references from Creator/checkpoints/releases explicit and durable so GC can never delete an artifact still in use.
+
+Required:
+1. New versioned media.artifact_pin_lease.v1:
+   - artifact digest + manifest digest;
+   - owner kind/id;
+   - pin reason;
+   - created/renewed timestamps;
+   - optional expiry;
+   - lease generation/version;
+   - canonical digest.
+2. Operations:
+   acquire / renew / release / inspect
+   with compare-and-set generation semantics; duplicate acquire idempotent only when identity matches.
+3. GC planner must treat any valid active pin lease as reachable regardless of retention age.
+4. TOCTOU: before actual delete, re-read pin state + manifest digest; newly acquired pin blocks delete.
+5. Restart-safe durable store; expired leases handled deterministically, clock-bound rules documented/testable.
+6. Fixture contract consumable by Creator without sibling imports.
+7. Tests:
+   concurrent acquire/release;
+   stale release generation;
+   pin acquired after GC plan before delete;
+   duplicate owner ids;
+   artifact/manifest mismatch;
+   expiry boundary;
+   restart;
+   10k leases stress;
+   protected artifact/path.
+8. Dry-run cleanup remains default; no real cleanup in CI.
+9. No publishing/account mutation; never touch E:\manhwa.
+
+Commit/push only agent/media-engine. No merge/release.
+Final exact SHA + CI + lease fixture/manifest hash + stress counts.
