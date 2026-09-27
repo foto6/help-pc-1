@@ -1,0 +1,43 @@
+{
+  "faults": {
+    "crash_between_write_and_flush_cases": 1,
+    "disk_full_cases": 1,
+    "dispatch_partial_boundary_cases": 6,
+    "dispatch_partial_unknown": 6,
+    "idempotent_duplicate_terminal_cases": 1,
+    "raw_duplicate_terminal_corruption_cases": 1,
+    "reordered_append_cases": 1,
+    "request_action_conflict_cases": 1,
+    "terminal_partial_boundary_cases": 6,
+    "terminal_partial_unknown": 6,
+    "truncated_tail_cases": 1
+  },
+  "frozen_action_outcome_sha256": {
+    "action_outcome_v1.json": "e73488314215a43768710247ee199aa878442d93f20025e35da567bb20757f10",
+    "action_outcome_v1_not_started.json": "06278df0fd016093d67420f9e33b0504d7f72bc5da8ecbece063c649d9d2c913",
+    "action_outcome_v1_unknown.json": "c4585b7b2ccd0788ee4d22be2dfee8f43c28e2f46555bbe731157b272d321951"
+  },
+  "journal": {
+    "bytes": 8057136,
+    "canonical_sha256": "3b22b78b5b7ad38ca14dafb05dadd6c3aa76b210a8f44c6edb0fd5c7574a207a",
+    "last_record_sha256": "d93d28382528f6a6b459246fb21c09eae4781f5568fb5a5791132c5c2e1befe1",
+    "raw_sha256": "3b22b78b5b7ad38ca14dafb05dadd6c3aa76b210a8f44c6edb0fd5c7574a207a",
+    "record_count": 10002,
+    "request_count": 3334
+  },
+  "performance": {
+    "first_lookup_bound_ms": 15000,
+    "first_lookup_ms": 1008.101,
+    "lookup_read_only": true,
+    "reopen_count": 12,
+    "reopen_total_bound_ms": 60000,
+    "reopen_total_ms": 11458.52
+  },
+  "runtime": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "python": "3.12.10"
+  },
+  "schema": "pc_executor.outcome_journal.reliability_report.v1",
+  "seed": 1511506142,
+  "stable_report_sha256": "e48545a9e4b5703df6d5acff9dc77b0cd12e73604227d710e48e9f7a5e4d50fc"
+}

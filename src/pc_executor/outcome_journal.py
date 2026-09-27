@@ -7,7 +7,7 @@ import threading
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Protocol
 
 from .outcome import ActionOutcomeEvidence, parse_action_outcome
 
@@ -49,6 +49,18 @@ def _record_digest(value: Mapping[str, Any]) -> str:
     return hashlib.sha256(_canonical_json(value).encode("utf-8")).hexdigest()
 
 
+def canonical_journal_bytes(raw: bytes) -> bytes:
+    """Normalize transport newlines for cross-platform hashing only."""
+    without_crlf = raw.replace(b"\r\n", b"\n")
+    if b"\r" in without_crlf:
+        raise OutcomeJournalIntegrityError("journal contains unsupported bare CR bytes")
+    return without_crlf
+
+
+def canonical_journal_sha256(raw: bytes) -> str:
+    return hashlib.sha256(canonical_journal_bytes(raw)).hexdigest()
+
+
 def _path_lock(path: Path) -> threading.RLock:
     key = str(path.resolve())
     with _LOCKS_GUARD:
@@ -57,6 +69,46 @@ def _path_lock(path: Path) -> threading.RLock:
             lock = threading.RLock()
             _PATH_LOCKS[key] = lock
         return lock
+
+
+class JournalStorage(Protocol):
+    def read_bytes(self) -> bytes: ...
+
+    def append_durable(self, payload: bytes) -> None: ...
+
+
+class FileJournalStorage:
+    def __init__(self, path: str | Path) -> None:
+        self.path = Path(path)
+
+    def read_bytes(self) -> bytes:
+        try:
+            return self.path.read_bytes()
+        except FileNotFoundError:
+            return b""
+
+    def append_durable(self, payload: bytes) -> None:
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        existed = self.path.exists()
+        flags = os.O_WRONLY | os.O_CREAT | os.O_APPEND
+        if hasattr(os, "O_BINARY"):
+            flags |= os.O_BINARY
+        fd = os.open(self.path, flags, 0o600)
+        try:
+            written = os.write(fd, payload)
+            if written != len(payload):
+                raise OutcomeJournalIntegrityError(
+                    f"short journal append: {written}/{len(payload)} bytes"
+                )
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+        if not existed and os.name != "nt":
+            directory_fd = os.open(self.path.parent, os.O_RDONLY)
+            try:
+                os.fsync(directory_fd)
+            finally:
+                os.close(directory_fd)
 
 
 @dataclass(slots=True, frozen=True)
@@ -239,8 +291,14 @@ class _ScanResult:
 
 
 class OutcomeJournal:
-    def __init__(self, path: str | Path) -> None:
+    def __init__(
+        self,
+        path: str | Path,
+        *,
+        storage: JournalStorage | None = None,
+    ) -> None:
         self.path = Path(path)
+        self._storage = storage or FileJournalStorage(self.path)
         self._lock = _path_lock(self.path)
 
     @staticmethod
@@ -437,29 +495,9 @@ class OutcomeJournal:
         )
 
     def _append_record_locked(self, record: OutcomeJournalRecord) -> None:
+        payload = (_canonical_json(record.to_dict()) + "\n").encode("utf-8")
         try:
-            self.path.parent.mkdir(parents=True, exist_ok=True)
-            existed = self.path.exists()
-            payload = (_canonical_json(record.to_dict()) + "\n").encode("utf-8")
-            flags = os.O_WRONLY | os.O_CREAT | os.O_APPEND
-            if hasattr(os, "O_BINARY"):
-                flags |= os.O_BINARY
-            fd = os.open(self.path, flags, 0o600)
-            try:
-                written = os.write(fd, payload)
-                if written != len(payload):
-                    raise OutcomeJournalIntegrityError(
-                        f"short journal append: {written}/{len(payload)} bytes"
-                    )
-                os.fsync(fd)
-            finally:
-                os.close(fd)
-            if not existed and os.name != "nt":
-                directory_fd = os.open(self.path.parent, os.O_RDONLY)
-                try:
-                    os.fsync(directory_fd)
-                finally:
-                    os.close(directory_fd)
+            self._storage.append_durable(payload)
         except OutcomeJournalError:
             raise
         except OSError as exc:
@@ -468,9 +506,18 @@ class OutcomeJournal:
             ) from exc
 
     def _scan_locked(self) -> _ScanResult:
-        if not self.path.exists():
-            return _ScanResult(records=(), corruption=None, journal_sha256=hashlib.sha256(b"").hexdigest())
-        raw = self.path.read_bytes()
+        try:
+            raw = self._storage.read_bytes()
+        except OSError as exc:
+            raise OutcomeJournalIntegrityError(
+                f"journal read failed: {type(exc).__name__}: {exc}"
+            ) from exc
+        if not raw:
+            return _ScanResult(
+                records=(),
+                corruption=None,
+                journal_sha256=hashlib.sha256(b"").hexdigest(),
+            )
         digest = hashlib.sha256(raw).hexdigest()
         records: list[OutcomeJournalRecord] = []
         previous_hash: str | None = None
