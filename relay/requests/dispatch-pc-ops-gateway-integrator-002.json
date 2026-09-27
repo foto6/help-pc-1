@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "dispatch-pc-ops-gateway-integrator-002",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=D7953E61B3112ABC8A90A5C3BCBB5F0B --prompt=E:\\pc-github-relay\\relay\\prompts\\pc-ops-gateway-integrator.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Bind PC Ops Gateway prompt to the reconciled existing chat; helper avoids duplicate send if already generating."
+}
