@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "create-pc-ops-gateway-integrator-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\create_project_agent_chat.js E:\\pc-github-relay\\relay\\prompts\\pc-ops-gateway-integrator.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Create dedicated PC Operations Gateway integrator agent."
+}
