@@ -27,21 +27,27 @@
     },
     {
       "reference": "set_config_value",
-      "candidate": [],
-      "status": "unsupported",
-      "note": "Runtime mutation of safety policy is intentionally unsupported."
+      "candidate": [
+        "config.set"
+      ],
+      "status": "direct",
+      "note": "Explicit allowlist only; updates are atomically validated and journaled."
     },
     {
       "reference": "who_am_i",
-      "candidate": [],
-      "status": "unsupported",
-      "note": "OS/account identity disclosure is not required for native parity."
+      "candidate": [
+        "identity.who_am_i"
+      ],
+      "status": "sanitized",
+      "note": "Non-secret local account/host identity only."
     },
     {
       "reference": "shutdown",
-      "candidate": [],
-      "status": "unsupported",
-      "note": "Device shutdown is outside Wave 1."
+      "candidate": [
+        "agent.shutdown"
+      ],
+      "status": "direct",
+      "note": "Journaled graceful shutdown bound to the current device/control-session/session epoch."
     },
     {
       "reference": "read_file",
@@ -55,11 +61,10 @@
     {
       "reference": "read_multiple_files",
       "candidate": [
-        "fs.read_text",
-        "fs.read_bytes"
+        "fs.read_multiple"
       ],
-      "status": "composed",
-      "note": "Caller issues independent bounded reads; no unbounded multi-read RPC."
+      "status": "direct",
+      "note": "Ordered native batch read with per-file result and aggregate byte bound."
     },
     {
       "reference": "write_file",
@@ -71,9 +76,11 @@
     },
     {
       "reference": "write_pdf",
-      "candidate": [],
-      "status": "unsupported",
-      "note": "Binary document generation remains a higher-layer concern."
+      "candidate": [
+        "pdf.write"
+      ],
+      "status": "safe_core",
+      "note": "Markdown create plus delete/insert modification to a new output; no in-place overwrite."
     },
     {
       "reference": "edit_block",
@@ -201,16 +208,30 @@
     {
       "reference": "get_usage_stats",
       "candidate": [
-        "health.get"
+        "diagnostics.usage_stats"
       ],
-      "status": "partial",
-      "note": "Health exposes gateway state, not connector billing/usage telemetry."
+      "status": "sanitized",
+      "note": "Native Executor usage counters only; no vendor billing/quota data."
     },
     {
       "reference": "get_recent_tool_calls",
+      "candidate": [
+        "diagnostics.recent_tool_calls"
+      ],
+      "status": "sanitized",
+      "note": "Metadata only; never raw arguments/results or credentials."
+    },
+    {
+      "reference": "get_prompts",
       "candidate": [],
-      "status": "external_audit",
-      "note": "Use the existing Executor audit/outcome journals rather than a duplicate tool log."
+      "status": "intentional_exclusion",
+      "note": "Desktop Commander vendor onboarding surface; not a native PC execution primitive."
+    },
+    {
+      "reference": "give_feedback_to_desktop_commander",
+      "candidate": [],
+      "status": "intentional_exclusion",
+      "note": "Desktop Commander vendor feedback surface; intentionally not reproduced."
     }
   ],
   "pagination": {

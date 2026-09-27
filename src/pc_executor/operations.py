@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import csv
+import getpass
 import hashlib
 import io
 import json
@@ -29,6 +30,12 @@ from .safety import (
     ensure_path_allowed,
     ensure_resolved_path_allowed,
 )
+from .native_settings import (
+    NativeSettingsStore,
+    SETTINGS_CONTRACT_VERSION,
+    validate_setting_value,
+)
+from .pdf_ops import PdfOperationError, create_markdown_pdf, modify_pdf_to_new_output
 from .shell import SafeShellAdapter
 
 
@@ -60,12 +67,15 @@ MAX_READ_OUTPUT_BYTES = 64 * 1024
 MAX_SESSION_INPUT_BYTES = 64 * 1024
 MAX_ENV_ENTRIES = 128
 MAX_ENV_VALUE_BYTES = 16 * 1024
+MAX_BATCH_READ_FILES = 128
+MAX_DIAGNOSTIC_RESULTS = 1000
 
 FS_READ_ACTIONS = frozenset(
     {
         "fs.list",
         "fs.stat",
         "fs.read_text",
+        "fs.read_multiple",
         "fs.read_bytes",
         "fs.hash",
         "fs.find",
@@ -108,12 +118,17 @@ SYSTEM_ACTIONS = frozenset(
         "device.info",
         "health.get",
         "config.get",
+        "identity.who_am_i",
+        "diagnostics.usage_stats",
+        "diagnostics.recent_tool_calls",
         "system.info",
         "system.resources",
         "system.paths",
     }
 )
-SYSTEM_SIDE_EFFECT_ACTIONS = frozenset({"system.process.kill"})
+SYSTEM_SIDE_EFFECT_ACTIONS = frozenset(
+    {"system.process.kill", "config.set", "agent.shutdown", "pdf.write"}
+)
 OPS_READ_ONLY_ACTIONS = frozenset(
     FS_READ_ACTIONS
     | LOG_ACTIONS
@@ -392,6 +407,10 @@ def validate_ops_params(action: str, params: Mapping[str, Any]) -> None:
             },
             {"path"},
         ),
+        "fs.read_multiple": (
+            {"paths", "encoding", "max_bytes_per_file", "max_total_bytes"},
+            {"paths"},
+        ),
         "fs.read_bytes": ({"path", "offset", "max_bytes"}, {"path"}),
         "fs.hash": ({"path", "max_bytes"}, {"path"}),
         "fs.find": (
@@ -499,6 +518,18 @@ def validate_ops_params(action: str, params: Mapping[str, Any]) -> None:
         "device.info": (set(), set()),
         "health.get": (set(), set()),
         "config.get": (set(), set()),
+        "config.set": ({"key", "value"}, {"key", "value"}),
+        "agent.shutdown": (
+            {"device_id", "session_id", "session_epoch", "generation_id"},
+            {"device_id", "session_id", "session_epoch", "generation_id"},
+        ),
+        "identity.who_am_i": (set(), set()),
+        "diagnostics.usage_stats": (set(), set()),
+        "diagnostics.recent_tool_calls": (
+            {"max_results", "tool_name", "since"},
+            set(),
+        ),
+        "pdf.write": ({"path", "content", "output_path"}, {"path", "content"}),
         "system.info": (set(), set()),
         "system.resources": ({"path"}, set()),
         "system.paths": ({"path"}, set()),
@@ -532,6 +563,25 @@ def validate_ops_params(action: str, params: Mapping[str, Any]) -> None:
             raise ValueError("fs.read_text end_line must be >= start_line")
         _integer(params.get("max_bytes", 256 * 1024), "fs.read_text max_bytes", minimum=1, maximum=MAX_TEXT_READ_BYTES)
         _encoding(params)
+    elif action == "fs.read_multiple":
+        paths = params["paths"]
+        if not isinstance(paths, list) or not paths or len(paths) > MAX_BATCH_READ_FILES:
+            raise ValueError(f"fs.read_multiple paths must contain 1..{MAX_BATCH_READ_FILES} entries")
+        for index, item in enumerate(paths):
+            _nonempty(item, f"fs.read_multiple paths[{index}]", max_length=4096)
+        _encoding(params)
+        _integer(
+            params.get("max_bytes_per_file", 256 * 1024),
+            "fs.read_multiple max_bytes_per_file",
+            minimum=1,
+            maximum=MAX_TEXT_READ_BYTES,
+        )
+        _integer(
+            params.get("max_total_bytes", 1024 * 1024),
+            "fs.read_multiple max_total_bytes",
+            minimum=1,
+            maximum=4 * 1024 * 1024,
+        )
     elif action == "fs.read_bytes":
         _integer(params.get("offset", 0), "fs.read_bytes offset", minimum=0)
         _integer(params.get("max_bytes", 256 * 1024), "fs.read_bytes max_bytes", minimum=1, maximum=MAX_BINARY_READ_BYTES)
@@ -667,6 +717,72 @@ def validate_ops_params(action: str, params: Mapping[str, Any]) -> None:
                 raise SafetyViolation("credential/CAPTCHA session input is forbidden")
         else:
             _integer(params.get("grace_ms", 1000), "shell.session.terminate grace_ms", minimum=0, maximum=5000)
+    elif action == "config.set":
+        _nonempty(params["key"], "config.set key", max_length=128)
+    elif action == "agent.shutdown":
+        _nonempty(params["device_id"], "agent.shutdown device_id", max_length=256)
+        _nonempty(params["session_id"], "agent.shutdown session_id", max_length=256)
+        _nonempty(params["session_epoch"], "agent.shutdown session_epoch", max_length=256)
+        _nonempty(params["generation_id"], "agent.shutdown generation_id", max_length=256)
+    elif action == "diagnostics.recent_tool_calls":
+        _integer(
+            params.get("max_results", 50),
+            "diagnostics.recent_tool_calls max_results",
+            minimum=1,
+            maximum=MAX_DIAGNOSTIC_RESULTS,
+        )
+        if params.get("tool_name") is not None:
+            _nonempty(params["tool_name"], "diagnostics.recent_tool_calls tool_name", max_length=128)
+        if params.get("since") is not None:
+            _nonempty(params["since"], "diagnostics.recent_tool_calls since", max_length=64)
+    elif action == "pdf.write":
+        if not str(params["path"]).casefold().endswith(".pdf"):
+            raise ValueError("pdf.write path must end with .pdf")
+        if params.get("output_path") is not None and not str(params["output_path"]).casefold().endswith(".pdf"):
+            raise ValueError("pdf.write output_path must end with .pdf")
+        content = params["content"]
+        if isinstance(content, str):
+            if len(content.encode("utf-8")) > 8 * 1024 * 1024:
+                raise ValueError("pdf.write markdown content exceeds hard input bound")
+        elif isinstance(content, list):
+            if not content or len(content) > 128:
+                raise ValueError("pdf.write operations must contain 1..128 entries")
+            for index, operation in enumerate(content):
+                if not isinstance(operation, Mapping):
+                    raise ValueError(f"pdf.write operation {index} must be an object")
+                op_type = operation.get("type")
+                if op_type == "delete":
+                    _exact_params(
+                        f"pdf.write operation {index}",
+                        operation,
+                        {"type", "page_indexes"},
+                        {"type", "page_indexes"},
+                    )
+                    indexes = operation["page_indexes"]
+                    if not isinstance(indexes, list) or not indexes:
+                        raise ValueError(f"pdf.write operation {index} page_indexes must be non-empty")
+                    for page_index in indexes:
+                        _integer(page_index, f"pdf.write operation {index} page index", minimum=0, maximum=100000)
+                elif op_type == "insert":
+                    _exact_params(
+                        f"pdf.write operation {index}",
+                        operation,
+                        {"type", "page_index", "markdown", "source_pdf_path"},
+                        {"type", "page_index"},
+                    )
+                    _integer(operation["page_index"], f"pdf.write operation {index} page_index", minimum=0, maximum=100000)
+                    has_markdown = operation.get("markdown") is not None
+                    has_source = operation.get("source_pdf_path") is not None
+                    if has_markdown == has_source:
+                        raise ValueError(f"pdf.write operation {index} insert requires exactly one source")
+                    if has_markdown:
+                        _text(operation["markdown"], f"pdf.write operation {index} markdown", max_length=8 * 1024 * 1024)
+                    else:
+                        _nonempty(operation["source_pdf_path"], f"pdf.write operation {index} source_pdf_path", max_length=4096)
+                else:
+                    raise ValueError(f"pdf.write operation {index} type must be insert or delete")
+        else:
+            raise ValueError("pdf.write content must be markdown string or operation array")
     elif action == "system.process.kill":
         pid = _integer(params["pid"], "system.process.kill pid", minimum=1)
         if pid == os.getpid():
@@ -1058,6 +1174,14 @@ class LocalOperations:
             root / "managed-processes.v1.json",
             generation_id=self.generation_id,
         )
+        self.settings = NativeSettingsStore(root / "native-settings.v1.json")
+        self._shutdown_requested = threading.Event()
+        self._diagnostic_lock = threading.RLock()
+        self._binding_lock = threading.RLock()
+        self._active_agent_binding: dict[str, str] | None = None
+        self._recent_calls: deque[dict[str, Any]] = deque(maxlen=MAX_DIAGNOSTIC_RESULTS)
+        self._usage_by_action: dict[str, dict[str, int]] = {}
+        self._diagnostics_started_at = _utc_now_iso()
 
     @staticmethod
     def default_state_root() -> Path:
@@ -1069,6 +1193,108 @@ class LocalOperations:
                 or Path.home() / ".local" / "state"
             )
         return root / "pc-executor" / "operations"
+
+    @property
+    def shutdown_requested(self) -> bool:
+        return self._shutdown_requested.is_set()
+
+    def bind_agent_session(
+        self,
+        *,
+        device_id: str,
+        session_id: str,
+        session_epoch: str,
+    ) -> None:
+        with self._binding_lock:
+            self._active_agent_binding = {
+                "device_id": device_id,
+                "session_id": session_id,
+                "session_epoch": session_epoch,
+            }
+
+    def current_agent_binding(self) -> dict[str, str] | None:
+        with self._binding_lock:
+            if self._active_agent_binding is None:
+                return None
+            return dict(self._active_agent_binding)
+
+    def record_runtime_call(
+        self,
+        *,
+        request_id: str,
+        action: str,
+        status: str,
+        started_at: str,
+        finished_at: str,
+        dry_run: bool,
+        effect_state: str | None,
+    ) -> None:
+        entry = {
+            "request_id": request_id,
+            "action": action,
+            "status": status,
+            "started_at": started_at,
+            "finished_at": finished_at,
+            "dry_run": bool(dry_run),
+            "effect_state": effect_state,
+        }
+        with self._diagnostic_lock:
+            self._recent_calls.append(entry)
+            counters = self._usage_by_action.setdefault(
+                action,
+                {"total": 0, "completed": 0, "blocked": 0, "error": 0, "dry_run": 0},
+            )
+            counters["total"] += 1
+            bucket = "dry_run" if dry_run else status if status in counters else "error"
+            counters[bucket] += 1
+
+    def _usage_stats(self) -> dict[str, Any]:
+        with self._diagnostic_lock:
+            by_action = {
+                action: dict(counts)
+                for action, counts in sorted(self._usage_by_action.items())
+            }
+            total = sum(item["total"] for item in by_action.values())
+        return {
+            "generation_id": self.generation_id,
+            "started_at": self._diagnostics_started_at,
+            "total_calls": total,
+            "by_action": by_action,
+            "remote_quota": None,
+        }
+
+    def _recent_tool_calls(self, params: Mapping[str, Any]) -> dict[str, Any]:
+        limit = min(
+            int(params.get("max_results", 50)),
+            int(self.settings.value("diagnostics.max_recent_calls")),
+        )
+        tool_name = params.get("tool_name")
+        since = params.get("since")
+        with self._diagnostic_lock:
+            entries = list(self._recent_calls)
+        filtered = [
+            dict(entry)
+            for entry in entries
+            if (tool_name is None or entry["action"] == tool_name)
+            and (since is None or entry["started_at"] >= since)
+        ]
+        selected = filtered[-limit:]
+        return {
+            "calls": selected,
+            "count": len(selected),
+            "truncated": len(filtered) > len(selected),
+            "sanitized": True,
+        }
+
+    def _identity(self) -> dict[str, Any]:
+        return {
+            "account_name": getpass.getuser(),
+            "host_name": platform.node() or "unknown",
+            "device_id": "local",
+            "generation_id": self.generation_id,
+            "platform": platform.system() or "unknown",
+            "secret_fields_included": False,
+        }
 
     def capabilities_snapshot(self) -> dict[str, Any]:
         actions = {
@@ -1105,6 +1331,10 @@ class LocalOperations:
                 "max_binary_read_bytes": MAX_BINARY_READ_BYTES,
                 "max_log_bytes": MAX_LOG_BYTES,
                 "max_process_output_bytes": MAX_PROCESS_OUTPUT_BYTES,
+                "native_settings_contract": SETTINGS_CONTRACT_VERSION,
+                "mutable_setting_keys": sorted(self.settings.snapshot()["mutable_keys"]),
+                "configured_allowed_roots": list(self.settings.value("filesystem.allowed_roots")),
+                "max_batch_read_files": MAX_BATCH_READ_FILES,
             },
         }
         digest = hashlib.sha256(
@@ -1160,6 +1390,7 @@ class LocalOperations:
     def _start_context(self, action: str, params: Mapping[str, Any]) -> dict[str, Any]:
         argv = self.shell.validate(params["argv"], cwd=params.get("cwd"))
         cwd = ensure_resolved_path_allowed(params.get("cwd") or os.getcwd())
+        self.settings.assert_allowed_path(cwd)
         device, inode = _file_identity(cwd)
         body: dict[str, Any] = {
             "contract_version": OPS_CONTEXT_VERSION,
@@ -1177,6 +1408,26 @@ class LocalOperations:
     def preflight(self, action: str, params: Mapping[str, Any]) -> None:
         validate_ops_params(action, params)
         if action in {"ops.capabilities.get", "ops.preflight"}:
+            return
+        if action == "fs.read_multiple":
+            return
+        if action == "config.set":
+            validate_setting_value(str(params["key"]), params["value"])
+            return
+        if action == "agent.shutdown":
+            if params["generation_id"] != self.generation_id:
+                raise SafetyViolation("agent.shutdown generation binding is stale")
+            expected = self.current_agent_binding()
+            supplied = {
+                "device_id": params["device_id"],
+                "session_id": params["session_id"],
+                "session_epoch": params["session_epoch"],
+            }
+            if expected is None or supplied != expected:
+                raise SafetyViolation("agent.shutdown device/session binding is stale")
+            return
+        if action == "pdf.write":
+            self._preflight_pdf(params)
             return
         if action.startswith("fs.") or action.startswith("log."):
             self._preflight_path_action(action, params)
@@ -1208,6 +1459,48 @@ class LocalOperations:
                 params["expected_name"],
             )
 
+    def _preflight_pdf(self, params: Mapping[str, Any]) -> None:
+        content = params["content"]
+        max_input = int(self.settings.value("pdf.max_input_bytes"))
+        output_raw = params.get("output_path") or params["path"]
+        ensure_path_allowed(output_raw)
+        _assert_mutation_leaf_not_reparse(output_raw)
+        output = ensure_resolved_path_allowed(output_raw, for_creation=True)
+        self.settings.assert_allowed_path(output)
+        if output.exists():
+            raise SafetyViolation("pdf.write refuses to overwrite an existing output")
+        parent = output.parent
+        if not parent.exists() or not parent.is_dir():
+            raise SafetyViolation("pdf.write output parent must already exist")
+
+        if isinstance(content, str):
+            if len(content.encode("utf-8")) > max_input:
+                raise SafetyViolation("pdf.write markdown exceeds configured input bound")
+            return
+
+        source = ensure_resolved_path_allowed(params["path"])
+        self.settings.assert_allowed_path(source)
+        _ensure_file(source)
+        if source.stat().st_size > max_input:
+            raise SafetyViolation("pdf.write source PDF exceeds configured input bound")
+        if params.get("output_path") is None:
+            raise SafetyViolation("pdf.write modification requires output_path")
+        if os.path.normcase(str(source)) == os.path.normcase(str(output)):
+            raise SafetyViolation("pdf.write modification must use a new output path")
+        for operation in content:
+            source_pdf = operation.get("source_pdf_path")
+            if source_pdf is None:
+                markdown = operation.get("markdown")
+                if markdown is not None and len(str(markdown).encode("utf-8")) > max_input:
+                    raise SafetyViolation("pdf.write inserted markdown exceeds configured input bound")
+                continue
+            ensure_path_allowed(source_pdf)
+            resolved = ensure_resolved_path_allowed(source_pdf)
+            self.settings.assert_allowed_path(resolved)
+            _ensure_file(resolved)
+            if resolved.stat().st_size > max_input:
+                raise SafetyViolation("pdf.write inserted source PDF exceeds configured input bound")
+
     def _preflight_path_action(self, action: str, params: Mapping[str, Any]) -> None:
         if action in {"fs.copy", "fs.move"}:
             _assert_mutation_leaf_not_reparse(params["source"])
@@ -1216,6 +1509,8 @@ class LocalOperations:
             destination = ensure_resolved_path_allowed(
                 params["destination"], for_creation=True
             )
+            self.settings.assert_allowed_path(source)
+            self.settings.assert_allowed_path(destination)
             _ensure_file(source)
             _assert_nonsensitive_path(source)
             if source.stat().st_size > MAX_COPY_BYTES:
@@ -1242,6 +1537,7 @@ class LocalOperations:
             params["path"],
             for_creation=action in {"fs.write_text", "fs.append_text", "fs.mkdir"},
         )
+        self.settings.assert_allowed_path(path)
         if action in FS_READ_ACTIONS or action in LOG_ACTIONS:
             if action in {"fs.list", "fs.find", "fs.glob", "fs.search"}:
                 _ensure_dir(path)
@@ -1326,6 +1622,8 @@ class LocalOperations:
             return self._fs_stat(params)
         if action == "fs.read_text":
             return self._fs_read_text(params, token)
+        if action == "fs.read_multiple":
+            return self._fs_read_multiple(params, token)
         if action == "fs.read_bytes":
             return self._fs_read_bytes(params)
         if action == "fs.hash":
@@ -1406,6 +1704,18 @@ class LocalOperations:
             return self._health()
         if action == "config.get":
             return self._config()
+        if action == "config.set":
+            return self._config_set(params)
+        if action == "agent.shutdown":
+            return self._agent_shutdown(params)
+        if action == "identity.who_am_i":
+            return self._identity()
+        if action == "diagnostics.usage_stats":
+            return self._usage_stats()
+        if action == "diagnostics.recent_tool_calls":
+            return self._recent_tool_calls(params)
+        if action == "pdf.write":
+            return self._pdf_write(params)
         if action == "system.info":
             return self._system_info()
         if action == "system.resources":
@@ -1541,6 +1851,82 @@ class LocalOperations:
             "truncated": truncated,
             "file_bytes": int(path.stat().st_size),
             "sha256": _sha256_file(path, max_bytes=MAX_HASH_BYTES, token=token),
+        }
+
+    def _fs_read_multiple(
+        self,
+        params: Mapping[str, Any],
+        token: CancellationToken,
+    ) -> dict[str, Any]:
+        encoding = _encoding(params)
+        per_file = int(params.get("max_bytes_per_file", 256 * 1024))
+        requested_total = int(params.get("max_total_bytes", 1024 * 1024))
+        configured_total = int(self.settings.value("batch_read.max_aggregate_bytes"))
+        if requested_total > configured_total:
+            raise SafetyViolation(
+                "fs.read_multiple max_total_bytes exceeds configured aggregate bound"
+            )
+        remaining = requested_total
+        results: list[dict[str, Any]] = []
+        for raw_path in params["paths"]:
+            token.raise_if_cancelled()
+            try:
+                ensure_path_allowed(raw_path)
+                self.settings.assert_allowed_path(raw_path)
+                if remaining <= 0:
+                    results.append(
+                        {
+                            "path": str(raw_path),
+                            "ok": False,
+                            "error_code": "aggregate_limit_exhausted",
+                            "error": "aggregate byte budget exhausted",
+                        }
+                    )
+                    continue
+                path = ensure_resolved_path_allowed(raw_path)
+                self.settings.assert_allowed_path(path)
+                _ensure_file(path)
+                _assert_nonsensitive_path(path)
+                limit = min(per_file, remaining)
+                size = int(path.stat().st_size)
+                with path.open("rb") as handle:
+                    raw = handle.read(limit + 1)
+                truncated = len(raw) > limit or size > limit
+                raw = raw[:limit]
+                text = raw.decode(encoding, errors="strict")
+                used = len(raw)
+                remaining -= used
+                results.append(
+                    {
+                        "path": str(path),
+                        "ok": True,
+                        "encoding": encoding,
+                        "text": text,
+                        "returned_bytes": used,
+                        "file_bytes": size,
+                        "truncated": truncated,
+                    }
+                )
+            except (SafetyViolation, OSError, UnicodeError) as exc:
+                results.append(
+                    {
+                        "path": str(raw_path),
+                        "ok": False,
+                        "error_code": type(exc).__name__,
+                        "error": str(exc),
+                    }
+                )
+        returned = requested_total - remaining
+        return {
+            "results": results,
+            "count": len(results),
+            "returned_bytes": returned,
+            "max_total_bytes": requested_total,
+            "aggregate_truncated": any(
+                item.get("error_code") == "aggregate_limit_exhausted"
+                or item.get("truncated") is True
+                for item in results
+            ),
         }
 
     def _fs_read_bytes(self, params: Mapping[str, Any]) -> dict[str, Any]:
@@ -2443,8 +2829,80 @@ class LocalOperations:
                 "max_process_output_bytes": MAX_PROCESS_OUTPUT_BYTES,
                 "max_read_output_bytes": MAX_READ_OUTPUT_BYTES,
             },
-            "mutable": False,
+            "settings": self.settings.snapshot(),
+            "mutable": True,
         }
+
+    def _config_set(self, params: Mapping[str, Any]) -> dict[str, Any]:
+        key = str(params["key"])
+        snapshot = self.settings.set_value(key, params["value"])
+        return {
+            "contract_version": SETTINGS_CONTRACT_VERSION,
+            "updated_key": key,
+            "settings": snapshot,
+        }
+
+    def _agent_shutdown(self, params: Mapping[str, Any]) -> dict[str, Any]:
+        if params["generation_id"] != self.generation_id:
+            raise SafetyViolation("agent.shutdown generation binding is stale")
+        self._shutdown_requested.set()
+        return {
+            "shutdown_requested": True,
+            "graceful": True,
+            "device_id": params["device_id"],
+            "session_id": params["session_id"],
+            "session_epoch": params["session_epoch"],
+            "generation_id": self.generation_id,
+        }
+
+    def _pdf_write(self, params: Mapping[str, Any]) -> dict[str, Any]:
+        content = params["content"]
+        output_raw = params.get("output_path") or params["path"]
+        output = ensure_resolved_path_allowed(output_raw, for_creation=True)
+        self.settings.assert_allowed_path(output)
+        max_input = int(self.settings.value("pdf.max_input_bytes"))
+        max_output = int(self.settings.value("pdf.max_output_bytes"))
+        temp = output.with_name(f".{output.name}.{uuid4().hex}.tmp")
+        result: dict[str, Any]
+        try:
+            if isinstance(content, str):
+                result = create_markdown_pdf(
+                    content,
+                    temp,
+                    max_output_bytes=max_output,
+                )
+            else:
+                source = ensure_resolved_path_allowed(params["path"])
+                normalized_operations: list[dict[str, Any]] = []
+                for operation in content:
+                    normalized = dict(operation)
+                    source_pdf = normalized.get("source_pdf_path")
+                    if source_pdf is not None:
+                        normalized["source_pdf_path"] = str(
+                            ensure_resolved_path_allowed(source_pdf)
+                        )
+                    normalized_operations.append(normalized)
+                result = modify_pdf_to_new_output(
+                    source,
+                    normalized_operations,
+                    temp,
+                    max_input_bytes=max_input,
+                    max_output_bytes=max_output,
+                )
+            payload = temp.read_bytes()
+            if len(payload) > max_output:
+                raise PdfOperationError("generated PDF exceeds configured output bound")
+            with output.open("xb") as handle:
+                handle.write(payload)
+                handle.flush()
+                os.fsync(handle.fileno())
+            result["output_path"] = str(output)
+            return result
+        finally:
+            try:
+                temp.unlink(missing_ok=True)
+            except OSError:
+                pass
 
     def _assert_system_kill_target(
         self,

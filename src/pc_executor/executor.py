@@ -295,6 +295,7 @@ class Executor:
                 outcome=result.status,
                 details=audit_details,
             )
+            self._record_runtime_call(result)
             return result
         except SafetyViolation as exc:
             return self._error_result(
@@ -393,7 +394,25 @@ class Executor:
             outcome=status,
             details=details,
         )
+        self._record_runtime_call(result)
         return result
+
+    def _record_runtime_call(self, result: ActionResult) -> None:
+        if result.action.startswith("diagnostics.") or result.action.startswith("ops."):
+            return
+        recorder = getattr(self.operations, "record_runtime_call", None)
+        if not callable(recorder):
+            return
+        evidence = result.outcome_evidence
+        recorder(
+            request_id=result.request_id,
+            action=result.action,
+            status=result.status,
+            started_at=result.started_at,
+            finished_at=result.finished_at,
+            dry_run=result.dry_run,
+            effect_state=(evidence.effect_state if evidence is not None else None),
+        )
 
     def read_outcome_evidence(
         self,

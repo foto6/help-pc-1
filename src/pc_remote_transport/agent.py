@@ -123,6 +123,10 @@ class DeviceAgent:
         self.max_stream_bytes = max_stream_bytes
         self.session_epoch_factory = session_epoch_factory or (lambda: uuid.uuid4().hex)
 
+    def _shutdown_requested(self) -> bool:
+        value = getattr(self.dispatcher, "shutdown_requested", False)
+        return bool(value() if callable(value) else value)
+
     async def run_session(self, connection: PersistentConnection) -> None:
         epoch = self.session_epoch_factory()
         if len(epoch) < 8:
@@ -187,6 +191,8 @@ class DeviceAgent:
                 else:
                     raw = await connection.recv()
             except asyncio.TimeoutError:
+                if self._shutdown_requested():
+                    return
                 await send("heartbeat", {"last_inbound_sequence": inbound_guard.last_sequence})
                 continue
 
@@ -219,6 +225,8 @@ class DeviceAgent:
                         session_capabilities_digest=session_capabilities_digest,
                     ),
                 )
+                if self._shutdown_requested():
+                    return
                 continue
             if frame_type == "error":
                 raise ProtocolError(f"relay error: {payload!r}")
@@ -386,7 +394,7 @@ class DeviceAgent:
         sleep: Callable[[float], Awaitable[None]] = asyncio.sleep,
     ) -> None:
         failure_count = 0
-        while enabled():
+        while enabled() and not self._shutdown_requested():
             connection: PersistentConnection | None = None
             try:
                 connection = await connector.open()
@@ -402,5 +410,5 @@ class DeviceAgent:
                         await connection.close()
                     except Exception:
                         pass
-            if enabled():
+            if enabled() and not self._shutdown_requested():
                 await sleep(backoff.delay(failure_count))

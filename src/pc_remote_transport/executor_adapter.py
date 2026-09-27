@@ -107,6 +107,7 @@ TOOL_REGISTRY_DIGEST = hashlib.sha256(
 _PARITY_EXECUTOR_ACTION_BY_TOOL = {
     "device.health": "health.get",
     "device.get_config": "config.get",
+    "device.set_config": "config.set",
     "content.search": "fs.search",
     "process.read": "process.read_output",
     "process.list": "process.managed.list",
@@ -300,6 +301,11 @@ class ExecutorRemoteDispatcher:
         self._handles: dict[str, _HandleRecord] = {}
         self._session_devices: dict[str, str] = {}
 
+    @property
+    def shutdown_requested(self) -> bool:
+        operations = getattr(self.executor, "operations", None)
+        return bool(getattr(operations, "shutdown_requested", False))
+
     def _capability_snapshots(self) -> tuple[dict[str, Any], dict[str, Any] | None]:
         capabilities = _as_dict(self.executor.capabilities_snapshot())
         operations = getattr(self.executor, "operations", None)
@@ -430,6 +436,14 @@ class ExecutorRemoteDispatcher:
                 "Control session belongs to another device",
                 code="STALE_SESSION",
                 category="session",
+            )
+        operations = getattr(self.executor, "operations", None)
+        binder = getattr(operations, "bind_agent_session", None)
+        if callable(binder):
+            binder(
+                device_id=context.device_id,
+                session_id=session_id,
+                session_epoch=context.session_epoch,
             )
         tool_name = _text(envelope["tool"], "tool")
         tool = TOOL_REGISTRY.get(tool_name)

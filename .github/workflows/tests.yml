@@ -6,6 +6,7 @@ on:
       - agent/pc-executor
       - agent/pc-native-tool-parity
       - agent/pc-native-full-stack
+      - agent/pc-native-full-parity-gaps
   workflow_dispatch:
 
 jobs:
@@ -31,7 +32,7 @@ jobs:
       - name: Wave 7 focused context-binding suite
         run: python -m pytest tests/test_execution_context_binding.py
       - name: Native desktop parity focused suite
-        run: python -m pytest tests/test_pc_operations.py tests/test_native_tool_parity.py
+        run: python -m pytest tests/test_pc_operations.py tests/test_native_tool_parity.py tests/test_native_full_parity_gaps.py
       - name: Native schema reproducibility
         shell: bash
         run: |

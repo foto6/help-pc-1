@@ -77,8 +77,11 @@ It rechecks executable identity on the opened Windows process handle before
 calling `TerminateProcess`.
 
 Device/system discovery: `device.info`, `health.get`, `config.get`,
-`system.info`, `system.resources`, and `system.paths`. Configuration is
-read-only through this surface.
+`identity.who_am_i`, `diagnostics.usage_stats`,
+`diagnostics.recent_tool_calls`, `system.info`, `system.resources`, and
+`system.paths`. `config.set` mutates only an explicit allowlist of native
+settings. Updates validate before an atomic replace; configured allowed roots
+must remain non-empty.
 
 ## Bounded output and pagination
 
@@ -102,19 +105,22 @@ per-file text size and aggregate scanned bytes.
 | --- | --- | --- |
 | `list_devices` | `device.info` | Local authorized device only |
 | `ping` | `health.get` | Direct |
-| `get_config` | `config.get` | Read-only |
-| `set_config_value` | — | Intentionally unsupported |
+| `get_config` | `config.get` | Direct |
+| `set_config_value` | `config.set` | Allowlisted, atomic, journaled |
+| `who_am_i` | `identity.who_am_i` | Sanitized non-secret identity |
+| `shutdown` | `agent.shutdown` | Bound, journaled graceful shutdown |
 | `read_file` | `fs.read_text`, `fs.read_bytes`, `log.tail` | Direct |
-| `read_multiple_files` | composed bounded `fs.read_*` calls | Composed |
+| `read_multiple_files` | `fs.read_multiple` | True ordered native batch |
 | `write_file` | `fs.write_text`, `fs.append_text` | Direct |
+| `write_pdf` | `pdf.write` | Safe create / modify-new-output core |
 | `edit_block` | `fs.edit_text` | Hash + replacement CAS |
 | `list_directory` | `fs.list` | Direct |
 | `move_file` | `fs.move` | Direct |
 | `create_directory` | `fs.mkdir` | Direct |
 | `get_file_info` | `fs.stat`, `fs.hash` | Direct |
-| `start_search` | `fs.search`, `fs.find`, `fs.glob`, `log.search` | Direct |
-| `get_more_search_results` | `fs.search` cursor / `log.read_since` | Cursor |
-| `stop_search` / `list_searches` | — | Not needed; search is stateless |
+| `start_search` | `fs.search`, `fs.find`, `fs.glob`, `log.search` | Existing stateless surface |
+| `get_more_search_results` | `fs.search` cursor / `log.read_since` | Existing cursor surface |
+| `stop_search` / `list_searches` | - | Stateful search intentionally not added here |
 | `start_process` | `process.start`, `shell.session.start` | Direct |
 | `read_process_output` | `process.read_output`, `shell.session.read` | Direct |
 | `interact_with_process` | `shell.session.write_stdin` | Direct |
@@ -122,10 +128,33 @@ per-file text size and aggregate scanned bytes.
 | `force_terminate` | `process.terminate` | Managed current-generation handle |
 | `list_processes` | `process.list`, `process.inspect` | Direct |
 | `kill_process` | `system.process.kill` | PID + executable identity |
-| `write_pdf` | — | Outside Wave 1 |
-| `shutdown` | — | Outside Wave 1 |
-| `who_am_i` | — | Identity disclosure not required |
-| `get_recent_tool_calls` | existing Executor audit/outcome journals | Existing authority |
+| `get_usage_stats` | `diagnostics.usage_stats` | Sanitized native counters |
+| `get_recent_tool_calls` | `diagnostics.recent_tool_calls` | Sanitized metadata only |
+| `get_prompts` | - | Intentional vendor-onboarding exclusion |
+| `give_feedback_to_desktop_commander` | - | Intentional vendor-feedback exclusion |
+
+`fs.read_multiple` preserves input order, returns success/error per path, and
+enforces both per-file and aggregate byte bounds. Protected-path policy is
+evaluated lexically before probing each requested path.
+
+`agent.shutdown` is a side effect. Executor preflight requires the active
+device/control-session/session-epoch plus current local generation, and the
+normal audit/outcome-journal path applies. The transport sends the completed
+response before the DeviceAgent exits its current session and stops reconnecting.
+
+`identity.who_am_i` and the diagnostics operations expose only non-secret
+identity and sanitized execution metadata. Recent-call records contain request
+identity, action, status, timestamps, dry-run state, and effect state; they do
+not contain arguments, results, environment variables, credentials, or
+unrelated OS process/session information.
+
+`pdf.write` is Executor-bound and journaled. Creation accepts bounded markdown
+and only a new `.pdf` output. Modification accepts bounded delete/insert
+operations against an existing PDF and requires a distinct new output path.
+Insertions may use bounded markdown or a bounded source PDF. Existing outputs
+are never overwritten. Active HTML/CSS, external-image rendering, arbitrary
+PDF options, and in-place modification are intentionally outside this safe
+core.
 
 The canonical machine-readable mapping is
 `tests/fixtures/native_tool_parity_v1/desktop_commander_mapping.json`.
@@ -145,9 +174,13 @@ the implementation.
 
 ## Intentionally unsupported edges
 
-Wave 1 does not implement remote multi-device routing, device shutdown,
-mutable safety configuration, credential/account identity disclosure, PDF
-generation, or server-side search handles. These exclusions prevent a
-duplicate policy plane or unbounded transport semantics. Higher layers may
-compose bounded reads or document generation while native side effects remain
-inside Executor.
+This branch deliberately does not add the separately assigned stateful-search
+lifecycle or Windows service/installability layer. Desktop Commander vendor
+surfaces `get_prompts` and `give_feedback_to_desktop_commander` are also
+intentional exclusions because they are onboarding/feedback product features,
+not native PC execution primitives.
+
+The PDF primitive implements the safe core needed for `write_pdf`: bounded
+markdown creation and bounded page delete/insert modification to a new output.
+High-fidelity browser-style HTML/CSS rendering, external image fetching,
+arbitrary vendor PDF options, and in-place overwrite remain excluded.

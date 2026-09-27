@@ -399,7 +399,8 @@ def test_device_health_and_config_are_read_only(tmp_path: Path) -> None:
     assert device.ok and health.ok and config.ok
     assert device.data["transport"] == "native_local"
     assert health.data["status"] == "ok"
-    assert config.data["mutable"] is False
+    assert config.data["mutable"] is True
+    assert "filesystem.allowed_roots" in config.data["settings"]["mutable_keys"]
     assert config.data["search_cursor_version"].endswith(".v1")
 
 
@@ -456,8 +457,13 @@ def test_desktop_commander_mapping_fixture_covers_reference_surface() -> None:
         "list_devices",
         "ping",
         "get_config",
+        "set_config_value",
+        "who_am_i",
+        "shutdown",
         "read_file",
+        "read_multiple_files",
         "write_file",
+        "write_pdf",
         "edit_block",
         "list_directory",
         "move_file",
@@ -472,10 +478,20 @@ def test_desktop_commander_mapping_fixture_covers_reference_surface() -> None:
         "force_terminate",
         "list_processes",
         "kill_process",
+        "get_usage_stats",
+        "get_recent_tool_calls",
+        "get_prompts",
+        "give_feedback_to_desktop_commander",
     }
     assert required <= set(mapped)
     assert mapped["kill_process"]["candidate"] == ["system.process.kill"]
     assert mapped["edit_block"]["candidate"] == ["fs.edit_text"]
+    assert mapped["read_multiple_files"]["candidate"] == ["fs.read_multiple"]
+    assert mapped["set_config_value"]["candidate"] == ["config.set"]
+    assert mapped["shutdown"]["candidate"] == ["agent.shutdown"]
+    assert mapped["write_pdf"]["candidate"] == ["pdf.write"]
+    assert mapped["get_prompts"]["status"] == "intentional_exclusion"
+    assert mapped["give_feedback_to_desktop_commander"]["status"] == "intentional_exclusion"
 
 
 def test_directory_listing_pagination_is_explicit(tmp_path: Path) -> None:
