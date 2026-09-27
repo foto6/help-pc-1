@@ -18,8 +18,13 @@ from .capture import PillowScreenCapture, ScreenshotProvider, screenshot_payload
 from .errors import ExecutorError, ExecutorFailureError, PolicyBlockedError
 from .input import InputAdapter, WindowsInputAdapter
 from .models import ActionRequest, ActionResult, AuditEvent, ElementQuery, utc_now_iso
-from .operations import OPS_ACTIONS, OPS_SIDE_EFFECT_ACTIONS, LocalOperations
-from .outcome import ActionOutcomeEvidence, SIDE_EFFECTING_ACTIONS
+from .operations import (
+    OPS_ACTIONS,
+    OPS_SIDE_EFFECT_ACTIONS,
+    LocalOperations,
+    register_native_outcome_actions,
+)
+from .outcome import ActionOutcomeEvidence
 from .outcome_journal import (
     ExecutionCorrelation,
     LOOKUP_CONTRACT_VERSION,
@@ -41,6 +46,8 @@ from .vision_target import GroundedTargetContractError, parse_grounded_target_v1
 from .windows import Win32WindowEnumerator, WindowEnumerator
 
 T = TypeVar("T")
+
+_REGISTERED_SIDE_EFFECTING_ACTIONS = register_native_outcome_actions()
 
 
 _AUDIT_REDACT_KEYS = frozenset(
@@ -83,7 +90,7 @@ def _sanitize_audit_details(value: Any) -> Any:
 
 class _OutcomeTracker:
     def __init__(self, action: str) -> None:
-        self.side_effecting = action in SIDE_EFFECTING_ACTIONS
+        self.side_effecting = action in _REGISTERED_SIDE_EFFECTING_ACTIONS
         self.dispatch_started = False
         self.completed = False
         self.correlation: ExecutionCorrelation | None = None

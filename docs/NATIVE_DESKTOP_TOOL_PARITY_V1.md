@@ -19,9 +19,13 @@ SHA-256 attestation of the capability document.
 Native read operations execute through the same Executor dispatch boundary.
 Every native side-effect action is part of `SIDE_EFFECTING_ACTIONS`.
 A live native side effect is rejected unless an existing `OutcomeJournal`
-is configured. Executor records `dispatch_started` before adapter dispatch
-and then writes the terminal outcome. An exception after dispatch produces
-`effect_state=unknown`; the same request identity cannot be blindly replayed.
+is configured. The frozen `action_outcome.v1` source blob is not modified;
+the parity layer registers its versioned native action names with that
+validator at process initialization so the existing journal records native
+request/action identities directly. Executor records `dispatch_started`
+before adapter dispatch and then writes the terminal outcome. An exception
+after dispatch produces `effect_state=unknown`; the same request identity
+cannot be blindly replayed.
 
 Executor's existing `pc_executor.action_preflight.v1` is used for native
 actions. Filesystem operations perform lexical and resolved-path validation.

@@ -130,6 +130,19 @@ OPS_SIDE_EFFECT_ACTIONS = frozenset(
 )
 OPS_ACTIONS = frozenset(OPS_READ_ONLY_ACTIONS | OPS_SIDE_EFFECT_ACTIONS)
 
+
+def register_native_outcome_actions() -> frozenset[str]:
+    """Extend the frozen action-outcome validator for native actions at runtime."""
+    from . import outcome as outcome_contract
+
+    registered = frozenset(
+        set(outcome_contract.SIDE_EFFECTING_ACTIONS)
+        | set(OPS_SIDE_EFFECT_ACTIONS)
+    )
+    outcome_contract.SIDE_EFFECTING_ACTIONS = registered
+    return registered
+
+
 _SENSITIVE_PATH_NAMES = {
     ".env",
     ".npmrc",

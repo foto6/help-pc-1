@@ -4,8 +4,6 @@ from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from typing import Any, Mapping
 
-from .operations import OPS_SIDE_EFFECT_ACTIONS
-
 
 CONTRACT_VERSION = "pc_executor.action_outcome.v1"
 EFFECT_STATES = {"not_started", "completed", "unknown"}
@@ -21,7 +19,6 @@ SIDE_EFFECTING_ACTIONS = frozenset(
         "clipboard.set",
         "shell.run",
     }
-    | set(OPS_SIDE_EFFECT_ACTIONS)
 )
 _ALLOWED_REASONS = {
     "dispatch_started",
