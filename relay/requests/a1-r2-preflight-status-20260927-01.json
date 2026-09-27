@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "a1-r2-preflight-status-20260927-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$repo='C:\\agentwork\\SpectraTrack-a1'; Write-Output ('REPO_EXISTS='+(Test-Path $repo)); if(Test-Path $repo){git -C $repo status --short; git -C $repo rev-parse HEAD}; $r2='E:\\SpectraTrack-data\\imports\\nightowls-public-smoke400-r2'; Write-Output ('R2_DIR='+(Test-Path $r2)); if(Test-Path $r2){Get-ChildItem -LiteralPath $r2 -File | Select-Object Name,Length | ConvertTo-Json -Compress}; Write-Output ('MODEL='+(Test-Path 'E:\\SpectraTrack\\yolo11x.onnx'))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "A1 blind R2 pre-exposure path/status check only; no R2 file contents or scoring."
+}
