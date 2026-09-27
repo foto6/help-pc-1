@@ -722,3 +722,104 @@ def test_audit_redacts_file_and_process_payloads(tmp_path: Path) -> None:
     serialized = repr([event.to_dict() for event in events])
     assert "abc123" not in serialized
     assert "text_redacted_bytes" in serialized
+
+
+def test_mutations_refuse_symlink_leaf_instead_of_mutating_target(
+    tmp_path: Path,
+) -> None:
+    target = tmp_path / "real.txt"
+    target.write_text("keep", encoding="utf-8")
+    link = tmp_path / "alias.txt"
+    try:
+        link.symlink_to(target)
+    except OSError:
+        pytest.skip("symlink creation unavailable")
+    digest = hashlib.sha256(target.read_bytes()).hexdigest()
+    executor, _ops = make_executor(tmp_path)
+
+    deleted = executor.execute(
+        request(
+            "fs.delete",
+            {
+                "path": str(link),
+                "classification": "file",
+                "expected_current_hash": digest,
+            },
+            "delete-symlink",
+        )
+    )
+    written = executor.execute(
+        request(
+            "fs.write_text",
+            {
+                "path": str(link),
+                "text": "replace",
+                "expected_current_hash": digest,
+            },
+            "write-symlink",
+        )
+    )
+
+    assert deleted.status == "blocked"
+    assert written.status == "blocked"
+    assert target.read_text(encoding="utf-8") == "keep"
+    assert link.exists()
+
+
+def test_structured_start_rejects_encoded_or_sensitive_shell_forms(
+    tmp_path: Path,
+) -> None:
+    shell = SafeShellAdapter(
+        allow_executables={"powershell.exe", "cmd.exe"},
+        output_limit_bytes=4096,
+    )
+    ops = LocalOperations(shell=shell, state_root=tmp_path / "ops-shell-policy")
+
+    with pytest.raises(SafetyViolation, match="encoded PowerShell"):
+        ops.preflight(
+            "process.start",
+            {
+                "argv": [
+                    "powershell.exe",
+                    "-NoProfile",
+                    "-EncodedCommand",
+                    "QQA=",
+                ]
+            },
+        )
+
+    with pytest.raises(SafetyViolation, match="credential/CAPTCHA"):
+        ops.preflight(
+            "shell.session.start",
+            {
+                "argv": [
+                    "powershell.exe",
+                    "-NoProfile",
+                    "-Command",
+                    "Get-Credential",
+                ]
+            },
+        )
+
+    with pytest.raises(SafetyViolation, match="persistent cmd"):
+        ops.preflight(
+            "process.start",
+            {
+                "argv": ["cmd.exe", "/k", "echo", "ok"],
+            },
+        )
+
+
+def test_inherited_environment_filters_sensitive_key_names(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    executor, ops = make_executor(tmp_path)
+    monkeypatch.setenv("API_TOKEN", "must-not-reach-child")
+    monkeypatch.setenv("PC_OPS_SAFE_FIXTURE", "visible")
+
+    env = ops._build_env({"inherit_env": True})
+
+    assert env is not None
+    assert "API_TOKEN" not in env
+    assert env["PC_OPS_SAFE_FIXTURE"] == "visible"

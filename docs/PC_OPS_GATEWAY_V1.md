@@ -73,7 +73,7 @@ Meta actions are `ops.capabilities.get` and `ops.preflight`. There are 31 Wave2/
 
 ## Filesystem policy
 
-All path-bearing actions run the lexical protected-path check and then resolve the requested target or the nearest existing ancestor. Existing ancestors are re-resolved individually, which catches practical symlink/junction/reparse-point aliases, relative paths, parent traversal, alternate separators, and case aliases before access.
+All path-bearing actions run the lexical protected-path check and then resolve the requested target or the nearest existing ancestor. Existing ancestors are re-resolved individually, which catches practical symlink/junction/reparse-point aliases, relative paths, parent traversal, alternate separators, and case aliases before access. Mutations additionally reject a symbolic-link/junction/reparse-point final component rather than following it and mutating the target.
 
 The protected Windows root `E:\manhwa` remains unreachable. No Wave2 operation has a bypass flag.
 
@@ -107,7 +107,7 @@ Log operations are finite reads. There is no follow/stream action.
 
 ## Managed processes
 
-`process.start` validates argv/cwd with the configured `SafeShellAdapter`; it does not introduce a second executable allowlist. Environment overlays are bounded and reject credential-like key names. Optional `inherit_env=false` allows an explicitly constructed environment.
+`process.start` validates argv/cwd with the configured `SafeShellAdapter`; it does not introduce a second executable allowlist. Environment overlays are bounded and reject credential-like key names. Inherited environments are filtered to remove credential-like key names before child creation; `inherit_env=false` allows an explicitly constructed environment. Structured PowerShell/cmd starts also reject encoded PowerShell, obvious credential/CAPTCHA shell terms, and persistent `cmd /k` under `process.start` (use a managed shell session for persistence).
 
 A successful start returns a durable handle record. Stdout/stderr are drained concurrently into separate bounded rolling byte windows. `process.read_output` uses an explicit `pc_executor.stream_cursor.v1` and reports whether requested bytes had already fallen out of the bounded window.
 

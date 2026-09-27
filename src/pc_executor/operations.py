@@ -9,6 +9,7 @@ import os
 import platform
 import re
 import shutil
+import stat as stat_module
 import subprocess
 import sys
 import tempfile
@@ -115,6 +116,19 @@ _SENSITIVE_STDIN_RE = re.compile(
     r"(?i)(captcha|password\s*[:=]|passwd\s*[:=]|secret\s*[:=]|"
     r"token\s*[:=]|api[_-]?key\s*[:=]|credential\s*[:=])"
 )
+_SENSITIVE_ARG_RE = re.compile(
+    r"(?i)(captcha|--?(?:password|passwd|secret|token|api[_-]?key|credential)(?:=|$))"
+)
+_POWERSHELL_NAMES = {"powershell", "powershell.exe", "pwsh", "pwsh.exe"}
+_CMD_NAMES = {"cmd", "cmd.exe"}
+_FORBIDDEN_SHELL_TERMS = (
+    "get-credential",
+    "read-host -assecurestring",
+    "convertto-securestring",
+    "set-clipboard",
+    "sendkeys",
+    "captcha",
+)
 _ENV_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]{0,127}$")
 
 
@@ -155,6 +169,70 @@ def _file_identity(path: Path) -> tuple[int | None, int | None]:
     except OSError:
         return None, None
     return int(stat.st_dev), int(stat.st_ino)
+
+
+def _absolute_requested_path(value: str | os.PathLike[str]) -> Path:
+    path = Path(value).expanduser()
+    if not path.is_absolute():
+        path = Path.cwd() / path
+    return path
+
+
+def _assert_mutation_leaf_not_reparse(value: str | os.PathLike[str]) -> None:
+    path = _absolute_requested_path(value)
+    try:
+        stat = os.lstat(path)
+    except FileNotFoundError:
+        return
+    except OSError as exc:
+        raise SafetyViolation(f"mutation path identity check failed: {path}: {exc}") from exc
+    reparse_flag = getattr(stat_module, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400)
+    attributes = int(getattr(stat, "st_file_attributes", 0) or 0)
+    if stat_module.S_ISLNK(stat.st_mode) or attributes & reparse_flag:
+        raise SafetyViolation(
+            "structured mutations refuse symbolic-link/junction/reparse leaf targets"
+        )
+
+
+def _validate_structured_command(action: str, argv: Sequence[str]) -> None:
+    executable = Path(str(argv[0]).replace("\\", "/")).name.lower()
+    lowered_args = [str(part).casefold() for part in argv[1:]]
+    joined = " ".join(lowered_args)
+    for part in argv[1:]:
+        if _SENSITIVE_ARG_RE.search(str(part)):
+            raise SafetyViolation(
+                f"{action} credential/CAPTCHA command arguments are forbidden"
+            )
+    if executable in _POWERSHELL_NAMES:
+        switches = set(lowered_args)
+        if "-noprofile" not in switches:
+            raise SafetyViolation(
+                f"{action} PowerShell requires explicit -NoProfile"
+            )
+        if "-encodedcommand" in switches or "-enc" in switches:
+            raise SafetyViolation(
+                f"{action} encoded PowerShell commands are forbidden"
+            )
+        if action == "process.start" and "-command" not in switches:
+            raise SafetyViolation(
+                "process.start PowerShell requires explicit -Command"
+            )
+        for term in _FORBIDDEN_SHELL_TERMS:
+            if term in joined:
+                raise SafetyViolation(
+                    f"{action} interactive credential/CAPTCHA shell term is forbidden: {term}"
+                )
+    if executable in _CMD_NAMES:
+        switches = set(lowered_args)
+        if action == "process.start" and "/k" in switches:
+            raise SafetyViolation(
+                "process.start persistent cmd sessions are forbidden; use shell.session.start"
+            )
+        for term in _FORBIDDEN_SHELL_TERMS:
+            if term in joined:
+                raise SafetyViolation(
+                    f"{action} interactive credential/CAPTCHA shell term is forbidden: {term}"
+                )
 
 
 def _assert_nonsensitive_path(path: Path) -> None:
@@ -904,6 +982,8 @@ class LocalOperations:
         if action.startswith("fs.") or action.startswith("log."):
             self._preflight_path_action(action, params)
         elif action in {"process.start", "shell.session.start"}:
+            validated = self.shell.validate(params["argv"], cwd=params.get("cwd"))
+            _validate_structured_command(action, validated)
             current = self._start_context(action, params)
             supplied = params.get("context_binding")
             if supplied is not None and _validate_ops_context_binding(supplied, action) != current:
@@ -926,6 +1006,8 @@ class LocalOperations:
 
     def _preflight_path_action(self, action: str, params: Mapping[str, Any]) -> None:
         if action in {"fs.copy", "fs.move"}:
+            _assert_mutation_leaf_not_reparse(params["source"])
+            _assert_mutation_leaf_not_reparse(params["destination"])
             source = ensure_resolved_path_allowed(params["source"])
             destination = ensure_resolved_path_allowed(
                 params["destination"], for_creation=True
@@ -943,6 +1025,8 @@ class LocalOperations:
                 raise SafetyViolation("source changed: expected_source_hash mismatch")
             return
 
+        if action in FS_WRITE_ACTIONS:
+            _assert_mutation_leaf_not_reparse(params["path"])
         path = ensure_resolved_path_allowed(
             params["path"],
             for_creation=action in {"fs.write_text", "fs.append_text", "fs.mkdir"},
@@ -1500,13 +1584,25 @@ class LocalOperations:
         inherit = bool(params.get("inherit_env", True))
         if supplied is None and inherit:
             return None
-        env = dict(os.environ) if inherit else {}
+        env = (
+            {
+                key: value
+                for key, value in os.environ.items()
+                if not _SENSITIVE_ENV_RE.search(key)
+            }
+            if inherit
+            else {}
+        )
         if supplied:
             env.update({str(key): str(value) for key, value in supplied.items()})
         return env
 
     def _start(self, params: Mapping[str, Any], *, kind: str) -> dict[str, Any]:
         argv = self.shell.validate(params["argv"], cwd=params.get("cwd"))
+        _validate_structured_command(
+            "shell.session.start" if kind == "session" else "process.start",
+            argv,
+        )
         output_limit = int(params.get("output_limit_bytes", MAX_PROCESS_OUTPUT_BYTES))
         process = subprocess.Popen(
             argv,
