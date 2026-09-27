@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "discover-managed-chats-20260927-2338",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "curl.exe -sS --max-time 12 http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/discover"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
