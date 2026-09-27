@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-profile-project-state-20260927-2237",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$cfg='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; if(Test-Path $cfg){$c=Get-Content $cfg -Raw|ConvertFrom-Json; foreach($p in @($c.aiProfiles)){Write-Output ('PROFILE|'+$p.id+'|'+$p.name+'|provider='+$p.provider+'|port='+$p.debugPort+'|enabled='+$p.enabled)}; foreach($p in @($c.managedProjects)){Write-Output ('PROJECT|'+$p.id+'|'+$p.name+'|agents='+(@($p.agentIds)-join ','))}}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
