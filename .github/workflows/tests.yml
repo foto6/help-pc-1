@@ -7,6 +7,7 @@ on:
       - agent/pc-native-tool-parity
       - agent/pc-native-full-stack
       - agent/pc-native-full-parity-gaps
+      - agent/pc-native-core-finalized
   workflow_dispatch:
 
 jobs:
@@ -31,23 +32,31 @@ jobs:
         run: python -m pytest tests/test_preflight.py
       - name: Wave 7 focused context-binding suite
         run: python -m pytest tests/test_execution_context_binding.py
-      - name: Native desktop parity focused suite
+      - name: Outcome and idempotency focused suite
+        run: python -m pytest tests/test_action_outcome.py tests/test_outcome_journal.py
+      - name: Native direct-parity focused suite
         run: python -m pytest tests/test_pc_operations.py tests/test_native_tool_parity.py tests/test_native_full_parity_gaps.py
+      - name: Stateful search lifecycle suite
+        run: python -m pytest tests/test_search_sessions.py
       - name: Native schema reproducibility
         shell: bash
         run: |
           python tools/generate_native_tool_schemas.py
           git diff --exit-code -- schemas/
-      - name: Windows native adapter suite
+      - name: Windows native and search suite
         if: runner.os == 'Windows'
-        run: python -m pytest tests/windows/test_native_windows_ops.py
+        run: python -m pytest tests/windows/test_native_windows_ops.py tests/windows/test_search_sessions_windows.py
       - name: Native remote transport focused suite
         run: python -m pytest tests/test_native_remote_transport.py tests/test_remote_protocol.py
       - name: Native remote transport harness
         run: python tools/native_remote_harness.py
+      - name: Native device service focused suite
+        run: python -m pytest tests/test_native_device_service.py
+      - name: Native service artifact security suite
+        run: python -m pytest tests/test_native_service_artifact.py
       - name: Native remote Executor adapter suite
         run: python -m pytest tests/test_native_remote_executor_adapter.py tests/test_native_remote_executor_adapter_recovery.py
-      - name: Native full-stack real Executor integration suite
+      - name: Native authenticated full-wire integration suite
         run: python -m pytest tests/test_native_full_stack_integration.py
       - name: Full test suite
         run: python -m pytest
