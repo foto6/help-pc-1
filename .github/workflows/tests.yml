@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - agent/pc-executor
+      - agent/pc-journal-chaos
   workflow_dispatch:
 
 jobs:
@@ -21,3 +22,15 @@ jobs:
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e ".[test]"
       - run: python -m pytest
+      - name: Journal chaos reliability report
+        run: >-
+          python tools/outcome_journal_chaos.py
+          --report outcome-journal-reliability-report.json
+          --work-dir .reliability-work
+          --records 10002
+          --reopens 12
+      - uses: actions/upload-artifact@v4
+        with:
+          name: outcome-journal-reliability-${{ runner.os }}
+          path: outcome-journal-reliability-report.json
+          if-no-files-found: error

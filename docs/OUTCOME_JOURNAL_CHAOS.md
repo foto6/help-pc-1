@@ -11,19 +11,21 @@ records for 3,334 request IDs. Every logical request has a proven-not-started at
 by a dispatched/completed attempt, covering multiple side-effecting action names while preserving
 the production record hash chain.
 
-The harness reopens the journal 12 times from cold `OutcomeJournal` instances. Lookup bytes are
-hashed before and after recovery and must remain byte-identical. Recovery only parses journal
-evidence; it has no adapter execution path.
+The harness reopens the journal 12 times from cold `OutcomeJournal` instances. CI additionally
+launches four fresh `pc_executor` processes against the 10,002-record journal to prove recovery
+across real process boundaries. Lookup bytes are hashed before and after recovery and must remain
+byte-identical. Recovery only parses journal evidence; it has no adapter execution path.
 
 ## Fault model
 
-Fake storage injects disk-full before write, partial writes at six boundary classes (zero, first
-byte, first quarter, half, penultimate byte, and before LF), and a failure after a complete append
-but before the simulated durable-flush boundary. Partial provisional and partial terminal records
-must resolve to `unknown`; they may never create `completed` evidence. Duplicate identical terminal
-evidence is idempotent, while a physically duplicated terminal record makes the journal corrupt and
-therefore `unknown`. Conflicting terminal evidence, request/action reuse, truncated tails, and
-terminal-before-dispatch correlation fail closed.
+Fake storage injects disk-full before write, partial writes at six named boundary classes (zero,
+first byte, first quarter, half, penultimate byte, and before LF), and a failure after a complete
+append but before the simulated durable-flush boundary. CI also sweeps every possible partial byte
+offset for both provisional dispatch and terminal append records. Partial provisional and partial
+terminal records must resolve to `unknown`; they may never create `completed` evidence. Duplicate
+identical terminal evidence is idempotent, while a physically duplicated terminal record makes the
+journal corrupt and therefore `unknown`. Conflicting terminal evidence, request/action reuse,
+truncated tails, and terminal-before-dispatch correlation fail closed.
 
 Process-local concurrent writers are supported through the existing per-path re-entrant lock and are
 covered with eight threads. Cross-process multi-writer serialization is not claimed by this journal;
@@ -44,8 +46,9 @@ Linux while their raw byte hashes remain distinct.
 The checked-in `docs/outcome_journal_reliability_report.json` records seed, counts, raw/canonical
 journal hashes, frozen outcome hashes, fault-case counts, runtime identity, and measured replay
 latency. The stress test enforces a generous 15-second bound for one 10k-record lookup and a
-60-second bound for 12 cold reopens so CI catches pathological replay regressions without depending
-on workstation-specific microbenchmarks.
+60-second bound for 12 cold reopens. Fresh-process recovery adds the same 15-second per-process
+and 60-second aggregate bounds so CI catches pathological replay regressions without depending on
+workstation-specific microbenchmarks.
 
 Reproduce the report with:
 
