@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-focus-cleanup-20260927-2345",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';\nWrite-Output '=== RELAY GIT ===';\ngit -C E:\\pc-github-relay status --porcelain=v1 -b 2>&1;\nif(Test-Path 'E:\\pc-github-relay\\.git\\rebase-merge'){Write-Output 'REBASE_MERGE_PRESENT'}else{Write-Output 'REBASE_MERGE_ABSENT'};\nWrite-Output '=== GH AUTH ===';\ngh auth status 2>&1;\nWrite-Output '=== ASSIGNMENTS ===';\ncurl.exe -sS --max-time 8 http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments 2>&1"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
