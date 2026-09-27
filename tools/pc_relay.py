@@ -7,6 +7,7 @@ import os
 import re
 import signal
 import subprocess
+import sys
 import threading
 import time
 from datetime import datetime, timezone
@@ -76,11 +77,11 @@ _FORBIDDEN_INTERACTIVE_SHELL_TERMS = (
     "captcha",
 )
 _SENSITIVE_KEY_RE = re.compile(
-    r"(?:password|passwd|secret|api[_-]?key|access[_-]?token|authorization|credential)",
+    r"(?:password|passwd|secret|api[_-]?key|access[_-]?token|token|authorization|credential)",
     re.IGNORECASE,
 )
 _SENSITIVE_VALUE_RE = re.compile(
-    r"(?i)\b(password|passwd|secret|api[_-]?key|access[_-]?token|authorization|credential)"
+    r"(?i)\b(password|passwd|secret|api[_-]?key|access[_-]?token|token|authorization|credential)"
     r"\s*[:=]\s*([^\s;,]+)"
 )
 
@@ -512,7 +513,7 @@ class GitQueue:
         return bool(paths) and all(path.startswith(allowed_prefixes) for path in paths)
 
     def sync(self) -> str:
-        self._assert_clean()
+        self._prepare_clean_checkout()
         remote = self._fetch()
         if self.last_remote_sha and remote != self.last_remote_sha:
             if not self._is_ancestor(self.last_remote_sha, remote):
