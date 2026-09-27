@@ -10,6 +10,8 @@ Input is one JSON object per line. `request_id` is optional; `dry_run` can overr
 
 | Action | Params | Notes |
 |---|---|---|
+| capabilities.get | {} | Read-only deterministic `pc_executor.capabilities.v1` snapshot with safety/runtime attestation digest. |
+| action.preflight | `pc_executor.action_preflight.v1` request object | Read-only feasibility/policy check; never dispatches the requested side effect. |
 | outcome.lookup | {"request_id":"...","action":"...","execution_attempt":1} | Read-only durable outcome-journal lookup; never invokes side-effect adapters. |
 | screenshot.capture | {} | Base64 PNG plus capture id, dimensions, display geometry, coordinate space and SHA-256. |
 | windows.list | {} | Visible top-level windows in deterministic order. |
@@ -27,6 +29,8 @@ Input is one JSON object per line. `request_id` is optional; `dry_run` can overr
 | shell.run | {"argv":["git","status"],"cwd":"C:\\work"} | argv-only allowlist, protected paths, cancellation/deadline, bounded stdout/stderr. |
 
 `ElementQuery` supports `automation_id`, `name`, `control_type`, `class_name`, and `window_title`. At least one non-empty selector is required and unknown keys are rejected.
+
+`action.preflight` returns strict `pc_executor.action_preflight.v1` with status `ready`, `blocked`, `unsupported`, `stale_observation`, `ambiguous_target`, or `invalid_request`, the current capabilities attestation digest, effective deadline budget, fixed reason metadata and a sanitized UIA actionability summary when applicable. `ready` is not an execution guarantee. See `docs/PREFLIGHT_V1.md`.
 
 ## Result shape
 

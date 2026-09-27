@@ -4,6 +4,7 @@ from typing import Any, Callable, TypeVar
 
 from .audit import AuditSink, InMemoryAuditSink
 from .cancellation import CancellationToken, run_bounded
+from .capabilities import build_capabilities
 from .capture import PillowScreenCapture, ScreenshotProvider, screenshot_payload
 from .errors import ExecutorError, ExecutorFailureError, PolicyBlockedError
 from .input import InputAdapter, WindowsInputAdapter
@@ -15,6 +16,13 @@ from .outcome_journal import (
     SOURCE as OUTCOME_JOURNAL_SOURCE,
     OutcomeJournal,
     OutcomeJournalError,
+)
+from .preflight import (
+    PreflightRequest,
+    PreflightResult,
+    PreflightValidationError,
+    evaluate_preflight,
+    invalid_result,
 )
 from .safety import SafetyViolation, ensure_not_sensitive_text
 from .shell import SafeShellAdapter
@@ -71,6 +79,42 @@ class Executor:
         self.dry_run = dry_run
         self.allow_coordinate_fallback = allow_coordinate_fallback
         self.operation_timeout_seconds = operation_timeout_seconds
+
+    def capabilities_snapshot(self) -> dict[str, Any]:
+        return build_capabilities(
+            screenshot=self.screenshot,
+            windows=self.windows,
+            accessibility=self.accessibility,
+            input_adapter=self.input,
+            shell=self.shell,
+            outcome_journal_configured=self.outcome_journal is not None,
+            dry_run_default=self.dry_run,
+            allow_coordinate_fallback=self.allow_coordinate_fallback,
+            operation_timeout_seconds=self.operation_timeout_seconds,
+        )
+
+    def preflight(self, payload: Any) -> PreflightResult:
+        capabilities = self.capabilities_snapshot()
+        digest = capabilities["attestation"]["digest"]
+        default_deadline_ms = max(1, int(self.operation_timeout_seconds * 1000))
+        try:
+            request = PreflightRequest.from_dict(payload)
+        except PreflightValidationError as exc:
+            return invalid_result(
+                payload,
+                capabilities_digest=digest,
+                default_deadline_ms=default_deadline_ms,
+                message=str(exc),
+            )
+        return evaluate_preflight(
+            request,
+            capabilities=capabilities,
+            accessibility=self.accessibility,
+            input_adapter=self.input,
+            shell=self.shell,
+            default_timeout_ms=default_deadline_ms,
+            allow_coordinate_fallback=self.allow_coordinate_fallback,
+        )
 
     def execute(
         self,
@@ -404,6 +448,16 @@ class Executor:
     ) -> dict[str, Any]:
         action = request.action
         p = request.params
+
+        if action == "capabilities.get":
+            if p:
+                raise PolicyBlockedError(
+                    "capabilities.get does not accept parameters"
+                )
+            return {"capabilities": self.capabilities_snapshot()}
+
+        if action == "action.preflight":
+            return {"preflight": self.preflight(p).to_dict()}
 
         if action == "outcome.lookup":
             target_request_id = p.get("request_id")

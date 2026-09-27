@@ -1,0 +1,1 @@
+{"contract_version":"pc_executor.action_preflight.v1","request":{"action":"keyboard.press","dry_run":null,"params":{"key":"enter"},"request_id":"fixture-ready","timeout_ms":1000}}

@@ -4,19 +4,24 @@ The upstream planner/vision component proposes intent and selectors; PC Executor
 
 ## Recommended loop
 
-1. Use `screenshot.capture`, `windows.list`, and/or read-only `uia.snapshot` to observe current state.
-2. Vision/planner identifies a target.
-3. Prefer `uia.inspect` to verify current accessibility metadata.
-4. For `vision.grounded_target.v1`, call `vision.target.invoke`. The frozen transport remains unchanged and the executor re-resolves only by non-empty UIA `automation_id`.
-5. Use `uia.invoke`, `uia.focus`, or `uia.set_value` for non-Vision UIA actions when supported.
-6. Re-observe after the action.
-7. Generic coordinate fallback remains separately gated. `vision.target.invoke` never uses `bounds_screen` or `click_point_screen` for input.
+1. Read `capabilities.get` and bind planning to its attestation digest when environment/safety compatibility matters.
+2. Use `screenshot.capture`, `windows.list`, and/or read-only `uia.snapshot` to observe current state.
+3. Vision/planner identifies a target.
+4. Use `action.preflight` for the exact logical request before side-effect dispatch when Control needs a current feasibility gate. `ready` is not an execution guarantee.
+5. Prefer UIA targeting. For `vision.grounded_target.v1`, call `vision.target.invoke`; the frozen transport remains unchanged and the executor re-resolves only by non-empty UIA `automation_id`.
+6. Use `uia.invoke`, `uia.focus`, or `uia.set_value` for non-Vision UIA actions when supported.
+7. Re-observe after the action.
+8. Generic coordinate fallback remains separately gated. `vision.target.invoke` never uses `bounds_screen` or `click_point_screen` for input.
 
 ## Observation correlation
 
 Screenshot results include `capture_id`, width/height, display geometry, `coordinate_space="physical_screen_px"`, and SHA-256. UIA snapshots include a stable snapshot id, capture time, app/window identity, display geometry, per-node physical bounds, display id, window/process correlation and deterministic JSON.
 
 Consumers must treat observation ids/timestamps as provenance. A later action should be based on a fresh observation when the UI can change.
+
+## Preflight contract
+
+`pc_executor.action_preflight.v1` returns `ready`, `blocked`, `unsupported`, `stale_observation`, `ambiguous_target`, or `invalid_request` plus the current `pc_executor.capabilities.v1` attestation digest. Preflight is side-effect-free: UIA checks use only read-only observation and shell checks use only allowlist/path validation. Control must not interpret `ready` as proof that execution later succeeded, nor as retry/replay authority. See `docs/PREFLIGHT_V1.md`.
 
 ## Failure and retry contract
 

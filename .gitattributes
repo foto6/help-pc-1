@@ -1,2 +1,3 @@
 tests/fixtures/outcome_journal_v1/* -text
 tests/fixtures/action_outcome_v1*.json -text
+tests/fixtures/preflight_v1/* -text

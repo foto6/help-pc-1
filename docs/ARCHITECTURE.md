@@ -65,6 +65,12 @@ This evidence layer is orthogonal to UIA resolution, cancellation, and verificat
 
 `outcome.lookup` and `OutcomeJournal.read_evidence()` are read-only. They return history/provenance plus a Control-compatible outcome and always report `replay_authorized=false`; neither path can invoke UI/input/shell adapters. See `docs/OUTCOME_JOURNAL_V1.md`.
 
+## Capability attestation and preflight
+
+`capabilities.get` returns deterministic `pc_executor.capabilities.v1` state for action support, adapter availability, runtime compatibility and active safety gates. Its SHA-256 attestation excludes machine-unique identity and secrets.
+
+`action.preflight` consumes strict `pc_executor.action_preflight.v1`. It may use only read-only UIA observation and shell validation. It never invokes/focuses/sets UIA values, generates input, accesses clipboard contents, captures screenshots, enumerates windows, or starts subprocesses. Statuses are `ready`, `blocked`, `unsupported`, `stale_observation`, `ambiguous_target`, and `invalid_request`; `ready` is only a current feasibility statement, never an execution guarantee or replay authorization. See `docs/PREFLIGHT_V1.md`.
+
 ## Safety invariants
 
 - Default mode is dry-run.
