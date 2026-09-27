@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$xs=Invoke-RestMethod 'http://127.0.0.1:17410/json/list'; $xs | Where-Object {($_.title -like '*PC OPS*') -or ($_.title -like '*Operations Gateway*') -or ($_.url -like '*local-chatgpt*')} | Select-Object id,title,url | ConvertTo-Json -Compress -Depth 4"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"D7953E61B3112ABC8A90A5C3BCBB5F0B\",\"title\":\"Build PC Operations Gateway\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab92c50-29d0-83ed-8cfb-7e9f353fe7a3\"}\r\n",
+      "stdout_bytes": 190,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:50:22.518Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:50:22.498Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "locate-pc-ops-integrator-001"
+    },
+    "request_id": "locate-pc-ops-integrator-001",
+    "started_at": "2026-09-27T14:50:22.157Z",
+    "status": "completed"
+  },
+  "id": "locate-pc-ops-integrator-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
