@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "inspect-primary-chats-003",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$xs=Invoke-RestMethod 'http://127.0.0.1:17410/json/list'; Set-Location E:\\WebAIBridge\\app\\data; $t0=$xs|Where-Object {$_.url -like '*6ab9011f-1798-83eb-9dc2-5df9382d9ddb*'}|Select-Object -First 1; if($t0){node .\\inspect_target.js $($t0.id)} else {Write-Output 'MISSING 6ab9011f-1798-83eb-9dc2-5df9382d9ddb'}; $t1=$xs|Where-Object {$_.url -like '*6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6*'}|Select-Object -First 1; if($t1){node .\\inspect_target.js $($t1.id)} else {Write-Output 'MISSING 6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6'}; $t2=$xs|Where-Object {$_.url -like '*6ab8b66d-c874-83eb-a448-594292c17d59*'}|Select-Object -First 1; if($t2){node .\\inspect_target.js $($t2.id)} else {Write-Output 'MISSING 6ab8b66d-c874-83eb-a448-594292c17d59'}; $t3=$xs|Where-Object {$_.url -like '*6ab8b24f-9c40-83eb-9b7b-766af74defe0*'}|Select-Object -First 1; if($t3){node .\\inspect_target.js $($t3.id)} else {Write-Output 'MISSING 6ab8b24f-9c40-83eb-9b7b-766af74defe0'}; $t4=$xs|Where-Object {$_.url -like '*6ab8b25d-b630-83eb-bed7-7d6aa135e647*'}|Select-Object -First 1; if($t4){node .\\inspect_target.js $($t4.id)} else {Write-Output 'MISSING 6ab8b25d-b630-83eb-bed7-7d6aa135e647'}"
+    ],
+    "cwd": "E:\\WebAIBridge\\app\\data"
+  },
+  "timeout_ms": 40000,
+  "note": "Inspect current generating/idle state for primary chats."
+}
