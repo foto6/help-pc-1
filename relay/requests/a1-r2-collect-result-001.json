@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "a1-r2-collect-result-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$out='E:\\SpectraTrack-data\\runs\\a1-nightowls-r2-ea1234-run2'; Get-FileHash -Algorithm SHA256 ($out+'\\r2-result.json'),($out+'\\r2-runtime.json') | Select-Object Path,Hash | ConvertTo-Json -Compress; Write-Output 'RESULT_JSON_BEGIN'; Get-Content -Raw ($out+'\\r2-result.json'); Write-Output 'RUNTIME_JSON_BEGIN'; Get-Content -Raw ($out+'\\r2-runtime.json')"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only collection of completed frozen A1 R2 artifacts."
+}
