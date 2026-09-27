@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$r='E:\\pc-github-relay'; \nWrite-Output 'BEFORE'; git -C $r status --porcelain=v2 -b;\nif((Test-Path \"$r\\.git\\rebase-merge\") -or (Test-Path \"$r\\.git\\rebase-apply\")){\n  Write-Output 'ABORTING_REBASE'; git -C $r rebase --abort; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}\n}else{Write-Output 'NO_REBASE_STATE'}\nWrite-Output 'AFTER_ABORT'; git -C $r status --porcelain=v2 -b;\n$dirty=(git -C $r status --porcelain);\nif($dirty){Write-Output 'DIRTY_WORKTREE_STOP'; $dirty; exit 3}\ngit -C $r fetch origin; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}\ngit -C $r pull --rebase origin agent/pc-github-relay; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}\nWrite-Output 'RECOVERED'; git -C $r status --porcelain=v2 -b; git -C $r rev-parse HEAD; git -C $r rev-list --left-right --count HEAD...origin/agent/pc-github-relay"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "From https://github.com/foto6/help-pc-1\n   88bc5ee..58bad1b  agent/pc-relay-hardening -> origin/agent/pc-relay-hardening\nFrom https://github.com/foto6/help-pc-1\n * branch            agent/pc-github-relay -> FETCH_HEAD\n",
+      "stderr_bytes": 218,
+      "stderr_truncated": false,
+      "stdout": "BEFORE\r\n# branch.oid 7378cac06f1b0218e3ef48e3c3321e922af497f5\n# branch.head agent/pc-github-relay\n# branch.upstream origin/agent/pc-github-relay\n# branch.ab +0 -0\nNO_REBASE_STATE\r\nAFTER_ABORT\r\n# branch.oid 7378cac06f1b0218e3ef48e3c3321e922af497f5\n# branch.head agent/pc-github-relay\n# branch.upstream origin/agent/pc-github-relay\n# branch.ab +0 -0\nAlready up to date.\nRECOVERED\r\n# branch.oid 7378cac06f1b0218e3ef48e3c3321e922af497f5\n# branch.head agent/pc-github-relay\n# branch.upstream origin/agent/pc-github-relay\n# branch.ab +0 -0\n7378cac06f1b0218e3ef48e3c3321e922af497f5\n0\t0\n",
+      "stdout_bytes": 579,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:43:14.792Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:43:14.766Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-relay-rebase-recover-20260927-2322"
+    },
+    "request_id": "pc-relay-rebase-recover-20260927-2322",
+    "started_at": "2026-09-27T15:43:11.714Z",
+    "status": "completed"
+  },
+  "id": "pc-relay-rebase-recover-20260927-2322",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
