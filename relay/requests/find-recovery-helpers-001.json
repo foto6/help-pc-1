@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "find-recovery-helpers-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Get-ChildItem E:\\WebAIBridge\\app\\data -File | Where-Object {$_.Name -match 'retry|resume|recover|watchdog|continue'} | Select-Object Name,FullName | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge\\app\\data"
+  },
+  "timeout_ms": 10000,
+  "note": "Find existing chat recovery helpers only."
+}
