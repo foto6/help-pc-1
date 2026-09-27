@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-assignment-detail-20260927-2315",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$st='E:\\WebAIBridge\\app\\data\\state.json'; $s=Get-Content $st -Raw|ConvertFrom-Json; $ids=@('2ba64468-e4e8-4272-b63e-e00e491b4ee4','cb7f85d3-226e-4c87-8be2-53ba473bc48d','8664aaf2-0e58-482e-9b39-6dc71e89da1e','2d7c4aae-8565-45c2-9751-42dd950c347e','31091def-1cb4-4431-9c58-a6e1b87b6a45'); foreach($id in $ids){$a=@($s.agentAssignments)|Where-Object{$_.id -eq $id}|Select-Object -First 1; if($a){Write-Output ('A|'+$id+'|state='+$a.state+'|target='+$a.targetChatId+'|dispatch='+$a.dispatchCount+'|diag='+$a.lastDiagnostic+'|repo='+$a.repository+'|branch='+$a.branch)}else{Write-Output ('MISSING|'+$id)}}; Write-Output 'VISION'; foreach($a in @($s.agentAssignments)|Where-Object{$_.targetChatId -eq 'agent-vision'}|Select-Object -Last 5){Write-Output ('V|'+$a.id+'|state='+$a.state+'|diag='+$a.lastDiagnostic+'|repo='+$a.repository+'|branch='+$a.branch)}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
