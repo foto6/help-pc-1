@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "executable is not in safe allowlist: node.exe",
+    "error_kind": "policy_blocked",
+    "finished_at": "2026-09-27T15:28:20.659Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": false,
+      "effect_state": "not_started",
+      "observed_at": "2026-09-27T15:28:20.645Z",
+      "reason": "policy_blocked",
+      "reconciliation_required": false,
+      "reexecution_safe": true,
+      "request_id": "cdp-tabs-node-20260927-2315"
+    },
+    "request_id": "cdp-tabs-node-20260927-2315",
+    "started_at": "2026-09-27T15:28:20.628Z",
+    "status": "blocked"
+  },
+  "id": "cdp-tabs-node-20260927-2315",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
