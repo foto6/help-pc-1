@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "dispatch-a1-blind-r2-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$xs=Invoke-RestMethod 'http://127.0.0.1:17410/json/list'; $t=$xs|Where-Object {$_.url -like '*6ab8f4ad-224c-83ed-aa28-7a7277075fa1*'}|Select-Object -First 1; if(-not $t){Write-Error 'target_not_found'; exit 3}; Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=$($t.id) --prompt=E:\\pc-github-relay\\relay\\prompts\\a1-blind-r2-validation.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Dispatch A1 blind R2 validation after lock+CI gate."
+}
