@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$cfg='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; if(Test-Path $cfg){$c=Get-Content $cfg -Raw|ConvertFrom-Json; $c.PSObject.Properties | ForEach-Object { $v=$_.Value; $t=if($null -eq $v){'null'}else{$v.GetType().Name}; $n=if($v -is [System.Collections.ICollection]){$v.Count}else{''}; Write-Output ('KEY|'+$_.Name+'|type='+$t+'|count='+$n) }}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "KEY|mode|type=String|count=\r\nKEY|enabled|type=Boolean|count=\r\nKEY|bridgeUrl|type=String|count=\r\nKEY|apiToken|type=String|count=\r\nKEY|profileId|type=String|count=\r\nKEY|debugPort|type=Int32|count=\r\nKEY|supervisorChatUrl|type=String|count=\r\nKEY|supervisorChatTitlePattern|type=String|count=\r\nKEY|continuationText|type=String|count=\r\nKEY|pollSeconds|type=Int32|count=\r\nKEY|idleMinutes|type=Int32|count=\r\nKEY|kickCooldownMinutes|type=Int32|count=\r\nKEY|maxConsecutiveKicks|type=Int32|count=\r\nKEY|autoDetectProfile|type=Boolean|count=\r\nKEY|autoDetectChat|type=Boolean|count=\r\nKEY|stopStaleGenerationEnabled|type=Boolean|count=\r\nKEY|autoContinueEnabled|type=Boolean|count=\r\nKEY|sendProtectedDraftEnabled|type=Boolean|count=\r\nKEY|allowProfileRecovery|type=Boolean|count=\r\nKEY|allowAutonomousSend|type=Boolean|count=\r\nKEY|bridgeRestartAfterSeconds|type=Int32|count=\r\nKEY|profileRecoverAfterSeconds|type=Int32|count=\r\nKEY|enforceHighMode|type=Boolean|count=\r\nKEY|highModeStrategy|type=String|count=\r\nKEY|openExistingChatIfMissing|type=Boolean|count=\r\nKEY|freshVerifyBeforeKick|type=Boolean|count=\r\nKEY|freshVerifySettleSeconds|type=Int32|count=\r\nKEY|freshVerifyLoadTimeoutSeconds|type=Int32|count=\r\nKEY|generationActivityGraceSeconds|type=Int32|count=\r\nKEY|generationStallMinutes|type=Int32|count=\r\nKEY|generationStallConfirmations|type=Int32|count=\r\nKEY|closeFreshVerifyWhenIdle|type=Boolean|count=\r\nKEY|providerErrorBackoffMinutes|type=Int32|count=\r\nKEY|providerErrorBackoffMaxMinutes|type=Int32|count=\r\nKEY|providerErrorMigrationThreshold|type=Int32|count=\r\nKEY|closeChatDuringProviderBackoff|type=Boolean|count=\r\nKEY|migrationEnabled|type=Boolean|count=\r\nKEY|migrationHandoffMaxChars|type=Int32|count=\r\nKEY|migrationUrlWaitSeconds|type=Int32|count=\r\nKEY|surfaceReadyTimeoutSeconds|type=Int32|count=\r\nKEY|providerProbeTimeoutSeconds|type=Int32|count=\r\nKEY|managedProjects|type=Object[]|count=1\r\nKEY|managedChats|type=Object[]|count=9\r\nKEY|knownProjectChats|type=Object[]|count=9\r\nKEY|autonomyMode|type=String|count=\r\nKEY|autoDetectChatEnabled|type=Boolean|count=\r\n",
+      "stdout_bytes": 2056,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:20:37.880Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:20:37.861Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-config-schema-20260927-2239"
+    },
+    "request_id": "bridge-config-schema-20260927-2239",
+    "started_at": "2026-09-27T15:20:37.493Z",
+    "status": "completed"
+  },
+  "id": "bridge-config-schema-20260927-2239",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
