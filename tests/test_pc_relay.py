@@ -432,6 +432,50 @@ def test_duplicate_result_with_different_content_fails_closed(tmp_path: Path) ->
     assert executor.execute_calls == 0
 
 
+def test_quarantine_publication_is_idempotent(monkeypatch, tmp_path: Path) -> None:
+    queue = GitQueue(
+        tmp_path,
+        queue_ref="agent/pc-relay-queue",
+        metadata_path=tmp_path / "queue-history.json",
+    )
+    commits: list[str] = []
+    monkeypatch.setattr(
+        queue,
+        "_commit_and_push",
+        lambda path, message, mutable: commits.append(path.name),
+    )
+    metadata = {
+        "version": "pc_relay.quarantine.v1",
+        "source_name": "bad.json",
+        "raw_sha256": "a" * 64,
+        "bytes": 9,
+        "error_kind": "RequestValidationError",
+        "error": "bad request",
+        "observed_at": "2026-09-27T00:00:00.000Z",
+        "raw_content_committed": False,
+    }
+
+    queue.publish_quarantine(metadata)
+    repeated = dict(metadata)
+    repeated["observed_at"] = "2026-09-27T00:01:00.000Z"
+    queue.publish_quarantine(repeated)
+
+    assert commits == ["bad.json.aaaaaaaaaaaaaaaa.json"]
+
+
+def test_heartbeat_publication_is_cadence_bounded(tmp_path: Path) -> None:
+    relay, queue, _executor = _relay(tmp_path)
+    relay.heartbeat_seconds = 3600.0
+
+    relay._maybe_publish_heartbeat()
+    relay._maybe_publish_heartbeat()
+
+    assert len(queue.heartbeats) == 1
+    relay._maybe_publish_heartbeat(alive=False, force=True)
+    assert len(queue.heartbeats) == 2
+    assert queue.heartbeats[-1]["relay_alive"] is False
+
+
 def test_heartbeat_reports_required_health_dimensions(tmp_path: Path) -> None:
     relay, queue, _executor = _relay(tmp_path)
     relay.queue_reachable = True
