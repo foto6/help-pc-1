@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-dispatch-route-scan-20260927-2318",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$f='E:\\WebAIBridge\\app\\server.js'; Select-String -Path $f -Pattern 'function rotateManagedAgentChat','dispatchManaged','sendManaged','autoContinue','enforceHighMode','highModeStrategy','draft verification','verify.*draft','kickManaged' -SimpleMatch -Context 1,3 | Select-Object -First 180 | ForEach-Object{$_.ToString()}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
