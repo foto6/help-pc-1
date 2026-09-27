@@ -1,0 +1,18 @@
+EXECUTE NOW — RECOVER CURRENT CREATOR WAVE 8 AFTER NETWORK ERROR. Do not restart from scratch and do not redo already completed edits.
+
+Repository: foto6/video1
+Branch: agent/creator-orchestrator
+
+You were already working on the Media artifact-manifest release binding task and had made substantial local changes before the ChatGPT network error.
+
+Required recovery behavior:
+1. FIRST inspect the ACTUAL current worktree: git status, git diff, untracked files, current HEAD.
+2. Preserve all valid existing local edits. Do not reset/clean/discard them.
+3. Re-read the original Wave8 request above in this same chat.
+4. Continue from the current worktree state, not from memory and not from a fresh rewrite.
+5. Re-verify exact Media producer head/fixture byte hashes already copied. Do not duplicate fixture files if they already exist.
+6. Complete focused/full tests, fix only real failures, commit/push only agent/creator-orchestrator.
+7. No merge/release, no auto-publish, never touch E:\manhwa.
+8. First response must show actual git/worktree evidence proving you resumed rather than restarted.
+
+Final evidence remains: exact SHA + exact-head CI + release-bundle hash.
