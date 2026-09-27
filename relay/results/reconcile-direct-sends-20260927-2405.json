@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p='E:\\WebAIBridge\\app\\data\\managed-chat-status.json'; $j=Get-Content $p -Raw|ConvertFrom-Json; foreach($cid in @('agent-vision','chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c','agent-pc-executor')){$x=$j.chats.PSObject.Properties[$cid].Value;if($x){Write-Output ('C|'+$cid+'|gen='+$x.generating+'|high='+$x.highMode+'|lastSeen='+$x.lastSeenAt+'|err='+$x.lastError)}}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "C|agent-vision|gen=False|high=True|lastSeen=2026-09-27T08:00:13.588Z|err=\r\nC|chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c|gen=False|high=True|lastSeen=2026-09-27T09:55:25.683Z|err=\r\nC|agent-pc-executor|gen=True|high=True|lastSeen=2026-09-27T15:23:37.154Z|err=\r\n",
+      "stdout_bytes": 258,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T16:22:56.311Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T16:22:56.286Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "reconcile-direct-sends-20260927-2405"
+    },
+    "request_id": "reconcile-direct-sends-20260927-2405",
+    "started_at": "2026-09-27T16:22:55.930Z",
+    "status": "completed"
+  },
+  "id": "reconcile-direct-sends-20260927-2405",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
