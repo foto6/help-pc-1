@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "locate-creator-worktree-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Get-ChildItem E:\\ -Directory -ErrorAction SilentlyContinue | Where-Object {$_.Name -match 'video1|creator'} | ForEach-Object { $p=$_.FullName; $git=Test-Path (Join-Path $p '.git'); [pscustomobject]@{Path=$p;Git=$git} } | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only locate Creator/video1 worktree candidates."
+}
