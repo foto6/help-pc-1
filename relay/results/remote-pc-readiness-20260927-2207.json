@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "Write-Output REMOTE_PC_READY; Write-Output ('HOST='+$env:COMPUTERNAME); Write-Output ('PWD='+(Get-Location).Path)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "REMOTE_PC_READY\r\nHOST=DESKTOP-64LCMQ8\r\nPWD=E:\\pc-github-relay\r\n",
+      "stdout_bytes": 63,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:07:49.317Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:07:49.297Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "remote-pc-readiness-20260927-2207"
+    },
+    "request_id": "remote-pc-readiness-20260927-2207",
+    "started_at": "2026-09-27T15:07:49.017Z",
+    "status": "completed"
+  },
+  "id": "remote-pc-readiness-20260927-2207",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
