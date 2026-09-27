@@ -437,28 +437,35 @@ class OutcomeJournal:
         )
 
     def _append_record_locked(self, record: OutcomeJournalRecord) -> None:
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        existed = self.path.exists()
-        payload = (_canonical_json(record.to_dict()) + "\n").encode("utf-8")
-        flags = os.O_WRONLY | os.O_CREAT | os.O_APPEND
-        if hasattr(os, "O_BINARY"):
-            flags |= os.O_BINARY
-        fd = os.open(self.path, flags, 0o600)
         try:
-            written = os.write(fd, payload)
-            if written != len(payload):
-                raise OutcomeJournalIntegrityError(
-                    f"short journal append: {written}/{len(payload)} bytes"
-                )
-            os.fsync(fd)
-        finally:
-            os.close(fd)
-        if not existed and os.name != "nt":
-            directory_fd = os.open(self.path.parent, os.O_RDONLY)
+            self.path.parent.mkdir(parents=True, exist_ok=True)
+            existed = self.path.exists()
+            payload = (_canonical_json(record.to_dict()) + "\n").encode("utf-8")
+            flags = os.O_WRONLY | os.O_CREAT | os.O_APPEND
+            if hasattr(os, "O_BINARY"):
+                flags |= os.O_BINARY
+            fd = os.open(self.path, flags, 0o600)
             try:
-                os.fsync(directory_fd)
+                written = os.write(fd, payload)
+                if written != len(payload):
+                    raise OutcomeJournalIntegrityError(
+                        f"short journal append: {written}/{len(payload)} bytes"
+                    )
+                os.fsync(fd)
             finally:
-                os.close(directory_fd)
+                os.close(fd)
+            if not existed and os.name != "nt":
+                directory_fd = os.open(self.path.parent, os.O_RDONLY)
+                try:
+                    os.fsync(directory_fd)
+                finally:
+                    os.close(directory_fd)
+        except OutcomeJournalError:
+            raise
+        except OSError as exc:
+            raise OutcomeJournalIntegrityError(
+                f"journal durable append failed: {type(exc).__name__}: {exc}"
+            ) from exc
 
     def _scan_locked(self) -> _ScanResult:
         if not self.path.exists():

@@ -855,3 +855,37 @@ def test_cli_live_uses_default_outcome_journal_for_safe_policy_block(tmp_path):
     assert lookup["outcome"] == "blocked"
     assert lookup["latest_valid_evidence"]["effect_state"] == "not_started"
     assert lookup["latest_valid_evidence"]["reason"] == "policy_blocked"
+
+
+def test_provisional_fsync_failure_blocks_adapter_and_remains_conservative(
+    tmp_path, monkeypatch
+):
+    path = tmp_path / "fsync-failure.jsonl"
+    journal = OutcomeJournal(path)
+    raw_input = ReplayInputAdapter()
+
+    def fail_fsync(_fd):
+        raise OSError("simulated durable flush failure")
+
+    monkeypatch.setattr(os, "fsync", fail_fsync)
+    result = Executor(
+        input_adapter=raw_input,
+        outcome_journal=journal,
+        dry_run=False,
+    ).execute(
+        ActionRequest(
+            "keyboard.press",
+            {"key": "enter"},
+            request_id="fsync-failure",
+        )
+    )
+
+    assert result.status == "blocked"
+    assert raw_input.events == []
+    lookup = journal.lookup(
+        request_id="fsync-failure",
+        action="keyboard.press",
+    ).to_dict()
+    assert lookup["outcome"] == "unknown"
+    assert lookup["replay_authorized"] is False
+    assert lookup["latest_valid_evidence"]["effect_state"] == "unknown"
