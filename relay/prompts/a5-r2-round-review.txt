@@ -1,0 +1,41 @@
+EXECUTE NOW — A5 R2 ROUND REVIEW / PRESERVE HOLDOUT4200. Do not acknowledge readiness.
+
+Repository: foto6/SpectraTrack
+Branch: agent/vnext-qa
+Start from CURRENT remote HEAD; expected around a339da324ea0df682179097d7d6810b6fc250240. Re-read exact heads/CI/artifacts yourself.
+
+Frozen methodology remains:
+R1 discovery -> hypothesis lock before R2 exposure -> blind R2 validation -> holdout4200 only for a genuine R2 survivor -> FULL5000 only aggregate characterization after decisions.
+Do not change any frozen frame selection.
+
+Current evidence to independently verify:
+- A1 detection current head ea1234e153a689811488e439429472c5b2a698ea / CI 36324326177 SUCCESS.
+  Locked candidate digest sha256:350d92339030c2f1fd781951f25c13f1b96aec5f0a607e3796df3ebf4e6e6cfc.
+  Blind R2 result file pc/benchmarks/vnext/detection/r2_result.v1.json.
+  R2 decision REJECT_R2:
+    control: TP 63 / FN 10 / FP 108 / F1 0.5163934426 / recall 0.8630136986
+    candidate: TP 63 / FN 10 / FP 110 / F1 0.5121951220 / recall 0.8630136986
+    duplicate pressure 73 -> 122 (+67.12%)
+    extra ONNX calls 69, activations 69
+    no targeted-cluster FN improvement
+    result digest sha256:a7af50585e244bdaed69aefebe8c34a3a82a465d0714258967be41bdb87be63f
+  holdout4200_inspected=false/scored=false.
+- A3 enhancement current head 2b58192cfdb8c1f9581d93cc32e8651a5ff79398 / CI 36323234561 SUCCESS.
+  It froze NO_NEW_CANDIDATE before R2; production ENHANCEMENT OFF; r2_scoring_allowed=false.
+- A4 performance current head 5c880267498a18b51b2e5c5f92f6c5360fafc212 / CI 36315968648 SUCCESS; its small optimization was rejected and no NightOwls holdout candidate promoted.
+- A6 current head 1a63c0a981c21e57dbe679e388046eaaaa0d5577 / CI 36317780050 SUCCESS; stage/anti-leakage policy bound.
+- A7 current head 9773947b06edad1c44c20773092f75c212ad517b / CI 36316799705 SUCCESS.
+- A2/A8 tracking work is separate and must not use NightOwls because tracking_supported=false.
+
+Tasks:
+1. Verify exact evidence/hashes/CI yourself.
+2. Produce one machine-readable NightOwls R2 round review with A1/A3/A4 decisions, A6 stage-policy references and A7 taxonomy lineage.
+3. If evidence is as above, explicitly record NO_NIGHTOWLS_HOLDOUT4200_THIS_ROUND and HOLDOUT_UNTOUCHED.
+4. Quantify avoided compute: no 4200-frame holdout and no FULL5000 rerun for rejected/no-candidate paths.
+5. Preserve exact R1/R2/holdout partition hashes and disjointness proof.
+6. Create a bounded next-research queue of at most 3 questions, but DO NOT define/tune a new candidate from R2/holdout. Any future candidate must be motivated by allowed discovery evidence, locked before a fresh eligible validation stage, and must not reuse R2 as discovery if stage policy forbids it.
+7. Do not run holdout4200 or FULL5000.
+8. Commit/push only agent/vnext-qa; exact-head CI required.
+9. No merge/release; never touch E:\manhwa.
+
+Final: exact SHA + CI + review hash + explicit holdout decision.
