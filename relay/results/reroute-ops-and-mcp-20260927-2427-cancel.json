@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "try{$r=Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/b32b9f52-c203-47dd-890e-7914ff9c3b23/cancel' -TimeoutSec 8; Write-Output ('CANCEL_OPS|'+$r.state)}catch{Write-Output ('CANCEL_ERR|'+$_.Exception.Message); exit 1}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "CANCEL_OPS|cancelled\r\n",
+      "stdout_bytes": 22,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:55:49.005Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:55:48.981Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "reroute-ops-and-mcp-20260927-2427-cancel"
+    },
+    "request_id": "reroute-ops-and-mcp-20260927-2427-cancel",
+    "started_at": "2026-09-27T15:55:48.597Z",
+    "status": "completed"
+  },
+  "id": "reroute-ops-and-mcp-20260927-2427-cancel",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
