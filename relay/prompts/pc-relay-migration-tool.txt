@@ -1,0 +1,34 @@
+EXECUTE NOW — PC RELAY HARDENING FOLLOW-UP / AUTOMATED ZERO-LOSS MIGRATION TOOLING. Do not acknowledge readiness.
+
+Repository: foto6/help-pc-1
+Branch: agent/pc-relay-hardening
+Start from CURRENT remote HEAD; expected recent green head around 5181e23e07130f0584e944ad4dd7c3c21155c857. Re-read exact head/CI first.
+
+The hardened relay itself is green. What is still missing operationally is an executable migration helper; docs currently provide a manual checklist only.
+
+Build a migration tool that automates the SAFE parts while keeping final live cutover explicit.
+
+Required:
+1. Add a Windows-first migration command/script (PowerShell or Python wrapper, choose the smallest maintainable form) that:
+   - takes prototype checkout path (default E:\pc-github-relay),
+   - implementation checkout path (default E:\pc-relay-hardening),
+   - queue checkout path (default E:\pc-relay-queue),
+   - repo URL/remote and refs as explicit args/defaults;
+   - refuses dirty/non-dedicated unexpected worktrees;
+   - records exact prototype remote/local SHA and result/request inventories with hashes;
+   - creates/fetches dedicated agent/pc-relay-queue without rewriting prototype history;
+   - clones/checks out agent/pc-relay-hardening at an explicit expected implementation SHA;
+   - creates queue checkout separately;
+   - preserves every published legacy result byte exactly;
+   - identifies legacy v1 requests without results and emits a conversion plan, but DOES NOT silently execute/convert them;
+   - verifies result inventory equality before proceeding;
+   - runs hardened relay --once dry-run and validates heartbeat fields/implementation SHA/queue reachability/force-push status.
+2. Final live start must NOT happen automatically. The script ends with one explicit printed command for live start only after all checks PASS.
+3. Add --plan/--dry-run mode that mutates nothing and prints intended operations.
+4. Idempotent rerun: if checkouts/queue ref already exist and match, verify/reuse; mismatches fail closed.
+5. Tests for fresh migration, rerun, dirty checkout, wrong expected SHA, missing legacy result, duplicate/mismatched result bytes, queue ref pre-exists correctly/incorrectly, interrupted migration resume.
+6. Never delete prototype checkout/history/results. Never force-push. Never touch E:\manhwa.
+7. Update docs with the new migration command and rollback story.
+8. Exact-head CI required.
+
+Final: exact SHA + CI + migration test counts + one-command plan/dry-run example + one explicit final live-start command format.
