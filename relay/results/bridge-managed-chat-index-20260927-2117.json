@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; if(Test-Path $p){ $j=Get-Content $p -Raw | ConvertFrom-Json; @($j.managedChats) | ForEach-Object { if($_.repository -eq 'foto6/WebAIBridge' -or $_.branch -match 'bridge|webbridge'){ [pscustomobject]@{id=$_.id;name=$_.name;enabled=$_.enabled;repository=$_.repository;branch=$_.branch;gitHead=$_.gitHead;projectId=$_.projectId} | ConvertTo-Json -Compress } } } else { Write-Output 'CONFIG_MISSING' }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:02:15.506Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:02:15.490Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-managed-chat-index-20260927-2117"
+    },
+    "request_id": "bridge-managed-chat-index-20260927-2117",
+    "started_at": "2026-09-27T14:02:15.131Z",
+    "status": "completed"
+  },
+  "id": "bridge-managed-chat-index-20260927-2117",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
