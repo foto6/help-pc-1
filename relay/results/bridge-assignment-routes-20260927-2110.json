@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "git -C E:\\WebAIBridge grep -n -E \"batch-assignments|agent-assignments/dry-run|managed-chats/.*/assignments\" -- app/server.js app/*.js app/docs/*.md | Select-Object -First 80"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "app/agent-assignment-live-dry-run.js:29:    base + '/api/supervisor-watchdog/agent-assignments/dry-run');\r\napp/docs/AGENT_EXECUTION_CONTROL.md:58:Legacy coding-task ingress is fail-closed. `POST /managed-chats/:id/tasks` and `POST /managed-chats/batch-tasks` return HTTP 410 and never create responder work. Coding callers must use `/managed-chats/:id/assignments` or `/managed-chats/batch-assignments`.\r\napp/docs/AGENT_EXECUTION_CONTROL.md:71:Operators and integrations must use `/managed-chats/:id/assignments` or\r\napp/docs/AGENT_EXECUTION_CONTROL.md:72:`/managed-chats/batch-assignments`. Ordinary Telegram/responder tasks remain on the\r\napp/docs/AGENT_EXECUTION_CONTROL.md:89:`GET /api/supervisor-watchdog/agent-assignments/dry-run` is the live-safe scheduler\r\napp/server.js:15064:      && url.pathname === '/api/supervisor-watchdog/agent-assignments/dry-run') {\r\napp/server.js:15107:      && url.pathname === '/api/supervisor-watchdog/managed-chats/batch-assignments') {\r\napp/server.js:15120:        error:'Legacy managed-agent task API is retired; use batch-assignments.',\r\napp/server.js:15122:        replacement:'/api/supervisor-watchdog/managed-chats/batch-assignments',\r\napp/server.js:16449:        error:'managed_agent_instruction is retired; use /api/supervisor-watchdog/managed-chats/:id/assignments',\r\napp/ui-static.test.js:40:assert.match(html, /managed-chats\\/batch-assignments/);\r\n",
+      "stdout_bytes": 1398,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:00:57.152Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:00:57.138Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-assignment-routes-20260927-2110"
+    },
+    "request_id": "bridge-assignment-routes-20260927-2110",
+    "started_at": "2026-09-27T14:00:56.820Z",
+    "status": "completed"
+  },
+  "id": "bridge-assignment-routes-20260927-2110",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
