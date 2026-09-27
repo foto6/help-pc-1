@@ -1,0 +1,55 @@
+EXECUTE NOW — PC OPS CHAOS / FAILURE & RECOVERY VALIDATION. Do not acknowledge readiness.
+
+Repository: foto6/help-pc-2
+Branch: agent/pc-ops-chaos
+Base exact SHA: f082a7e837392240788d7474123c90095891e153
+Do not modify agent/pc-control-plane or agent/pc-ops-gateway.
+
+Purpose:
+Independently validate the coming PC Operations Gateway v1 and hardened relay under failures. You are QA/chaos only; do not become the implementation owner.
+
+Producer dependencies to re-read as they advance:
+- foto6/help-pc-1 agent/pc-relay-hardening
+- foto6/help-pc-2 agent/pc-ops-gateway
+- foto6/help-pc-1 agent/pc-executor @ current green head
+Use exact-head fixtures only; no sibling runtime imports.
+
+Build a deterministic failure harness for the planned tool families:
+fs.*, log.*, process.*, shell.session.*, system.*, plus existing shell.run/outcome/preflight/window/UIA operations.
+
+Required:
+1. Fault matrix:
+   - Git queue advance during local result commit;
+   - failed rebase/push with stale rebase metadata;
+   - relay restart between dispatch and result publication;
+   - duplicate request id same payload / different payload;
+   - malformed request/version/schema;
+   - large stdout/stderr truncation;
+   - long-running process exits before read;
+   - process hangs;
+   - shell session restart;
+   - stale output cursor;
+   - fs expected-hash race;
+   - append/write crash boundary;
+   - file deleted/moved between stat/read/write;
+   - protected path aliases/traversal/junction escape;
+   - log rotation/truncation;
+   - concurrent readers/writers;
+   - gateway/control restart at every durable boundary.
+2. Invariants:
+   - no duplicate side effect after uncertain boundary;
+   - unknown/completed outcome never blind replayed;
+   - protected E:\manhwa never touched;
+   - credentials/CAPTCHA remain blocked;
+   - output bounded;
+   - no action silently falls back to raw coordinates;
+   - read-only retries can be repeated safely;
+   - request/result provenance hashes stable.
+3. Prepare reusable contract-level harness now; bind to producer fixtures only when exact-head green evidence exists.
+4. Add model/property tests for idempotency, cursor monotonicity, expected-hash semantics and restart recovery.
+5. Produce machine-readable CHAOS_MATRIX.v1 with PASS/PENDING/BLOCKED by producer capability.
+6. Do not edit production implementations to make tests pass. File precise blockers.
+7. CI exact-head required.
+8. No merge/release, never touch E:\manhwa.
+
+Final exact SHA + CI + matrix hash + blocker list.
