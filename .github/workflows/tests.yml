@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - agent/pc-executor
+      - agent/pc-native-integration-canonical
   workflow_dispatch:
 
 jobs:
@@ -26,5 +27,9 @@ jobs:
         run: python -m pytest tests/test_preflight.py
       - name: Wave 7 focused context-binding suite
         run: python -m pytest tests/test_execution_context_binding.py
+      - name: Native remote transport focused suite
+        run: python -m pytest tests/test_native_remote_transport.py tests/test_remote_protocol.py
+      - name: Native remote transport harness
+        run: python tools/native_remote_harness.py
       - name: Full test suite
         run: python -m pytest
