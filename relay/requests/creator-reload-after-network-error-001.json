@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "creator-reload-after-network-error-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "node E:\\pc-github-relay\\relay\\helpers\\reload_chat.js 6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 20000,
+  "note": "Reload only Creator chat tab after persistent network error, then inspect composer/stop/retry state."
+}
