@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "reroute-ops-and-mcp-20260927-2427-ops",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$body=[Uri]::UnescapeDataString('%7B%22text%22%3A%22EXECUTE%20NOW%20%E2%80%94%20PC%20OPS%20MIGRATION%20GATE%20REFRESH.%20Do%20not%20acknowledge%20readiness%3B%20produce%20durable%20evidence.%5Cn%5CnRepo%3A%20foto6%2Fhelp-pc-2%5CnBranch%3A%20agent%2Fpc-ops-gateway%5CnExpected%20HEAD%3A%20732f0f5e6482f6bb96f0dfa582dc1c0fe2ea712e%5Cn%5CnExact%20producer%3A%20relay%20hardening%20agent%2Fpc-relay-hardening%20%40%2058bad1bc60f7d4d26d03223c8f0bea5f138f49a6%2C%20CI%2036330545372%20SUCCESS.%20Structured%20fixture%20bytes%20are%20under%20tests%2Ffixtures%2Fpc_ops_v1.%20Current%20committed%20gateway%20E2E%20report%20is%20stale%20and%20still%20pins%20fcea28ec.%5Cn%5CnRequired%3A%20rebind%20exact%20producer%20bytes%2Fhashes%3B%20run%20every%20canonical%20E2E%20scenario%3B%20regenerate%20producer%20pins%2C%20matrix%2C%20report%20and%20digest%3B%20set%20ready_to_migrate%3Dtrue%20only%20if%20every%20required%20gate%20is%20actually%20proven.%20Use%20disposable%20paths%20only.%20E%3A%5C%5Cmanhwa%20must%20never%20be%20touched.%20Preserve%20structured-first%20and%20fail-closed%20reconciliation.%20Add%20focused%20tests%2C%20run%20full%20CI%2C%20push%20non-empty%20commit%20and%20report%20exact%20SHA%2Bexact-head%20CI.%20No%20merge%2Frelease%2Fcutover.%22%2C%22repository%22%3A%22foto6%2Fhelp-pc-2%22%2C%22branch%22%3A%22agent%2Fpc-ops-gateway%22%2C%22expectedHead%22%3A%22732f0f5e6482f6bb96f0dfa582dc1c0fe2ea712e%22%2C%22idempotencyKey%22%3A%22pc-only-ops-migration-gate-v1-reroute%22%2C%22evidenceTimeoutMinutes%22%3A120%2C%22priority%22%3A975%2C%22supervisorVerificationRequired%22%3Atrue%7D'); $r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c/assignments' -Method Post -ContentType 'application/json; charset=utf-8' -Body $body -TimeoutSec 10; Write-Output ('OPS|id='+$r.id+'|state='+$r.state+'|chat='+$r.targetChatId)"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
