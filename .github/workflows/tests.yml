@@ -24,8 +24,8 @@ jobs:
           python-version: "3.11"
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e ".[test]"
-      - name: Canonical remote Executor ancestry and diff audit
-        run: python tools/audit_canonical_remote_executor_integration.py
+      - name: Canonical full-stack provenance and diff audit
+        run: python tools/audit_full_stack_integration.py
       - name: Wave 6 focused preflight suite
         run: python -m pytest tests/test_preflight.py
       - name: Wave 7 focused context-binding suite
@@ -46,5 +46,7 @@ jobs:
         run: python tools/native_remote_harness.py
       - name: Native remote Executor adapter suite
         run: python -m pytest tests/test_native_remote_executor_adapter.py tests/test_native_remote_executor_adapter_recovery.py
+      - name: Native full-stack real Executor integration suite
+        run: python -m pytest tests/test_native_full_stack_integration.py
       - name: Full test suite
         run: python -m pytest

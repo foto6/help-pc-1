@@ -100,6 +100,27 @@ TOOL_REGISTRY_DIGEST = hashlib.sha256(
     ).encode("utf-8")
 ).hexdigest()
 
+# The external pc.native.tool_registry.v1 contract stays byte-for-byte stable.
+# When the parity Executor exposes an equivalent action under its native
+# LocalOperations contract, dispatch resolves to that action without changing
+# the external registry digest.
+_PARITY_EXECUTOR_ACTION_BY_TOOL = {
+    "device.health": "health.get",
+    "device.get_config": "config.get",
+    "content.search": "fs.search",
+    "process.read": "process.read_output",
+    "process.list": "process.managed.list",
+    "system.process.list": "process.list",
+    "shell.session.open": "shell.session.start",
+    "shell.session.write": "shell.session.write_stdin",
+    "shell.session.close": "shell.session.terminate",
+    "window.list": "windows.list",
+    "input.click": "mouse.click",
+    "input.type": "keyboard.type_text",
+    "clipboard.read": "clipboard.get",
+    "clipboard.write": "clipboard.set",
+}
+
 
 class NativeAdapterError(ValueError):
     def __init__(
@@ -203,7 +224,7 @@ def _has_protected_path(value: Any) -> bool:
 
 
 def _input_handle(arguments: Mapping[str, Any]) -> str | None:
-    for key in ("process_handle", "session_handle", "handle"):
+    for key in ("process_handle", "session_handle", "handle", "handle_id", "session_id"):
         value = arguments.get(key)
         if isinstance(value, str) and value:
             return value
@@ -279,23 +300,67 @@ class ExecutorRemoteDispatcher:
         self._handles: dict[str, _HandleRecord] = {}
         self._session_devices: dict[str, str] = {}
 
-    def capability_manifest(self) -> dict[str, Any]:
+    def _capability_snapshots(self) -> tuple[dict[str, Any], dict[str, Any] | None]:
         capabilities = _as_dict(self.executor.capabilities_snapshot())
-        attestation = _mapping(capabilities.get("attestation"), "Executor attestation")
-        digest = _text(attestation.get("digest"), "Executor capabilities digest")
-        contract_version = _text(capabilities.get("contract_version"), "Executor capabilities contract_version")
-        actions = capabilities.get("actions")
+        operations = getattr(self.executor, "operations", None)
+        snapshot = getattr(operations, "capabilities_snapshot", None)
+        operations_capabilities = _as_dict(snapshot()) if callable(snapshot) else None
+        return capabilities, operations_capabilities
+
+    @staticmethod
+    def _snapshot_actions(snapshot: Mapping[str, Any], where: str) -> dict[str, Any]:
+        actions = snapshot.get("actions")
         if not isinstance(actions, Mapping):
             raise NativeAdapterError(
-                "Executor capabilities actions must be an object",
+                f"{where} actions must be an object",
                 code="PROVIDER_PROTOCOL_ERROR",
                 category="provider",
             )
-        supported = sorted(
+        return dict(actions)
+
+    @staticmethod
+    def _snapshot_digest(snapshot: Mapping[str, Any], where: str) -> str:
+        attestation = _mapping(snapshot.get("attestation"), f"{where} attestation")
+        return _text(attestation.get("digest"), f"{where} capabilities digest")
+
+    def _manifest_from_snapshots(
+        self,
+        capabilities: dict[str, Any],
+        operations_capabilities: dict[str, Any] | None,
+    ) -> dict[str, Any]:
+        executor_actions = self._snapshot_actions(capabilities, "Executor capabilities")
+        supported = {
             name
-            for name, entry in actions.items()
+            for name, entry in executor_actions.items()
             if isinstance(entry, Mapping) and entry.get("supported") is True
-        )
+        }
+        executor_manifest: dict[str, Any] = {
+            "contract_version": _text(
+                capabilities.get("contract_version"),
+                "Executor capabilities contract_version",
+            ),
+            "digest": self._snapshot_digest(capabilities, "Executor"),
+            "actions": [],
+        }
+        if operations_capabilities is not None:
+            operations_actions = self._snapshot_actions(
+                operations_capabilities,
+                "Executor operations capabilities",
+            )
+            supported.update(
+                name
+                for name, entry in operations_actions.items()
+                if isinstance(entry, Mapping) and entry.get("supported") is True
+            )
+            executor_manifest["operations_contract_version"] = _text(
+                operations_capabilities.get("contract_version"),
+                "Executor operations capabilities contract_version",
+            )
+            executor_manifest["operations_digest"] = self._snapshot_digest(
+                operations_capabilities,
+                "Executor operations",
+            )
+        executor_manifest["actions"] = sorted(supported)
         return {
             "contract_version": NATIVE_TOOL_REGISTRY_V1,
             "protocol_version": NATIVE_CONTROL_PROTOCOL_V1,
@@ -304,13 +369,13 @@ class ExecutorRemoteDispatcher:
                 "max_page_size": self.max_page_size,
                 "max_body_bytes": 1024 * 1024,
             },
-            "executor": {
-                "contract_version": contract_version,
-                "digest": digest,
-                "actions": supported,
-            },
+            "executor": executor_manifest,
             "tools": [tool.manifest_dict() for tool in TOOL_REGISTRY_LIST],
         }
+
+    def capability_manifest(self) -> dict[str, Any]:
+        capabilities, operations_capabilities = self._capability_snapshots()
+        return self._manifest_from_snapshots(capabilities, operations_capabilities)
 
     def _validate_envelope(
         self,
@@ -439,8 +504,9 @@ class ExecutorRemoteDispatcher:
         self,
         context: TransportDispatchContext,
         tool: NativeTool,
-    ) -> tuple[dict[str, Any], str]:
-        manifest = self.capability_manifest()
+    ) -> tuple[str, str]:
+        capabilities, operations_capabilities = self._capability_snapshots()
+        manifest = self._manifest_from_snapshots(capabilities, operations_capabilities)
         manifest_digest = hashlib.sha256(canonical_json(manifest).encode("utf-8")).hexdigest()
         if manifest_digest != context.session_capabilities_digest:
             raise NativeAdapterError(
@@ -452,14 +518,33 @@ class ExecutorRemoteDispatcher:
                     "current_manifest_digest": manifest_digest,
                 },
             )
-        executor = manifest["executor"]
-        executor_digest = executor["digest"]
-        capabilities = _as_dict(self.executor.capabilities_snapshot())
-        actions = _mapping(capabilities.get("actions"), "Executor capabilities actions")
-        action_capability = actions.get(tool.executor_action)
-        if not isinstance(action_capability, Mapping) or action_capability.get("supported") is not True:
+
+        preferred = _PARITY_EXECUTOR_ACTION_BY_TOOL.get(tool.name)
+        candidates = [preferred] if preferred is not None else []
+        if tool.executor_action not in candidates:
+            candidates.append(tool.executor_action)
+        snapshots: list[tuple[str, dict[str, Any]]] = []
+        if operations_capabilities is not None:
+            snapshots.append(("Executor operations", operations_capabilities))
+        snapshots.append(("Executor", capabilities))
+
+        resolved_action = None
+        action_capability: Mapping[str, Any] | None = None
+        action_digest = None
+        for candidate in candidates:
+            for where, snapshot in snapshots:
+                actions = self._snapshot_actions(snapshot, f"{where} capabilities")
+                entry = actions.get(candidate)
+                if isinstance(entry, Mapping) and entry.get("supported") is True:
+                    resolved_action = candidate
+                    action_capability = entry
+                    action_digest = self._snapshot_digest(snapshot, where)
+                    break
+            if resolved_action is not None:
+                break
+        if resolved_action is None or action_capability is None or action_digest is None:
             raise NativeAdapterError(
-                f"Executor does not advertise action {tool.executor_action!r}",
+                f"Executor does not advertise a compatible action for {tool.name!r}: {candidates!r}",
                 code="EXECUTOR_ACTION_UNAVAILABLE",
                 category="capability_mismatch",
             )
@@ -470,7 +555,44 @@ class ExecutorRemoteDispatcher:
                 code="CAPABILITY_SEMANTICS_MISMATCH",
                 category="capability_mismatch",
             )
-        return capabilities, executor_digest
+        return resolved_action, action_digest
+
+    @staticmethod
+    def _translated_arguments(
+        tool: NativeTool,
+        executor_action: str,
+        arguments: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        params = dict(arguments)
+        if executor_action in {"process.read_output", "process.terminate", "process.status"}:
+            handle = _input_handle(params)
+            for key in ("process_handle", "session_handle", "handle"):
+                params.pop(key, None)
+            if handle is not None:
+                params["handle_id"] = handle
+        elif executor_action in {
+            "shell.session.read",
+            "shell.session.write_stdin",
+            "shell.session.terminate",
+        }:
+            handle = _input_handle(params)
+            for key in ("process_handle", "session_handle", "handle", "handle_id"):
+                params.pop(key, None)
+            if handle is not None:
+                params["session_id"] = handle
+
+        if executor_action in {"fs.list", "fs.find", "fs.search", "process.list", "process.managed.list"}:
+            limit = params.pop("limit", None)
+            if limit is not None:
+                target = "max_entries" if executor_action == "fs.list" else "max_results"
+                params.setdefault(target, limit)
+        if executor_action == "process.read_output":
+            limit = params.pop("limit", None)
+            if limit is not None:
+                params.setdefault("max_bytes", limit)
+        if executor_action == "fs.search" and "pattern" in params and "query" not in params:
+            params["query"] = params.pop("pattern")
+        return params
 
     def _assert_handle(
         self,
@@ -526,7 +648,7 @@ class ExecutorRemoteDispatcher:
         self,
         *,
         request_id: str,
-        tool: NativeTool,
+        action: str,
         arguments: dict[str, Any],
         executor_digest: str,
     ) -> dict[str, Any]:
@@ -535,7 +657,7 @@ class ExecutorRemoteDispatcher:
                 "contract_version": PREFLIGHT_CONTRACT_VERSION,
                 "request": {
                     "request_id": request_id,
-                    "action": tool.executor_action,
+                    "action": action,
                     "params": arguments,
                     "dry_run": None,
                     "timeout_ms": None,
@@ -594,11 +716,12 @@ class ExecutorRemoteDispatcher:
         envelope: Mapping[str, Any],
         request: ActionRequest,
         tool: NativeTool,
+        executor_action: str,
     ) -> dict[str, Any] | None:
         wrapped = envelope.get("execution_context")
         if wrapped is not None:
             return dict(_mapping(wrapped, "execution_context")["binding"])
-        if tool.effect == "side_effect" and tool.executor_action in BOUND_ACTIONS:
+        if tool.effect == "side_effect" and executor_action in BOUND_ACTIONS:
             try:
                 return dict(self.executor.bind_execution_context(request))
             except Exception as exc:
@@ -632,7 +755,7 @@ class ExecutorRemoteDispatcher:
                 body,
                 transport_context,
             )
-            _, executor_digest = self._assert_capability_stability(
+            executor_action, executor_digest = self._assert_capability_stability(
                 transport_context,
                 tool,
             )
@@ -642,33 +765,43 @@ class ExecutorRemoteDispatcher:
                 session_id=session_id,
                 context=transport_context,
             )
+            executor_arguments = self._translated_arguments(
+                tool,
+                executor_action,
+                arguments,
+            )
             if tool.effect == "side_effect":
                 self._assert_side_effect_replay_safe(
                     request_id=request_id,
-                    action=tool.executor_action,
+                    action=executor_action,
                 )
             self._preflight(
                 request_id=request_id,
-                tool=tool,
-                arguments=arguments,
+                action=executor_action,
+                arguments=executor_arguments,
                 executor_digest=executor_digest,
             )
             action_request = ActionRequest.from_dict(
                 {
                     "request_id": request_id,
-                    "action": tool.executor_action,
-                    "params": arguments,
+                    "action": executor_action,
+                    "params": executor_arguments,
                     "dry_run": None,
                     "timeout_ms": None,
                 }
             )
-            binding = self._execution_binding(envelope, action_request, tool)
+            binding = self._execution_binding(
+                envelope,
+                action_request,
+                tool,
+                executor_action,
+            )
             if binding is not None:
                 action_request.execution_context_binding = binding
 
             result = self.executor.execute(action_request)
             raw = _as_dict(result)
-            if raw.get("request_id") != request_id or raw.get("action") != tool.executor_action:
+            if raw.get("request_id") != request_id or raw.get("action") != executor_action:
                 if tool.effect == "side_effect":
                     raise UnknownDispatchOutcome("Executor result identity mismatch after side-effect dispatch")
                 raise NativeAdapterError(
