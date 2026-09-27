@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$e=[uri]::EscapeDataString('https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8f4bb-069c-83eb-9bba-7add1eb57fab'); Invoke-WebRequest -UseBasicParsing -Method Put -Uri (\"http://127.0.0.1:17410/json/new?\"+$e) | Out-Null; Write-Output 'OPENED_A2'"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "OPENED_A2\r\n",
+      "stdout_bytes": 11,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T13:32:44.449Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T13:32:44.437Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "open-a2-chat-001"
+    },
+    "request_id": "open-a2-chat-001",
+    "started_at": "2026-09-27T13:32:44.141Z",
+    "status": "completed"
+  },
+  "id": "open-a2-chat-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
