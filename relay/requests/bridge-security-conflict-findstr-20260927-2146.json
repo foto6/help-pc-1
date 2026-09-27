@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-security-conflict-findstr-20260927-2146",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/s",
+      "/c",
+      "for %f in (\"C:\\agentwork\\WebAIBridge-integration-final\\app\\agent-execution-control.js\" \"C:\\agentwork\\WebAIBridge-integration-final\\app\\package.json\" \"C:\\agentwork\\WebAIBridge-integration-final\\app\\server.js\" \"C:\\agentwork\\WebAIBridge-integration-final\\app\\supervisor-control.js\") do @echo ==== %~nxf ==== & @findstr /n /b /c:\"<<<<<<< \" /c:\"=======\" /c:\">>>>>>> \" \"%~f\""
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 15000
+}
