@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-local-snapshot-20260927-2056",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$paths=@('E:\\pc-github-relay','E:\\SpectraTrack','E:\\help-pc-1','E:\\help-pc-2','E:\\vision-2','E:\\video1','E:\\video2','E:\\video3','E:\\WebAIBridge','E:\\boss'); foreach($p in $paths){ if(Test-Path (Join-Path $p '.git')){ Push-Location $p; try { $b=(git branch --show-current); $h=(git rev-parse HEAD); $s=@(git status --porcelain=v1 -uno); Write-Output ('REPO|'+$p+'|'+$b+'|'+$h+'|dirty='+$s.Count) } finally { Pop-Location } } else { Write-Output ('MISSING|'+$p) } }; Get-CimInstance Win32_Process | Where-Object { $_.Name -in @('python.exe','py.exe','node.exe','powershell.exe') } | ForEach-Object { $role='other'; if($_.CommandLine -match 'github_relay\\.py'){ $role='github-relay' } elseif($_.CommandLine -match 'WebAIBridge|webbridge|bridge'){ $role='bridge' } elseif($_.CommandLine -match 'executor|pc.?control'){ $role='pc-control' }; if($role -ne 'other'){ Write-Output ('PROC|'+$role+'|pid='+$_.ProcessId+'|name='+$_.Name) } }"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
