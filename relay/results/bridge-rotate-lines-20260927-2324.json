@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "git -C E:\\WebAIBridge grep -n \"function rotateManagedAgentChat\" -- app/server.js"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "app/server.js:13529:async function rotateManagedAgentChat(managedChatId, options = {}) {\n",
+      "stdout_bytes": 89,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:30:37.207Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:30:37.186Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-rotate-lines-20260927-2324"
+    },
+    "request_id": "bridge-rotate-lines-20260927-2324",
+    "started_at": "2026-09-27T15:30:36.960Z",
+    "status": "completed"
+  },
+  "id": "bridge-rotate-lines-20260927-2324",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
