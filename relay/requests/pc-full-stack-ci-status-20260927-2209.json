@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-full-stack-ci-status-20260927-2209",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$checks=@(\n  @{repo='foto6/help-pc-1';branch='agent/pc-relay-hardening'},\n  @{repo='foto6/help-pc-2';branch='agent/pc-ops-gateway'},\n  @{repo='foto6/help-pc-2';branch='agent/pc-control-mcp-gateway'},\n  @{repo='foto6/help-pc-2';branch='agent/pc-control-plane'},\n  @{repo='foto6/vision-2';branch='agent/vision'}\n); foreach($c in $checks){ Write-Output ('CHECK|'+$c.repo+'|'+$c.branch); gh run list --repo $c.repo --branch $c.branch --limit 3 --json databaseId,headSha,status,conclusion,workflowName,createdAt 2>&1 }"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
