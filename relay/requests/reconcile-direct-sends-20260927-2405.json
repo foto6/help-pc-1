@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "reconcile-direct-sends-20260927-2405",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='E:\\WebAIBridge\\app\\data\\managed-chat-status.json'; $j=Get-Content $p -Raw|ConvertFrom-Json; foreach($cid in @('agent-vision','chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c','agent-pc-executor')){$x=$j.chats.PSObject.Properties[$cid].Value;if($x){Write-Output ('C|'+$cid+'|gen='+$x.generating+'|high='+$x.highMode+'|lastSeen='+$x.lastSeenAt+'|err='+$x.lastError)}}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 20000
+}
