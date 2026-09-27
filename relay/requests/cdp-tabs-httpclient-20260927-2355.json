@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "cdp-tabs-httpclient-20260927-2355",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$h=[System.Net.Http.HttpClientHandler]::new();$h.UseProxy=$false;$c=[System.Net.Http.HttpClient]::new($h);$c.Timeout=[TimeSpan]::FromSeconds(4);foreach($p in @(17410,17447)){try{$u='http://127.0.0.1:'+$p+'/json/list';$t=$c.GetStringAsync($u).GetAwaiter().GetResult();$j=$t|ConvertFrom-Json;foreach($x in @($j)){if($x.type -eq 'page' -and $x.url -match 'chatgpt\\.com'){Write-Output ('TAB|'+$p+'|'+$x.id+'|'+(($x.title -replace '\\s+',' ').Trim())+'|'+$x.url)}}}catch{Write-Output ('ERR|'+$p+'|'+$_.Exception.Message)}};$c.Dispose();$h.Dispose()"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 20000
+}
