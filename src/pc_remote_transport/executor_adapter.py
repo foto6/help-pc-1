@@ -61,6 +61,10 @@ _TOOLS = (
     NativeTool("file.hash", "fs.hash", "read_only"),
     NativeTool("file.search", "fs.find", "read_only", True),
     NativeTool("content.search", "fs.search_text", "read_only", True),
+    NativeTool("search.start", "search.start", "side_effect", handle_mode="create"),
+    NativeTool("search.read", "search.read", "read_only", True, "use"),
+    NativeTool("search.list", "search.list", "read_only"),
+    NativeTool("search.stop", "search.stop", "side_effect", handle_mode="use"),
     NativeTool("file.write", "fs.write_text", "side_effect"),
     NativeTool("file.append", "fs.append_text", "side_effect"),
     NativeTool("file.edit", "fs.edit_text", "side_effect"),
@@ -100,10 +104,10 @@ TOOL_REGISTRY_DIGEST = hashlib.sha256(
     ).encode("utf-8")
 ).hexdigest()
 
-# The external pc.native.tool_registry.v1 contract stays byte-for-byte stable.
-# When the parity Executor exposes an equivalent action under its native
-# LocalOperations contract, dispatch resolves to that action without changing
-# the external registry digest.
+# Existing pc.native.tool_registry.v1 tool names remain stable. This integrated
+# candidate extends the registry with stateful search lifecycle tools; the
+# registry digest therefore changes and is pinned in the authenticated hello.
+# Legacy parity aliases still resolve without changing their public names.
 _PARITY_EXECUTOR_ACTION_BY_TOOL = {
     "device.health": "health.get",
     "device.get_config": "config.get",
@@ -145,6 +149,7 @@ class _HandleRecord:
     session_id: str
     device_id: str
     session_epoch: str
+    capabilities_digest: str
     tool: str
     open: bool = True
 
@@ -224,7 +229,14 @@ def _has_protected_path(value: Any) -> bool:
 
 
 def _input_handle(arguments: Mapping[str, Any]) -> str | None:
-    for key in ("process_handle", "session_handle", "handle", "handle_id", "session_id"):
+    for key in (
+        "process_handle",
+        "session_handle",
+        "search_id",
+        "handle",
+        "handle_id",
+        "session_id",
+    ):
         value = arguments.get(key)
         if isinstance(value, str) and value:
             return value
@@ -590,6 +602,20 @@ class ExecutorRemoteDispatcher:
             limit = params.pop("limit", None)
             if limit is not None:
                 params.setdefault("max_bytes", limit)
+        if executor_action == "search.read":
+            limit = params.pop("limit", None)
+            if limit is not None:
+                params.setdefault("length", limit)
+            cursor = params.pop("cursor", None)
+            if cursor is not None and "offset" not in params:
+                try:
+                    params["offset"] = int(cursor)
+                except (TypeError, ValueError) as exc:
+                    raise NativeAdapterError(
+                        "search.read page.cursor must be an integer offset",
+                        code="INVALID_ARGUMENT",
+                        category="bounds",
+                    ) from exc
         if executor_action == "fs.search" and "pattern" in params and "query" not in params:
             params["query"] = params.pop("pattern")
         return params
@@ -612,11 +638,17 @@ class ExecutorRemoteDispatcher:
             or record.session_id != session_id
             or record.device_id != context.device_id
             or record.session_epoch != context.session_epoch
+            or record.capabilities_digest != context.session_capabilities_digest
         ):
+            search_handle = tool.name.startswith("search.")
             raise NativeAdapterError(
-                "Process/session handle is stale for this device/session epoch",
-                code="STALE_PROCESS_HANDLE",
-                category="process_handle",
+                (
+                    "Search handle is stale for this device/session epoch or capability digest"
+                    if search_handle
+                    else "Process/session handle is stale for this device/session epoch"
+                ),
+                code="STALE_SEARCH_HANDLE" if search_handle else "STALE_PROCESS_HANDLE",
+                category="search_handle" if search_handle else "process_handle",
             )
 
     def _register_or_close_handle(
@@ -636,6 +668,7 @@ class ExecutorRemoteDispatcher:
                     session_id=session_id,
                     device_id=context.device_id,
                     session_epoch=context.session_epoch,
+                    capabilities_digest=context.session_capabilities_digest,
                     tool=tool.name,
                 )
         elif tool.handle_mode == "close":
@@ -643,6 +676,37 @@ class ExecutorRemoteDispatcher:
             record = self._handles.get(handle or "")
             if record is not None:
                 record.open = False
+
+    def _filter_search_list(
+        self,
+        data: Mapping[str, Any],
+        *,
+        session_id: str,
+        context: TransportDispatchContext,
+    ) -> dict[str, Any]:
+        raw = dict(data)
+        searches = raw.get("searches")
+        if not isinstance(searches, list):
+            return raw
+        visible: list[dict[str, Any]] = []
+        for item in searches:
+            if not isinstance(item, Mapping):
+                continue
+            search_id = item.get("search_id")
+            record = self._handles.get(search_id) if isinstance(search_id, str) else None
+            if (
+                record is not None
+                and record.open
+                and record.tool == "search.start"
+                and record.session_id == session_id
+                and record.device_id == context.device_id
+                and record.session_epoch == context.session_epoch
+                and record.capabilities_digest == context.session_capabilities_digest
+            ):
+                visible.append(dict(item))
+        raw["searches"] = visible
+        raw["count"] = len(visible)
+        return raw
 
     def _preflight(
         self,
@@ -823,6 +887,12 @@ class ExecutorRemoteDispatcher:
             if not isinstance(data, Mapping):
                 data = {}
             data = dict(data)
+            if executor_action == "search.list":
+                data = self._filter_search_list(
+                    data,
+                    session_id=session_id,
+                    context=transport_context,
+                )
             if raw.get("ok") is not True:
                 raise NativeAdapterError(
                     str(raw.get("error") or "Executor rejected request"),

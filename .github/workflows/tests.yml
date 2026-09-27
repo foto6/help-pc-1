@@ -6,6 +6,8 @@ on:
       - agent/pc-executor
       - agent/pc-native-tool-parity
       - agent/pc-native-full-stack
+      - agent/pc-native-search-sessions
+      - agent/pc-native-full-stack-search
   workflow_dispatch:
 
 jobs:
@@ -31,7 +33,7 @@ jobs:
       - name: Wave 7 focused context-binding suite
         run: python -m pytest tests/test_execution_context_binding.py
       - name: Native desktop parity focused suite
-        run: python -m pytest tests/test_pc_operations.py tests/test_native_tool_parity.py
+        run: python -m pytest tests/test_pc_operations.py tests/test_native_tool_parity.py tests/test_search_sessions.py
       - name: Native schema reproducibility
         shell: bash
         run: |
@@ -39,7 +41,7 @@ jobs:
           git diff --exit-code -- schemas/
       - name: Windows native adapter suite
         if: runner.os == 'Windows'
-        run: python -m pytest tests/windows/test_native_windows_ops.py
+        run: python -m pytest tests/windows/test_native_windows_ops.py tests/windows/test_search_sessions_windows.py
       - name: Native remote transport focused suite
         run: python -m pytest tests/test_native_remote_transport.py tests/test_remote_protocol.py
       - name: Native remote transport harness

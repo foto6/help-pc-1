@@ -22,9 +22,9 @@ Not carried:
 - relay queue/history files;
 - any `tools/github_relay.py` RPC dependency.
 
-The provider-neutral registry semantics are `pc.native.control.v1` / `pc.native.tool_registry.v1`. The static registry digest remains:
+The provider-neutral registry semantics are `pc.native.control.v1` / `pc.native.tool_registry.v1`. This full-stack search candidate extends the registry with `search.start`, `search.read`, `search.list`, and `search.stop`; the resulting registry digest is:
 
-`58b2bde8c6a49825747dcd7010f105dad0b6d548c7e8341cdafb32d2319f6dcd`
+`6d8f150c2c2edb188581f8ecd2989c31db2591dd4232aa48f09e2a7b849417e3`
 
 ## Capability and session binding
 
@@ -34,7 +34,7 @@ Each dispatch receives device ID, authenticated session epoch, and hello-time ca
 
 Control `request_id` must exactly match the transport logical request ID. It flows unchanged through `ActionRequest`, preflight, outcome journaling, audit, and the response.
 
-Stable control sessions remain device-bound across reconnects. Process/session handles are additionally bound to the authenticated transport epoch, so stale handles fail closed after reconnect.
+Stable control sessions remain device-bound across reconnects. Process/session handles are additionally bound to the authenticated transport epoch, so stale handles fail closed after reconnect. Search handles are bound to control session, device, authenticated epoch, and hello-time capability-manifest digest; epoch/digest changes fail closed, while `search.stop` preserves retained final-result readability.
 
 ## Side-effect and idempotency path
 

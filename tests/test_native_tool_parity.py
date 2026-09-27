@@ -95,6 +95,10 @@ def test_capabilities_publish_exact_native_contract_versions(
         "fs.mkdir",
         "fs.stat",
         "fs.search",
+        "search.start",
+        "search.read",
+        "search.list",
+        "search.stop",
         "process.start",
         "process.read_output",
         "process.managed.list",
@@ -401,6 +405,7 @@ def test_device_health_and_config_are_read_only(tmp_path: Path) -> None:
     assert health.data["status"] == "ok"
     assert config.data["mutable"] is False
     assert config.data["search_cursor_version"].endswith(".v1")
+    assert config.data["search_session_version"].endswith(".v1")
 
 
 def test_generated_schemas_freeze_exact_action_inventory() -> None:
@@ -465,6 +470,8 @@ def test_desktop_commander_mapping_fixture_covers_reference_surface() -> None:
         "get_file_info",
         "start_search",
         "get_more_search_results",
+        "stop_search",
+        "list_searches",
         "start_process",
         "read_process_output",
         "interact_with_process",
@@ -476,6 +483,10 @@ def test_desktop_commander_mapping_fixture_covers_reference_surface() -> None:
     assert required <= set(mapped)
     assert mapped["kill_process"]["candidate"] == ["system.process.kill"]
     assert mapped["edit_block"]["candidate"] == ["fs.edit_text"]
+    assert mapped["start_search"]["candidate"] == ["search.start"]
+    assert mapped["get_more_search_results"]["candidate"] == ["search.read"]
+    assert mapped["stop_search"]["candidate"] == ["search.stop"]
+    assert mapped["list_searches"]["candidate"] == ["search.list"]
 
 
 def test_directory_listing_pagination_is_explicit(tmp_path: Path) -> None:
