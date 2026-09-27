@@ -1,0 +1,11 @@
+{
+  "action": null,
+  "error": "ValueError: timeout_ms must be an integer in [100, 120000]",
+  "executor_result": null,
+  "id": "a1-r2-score-ea1234-20260927-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "relay_error",
+  "version": "pc_relay.result.v1"
+}
