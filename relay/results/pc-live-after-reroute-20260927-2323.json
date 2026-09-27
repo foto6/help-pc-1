@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$st='E:\\WebAIBridge\\app\\data\\state.json'; $ms='E:\\WebAIBridge\\app\\data\\managed-chat-status.json'; if(Test-Path $st){$s=Get-Content $st -Raw|ConvertFrom-Json; foreach($id in @('2ba64468-e4e8-4272-b63e-e00e491b4ee4','814c957a-efb7-4401-9675-bf7997fdc278','28c0666c-dfde-43b3-856a-8581cfc65857')){$a=@($s.agentAssignments)|Where-Object{$_.id -eq $id}|Select-Object -First 1; if($a){Write-Output ('A|'+$id+'|state='+$a.state+'|target='+$a.targetChatId+'|dispatch='+$a.dispatchCount+'|diag='+$a.lastDiagnostic)}}}; if(Test-Path $ms){$m=Get-Content $ms -Raw|ConvertFrom-Json; foreach($cid in @('agent-pc-executor','chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c','chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e')){$x=$m.chats.PSObject.Properties[$cid].Value; if($x){Write-Output ('C|'+$cid+'|name='+$x.name+'|gen='+$x.generating+'|high='+$x.highMode+'|err='+$x.lastError)}}}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "A|2ba64468-e4e8-4272-b63e-e00e491b4ee4|state=queued|target=agent-pc-executor|dispatch=0|diag=active_generation\r\nA|814c957a-efb7-4401-9675-bf7997fdc278|state=blocked|target=chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c|dispatch=0|diag=replacement_policy_unavailable\r\nA|28c0666c-dfde-43b3-856a-8581cfc65857|state=queued|target=chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e|dispatch=0|diag=active_generation\r\nC|agent-pc-executor|name=PC Executor|gen=True|high=True|err=\r\nC|chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c|name=SpectraTrack Round2 Watch|gen=False|high=True|err=\r\nC|chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e|name=SpectraTrack Agent Watch (supervisor)|gen=False|high=True|err=\r\n",
+      "stdout_bytes": 674,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T16:13:14.990Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T16:13:14.965Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-live-after-reroute-20260927-2323"
+    },
+    "request_id": "pc-live-after-reroute-20260927-2323",
+    "started_at": "2026-09-27T16:13:14.282Z",
+    "status": "completed"
+  },
+  "id": "pc-live-after-reroute-20260927-2323",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
