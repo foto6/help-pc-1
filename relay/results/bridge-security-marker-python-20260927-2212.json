@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "py -3 -c \"from pathlib import Path; fs=[r'C:\\agentwork\\WebAIBridge-integration-final\\app\\agent-execution-control.js',r'C:\\agentwork\\WebAIBridge-integration-final\\app\\server.js',r'C:\\agentwork\\WebAIBridge-integration-final\\app\\supervisor-control.js']; [(print('=== '+f+' ==='),print('\\n'.join(str(i+1)+': '+x for i,x in enumerate(Path(f).read_text(encoding='utf-8').splitlines()) if x.startswith(('<<<<<<<','=======','>>>>>>>'))))) for f in fs]\""
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "  File \"<string>\", line 1\r\n    \"from\r\n    ^\r\nSyntaxError: unterminated string literal (detected at line 1)\r\n",
+      "stderr_bytes": 108,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:19:32.444Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:19:32.421Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-security-marker-python-20260927-2212"
+    },
+    "request_id": "bridge-security-marker-python-20260927-2212",
+    "started_at": "2026-09-27T14:19:32.195Z",
+    "status": "completed"
+  },
+  "id": "bridge-security-marker-python-20260927-2212",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
