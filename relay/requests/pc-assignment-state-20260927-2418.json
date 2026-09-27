@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-assignment-state-20260927-2418",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$urls=@('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId=chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e','http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId=agent-pc-executor','http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId=chat-6ab66b08-a90c-83eb-80d8-a7567d24352d'); foreach($u in $urls){ Write-Output ('URL|'+$u); curl.exe -sS --max-time 5 $u; Write-Output '' }"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 25000
+}
