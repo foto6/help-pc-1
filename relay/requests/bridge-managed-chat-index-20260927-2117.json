@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-managed-chat-index-20260927-2117",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; if(Test-Path $p){ $j=Get-Content $p -Raw | ConvertFrom-Json; @($j.managedChats) | ForEach-Object { if($_.repository -eq 'foto6/WebAIBridge' -or $_.branch -match 'bridge|webbridge'){ [pscustomobject]@{id=$_.id;name=$_.name;enabled=$_.enabled;repository=$_.repository;branch=$_.branch;gitHead=$_.gitHead;projectId=$_.projectId} | ConvertTo-Json -Compress } } } else { Write-Output 'CONFIG_MISSING' }"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
