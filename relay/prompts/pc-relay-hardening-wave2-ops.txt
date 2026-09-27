@@ -1,0 +1,58 @@
+EXECUTE NOW — PC RELAY HARDENING WAVE 2 / FULL PC OPERATIONS SURFACE. Do not acknowledge readiness.
+
+Repository: foto6/help-pc-1
+Branch: agent/pc-relay-hardening
+Continue your current work; do not reset or replace Wave1 transport hardening. Current production Executor already has capabilities/preflight/outcome/context binding plus screenshot/windows/UIA/input/clipboard/shell.run.
+
+Goal: make the hardened transport capable of complete day-to-day engineering operations WITHOUT forcing the coordinator to encode everything as ad-hoc PowerShell.
+
+Add versioned structured operations, implemented through Executor policy rather than bypassing it:
+
+1. Filesystem read actions:
+   - fs.list
+   - fs.stat
+   - fs.read_text with line/range and byte bounds
+   - fs.read_bytes with base64 and strict size bounds
+   - fs.hash
+   - fs.find/glob with bounded result count
+2. Filesystem write actions:
+   - fs.write_text with expected-current-hash / create-only / overwrite semantics
+   - fs.append_text
+   - fs.mkdir
+   - fs.copy
+   - fs.move
+   - fs.delete only with explicit policy classification and fail-closed protected-path checks
+   Atomic temp+replace where applicable. Never touch E:\manhwa.
+3. Logs:
+   - log.tail by path with bounded lines/bytes
+   - log.read_since using stable offset/cursor
+   - log.search with regex/literal bounds
+   No infinite follow stream; polling must be explicit/read-only.
+4. Processes:
+   - process.list/filter
+   - process.inspect
+   - process.start with argv/cwd/env allow policy and durable process handle
+   - process.status
+   - process.read_output by cursor for managed child processes
+   - process.terminate only for processes started/owned by the gateway unless a stricter explicit capability is later authorized
+5. Shell sessions:
+   - shell.session.start
+   - shell.session.read
+   - shell.session.write_stdin
+   - shell.session.terminate
+   with durable session ids, bounded buffers, no credential/CAPTCHA entry, and restart semantics documented.
+   shell.run remains for short commands.
+6. System read-only:
+   - system.info
+   - system.resources (CPU/RAM/disk; GPU only if safely available)
+   - system.paths / cwd validation as useful
+7. Git convenience may be structured only if it reuses safe process/filesystem primitives; do not invent a second Git security model.
+8. Every action must have strict schemas, capabilities declaration, preflight semantics where side effects exist, audit redaction, cancellation/timeouts, exact outcome evidence and context binding where relevant.
+9. Protected path policy must cover resolved paths, symlinks/junctions/reparse points where practical, relative paths, alternate separators/case and parent traversal.
+10. Fault tests: large file, encoding error, file changes between read/write, stale expected hash, append crash, delete race, process exits before read, stdout/stderr truncation, session restart, duplicate operation IDs, malformed cursors, symlink/junction escape, protected path aliases.
+11. Keep the live prototype untouched. This branch is code/tests/docs only.
+12. Produce schemas/fixtures consumable by foto6/help-pc-2 agent/pc-ops-gateway and a migration matrix from shell-run equivalent -> structured action.
+13. Linux-portable tests + Windows-specific tests where needed; exact-head CI required.
+
+Do not merge/release. Never touch E:\manhwa.
+Final exact SHA + CI + action inventory + schema/fixture manifest hashes + fault matrix.
