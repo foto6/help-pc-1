@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-live-diagnose-20260927-2058",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$repo='E:\\WebAIBridge'; Push-Location $repo; try { Write-Output ('HEAD|'+(git branch --show-current)+'|'+(git rev-parse HEAD)); git fetch origin --prune | Out-Null; $p=(git rev-parse origin/agent/webbridge-dev); $i=(git rev-parse origin/agent/bridge-integration); Write-Output ('REMOTE|primary|'+$p); Write-Output ('REMOTE|integration|'+$i); Write-Output 'AGENT_CONTROL_MATCHES'; git grep -n \"agentControlHealth\" 2>$null | Select-Object -First 20; Write-Output 'MODEL_MATCHES'; git grep -n -E \"models|modelList|availableModels\" -- '*.js' '*.ts' '*.tsx' '*.json' 2>$null | Select-Object -First 40 } finally { Pop-Location }; $bp=@(Get-CimInstance Win32_Process | Where-Object { $_.Name -eq 'node.exe' -and $_.CommandLine -match 'WebAIBridge|webbridge|bridge' }); foreach($x in $bp){ $ports=@(Get-NetTCPConnection -State Listen -OwningProcess $x.ProcessId -ErrorAction SilentlyContinue | Select-Object -ExpandProperty LocalPort -Unique); Write-Output ('BRIDGE_PID|'+$x.ProcessId+'|PORTS='+($ports -join ',')) }"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
