@@ -265,6 +265,14 @@ class Executor:
                 exc,
                 tracker,
             )
+        except UnicodeError as exc:
+            return self._error_result(
+                request,
+                started,
+                effective_dry_run,
+                ExecutorFailureError(f"{type(exc).__name__}: {exc}"),
+                tracker,
+            )
         except (KeyError, TypeError, ValueError) as exc:
             return self._error_result(
                 request,
