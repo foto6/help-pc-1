@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-highmode-route-search-20260927-2440",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Select-String -Path 'E:\\WebAIBridge\\app\\server.js' -Pattern 'highMode|enforceHighMode|model.*strategy|mode.*high|set.*mode' -CaseSensitive:$false -Context 1,2 | Select-Object -First 120 | ForEach-Object{$_.ToString()}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
