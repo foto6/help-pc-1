@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-integrate-security-start-20260927-2131",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$src='E:\\WebAIBridge'; $wt='C:\\agentwork\\WebAIBridge-integration-final'; if(Test-Path $wt){ Write-Output 'TARGET_ALREADY_EXISTS'; exit 10 }; git -C $src fetch origin --prune; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; git -C $src worktree add --detach $wt origin/agent/bridge-integration; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; Write-Output ('WT_HEAD|'+(git -C $wt rev-parse HEAD)); git -C $wt cherry-pick 8cee868; $rc=$LASTEXITCODE; Write-Output ('CHERRYPICK_RC|'+$rc); git -C $wt status --short; exit $rc"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
