@@ -6,11 +6,12 @@ This integration-only branch assembles the final `help-pc-1` PC Core candidate. 
 
 - Primary base: `078de1871d4303db74ffff9d6b74efe1f342c482`.
 - Stateful-search source: `c3b86fefb66348e6a78f5f555a59f81154bd357e`.
-- Windows-service source: `e8804f116c84b74ae8e04f1c07abc3a01baf79a1`.
+- Windows-service runtime source: `e8804f116c84b74ae8e04f1c07abc3a01baf79a1`.
+- Immutable service-install source: `a906312f49c97ab0ee6ceb6cda00925d5b9ebfca`.
 - Strict parity-binding sibling reference: `fec2bc951cef3e4c9f5d31f00503277e7ed5b90b`.
 - Lineage review: `foto6/boss` `43718b7b872f47103ea5fad2c54a0ed041b8f1f5`.
 
-The candidate starts exactly from the primary base. Search and service changes were selectively reapplied; none of the three sibling source heads is merged as history. The old GitHub-relay and obsolete transport histories remain non-ancestors.
+The candidate starts exactly from the primary base. Search, service-runtime, immutable-install, and strict-B changes were selectively reapplied or reimplemented; none of those source heads is merged as history. The old GitHub-relay and obsolete transport histories remain non-ancestors.
 
 ## Registry and digest policy
 
@@ -35,7 +36,7 @@ The compatibility digest is never reinterpreted as the parity-registry digest.
 
 The candidate retains the parity-gap primitives from the primary base: ordered bounded `fs.read_multiple`, atomic allowlisted `config.set`, journaled `agent.shutdown`, sanitized `identity.who_am_i`, `diagnostics.usage_stats`, `diagnostics.recent_tool_calls`, and bounded/safe `pdf.write`.
 
-Stateful search adds `search.start`, `search.read`, `search.list`, and `search.stop` with generation-scoped retained handles, files/content modes, literal or regex matching, case handling, hidden-file control, bounded context/results/timeouts, absolute/tail pagination, cancellation, and retention cleanup. Remote search handles are additionally bound to control session, device, transport epoch, and authenticated capability-manifest digest.
+Stateful search adds `search.start`, `search.read`, `search.list`, and `search.stop` with generation-scoped retained handles, files/content modes, literal or regex matching, case handling, hidden-file control, bounded context/results/timeouts, absolute/tail pagination, cancellation, and retention cleanup. A terminal search is retained until it has been observed at least once, after which the configured retention window begins; never-observed terminal sessions still have a bounded hard-expiry so GC is eventual. Remote search handles are additionally bound to control session, device, transport epoch, and authenticated capability-manifest digest.
 
 The Desktop Commander acceptance mapping contains 30 reference tools. Twenty-eight have mandatory semantic replacements backed by the direct parity registry. Only `get_prompts` and `give_feedback_to_desktop_commander` are intentional vendor-specific exclusions.
 
@@ -52,7 +53,7 @@ The service overlay retains the green Windows service runtime: disabled by defau
 
 Production-default `build_default_runtime()` constructs the exact current `Executor` -> `ExecutorRemoteDispatcher` -> `ServiceDeviceAgent` (`DeviceAgent`) path. There is no alternate side-effect engine or module override.
 
-The immutable-artifact installation requirement tracked as Security W3-B3 is deliberately not solved in this branch. The current bootstrap still installs from the mutable repository checkout and therefore remains an external deployment blocker. Production release/install must stay gated until the separate W3-B3 packaging work lands; this branch does not invent a competing packaging design.
+Security W3-B3 is closed by the selectively absorbed immutable-install delta from `a906312f49c97ab0ee6ceb6cda00925d5b9ebfca`. Production bootstrap no longer installs from a mutable checkout: it requires an immutable wheel plus sidecar manifest, independently supplied expected SHA-256/producer/package/protocol/registry metadata, rejects non-canonical or symlink/reparse inputs before mutation, stages and re-hashes the exact approved bytes, then verifies installed package and runtime contract identity before configuration or SCM registration. No local-source production fallback is retained.
 
 ## Verification
 

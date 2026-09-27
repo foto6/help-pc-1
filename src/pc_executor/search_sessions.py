@@ -29,6 +29,7 @@ MAX_SEARCH_CONTEXT_LINES = 20
 MAX_SEARCH_CONTEXT_CHARS = 1024
 MAX_SEARCH_STALE_TOMBSTONES = 128
 MAX_SEARCH_EXPIRED_TOMBSTONES = 128
+MIN_UNOBSERVED_TERMINAL_RETENTION_SECONDS = 1.0
 
 
 def _utc_now_iso() -> str:
@@ -60,6 +61,7 @@ class SearchSession:
     stop_requested: bool = False
     finished_at: str | None = None
     finished_monotonic: float | None = None
+    terminal_observed_monotonic: float | None = None
     error_kind: str | None = None
     future: Future[None] | None = None
 
@@ -170,18 +172,37 @@ class SearchSessionManager:
 
     def _gc_locked(self) -> None:
         now = time.monotonic()
-        expired_ids = [
-            search_id
-            for search_id, item in self.sessions.items()
-            if item.finished_monotonic is not None
-            and now - item.finished_monotonic >= self.retention_seconds
-        ]
+        expired_ids: list[str] = []
+        for search_id, item in self.sessions.items():
+            if item.finished_monotonic is None:
+                continue
+            if item.terminal_observed_monotonic is not None:
+                expired = (
+                    now - item.terminal_observed_monotonic
+                    >= self.retention_seconds
+                )
+            else:
+                hard_retention = max(
+                    self.retention_seconds,
+                    MIN_UNOBSERVED_TERMINAL_RETENTION_SECONDS,
+                )
+                expired = now - item.finished_monotonic >= hard_retention
+            if expired:
+                expired_ids.append(search_id)
         if not expired_ids:
             return
         for search_id in expired_ids:
             self.sessions.pop(search_id, None)
             self.expired.append(search_id)
         self._persist_locked()
+
+    @staticmethod
+    def _mark_terminal_observed_locked(item: SearchSession) -> None:
+        if (
+            item.status != "running"
+            and item.terminal_observed_monotonic is None
+        ):
+            item.terminal_observed_monotonic = time.monotonic()
 
     def _get_locked(self, search_id: str) -> SearchSession:
         self._gc_locked()
@@ -286,6 +307,8 @@ class SearchSessionManager:
             if not already_finished:
                 item.stop_requested = True
                 item.cancellation.cancel()
+            if already_finished:
+                self._mark_terminal_observed_locked(item)
             summary = self._summary_locked(item)
             summary["already_finished"] = already_finished
             summary["stop_requested"] = not already_finished
@@ -308,6 +331,7 @@ class SearchSessionManager:
             else:
                 resolved_offset = min(offset, total)
                 page = item.results[resolved_offset : resolved_offset + length]
+            self._mark_terminal_observed_locked(item)
             summary = self._summary_locked(item)
             summary.update(
                 {
@@ -328,13 +352,13 @@ class SearchSessionManager:
     def list(self) -> dict[str, Any]:
         with self.lock:
             self._gc_locked()
-            items = [
-                self._summary_locked(item)
-                for item in sorted(
-                    self.sessions.values(),
-                    key=lambda value: (value.started_monotonic, value.search_id),
-                )
-            ]
+            ordered = sorted(
+                self.sessions.values(),
+                key=lambda value: (value.started_monotonic, value.search_id),
+            )
+            for item in ordered:
+                self._mark_terminal_observed_locked(item)
+            items = [self._summary_locked(item) for item in ordered]
             return {
                 "searches": items,
                 "count": len(items),

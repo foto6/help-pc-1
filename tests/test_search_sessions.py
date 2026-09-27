@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 import pc_executor.operations as operations_module
+import pc_executor.search_sessions as search_sessions_module
 from pc_executor.executor import Executor
 from pc_executor.models import ActionRequest
 from pc_executor.operations import (
@@ -13,8 +14,9 @@ from pc_executor.operations import (
     LocalOperations,
 )
 from pc_executor.outcome_journal import OutcomeJournal
+from pc_executor.errors import OperationCancelledError
 from pc_executor.safety import SafetyViolation
-from pc_executor.search_sessions import SEARCH_SESSION_VERSION
+from pc_executor.search_sessions import SEARCH_SESSION_VERSION, SearchSessionManager
 from pc_executor.shell import SafeShellAdapter
 
 
@@ -363,6 +365,113 @@ def test_completed_stop_list_reconnect_and_stale_restart(tmp_path: Path) -> None
     assert stale.status == "blocked"
     assert "previous executor/device generation" in (stale.error or "")
     assert ops.generation_id != _restarted_ops.generation_id
+
+
+def test_terminal_state_is_observable_before_tiny_retention_gc(
+    tmp_path: Path,
+) -> None:
+    for terminal in ("completed", "cancelled", "failed"):
+        manager = SearchSessionManager(
+            tmp_path / f"{terminal}-sessions.json",
+            generation_id=f"generation-{terminal}",
+            retention_seconds=0.005,
+            max_workers=1,
+        )
+
+        def runner(item, emit, *, terminal=terminal):
+            if terminal == "completed":
+                emit({"path": "synthetic"})
+                return "completed"
+            if terminal == "cancelled":
+                raise OperationCancelledError("synthetic cancellation")
+            raise RuntimeError("synthetic failure")
+
+        started = manager.start(
+            search_type="files",
+            pattern="synthetic",
+            path=str(tmp_path),
+            literal_search=True,
+            ignore_case=True,
+            context_lines=0,
+            include_hidden=False,
+            max_results=10,
+            timeout_ms=1000,
+            runner=runner,
+        )
+        search_id = started["search_id"]
+        with manager.lock:
+            future = manager.sessions[search_id].future
+        assert future is not None
+        future.result(timeout=1.0)
+
+        # Move the terminal timestamp beyond the normal retention window
+        # without relying on scheduler timing. An unobserved terminal session
+        # must still be readable once.
+        with manager.lock:
+            item = manager.sessions[search_id]
+            assert item.finished_monotonic is not None
+            assert item.terminal_observed_monotonic is None
+            item.finished_monotonic -= manager.retention_seconds * 2
+        observed = manager.read(search_id, offset=0, length=10)
+        assert observed["status"] == terminal
+        assert observed["finished_at"] is not None
+
+        # Once observed, retention is measured from that observation.
+        with manager.lock:
+            item = manager.sessions[search_id]
+            assert item.terminal_observed_monotonic is not None
+            item.terminal_observed_monotonic -= manager.retention_seconds * 2
+        with pytest.raises(SafetyViolation, match="expired after retention"):
+            manager.read(search_id, offset=0, length=10)
+        manager.shutdown()
+
+
+def test_unobserved_terminal_state_has_bounded_hard_gc(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(
+        search_sessions_module,
+        "MIN_UNOBSERVED_TERMINAL_RETENTION_SECONDS",
+        0.02,
+    )
+    manager = SearchSessionManager(
+        tmp_path / "hard-gc-sessions.json",
+        generation_id="generation-hard-gc",
+        retention_seconds=0.005,
+        max_workers=1,
+    )
+
+    def runner(item, emit):
+        return "completed"
+
+    started = manager.start(
+        search_type="files",
+        pattern="synthetic",
+        path=str(tmp_path),
+        literal_search=True,
+        ignore_case=True,
+        context_lines=0,
+        include_hidden=False,
+        max_results=10,
+        timeout_ms=1000,
+        runner=runner,
+    )
+    search_id = started["search_id"]
+    with manager.lock:
+        future = manager.sessions[search_id].future
+    assert future is not None
+    future.result(timeout=1.0)
+
+    with manager.lock:
+        item = manager.sessions[search_id]
+        assert item.finished_monotonic is not None
+        item.finished_monotonic -= 0.03
+    listed = manager.list()
+    assert all(item["search_id"] != search_id for item in listed["searches"])
+    with pytest.raises(SafetyViolation, match="expired after retention"):
+        manager.read(search_id, offset=0, length=10)
+    manager.shutdown()
 
 
 def test_retention_expiry_gc_removes_handle(tmp_path: Path) -> None:

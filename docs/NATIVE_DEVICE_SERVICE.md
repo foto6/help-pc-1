@@ -1,8 +1,8 @@
 # Native PC Device Service
 
 This component hosts the existing pc_remote_transport.DeviceAgent as a real Windows
-Service. It is an installability/operations layer only: transport requests still flow
-through the native Executor dispatcher when that adapter is present.
+Service. It is an installability/operations layer only: transport requests flow through
+the current full-stack native Executor dispatcher.
 
 ## Security model
 
@@ -24,6 +24,14 @@ through the native Executor dispatcher when that adapter is present.
 - The full-stack service is statically bound to this branch's current
   `pc_remote_transport.DeviceAgent`, `ExecutorRemoteDispatcher`, and `pc_executor.Executor`.
   Service configuration has no module/executable override and no fallback side-effect engine.
+- Production install/update accepts only an immutable wheel plus a sidecar
+  `pc.native.device_service.artifact_manifest.v1` manifest. The caller must independently
+  provide the expected wheel SHA-256, producer git SHA, package version, native-control
+  protocol version, tool-registry contract version, and registry digest.
+- Artifact and manifest paths must be absolute, canonical regular files with no symlink/reparse
+  component. The verifier hashes the exact opened wheel bytes, validates the release metadata,
+  stages those same bytes to a private temporary directory, and re-hashes the staged file before
+  any ProgramData, venv, configuration, LSA-secret, or SCM mutation.
 
 ## Files and state
 
@@ -43,27 +51,57 @@ Non-secret files include:
 Configuration writes are staged, fsynced, atomically replaced, re-read, and rolled back
 to the previous bytes if post-write validation fails.
 
-## Install / bootstrap
+## Production install / update
 
-Run the bootstrap from an Administrator PowerShell. If it is not elevated, it
-self-elevates before prompting for configuration.
+The production bootstrap has no local-checkout or `RepoRoot` install mode. Release packaging
+must provide a wheel and sidecar manifest as immutable inputs. The expected values are supplied
+separately from the artifact so a boss release bundle lock can bind them without this service
+importing boss source at runtime.
+
+Manifest shape:
+
+    {
+      "format_version": "pc.native.device_service.artifact_manifest.v1",
+      "producer": {
+        "repository": "foto6/help-pc-1",
+        "sha": "<40-hex producer commit>",
+        "package_version": "0.1.0"
+      },
+      "artifact": {
+        "filename": "pc_executor-0.1.0-py3-none-any.whl",
+        "sha256": "<64-hex wheel sha256>",
+        "size_bytes": 12345
+      },
+      "contracts": {
+        "protocol_version": "pc.native.control.v1",
+        "capability_contract_version": "pc.native.tool_registry.v1",
+        "capability_digest": "<TOOL_REGISTRY_DIGEST>"
+      }
+    }
+
+Run from Administrator PowerShell (or allow the script to self-elevate):
 
     .\tools\install_pc_native_device_service.ps1 \
+      -ArtifactPath "C:\release\pc_executor-0.1.0-py3-none-any.whl" \
+      -ArtifactManifestPath "C:\release\pc-executor.manifest.json" \
+      -ExpectedArtifactSha256 "<bundle-lock artifact sha256>" \
+      -ExpectedProducerSha "<bundle-lock help-pc-1 sha>" \
+      -ExpectedPackageVersion "0.1.0" \
+      -ExpectedProtocolVersion "pc.native.control.v1" \
+      -ExpectedCapabilityContractVersion "pc.native.tool_registry.v1" \
+      -ExpectedCapabilityDigest "<bundle-lock registry digest>" \
       -Endpoint "wss://relay.example/device" \
       -DeviceId "workstation-01"
 
-That installs and starts the Windows service but leaves transport disabled. To opt in
-during bootstrap, add -Enable.
+The verifier rejects missing/stale metadata, hash mismatch, wrong producer identity, wrong contract
+metadata, non-canonical paths, and symlink/reparse paths before service mutation. It stages the exact
+verified bytes atomically and pip installs only that staged wheel. After installation, the bootstrap
+rechecks installed package version and the runtime protocol/registry constants before configuration,
+secret handling, or service registration.
 
-The bootstrap creates an isolated virtual environment under ProgramData, installs the
-current repository build into it, prompts for the token with hidden input, stores it as
-Windows LSA private data, configures SCM crash recovery, and starts the service.
-
-**Deployment blocker W3-B3:** this mutable-checkout install path is not an approved
-production release/install mechanism. Immutable artifact identity/hash/producer binding is
-being implemented in the separate packaging/security lane. Production deployment remains
-blocked on W3-B3; this service integration intentionally does not add a competing packaging
-design.
+The service remains disabled unless `-Enable` is explicitly supplied. Token bytes are still entered
+only through the hidden `secret set` prompt and never appear in artifact metadata or bootstrap argv.
+There is intentionally no developer local-source fallback in the production bootstrap.
 
 ## CLI commands
 
