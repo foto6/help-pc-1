@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$out='E:\\SpectraTrack-data\\runs\\a1-nightowls-r2-ea1234-run2'; $pidv=[int](Get-Content ($out+'\\pid.txt')); $p=Get-Process -Id $pidv -ErrorAction SilentlyContinue; Write-Output ('RUNNING='+[bool]$p); Write-Output ('RESULT_EXISTS='+(Test-Path ($out+'\\r2-result.json'))); if(Test-Path ($out+'\\stderr.txt')){Write-Output 'STDERR'; Get-Content -Tail 20 ($out+'\\stderr.txt')}; if(Test-Path ($out+'\\stdout.txt')){Write-Output 'STDOUT'; Get-Content -Tail 20 ($out+'\\stdout.txt')}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "RUNNING=False\r\nRESULT_EXISTS=True\r\nSTDERR\r\nSTDOUT\r\n{\r\n  \"candidate_config_digest\": \"sha256:da906156a54e87cfca55f5c5fc0574a94ae9919835a25508321662078d4af10b\",\r\n  \"decision\": \"REJECT_R2\",\r\n  \"provenance_digest\": \"sha256:d6302f466c69d94730169ea8f414d9b238ec08b85cb2adbad0e5a8eacc751b96\",\r\n  \"result_digest\": \"sha256:a7af50585e244bdaed69aefebe8c34a3a82a465d0714258967be41bdb87be63f\"\r\n}\r\n",
+      "stdout_bytes": 383,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:10:20.290Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:10:20.275Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "a1-r2-poll-002"
+    },
+    "request_id": "a1-r2-poll-002",
+    "started_at": "2026-09-27T14:10:19.953Z",
+    "status": "completed"
+  },
+  "id": "a1-r2-poll-002",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
