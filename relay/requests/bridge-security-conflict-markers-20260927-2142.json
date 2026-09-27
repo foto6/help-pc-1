@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-security-conflict-markers-20260927-2142",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$wt='C:\\agentwork\\WebAIBridge-integration-final'; foreach($f in @('app\\agent-execution-control.js','app\\package.json','app\\server.js','app\\supervisor-control.js')){ $p=Join-Path $wt $f; Write-Output ('===FILE '+$f+'==='); $lines=Get-Content $p; for($i=0;$i -lt $lines.Count;$i++){ if($lines[$i] -match '^<<<<<<< '){ $s=[Math]::Max(0,$i-8); $e=[Math]::Min($lines.Count-1,$i+35); for($j=$s;$j -le $e;$j++){ Write-Output (('{0,6}: {1}' -f ($j+1),$lines[$j])) }; Write-Output '---' } } }"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
