@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pc_relay.result.v2",
+  "title": "PC Relay Result v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "id", "request_sha256", "action", "relay_status", "live", "executor_result", "reconciliation", "reexecuted", "error", "implementation_sha", "queue_head_at_receive", "published_at", "result_sha256"],
+  "properties": {
+    "version": {"const": "pc_relay.result.v2"},
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{1,80}$"},
+    "request_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "action": {"type": ["string", "null"]},
+    "relay_status": {"enum": ["completed", "reconciled_completed", "reconciliation_required", "relay_error", "rejected"]},
+    "live": {"type": "boolean"},
+    "executor_result": {"type": ["object", "null"]},
+    "reconciliation": {"type": ["object", "null"]},
+    "reexecuted": {"type": "boolean"},
+    "error": {"type": ["string", "null"]},
+    "implementation_sha": {"type": "string"},
+    "queue_head_at_receive": {"type": ["string", "null"]},
+    "published_at": {"type": "string"},
+    "result_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}
