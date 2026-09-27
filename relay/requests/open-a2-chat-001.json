@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "open-a2-chat-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$e=[uri]::EscapeDataString('https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8f4bb-069c-83eb-9bba-7add1eb57fab'); Invoke-WebRequest -UseBasicParsing -Method Put -Uri (\"http://127.0.0.1:17410/json/new?\"+$e) | Out-Null; Write-Output 'OPENED_A2'"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Open canonical A2 tracking chat."
+}
