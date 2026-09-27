@@ -32,9 +32,12 @@ SERVICE_OVERLAY = {
 SERVICE_EXACT = {
     "src/pc_remote_transport/service_cli.py",
     "src/pc_remote_transport/windows_service.py",
-    "tools/install_pc_native_device_service.ps1",
 }
 SERVICE_INTEGRATION_DIVERGENCES = SERVICE_OVERLAY - SERVICE_EXACT
+SECURITY_W3_B3_OVERLAY = {
+    "tests/test_native_service_artifact.py",
+    "tools/verify_pc_native_service_artifact.py",
+}
 
 
 def git(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
@@ -80,7 +83,7 @@ def main() -> None:
     service_delta = names(SERVICE_BASE, SERVICE_SOURCE)
     assert service_delta == SERVICE_OVERLAY | {".github/workflows/tests.yml", "pyproject.toml"}
     changed = names(PARITY_BASE, head)
-    expected = remote_delta | INTEGRATION_ONLY | SERVICE_OVERLAY
+    expected = remote_delta | INTEGRATION_ONLY | SERVICE_OVERLAY | SECURITY_W3_B3_OVERLAY
     assert changed == expected, (
         f"unexpected full-stack diff; missing={sorted(expected - changed)} "
         f"extra={sorted(changed - expected)}"
@@ -128,7 +131,13 @@ def main() -> None:
     assert "agent/pc-native-full-stack-service" in workflow
     assert "tests/test_native_full_stack_integration.py" in workflow
     assert "tests/test_native_device_service.py" in workflow
+    assert "tests/test_native_service_artifact.py" in workflow
     assert "tools/audit_full_stack_integration.py" in workflow
+
+    bootstrap = Path("tools/install_pc_native_device_service.ps1").read_text(encoding="utf-8")
+    assert "$RepoRoot" not in bootstrap
+    assert "verify_pc_native_service_artifact.py" in bootstrap
+    assert "$StagedArtifact" in bootstrap
 
     changed_text = "\n".join(sorted(changed)).lower()
     assert "tools/github_relay.py" not in changed_text

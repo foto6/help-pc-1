@@ -47,6 +47,8 @@ jobs:
         run: python tools/native_remote_harness.py
       - name: Native device service focused suite
         run: python -m pytest tests/test_native_device_service.py
+      - name: Native service artifact security suite
+        run: python -m pytest tests/test_native_service_artifact.py
       - name: Native remote Executor adapter suite
         run: python -m pytest tests/test_native_remote_executor_adapter.py tests/test_native_remote_executor_adapter_recovery.py
       - name: Native full-stack real Executor integration suite
