@@ -448,7 +448,7 @@ class GitQueue:
             self.repo,
             "diff",
             "--name-only",
-            f"{remote}..HEAD",
+            f"{remote}...HEAD",
             check=False,
         )
         if diff.returncode != 0:
@@ -551,10 +551,19 @@ class GitQueue:
             if payload is None:
                 raise QueueConflictError("publication payload disappeared during reconciliation")
             path.parent.mkdir(parents=True, exist_ok=True)
-            if path.exists() and not mutable and path.read_bytes() != payload:
-                raise QueueConflictError(f"immutable queue object conflict: {relative}")
+            if path.exists():
+                existing = path.read_bytes()
+                if not mutable and existing != payload:
+                    raise QueueConflictError(f"immutable queue object conflict: {relative}")
+                if existing == payload:
+                    self._save_remote(remote)
+                    return
             path.write_bytes(payload)
             _run_git(self.repo, "add", relative)
+            staged = _run_git(self.repo, "diff", "--cached", "--quiet", check=False)
+            if staged.returncode == 0:
+                self._save_remote(remote)
+                return
             _run_git(
                 self.repo,
                 "-c",
