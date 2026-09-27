@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-chat-statuses-20260927-2245b",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='E:\\WebAIBridge\\app\\data\\managed-chat-status.json'; $j=Get-Content $p -Raw|ConvertFrom-Json; foreach($prop in $j.chats.PSObject.Properties){$x=$prop.Value; Write-Output ('STATUS|'+$prop.Name+'|name='+$x.name+'|generating='+$x.generating+'|high='+$x.highMode+'|draft='+$x.hasDraft+'|lastSeen='+$x.lastSeenAt+'|lastError='+$x.lastError)}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
