@@ -9,6 +9,7 @@ from .models import ActionRequest, ActionResult, AuditEvent, ElementQuery, utc_n
 from .safety import SafetyViolation, ensure_not_sensitive_text
 from .shell import SafeShellAdapter
 from .uia import AccessibilityAdapter, WindowsUIAutomationAdapter
+from .vision_target import GroundedTargetContractError, parse_grounded_target_v1
 from .windows import Win32WindowEnumerator, WindowEnumerator
 
 
@@ -94,6 +95,27 @@ class Executor:
             if dry_run:
                 return {"would_execute": action}
             return {"windows": [window.to_dict() for window in self.windows.list_windows()]}
+
+        if action == "vision.target.invoke":
+            try:
+                target = parse_grounded_target_v1(p.get("target"))
+            except GroundedTargetContractError as exc:
+                raise SafetyViolation(f"invalid vision target contract: {exc}") from exc
+
+            automation_id = target.automation_id
+            if "uia" not in target.sources or not automation_id or not automation_id.strip():
+                raise SafetyViolation(
+                    "vision target is not actionable through UIA; "
+                    "non-empty automation_id is required"
+                )
+
+            query = ElementQuery(automation_id=automation_id)
+            if dry_run:
+                return {
+                    "would_execute": action,
+                    "query": {"automation_id": automation_id},
+                }
+            return {"element": self.accessibility.invoke(query).to_dict()}
 
         if action.startswith("uia."):
             query = ElementQuery.from_dict(dict(p.get("query") or {}))

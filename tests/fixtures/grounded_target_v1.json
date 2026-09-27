@@ -1,0 +1,21 @@
+{
+  "contract_version": "vision.grounded_target.v1",
+  "frame": {
+    "frame_id": "f1",
+    "sequence": 1,
+    "captured_at_ms": 1000,
+    "image_digest": "a",
+    "display_id": "desktop"
+  },
+  "target": {
+    "element_id": "uia:save-button",
+    "node_id": "save-button",
+    "automation_id": "save",
+    "role": "button",
+    "name": "Save",
+    "confidence": 0.97,
+    "sources": ["uia", "vision"],
+    "bounds_screen": {"x": 200, "y": 100, "width": 120, "height": 40},
+    "click_point_screen": {"x": 260.0, "y": 120.0}
+  }
+}

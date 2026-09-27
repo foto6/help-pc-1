@@ -7,9 +7,10 @@ The upstream planner/vision component proposes intent plus selectors; PC Executo
 1. screenshot.capture and/or windows.list to observe state.
 2. Vision/planner identifies a target.
 3. Prefer uia.inspect to verify the target by accessibility metadata.
-4. Use uia.invoke, uia.focus, or uia.set_value when supported.
-5. Re-observe after the action.
-6. Only if UIA cannot identify the target, the orchestrator may explicitly opt into coordinate fallback for the executor instance and issue mouse.click based on a fresh screenshot.
+4. For `vision.grounded_target.v1`, use `vision.target.invoke`; it strictly validates the transport and re-resolves only by non-empty UIA `automation_id`.
+5. Use uia.invoke, uia.focus, or uia.set_value for non-Vision UIA actions when supported.
+6. Re-observe after the action.
+7. Generic coordinate fallback remains a separately gated `mouse.click` capability; `vision.target.invoke` never uses target coordinates or the raw input adapter.
 
 ## Boundary rules
 
