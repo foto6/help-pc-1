@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$r='E:\\WebAIBridge'; git -C $r fetch origin --prune; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; foreach($b in @('agent/bridge-security-boundaries','agent/bridge-observability')){ Write-Output ('=== '+$b+' ==='); Write-Output 'COMMITS_NOT_IN_PRIMARY'; git -C $r log --oneline --decorate --no-merges origin/agent/webbridge-dev..origin/$b; Write-Output 'DIFF_STAT'; git -C $r diff --stat origin/agent/webbridge-dev...origin/$b; Write-Output 'CHANGED_FILES'; git -C $r diff --name-status origin/agent/webbridge-dev...origin/$b }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "=== agent/bridge-security-boundaries ===\r\nCOMMITS_NOT_IN_PRIMARY\r\nf3f24a8 Tighten evidence and API trust boundaries\n8cee868 Harden managed agent trust boundaries\nDIFF_STAT\r\n .github/workflows/test.yml                  |   1 +\n app/agent-assignment-restart-harness.js     |   2 +-\n app/agent-evidence-collector.js             |  20 +-\n app/agent-evidence-collector.test.js        |  17 ++\n app/agent-execution-control.js              |  85 +++---\n app/agent-execution-control.test.js         |   1 +\n app/agent-security-boundaries.js            | 423 ++++++++++++++++++++++++++\n app/agent-security-boundaries.test.js       | 452 ++++++++++++++++++++++++++++\n app/docs/AGENT_SECURITY_TRUST_BOUNDARIES.md | 216 +++++++++++++\n app/package.json                            |   2 +-\n app/project-control.js                      |   7 +-\n app/project-control.test.js                 |   5 +\n app/server.js                               |  94 ++++--\n app/supervisor-control.js                   |  31 +-\n 14 files changed, 1267 insertions(+), 89 deletions(-)\nCHANGED_FILES\r\nM\t.github/workflows/test.yml\nM\tapp/agent-assignment-restart-harness.js\nM\tapp/agent-evidence-collector.js\nM\tapp/agent-evidence-collector.test.js\nM\tapp/agent-execution-control.js\nM\tapp/agent-execution-control.test.js\nA\tapp/agent-security-boundaries.js\nA\tapp/agent-security-boundaries.test.js\nA\tapp/docs/AGENT_SECURITY_TRUST_BOUNDARIES.md\nM\tapp/package.json\nM\tapp/project-control.js\nM\tapp/project-control.test.js\nM\tapp/server.js\nM\tapp/supervisor-control.js\n=== agent/bridge-observability ===\r\nCOMMITS_NOT_IN_PRIMARY\r\n358d199 (origin/agent/bridge-observability) Run CI on observability branch\n556baf1 Refine observability lane metrics\n3aaa4bc Add managed agent observability\nDIFF_STAT\r\n .github/workflows/test.yml              |   1 +\n app/README.md                           |   5 +\n app/agent-observability.js              | 530 ++++++++++++++++++++++++++++++++\n app/agent-observability.test.js         | 379 +++++++++++++++++++++++\n app/docs/AGENT_OBSERVABILITY_RUNBOOK.md | 164 ++++++++++\n app/package.json                        |   7 +-\n app/server.js                           | 231 +++++++++++++-\n 7 files changed, 1312 insertions(+), 5 deletions(-)\nCHANGED_FILES\r\nM\t.github/workflows/test.yml\nM\tapp/README.md\nA\tapp/agent-observability.js\nA\tapp/agent-observability.test.js\nA\tapp/docs/AGENT_OBSERVABILITY_RUNBOOK.md\nM\tapp/package.json\nM\tapp/server.js\n",
+      "stdout_bytes": 2419,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:03:15.174Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:03:15.161Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-six-delta-inspect-20260927-2122"
+    },
+    "request_id": "bridge-six-delta-inspect-20260927-2122",
+    "started_at": "2026-09-27T14:03:12.915Z",
+    "status": "completed"
+  },
+  "id": "bridge-six-delta-inspect-20260927-2122",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
