@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-queue-state-refresh-20260927-2342",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$st='E:\\WebAIBridge\\app\\data\\state.json'; if(Test-Path $st){$s=Get-Content $st -Raw|ConvertFrom-Json; foreach($id in @('2ba64468-e4e8-4272-b63e-e00e491b4ee4','949d8e95-6591-45b6-a5c3-a633bb28b120','28c0666c-dfde-43b3-856a-8581cfc65857','814c957a-efb7-4401-9675-bf7997fdc278')){$a=@($s.agentAssignments)|Where-Object{$_.id -eq $id}|Select-Object -First 1;if($a){Write-Output ('A|'+$id+'|state='+$a.state+'|target='+$a.targetChatId+'|dispatch='+$a.dispatchCount+'|diag='+$a.lastDiagnostic+'|current='+$a.currentHead+'|ci='+$a.ciConclusion)}}}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
