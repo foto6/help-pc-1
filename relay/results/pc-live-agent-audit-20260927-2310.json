@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$st='E:\\WebAIBridge\\app\\data\\state.json'; $ms='E:\\WebAIBridge\\app\\data\\managed-chat-status.json';\nif(Test-Path $st){$s=Get-Content $st -Raw|ConvertFrom-Json; foreach($a in @($s.agentAssignments)){ if($a.state -in @('queued','dispatching','running','awaiting_evidence','blocked')){Write-Output ('A|'+$a.id+'|state='+$a.state+'|target='+$a.targetChatId+'|repo='+$a.repository+'|branch='+$a.branch+'|dispatch='+$a.dispatchCount+'|diag='+$a.lastDiagnostic)}}}\nif(Test-Path $ms){$m=Get-Content $ms -Raw|ConvertFrom-Json; foreach($p in $m.chats.PSObject.Properties){$x=$p.Value; Write-Output ('C|'+$p.Name+'|name='+$x.name+'|gen='+$x.generating+'|high='+$x.highMode+'|err='+$x.lastError)}}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "A|53560f30-896e-497c-8a25-818e6836e0a2|state=blocked|target=chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e|repo=foto6/SpectraTrack|branch=agent/vnext-tracking|dispatch=0|diag=replacement_policy_unavailable\r\nA|9c4bd28a-4a77-4b52-9323-891ba30d676f|state=blocked|target=chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c|repo=foto6/WebAIBridge|branch=agent/bridge-integration|dispatch=0|diag=replacement_policy_unavailable\r\nA|2ba64468-e4e8-4272-b63e-e00e491b4ee4|state=queued|target=agent-pc-executor|repo=foto6/help-pc-1|branch=agent/pc-relay-hardening|dispatch=0|diag=active_generation\r\nA|cb7f85d3-226e-4c87-8be2-53ba473bc48d|state=blocked|target=chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c|repo=foto6/help-pc-2|branch=agent/pc-ops-gateway|dispatch=0|diag=replacement_policy_unavailable\r\nC|chat-6ab6703e-b760-83eb-ae7e-686637c7de67|name=A4|gen=False|high=False|err=\r\nC|chat-6ab66b08-a90c-83eb-80d8-a7567d24352d|name=SpectraTrack Agent Watch (secondary)|gen=False|high=False|err=\r\nC|chat-6ab67022-ae5c-83ed-a654-5dcc82c3b351|name=A2|gen=False|high=False|err=\r\nC|chat-6ab67031-7290-83eb-965e-8cd7c16b3504|name=A3|gen=False|high=False|err=\r\nC|chat-6ab67052-1ae8-83eb-b5bc-60ddae15aa6f|name=A5|gen=False|high=False|err=\r\nC|chat-6ab67007-81fc-83eb-94e1-9511ab086c08|name=A1|gen=False|high=False|err=\r\nC|chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c|name=SpectraTrack Round2 Watch|gen=False|high=True|err=\r\nC|chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e|name=SpectraTrack Agent Watch (supervisor)|gen=False|high=True|err=\r\nC|agent-webbridge-dev|name=WebAIBridge Dev|gen=False|high=False|err=\r\nC|agent-pc-executor|name=PC Executor|gen=True|high=True|err=\r\nC|agent-vision|name=Vision|gen=False|high=True|err=\r\n",
+      "stdout_bytes": 1678,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T16:09:30.508Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T16:09:30.482Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-live-agent-audit-20260927-2310"
+    },
+    "request_id": "pc-live-agent-audit-20260927-2310",
+    "started_at": "2026-09-27T16:09:29.716Z",
+    "status": "completed"
+  },
+  "id": "pc-live-agent-audit-20260927-2310",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
