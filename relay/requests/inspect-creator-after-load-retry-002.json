@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "inspect-creator-after-load-retry-002",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$xs=Invoke-RestMethod 'http://127.0.0.1:17410/json/list'; $t=$xs|Where-Object {$_.url -like '*6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6*'}|Select-Object -First 1; if(-not $t){Write-Error 'target_not_found'; exit 3}; Set-Location E:\\WebAIBridge\\app\\data; node .\\inspect_target.js $($t.id)"
+    ],
+    "cwd": "E:\\WebAIBridge\\app\\data"
+  },
+  "timeout_ms": 12000,
+  "note": "Inspect Creator after conversation-load retry."
+}
