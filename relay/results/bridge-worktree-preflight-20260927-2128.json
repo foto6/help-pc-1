@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$r='E:\\WebAIBridge'; Write-Output ('TARGET_EXISTS|'+(Test-Path 'C:\\agentwork\\WebAIBridge-integration-final')); git -C $r worktree list --porcelain"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "TARGET_EXISTS|False\r\nworktree E:/WebAIBridge\nHEAD 28fef7aa556a49a933d9a2ae73fc033c262ffa7e\nbranch refs/heads/agent/webbridge-dev\n\nworktree E:/WebAIBridge-observability\nHEAD 358d1991b47f2019d7eb0d5bfdff77aae0be83d1\ndetached\n\nworktree E:/WebAIBridge-worktrees/bridge-assignment-chaos\nHEAD 26bb4ed00ee8f658c162526a1ee923782a2a19b4\nbranch refs/heads/agent/bridge-assignment-chaos\n\nworktree E:/WebAIBridge-worktrees/bridge-evidence-engine\nHEAD 26bb4ed00ee8f658c162526a1ee923782a2a19b4\nbranch refs/heads/agent/bridge-evidence-engine\n\nworktree E:/WebAIBridge-worktrees/bridge-live-deploy\nHEAD 40d99b96314c663fae0c6e35d6ae0fdea38a3dc7\nbranch refs/heads/agent/bridge-live-deploy\n\nworktree E:/WebAIBridge-worktrees/bridge-rate-limit-recovery\nHEAD 26bb4ed00ee8f658c162526a1ee923782a2a19b4\nbranch refs/heads/agent/bridge-rate-limit-recovery\n\nworktree E:/WebAIBridge-worktrees/bridge-security-boundaries\nHEAD 7027510e3577741f0fa9e7f507910445ce5578da\nbranch refs/heads/agent/bridge-security-boundaries\n\n",
+      "stdout_bytes": 989,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:04:18.378Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:04:18.364Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-worktree-preflight-20260927-2128"
+    },
+    "request_id": "bridge-worktree-preflight-20260927-2128",
+    "started_at": "2026-09-27T14:04:18.024Z",
+    "status": "completed"
+  },
+  "id": "bridge-worktree-preflight-20260927-2128",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
