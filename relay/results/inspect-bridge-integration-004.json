@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "shell execution timed out",
+    "error_kind": "timeout",
+    "finished_at": "2026-09-27T14:18:43.669Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "unknown",
+      "observed_at": "2026-09-27T14:18:43.648Z",
+      "reason": "timeout",
+      "reconciliation_required": true,
+      "reexecution_safe": false,
+      "request_id": "inspect-bridge-integration-004"
+    },
+    "request_id": "inspect-bridge-integration-004",
+    "started_at": "2026-09-27T14:18:28.572Z",
+    "status": "timeout"
+  },
+  "id": "inspect-bridge-integration-004",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
