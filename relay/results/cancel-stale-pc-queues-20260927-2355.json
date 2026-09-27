@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "foreach($id in @('949d8e95-6591-45b6-a5c3-a633bb28b120','28c0666c-dfde-43b3-856a-8581cfc65857')){ try{$r=Invoke-RestMethod -Method Post -Uri ('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/'+$id+'/cancel') -TimeoutSec 5; Write-Output ('CANCEL|'+$id+'|'+$r.state)}catch{Write-Output ('ERR|'+$id+'|'+$_.Exception.Message)} }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "CANCEL|949d8e95-6591-45b6-a5c3-a633bb28b120|cancelled\r\nCANCEL|28c0666c-dfde-43b3-856a-8581cfc65857|cancelled\r\n",
+      "stdout_bytes": 110,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T16:19:56.250Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T16:19:56.219Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "cancel-stale-pc-queues-20260927-2355"
+    },
+    "request_id": "cancel-stale-pc-queues-20260927-2355",
+    "started_at": "2026-09-27T16:19:55.789Z",
+    "status": "completed"
+  },
+  "id": "cancel-stale-pc-queues-20260927-2355",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
