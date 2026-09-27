@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "findstr /n /c:\"<<<<<<< HEAD\" C:\\agentwork\\WebAIBridge-integration-final\\app\\agent-execution-control.js & findstr /n /c:\"<<<<<<< HEAD\" C:\\agentwork\\WebAIBridge-integration-final\\app\\server.js & findstr /n /c:\"<<<<<<< HEAD\" C:\\agentwork\\WebAIBridge-integration-final\\app\\supervisor-control.js"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "FINDSTR: �� ������� ������� HEAD\"\r\nFINDSTR: �� ������� ������� HEAD\"\r\nFINDSTR: �� ������� ������� HEAD\"\r\n",
+      "stderr_bytes": 105,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:16:30.663Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:16:30.646Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-security-marker-lines-20260927-2158"
+    },
+    "request_id": "bridge-security-marker-lines-20260927-2158",
+    "started_at": "2026-09-27T14:16:30.412Z",
+    "status": "completed"
+  },
+  "id": "bridge-security-marker-lines-20260927-2158",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
