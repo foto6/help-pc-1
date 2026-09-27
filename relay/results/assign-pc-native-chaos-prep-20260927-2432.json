@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$body=[Uri]::UnescapeDataString('%7B%22text%22%3A%22EXECUTE%20NOW%20%E2%80%94%20PC%20NATIVE%20CUTOVER%20CHAOS%20PREP.%20Independent%20validation%20only%3B%20do%20not%20modify%20primary%20gateway%20policy.%5Cn%5CnRepo%3A%20foto6%2Fhelp-pc-2%5CnBranch%3A%20agent%2Fpc-ops-chaos%5CnExpected%20HEAD%3A%2053bf83a63cb4137c5e41fbd06cd18863f890d730%5Cn%5CnGoal%3A%20prepare%20adversarial%20evidence%20for%20the%20upcoming%20native%20MCP%20cutover%20without%20duplicating%20pc-ops-gateway%20or%20mcp-gateway%20implementation.%5Cn%5CnRequired%3A%5Cn1.%20Extend%20chaos%20coverage%20for%20native%20structured%20operations%20across%20restart%2Freconnect%20boundaries%3A%20MCP%20disconnect%20after%20dispatch%2C%20Control%20Plane%20restart%2C%20Executor%20restart%2C%20stale%20context%20binding%2C%20duplicate%20request%20id%2C%20journal%20unknown%2C%20result%20lost%20after%20side%20effect%2C%20managed%20process%2Fsession%20reconnect%2C%20UI%20observation%20epoch%20change.%5Cn2.%20Prove%20fail-closed%20behavior%20and%20at-most-once%20side-effect%20semantics.%20No%20blind%20replay%20after%20unknown%20outcomes.%5Cn3.%20Add%20explicit%20tests%20that%20protected%20path%20E%3A%5C%5Cmanhwa%20is%20rejected%20before%20dispatch%20and%20never%20accessed.%5Cn4.%20Bind%20tests%20to%20exact%20current%20green%20producer%20heads%20where%20available%2C%20but%20do%20not%20claim%20migration%20readiness%3B%20this%20branch%20is%20validation%20only.%5Cn5.%20Produce%20deterministic%20chaos%20matrix%2Fprovenance%20and%20exact-head%20CI.%5Cn6.%20Push%20non-empty%20commit%20and%20report%20exact%20SHA%2BCI.%20No%20merge%2Frelease%2Fcutover.%22%2C%22repository%22%3A%22foto6%2Fhelp-pc-2%22%2C%22branch%22%3A%22agent%2Fpc-ops-chaos%22%2C%22expectedHead%22%3A%2253bf83a63cb4137c5e41fbd06cd18863f890d730%22%2C%22idempotencyKey%22%3A%22pc-only-native-chaos-prep-v1%22%2C%22evidenceTimeoutMinutes%22%3A120%2C%22priority%22%3A900%2C%22supervisorVerificationRequired%22%3Atrue%7D'); try{$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ab6703e-b760-83eb-ae7e-686637c7de67/assignments' -Method Post -ContentType 'application/json; charset=utf-8' -Body $body -TimeoutSec 10; Write-Output ('OK|id='+$r.id+'|state='+$r.state+'|chat='+$r.targetChatId)}catch{Write-Output ('ERR|'+$_.Exception.Message); exit 1}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "OK|id=31091def-1cb4-4431-9c58-a6e1b87b6a45|state=queued|chat=chat-6ab6703e-b760-83eb-ae7e-686637c7de67\r\n",
+      "stdout_bytes": 104,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:57:03.924Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:57:03.893Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "assign-pc-native-chaos-prep-20260927-2432"
+    },
+    "request_id": "assign-pc-native-chaos-prep-20260927-2432",
+    "started_at": "2026-09-27T15:57:03.459Z",
+    "status": "completed"
+  },
+  "id": "assign-pc-native-chaos-prep-20260927-2432",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
