@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "Select-String -Path 'E:\\WebAIBridge\\app\\server.js' -Pattern 'cancelManagedAgentTask|assignments/.+cancel|managed_assignment_cancelled' -Context 2,3 | ForEach-Object { $_.ToString() } | Select-Object -First 80"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "  E:\\WebAIBridge\\app\\server.js:14329:}\r\n  E:\\WebAIBridge\\app\\server.js:14330:\r\n> E:\\WebAIBridge\\app\\server.js:14331:function cancelManagedAgentTask(managedChatId, assignmentId) {\r\n  E:\\WebAIBridge\\app\\server.js:14332:  const assignment = (state.agentAssignments || []).find(item =>\r\n  E:\\WebAIBridge\\app\\server.js:14333:    item.id === String(assignmentId || '')\r\n  E:\\WebAIBridge\\app\\server.js:14334:    && item.targetChatId === String(managedChatId || ''));\r\n  E:\\WebAIBridge\\app\\server.js:15087:        json(res, 404, { error:'managed assignment not found' });\r\n  E:\\WebAIBridge\\app\\server.js:15088:      } else {\r\n> E:\\WebAIBridge\\app\\server.js:15089:        json(res, 200, cancelManagedAgentTask(assignment.targetChatId, assignment.id));\r\n  E:\\WebAIBridge\\app\\server.js:15090:      }\r\n  E:\\WebAIBridge\\app\\server.js:15091:      return;\r\n  E:\\WebAIBridge\\app\\server.js:15092:    }\r\n  E:\\WebAIBridge\\app\\server.js:15208:    if (managedTaskCancelMatch && req.method === 'POST') {\r\n  E:\\WebAIBridge\\app\\server.js:15209:      json(res, 410, {\r\n> E:\\WebAIBridge\\app\\server.js:15210:        error:'Legacy managed-agent task cancellation API is retired; use agent-assignments/:id/cancel.',\r\n  E:\\WebAIBridge\\app\\server.js:15211:        code:'legacy_managed_agent_execution_retired',\r\n  E:\\WebAIBridge\\app\\server.js:15212:      });\r\n  E:\\WebAIBridge\\app\\server.js:15213:      return;\r\n",
+      "stdout_bytes": 1381,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:34:36.390Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:34:36.368Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-cancel-route-20260927-2307"
+    },
+    "request_id": "bridge-cancel-route-20260927-2307",
+    "started_at": "2026-09-27T15:34:35.903Z",
+    "status": "completed"
+  },
+  "id": "bridge-cancel-route-20260927-2307",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
