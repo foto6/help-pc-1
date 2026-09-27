@@ -1,26 +1,48 @@
 # Integration contract: help-pc-2 / vision-2 -> PC Executor
 
-The upstream planner/vision component proposes intent plus selectors; PC Executor owns final local policy enforcement and side effects.
+The upstream planner/vision component proposes intent and selectors; PC Executor owns final local policy enforcement, deterministic target re-resolution, deadlines/cancellation, and side effects.
 
 ## Recommended loop
 
-1. screenshot.capture and/or windows.list to observe state.
+1. Use `screenshot.capture`, `windows.list`, and/or read-only `uia.snapshot` to observe current state.
 2. Vision/planner identifies a target.
-3. Prefer uia.inspect to verify the target by accessibility metadata.
-4. For `vision.grounded_target.v1`, use `vision.target.invoke`; it strictly validates the transport and re-resolves only by non-empty UIA `automation_id`.
-5. Use uia.invoke, uia.focus, or uia.set_value for non-Vision UIA actions when supported.
+3. Prefer `uia.inspect` to verify current accessibility metadata.
+4. For `vision.grounded_target.v1`, call `vision.target.invoke`. The frozen transport remains unchanged and the executor re-resolves only by non-empty UIA `automation_id`.
+5. Use `uia.invoke`, `uia.focus`, or `uia.set_value` for non-Vision UIA actions when supported.
 6. Re-observe after the action.
-7. Generic coordinate fallback remains a separately gated `mouse.click` capability; `vision.target.invoke` never uses target coordinates or the raw input adapter.
+7. Generic coordinate fallback remains separately gated. `vision.target.invoke` never uses `bounds_screen` or `click_point_screen` for input.
+
+## Observation correlation
+
+Screenshot results include `capture_id`, width/height, display geometry, `coordinate_space="physical_screen_px"`, and SHA-256. UIA snapshots include a stable snapshot id, capture time, app/window identity, display geometry, per-node physical bounds, display id, window/process correlation and deterministic JSON.
+
+Consumers must treat observation ids/timestamps as provenance. A later action should be based on a fresh observation when the UI can change.
+
+## Failure and retry contract
+
+Every failed action includes `error_kind`.
+
+| error_kind | Meaning | Retry guidance |
+|---|---|---|
+| transient | runtime condition may clear | bounded retry after re-observation |
+| stale_target | selector no longer resolves | re-observe and re-ground |
+| ambiguous_target | selector resolves to multiple controls | refine selector; do not guess |
+| policy_blocked | safety/capability boundary | do not auto-retry around policy |
+| timeout | bounded operation deadline expired | re-observe before bounded retry |
+| cancelled | caller cancelled work | do not auto-retry |
+| executor_failure | unexpected adapter/runtime failure | diagnose; retry only with evidence |
+
+Round-1 status compatibility is preserved: policy blocks return `status="blocked"`; unexpected executor failures return `status="error"`.
 
 ## Boundary rules
 
-- Upstream components must not send credentials, secrets, authentication codes, CAPTCHA answers, or password-field content.
-- The executor does not expose a CAPTCHA action and rejects sensitive/password value entry.
-- Upstream must treat blocked as a policy decision, not a transient failure to retry around.
-- Upstream may retry error only after re-observation or selector refinement.
-- shell.run must use an argv array; shell command strings are not accepted.
-- No upstream component may request access to E:\manhwa; PC Executor rejects the protected path regardless.
+- Do not send credentials, secrets, authentication codes, CAPTCHA answers, or password-field content.
+- Non-actionable UIA controls are policy blocked; the executor does not silently synthesize a click.
+- `shell.run` accepts argv arrays only; shell command strings are not accepted.
+- `E:\manhwa` is protected regardless of dry-run/live mode.
+- Coordinate fallback is disabled by default and must never be inferred from Vision target coordinates.
+- Use request `timeout_ms` for caller-specific tighter deadlines; cancellation is supplied out-of-band by embedding callers through `CancellationToken`.
 
 ## Audit correlation
 
-Preserve a stable request_id from planner -> executor -> telemetry. Each request emits start and finish audit events carrying action name, dry-run state, outcome and non-sensitive result metadata. Text bodies are intentionally excluded from audit details.
+Preserve a stable `request_id` from planner -> executor -> telemetry. Each request emits start/finish events carrying action, dry-run state, outcome and non-sensitive result metadata. Text bodies are intentionally excluded.
