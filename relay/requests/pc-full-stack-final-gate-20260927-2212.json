@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-full-stack-final-gate-20260927-2212",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$checks=@(\n  @{repo='foto6/help-pc-1';branch='agent/pc-relay-hardening'},\n  @{repo='foto6/help-pc-2';branch='agent/pc-ops-gateway'}\n); foreach($c in $checks){ Write-Output ('CHECK|'+$c.repo+'|'+$c.branch); gh run list --repo $c.repo --branch $c.branch --limit 1 --json databaseId,headSha,status,conclusion,workflowName,createdAt 2>&1 }"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
