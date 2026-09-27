@@ -1,0 +1,53 @@
+EXECUTE NOW — PC RELAY HARDENING / PRODUCTION TRANSPORT. Do not acknowledge readiness.
+
+Repository: foto6/help-pc-1
+Branch: agent/pc-relay-hardening
+Base/current expected HEAD: 2cc1e40f792a3d74560b726a0d246c90b7f077e9
+Do not modify agent/pc-executor or the currently-running agent/pc-github-relay branch.
+
+Context:
+A functional emergency transport is live today:
+ChatGPT -> private GitHub queue -> local pc_executor.Executor -> PowerShell/UIA -> result commit.
+The prototype implementation/history is on agent/pc-github-relay. It proved live shell.run works, but that branch mixes implementation commits with request/result traffic and currently has no exact-head CI because runtime result commits continuously move the branch.
+
+Goal:
+Build a clean, production-grade relay transport without weakening Executor safety and without interrupting the currently running prototype.
+
+Required:
+1. Re-read current pc-executor architecture/contracts and prototype relay implementation/history. Reuse logic; do not duplicate Executor policy.
+2. Separate immutable relay IMPLEMENTATION from mutable QUEUE traffic:
+   - agent/pc-relay-hardening contains code/tests/docs only;
+   - design a dedicated queue ref/worktree/protocol that can advance independently without invalidating implementation CI provenance.
+3. Preserve at-most-once/reconciliation semantics:
+   - immutable request IDs;
+   - durable local state;
+   - outcome journal lookup after uncertain side-effect boundary;
+   - never blind replay when outcome is unknown/completed.
+4. Transport safety:
+   - strict versioned request/result schemas;
+   - bounded action allowlist;
+   - protected E:\manhwa remains unreachable;
+   - credential/CAPTCHA entry remains forbidden;
+   - raw coordinate fallback remains off;
+   - output/time bounds;
+   - no secrets committed.
+5. PowerShell/cmd allowance must remain transport-local and explicit; do not silently widen DEFAULT_SAFE_EXECUTABLES for all pc-executor users.
+6. Clean shutdown/restart, queue sync conflict handling, fast-forward/force-push detection, malformed request quarantine, duplicate request/result conflict handling.
+7. Add health/status heartbeat that is read-only and lets the coordinator distinguish: relay alive / queue reachable / executor available / last processed request / current implementation SHA.
+8. Test fault matrix:
+   - crash before dispatch;
+   - crash after dispatch-start before result;
+   - crash after executor completion before queue push;
+   - Git commit failure;
+   - Git push rejection;
+   - concurrent queue update;
+   - malformed JSON/schema/version;
+   - duplicate ID with different content;
+   - result already published;
+   - protected path attempt;
+   - PowerShell stdout/stderr truncation.
+9. CI must run exact-head tests. Include Windows where live-path semantics matter and portable unit tests elsewhere if current workflow supports both.
+10. Produce migration instructions from the currently-running prototype to hardened relay with zero loss of already-published results. DO NOT perform that migration yourself.
+11. Never touch E:\manhwa. No merge/release.
+
+Final evidence: exact SHA, CI run/conclusion, protocol/schema hashes, fault-matrix counts, and migration checklist.
