@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-managed-state-20260927-2233",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$cfg='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; $st='E:\\WebAIBridge\\app\\data\\state.json'; if(Test-Path $cfg){$c=Get-Content $cfg -Raw|ConvertFrom-Json; foreach($m in @($c.managedChats)){Write-Output ('CHAT|'+$m.id+'|'+$m.name+'|repo='+$m.repository+'|branch='+$m.branch+'|enabled='+$m.enabled+'|profile='+$m.profileId)}} else {Write-Output 'NO_CONFIG'}; if(Test-Path $st){$s=Get-Content $st -Raw|ConvertFrom-Json; foreach($a in @($s.agentAssignments)){Write-Output ('ASSIGN|'+$a.id+'|chat='+$a.targetChatId+'|state='+$a.state+'|repo='+$a.repository+'|branch='+$a.branch+'|expected='+$a.expectedHead+'|current='+$a.currentHead+'|ci='+$a.ciConclusion+'|diag='+$a.lastDiagnostic)}} else {Write-Output 'NO_STATE'}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
