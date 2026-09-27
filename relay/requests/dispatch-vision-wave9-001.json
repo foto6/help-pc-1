@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "dispatch-vision-wave9-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$xs=Invoke-RestMethod 'http://127.0.0.1:17410/json/list'; $t=$xs|Where-Object {$_.url -like '*6ab8b66d-c874-83eb-a448-594292c17d59*'}|Select-Object -First 1; if(-not $t){Write-Error 'target_not_found'; exit 3}; Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=$($t.id) --prompt=E:\\pc-github-relay\\relay\\prompts\\vision-wave9-action-effect.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Dispatch Vision Wave9 action-effect evidence."
+}
