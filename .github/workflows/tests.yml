@@ -29,6 +29,6 @@ jobs:
       - name: Native remote transport harness
         run: python tools/native_remote_harness.py
       - name: Native remote Executor adapter suite
-        run: python -m pytest tests/test_native_remote_executor_adapter.py
+        run: python -m pytest tests/test_native_remote_executor_adapter.py tests/test_native_remote_executor_adapter_recovery.py
       - name: Full test suite
         run: python -m pytest
