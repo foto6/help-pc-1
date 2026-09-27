@@ -1,0 +1,22 @@
+EXECUTE NOW — A2 CANONICAL CONTIGUOUS TRACKING REPLAY PACK FOR A8. Do not acknowledge readiness.
+
+Repository: foto6/SpectraTrack
+Branch: agent/vnext-tracking
+Expected current HEAD: d73b5d5a8268586ee963df9de901d3fd6ff6fcca
+Preserve the current tracker as CONTROL and the prior current-ambiguity-guard REJECT decision.
+
+Problem:
+A8 perf↔tracking gate @ d4a1f061b0d2f4303d418cbf6a51eb14c2e13d87 is CI green but cannot score quality because the exact canonical replay/GT payload bytes required to reproduce A2's 400-frame contiguous windows are not committed.
+
+Required:
+1. Publish a deterministic canonical replay pack for the EXACT existing A2 smoke windows only: MOT17-04 frames 0-199 and 400-599 (or the exact already-frozen indices if represented differently). Never use NightOwls for tracking.
+2. Include the minimum replay/GT/observation payload needed for an independent research consumer to run candidate schedules and recompute:
+   tracking recall, ID switches, fragmentation, false track creation, recovery events/latency, same-ID/wrong-ID recovery, mean uninterrupted length; detector discovery/FN evidence where legitimately available.
+3. If raw images are too large for Git, commit deterministic extraction/build tooling + exact source identifiers/hashes and a canonical compact derived payload sufficient for offline replay. No external mutable URLs as the sole provenance.
+4. Re-run CONTROL from the pack and prove metrics equal the already committed A2 control within exact/predeclared tolerance. Do not change tracker thresholds or candidate logic.
+5. Manifest with file hashes, frame order, reset boundaries, source corpus identity, schema version and consumer instructions for A8.
+6. Property tests: ordering sensitivity where appropriate, duplicate/missing frame rejection, wrong sequence/GT hash rejection, reset-boundary enforcement.
+7. Do not score A8 candidates yourself. This task only makes quality replay reproducible.
+8. Commit/push only agent/vnext-tracking; exact-head CI required. No merge/release; never touch E:\manhwa.
+
+Final: exact SHA + CI + replay manifest SHA + control reproduction evidence.
