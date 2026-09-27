@@ -7,6 +7,7 @@ on:
       - agent/pc-native-tool-parity
       - agent/pc-native-full-stack
       - agent/pc-native-full-parity-gaps
+      - agent/pc-native-core-final-candidate
   workflow_dispatch:
 
 jobs:
@@ -25,14 +26,20 @@ jobs:
           python-version: "3.11"
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e ".[test]"
-      - name: Canonical full-stack provenance and diff audit
-        run: python tools/audit_full_stack_integration.py
+      - name: Final PC Core provenance and registry audit
+        run: python tools/audit_native_core_final_candidate.py
       - name: Wave 6 focused preflight suite
         run: python -m pytest tests/test_preflight.py
       - name: Wave 7 focused context-binding suite
         run: python -m pytest tests/test_execution_context_binding.py
       - name: Native desktop parity focused suite
         run: python -m pytest tests/test_pc_operations.py tests/test_native_tool_parity.py tests/test_native_full_parity_gaps.py
+      - name: Stateful search focused suite
+        run: python -m pytest tests/test_search_sessions.py
+      - name: Windows device service focused suite
+        run: python -m pytest tests/test_native_device_service.py
+      - name: Registry policy and direct parity suite
+        run: python -m pytest tests/test_native_core_registry_policy.py tests/test_native_stack_integration.py
       - name: Native schema reproducibility
         shell: bash
         run: |
@@ -40,7 +47,7 @@ jobs:
           git diff --exit-code -- schemas/
       - name: Windows native adapter suite
         if: runner.os == 'Windows'
-        run: python -m pytest tests/windows/test_native_windows_ops.py
+        run: python -m pytest tests/windows/test_native_windows_ops.py tests/windows/test_search_sessions_windows.py
       - name: Native remote transport focused suite
         run: python -m pytest tests/test_native_remote_transport.py tests/test_remote_protocol.py
       - name: Native remote transport harness

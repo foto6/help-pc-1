@@ -21,6 +21,7 @@ from pc_executor.outcome_journal import OutcomeJournal
 from pc_remote_transport import (
     DeviceAgent,
     ExecutorRemoteDispatcher,
+    PARITY_TOOL_REGISTRY_V1,
     RequestLedger,
     StreamAssembler,
     TokenMaterial,
@@ -149,6 +150,7 @@ class TransportHarness:
         arguments: dict | None = None,
         *,
         side_effecting: bool = False,
+        registry_version: str | None = None,
     ) -> tuple[dict, bytes | None]:
         assert self.relay is not None
         self.sequence += 1
@@ -159,6 +161,8 @@ class TransportHarness:
             "tool": tool,
             "arguments": arguments or {},
         }
+        if registry_version is not None:
+            body["registry_version"] = registry_version
         await self.relay.send(
             encode_frame(
                 device_id="device-1",
@@ -237,9 +241,11 @@ def test_real_executor_manifest_advertises_parity_operations(tmp_path: Path) -> 
         "search.stop",
     }
     assert required <= advertised
-    registry_tools = {item["name"] for item in manifest["tools"]}
+    registry_tools = {
+        item["name"] for item in manifest["internal_registry"]["tools"]
+    }
     assert {"search.start", "search.read", "search.list", "search.stop"} <= registry_tools
-    assert manifest["executor"]["operations_digest"] == (
+    assert manifest["executor"]["digest"] == (
         executor.operations.capabilities_snapshot()["attestation"]["digest"]
     )
 
@@ -372,6 +378,7 @@ async def test_real_search_lifecycle_traverses_transport_adapter_executor(tmp_pa
                 "max_results": 20,
             },
             side_effecting=True,
+            registry_version=PARITY_TOOL_REGISTRY_V1,
         )
         assert started["status"] == "completed"
         search_id = started["data"]["search_id"]
@@ -382,6 +389,7 @@ async def test_real_search_lifecycle_traverses_transport_adapter_executor(tmp_pa
                 f"search-read-real-{index}",
                 "search.read",
                 {"search_id": search_id, "offset": 0, "length": 100},
+                registry_version=PARITY_TOOL_REGISTRY_V1,
             )
             assert read["status"] == "completed"
             assert stream is not None
@@ -399,6 +407,7 @@ async def test_real_search_lifecycle_traverses_transport_adapter_executor(tmp_pa
             "search-list-real-1",
             "search.list",
             {},
+            registry_version=PARITY_TOOL_REGISTRY_V1,
         )
         assert listed["status"] == "completed"
         assert [item["search_id"] for item in listed["data"]["searches"]] == [search_id]
@@ -408,6 +417,7 @@ async def test_real_search_lifecycle_traverses_transport_adapter_executor(tmp_pa
             "search.stop",
             {"search_id": search_id},
             side_effecting=True,
+            registry_version=PARITY_TOOL_REGISTRY_V1,
         )
         assert stopped["status"] == "completed"
         assert stopped["data"]["already_finished"] is True
@@ -416,6 +426,7 @@ async def test_real_search_lifecycle_traverses_transport_adapter_executor(tmp_pa
             "search-read-final-real-1",
             "search.read",
             {"search_id": search_id, "offset": -1, "length": 100},
+            registry_version=PARITY_TOOL_REGISTRY_V1,
         )
         assert final["status"] == "completed"
         assert len(final["data"]["results"]) == 1

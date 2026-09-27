@@ -41,8 +41,10 @@ capability digest fails closed with `STALE_SEARCH_HANDLE`. `search.list`
 filters out handles from other epochs/digests. `search.stop` does not close the
 handle, so final results remain readable for the native retention window.
 
-The hello manifest advertises the native search actions through the current
-operations capability snapshot and pins the evolved tool-registry digest.
+The hello manifest advertises search through the exact current operations
+capability snapshot and the separate `pc.native.parity_tool_registry.v1`.
+The older `pc.native.tool_registry.v1` compatibility digest remains frozen
+and is not reinterpreted as the parity registry digest.
 
 ## Verification
 

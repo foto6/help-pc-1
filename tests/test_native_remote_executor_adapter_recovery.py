@@ -5,6 +5,22 @@ import json
 
 import pytest
 
+from pc_executor.operations import (
+    CURSOR_VERSION,
+    LOG_CURSOR_VERSION,
+    NATIVE_CAPABILITIES_VERSION,
+    NATIVE_REQUEST_VERSION,
+    NATIVE_RESULT_VERSION,
+    NATIVE_TOOL_PARITY_VERSION,
+    OPS_ACTIONS,
+    OPS_CAPABILITIES_VERSION,
+    OPS_CONTEXT_VERSION,
+    OPS_PREFLIGHT_VERSION,
+    OPS_SIDE_EFFECT_ACTIONS,
+    PROCESS_HANDLE_VERSION,
+    SEARCH_CURSOR_VERSION,
+)
+from pc_executor.search_sessions import SEARCH_SESSION_VERSION
 from pc_remote_transport import (
     DeviceAgent,
     ExecutorRemoteDispatcher,
@@ -20,12 +36,50 @@ from pc_remote_transport.protocol import FRAME_VERSION, decode_frame, digest_jso
 _SENTINEL = object()
 
 
+class SpyOperations:
+    def __init__(self) -> None:
+        self.digest = "p" * 64
+
+    def capabilities_snapshot(self) -> dict:
+        return {
+            "contract_version": OPS_CAPABILITIES_VERSION,
+            "operations_contract_version": "pc_executor.ops.v1",
+            "native_tool_parity_version": NATIVE_TOOL_PARITY_VERSION,
+            "schema_versions": {
+                "request": NATIVE_REQUEST_VERSION,
+                "result": NATIVE_RESULT_VERSION,
+                "capabilities": NATIVE_CAPABILITIES_VERSION,
+                "preflight": OPS_PREFLIGHT_VERSION,
+                "execution_context": OPS_CONTEXT_VERSION,
+                "stream_cursor": CURSOR_VERSION,
+                "log_cursor": LOG_CURSOR_VERSION,
+                "search_cursor": SEARCH_CURSOR_VERSION,
+                "search_session": SEARCH_SESSION_VERSION,
+                "process_handle": PROCESS_HANDLE_VERSION,
+            },
+            "actions": {
+                action: {
+                    "supported": True,
+                    "side_effecting": action in OPS_SIDE_EFFECT_ACTIONS,
+                    "tool_contract_version": NATIVE_TOOL_PARITY_VERSION,
+                }
+                for action in sorted(OPS_ACTIONS)
+            },
+            "safety": {},
+            "attestation": {
+                "algorithm": "sha256",
+                "digest": self.digest,
+            },
+        }
+
+
 class OutcomeSpyExecutor:
     def __init__(self) -> None:
         self.digest = "d" * 64
         self.outcome_journal = object()
         self.execute_calls = 0
         self.completed_requests: set[tuple[str, str]] = set()
+        self.operations = SpyOperations()
 
     def capabilities_snapshot(self) -> dict:
         return {
@@ -219,8 +273,10 @@ async def test_device_hello_contains_exact_executor_digest(tmp_path) -> None:
     advertised = hello["payload"]["capabilities"]
     assert advertised["protocol_version"] == NATIVE_CONTROL_PROTOCOL_V1
     assert advertised["registry_digest"] == TOOL_REGISTRY_DIGEST
-    assert advertised["executor"]["contract_version"] == "pc_executor.capabilities.v1"
-    assert advertised["executor"]["digest"] == executor.digest
+    assert advertised["executor"]["contract_version"] == OPS_CAPABILITIES_VERSION
+    assert advertised["executor"]["digest"] == executor.operations.digest
+    assert advertised["tool_parity"]["native_tool_parity_version"] == NATIVE_TOOL_PARITY_VERSION
+    assert advertised["compatibility"]["legacy_executor"]["digest"] == executor.digest
     assert hello["payload"]["capabilities_digest"] == digest_json(advertised)
 
     task.cancel()

@@ -22,9 +22,11 @@ Not carried:
 - relay queue/history files;
 - any `tools/github_relay.py` RPC dependency.
 
-The provider-neutral registry semantics are `pc.native.control.v1` / `pc.native.tool_registry.v1`. This full-stack search candidate extends the registry with `search.start`, `search.read`, `search.list`, and `search.stop`; the resulting registry digest is:
+The provider-neutral compatibility registry remains `pc.native.tool_registry.v1` with its frozen digest:
 
-`6d8f150c2c2edb188581f8ecd2989c31db2591dd4232aa48f09e2a7b849417e3`
+`58b2bde8c6a49825747dcd7010f105dad0b6d548c7e8341cdafb32d2319f6dcd`
+
+New native parity actions, including stateful search and parity-gap primitives, are exposed through the separate versioned `pc.native.parity_tool_registry.v1`. The compatibility digest is never silently redefined.
 
 ## Capability and session binding
 
@@ -52,12 +54,10 @@ Streaming tool results are projected into bounded bytes and handed back to the e
 
 Arguments resolving to `E:\\manhwa` or descendants are rejected as `PROTECTED_PATH_BLOCKED` before Executor preflight or execution. Tests use only path strings/spies and do not access that location. This adapter guard is additive; it does not replace Executor policy.
 
-## Canonical topology audit
+## Final candidate audit
 
-`tools/audit_canonical_remote_executor_integration.py` runs in both CI matrix jobs. It proves that:
-
-- the canonical base is the sole parent of the integration commit;
-- old relay commit `992c66335c9e6c40d150bc10c086e97ea7600d48` and old transport commit `8df29aad32a6cb142dff6721f92fca74a080e441` are not ancestors of the new head;
-- no `src/pc_executor/**`, `tools/github_relay.py`, or `relay/**` path is changed;
-- the five carried adapter/hook/test blobs are byte-identical to the source candidate;
-- the diff passes `git diff --check`.
+The historical adapter audit is superseded on the final PC Core candidate by
+`tools/audit_native_core_final_candidate.py`. The final audit keeps the old-relay
+non-ancestry and diff checks, while also tracking the intentional stateful-search
+Executor/schema delta, Windows service overlay, direct parity registry invariants,
+frozen compatibility digest, and the complete 30-tool acceptance mapping.

@@ -16,12 +16,29 @@ from pc_executor.fakes import (
     ReplayUIAAdapter,
     ReplayWindowEnumerator,
 )
+from pc_executor.operations import (
+    CURSOR_VERSION,
+    LOG_CURSOR_VERSION,
+    NATIVE_CAPABILITIES_VERSION,
+    NATIVE_REQUEST_VERSION,
+    NATIVE_RESULT_VERSION,
+    NATIVE_TOOL_PARITY_VERSION,
+    OPS_ACTIONS,
+    OPS_CAPABILITIES_VERSION,
+    OPS_CONTEXT_VERSION,
+    OPS_PREFLIGHT_VERSION,
+    OPS_SIDE_EFFECT_ACTIONS,
+    PROCESS_HANDLE_VERSION,
+    SEARCH_CURSOR_VERSION,
+)
+from pc_executor.search_sessions import SEARCH_SESSION_VERSION
 from pc_executor.outcome_journal import OutcomeJournal
 from pc_executor.shell import ShellResult
 from pc_remote_transport import (
     DeviceAgent,
     ExecutorRemoteDispatcher,
     NATIVE_CONTROL_PROTOCOL_V1,
+    PARITY_TOOL_REGISTRY_V1,
     RequestLedger,
     StaleEpochError,
     StreamAssembler,
@@ -33,7 +50,7 @@ from pc_remote_transport.executor_adapter import TOOL_REGISTRY_DIGEST
 from pc_remote_transport.protocol import FRAME_VERSION, decode_frame, digest_json, encode_frame
 
 
-EXPECTED_HELP_PC_2_REGISTRY_DIGEST = "6d8f150c2c2edb188581f8ecd2989c31db2591dd4232aa48f09e2a7b849417e3"
+EXPECTED_HELP_PC_2_REGISTRY_DIGEST = "58b2bde8c6a49825747dcd7010f105dad0b6d548c7e8341cdafb32d2319f6dcd"
 _SENTINEL = object()
 
 
@@ -52,6 +69,43 @@ class StaticContextObserver:
         return CwdIdentity("1" * 64, 7, 11)
 
 
+class SpyOperations:
+    def __init__(self) -> None:
+        self.digest = "d" * 64
+
+    def capabilities_snapshot(self) -> dict:
+        return {
+            "contract_version": OPS_CAPABILITIES_VERSION,
+            "operations_contract_version": "pc_executor.ops.v1",
+            "native_tool_parity_version": NATIVE_TOOL_PARITY_VERSION,
+            "schema_versions": {
+                "request": NATIVE_REQUEST_VERSION,
+                "result": NATIVE_RESULT_VERSION,
+                "capabilities": NATIVE_CAPABILITIES_VERSION,
+                "preflight": OPS_PREFLIGHT_VERSION,
+                "execution_context": OPS_CONTEXT_VERSION,
+                "stream_cursor": CURSOR_VERSION,
+                "log_cursor": LOG_CURSOR_VERSION,
+                "search_cursor": SEARCH_CURSOR_VERSION,
+                "search_session": SEARCH_SESSION_VERSION,
+                "process_handle": PROCESS_HANDLE_VERSION,
+            },
+            "actions": {
+                action: {
+                    "supported": True,
+                    "side_effecting": action in OPS_SIDE_EFFECT_ACTIONS,
+                    "tool_contract_version": NATIVE_TOOL_PARITY_VERSION,
+                }
+                for action in sorted(OPS_ACTIONS)
+            },
+            "safety": {},
+            "attestation": {
+                "algorithm": "sha256",
+                "digest": self.digest,
+            },
+        }
+
+
 class SpyExecutor:
     def __init__(self, actions: dict[str, bool]) -> None:
         self.actions = dict(actions)
@@ -64,6 +118,7 @@ class SpyExecutor:
         self.unknown_actions: set[str] = set()
         self.prior_requests: set[tuple[str, str]] = set()
         self.binding_calls = 0
+        self.operations = SpyOperations()
 
     def capabilities_snapshot(self) -> dict:
         return {
@@ -86,13 +141,18 @@ class SpyExecutor:
         request = payload["request"]
         action = request["action"]
         supported = action in self.actions
+        digest = (
+            self.operations.digest
+            if action in OPS_ACTIONS
+            else self.digest
+        )
         return {
             "contract_version": "pc_executor.action_preflight.v1",
             "request_id": request["request_id"],
             "action": action,
             "status": "ready" if supported else "unsupported",
             "executable": supported,
-            "capabilities_digest": self.digest,
+            "capabilities_digest": digest,
             "deadline_budget_ms": 5000,
             "reasons": [],
             "target": None,
@@ -218,6 +278,7 @@ def envelope(
     session_id: str = "control-session-1",
     execution_context: dict | None = None,
     page: dict | None = None,
+    registry_version: str | None = None,
 ) -> dict:
     value = {
         "contract_version": NATIVE_CONTROL_PROTOCOL_V1,
@@ -226,6 +287,8 @@ def envelope(
         "tool": tool,
         "arguments": arguments or {},
     }
+    if registry_version is not None:
+        value["registry_version"] = registry_version
     if execution_context is not None:
         value["execution_context"] = execution_context
     if page is not None:
@@ -430,9 +493,9 @@ async def test_capability_drift_after_hello_is_rejected_before_preflight() -> No
 
 @pytest.mark.asyncio
 async def test_process_handle_is_bound_to_transport_epoch_and_process_output_streams() -> None:
-    executor = SpyExecutor({"process.start": True, "process.read": False})
+    executor = SpyExecutor({"process.start": True, "process.read_output": False})
     executor.results["process.start"] = {"process_handle": "proc-1"}
-    executor.results["process.read"] = {"stdout": "hello", "stderr": ""}
+    executor.results["process.read_output"] = {"stdout": "hello", "stderr": ""}
     dispatcher = ExecutorRemoteDispatcher(executor)
     context1 = manifest_context(dispatcher, epoch="epoch-process-1")
 
@@ -513,6 +576,7 @@ async def test_search_handle_binds_epoch_and_capability_digest_and_stop_keeps_re
             "search-start-1",
             "search.start",
             {"path": "C:/fixture", "pattern": "match", "search_type": "files"},
+            registry_version=PARITY_TOOL_REGISTRY_V1,
         ),
         transport_context=context1,
     )
@@ -525,6 +589,7 @@ async def test_search_handle_binds_epoch_and_capability_digest_and_stop_keeps_re
             "search-read-1",
             "search.read",
             {"search_id": "search:remote-1", "offset": 0, "length": 100},
+            registry_version=PARITY_TOOL_REGISTRY_V1,
         ),
         transport_context=context1,
     )
@@ -537,6 +602,7 @@ async def test_search_handle_binds_epoch_and_capability_digest_and_stop_keeps_re
             "search-stop-1",
             "search.stop",
             {"search_id": "search:remote-1"},
+            registry_version=PARITY_TOOL_REGISTRY_V1,
         ),
         transport_context=context1,
     )
@@ -549,6 +615,7 @@ async def test_search_handle_binds_epoch_and_capability_digest_and_stop_keeps_re
             "search-read-final",
             "search.read",
             {"search_id": "search:remote-1", "offset": -10, "length": 1},
+            registry_version=PARITY_TOOL_REGISTRY_V1,
         ),
         transport_context=context1,
     )
@@ -561,6 +628,7 @@ async def test_search_handle_binds_epoch_and_capability_digest_and_stop_keeps_re
             "search-read-stale-epoch",
             "search.read",
             {"search_id": "search:remote-1"},
+            registry_version=PARITY_TOOL_REGISTRY_V1,
         ),
         transport_context=manifest_context(dispatcher, epoch="epoch-search-0002"),
     )
@@ -576,6 +644,7 @@ async def test_search_handle_binds_epoch_and_capability_digest_and_stop_keeps_re
             "search-read-stale-digest",
             "search.read",
             {"search_id": "search:remote-1"},
+            registry_version=PARITY_TOOL_REGISTRY_V1,
         ),
         transport_context=changed_context,
     )
@@ -585,7 +654,11 @@ async def test_search_handle_binds_epoch_and_capability_digest_and_stop_keeps_re
     listed = await dispatcher.dispatch(
         request_version=NATIVE_CONTROL_PROTOCOL_V1,
         request_id="search-list-new-digest",
-        body=envelope("search-list-new-digest", "search.list"),
+        body=envelope(
+            "search-list-new-digest",
+            "search.list",
+            registry_version=PARITY_TOOL_REGISTRY_V1,
+        ),
         transport_context=changed_context,
     )
     assert listed.payload["status"] == "completed"

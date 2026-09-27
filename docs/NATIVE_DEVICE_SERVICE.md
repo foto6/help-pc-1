@@ -59,6 +59,12 @@ The bootstrap creates an isolated virtual environment under ProgramData, install
 current repository build into it, prompts for the token with hidden input, stores it as
 Windows LSA private data, configures SCM crash recovery, and starts the service.
 
+**Deployment blocker W3-B3:** this mutable-checkout install path is not an approved
+production release/install mechanism. Immutable artifact identity/hash/producer binding is
+being implemented in the separate packaging/security lane. Production deployment remains
+blocked on W3-B3; this service integration intentionally does not add a competing packaging
+design.
+
 ## CLI commands
 
     pc-native-device-service install

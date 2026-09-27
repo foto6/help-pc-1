@@ -240,6 +240,6 @@
     "bytes": "fs.read_bytes offset/max_bytes",
     "log": "log.tail or log.read_since cursor",
     "process": "process.read_output/shell.session.read cursor or tail_bytes",
-    "search": "fs.search cursor/max_results"
+    "search": "search.read offset/length over a search.start handle"
   }
 }

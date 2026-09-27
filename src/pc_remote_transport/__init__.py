@@ -14,6 +14,8 @@ from .executor_adapter import (
     NATIVE_CONTROL_PROTOCOL_V1,
     NATIVE_RESPONSE_V1,
     NATIVE_TOOL_REGISTRY_V1,
+    PARITY_TOOL_REGISTRY_V1,
+    PARITY_TOOL_REGISTRY_DIGEST,
     TOOL_REGISTRY_DIGEST,
 )
 from .ledger import LedgerRecord, RequestLedger
@@ -48,6 +50,8 @@ __all__ = [
     "NATIVE_CONTROL_PROTOCOL_V1",
     "NATIVE_RESPONSE_V1",
     "NATIVE_TOOL_REGISTRY_V1",
+    "PARITY_TOOL_REGISTRY_V1",
+    "PARITY_TOOL_REGISTRY_DIGEST",
     "TOOL_REGISTRY_DIGEST",
     "ReplayError",
     "RequestLedger",
