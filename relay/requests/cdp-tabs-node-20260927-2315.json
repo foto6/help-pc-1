@@ -1,0 +1,14 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "cdp-tabs-node-20260927-2315",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "node.exe",
+      "-e",
+      "const http=require('http');const ports=[17410,17447];let pending=ports.length;for(const p of ports){const req=http.get({host:'127.0.0.1',port:p,path:'/json/list',timeout:4000},res=>{let d='';res.on('data',c=>d+=c);res.on('end',()=>{try{for(const x of JSON.parse(d)){if(x.type==='page'&&/chatgpt\\.com/.test(x.url||''))console.log('TAB|'+p+'|'+(x.id||'')+'|'+String(x.title||'').replace(/\\s+/g,' ')+'|'+x.url)}}catch(e){console.log('ERR|'+p+'|parse')}if(--pending===0)process.exit(0)})});req.on('timeout',()=>{req.destroy();});req.on('error',e=>{console.log('ERR|'+p+'|'+e.message);if(--pending===0)process.exit(0)});}"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 15000
+}
