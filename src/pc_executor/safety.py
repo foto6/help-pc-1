@@ -27,6 +27,10 @@ DEFAULT_SAFE_EXECUTABLES = {
     "python.exe",
     "py",
     "py.exe",
+    "powershell",
+    "powershell.exe",
+    "pwsh",
+    "pwsh.exe",
 }
 
 
