@@ -333,7 +333,7 @@ def test_fault_force_push_detection_fails_closed(monkeypatch, tmp_path: Path) ->
         encoding="utf-8",
     )
     queue = GitQueue(tmp_path, queue_ref="agent/pc-relay-queue", metadata_path=metadata)
-    monkeypatch.setattr(queue, "_assert_clean", lambda: None)
+    monkeypatch.setattr(queue, "_prepare_clean_checkout", lambda: None)
     monkeypatch.setattr(queue, "_fetch", lambda: "2" * 40)
     monkeypatch.setattr(queue, "_is_ancestor", lambda older, newer: False)
 
