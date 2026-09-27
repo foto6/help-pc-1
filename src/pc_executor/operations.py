@@ -502,7 +502,7 @@ def _validate_ops_preflight_payload(value: Any) -> dict[str, Any]:
     request = value["request"]
     if not isinstance(request, Mapping):
         raise ValueError("ops.preflight request must be an object")
-    allowed = {"request_id", "action", "params", "timeout_ms"}
+    allowed = {"request_id", "action", "params", "dry_run", "timeout_ms"}
     required = {"request_id", "action", "params"}
     if set(request) - allowed or required - set(request):
         raise ValueError("ops.preflight request keys mismatch")
@@ -514,6 +514,9 @@ def _validate_ops_preflight_payload(value: Any) -> dict[str, Any]:
         raise ValueError(f"unsupported structured operation: {action}")
     if not isinstance(request["params"], Mapping):
         raise ValueError("ops.preflight params must be an object")
+    dry_run = request.get("dry_run")
+    if dry_run is not None and not isinstance(dry_run, bool):
+        raise ValueError("ops.preflight dry_run must be boolean or null")
     timeout = request.get("timeout_ms")
     if timeout is not None:
         _integer(timeout, "ops.preflight timeout_ms", minimum=1, maximum=120000)
@@ -521,6 +524,7 @@ def _validate_ops_preflight_payload(value: Any) -> dict[str, Any]:
         "request_id": request["request_id"],
         "action": action,
         "params": dict(request["params"]),
+        "dry_run": dry_run,
         "timeout_ms": timeout,
     }
 
