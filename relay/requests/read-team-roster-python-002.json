@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "read-team-roster-python-002",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json; p=r'E:\\WebAIBridge\\app\\data\\PERMANENT_TEAM_ROSTER.local.json'; d=json.load(open(p,encoding='utf-8')); keep={'bridge-primary','bridge-integration','pc-executor-primary','pc-control-primary','vision-primary','creator-primary','media-primary','growth-primary','team-coordinator','release-conformance','spectra-a1-detection','spectra-a2-tracking','spectra-a3-enhancement','spectra-a4-performance','spectra-a5-qa','spectra-a6-smoke-stats','spectra-a7-error-analysis','spectra-a8-perf-tracking'}; print(json.dumps([{k:a.get(k) for k in ('id','role','targetId','url','branch','lifecycle')} for a in d.get('agents',[]) if a.get('id') in keep],ensure_ascii=True))"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 10000,
+  "note": "Read selected canonical agent chat URLs with ASCII-safe output."
+}
