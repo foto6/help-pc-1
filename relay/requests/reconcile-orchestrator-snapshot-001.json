@@ -1,0 +1,12 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "reconcile-orchestrator-snapshot-001",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "orchestrator-local-snapshot-001",
+    "action": "shell.run",
+    "execution_attempt": 1
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only reconciliation of timed-out orchestration snapshot."
+}
