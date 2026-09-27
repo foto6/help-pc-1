@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$body=[Uri]::UnescapeDataString('%7B%22text%22%3A%22EXECUTE%20NOW%20%E2%80%94%20PC%20OPS%20MIGRATION%20GATE%20REFRESH.%20Do%20not%20acknowledge%20readiness%3B%20produce%20durable%20evidence.%5Cn%5CnRepo%3A%20foto6%2Fhelp-pc-2%5CnBranch%3A%20agent%2Fpc-ops-gateway%5CnExpected%20HEAD%3A%20732f0f5e6482f6bb96f0dfa582dc1c0fe2ea712e%5Cn%5CnProducer%20facts%3A%5Cn-%20relay%20hardening%20exact-green%3A%20foto6%2Fhelp-pc-1%20agent%2Fpc-relay-hardening%20%40%2058bad1bc60f7d4d26d03223c8f0bea5f138f49a6%2C%20CI%2036330545372%20SUCCESS.%5Cn-%20structured%20contract%2Ffixture%20pack%20exists%20under%20tests%2Ffixtures%2Fpc_ops_v1%20and%20is%20frozen%20cross-platform%20at%2058bad1b.%5Cn-%20current%20pc-ops-gateway%20report%20is%20stale%20and%20still%20pins%20fcea28ec%20as%20if%20structured%20ops%20were%20absent.%5Cn%5CnRequired%3A%5Cn1.%20Consume%2Fcopy%20exact%20producer%20bytes%20from%20the%20exact-green%20relay%20head%20into%20conformance%20provenance%3B%20verify%20blob%2Fhash%20identity%20and%20update%20producer-fixture-pins%20%2B%20producer-matrix%20deterministically.%5Cn2.%20Run%20canonical%20E2E%20for%20read-edit-verify%2C%20log%2Fprocess%20lifecycle%2C%20long%20PowerShell%20session%2C%20structured%20git%20status%2C%20screenshot%2FUIA%20observation%2C%20restart%20durable%20boundaries%2C%20protected-path%20rejection%2C%20and%20unknown-outcome%20reconciliation.%5Cn3.%20Use%20only%20disposable%20test%20paths.%20E%3A%5C%5Cmanhwa%20and%20descendants%20are%20protected%20and%20must%20never%20be%20touched%3B%20rejection%20may%20be%20tested%20only%20before%20dispatch%20with%20zero%20filesystem%20access.%5Cn4.%20Update%20pc-ops-gateway-e2e-v1.json%20and%20digest.%20Set%20ready_to_migrate%3Dtrue%20ONLY%20if%20every%20required%20producer%2Fscenario%20gate%20is%20proven%3B%20otherwise%20precise%20blockers.%5Cn5.%20Preserve%20structured-first%20and%20fail-closed%20reconciliation.%20No%20merge%2Frelease%2Fcutover.%5Cn6.%20Add%20focused%20regression%20tests%2C%20run%20full%20relevant%20CI%2C%20push%20non-empty%20commit%2C%20report%20exact%20SHA%20%2B%20exact-head%20CI.%22%2C%22repository%22%3A%22foto6%2Fhelp-pc-2%22%2C%22branch%22%3A%22agent%2Fpc-ops-gateway%22%2C%22expectedHead%22%3A%22732f0f5e6482f6bb96f0dfa582dc1c0fe2ea712e%22%2C%22idempotencyKey%22%3A%22pc-only-ops-migration-gate-v1%22%2C%22evidenceTimeoutMinutes%22%3A120%2C%22priority%22%3A950%2C%22supervisorVerificationRequired%22%3Atrue%7D'); try{$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e/assignments' -Method Post -ContentType 'application/json; charset=utf-8' -Body $body -TimeoutSec 10; Write-Output ('OK|id='+$r.id+'|state='+$r.state+'|chat='+$r.targetChatId)}catch{Write-Output ('ERR|'+$_.Exception.Message); exit 1}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "OK|id=b32b9f52-c203-47dd-890e-7914ff9c3b23|state=queued|chat=chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e\r\n",
+      "stdout_bytes": 104,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:51:59.738Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:51:59.712Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "assign-pc-ops-migration-gate-20260927-2413"
+    },
+    "request_id": "assign-pc-ops-migration-gate-20260927-2413",
+    "started_at": "2026-09-27T15:51:59.307Z",
+    "status": "completed"
+  },
+  "id": "assign-pc-ops-migration-gate-20260927-2413",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
