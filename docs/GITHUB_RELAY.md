@@ -66,8 +66,9 @@ A request ID is executed at most once by the local relay state. If the relay cra
 
 ## Recommended bootstrap
 
-1. Run the one-shot dry-run command.
-2. Confirm that `relay/results/bootstrap-capabilities.json` appears on the branch.
-3. Start the persistent relay with `--live`.
-4. Submit a separate PowerShell echo request and verify the returned stdout.
-5. Only after that use it for orchestration commands.
+1. If a previous relay attempt failed during `git commit`, run `git reset` once to unstage the local result, then `git pull --ff-only` to update the relay code. The result file is preserved and will be published automatically on the next run.
+2. Run the one-shot dry-run command.
+3. Confirm that `relay/results/bootstrap-capabilities.json` appears on the branch.
+4. Start the persistent relay with `--live`.
+5. Submit a separate PowerShell echo request and verify the returned stdout.
+6. Only after that use it for orchestration commands.
