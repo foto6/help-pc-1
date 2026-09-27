@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$body=@'\n{\"text\":\"EXECUTE NOW — WEBAIBRIDGE ALL-SPECIALIST RECONCILIATION. Do not acknowledge readiness and do not stop at a plan.\\n\\nRepository: foto6/WebAIBridge\\nBranch: agent/bridge-integration\\nExpected current HEAD: a270c3de8f0b3b81c43cd4805a1c40bed0336775\\n\\nRequired specialist heads to reconcile exactly:\\n- agent/bridge-rate-limit-recovery @ 391a6fefc56e5feb7ab938974d875167aa6aa688\\n- agent/bridge-live-deploy @ 40d99b96314c663fae0c6e35d6ae0fdea38a3dc7\\n- agent/bridge-assignment-chaos @ dbed14ddf25fa74074228d80b6ba869a12e5faed\\n- agent/bridge-evidence-engine @ 3c69450d2dbc406cd0417dd6feae8bd378e9057c\\n- agent/bridge-security-boundaries @ 7027510e3577741f0fa9e7f507910445ce5578da\\n- agent/bridge-observability @ 358d1991b47f2019d7eb0d5bfdff77aae0be83d1\\n\\nThe previous a270 candidate predates the now-green security/observability heads and does NOT complete this assignment.\\n\\nRequired:\\n1. Re-read primary architecture and all six specialist deltas. Reconcile them into one new non-empty integration head; preserve project-native assignment semantics and current safety boundaries.\\n2. Resolve conflicts minimally; do not rewrite the primary architecture or reintroduce legacy responder/task APIs.\\n3. Verify assignment idempotency/evidence, rate-limit recovery, live deploy/reload, security boundaries, and observability all coexist.\\n4. Add/update durable integration evidence listing exact consumed SHAs.\\n5. Run focused tests and full exact-head CI.\\n6. Push a new commit on agent/bridge-integration.\\n\\nCompletion evidence: new SHA after a270c3d..., durable exact consumed-head evidence, exact-head green CI. No merge/release.\",\"repository\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-integration\",\"expectedHead\":\"a270c3de8f0b3b81c43cd4805a1c40bed0336775\",\"idempotencyKey\":\"coord-bridge-all-specialist-reconcile-20260927-v1\",\"evidenceTimeoutMinutes\":90,\"priority\":850,\"supervisorVerificationRequired\":true}\n'@; Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c/assignments' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 10 | ConvertTo-Json -Depth 10 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"object\":\"agent_assignment\",\"id\":\"9c4bd28a-4a77-4b52-9323-891ba30d676f\",\"idempotencyKey\":\"coord-bridge-all-specialist-reconcile-20260927-v1\",\"immutableFingerprint\":\"bcda5c11d60d8fb7ad8eb4cb628c415e269b4aad5f04fcb7db1c771eb090dde9\",\"state\":\"queued\",\"status\":\"queued\",\"targetChatId\":\"chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c\",\"targetChatUrl\":\"https://chatgpt.com/c/6ab69af7-68c0-83ed-8552-f5f41d97a00c\",\"targetProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"projectId\":\"\",\"resourceClass\":\"cpu\",\"priority\":850,\"text\":\"EXECUTE NOW - WEBAIBRIDGE ALL-SPECIALIST RECONCILIATION. Do not acknowledge readiness and do not stop at a plan.\\n\\nRepository: foto6/WebAIBridge\\nBranch: agent/bridge-integration\\nExpected current HEAD: a270c3de8f0b3b81c43cd4805a1c40bed0336775\\n\\nRequired specialist heads to reconcile exactly:\\n- agent/bridge-rate-limit-recovery @ 391a6fefc56e5feb7ab938974d875167aa6aa688\\n- agent/bridge-live-deploy @ 40d99b96314c663fae0c6e35d6ae0fdea38a3dc7\\n- agent/bridge-assignment-chaos @ dbed14ddf25fa74074228d80b6ba869a12e5faed\\n- agent/bridge-evidence-engine @ 3c69450d2dbc406cd0417dd6feae8bd378e9057c\\n- agent/bridge-security-boundaries @ 7027510e3577741f0fa9e7f507910445ce5578da\\n- agent/bridge-observability @ 358d1991b47f2019d7eb0d5bfdff77aae0be83d1\\n\\nThe previous a270 candidate predates the now-green security/observability heads and does NOT complete this assignment.\\n\\nRequired:\\n1. Re-read primary architecture and all six specialist deltas. Reconcile them into one new non-empty integration head; preserve project-native assignment semantics and current safety boundaries.\\n2. Resolve conflicts minimally; do not rewrite the primary architecture or reintroduce legacy responder/task APIs.\\n3. Verify assignment idempotency/evidence, rate-limit recovery, live deploy/reload, security boundaries, and observability all coexist.\\n4. Add/update durable integration evidence listing exact consumed SHAs.\\n5. Run focused tests and full exact-head CI.\\n6. Push a new commit on agent/bridge-integration.\\n\\nCompletion evidence: new SHA after a270c3d..., durable exact consumed-head evidence, exact-head green CI. No merge/release.\",\"repository\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-integration\",\"expectedHead\":\"a270c3de8f0b3b81c43cd4805a1c40bed0336775\",\"currentHead\":\"\",\"exactCommitSha\":\"\",\"ciRunId\":\"\",\"ciConclusion\":\"\",\"lastEvidenceCollectorAt\":\"\",\"evidenceCollectorStatus\":\"\",\"evidenceCollectorError\":\"\",\"baselineCheckedAt\":\"\",\"baselineVerified\":false,\"baselineError\":\"\",\"migration\":null,\"supervisorVerificationRequired\":true,\"supervisorVerified\":false,\"createdAt\":\"2026-09-27T15:41:47.311Z\",\"updatedAt\":\"2026-09-27T15:41:47.311Z\",\"queuedAt\":\"2026-09-27T15:41:47.311Z\",\"dispatchStartedAt\":\"\",\"lastDispatchAt\":\"\",\"runningAt\":\"\",\"awaitingEvidenceAt\":\"\",\"lastEvidenceAt\":\"\",\"evidenceDeadlineAt\":\"\",\"completedAt\":\"\",\"blockedAt\":\"\",\"failedAt\":\"\",\"cancelledAt\":\"\",\"lastPreflightAt\":\"\",\"lastPreflightReason\":\"\",\"lastDiagnostic\":\"\",\"dispatchTargetId\":\"\",\"dispatchFingerprint\":\"\",\"dispatchCount\":0,\"replacementCount\":0,\"predecessorUrl\":\"\",\"replacementUrl\":\"\",\"replacementAt\":\"\",\"evidence\":{},\"integration\":null}\r\n",
+      "stdout_bytes": 3132,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:41:47.464Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:41:47.440Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "assign-bridge-integration-via-round2watch-20260927-2346"
+    },
+    "request_id": "assign-bridge-integration-via-round2watch-20260927-2346",
+    "started_at": "2026-09-27T15:41:47.024Z",
+    "status": "completed"
+  },
+  "id": "assign-bridge-integration-via-round2watch-20260927-2346",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
