@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-09-27T14:46:34.311Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "create-pc-ops-gateway-integrator-001"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:1ae627da529b48b12de0b580946145d0cd2ee7f72b030c38233668b69a6e1673",
+            "journal_sequence": 142,
+            "previous_record_sha256": "e6c0e22f27fcae6e43b7d5bd560e6b38b940479df0175b8ca6c459d996ae7fe1",
+            "record_sha256": "d9eb1a40eedfcd690755e3b163f4b03220d819cb2dc5bde066306a3e92071bce",
+            "recorded_at": "2026-09-27T14:46:34.319Z",
+            "request_id": "create-pc-ops-gateway-integrator-001",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-09-27T14:47:04.354Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "create-pc-ops-gateway-integrator-001"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:1ae627da529b48b12de0b580946145d0cd2ee7f72b030c38233668b69a6e1673",
+            "journal_sequence": 143,
+            "previous_record_sha256": "d9eb1a40eedfcd690755e3b163f4b03220d819cb2dc5bde066306a3e92071bce",
+            "record_sha256": "c57eba41101a0c6391497b4ef27820ff3ba1d9ba4e59bbcd32a6836d08070bd4",
+            "recorded_at": "2026-09-27T14:47:04.371Z",
+            "request_id": "create-pc-ops-gateway-integrator-001",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-09-27T14:47:04.354Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "create-pc-ops-gateway-integrator-001"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-09-27T14:47:04.354Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "create-pc-ops-gateway-integrator-001"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:1ae627da529b48b12de0b580946145d0cd2ee7f72b030c38233668b69a6e1673",
+          "journal_sequence": 143,
+          "previous_record_sha256": "d9eb1a40eedfcd690755e3b163f4b03220d819cb2dc5bde066306a3e92071bce",
+          "record_sha256": "c57eba41101a0c6391497b4ef27820ff3ba1d9ba4e59bbcd32a6836d08070bd4",
+          "recorded_at": "2026-09-27T14:47:04.371Z",
+          "request_id": "create-pc-ops-gateway-integrator-001",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "a6e37f933fd5d5aab3e9ca01f293c262dee20bf85b463ffdfc0b18ae4957c6b4",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 149
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "create-pc-ops-gateway-integrator-001",
+        "request_id": "create-pc-ops-gateway-integrator-001",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:49:23.842Z",
+    "ok": true,
+    "request_id": "reconcile-pc-ops-gateway-integrator-001",
+    "started_at": "2026-09-27T14:49:23.827Z",
+    "status": "completed"
+  },
+  "id": "reconcile-pc-ops-gateway-integrator-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
