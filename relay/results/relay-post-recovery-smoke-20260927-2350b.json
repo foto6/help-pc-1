@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "Write-Output 'RELAY_OK'; git -C E:\\pc-github-relay status --porcelain=v1 -b; Write-Output ('NAME='+(git -C E:\\pc-github-relay config user.name)); Write-Output ('EMAIL='+(git -C E:\\pc-github-relay config user.email))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "RELAY_OK\r\n## agent/pc-github-relay...origin/agent/pc-github-relay\nNAME=foto6\r\nEMAIL=foto6@users.noreply.github.com\r\n",
+      "stdout_bytes": 116,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:43:30.017Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:43:29.990Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "relay-post-recovery-smoke-20260927-2350b"
+    },
+    "request_id": "relay-post-recovery-smoke-20260927-2350b",
+    "started_at": "2026-09-27T15:43:29.556Z",
+    "status": "completed"
+  },
+  "id": "relay-post-recovery-smoke-20260927-2350b",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
