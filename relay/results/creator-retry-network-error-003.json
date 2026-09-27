@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "node E:\\pc-github-relay\\relay\\helpers\\retry_chat.js 6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"before\":{\"clicked\":true,\"stopBefore\":false,\"retryText\":\"Повторить\"},\"after\":{\"stop\":false,\"retry\":true,\"tail\":\"e canonical fixture binds logicalJobId, idempotencyKey, renderFingerprint, content digest/size, probe evidence, QA evidence, atomic finalization, and commit timestamps. I’m reading the exact manifest/digest rules and the producer’s succeeded-job shape next.\\n\\nУточнил интеграцию\\n\\nПроверил контрольную точку\\n\\nПроверены манифесты, происхождение артефактов и статус CI\\n\\nКлонировал продюсера и медиа, скопировал файлы и вычислил хэши\\n\\nThe first filesystem copy preserved Git blobs but Windows checkout transformed line endings, so raw SHA-256 did not match Media’s published fixture manifest. I’m replacing those copies with exact Git blob bytes; the consumer will pin byte hashes, not rely on checkout normalization.\\n\\nИсправил байты, проверил хэши и завершил модуль MediaJob\\n\\nОбновлены валидация чекпоинтов, импорт и пересборка проекта\\n\\nОбновил валидацию медиарелизов, кандидата и запросов\\n\\nУсилены валидаторы, привязка медиазаписей и обновлены тестовые артефакты\\n\\nПерегенерировал фикстуры контрольных точек и прочитал вывод процесса\\n\\nA network error occurred. Please check your connection and try again.\\nПовторить\\nПоследний ответ\\n\\n\\n\\n\\nВысокий\\nChatGPT может допускать ошибки. Проверяйте важную информацию.\"}}\n",
+      "stdout_bytes": 1845,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:25:21.760Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:25:21.741Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "creator-retry-network-error-003"
+    },
+    "request_id": "creator-retry-network-error-003",
+    "started_at": "2026-09-27T14:25:09.420Z",
+    "status": "completed"
+  },
+  "id": "creator-retry-network-error-003",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
