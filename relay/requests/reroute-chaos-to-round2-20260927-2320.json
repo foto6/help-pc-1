@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "reroute-chaos-to-round2-20260927-2320",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$body=[Uri]::UnescapeDataString('%7B%22text%22%3A%22EXECUTE%20NOW.%20PC%20NATIVE%20CUTOVER%20CHAOS%20PREP.%20Repo%20foto6%2Fhelp-pc-2%2C%20branch%20agent%2Fpc-ops-chaos%2C%20expected%20HEAD%2053bf83a63cb4137c5e41fbd06cd18863f890d730.%20Independent%20validation%20only%3B%20do%20not%20modify%20primary%20gateway%20policy.%20Extend%20adversarial%20coverage%20for%20MCP%20disconnect%20after%20dispatch%2C%20Control%20Plane%20restart%2C%20Executor%20restart%2C%20stale%20context%20binding%2C%20duplicate%20request%20id%2C%20journal%20unknown%2C%20result%20lost%20after%20side%20effect%2C%20managed%20process%2Fsession%20reconnect%2C%20and%20UI%20observation%20epoch%20change.%20Prove%20fail-closed%20and%20at-most-once%20side%20effects%20with%20no%20blind%20replay.%20Prove%20E%3A%5C%5Cmanhwa%20rejection%20occurs%20before%20dispatch%20and%20no%20protected-path%20access%20occurs.%20Bind%20deterministic%20chaos%20provenance%20to%20current%20exact-green%20producer%20heads.%20Add%20exact-head%20CI%2C%20push%20non-empty%20commit%2C%20report%20SHA%20and%20tests.%20No%20merge%20or%20release.%22%2C%22repository%22%3A%22foto6%2Fhelp-pc-2%22%2C%22branch%22%3A%22agent%2Fpc-ops-chaos%22%2C%22expectedHead%22%3A%2253bf83a63cb4137c5e41fbd06cd18863f890d730%22%2C%22idempotencyKey%22%3A%22pc-only-chaos-reroute-round2-v1%22%2C%22evidenceTimeoutMinutes%22%3A120%2C%22priority%22%3A980%2C%22supervisorVerificationRequired%22%3Atrue%7D'); try{$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c/assignments' -Method Post -ContentType 'application/json; charset=utf-8' -Body $body -TimeoutSec 10; Write-Output ('OK|id='+$r.id+'|state='+$r.state+'|chat='+$r.targetChatId)}catch{Write-Output ('ERR|'+$_.Exception.Message); exit 1}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
