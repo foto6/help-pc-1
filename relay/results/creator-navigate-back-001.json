@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "node E:\\pc-github-relay\\relay\\helpers\\navigate_target.js E2696715D5350FFC22B264097A2EB801 https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6\",\"title\":\"ChatGPT\",\"composer\":false,\"stop\":false,\"retry\":true,\"tail\":\"Перейти к контенту\\nChatGPT\\nНовый чат\\nЗапланировано\\nБиблиотека\\nПлагины\\nОбзор\\nЗакрепленные\\nПодробное объяснение математики\\nПеремножение в восьмеричной системе\\nПроизводные скорости и ускорения\\nОценка задач ЕГЭ\\nПроекты\\nНедавние\\nSmoke400 Gate Implementation\\nDetection Triage Harness Results\\nImplemented relay hardening\\nTracking Smoke Gate Reject\\nСоздание реестра команды\\nПроверка и запуск агентов\\nRelay Hardening Implementation\\nНовый чат\\nImplement PC Control MVP\\nReject Low Light Candidate\\nЗагрузка чатов…\\nFik\\nPlus\\nНе удалось загрузить этот разговор ChatGPT\\nПовторить\"}\n",
+      "stdout_bytes": 1068,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:31:56.610Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:31:56.589Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "creator-navigate-back-001"
+    },
+    "request_id": "creator-navigate-back-001",
+    "started_at": "2026-09-27T14:31:38.947Z",
+    "status": "completed"
+  },
+  "id": "creator-navigate-back-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
