@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=D7953E61B3112ABC8A90A5C3BCBB5F0B --prompt=E:\\pc-github-relay\\relay\\prompts\\pc-ops-gateway-integrator.txt"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Error: chat is generating\n    at E:\\WebAIBridge\\app\\data\\direct_send_existing_agent.js:13:76\n",
+      "stderr_bytes": 93,
+      "stderr_truncated": false,
+      "stdout": "PRE {\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab92c50-29d0-83ed-8cfb-7e9f353fe7a3\",\"title\":\"Build PC Operations Gateway\",\"high\":true,\"stop\":true,\"composer\":true,\"draft\":\"\\n\"}\n",
+      "stdout_bytes": 206,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:51:31.098Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:51:31.079Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "dispatch-pc-ops-gateway-integrator-002"
+    },
+    "request_id": "dispatch-pc-ops-gateway-integrator-002",
+    "started_at": "2026-09-27T14:51:30.685Z",
+    "status": "completed"
+  },
+  "id": "dispatch-pc-ops-gateway-integrator-002",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
