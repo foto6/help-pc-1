@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "live-powershell-smoke-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Write-Output 'PC_RELAY_LIVE_OK'; Write-Output ('PS=' + $PSVersionTable.PSVersion.ToString()); Write-Output ('PWD=' + (Get-Location).Path)"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Harmless live shell smoke test: output only."
+}
