@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-ci-exact-head-20260927-2105",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$branches=@('agent/bridge-security-boundaries','agent/bridge-observability','agent/bridge-integration'); foreach($b in $branches){ Write-Output ('BRANCH|'+$b); gh run list --repo foto6/WebAIBridge --branch $b --limit 5 --json databaseId,headSha,status,conclusion,event,workflowName,createdAt 2>&1 }"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
