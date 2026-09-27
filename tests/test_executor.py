@@ -131,9 +131,30 @@ def test_password_uia_value_is_blocked_by_adapter():
 
 def test_shell_rejects_non_allowlisted_executable():
     executor, _ = make_executor(dry_run=True)
-    result = executor.execute(ActionRequest("shell.run", {"argv": ["powershell.exe", "Get-Process"]}))
+    result = executor.execute(ActionRequest("shell.run", {"argv": ["format.com", "C:"]}))
     assert result.status == "blocked"
     assert "safe allowlist" in result.error
+
+
+def test_shell_default_adapter_allows_powershell_in_dry_run():
+    executor = Executor(
+        screenshot=FakeCapture(),
+        windows=FakeWindows(),
+        accessibility=FakeAccessibility(),
+        input_adapter=FakeInput(),
+        shell=SafeShellAdapter(),
+        audit=InMemoryAuditSink(),
+        dry_run=True,
+    )
+    result = executor.execute(
+        ActionRequest(
+            "shell.run",
+            {"argv": ["powershell.exe", "-NoProfile", "-Command", "Get-Process"]},
+        )
+    )
+    assert result.ok is True
+    assert result.status == "dry_run"
+    assert result.data["argv"][0] == "powershell.exe"
 
 
 def test_shell_rejects_protected_path():
