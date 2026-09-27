@@ -2,3 +2,5 @@ tests/fixtures/outcome_journal_v1/* -text
 tests/fixtures/action_outcome_v1*.json -text
 tests/fixtures/preflight_v1/* -text
 tests/fixtures/execution_context_binding_v1/* -text
+tests/fixtures/pc_ops_v1/* -text
+schemas/pc_executor.ops* -text
