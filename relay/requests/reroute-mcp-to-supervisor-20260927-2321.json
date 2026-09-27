@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "reroute-mcp-to-supervisor-20260927-2321",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$body=[Uri]::UnescapeDataString('%7B%22text%22%3A%22EXECUTE%20NOW.%20NATIVE%20PC%20MCP%20CUTOVER%20PREP%2C%20NO%20LIVE%20CUTOVER.%20Repo%20foto6%2Fhelp-pc-2%2C%20branch%20agent%2Fpc-control-mcp-gateway%2C%20expected%20HEAD%205495c320304860bf190476833177f716fe9ad960.%20Integrate%20structured%20PC%20Ops%20v1%20tools%20as%20first-class%20MCP%20surface%20through%20existing%20Control%20Plane%20and%20Executor%20safety%20paths.%20Keep%20raw%20shell.run%20argv-only%20fallback.%20Add%20machine-readable%20readiness%20binding%20exact%20Control%20Plane%2C%20Executor%2C%20Vision%2C%20relay%20producer%20and%20PC%20Ops%20report%20digest.%20Live%20structured%20side%20effects%20must%20stay%20disabled%20unless%20READY_TO_MIGRATE%20is%20proven%20and%20explicit%20live%20gate%20is%20enabled.%20Preserve%20protected-path%20policy%2C%20context%20binding%2C%20durable%20outcome%20lookup%2C%20reconciliation%2C%20and%20no%20blind%20retry.%20Prepare%20the%20private%20PC%20Control%20plugin%2Fbackend%20registration%20contract%20but%20do%20not%20switch%20the%20live%20transport%20yet.%20Add%20focused%20integration%20tests%2C%20exact-head%20CI%2C%20push%20a%20non-empty%20commit%2C%20and%20report%20exact%20SHA%20and%20CI.%20No%20merge%20or%20release.%22%2C%22repository%22%3A%22foto6%2Fhelp-pc-2%22%2C%22branch%22%3A%22agent%2Fpc-control-mcp-gateway%22%2C%22expectedHead%22%3A%225495c320304860bf190476833177f716fe9ad960%22%2C%22idempotencyKey%22%3A%22pc-only-mcp-reroute-supervisor-v3%22%2C%22evidenceTimeoutMinutes%22%3A120%2C%22priority%22%3A990%2C%22supervisorVerificationRequired%22%3Atrue%7D'); try{$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e/assignments' -Method Post -ContentType 'application/json; charset=utf-8' -Body $body -TimeoutSec 10; Write-Output ('OK|id='+$r.id+'|state='+$r.state+'|chat='+$r.targetChatId)}catch{Write-Output ('ERR|'+$_.Exception.Message); exit 1}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
