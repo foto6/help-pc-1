@@ -6,6 +6,7 @@ on:
       - agent/pc-executor
       - agent/pc-native-tool-parity
       - agent/pc-native-full-stack
+      - agent/pc-native-full-stack-service
   workflow_dispatch:
 
 jobs:
@@ -44,6 +45,8 @@ jobs:
         run: python -m pytest tests/test_native_remote_transport.py tests/test_remote_protocol.py
       - name: Native remote transport harness
         run: python tools/native_remote_harness.py
+      - name: Native device service focused suite
+        run: python -m pytest tests/test_native_device_service.py
       - name: Native remote Executor adapter suite
         run: python -m pytest tests/test_native_remote_executor_adapter.py tests/test_native_remote_executor_adapter_recovery.py
       - name: Native full-stack real Executor integration suite
