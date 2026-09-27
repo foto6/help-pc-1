@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$body=@'\n{\"text\":\"EXECUTE NOW — SPECTRATRACK A2 CANONICAL REPLAY PACK. Do not acknowledge readiness and do not stop at a plan.\\n\\nRepository: foto6/SpectraTrack\\nBranch: agent/vnext-tracking\\nExpected current HEAD: d73b5d5a8268586ee963df9de901d3fd6ff6fcca\\n\\nThis task exists solely to unblock A8 quality scoring. Preserve all frozen tracking/control semantics and do not touch NightOwls for tracking ground truth.\\n\\nRequired durable output:\\n1. Commit reproducible canonical replay bytes, GT bytes, and observation/input bytes for the already-frozen MOT17-04 contiguous windows frames 0-199 and 400-599 only.\\n2. Include exact provenance and SHA-256 hashes sufficient for A8 to recompute CONTROL and both already-locked schedules on identical bytes.\\n3. Do not expand to a larger replay, do not retune schedules, do not modify A8 gates.\\n4. Add validation/tests that fail if payload/provenance/hash contracts drift.\\n5. Run focused tests and full relevant CI.\\n6. Commit and push a non-empty delta to agent/vnext-tracking.\\n\\nCompletion evidence is only: new commit SHA after d73b5d5..., committed canonical bytes+hash provenance, and exact-head green CI. If blocked, report the exact missing artifact/path and no speculative workaround.\",\"repository\":\"foto6/SpectraTrack\",\"branch\":\"agent/vnext-tracking\",\"expectedHead\":\"d73b5d5a8268586ee963df9de901d3fd6ff6fcca\",\"idempotencyKey\":\"coord-a2-canonical-replay-pack-20260927-v1\",\"evidenceTimeoutMinutes\":90,\"priority\":900,\"supervisorVerificationRequired\":true}\n'@; Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e/assignments' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 10 | ConvertTo-Json -Depth 10 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"object\":\"agent_assignment\",\"id\":\"53560f30-896e-497c-8a25-818e6836e0a2\",\"idempotencyKey\":\"coord-a2-canonical-replay-pack-20260927-v1\",\"immutableFingerprint\":\"37b7106feedda330dc305042f1868e3fea2f7835374d2ac395ca740466dd78ea\",\"state\":\"queued\",\"status\":\"queued\",\"targetChatId\":\"chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e\",\"targetChatUrl\":\"https://chatgpt.com/c/6ab77f2d-b9bc-83ed-906e-a0e35cca142e\",\"targetProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"projectId\":\"\",\"resourceClass\":\"cpu\",\"priority\":900,\"text\":\"EXECUTE NOW - SPECTRATRACK A2 CANONICAL REPLAY PACK. Do not acknowledge readiness and do not stop at a plan.\\n\\nRepository: foto6/SpectraTrack\\nBranch: agent/vnext-tracking\\nExpected current HEAD: d73b5d5a8268586ee963df9de901d3fd6ff6fcca\\n\\nThis task exists solely to unblock A8 quality scoring. Preserve all frozen tracking/control semantics and do not touch NightOwls for tracking ground truth.\\n\\nRequired durable output:\\n1. Commit reproducible canonical replay bytes, GT bytes, and observation/input bytes for the already-frozen MOT17-04 contiguous windows frames 0-199 and 400-599 only.\\n2. Include exact provenance and SHA-256 hashes sufficient for A8 to recompute CONTROL and both already-locked schedules on identical bytes.\\n3. Do not expand to a larger replay, do not retune schedules, do not modify A8 gates.\\n4. Add validation/tests that fail if payload/provenance/hash contracts drift.\\n5. Run focused tests and full relevant CI.\\n6. Commit and push a non-empty delta to agent/vnext-tracking.\\n\\nCompletion evidence is only: new commit SHA after d73b5d5..., committed canonical bytes+hash provenance, and exact-head green CI. If blocked, report the exact missing artifact/path and no speculative workaround.\",\"repository\":\"foto6/SpectraTrack\",\"branch\":\"agent/vnext-tracking\",\"expectedHead\":\"d73b5d5a8268586ee963df9de901d3fd6ff6fcca\",\"currentHead\":\"\",\"exactCommitSha\":\"\",\"ciRunId\":\"\",\"ciConclusion\":\"\",\"lastEvidenceCollectorAt\":\"\",\"evidenceCollectorStatus\":\"\",\"evidenceCollectorError\":\"\",\"baselineCheckedAt\":\"\",\"baselineVerified\":false,\"baselineError\":\"\",\"migration\":null,\"supervisorVerificationRequired\":true,\"supervisorVerified\":false,\"createdAt\":\"2026-09-27T15:34:05.210Z\",\"updatedAt\":\"2026-09-27T15:34:05.210Z\",\"queuedAt\":\"2026-09-27T15:34:05.210Z\",\"dispatchStartedAt\":\"\",\"lastDispatchAt\":\"\",\"runningAt\":\"\",\"awaitingEvidenceAt\":\"\",\"lastEvidenceAt\":\"\",\"evidenceDeadlineAt\":\"\",\"completedAt\":\"\",\"blockedAt\":\"\",\"failedAt\":\"\",\"cancelledAt\":\"\",\"lastPreflightAt\":\"\",\"lastPreflightReason\":\"\",\"lastDiagnostic\":\"\",\"dispatchTargetId\":\"\",\"dispatchFingerprint\":\"\",\"dispatchCount\":0,\"replacementCount\":0,\"predecessorUrl\":\"\",\"replacementUrl\":\"\",\"replacementAt\":\"\",\"evidence\":{},\"integration\":null}\r\n",
+      "stdout_bytes": 2714,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:34:05.365Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:34:05.336Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "assign-spectra-a2-via-supervisor-20260927-2340"
+    },
+    "request_id": "assign-spectra-a2-via-supervisor-20260927-2340",
+    "started_at": "2026-09-27T15:34:04.885Z",
+    "status": "completed"
+  },
+  "id": "assign-spectra-a2-via-supervisor-20260927-2340",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
