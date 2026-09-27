@@ -5,6 +5,7 @@ on:
     branches:
       - agent/pc-executor
       - agent/pc-native-remote-transport
+      - agent/pc-native-remote-executor-adapter
   workflow_dispatch:
 
 jobs:
@@ -27,5 +28,7 @@ jobs:
         run: python -m pytest tests/test_preflight.py
       - name: Native remote transport harness
         run: python tools/native_remote_harness.py
+      - name: Native remote Executor adapter suite
+        run: python -m pytest tests/test_native_remote_executor_adapter.py
       - name: Full test suite
         run: python -m pytest
