@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$out='E:\\SpectraTrack-data\\runs\\a1-nightowls-r2-ea1234'; $pidv=[int](Get-Content ($out+'\\pid.txt')); $p=Get-Process -Id $pidv -ErrorAction SilentlyContinue; Write-Output ('RUNNING='+[bool]$p); Write-Output ('RESULT_EXISTS='+(Test-Path ($out+'\\r2-result.json'))); if(Test-Path ($out+'\\stderr.txt')){Write-Output 'STDERR'; Get-Content -Tail 20 ($out+'\\stderr.txt')}; if(Test-Path ($out+'\\stdout.txt')){Write-Output 'STDOUT'; Get-Content -Tail 20 ($out+'\\stdout.txt')}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "RUNNING=False\r\nRESULT_EXISTS=False\r\nSTDERR\r\nusage: vnext_detection_r2_validation.py [-h] {run,validate-result} ...\r\nvnext_detection_r2_validation.py: error: unrecognized arguments: \\pc\\benchmarks\\vnext\\detection\\r2_hypothesis_lock.v1.json \\r2-result.json \\r2-runtime.json\r\nSTDOUT\r\n",
+      "stdout_bytes": 281,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:04:01.631Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:04:01.616Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "a1-r2-poll-001"
+    },
+    "request_id": "a1-r2-poll-001",
+    "started_at": "2026-09-27T14:04:01.323Z",
+    "status": "completed"
+  },
+  "id": "a1-r2-poll-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
