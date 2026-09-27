@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "reroute-ops-and-mcp-20260927-2427-mcp",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$body=[Uri]::UnescapeDataString('%7B%22text%22%3A%22EXECUTE%20NOW%20%E2%80%94%20NATIVE%20PC%20MCP%20CUTOVER%20PREPARATION%2C%20NO%20CUTOVER.%5Cn%5CnRepo%3A%20foto6%2Fhelp-pc-2%5CnBranch%3A%20agent%2Fpc-control-mcp-gateway%5CnExpected%20HEAD%3A%205495c320304860bf190476833177f716fe9ad960%5Cn%5CnMake%20MCP%20gateway%20ready%20to%20become%20ChatGPT%20PC%20backend%20after%20PC%20Ops%20READY_TO_MIGRATE.%20Integrate%20structured%20PC%20Ops%20v1%20tools%20as%20first-class%20without%20bypassing%20Control%20Plane%2FExecutor%20safety%3B%20shell.run%20stays%20bounded%20argv-only%20fallback.%20Add%20machine-readable%20readiness%20binding%20exact%20Control%20Plane%2FExecutor%2FVision%2FRelay%2FOps%20SHAs%20and%20PC%20Ops%20report%20digest.%20Live%20native%20side%20effects%20must%20fail%20closed%20until%20migration%20gate%20green%20plus%20explicit%20live%20enable.%20Preserve%20protected%20paths%2C%20credentials%2FCAPTCHA%20prohibition%2C%20context%20binding%20and%20durable%20reconciliation.%20Prepare%20plugin%2Fbackend%20registration%20contract%20but%20do%20not%20switch%20current%20live%20relay%20transport.%20Add%20tests%2C%20exact-head%20CI%20and%20non-empty%20commit.%20No%20merge%2Frelease%2Fcutover.%22%2C%22repository%22%3A%22foto6%2Fhelp-pc-2%22%2C%22branch%22%3A%22agent%2Fpc-control-mcp-gateway%22%2C%22expectedHead%22%3A%225495c320304860bf190476833177f716fe9ad960%22%2C%22idempotencyKey%22%3A%22pc-only-mcp-native-prep-v1-reroute-vision%22%2C%22evidenceTimeoutMinutes%22%3A120%2C%22priority%22%3A975%2C%22supervisorVerificationRequired%22%3Atrue%7D'); $r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-vision/assignments' -Method Post -ContentType 'application/json; charset=utf-8' -Body $body -TimeoutSec 10; Write-Output ('MCP|id='+$r.id+'|state='+$r.state+'|chat='+$r.targetChatId)"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
