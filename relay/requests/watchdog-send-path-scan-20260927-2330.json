@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "watchdog-send-path-scan-20260927-2330",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$f='E:\\WebAIBridge\\app\\supervisor-watchdog.js'; Select-String -Path $f -Pattern 'continuationText','Input.insertText','dispatchKeyEvent','sendProtectedDraftEnabled','allowAutonomousSend','highMode','managedChats','targetId','composer' -SimpleMatch -Context 2,4 | Select-Object -First 260 | ForEach-Object{$_.ToString()}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
