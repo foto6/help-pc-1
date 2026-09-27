@@ -51,8 +51,15 @@ arguments and stdin remain blocked by the inherited policy.
 Filesystem reads: `fs.list`, `fs.stat`, `fs.read_text`,
 `fs.read_bytes`, `fs.hash`, `fs.find`, `fs.glob`, and `fs.search`.
 Text reads support absolute line ranges or bounded tail reads. Binary reads use
-absolute byte offsets. Search is deterministic and stateless; continuation is
-represented by `pc_executor.search_cursor.v1`.
+absolute byte offsets. The legacy `fs.search` remains a deterministic bounded
+one-shot/cursor primitive and shares safe traversal with the stateful search
+layer.
+
+Stateful Desktop Commander search parity is provided by `search.start`,
+`search.read`, `search.list`, and `search.stop`, with handle metadata
+versioned as `pc_executor.search_session.v1`. `search.start` and
+`search.stop` mutate managed lifecycle state and therefore use the existing
+Executor outcome journal; `search.read` and `search.list` are read-only.
 
 Filesystem mutations: `fs.write_text`, `fs.append_text`, `fs.edit_text`,
 `fs.mkdir`, `fs.copy`, `fs.move`, and `fs.delete`. Direct filesystem
@@ -93,8 +100,13 @@ total bytes observed, and explicit `*_truncated_before_cursor` flags. Data
 loss from buffer eviction is therefore never silent.
 
 `fs.search` returns a versioned stateless cursor with root/query digests and
-an absolute result offset. Content search is bounded by result count, depth,
-per-file text size and aggregate scanned bytes.
+an absolute result offset. Stateful searches execute in a bounded worker pool
+with bounded result memory, timeout and cancellation checkpoints. Results are
+kept in deterministic traversal order. `search.read` uses an absolute
+zero-based result offset and defaults to 100 results; a negative offset reads
+that many results from the tail and ignores length. Completed, cancelled,
+timed-out, and max-result searches remain readable for 300 seconds by default,
+then are garbage-collected.
 
 ## Desktop Commander mapping
 
@@ -112,9 +124,10 @@ per-file text size and aggregate scanned bytes.
 | `move_file` | `fs.move` | Direct |
 | `create_directory` | `fs.mkdir` | Direct |
 | `get_file_info` | `fs.stat`, `fs.hash` | Direct |
-| `start_search` | `fs.search`, `fs.find`, `fs.glob`, `log.search` | Direct |
-| `get_more_search_results` | `fs.search` cursor / `log.read_since` | Cursor |
-| `stop_search` / `list_searches` | — | Not needed; search is stateless |
+| `start_search` | `search.start` | Stateful handle |
+| `get_more_search_results` | `search.read` | Absolute/tail pagination |
+| `stop_search` | `search.stop` | Cancel addressed current-generation handle |
+| `list_searches` | `search.list` | Active/recent current-generation handles |
 | `start_process` | `process.start`, `shell.session.start` | Direct |
 | `read_process_output` | `process.read_output`, `shell.session.read` | Direct |
 | `interact_with_process` | `shell.session.write_stdin` | Direct |
@@ -146,8 +159,9 @@ the implementation.
 ## Intentionally unsupported edges
 
 Wave 1 does not implement remote multi-device routing, device shutdown,
-mutable safety configuration, credential/account identity disclosure, PDF
-generation, or server-side search handles. These exclusions prevent a
-duplicate policy plane or unbounded transport semantics. Higher layers may
-compose bounded reads or document generation while native side effects remain
-inside Executor.
+mutable safety configuration, credential/account identity disclosure, or PDF
+generation. Search handles are scoped to the current Executor/device
+generation. A restart makes persisted prior-generation IDs explicitly stale;
+they cannot be read, stopped, or silently rebound. Reconnects that retain the
+same generation keep the handle valid. Protected roots are rejected before
+traversal, and symlink/reparse traversal is skipped fail-closed.
