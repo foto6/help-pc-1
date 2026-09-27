@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$body=@'\\n{\"text\":\"EXECUTE NOW — RELAY REBASE/IDENTITY SELF-HEALING. Do not stop at a plan.\\n\\nRepo: foto6/help-pc-1\\nBranch: agent/pc-relay-hardening\\nExpected HEAD: 58bad1bc60f7d4d26d03223c8f0bea5f138f49a6\\n\\nObserved real failure on the dedicated relay worktree E:\\\\pc-github-relay:\\n- pull --rebase could leave .git/rebase-merge and wedge future cycles.\\n- rebase then failed at Rebasing (1/1) with \\\"Committer identity unknown\\\".\\n- after repository-local user.name=foto6 and user.email=foto6@users.noreply.github.com, recovery succeeded and request→result smoke passed.\\n- concurrent remote queue commits also create normal branch-head races.\\n\\nRequired:\\n1. Harden relay startup/sync so this class of failure is detected before processing side effects.\\n2. Never blindly delete arbitrary rebase state. Recover automatically only when ownership/provenance proves the relay created the interrupted operation; otherwise fail closed with exact manual reconciliation evidence.\\n3. Add repository-local Git identity preflight with configurable values / clear actionable failure. Do not mutate global Git config.\\n4. Serialize/lock fetch-rebase-commit-push operations so concurrent queue movement is handled without corrupting or wedging the worktree.\\n5. Preserve every published request/result and outcome-journal invariant; never replay completed/unknown side effects.\\n6. Add Windows-focused fault tests: missing identity, owned interrupted rebase, foreign rebase state, remote head race, process restart mid-sync, dirty worktree.\\n7. Run focused + full CI and push a non-empty commit. Report exact SHA and exact-head CI. No merge/release.\",\"repository\":\"foto6/help-pc-1\",\"branch\":\"agent/pc-relay-hardening\",\"expectedHead\":\"58bad1bc60f7d4d26d03223c8f0bea5f138f49a6\",\"idempotencyKey\":\"pc-only-relay-self-heal-v1\",\"evidenceTimeoutMinutes\":120,\"priority\":950,\"supervisorVerificationRequired\":true}\\n'@; try{$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-pc-executor/assignments' -Method Post -ContentType 'application/json' -Body $body -TimeoutSec 10; Write-Output ('OK|id='+$r.id+'|state='+$r.state+'|chat='+$r.targetChatId)}catch{Write-Output ('ERR|'+$_.Exception.Message); exit 1}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "��ப�:1 ����:9\r\n+ $body=@'\\n{\"text\":\"EXECUTE NOW - RELAY REBASE/IDENTITY SELF-HEALING.  ...\r\n+         ~\r\n��� ���� �� ����᪠���� ����� ���������� here-��ப� � ���殬 ��ப� ����.\r\n    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : UnexpectedCharactersAfterHereStringHeader\r\n \r\n",
+      "stderr_bytes": 347,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:50:15.096Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:50:15.071Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "assign-relay-self-heal-20260927-2405"
+    },
+    "request_id": "assign-relay-self-heal-20260927-2405",
+    "started_at": "2026-09-27T15:50:14.808Z",
+    "status": "completed"
+  },
+  "id": "assign-relay-self-heal-20260927-2405",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
