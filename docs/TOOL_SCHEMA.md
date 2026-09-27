@@ -1,6 +1,6 @@
 # PC Executor tool schema
 
-Input is one JSON object per line. `request_id` is optional; `dry_run` can override the process default for one request; `timeout_ms` optionally supplies a positive per-request deadline.
+Input is one JSON object per line. `request_id` is optional; `dry_run` can override the process default for one request; `timeout_ms` optionally supplies a positive per-request deadline. Side-effecting requests may additionally carry optional top-level `execution_context_binding` using `pc_executor.execution_context_binding.v1`.
 
 ~~~json
 {"request_id":"uuid","action":"windows.list","params":{},"dry_run":true,"timeout_ms":5000}
@@ -31,6 +31,10 @@ Input is one JSON object per line. `request_id` is optional; `dry_run` can overr
 `ElementQuery` supports `automation_id`, `name`, `control_type`, `class_name`, and `window_title`. At least one non-empty selector is required and unknown keys are rejected.
 
 `action.preflight` returns strict `pc_executor.action_preflight.v1` with status `ready`, `blocked`, `unsupported`, `stale_observation`, `ambiguous_target`, or `invalid_request`, the current capabilities attestation digest, effective deadline budget, fixed reason metadata and a sanitized UIA actionability summary when applicable. `ready` is not an execution guarantee. See `docs/PREFLIGHT_V1.md`.
+
+## Optional execution context binding
+
+For side-effecting actions only, `execution_context_binding` can bind read-only process/window/target/input/shell provenance gathered before execution. Executor re-reads only the authoritative context immediately before dispatch. A mismatch never invokes the side-effect adapter and returns blocked `pc_executor.execution_context_validation.v1` evidence in `data`. The frozen action-outcome contract remains unchanged. See `docs/EXECUTION_CONTEXT_BINDING_V1.md`.
 
 ## Result shape
 

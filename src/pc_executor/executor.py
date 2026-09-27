@@ -5,6 +5,14 @@ from typing import Any, Callable, TypeVar
 from .audit import AuditSink, InMemoryAuditSink
 from .cancellation import CancellationToken, run_bounded
 from .capabilities import build_capabilities
+from .context_binding import (
+    ContextMismatchBlockedError,
+    ExecutionContextBindingError,
+    ExecutionContextObserver,
+    SystemExecutionContextObserver,
+    derive_execution_context_binding,
+    validate_bound_execution_context,
+)
 from .capture import PillowScreenCapture, ScreenshotProvider, screenshot_payload
 from .errors import ExecutorError, ExecutorFailureError, PolicyBlockedError
 from .input import InputAdapter, WindowsInputAdapter
@@ -65,6 +73,7 @@ class Executor:
         shell: SafeShellAdapter | None = None,
         audit: AuditSink | None = None,
         outcome_journal: OutcomeJournal | None = None,
+        context_observer: ExecutionContextObserver | None = None,
         dry_run: bool = True,
         allow_coordinate_fallback: bool = False,
         operation_timeout_seconds: float = 5.0,
@@ -76,6 +85,7 @@ class Executor:
         self.shell = shell or SafeShellAdapter()
         self.audit = audit or InMemoryAuditSink()
         self.outcome_journal = outcome_journal
+        self.context_observer = context_observer or SystemExecutionContextObserver()
         self.dry_run = dry_run
         self.allow_coordinate_fallback = allow_coordinate_fallback
         self.operation_timeout_seconds = operation_timeout_seconds
@@ -116,6 +126,24 @@ class Executor:
             allow_coordinate_fallback=self.allow_coordinate_fallback,
         )
 
+    def bind_execution_context(
+        self,
+        request: ActionRequest,
+        *,
+        capture_id: str | None = None,
+        display_id: str | None = None,
+    ) -> dict[str, Any]:
+        return derive_execution_context_binding(
+            request_id=request.request_id,
+            action=request.action,
+            params=request.params,
+            accessibility=self.accessibility,
+            shell_adapter=self.shell,
+            observer=self.context_observer,
+            capture_id=capture_id,
+            display_id=display_id,
+        ).to_dict()
+
     def execute(
         self,
         request: ActionRequest,
@@ -129,6 +157,13 @@ class Executor:
         self._audit(request, "start", effective_dry_run)
         try:
             self._journal_preflight(request, tracker)
+            if (
+                request.execution_context_binding is not None
+                and not tracker.side_effecting
+            ):
+                raise PolicyBlockedError(
+                    "execution_context_binding is only valid for side-effecting actions"
+                )
             token.raise_if_cancelled()
             data = self._dispatch(request, effective_dry_run, token, tracker)
             outcome_evidence = self._outcome_evidence(
@@ -221,6 +256,11 @@ class Executor:
             tracker,
             raise_on_failure=False,
         )
+        error_data: dict[str, Any] = {}
+        if isinstance(exc, ContextMismatchBlockedError):
+            error_data["execution_context_validation"] = dict(
+                exc.validation_evidence
+            )
         result = ActionResult(
             request_id=request.request_id,
             action=request.action,
@@ -228,12 +268,15 @@ class Executor:
             status=status,
             started_at=started,
             finished_at=utc_now_iso(),
+            data=error_data,
             error=str(exc),
             error_kind=exc.kind,
             dry_run=dry_run,
             outcome_evidence=outcome_evidence,
         )
         details = {"error": result.error, "error_kind": result.error_kind}
+        if error_data:
+            details.update(error_data)
         if outcome_evidence is not None:
             details["outcome_evidence"] = outcome_evidence.to_dict()
         if journal_error is not None:
@@ -358,13 +401,47 @@ class Executor:
             reason=reason,
         )
 
+    def _validate_execution_context(
+        self,
+        request: ActionRequest,
+    ) -> dict[str, Any] | None:
+        binding = request.execution_context_binding
+        if binding is None:
+            return None
+        try:
+            return validate_bound_execution_context(
+                request_id=request.request_id,
+                action=request.action,
+                params=request.params,
+                binding_payload=binding,
+                accessibility=self.accessibility,
+                shell_adapter=self.shell,
+                observer=self.context_observer,
+            )
+        except ContextMismatchBlockedError:
+            raise
+        except (
+            ExecutionContextBindingError,
+            KeyError,
+            TypeError,
+            ValueError,
+        ) as exc:
+            raise PolicyBlockedError(
+                f"invalid execution_context_binding: {exc}"
+            ) from exc
+
     def _effectful(
         self,
         request: ActionRequest,
         dry_run: bool,
         tracker: _OutcomeTracker,
         operation: Callable[[], T],
+        *,
+        token: CancellationToken | None = None,
     ) -> T:
+        self._validate_execution_context(request)
+        if token is not None:
+            token.raise_if_cancelled()
         provisional = ActionOutcomeEvidence.create(
             request_id=request.request_id,
             action=request.action,
@@ -412,6 +489,7 @@ class Executor:
             dry_run,
             tracker,
             lambda: self._bounded(request, token, label, operation),
+            token=token,
         )
 
     def _timeout(self, request: ActionRequest) -> float:
@@ -674,6 +752,7 @@ class Executor:
                     timeout_seconds=self._timeout(request),
                     cancellation=token,
                 ),
+                token=token,
             )
             return result.to_dict()
 

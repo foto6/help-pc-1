@@ -71,6 +71,12 @@ This evidence layer is orthogonal to UIA resolution, cancellation, and verificat
 
 `action.preflight` consumes strict `pc_executor.action_preflight.v1`. It may use only read-only UIA observation and shell validation. It never invokes/focuses/sets UIA values, generates input, accesses clipboard contents, captures screenshots, enumerates windows, or starts subprocesses. Statuses are `ready`, `blocked`, `unsupported`, `stale_observation`, `ambiguous_target`, and `invalid_request`; `ready` is only a current feasibility statement, never an execution guarantee or replay authorization. See `docs/PREFLIGHT_V1.md`.
 
+## Last-moment execution context binding
+
+Side-effecting requests may carry optional `pc_executor.execution_context_binding.v1`. The binding is derived only from read-only provenance and is revalidated immediately before the executor records dispatch or calls an effectful adapter. UIA actions bind process/start epoch, top-level window and target identity; foreground input/clipboard actions bind the current process/window and mouse display when available; shell binds executable and cwd identity without inventing GUI context.
+
+A material mismatch raises a policy block before dispatch. Frozen `pc_executor.action_outcome.v1` therefore remains `not_started` with its existing `policy_blocked` reason and `reexecution_safe=true`; separate `pc_executor.execution_context_validation.v1` data carries the explicit `context_mismatch` reason. UIA bounds/display movement are advisory and do not invalidate an otherwise identical process/window/target binding. See `docs/EXECUTION_CONTEXT_BINDING_V1.md`.
+
 ## Safety invariants
 
 - Default mode is dry-run.

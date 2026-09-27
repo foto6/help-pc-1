@@ -25,6 +25,7 @@ class ActionRequest:
     request_id: str = field(default_factory=lambda: str(uuid4()))
     dry_run: bool | None = None
     timeout_ms: int | None = None
+    execution_context_binding: dict[str, Any] | None = None
 
     @classmethod
     def from_dict(cls, raw: dict[str, Any]) -> "ActionRequest":
@@ -45,12 +46,22 @@ class ActionRequest:
         dry_run = raw.get("dry_run")
         if dry_run is not None and not isinstance(dry_run, bool):
             raise ValueError("dry_run must be a boolean or null")
+        execution_context_binding = raw.get("execution_context_binding")
+        if execution_context_binding is not None and not isinstance(
+            execution_context_binding, dict
+        ):
+            raise ValueError("execution_context_binding must be an object or null")
         return cls(
             action=action,
             params=dict(params),
             request_id=str(raw.get("request_id") or uuid4()),
             dry_run=dry_run,
             timeout_ms=timeout_ms,
+            execution_context_binding=(
+                None
+                if execution_context_binding is None
+                else dict(execution_context_binding)
+            ),
         )
 
 
@@ -117,9 +128,16 @@ class WindowInfo:
     visible: bool
     pid: int | None = None
     app_name: str | None = None
+    process_start_epoch_ms: int | None = None
+    display_id: str | None = None
+    is_foreground: bool | None = None
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        raw = asdict(self)
+        for key in ("process_start_epoch_ms", "display_id", "is_foreground"):
+            if raw[key] is None:
+                raw.pop(key)
+        return raw
 
 
 @dataclass(slots=True, frozen=True)
@@ -163,11 +181,19 @@ class ElementInfo:
     is_offscreen: bool = False
     supports_invoke: bool = False
     supports_value: bool = False
+    process_start_epoch_ms: int | None = None
+    runtime_id: tuple[int, ...] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         raw = asdict(self)
         if self.bounds is not None:
             raw["bounds"] = self.bounds.to_dict()
+        if self.process_start_epoch_ms is None:
+            raw.pop("process_start_epoch_ms")
+        if self.runtime_id is None:
+            raw.pop("runtime_id")
+        else:
+            raw["runtime_id"] = list(self.runtime_id)
         return raw
 
 
