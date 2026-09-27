@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "Get-ChildItem E:\\WebAIBridge\\app\\data -File | Where-Object {$_.Name -match 'retry|resume|recover|watchdog|continue'} | Select-Object Name,FullName | ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"Name\":\"bridge_wave4_recover.txt\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\bridge_wave4_recover.txt\"},{\"Name\":\"disable_auto_continue_safety.py\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\disable_auto_continue_safety.py\"},{\"Name\":\"disable_watchdog_maintenance.py\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\disable_watchdog_maintenance.py\"},{\"Name\":\"disable_watchdog_stop_temporarily.py\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\disable_watchdog_stop_temporarily.py\"},{\"Name\":\"enable_watchdog_live_test.py\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\enable_watchdog_live_test.py\"},{\"Name\":\"enable_watchdog_live_test2.py\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\enable_watchdog_live_test2.py\"},{\"Name\":\"enable_watchdog_live_test3.py\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\enable_watchdog_live_test3.py\"},{\"Name\":\"executor_wave4_resume.txt\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\executor_wave4_resume.txt\"},{\"Name\":\"inspect_pc_control_recovery.py\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\inspect_pc_control_recovery.py\"},{\"Name\":\"parse_watchdog_scripts.ps1\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\parse_watchdog_scripts.ps1\"},{\"Name\":\"patch_package_watchdog.py\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\patch_package_watchdog.py\"},{\"Name\":\"patch_start_watchdog.py\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\patch_start_watchdog.py\"},{\"Name\":\"patch_watchdog_configs.py\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\patch_watchdog_configs.py\"},{\"Name\":\"patch_watchdog_example_final.py\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\patch_watchdog_example_final.py\"},{\"Name\":\"pc_control_recover_exact.py\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\pc_control_recover_exact.py\"},{\"Name\":\"supervisor-watchdog-state.json\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\supervisor-watchdog-state.json\"},{\"Name\":\"supervisor-watchdog.json\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\supervisor-watchdog.json\"},{\"Name\":\"supervisor-watchdog.lock\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\supervisor-watchdog.lock\"},{\"Name\":\"supervisor-watchdog.log\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\supervisor-watchdog.log\"},{\"Name\":\"wait_watchdog_autorestart.ps1\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\wait_watchdog_autorestart.ps1\"},{\"Name\":\"watchdog_safety_milestone.txt\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\watchdog_safety_milestone.txt\"}]\r\n",
+      "stdout_bytes": 2295,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T14:20:26.111Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T14:20:26.095Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "find-recovery-helpers-001"
+    },
+    "request_id": "find-recovery-helpers-001",
+    "started_at": "2026-09-27T14:20:25.736Z",
+    "status": "completed"
+  },
+  "id": "find-recovery-helpers-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
