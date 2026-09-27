@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "creator-navigate-back-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "node E:\\pc-github-relay\\relay\\helpers\\navigate_target.js E2696715D5350FFC22B264097A2EB801 https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 25000,
+  "note": "Navigate the recovered Creator target back to its canonical conversation URL."
+}
