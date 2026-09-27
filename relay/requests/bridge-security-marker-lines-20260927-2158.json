@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-security-marker-lines-20260927-2158",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "findstr /n /c:\"<<<<<<< HEAD\" C:\\agentwork\\WebAIBridge-integration-final\\app\\agent-execution-control.js & findstr /n /c:\"<<<<<<< HEAD\" C:\\agentwork\\WebAIBridge-integration-final\\app\\server.js & findstr /n /c:\"<<<<<<< HEAD\" C:\\agentwork\\WebAIBridge-integration-final\\app\\supervisor-control.js"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000
+}
