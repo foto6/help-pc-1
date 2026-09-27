@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "a1-r2-compact-evidence-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$out='E:\\SpectraTrack-data\\runs\\a1-nightowls-r2-ea1234-run2'; $rp=$out+'\\r2-result.json'; $tp=$out+'\\r2-runtime.json'; $r=Get-Content -Raw $rp | ConvertFrom-Json; $t=Get-Content -Raw $tp | ConvertFrom-Json; $o=[ordered]@{result_file_sha256=(Get-FileHash -Algorithm SHA256 $rp).Hash.ToLower();runtime_file_sha256=(Get-FileHash -Algorithm SHA256 $tp).Hash.ToLower();result_digest=$r.result_digest;candidate_config_digest=$r.candidate_config_digest;provenance_digest=$r.provenance_digest;decision=$r.decision;r2=$r.r2;model_sha256=$r.model_sha256;control_metrics=$r.control.metrics;candidate_metrics=$r.candidate.metrics;control_clusters=$r.control.clusters;candidate_clusters=$r.candidate.clusters;compute=$r.compute;gates=$r.gates;runtime=$t}; $o | ConvertTo-Json -Depth 12 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only compact evidence for completed frozen A1 R2 result."
+}
