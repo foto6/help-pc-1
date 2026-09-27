@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-security-agentexec-chunk1-20260927-2207",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='C:\\agentwork\\WebAIBridge-integration-final\\app\\agent-execution-control.js'; $a=Get-Content -LiteralPath $p; for($i=0;$i -lt [Math]::Min(260,$a.Count);$i++){ '{0,5}: {1}' -f ($i+1),$a[$i] }"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000
+}
