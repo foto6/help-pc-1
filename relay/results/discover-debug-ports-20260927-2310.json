@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "Get-CimInstance Win32_Process | Where-Object { $_.Name -match 'chrome|msedge' -and $_.CommandLine -match 'remote-debugging-port' } | ForEach-Object { if($_.CommandLine -match '--remote-debugging-port[= ](\\d+)'){ Write-Output ('PORT|'+$matches[1]+'|pid='+$_.ProcessId) } } | Sort-Object -Unique"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "PORT|17410|pid=10096\r\nPORT|17410|pid=10468\r\nPORT|17410|pid=10984\r\nPORT|17410|pid=11728\r\nPORT|17410|pid=11744\r\nPORT|17410|pid=11792\r\nPORT|17410|pid=12328\r\nPORT|17410|pid=12692\r\nPORT|17410|pid=13608\r\nPORT|17410|pid=15780\r\nPORT|17410|pid=16500\r\nPORT|17410|pid=17044\r\nPORT|17410|pid=17372\r\nPORT|17410|pid=17956\r\nPORT|17410|pid=18000\r\nPORT|17410|pid=18300\r\nPORT|17410|pid=18760\r\nPORT|17410|pid=18964\r\nPORT|17410|pid=18972\r\nPORT|17410|pid=19284\r\nPORT|17410|pid=19332\r\nPORT|17410|pid=3704\r\nPORT|17410|pid=3904\r\nPORT|17410|pid=4740\r\nPORT|17410|pid=5308\r\nPORT|17410|pid=7020\r\nPORT|17410|pid=7716\r\nPORT|17410|pid=9032\r\nPORT|17447|pid=11312\r\nPORT|17447|pid=11880\r\nPORT|17447|pid=12124\r\nPORT|17447|pid=12316\r\nPORT|17447|pid=13440\r\nPORT|17447|pid=13752\r\n",
+      "stdout_bytes": 741,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:26:31.604Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:26:31.582Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "discover-debug-ports-20260927-2310"
+    },
+    "request_id": "discover-debug-ports-20260927-2310",
+    "started_at": "2026-09-27T15:26:31.153Z",
+    "status": "completed"
+  },
+  "id": "discover-debug-ports-20260927-2310",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
