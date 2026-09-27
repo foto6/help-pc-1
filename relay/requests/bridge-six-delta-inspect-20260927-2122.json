@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-six-delta-inspect-20260927-2122",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$r='E:\\WebAIBridge'; git -C $r fetch origin --prune; if($LASTEXITCODE -ne 0){exit $LASTEXITCODE}; foreach($b in @('agent/bridge-security-boundaries','agent/bridge-observability')){ Write-Output ('=== '+$b+' ==='); Write-Output 'COMMITS_NOT_IN_PRIMARY'; git -C $r log --oneline --decorate --no-merges origin/agent/webbridge-dev..origin/$b; Write-Output 'DIFF_STAT'; git -C $r diff --stat origin/agent/webbridge-dev...origin/$b; Write-Output 'CHANGED_FILES'; git -C $r diff --name-status origin/agent/webbridge-dev...origin/$b }"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
