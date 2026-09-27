@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$f='E:\\WebAIBridge\\app\\server.js'; Select-String -Path $f -Pattern 'function rotateManagedAgentChat','dispatchManaged','sendManaged','autoContinue','enforceHighMode','highModeStrategy','draft verification','verify.*draft','kickManaged' -SimpleMatch -Context 1,3 | Select-Object -First 180 | ForEach-Object{$_.ToString()}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "  E:\\WebAIBridge\\app\\server.js:12881:    'autoDetectChat',\r\n> E:\\WebAIBridge\\app\\server.js:12882:    'enforceHighMode',\r\n> E:\\WebAIBridge\\app\\server.js:12883:    'highModeStrategy',\r\n  E:\\WebAIBridge\\app\\server.js:12884:    'openExistingChatIfMissing',\r\n  E:\\WebAIBridge\\app\\server.js:12885:    'freshVerifyBeforeKick',\r\n  E:\\WebAIBridge\\app\\server.js:12886:    'freshVerifySettleSeconds',\r\n  E:\\WebAIBridge\\app\\server.js:12892:    'stopStaleGenerationEnabled',\r\n> E:\\WebAIBridge\\app\\server.js:12893:    'autoContinueEnabled',\r\n  E:\\WebAIBridge\\app\\server.js:12894:    'sendProtectedDraftEnabled',\r\n  E:\\WebAIBridge\\app\\server.js:12895:    'allowProfileRecovery',\r\n  E:\\WebAIBridge\\app\\server.js:12896:    'allowAutonomousSend',\r\n  E:\\WebAIBridge\\app\\server.js:13528:\r\n> E:\\WebAIBridge\\app\\server.js:13529:async function rotateManagedAgentChat(managedChatId, options = {}) {\r\n  E:\\WebAIBridge\\app\\server.js:13530:  const config = supervisorConfigSnapshot();\r\n  E:\\WebAIBridge\\app\\server.js:13531:  const managed = (config.managedChats || []).find(item => item.id === String(managedChatId || ''));\r\n  E:\\WebAIBridge\\app\\server.js:13532:  if (!managed) throw apiError('Managed chat not found', 404, 'managed_chat_not_found');\r\n  E:\\WebAIBridge\\app\\server.js:13585:    if (normalizeManagedComposerText(afterInsert.text) !== normalizeManagedComposerText(handoff)) {\r\n> E:\\WebAIBridge\\app\\server.js:13586:      throw apiError('Project handoff draft verification failed; refusing to submit', 409, 'managed_project_handoff_verify_failed');\r\n  E:\\WebAIBridge\\app\\server.js:13587:    }\r\n  E:\\WebAIBridge\\app\\server.js:13588:    setManagedProjectRotationLock(managed.id, { state:'submitted', handoffHash });\r\n  E:\\WebAIBridge\\app\\server.js:13589:    submitted = true;\r\n  E:\\WebAIBridge\\app\\server.js:14642:\r\n> E:\\WebAIBridge\\app\\server.js:14643:async function dispatchManagedAgentAssignmentDirect(assignment) {\r\n  E:\\WebAIBridge\\app\\server.js:14644:  if (!assignment || assignment.state !== 'queued') return { dispatched:false, reason:'not_queued' };\r\n  E:\\WebAIBridge\\app\\server.js:14645:  if (!await refreshManagedAssignmentBaseline(assignment, true)) {\r\n  E:\\WebAIBridge\\app\\server.js:14646:    return { dispatched:false, reason:'git_baseline_unavailable' };\r\n  E:\\WebAIBridge\\app\\server.js:14730:    if (String(inserted.composerText || '').trim() !== String(assignment.text || '').trim()) {\r\n> E:\\WebAIBridge\\app\\server.js:14731:      throw apiError('Managed assignment draft verification failed; refusing submit', 409, 'managed_assignment_draft_verify_failed');\r\n  E:\\WebAIBridge\\app\\server.js:14732:    }\r\n  E:\\WebAIBridge\\app\\server.js:14733:    await cdp.send('Input.dispatchKeyEvent', {\r\n  E:\\WebAIBridge\\app\\server.js:14734:      type:'keyDown', key:'Enter', code:'Enter', windowsVirtualKeyCode:13, nativeVirtualKeyCode:13,\r\n  E:\\WebAIBridge\\app\\server.js:14922:    openedClosedChats:false,\r\n> E:\\WebAIBridge\\app\\server.js:14923:    autoContinueEnabled:watchdogConfig.autoContinueEnabled,\r\n  E:\\WebAIBridge\\app\\server.js:14924:    rows,\r\n  E:\\WebAIBridge\\app\\server.js:14925:    selectedChatIds:rows.filter(row => row.wouldDispatch).map(row => row.chatId),\r\n  E:\\WebAIBridge\\app\\server.js:14926:  };\r\n  E:\\WebAIBridge\\app\\server.js:14985:      launches.push(\r\n> E:\\WebAIBridge\\app\\server.js:14986:        dispatchManagedAgentAssignmentDirect(assignment)\r\n  E:\\WebAIBridge\\app\\server.js:14987:          .finally(() => {\r\n  E:\\WebAIBridge\\app\\server.js:14988:            managedAssignmentDispatchInFlight.delete(assignment.id);\r\n  E:\\WebAIBridge\\app\\server.js:14989:            managedAssignmentDispatchInFlight.delete('chat:' + assignment.targetChatId);\r\n",
+      "stdout_bytes": 3654,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T16:11:02.768Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T16:11:02.738Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-dispatch-route-scan-20260927-2318"
+    },
+    "request_id": "bridge-dispatch-route-scan-20260927-2318",
+    "started_at": "2026-09-27T16:11:02.230Z",
+    "status": "completed"
+  },
+  "id": "bridge-dispatch-route-scan-20260927-2318",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
