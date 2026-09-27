@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-security-conflict-diff-20260927-2135",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$wt='C:\\agentwork\\WebAIBridge-integration-final'; git -C $wt diff --cc --unified=10 -- app/agent-execution-control.js app/package.json app/server.js app/supervisor-control.js"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000
+}
