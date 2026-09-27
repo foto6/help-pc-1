@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$r='E:\\pc-github-relay'; Write-Output 'STATUS'; git -C $r status --porcelain=v2 -b; Write-Output 'REBASE'; if(Test-Path \"$r\\.git\\rebase-merge\"){Get-ChildItem \"$r\\.git\\rebase-merge\" | Select-Object -ExpandProperty Name}else{Write-Output 'none'}; Write-Output 'HEADS'; git -C $r rev-parse HEAD; git -C $r rev-parse origin/agent/pc-github-relay; Write-Output 'AHEAD_BEHIND'; git -C $r rev-list --left-right --count HEAD...origin/agent/pc-github-relay; Write-Output 'LOG'; git -C $r log --oneline --decorate -8"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "STATUS\r\n# branch.oid 4025b0ffb6de4e74a060bb97856ba30888c713d0\n# branch.head agent/pc-github-relay\n# branch.upstream origin/agent/pc-github-relay\n# branch.ab +0 -0\nREBASE\r\nnone\r\nHEADS\r\n4025b0ffb6de4e74a060bb97856ba30888c713d0\n4025b0ffb6de4e74a060bb97856ba30888c713d0\nAHEAD_BEHIND\r\n0\t0\nLOG\r\n4025b0f (HEAD -> agent/pc-github-relay, origin/agent/pc-github-relay) relay result pc-focus-cleanup-20260927-2345\n49e809b relay: relay-post-recovery-smoke-20260927-2350b\n32da862 relay result cdp-tabs-httpclient-20260927-2355\nc887dfb relay result cancel-duplicate-a2-supervisor-20260927-2310\ndf7cec9 relay result bridge-known-chats-20260927-2350\n9ad3c37 relay result bridge-current-assignments-20260927-2313\nc77f8e1 relay result assign-bridge-integration-via-round2watch-20260927-2346\nf7346b3 relay result check-a2-assignment-20260927-2343\n",
+      "stdout_bytes": 828,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:43:08.833Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:43:08.809Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-relay-rebase-diagnose-20260927-2318"
+    },
+    "request_id": "pc-relay-rebase-diagnose-20260927-2318",
+    "started_at": "2026-09-27T15:43:08.357Z",
+    "status": "completed"
+  },
+  "id": "pc-relay-rebase-diagnose-20260927-2318",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
