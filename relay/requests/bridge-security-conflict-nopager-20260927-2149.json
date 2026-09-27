@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-security-conflict-nopager-20260927-2149",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "git --no-pager -C C:\\agentwork\\WebAIBridge-integration-final diff --cc --unified=6 -- app/agent-execution-control.js app/package.json app/server.js app/supervisor-control.js"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 15000
+}
