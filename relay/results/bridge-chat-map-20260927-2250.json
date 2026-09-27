@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$cfg='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; $c=Get-Content $cfg -Raw|ConvertFrom-Json; foreach($m in @($c.managedChats)){ Write-Output ('M|'+$m.id+'|name='+$m.name+'|url='+$m.url+'|project='+$m.projectId+'|profile='+$m.profileId+'|branch='+$m.branch+'|repo='+$m.repository+'|enabled='+$m.enabled) }; foreach($k in @($c.knownProjectChats)){ Write-Output ('K|'+$k.id+'|name='+$k.name+'|url='+$k.url+'|project='+$k.projectId+'|profile='+$k.profileId) }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "M|chat-6ab6703e-b760-83eb-ae7e-686637c7de67|name=A4|url=https://chatgpt.com/c/6ab6703e-b760-83eb-ae7e-686637c7de67|project=|profile=|branch=|repo=|enabled=True\r\nM|chat-6ab66b08-a90c-83eb-80d8-a7567d24352d|name=SpectraTrack Agent Watch (secondary)|url=https://chatgpt.com/c/6ab66b08-a90c-83eb-80d8-a7567d24352d|project=|profile=|branch=|repo=|enabled=True\r\nM|chat-6ab67022-ae5c-83ed-a654-5dcc82c3b351|name=A2|url=https://chatgpt.com/c/6ab67022-ae5c-83ed-a654-5dcc82c3b351|project=|profile=|branch=|repo=|enabled=True\r\nM|chat-6ab67031-7290-83eb-965e-8cd7c16b3504|name=A3|url=https://chatgpt.com/c/6ab67031-7290-83eb-965e-8cd7c16b3504|project=|profile=|branch=|repo=|enabled=True\r\nM|chat-6ab67052-1ae8-83eb-b5bc-60ddae15aa6f|name=A5|url=https://chatgpt.com/c/6ab67052-1ae8-83eb-b5bc-60ddae15aa6f|project=|profile=|branch=|repo=|enabled=True\r\nM|chat-6ab67007-81fc-83eb-94e1-9511ab086c08|name=A1|url=https://chatgpt.com/c/6ab67007-81fc-83eb-94e1-9511ab086c08|project=|profile=|branch=|repo=|enabled=True\r\nM|chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c|name=SpectraTrack Round2 Watch|url=https://chatgpt.com/c/6ab69af7-68c0-83ed-8552-f5f41d97a00c|project=|profile=|branch=|repo=|enabled=True\r\nM|chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e|name=SpectraTrack Agent Watch (supervisor)|url=https://chatgpt.com/c/6ab77f2d-b9bc-83ed-906e-a0e35cca142e|project=|profile=|branch=|repo=|enabled=True\r\nM|agent-pc-executor|name=PC Executor|url=https://chatgpt.com/c/6ab8bed2-8d0c-83eb-b793-8e504335a57d|project=|profile=ef72920c-cfe7-4824-a79b-7a0e0943ce7e|branch=agent/pc-executor|repo=|enabled=True\r\nK||name=|url=|project=|profile=\r\nK||name=|url=|project=|profile=\r\nK||name=|url=|project=|profile=\r\nK||name=|url=|project=|profile=\r\nK||name=|url=|project=|profile=\r\nK||name=|url=|project=|profile=\r\nK||name=|url=|project=|profile=\r\nK||name=|url=|project=|profile=\r\nK||name=|url=|project=|profile=\r\n",
+      "stdout_bytes": 1876,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:30:51.423Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:30:51.403Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-chat-map-20260927-2250"
+    },
+    "request_id": "bridge-chat-map-20260927-2250",
+    "started_at": "2026-09-27T15:30:51.053Z",
+    "status": "completed"
+  },
+  "id": "bridge-chat-map-20260927-2250",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
