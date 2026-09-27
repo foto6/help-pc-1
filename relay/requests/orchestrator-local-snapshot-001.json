@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "orchestrator-local-snapshot-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue'; Write-Output '===BRIDGE GIT==='; if(Test-Path 'E:\\WebAIBridge'){ git -C E:\\WebAIBridge branch --show-current; git -C E:\\WebAIBridge rev-parse HEAD; git -C E:\\WebAIBridge status --short --branch }; Write-Output '===NODE PROCESSES==='; Get-CimInstance Win32_Process | Where-Object {$_.Name -eq 'node.exe'} | Select-Object ProcessId,CreationDate,CommandLine | Format-List; Write-Output '===AGENT SWEEP==='; if(Test-Path 'E:\\WebAIBridge\\app\\data\\sweep_round2_dispatch.js'){ Set-Location E:\\WebAIBridge\\app; node .\\data\\sweep_round2_dispatch.js }; Write-Output '===AGENT INVENTORY==='; if(Test-Path 'E:\\WebAIBridge\\app\\data\\inventory_real_agent_chats.js'){ Set-Location E:\\WebAIBridge\\app; node .\\data\\inventory_real_agent_chats.js }"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 120000,
+  "note": "Read-only orchestration snapshot via live PC Executor relay."
+}
