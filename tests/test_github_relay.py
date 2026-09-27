@@ -19,7 +19,7 @@ def test_relay_accepts_strict_shell_request() -> None:
             "action": "shell.run",
             "params": {
                 "argv": ["powershell.exe", "-NoProfile", "-Command", "Write-Output ok"],
-                "cwd": r"C:\",
+                "cwd": "C:\\",
             },
             "timeout_ms": 5000,
         },
