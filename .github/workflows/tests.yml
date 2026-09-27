@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - agent/pc-executor
+      - agent/pc-native-tool-parity
   workflow_dispatch:
 
 jobs:
@@ -26,5 +27,15 @@ jobs:
         run: python -m pytest tests/test_preflight.py
       - name: Wave 7 focused context-binding suite
         run: python -m pytest tests/test_execution_context_binding.py
+      - name: Native desktop parity focused suite
+        run: python -m pytest tests/test_pc_operations.py tests/test_native_tool_parity.py
+      - name: Native schema reproducibility
+        shell: bash
+        run: |
+          python tools/generate_native_tool_schemas.py
+          git diff --exit-code -- schemas/
+      - name: Windows native adapter suite
+        if: runner.os == 'Windows'
+        run: python -m pytest tests/windows/test_native_windows_ops.py
       - name: Full test suite
         run: python -m pytest

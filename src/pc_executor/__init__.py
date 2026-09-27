@@ -24,6 +24,13 @@ from .context_binding import (
 )
 from .executor import Executor
 from .models import ActionRequest, ActionResult, AuditEvent, UIObservationSnapshot
+from .operations import (
+    NATIVE_CAPABILITIES_VERSION,
+    NATIVE_REQUEST_VERSION,
+    NATIVE_RESULT_VERSION,
+    NATIVE_TOOL_PARITY_VERSION,
+    LocalOperations,
+)
 from .preflight import (
     CONTRACT_VERSION as ACTION_PREFLIGHT_CONTRACT_VERSION,
     PreflightRequest,
@@ -56,6 +63,11 @@ __all__ = [
     "AuditEvent",
     "CancellationToken",
     "UIObservationSnapshot",
+    "LocalOperations",
+    "NATIVE_TOOL_PARITY_VERSION",
+    "NATIVE_REQUEST_VERSION",
+    "NATIVE_RESULT_VERSION",
+    "NATIVE_CAPABILITIES_VERSION",
     "CAPABILITIES_CONTRACT_VERSION",
     "build_capabilities",
     "validate_capabilities",

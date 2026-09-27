@@ -1,0 +1,101 @@
+{
+  "$id": "pc_executor.native_tool_result.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "enum": [
+        "config.get",
+        "device.info",
+        "fs.append_text",
+        "fs.copy",
+        "fs.delete",
+        "fs.edit_text",
+        "fs.find",
+        "fs.glob",
+        "fs.hash",
+        "fs.list",
+        "fs.mkdir",
+        "fs.move",
+        "fs.read_bytes",
+        "fs.read_text",
+        "fs.search",
+        "fs.stat",
+        "fs.write_text",
+        "health.get",
+        "log.read_since",
+        "log.search",
+        "log.tail",
+        "ops.capabilities.get",
+        "ops.preflight",
+        "process.inspect",
+        "process.list",
+        "process.managed.list",
+        "process.read_output",
+        "process.start",
+        "process.status",
+        "process.terminate",
+        "shell.session.read",
+        "shell.session.start",
+        "shell.session.terminate",
+        "shell.session.write_stdin",
+        "system.info",
+        "system.paths",
+        "system.process.kill",
+        "system.resources"
+      ],
+      "type": "string"
+    },
+    "data": {
+      "type": "object"
+    },
+    "dry_run": {
+      "type": "boolean"
+    },
+    "error": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "error_kind": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "finished_at": {
+      "type": "string"
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "outcome_evidence": {
+      "additionalProperties": true,
+      "type": "object"
+    },
+    "request_id": {
+      "type": "string"
+    },
+    "started_at": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "request_id",
+    "action",
+    "ok",
+    "status",
+    "started_at",
+    "finished_at",
+    "data",
+    "error",
+    "error_kind",
+    "dry_run"
+  ],
+  "title": "PC Executor Native Tool Result v1",
+  "type": "object"
+}

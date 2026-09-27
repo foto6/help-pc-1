@@ -1,0 +1,81 @@
+{
+  "$id": "pc_executor.native_tool_request.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "enum": [
+        "config.get",
+        "device.info",
+        "fs.append_text",
+        "fs.copy",
+        "fs.delete",
+        "fs.edit_text",
+        "fs.find",
+        "fs.glob",
+        "fs.hash",
+        "fs.list",
+        "fs.mkdir",
+        "fs.move",
+        "fs.read_bytes",
+        "fs.read_text",
+        "fs.search",
+        "fs.stat",
+        "fs.write_text",
+        "health.get",
+        "log.read_since",
+        "log.search",
+        "log.tail",
+        "ops.capabilities.get",
+        "ops.preflight",
+        "process.inspect",
+        "process.list",
+        "process.managed.list",
+        "process.read_output",
+        "process.start",
+        "process.status",
+        "process.terminate",
+        "shell.session.read",
+        "shell.session.start",
+        "shell.session.terminate",
+        "shell.session.write_stdin",
+        "system.info",
+        "system.paths",
+        "system.process.kill",
+        "system.resources"
+      ],
+      "type": "string"
+    },
+    "dry_run": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "execution_context_binding": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "params": {
+      "type": "object"
+    },
+    "request_id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "timeout_ms": {
+      "minimum": 1,
+      "type": [
+        "integer",
+        "null"
+      ]
+    }
+  },
+  "required": [
+    "action"
+  ],
+  "title": "PC Executor Native Tool Request v1",
+  "type": "object"
+}

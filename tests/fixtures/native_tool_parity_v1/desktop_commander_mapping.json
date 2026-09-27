@@ -1,0 +1,223 @@
+{
+  "contract_version": "pc_executor.native_tool_parity.v1",
+  "reference_surface": "Remote Desktop Commander / Desktop Commander",
+  "mappings": [
+    {
+      "reference": "list_devices",
+      "candidate": [
+        "device.info"
+      ],
+      "status": "local_only",
+      "note": "Wave 1 exposes the authorized local device only; no remote device broker."
+    },
+    {
+      "reference": "ping",
+      "candidate": [
+        "health.get"
+      ],
+      "status": "direct"
+    },
+    {
+      "reference": "get_config",
+      "candidate": [
+        "config.get"
+      ],
+      "status": "read_only",
+      "note": "Safety limits and contract versions only."
+    },
+    {
+      "reference": "set_config_value",
+      "candidate": [],
+      "status": "unsupported",
+      "note": "Runtime mutation of safety policy is intentionally unsupported."
+    },
+    {
+      "reference": "who_am_i",
+      "candidate": [],
+      "status": "unsupported",
+      "note": "OS/account identity disclosure is not required for native parity."
+    },
+    {
+      "reference": "shutdown",
+      "candidate": [],
+      "status": "unsupported",
+      "note": "Device shutdown is outside Wave 1."
+    },
+    {
+      "reference": "read_file",
+      "candidate": [
+        "fs.read_text",
+        "fs.read_bytes",
+        "log.tail"
+      ],
+      "status": "direct"
+    },
+    {
+      "reference": "read_multiple_files",
+      "candidate": [
+        "fs.read_text",
+        "fs.read_bytes"
+      ],
+      "status": "composed",
+      "note": "Caller issues independent bounded reads; no unbounded multi-read RPC."
+    },
+    {
+      "reference": "write_file",
+      "candidate": [
+        "fs.write_text",
+        "fs.append_text"
+      ],
+      "status": "direct"
+    },
+    {
+      "reference": "write_pdf",
+      "candidate": [],
+      "status": "unsupported",
+      "note": "Binary document generation remains a higher-layer concern."
+    },
+    {
+      "reference": "edit_block",
+      "candidate": [
+        "fs.edit_text"
+      ],
+      "status": "direct",
+      "note": "Requires expected-current SHA-256 and exact replacement count."
+    },
+    {
+      "reference": "list_directory",
+      "candidate": [
+        "fs.list"
+      ],
+      "status": "direct"
+    },
+    {
+      "reference": "move_file",
+      "candidate": [
+        "fs.move"
+      ],
+      "status": "direct"
+    },
+    {
+      "reference": "create_directory",
+      "candidate": [
+        "fs.mkdir"
+      ],
+      "status": "direct"
+    },
+    {
+      "reference": "get_file_info",
+      "candidate": [
+        "fs.stat",
+        "fs.hash"
+      ],
+      "status": "direct"
+    },
+    {
+      "reference": "start_search",
+      "candidate": [
+        "fs.search",
+        "fs.find",
+        "fs.glob",
+        "log.search"
+      ],
+      "status": "direct"
+    },
+    {
+      "reference": "get_more_search_results",
+      "candidate": [
+        "fs.search",
+        "log.read_since"
+      ],
+      "status": "cursor",
+      "note": "Versioned stateless cursors replace server-side search handles."
+    },
+    {
+      "reference": "stop_search",
+      "candidate": [],
+      "status": "not_needed",
+      "note": "Search is stateless and bounded; there is no server search to stop."
+    },
+    {
+      "reference": "list_searches",
+      "candidate": [],
+      "status": "not_needed",
+      "note": "Search is stateless and bounded."
+    },
+    {
+      "reference": "start_process",
+      "candidate": [
+        "process.start",
+        "shell.session.start"
+      ],
+      "status": "direct"
+    },
+    {
+      "reference": "read_process_output",
+      "candidate": [
+        "process.read_output",
+        "shell.session.read"
+      ],
+      "status": "direct"
+    },
+    {
+      "reference": "interact_with_process",
+      "candidate": [
+        "shell.session.write_stdin"
+      ],
+      "status": "direct"
+    },
+    {
+      "reference": "list_sessions",
+      "candidate": [
+        "process.managed.list",
+        "process.status"
+      ],
+      "status": "direct"
+    },
+    {
+      "reference": "force_terminate",
+      "candidate": [
+        "process.terminate"
+      ],
+      "status": "direct",
+      "note": "Managed current-generation handles only."
+    },
+    {
+      "reference": "list_processes",
+      "candidate": [
+        "process.list",
+        "process.inspect"
+      ],
+      "status": "direct"
+    },
+    {
+      "reference": "kill_process",
+      "candidate": [
+        "system.process.kill"
+      ],
+      "status": "direct",
+      "note": "Requires PID plus expected executable name; Windows uses direct process handles."
+    },
+    {
+      "reference": "get_usage_stats",
+      "candidate": [
+        "health.get"
+      ],
+      "status": "partial",
+      "note": "Health exposes gateway state, not connector billing/usage telemetry."
+    },
+    {
+      "reference": "get_recent_tool_calls",
+      "candidate": [],
+      "status": "external_audit",
+      "note": "Use the existing Executor audit/outcome journals rather than a duplicate tool log."
+    }
+  ],
+  "pagination": {
+    "text": "fs.read_text start_line/end_line or tail_lines with max_bytes",
+    "bytes": "fs.read_bytes offset/max_bytes",
+    "log": "log.tail or log.read_since cursor",
+    "process": "process.read_output/shell.session.read cursor or tail_bytes",
+    "search": "fs.search cursor/max_results"
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "$id": "pc_executor.native_tool_capabilities.v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actions": {
+      "additionalProperties": {
+        "additionalProperties": false,
+        "properties": {
+          "side_effecting": {
+            "type": "boolean"
+          },
+          "supported": {
+            "const": true
+          },
+          "tool_contract_version": {
+            "const": "pc_executor.native_tool_parity.v1"
+          }
+        },
+        "required": [
+          "side_effecting",
+          "supported",
+          "tool_contract_version"
+        ],
+        "type": "object"
+      },
+      "propertyNames": {
+        "enum": [
+          "config.get",
+          "device.info",
+          "fs.append_text",
+          "fs.copy",
+          "fs.delete",
+          "fs.edit_text",
+          "fs.find",
+          "fs.glob",
+          "fs.hash",
+          "fs.list",
+          "fs.mkdir",
+          "fs.move",
+          "fs.read_bytes",
+          "fs.read_text",
+          "fs.search",
+          "fs.stat",
+          "fs.write_text",
+          "health.get",
+          "log.read_since",
+          "log.search",
+          "log.tail",
+          "ops.capabilities.get",
+          "ops.preflight",
+          "process.inspect",
+          "process.list",
+          "process.managed.list",
+          "process.read_output",
+          "process.start",
+          "process.status",
+          "process.terminate",
+          "shell.session.read",
+          "shell.session.start",
+          "shell.session.terminate",
+          "shell.session.write_stdin",
+          "system.info",
+          "system.paths",
+          "system.process.kill",
+          "system.resources"
+        ],
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "attestation": {
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "digest": {
+          "pattern": "^[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "algorithm",
+        "digest"
+      ],
+      "type": "object"
+    },
+    "contract_version": {
+      "const": "pc_executor.ops_capabilities.v1"
+    },
+    "native_tool_parity_version": {
+      "const": "pc_executor.native_tool_parity.v1"
+    },
+    "operations_contract_version": {
+      "const": "pc_executor.ops.v1"
+    },
+    "safety": {
+      "type": "object"
+    },
+    "schema_versions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    }
+  },
+  "required": [
+    "contract_version",
+    "operations_contract_version",
+    "native_tool_parity_version",
+    "schema_versions",
+    "actions",
+    "safety",
+    "attestation"
+  ],
+  "title": "PC Executor Native Tool Capabilities v1",
+  "type": "object"
+}

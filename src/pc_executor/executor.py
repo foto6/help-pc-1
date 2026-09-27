@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any, Callable, TypeVar
 
 from .audit import AuditSink, InMemoryAuditSink
@@ -17,6 +18,7 @@ from .capture import PillowScreenCapture, ScreenshotProvider, screenshot_payload
 from .errors import ExecutorError, ExecutorFailureError, PolicyBlockedError
 from .input import InputAdapter, WindowsInputAdapter
 from .models import ActionRequest, ActionResult, AuditEvent, ElementQuery, utc_now_iso
+from .operations import OPS_ACTIONS, OPS_SIDE_EFFECT_ACTIONS, LocalOperations
 from .outcome import ActionOutcomeEvidence, SIDE_EFFECTING_ACTIONS
 from .outcome_journal import (
     ExecutionCorrelation,
@@ -39,6 +41,44 @@ from .vision_target import GroundedTargetContractError, parse_grounded_target_v1
 from .windows import Win32WindowEnumerator, WindowEnumerator
 
 T = TypeVar("T")
+
+
+_AUDIT_REDACT_KEYS = frozenset(
+    {
+        "text",
+        "value",
+        "content",
+        "data_base64",
+        "stdout",
+        "stderr",
+        "lines",
+        "matches",
+        "env",
+        "old_text",
+        "new_text",
+    }
+)
+
+
+def _sanitize_audit_details(value: Any) -> Any:
+    if isinstance(value, dict):
+        output: dict[str, Any] = {}
+        for key, item in value.items():
+            if str(key).casefold() in _AUDIT_REDACT_KEYS:
+                if isinstance(item, str):
+                    output[str(key) + "_redacted_bytes"] = len(
+                        item.encode("utf-8")
+                    )
+                else:
+                    output[str(key) + "_redacted"] = True
+            else:
+                output[str(key)] = _sanitize_audit_details(item)
+        return output
+    if isinstance(value, list):
+        return [_sanitize_audit_details(item) for item in value]
+    if isinstance(value, tuple):
+        return [_sanitize_audit_details(item) for item in value]
+    return value
 
 
 class _OutcomeTracker:
@@ -71,6 +111,8 @@ class Executor:
         accessibility: AccessibilityAdapter | None = None,
         input_adapter: InputAdapter | None = None,
         shell: SafeShellAdapter | None = None,
+        operations: LocalOperations | None = None,
+        operations_state_root: str | Path | None = None,
         audit: AuditSink | None = None,
         outcome_journal: OutcomeJournal | None = None,
         context_observer: ExecutionContextObserver | None = None,
@@ -83,6 +125,10 @@ class Executor:
         self.accessibility = accessibility or WindowsUIAutomationAdapter()
         self.input = input_adapter or WindowsInputAdapter()
         self.shell = shell or SafeShellAdapter()
+        self.operations = operations or LocalOperations(
+            shell=self.shell,
+            state_root=operations_state_root,
+        )
         self.audit = audit or InMemoryAuditSink()
         self.outcome_journal = outcome_journal
         self.context_observer = context_observer or SystemExecutionContextObserver()
@@ -115,6 +161,50 @@ class Executor:
                 capabilities_digest=digest,
                 default_deadline_ms=default_deadline_ms,
                 message=str(exc),
+            )
+        if request.action in OPS_ACTIONS:
+            ops_capabilities = self.operations.capabilities_snapshot()
+            ops_digest = ops_capabilities["attestation"]["digest"]
+            deadline = request.timeout_ms or default_deadline_ms
+            try:
+                self.operations.preflight(request.action, request.params)
+            except SafetyViolation as exc:
+                return PreflightResult(
+                    request_id=request.request_id,
+                    action=request.action,
+                    status="blocked",
+                    executable=False,
+                    capabilities_digest=ops_digest,
+                    deadline_budget_ms=deadline,
+                    reasons=(
+                        {"code": "native_policy_blocked", "message": str(exc)},
+                    ),
+                )
+            except (KeyError, TypeError, ValueError) as exc:
+                return PreflightResult(
+                    request_id=request.request_id,
+                    action=request.action,
+                    status="invalid_request",
+                    executable=False,
+                    capabilities_digest=ops_digest,
+                    deadline_budget_ms=deadline,
+                    reasons=(
+                        {"code": "invalid_request", "message": str(exc)},
+                    ),
+                )
+            return PreflightResult(
+                request_id=request.request_id,
+                action=request.action,
+                status="ready",
+                executable=True,
+                capabilities_digest=ops_digest,
+                deadline_budget_ms=deadline,
+                reasons=(
+                    {
+                        "code": "ready",
+                        "message": "native operation preflight checks passed",
+                    },
+                ),
             )
         return evaluate_preflight(
             request,
@@ -156,7 +246,7 @@ class Executor:
         tracker = _OutcomeTracker(request.action)
         self._audit(request, "start", effective_dry_run)
         try:
-            self._journal_preflight(request, tracker)
+            self._journal_preflight(request, tracker, dry_run=effective_dry_run)
             if (
                 request.execution_context_binding is not None
                 and not tracker.side_effecting
@@ -213,6 +303,14 @@ class Executor:
                 started,
                 effective_dry_run,
                 exc,
+                tracker,
+            )
+        except UnicodeError as exc:
+            return self._error_result(
+                request,
+                started,
+                effective_dry_run,
+                ExecutorFailureError(f"{type(exc).__name__}: {exc}"),
                 tracker,
             )
         except (KeyError, TypeError, ValueError) as exc:
@@ -330,8 +428,20 @@ class Executor:
         self,
         request: ActionRequest,
         tracker: _OutcomeTracker,
+        *,
+        dry_run: bool,
     ) -> None:
-        if not tracker.side_effecting or self.outcome_journal is None:
+        if not tracker.side_effecting or dry_run:
+            return
+        if (
+            request.action in OPS_SIDE_EFFECT_ACTIONS
+            and self.outcome_journal is None
+        ):
+            tracker.journal_blocked = True
+            raise PolicyBlockedError(
+                "native side-effect requires configured outcome journal"
+            )
+        if self.outcome_journal is None:
             return
         try:
             self.outcome_journal.preflight_new_attempt(
@@ -736,6 +846,59 @@ class Executor:
             )
             return {"text_length": len(value)}
 
+        if action in {"ops.capabilities.get", "ops.preflight"}:
+            return self.operations.execute(
+                action,
+                p,
+                cancellation=token,
+            )
+
+        if action in OPS_ACTIONS:
+            preflight_payload = {
+                "contract_version": "pc_executor.action_preflight.v1",
+                "request": {
+                    "request_id": request.request_id,
+                    "action": action,
+                    "params": p,
+                    "dry_run": dry_run,
+                    "timeout_ms": request.timeout_ms,
+                },
+            }
+            native_preflight = self.preflight(preflight_payload)
+            if not native_preflight.executable:
+                reason = native_preflight.reasons[0]["message"]
+                raise PolicyBlockedError(
+                    f"native operation preflight blocked: {reason}"
+                )
+            if dry_run:
+                return {
+                    "would_execute": action,
+                    "preflight": native_preflight.to_dict(),
+                }
+            if action in OPS_SIDE_EFFECT_ACTIONS:
+                return self._bounded_effectful(
+                    request,
+                    dry_run,
+                    token,
+                    tracker,
+                    action,
+                    lambda: self.operations.execute(
+                        action,
+                        p,
+                        cancellation=token,
+                    ),
+                )
+            return self._bounded(
+                request,
+                token,
+                action,
+                lambda: self.operations.execute(
+                    action,
+                    p,
+                    cancellation=token,
+                ),
+            )
+
         if action == "shell.run":
             argv = [str(x) for x in p.get("argv", [])]
             cwd = p.get("cwd")
@@ -767,10 +930,7 @@ class Executor:
         outcome: str | None = None,
         details: dict[str, Any] | None = None,
     ) -> None:
-        safe_details = dict(details or {})
-        if request.action in {"keyboard.type_text", "clipboard.set", "uia.set_value"}:
-            safe_details.pop("text", None)
-            safe_details.pop("value", None)
+        safe_details = _sanitize_audit_details(dict(details or {}))
         self.audit.emit(
             AuditEvent(
                 request_id=request.request_id,

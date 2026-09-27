@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import ntpath
-from pathlib import PureWindowsPath
+import os
+from pathlib import Path, PureWindowsPath
 from typing import Iterable
 
 
@@ -75,3 +76,45 @@ def ensure_argv_allowed(argv: Iterable[str], allow_executables: set[str] | None 
 def ensure_not_sensitive_text(*, is_password: bool, sensitive: bool = False) -> None:
     if is_password or sensitive:
         raise SafetyViolation("credential/sensitive text entry is not supported")
+
+
+def ensure_resolved_path_allowed(
+    value: str | os.PathLike[str],
+    *,
+    for_creation: bool = False,
+) -> Path:
+    """Resolve relative paths and link/junction targets before allowing access."""
+    raw = str(value)
+    ensure_path_allowed(raw)
+    candidate = Path(raw).expanduser()
+    if not candidate.is_absolute():
+        candidate = Path.cwd() / candidate
+
+    if for_creation and not candidate.exists():
+        missing: list[str] = []
+        probe = candidate
+        while not probe.exists():
+            if probe.parent == probe:
+                raise SafetyViolation(f"path has no resolvable existing ancestor: {candidate}")
+            missing.append(probe.name)
+            probe = probe.parent
+        base = probe.resolve(strict=True)
+        ensure_path_allowed(str(base))
+        resolved = base.joinpath(*reversed(missing))
+    else:
+        resolved = candidate.resolve(strict=False)
+    ensure_path_allowed(str(resolved))
+
+    # Re-check all existing ancestors. This catches path aliases where an
+    # intermediate link/junction/reparse point resolves under a protected root.
+    probe = candidate if candidate.exists() else candidate.parent
+    while True:
+        try:
+            if probe.exists():
+                ensure_path_allowed(str(probe.resolve(strict=True)))
+        except OSError as exc:
+            raise SafetyViolation(f"path resolution failed closed: {probe}: {exc}") from exc
+        if probe.parent == probe:
+            break
+        probe = probe.parent
+    return resolved
