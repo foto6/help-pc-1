@@ -1,0 +1,38 @@
+EXECUTE NOW — PRIMARY PC CONTROL WAVE 9 / EXECUTION-CONTEXT + VISION-EPOCH RECONCILIATION. Do not acknowledge readiness.
+
+Repository: foto6/help-pc-2
+Branch: agent/pc-control-plane
+Expected current HEAD: f082a7e837392240788d7474123c90095891e153
+Exact-head CI 36317766821 SUCCESS.
+
+New producer heads:
+- foto6/help-pc-1 agent/pc-executor @ 2cc1e40f792a3d74560b726a0d246c90b7f077e9
+  CI 36318986551 SUCCESS
+  includes pc_executor.execution_context_binding.v1 and canonical provenance fixtures.
+- foto6/vision-2 agent/vision @ 51b96fb41cb72cdfc4a03129d14b9afc5fe750fd
+  CI 36317785328 SUCCESS
+  includes vision.observation_epoch.v1 / target liveness lease fixtures.
+
+Wave8 E2E readiness is already frozen. Extend, do not replace it.
+
+Required:
+1. Pin exact producer fixture packs with source SHA/path/hash provenance; no runtime sibling imports.
+2. Bind the Control action lifecycle across:
+   preflight attestation -> execution-context binding -> immediate dispatch validation -> action outcome/journal -> Vision observation epoch/consistency -> semantic delta -> verification.
+3. Explicit cases:
+   - same process/window/target epoch: execute once;
+   - process restart same title after preflight: Executor not_started/context_mismatch, Control performs read-only reacquire/re-preflight only;
+   - top-level window replacement same automation ids: same fail-closed behavior;
+   - benign move/resize within same epoch: allowed where producer contract says valid;
+   - Vision epoch changes after completed action: verify against new post-action observation without reexecuting;
+   - context mismatch plus unknown journal: reconciliation only, never replay;
+   - completed journal + stale Vision observation: recapture/reverify only;
+   - wrong producer version/digest/binding: fail closed.
+4. State machine/property tests over restart at every durable boundary. At most one side-effect provider call after any dispatch-started/completed boundary.
+5. Keep counters separate for observation/preflight/context-validation/execution/reconciliation/verification.
+6. Produce canonical pc_control.context_epoch_e2e.v1 report with exact producer SHAs, transition trace hash, fixture hashes and scenario outcomes.
+7. Preserve all existing lanes, idempotency, cancellation, dry-run, credential/CAPTCHA rejection and destructive-disabled defaults.
+8. Run focused + full Linux/Windows CI.
+9. Commit/push only agent/pc-control-plane. No merge/release; never touch E:\manhwa.
+
+Final exact SHA + exact CI + report hash + scenario summary.
