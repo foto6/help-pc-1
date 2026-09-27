@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-durable-assignment-snapshot-20260927-2436",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$st='E:\\WebAIBridge\\app\\data\\state.json'; $s=Get-Content $st -Raw|ConvertFrom-Json; $ids=@('2ba64468-e4e8-4272-b63e-e00e491b4ee4','cb7f85d3-226e-4c87-8be2-53ba473bc48d','2d7c4aae-8565-45c2-9751-42dd950c347e','31091def-1cb4-4431-9c58-a6e1b87b6a45'); foreach($id in $ids){$a=@($s.agentAssignments)|Where-Object{$_.id -eq $id}|Select-Object -First 1; if($a){Write-Output ('A|'+$id+'|state='+$a.state+'|dispatch='+$a.dispatchCount+'|head='+$a.currentHead+'|exact='+$a.exactCommitSha+'|ci='+$a.ciConclusion+'|diag='+$a.lastDiagnostic+'|target='+$a.targetChatId)}else{Write-Output ('A|'+$id+'|MISSING')}}; $ms='E:\\WebAIBridge\\app\\data\\managed-chat-status.json'; $m=Get-Content $ms -Raw|ConvertFrom-Json; foreach($cid in @('agent-pc-executor','chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c','chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e','chat-6ab6703e-b760-83eb-ae7e-686637c7de67')){$x=$m.chats.PSObject.Properties[$cid].Value; if($x){Write-Output ('C|'+$cid+'|generating='+$x.generating+'|high='+$x.highMode+'|lastError='+$x.lastError)}}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000
+}
