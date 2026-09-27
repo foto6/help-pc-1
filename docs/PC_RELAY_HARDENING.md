@@ -183,3 +183,12 @@ Before live cutover, rollback is simply to leave the hardened relay stopped. The
 After a live validation run, stop the hardened relay before changing transport ownership. Preserve the dedicated queue ref and its results as audit evidence. Reconcile all results produced since the frozen prototype snapshot before directing any producer back to the prototype transport. Never reset or force-push either history as a rollback mechanism.
 
 No merge or release is part of migration.
+
+
+## Wave2 structured operations
+
+The hardened relay also exposes the additive `pc_executor.ops.v1` surface documented in `docs/PC_OPS_GATEWAY_V1.md`. The legacy Executor v1 capabilities/preflight/outcome/context contracts remain byte-frozen; Wave2 discovery and preflight use `ops.capabilities.get` and `ops.preflight`.
+
+All Wave2 side effects use a separate durable `ops-outcome-journal-v1.jsonl` under the relay state root. Relay reconciliation routes structured actions to that journal through `Executor.read_outcome_evidence`, preserving the same no-blind-replay behavior as Wave1.
+
+The relay action allowlist adds only the structured filesystem/log/process/session/system actions. PowerShell/cmd remain transport-local; process/session start reuses the same relay-local `SafeShellAdapter`. No raw-coordinate, credential-entry, CAPTCHA-entry, or protected-path exception is introduced.

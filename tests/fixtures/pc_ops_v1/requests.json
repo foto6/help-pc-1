@@ -1,0 +1,319 @@
+{
+  "contract_version": "pc_executor.ops.fixture_requests.v1",
+  "request_schema": "schemas/pc_executor.ops.request.v1.schema.json",
+  "requests": [
+    {
+      "request_id": "fixture-01",
+      "action": "fs.list",
+      "params": {
+        "path": "C:\\work\\repo",
+        "max_entries": 100
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-02",
+      "action": "fs.stat",
+      "params": {
+        "path": "C:\\work\\repo\\README.md"
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-03",
+      "action": "fs.read_text",
+      "params": {
+        "path": "C:\\work\\repo\\README.md",
+        "start_line": 1,
+        "end_line": 80,
+        "max_bytes": 65536
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-04",
+      "action": "fs.read_bytes",
+      "params": {
+        "path": "C:\\work\\repo\\artifact.bin",
+        "offset": 0,
+        "max_bytes": 65536
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-05",
+      "action": "fs.hash",
+      "params": {
+        "path": "C:\\work\\repo\\artifact.bin",
+        "max_bytes": 104857600
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-06",
+      "action": "fs.find",
+      "params": {
+        "path": "C:\\work\\repo",
+        "name_contains": "test",
+        "max_results": 100,
+        "max_depth": 8
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-07",
+      "action": "fs.glob",
+      "params": {
+        "path": "C:\\work\\repo",
+        "pattern": "**/*.py",
+        "max_results": 100
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-08",
+      "action": "fs.write_text",
+      "params": {
+        "path": "C:\\work\\repo\\notes.txt",
+        "text": "replacement\n",
+        "expected_current_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-09",
+      "action": "fs.append_text",
+      "params": {
+        "path": "C:\\work\\repo\\notes.txt",
+        "text": "next\n",
+        "expected_current_hash": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-10",
+      "action": "fs.mkdir",
+      "params": {
+        "path": "C:\\work\\repo\\build",
+        "parents": true,
+        "exist_ok": true
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-11",
+      "action": "fs.copy",
+      "params": {
+        "source": "C:\\work\\repo\\a.txt",
+        "destination": "C:\\work\\repo\\b.txt",
+        "expected_source_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-12",
+      "action": "fs.move",
+      "params": {
+        "source": "C:\\work\\repo\\b.txt",
+        "destination": "C:\\work\\repo\\c.txt",
+        "expected_source_hash": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-13",
+      "action": "fs.delete",
+      "params": {
+        "path": "C:\\work\\repo\\obsolete.txt",
+        "classification": "file",
+        "expected_current_hash": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-14",
+      "action": "log.tail",
+      "params": {
+        "path": "C:\\work\\repo\\app.log",
+        "max_lines": 200,
+        "max_bytes": 131072
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-15",
+      "action": "log.read_since",
+      "params": {
+        "path": "C:\\work\\repo\\app.log",
+        "max_bytes": 131072
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-16",
+      "action": "log.search",
+      "params": {
+        "path": "C:\\work\\repo\\app.log",
+        "pattern": "ERROR",
+        "regex": false,
+        "max_matches": 100
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-17",
+      "action": "process.list",
+      "params": {
+        "name_contains": "python",
+        "max_results": 100
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-18",
+      "action": "process.inspect",
+      "params": {
+        "pid": 1234
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-19",
+      "action": "process.start",
+      "params": {
+        "argv": [
+          "python",
+          "-m",
+          "pytest"
+        ],
+        "cwd": "C:\\work\\repo",
+        "inherit_env": true,
+        "output_limit_bytes": 131072
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-20",
+      "action": "process.status",
+      "params": {
+        "handle_id": "process:00000000-0000-0000-0000-000000000000"
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-21",
+      "action": "process.read_output",
+      "params": {
+        "handle_id": "process:00000000-0000-0000-0000-000000000000",
+        "max_bytes": 65536,
+        "wait_ms": 100
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-22",
+      "action": "process.terminate",
+      "params": {
+        "handle_id": "process:00000000-0000-0000-0000-000000000000",
+        "grace_ms": 1000
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-23",
+      "action": "shell.session.start",
+      "params": {
+        "argv": [
+          "python",
+          "-u",
+          "-i"
+        ],
+        "cwd": "C:\\work\\repo",
+        "inherit_env": true,
+        "output_limit_bytes": 131072
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-24",
+      "action": "shell.session.read",
+      "params": {
+        "session_id": "session:00000000-0000-0000-0000-000000000000",
+        "max_bytes": 65536,
+        "wait_ms": 100
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-25",
+      "action": "shell.session.write_stdin",
+      "params": {
+        "session_id": "session:00000000-0000-0000-0000-000000000000",
+        "text": "print('ok')",
+        "append_newline": true,
+        "sensitive": false
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-26",
+      "action": "shell.session.terminate",
+      "params": {
+        "session_id": "session:00000000-0000-0000-0000-000000000000",
+        "grace_ms": 1000
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-27",
+      "action": "system.info",
+      "params": {},
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-28",
+      "action": "system.resources",
+      "params": {
+        "path": "C:\\work\\repo"
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    },
+    {
+      "request_id": "fixture-29",
+      "action": "system.paths",
+      "params": {
+        "path": "C:\\work\\repo"
+      },
+      "dry_run": true,
+      "timeout_ms": 5000
+    }
+  ]
+}

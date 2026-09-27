@@ -1,0 +1,279 @@
+{
+  "contract_version": "pc_executor.ops.fixture_action_inventory.v1",
+  "producer_repository": "foto6/help-pc-1",
+  "producer_branch": "agent/pc-relay-hardening",
+  "producer_source_head": "e0e290403a6e61fa2e4dd9ca063e7c333f5cfa4b",
+  "consumer_repository": "foto6/help-pc-2",
+  "consumer_branch": "agent/pc-ops-gateway",
+  "operation_contract_version": "pc_executor.ops.v1",
+  "capabilities_contract_version": "pc_executor.ops_capabilities.v1",
+  "preflight_contract_version": "pc_executor.ops_preflight.v1",
+  "context_binding_contract_version": "pc_executor.ops_context_binding.v1",
+  "outcome_contract_version": "pc_executor.ops_action_outcome.v1",
+  "groups": {
+    "filesystem_read": [
+      "fs.list",
+      "fs.stat",
+      "fs.read_text",
+      "fs.read_bytes",
+      "fs.hash",
+      "fs.find",
+      "fs.glob"
+    ],
+    "filesystem_write": [
+      "fs.write_text",
+      "fs.append_text",
+      "fs.mkdir",
+      "fs.copy",
+      "fs.move",
+      "fs.delete"
+    ],
+    "logs": [
+      "log.tail",
+      "log.read_since",
+      "log.search"
+    ],
+    "process": [
+      "process.list",
+      "process.inspect",
+      "process.start",
+      "process.status",
+      "process.read_output",
+      "process.terminate"
+    ],
+    "shell_session": [
+      "shell.session.start",
+      "shell.session.read",
+      "shell.session.write_stdin",
+      "shell.session.terminate"
+    ],
+    "system": [
+      "system.info",
+      "system.resources",
+      "system.paths"
+    ],
+    "meta": [
+      "ops.capabilities.get",
+      "ops.preflight"
+    ]
+  },
+  "actions": [
+    {
+      "name": "fs.list",
+      "category": "filesystem_read",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "fs.stat",
+      "category": "filesystem_read",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "fs.read_text",
+      "category": "filesystem_read",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "fs.read_bytes",
+      "category": "filesystem_read",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "fs.hash",
+      "category": "filesystem_read",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "fs.find",
+      "category": "filesystem_read",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "fs.glob",
+      "category": "filesystem_read",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "fs.write_text",
+      "category": "filesystem_write",
+      "side_effecting": true,
+      "preflight_required": true,
+      "durable_outcome": true
+    },
+    {
+      "name": "fs.append_text",
+      "category": "filesystem_write",
+      "side_effecting": true,
+      "preflight_required": true,
+      "durable_outcome": true
+    },
+    {
+      "name": "fs.mkdir",
+      "category": "filesystem_write",
+      "side_effecting": true,
+      "preflight_required": true,
+      "durable_outcome": true
+    },
+    {
+      "name": "fs.copy",
+      "category": "filesystem_write",
+      "side_effecting": true,
+      "preflight_required": true,
+      "durable_outcome": true
+    },
+    {
+      "name": "fs.move",
+      "category": "filesystem_write",
+      "side_effecting": true,
+      "preflight_required": true,
+      "durable_outcome": true
+    },
+    {
+      "name": "fs.delete",
+      "category": "filesystem_write",
+      "side_effecting": true,
+      "preflight_required": true,
+      "durable_outcome": true
+    },
+    {
+      "name": "log.tail",
+      "category": "logs",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "log.read_since",
+      "category": "logs",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "log.search",
+      "category": "logs",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "process.list",
+      "category": "process",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "process.inspect",
+      "category": "process",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "process.start",
+      "category": "process",
+      "side_effecting": true,
+      "preflight_required": true,
+      "durable_outcome": true
+    },
+    {
+      "name": "process.status",
+      "category": "process",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "process.read_output",
+      "category": "process",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "process.terminate",
+      "category": "process",
+      "side_effecting": true,
+      "preflight_required": true,
+      "durable_outcome": true
+    },
+    {
+      "name": "shell.session.start",
+      "category": "shell_session",
+      "side_effecting": true,
+      "preflight_required": true,
+      "durable_outcome": true
+    },
+    {
+      "name": "shell.session.read",
+      "category": "shell_session",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "shell.session.write_stdin",
+      "category": "shell_session",
+      "side_effecting": true,
+      "preflight_required": true,
+      "durable_outcome": true
+    },
+    {
+      "name": "shell.session.terminate",
+      "category": "shell_session",
+      "side_effecting": true,
+      "preflight_required": true,
+      "durable_outcome": true
+    },
+    {
+      "name": "system.info",
+      "category": "system",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "system.resources",
+      "category": "system",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "system.paths",
+      "category": "system",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "ops.capabilities.get",
+      "category": "meta",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    },
+    {
+      "name": "ops.preflight",
+      "category": "meta",
+      "side_effecting": false,
+      "preflight_required": false,
+      "durable_outcome": false
+    }
+  ]
+}

@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spectratrack.local/schemas/pc_executor.ops_outcome_journal.record.v1.schema.json",
+  "title": "PC Executor Structured Operation Outcome Journal Record v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contract_version": {
+      "const": "pc_executor.ops_outcome_journal.record.v1"
+    },
+    "journal_sequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "recorded_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "action": {
+      "enum": [
+        "fs.write_text",
+        "fs.append_text",
+        "fs.mkdir",
+        "fs.copy",
+        "fs.move",
+        "fs.delete",
+        "process.start",
+        "process.terminate",
+        "shell.session.start",
+        "shell.session.write_stdin",
+        "shell.session.terminate"
+      ]
+    },
+    "execution_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "execution_attempt": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "transition": {
+      "enum": [
+        "dispatch_started",
+        "terminal"
+      ]
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "contract_version": {
+          "const": "pc_executor.ops_action_outcome.v1"
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "action": {
+          "enum": [
+            "fs.write_text",
+            "fs.append_text",
+            "fs.mkdir",
+            "fs.copy",
+            "fs.move",
+            "fs.delete",
+            "process.start",
+            "process.terminate",
+            "shell.session.start",
+            "shell.session.write_stdin",
+            "shell.session.terminate"
+          ]
+        },
+        "effect_state": {
+          "enum": [
+            "not_started",
+            "completed",
+            "unknown"
+          ]
+        },
+        "dispatch_started": {
+          "type": "boolean"
+        },
+        "completion_observed": {
+          "type": "boolean"
+        },
+        "reexecution_safe": {
+          "type": "boolean"
+        },
+        "reconciliation_required": {
+          "type": "boolean"
+        },
+        "observed_at": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reason": {
+          "enum": [
+            "dispatch_started",
+            "completed",
+            "dry_run",
+            "policy_blocked",
+            "timeout",
+            "cancelled",
+            "transient",
+            "executor_failure"
+          ]
+        }
+      },
+      "required": [
+        "contract_version",
+        "request_id",
+        "action",
+        "effect_state",
+        "dispatch_started",
+        "completion_observed",
+        "reexecution_safe",
+        "reconciliation_required",
+        "observed_at",
+        "reason"
+      ]
+    },
+    "previous_record_sha256": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "record_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "required": [
+    "contract_version",
+    "journal_sequence",
+    "recorded_at",
+    "request_id",
+    "action",
+    "execution_id",
+    "execution_attempt",
+    "transition",
+    "evidence",
+    "previous_record_sha256",
+    "record_sha256"
+  ]
+}

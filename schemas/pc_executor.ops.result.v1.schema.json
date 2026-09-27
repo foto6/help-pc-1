@@ -1,0 +1,5920 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spectratrack.local/schemas/pc_executor.ops.result.v1.schema.json",
+  "title": "PC Executor Structured Operations ActionResult v1",
+  "description": "Strict successful result data per structured action plus strict ActionResult envelope. Error data is intentionally opaque but object-bounded.",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "ops.capabilities.get"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "capabilities": {
+                  "$ref": "#/$defs/capabilities"
+                }
+              },
+              "required": [
+                "capabilities"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "ops.capabilities.get"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "ops.capabilities.get"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "ops.preflight"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "preflight": {
+                  "$ref": "#/$defs/preflight"
+                }
+              },
+              "required": [
+                "preflight"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "ops.preflight"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "ops.preflight"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.list"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "entries": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "path": {
+                        "type": "string"
+                      },
+                      "kind": {
+                        "enum": [
+                          "directory",
+                          "file",
+                          "other"
+                        ]
+                      },
+                      "bytes": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "modified_ns": {
+                        "type": "integer",
+                        "minimum": 0
+                      },
+                      "symlink": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "path",
+                      "kind",
+                      "bytes",
+                      "modified_ns",
+                      "symlink"
+                    ]
+                  }
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "limit": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "path",
+                "entries",
+                "count",
+                "limit"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "fs.list"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.list"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.stat"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "exists": {
+                  "const": true
+                },
+                "kind": {
+                  "enum": [
+                    "directory",
+                    "file",
+                    "other"
+                  ]
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "modified_ns": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "device": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "inode": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "symlink": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "path",
+                "exists",
+                "kind",
+                "bytes",
+                "modified_ns",
+                "device",
+                "inode",
+                "symlink"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "fs.stat"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.stat"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.read_text"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "encoding": {
+                  "type": "string"
+                },
+                "start_line": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "next_line": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "text": {
+                  "type": "string"
+                },
+                "returned_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "truncated": {
+                  "type": "boolean"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              },
+              "required": [
+                "path",
+                "encoding",
+                "start_line",
+                "next_line",
+                "text",
+                "returned_bytes",
+                "truncated",
+                "sha256"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "fs.read_text"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.read_text"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.read_bytes"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "offset": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "next_offset": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "data_base64": {
+                  "type": "string"
+                },
+                "returned_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "file_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "truncated": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "path",
+                "offset",
+                "next_offset",
+                "data_base64",
+                "returned_bytes",
+                "file_bytes",
+                "truncated"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "fs.read_bytes"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.read_bytes"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.hash"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "algorithm": {
+                  "const": "sha256"
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "path",
+                "algorithm",
+                "sha256",
+                "bytes"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "fs.hash"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.hash"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.find"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "truncated": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "path",
+                "results",
+                "count",
+                "truncated"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "fs.find"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.find"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.glob"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "pattern": {
+                  "type": "string"
+                },
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "truncated": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "path",
+                "pattern",
+                "results",
+                "count",
+                "truncated"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "fs.glob"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.glob"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.write_text"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "atomic_replace": {
+                  "const": true
+                }
+              },
+              "required": [
+                "path",
+                "bytes",
+                "sha256",
+                "atomic_replace"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "fs.write_text"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.write_text"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.append_text"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "appended_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "atomic_replace": {
+                  "const": true
+                }
+              },
+              "required": [
+                "path",
+                "appended_bytes",
+                "bytes",
+                "sha256",
+                "atomic_replace"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "fs.append_text"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.append_text"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.mkdir"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "created": {
+                  "const": true
+                }
+              },
+              "required": [
+                "path",
+                "created"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "fs.mkdir"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.mkdir"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.copy"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "source": {
+                  "type": "string"
+                },
+                "destination": {
+                  "type": "string"
+                },
+                "bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "atomic_replace": {
+                  "const": true
+                }
+              },
+              "required": [
+                "source",
+                "destination",
+                "bytes",
+                "sha256",
+                "atomic_replace"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "fs.copy"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.copy"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.move"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "source": {
+                  "type": "string"
+                },
+                "destination": {
+                  "type": "string"
+                },
+                "atomic_move": {
+                  "const": true
+                }
+              },
+              "required": [
+                "source",
+                "destination",
+                "atomic_move"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "fs.move"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.move"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.delete"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "classification": {
+                  "enum": [
+                    "file",
+                    "empty_directory"
+                  ]
+                },
+                "deleted": {
+                  "const": true
+                }
+              },
+              "required": [
+                "path",
+                "classification",
+                "deleted"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "fs.delete"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "fs.delete"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "log.tail"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "lines": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "returned_lines": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "returned_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "file_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "truncated": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "path",
+                "lines",
+                "returned_lines",
+                "returned_bytes",
+                "file_bytes",
+                "truncated"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "log.tail"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "log.tail"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "log.read_since"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "text": {
+                  "type": "string"
+                },
+                "returned_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "cursor": {
+                  "$ref": "#/$defs/logCursor"
+                },
+                "has_more": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "path",
+                "text",
+                "returned_bytes",
+                "cursor",
+                "has_more"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "log.read_since"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "log.read_since"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "log.search"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "path": {
+                  "type": "string"
+                },
+                "matches": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "line_number": {
+                        "type": "integer",
+                        "minimum": 1
+                      },
+                      "text": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "line_number",
+                      "text"
+                    ]
+                  }
+                },
+                "match_count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "scanned_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "bounded": {
+                  "const": true
+                }
+              },
+              "required": [
+                "path",
+                "matches",
+                "match_count",
+                "scanned_bytes",
+                "bounded"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "log.search"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "log.search"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "process.list"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "processes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/processEntry"
+                  }
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "limit": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "processes",
+                "count",
+                "limit"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "process.list"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "process.list"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "process.inspect"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/processEntry"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "process.inspect"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "process.inspect"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "process.start"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "version": {
+                  "const": "pc_executor.process_handle.v1"
+                },
+                "handle_id": {
+                  "type": "string"
+                },
+                "session_id": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "pid": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "kind": {
+                  "enum": [
+                    "process",
+                    "session"
+                  ]
+                },
+                "executable": {
+                  "type": "string"
+                },
+                "started_at": {
+                  "type": "string"
+                },
+                "output_limit_bytes": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "version",
+                "handle_id",
+                "session_id",
+                "pid",
+                "kind",
+                "executable",
+                "started_at",
+                "output_limit_bytes"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "process.start"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "process.start"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "process.status"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "handle_id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "process",
+                        "session"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "pid": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "status": {
+                  "enum": [
+                    "running",
+                    "exited",
+                    "stale_after_restart"
+                  ]
+                },
+                "owned_by_current_gateway": {
+                  "type": "boolean"
+                },
+                "returncode": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "handle_id",
+                "kind",
+                "pid",
+                "status",
+                "owned_by_current_gateway",
+                "returncode"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "process.status"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "process.status"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "process.read_output"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "handle_id": {
+                  "type": "string"
+                },
+                "stdout": {
+                  "type": "string"
+                },
+                "stderr": {
+                  "type": "string"
+                },
+                "stdout_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "stderr_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "stdout_truncated_before_cursor": {
+                  "type": "boolean"
+                },
+                "stderr_truncated_before_cursor": {
+                  "type": "boolean"
+                },
+                "cursor": {
+                  "$ref": "#/$defs/streamCursor"
+                },
+                "running": {
+                  "type": "boolean"
+                },
+                "returncode": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "handle_id",
+                "stdout",
+                "stderr",
+                "stdout_bytes",
+                "stderr_bytes",
+                "stdout_truncated_before_cursor",
+                "stderr_truncated_before_cursor",
+                "cursor",
+                "running",
+                "returncode"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "process.read_output"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "process.read_output"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "process.terminate"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "handle_id": {
+                  "type": "string"
+                },
+                "already_exited": {
+                  "type": "boolean"
+                },
+                "returncode": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "handle_id",
+                "already_exited",
+                "returncode"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "process.terminate"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "process.terminate"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "shell.session.start"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "version": {
+                  "const": "pc_executor.process_handle.v1"
+                },
+                "handle_id": {
+                  "type": "string"
+                },
+                "session_id": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "pid": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "kind": {
+                  "enum": [
+                    "process",
+                    "session"
+                  ]
+                },
+                "executable": {
+                  "type": "string"
+                },
+                "started_at": {
+                  "type": "string"
+                },
+                "output_limit_bytes": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "version",
+                "handle_id",
+                "session_id",
+                "pid",
+                "kind",
+                "executable",
+                "started_at",
+                "output_limit_bytes"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "shell.session.start"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "shell.session.start"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "shell.session.read"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "handle_id": {
+                  "type": "string"
+                },
+                "stdout": {
+                  "type": "string"
+                },
+                "stderr": {
+                  "type": "string"
+                },
+                "stdout_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "stderr_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "stdout_truncated_before_cursor": {
+                  "type": "boolean"
+                },
+                "stderr_truncated_before_cursor": {
+                  "type": "boolean"
+                },
+                "cursor": {
+                  "$ref": "#/$defs/streamCursor"
+                },
+                "running": {
+                  "type": "boolean"
+                },
+                "returncode": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "handle_id",
+                "stdout",
+                "stderr",
+                "stdout_bytes",
+                "stderr_bytes",
+                "stdout_truncated_before_cursor",
+                "stderr_truncated_before_cursor",
+                "cursor",
+                "running",
+                "returncode"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "shell.session.read"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "shell.session.read"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "shell.session.write_stdin"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "session_id": {
+                  "type": "string"
+                },
+                "written_bytes": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "session_id",
+                "written_bytes"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "shell.session.write_stdin"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "shell.session.write_stdin"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "shell.session.terminate"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "handle_id": {
+                  "type": "string"
+                },
+                "already_exited": {
+                  "type": "boolean"
+                },
+                "returncode": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "handle_id",
+                "already_exited",
+                "returncode"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "shell.session.terminate"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "shell.session.terminate"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "system.info"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "platform_system": {
+                  "type": "string"
+                },
+                "platform_release": {
+                  "type": "string"
+                },
+                "platform_machine": {
+                  "type": "string"
+                },
+                "os_family": {
+                  "type": "string"
+                },
+                "python_version": {
+                  "type": "string"
+                },
+                "cpu_count": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "platform_system",
+                "platform_release",
+                "platform_machine",
+                "os_family",
+                "python_version",
+                "cpu_count"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "system.info"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "system.info"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "system.resources"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "cpu_count": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "load_average": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "minItems": 3,
+                      "maxItems": 3,
+                      "items": {
+                        "type": "number"
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "memory": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                        "total_bytes": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "available_bytes": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "total_bytes",
+                        "available_bytes"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "disk": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    },
+                    "total_bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "used_bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "free_bytes": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "total_bytes",
+                    "used_bytes",
+                    "free_bytes"
+                  ]
+                },
+                "gpu": {
+                  "type": "null"
+                }
+              },
+              "required": [
+                "cpu_count",
+                "load_average",
+                "memory",
+                "disk",
+                "gpu"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "system.resources"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "system.resources"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": true
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "system.paths"
+        },
+        "data": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "cwd": {
+                  "type": "string"
+                },
+                "separator": {
+                  "type": "string"
+                },
+                "path_separator": {
+                  "type": "string"
+                },
+                "requested": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    },
+                    "exists": {
+                      "type": "boolean"
+                    },
+                    "parent_exists": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "exists",
+                    "parent_exists"
+                  ]
+                }
+              },
+              "required": [
+                "cwd",
+                "separator",
+                "path_separator"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "would_execute": {
+                  "const": "system.paths"
+                }
+              },
+              "required": [
+                "would_execute"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "ok": {
+          "const": false
+        },
+        "status": {
+          "type": "string"
+        },
+        "started_at": {
+          "type": "string"
+        },
+        "finished_at": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "minLength": 1
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dry_run": {
+          "type": "boolean"
+        },
+        "outcome_evidence": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/outcome"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "action": {
+          "const": "system.paths"
+        },
+        "data": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "request_id",
+        "action",
+        "ok",
+        "status",
+        "started_at",
+        "finished_at",
+        "data",
+        "error",
+        "error_kind",
+        "dry_run"
+      ]
+    }
+  ],
+  "$defs": {
+    "streamCursor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": "pc_executor.stream_cursor.v1"
+        },
+        "handle_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stdout_offset": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stderr_offset": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "version",
+        "handle_id",
+        "stdout_offset",
+        "stderr_offset"
+      ]
+    },
+    "logCursor": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "version": {
+          "const": "pc_executor.log_cursor.v1"
+        },
+        "path_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "device": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "inode": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "offset": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "version",
+        "path_sha256",
+        "device",
+        "inode",
+        "offset"
+      ]
+    },
+    "outcome": {
+      "$ref": "pc_executor.ops_outcome.v1.schema.json"
+    },
+    "capabilities": {
+      "$ref": "pc_executor.ops_capabilities.v1.schema.json"
+    },
+    "preflight": {
+      "$ref": "pc_executor.ops_preflight.v1.schema.json"
+    },
+    "processEntry": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "pid": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "pid",
+            "name"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "pid": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "ppid": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "pid",
+            "ppid",
+            "name"
+          ]
+        }
+      ]
+    }
+  }
+}

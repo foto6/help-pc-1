@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spectratrack.local/schemas/pc_executor.ops_preflight.v1.schema.json",
+  "title": "PC Executor Structured Operation Preflight Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contract_version": {
+      "const": "pc_executor.ops_preflight.v1"
+    },
+    "request_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "action": {
+      "anyOf": [
+        {
+          "enum": [
+            "fs.list",
+            "fs.stat",
+            "fs.read_text",
+            "fs.read_bytes",
+            "fs.hash",
+            "fs.find",
+            "fs.glob",
+            "fs.write_text",
+            "fs.append_text",
+            "fs.mkdir",
+            "fs.copy",
+            "fs.move",
+            "fs.delete",
+            "log.tail",
+            "log.read_since",
+            "log.search",
+            "process.list",
+            "process.inspect",
+            "process.start",
+            "process.status",
+            "process.read_output",
+            "process.terminate",
+            "shell.session.start",
+            "shell.session.read",
+            "shell.session.write_stdin",
+            "shell.session.terminate",
+            "system.info",
+            "system.resources",
+            "system.paths"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "enum": [
+        "ready",
+        "blocked",
+        "invalid_request"
+      ]
+    },
+    "executable": {
+      "type": "boolean"
+    },
+    "side_effecting": {
+      "type": "boolean"
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "context_binding": {
+      "anyOf": [
+        {
+          "$ref": "pc_executor.ops_context_binding.v1.schema.json"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "contract_version",
+    "request_id",
+    "action",
+    "status",
+    "executable",
+    "side_effecting",
+    "reason",
+    "context_binding"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "ready"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "executable": {
+            "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "blocked",
+              "invalid_request"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "executable": {
+            "const": false
+          }
+        }
+      }
+    }
+  ]
+}

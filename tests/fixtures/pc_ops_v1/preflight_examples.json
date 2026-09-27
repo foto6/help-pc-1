@@ -1,0 +1,39 @@
+{
+  "contract_version": "pc_executor.ops.fixture_preflight_examples.v1",
+  "examples": [
+    {
+      "name": "ready_process_start",
+      "result": {
+        "contract_version": "pc_executor.ops_preflight.v1",
+        "request_id": "fixture-process-start",
+        "action": "process.start",
+        "status": "ready",
+        "executable": true,
+        "side_effecting": true,
+        "reason": "ready",
+        "context_binding": {
+          "contract_version": "pc_executor.ops_context_binding.v1",
+          "action": "process.start",
+          "executable": "python.exe",
+          "cwd_path_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+          "cwd_device": 1,
+          "cwd_inode": 2,
+          "context_digest": "d29026373cac614f9df8661d71c586462d656631e852014c2a34a745424cfb00"
+        }
+      }
+    },
+    {
+      "name": "blocked_sensitive_environment",
+      "result": {
+        "contract_version": "pc_executor.ops_preflight.v1",
+        "request_id": "fixture-sensitive-env",
+        "action": "process.start",
+        "status": "blocked",
+        "executable": false,
+        "side_effecting": true,
+        "reason": "process.start sensitive environment key is forbidden: API_TOKEN",
+        "context_binding": null
+      }
+    }
+  ]
+}

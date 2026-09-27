@@ -1,0 +1,618 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spectratrack.local/schemas/pc_executor.ops_capabilities.v1.schema.json",
+  "title": "PC Executor Structured Operations Capabilities v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contract_version": {
+      "const": "pc_executor.ops_capabilities.v1"
+    },
+    "operations_contract_version": {
+      "const": "pc_executor.ops.v1"
+    },
+    "actions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fs.list": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "fs.stat": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "fs.read_text": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "fs.read_bytes": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "fs.hash": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "fs.find": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "fs.glob": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "fs.write_text": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": true
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "fs.append_text": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": true
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "fs.mkdir": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": true
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "fs.copy": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": true
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "fs.move": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": true
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "fs.delete": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": true
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "log.tail": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "log.read_since": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "log.search": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "process.list": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "process.inspect": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "process.start": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": true
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "process.status": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "process.read_output": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "process.terminate": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": true
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "shell.session.start": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": true
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "shell.session.read": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "shell.session.write_stdin": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": true
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "shell.session.terminate": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": true
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "system.info": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "system.resources": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "system.paths": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "ops.capabilities.get": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        },
+        "ops.preflight": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "side_effecting": {
+              "const": false
+            },
+            "supported": {
+              "const": true
+            }
+          },
+          "required": [
+            "side_effecting",
+            "supported"
+          ]
+        }
+      },
+      "required": [
+        "fs.list",
+        "fs.stat",
+        "fs.read_text",
+        "fs.read_bytes",
+        "fs.hash",
+        "fs.find",
+        "fs.glob",
+        "fs.write_text",
+        "fs.append_text",
+        "fs.mkdir",
+        "fs.copy",
+        "fs.move",
+        "fs.delete",
+        "log.tail",
+        "log.read_since",
+        "log.search",
+        "process.list",
+        "process.inspect",
+        "process.start",
+        "process.status",
+        "process.read_output",
+        "process.terminate",
+        "shell.session.start",
+        "shell.session.read",
+        "shell.session.write_stdin",
+        "shell.session.terminate",
+        "system.info",
+        "system.resources",
+        "system.paths",
+        "ops.capabilities.get",
+        "ops.preflight"
+      ]
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "protected_path_policy": {
+          "const": "lexical_plus_resolved_target_and_existing_ancestors"
+        },
+        "credential_entry_allowed": {
+          "const": false
+        },
+        "captcha_entry_allowed": {
+          "const": false
+        },
+        "process_termination_scope": {
+          "const": "gateway_owned_current_generation_only"
+        },
+        "max_text_read_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_binary_read_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_log_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_process_output_bytes": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "protected_path_policy",
+        "credential_entry_allowed",
+        "captcha_entry_allowed",
+        "process_termination_scope",
+        "max_text_read_bytes",
+        "max_binary_read_bytes",
+        "max_log_bytes",
+        "max_process_output_bytes"
+      ]
+    },
+    "attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "const": "sha256"
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "algorithm",
+        "digest"
+      ]
+    }
+  },
+  "required": [
+    "contract_version",
+    "operations_contract_version",
+    "actions",
+    "safety",
+    "attestation"
+  ]
+}

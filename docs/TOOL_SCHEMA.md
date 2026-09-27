@@ -82,3 +82,12 @@ Live `screenshot.capture` returns `capture_id`, `width`, `height`, `coordinate_s
 ## UIA snapshot transport
 
 `uia.snapshot` returns both a parsed `snapshot` object and `canonical_json`. Nodes carry deterministic node ids, role/name/automation id/class, enabled/offscreen state, physical bounds, display id, window/process ids and invoke/value capability flags.
+
+
+## Structured operations v1
+
+Routine engineering operations should prefer the additive `pc_executor.ops.v1` actions over encoding equivalent work in `shell.run`. Discovery is `ops.capabilities.get`; read-only side-effect validation is `ops.preflight`.
+
+The canonical action list, strict request/result schemas, fixture hashes, and shell migration matrix are documented in `docs/PC_OPS_GATEWAY_V1.md` and `tests/fixtures/pc_ops_v1/manifest.json`.
+
+Git intentionally remains under the existing safe shell/process primitives rather than gaining a second Git-specific policy model.

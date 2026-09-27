@@ -1,0 +1,157 @@
+{
+  "contract_version": "pc_executor.ops.shell_migration_matrix.v1",
+  "producer_source_head": "e0e290403a6e61fa2e4dd9ca063e7c333f5cfa4b",
+  "rule": "Prefer a structured operation when a row exists. Git remains shell.run so there is one command-execution security model.",
+  "rows": [
+    {
+      "shell_equivalent": "Get-ChildItem / dir / ls",
+      "structured_action": "fs.list",
+      "notes": "bounded directory enumeration; no shell parsing"
+    },
+    {
+      "shell_equivalent": "Get-Item / stat",
+      "structured_action": "fs.stat",
+      "notes": "resolved metadata only"
+    },
+    {
+      "shell_equivalent": "Get-Content / cat / type",
+      "structured_action": "fs.read_text",
+      "notes": "line/range and byte bounds"
+    },
+    {
+      "shell_equivalent": "binary read + base64",
+      "structured_action": "fs.read_bytes",
+      "notes": "base64 response with strict byte bound"
+    },
+    {
+      "shell_equivalent": "Get-FileHash / sha256sum",
+      "structured_action": "fs.hash",
+      "notes": "bounded SHA-256"
+    },
+    {
+      "shell_equivalent": "Get-ChildItem -Recurse / find",
+      "structured_action": "fs.find",
+      "notes": "bounded count/depth"
+    },
+    {
+      "shell_equivalent": "Get-ChildItem -Filter / glob",
+      "structured_action": "fs.glob",
+      "notes": "relative pattern; bounded count"
+    },
+    {
+      "shell_equivalent": "Set-Content / redirection >",
+      "structured_action": "fs.write_text",
+      "notes": "atomic replace; create/overwrite/hash policy"
+    },
+    {
+      "shell_equivalent": "Add-Content / redirection >>",
+      "structured_action": "fs.append_text",
+      "notes": "atomic reconstructed append with optional expected hash"
+    },
+    {
+      "shell_equivalent": "New-Item -ItemType Directory / mkdir",
+      "structured_action": "fs.mkdir",
+      "notes": "explicit parents/exist_ok"
+    },
+    {
+      "shell_equivalent": "Copy-Item / cp",
+      "structured_action": "fs.copy",
+      "notes": "bounded atomic destination replace; optional source hash"
+    },
+    {
+      "shell_equivalent": "Move-Item / mv",
+      "structured_action": "fs.move",
+      "notes": "same-filesystem atomic move; optional source hash"
+    },
+    {
+      "shell_equivalent": "Remove-Item / del / rm",
+      "structured_action": "fs.delete",
+      "notes": "file or empty_directory classification; file hash required"
+    },
+    {
+      "shell_equivalent": "Get-Content -Tail / tail",
+      "structured_action": "log.tail",
+      "notes": "bounded lines and bytes; no follow"
+    },
+    {
+      "shell_equivalent": "manual byte-offset log polling",
+      "structured_action": "log.read_since",
+      "notes": "stable file-identity cursor"
+    },
+    {
+      "shell_equivalent": "Select-String / grep",
+      "structured_action": "log.search",
+      "notes": "bounded literal/regex search"
+    },
+    {
+      "shell_equivalent": "Get-Process / tasklist / ps",
+      "structured_action": "process.list",
+      "notes": "bounded/filterable read-only process list"
+    },
+    {
+      "shell_equivalent": "Get-Process -Id / ps -p",
+      "structured_action": "process.inspect",
+      "notes": "read-only process inspection"
+    },
+    {
+      "shell_equivalent": "Start-Process / background command",
+      "structured_action": "process.start",
+      "notes": "safe argv/cwd/env policy and gateway-owned handle"
+    },
+    {
+      "shell_equivalent": "poll child process",
+      "structured_action": "process.status",
+      "notes": "managed handle status"
+    },
+    {
+      "shell_equivalent": "capture child stdout/stderr",
+      "structured_action": "process.read_output",
+      "notes": "cursor-based bounded output"
+    },
+    {
+      "shell_equivalent": "Stop-Process / kill",
+      "structured_action": "process.terminate",
+      "notes": "only current-generation gateway-owned handles"
+    },
+    {
+      "shell_equivalent": "long-lived pwsh/cmd/python process",
+      "structured_action": "shell.session.start",
+      "notes": "managed interactive stdin/stdout session"
+    },
+    {
+      "shell_equivalent": "poll interactive output",
+      "structured_action": "shell.session.read",
+      "notes": "cursor-based bounded output"
+    },
+    {
+      "shell_equivalent": "send interactive stdin",
+      "structured_action": "shell.session.write_stdin",
+      "notes": "bounded, credential/CAPTCHA blocked"
+    },
+    {
+      "shell_equivalent": "stop interactive session",
+      "structured_action": "shell.session.terminate",
+      "notes": "only current-generation gateway-owned session"
+    },
+    {
+      "shell_equivalent": "systeminfo / uname / platform probes",
+      "structured_action": "system.info",
+      "notes": "read-only normalized system summary"
+    },
+    {
+      "shell_equivalent": "CPU/RAM/disk probes",
+      "structured_action": "system.resources",
+      "notes": "read-only bounded resource snapshot; GPU null unless safely implemented"
+    },
+    {
+      "shell_equivalent": "pwd / path existence validation",
+      "structured_action": "system.paths",
+      "notes": "resolved cwd/requested path validation"
+    },
+    {
+      "shell_equivalent": "git status/log/diff/add/commit/etc.",
+      "structured_action": "shell.run",
+      "notes": "Git intentionally remains under the existing safe shell model; no second Git policy"
+    }
+  ]
+}

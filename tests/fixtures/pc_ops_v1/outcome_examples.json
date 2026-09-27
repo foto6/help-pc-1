@@ -1,0 +1,41 @@
+{
+  "contract_version": "pc_executor.ops.fixture_outcomes.v1",
+  "examples": [
+    {
+      "contract_version": "pc_executor.ops_action_outcome.v1",
+      "request_id": "fixture-write",
+      "action": "fs.write_text",
+      "effect_state": "completed",
+      "dispatch_started": true,
+      "completion_observed": true,
+      "reexecution_safe": false,
+      "reconciliation_required": false,
+      "observed_at": "2026-09-27T00:00:00.000Z",
+      "reason": "completed"
+    },
+    {
+      "contract_version": "pc_executor.ops_action_outcome.v1",
+      "request_id": "fixture-append-unknown",
+      "action": "fs.append_text",
+      "effect_state": "unknown",
+      "dispatch_started": true,
+      "completion_observed": false,
+      "reexecution_safe": false,
+      "reconciliation_required": true,
+      "observed_at": "2026-09-27T00:00:00.000Z",
+      "reason": "executor_failure"
+    },
+    {
+      "contract_version": "pc_executor.ops_action_outcome.v1",
+      "request_id": "fixture-delete-blocked",
+      "action": "fs.delete",
+      "effect_state": "not_started",
+      "dispatch_started": false,
+      "completion_observed": false,
+      "reexecution_safe": true,
+      "reconciliation_required": false,
+      "observed_at": "2026-09-27T00:00:00.000Z",
+      "reason": "policy_blocked"
+    }
+  ]
+}

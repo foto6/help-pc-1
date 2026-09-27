@@ -1,0 +1,91 @@
+{
+  "contract_version": "pc_executor.ops_fixture_manifest.v1",
+  "producer_repository": "foto6/help-pc-1",
+  "producer_branch": "agent/pc-relay-hardening",
+  "producer_source_head": "e0e290403a6e61fa2e4dd9ca063e7c333f5cfa4b",
+  "consumer_repository": "foto6/help-pc-2",
+  "consumer_branch": "agent/pc-ops-gateway",
+  "action_count": 31,
+  "non_meta_operation_count": 29,
+  "schema_count": 7,
+  "fixture_payload_count": 5,
+  "contracts": {
+    "operations": "pc_executor.ops.v1",
+    "capabilities": "pc_executor.ops_capabilities.v1",
+    "preflight": "pc_executor.ops_preflight.v1",
+    "context_binding": "pc_executor.ops_context_binding.v1",
+    "outcome": "pc_executor.ops_action_outcome.v1",
+    "outcome_journal_record": "pc_executor.ops_outcome_journal.record.v1",
+    "stream_cursor": "pc_executor.stream_cursor.v1",
+    "log_cursor": "pc_executor.log_cursor.v1",
+    "process_handle": "pc_executor.process_handle.v1"
+  },
+  "frozen_legacy_v1_git_blobs": {
+    "src/pc_executor/capabilities.py": "a30a2f49736a445ca1574519f85775761359e2c0",
+    "src/pc_executor/preflight.py": "884d4f7668dfdacc61467bf2270f4469bc046417",
+    "src/pc_executor/outcome.py": "f79c0dc2d6b1ded11a9ef57dd1fe66110daaabff",
+    "src/pc_executor/outcome_journal.py": "dd7f904fc10abfdd8bb385b8cf31b5177e9cb07b"
+  },
+  "files": {
+    "schemas/pc_executor.ops.request.v1.schema.json": {
+      "sha256": "f545c2f28a485402001f8dfd6f76628d3fae9c83626c32c0ebdd4be9181b6e75",
+      "bytes": 97490,
+      "git_blob_sha1": "b080655a98d5ec9cc495240231133b75dc442df3"
+    },
+    "schemas/pc_executor.ops.result.v1.schema.json": {
+      "sha256": "3e25bd1bc615407ebe1ce211c46cc161fd9936b9d58d4af0fe79b794d23dee2f",
+      "bytes": 126082,
+      "git_blob_sha1": "0be6d9eb555a36dda9997b5fca29146d706b1f4f"
+    },
+    "schemas/pc_executor.ops_capabilities.v1.schema.json": {
+      "sha256": "b566f20b4388f03d17c9118f220ee24d5825f7e7e497142ded8a5a5ca59836b0",
+      "bytes": 14795,
+      "git_blob_sha1": "1e152f784ccbe9112f2d34d70247ada402fe1d82"
+    },
+    "schemas/pc_executor.ops_preflight.v1.schema.json": {
+      "sha256": "ec90a0b96e622498c57139c9ab0b7bd86bf6710034be8e407c0af0ada5dbd2de",
+      "bytes": 2802,
+      "git_blob_sha1": "d97715e96bb8232124b7b06da46d478d87936273"
+    },
+    "schemas/pc_executor.ops_context_binding.v1.schema.json": {
+      "sha256": "e12e837286d70e514927a6230a5034b778894083cf83633d47d768dd11f765c5",
+      "bytes": 1262,
+      "git_blob_sha1": "2fc2848a23c2e4179e8911a98cb02efd451c1831"
+    },
+    "schemas/pc_executor.ops_outcome.v1.schema.json": {
+      "sha256": "4ba4eca130b24efcb0073a47259d04977d8dfca258f8a859c19bbda445239fd2",
+      "bytes": 1671,
+      "git_blob_sha1": "c0e91744dfecd897f655e1362e8850cdcf2cb208"
+    },
+    "schemas/pc_executor.ops_outcome_journal.record.v1.schema.json": {
+      "sha256": "371e0a0937c9d0861357ae9f01de5efa41918296018901e69c7df654a51d5410",
+      "bytes": 3513,
+      "git_blob_sha1": "a28484bbb94abc65224f51b1b03ba24476e71d21"
+    },
+    "action_inventory.json": {
+      "sha256": "ff5df1bc6b15f1606f49d72720721b47393963f2931f1548aa07b338a045b7f5",
+      "bytes": 6923,
+      "git_blob_sha1": "f35ebc02cd8a1dcfbe871d102b3721dc0ae92956"
+    },
+    "shell_migration_matrix.json": {
+      "sha256": "2fae6e095973a8b0dcd2a62e6492b4aba61b7cd906daf78847ec15d65dab1582",
+      "bytes": 5333,
+      "git_blob_sha1": "bff472f643946cd336d6dd38f870afe94dcad961"
+    },
+    "requests.json": {
+      "sha256": "698917fa4dc8d7c9674b9964ab08cb256446c0db0c3ebbb26c404248c34b617a",
+      "bytes": 7699,
+      "git_blob_sha1": "8f1f3b2c106c7ff74a9cbea129f91a4d86e5e8e2"
+    },
+    "preflight_examples.json": {
+      "sha256": "a562e377fe48e755aeb0dd94bac157c1469f2387b1ccb60a6992e13294b50ba8",
+      "bytes": 1288,
+      "git_blob_sha1": "e341e29a915fd3e7122fc6e9ba16bee2094a2d30"
+    },
+    "outcome_examples.json": {
+      "sha256": "3e7cf1b7083993a381f5d563538d006fd058792d9ac9824b9ee8ea5903b0c075",
+      "bytes": 1306,
+      "git_blob_sha1": "6fa4cd6766411b4a24a0b4212d3d2ff66379256d"
+    }
+  }
+}

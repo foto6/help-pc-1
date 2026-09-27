@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spectratrack.local/schemas/pc_executor.ops_context_binding.v1.schema.json",
+  "title": "PC Executor Structured Operation Start Context Binding v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contract_version": {
+      "const": "pc_executor.ops_context_binding.v1"
+    },
+    "action": {
+      "enum": [
+        "process.start",
+        "shell.session.start"
+      ]
+    },
+    "executable": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "cwd_path_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "cwd_device": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "cwd_inode": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "context_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "required": [
+    "contract_version",
+    "action",
+    "executable",
+    "cwd_path_sha256",
+    "cwd_device",
+    "cwd_inode",
+    "context_digest"
+  ]
+}
