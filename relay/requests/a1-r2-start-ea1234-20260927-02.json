@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "a1-r2-start-ea1234-20260927-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $repo='C:\\agentwork\\SpectraTrack-a1'; $head=(git -C $repo rev-parse HEAD).Trim(); if($head -ne 'ea1234e153a689811488e439429472c5b2a698ea'){Write-Error 'source_head_mismatch'; exit 4}; $out='E:\\SpectraTrack-data\\runs\\a1-nightowls-r2-ea1234-run2'; if(Test-Path $out){Write-Error 'output_dir_already_exists'; exit 5}; New-Item -ItemType Directory -Path $out | Out-Null; $py=$repo+'\\.venv\\Scripts\\python.exe'; $alist=@('-m','spectratrack.research.vnext_detection_r2_validation','run','--lock',($repo+'\\pc\\benchmarks\\vnext\\detection\\r2_hypothesis_lock.v1.json'),'--ground-truth','E:\\SpectraTrack-data\\imports\\nightowls-public-smoke400-r2\\nightowls-public-smoke400-r2.jsonl','--manifest','E:\\SpectraTrack-data\\imports\\nightowls-public-smoke400-r2\\nightowls-public-smoke400-r2.manifest.json','--selection-proof','E:\\SpectraTrack-data\\imports\\nightowls-public-smoke400-r2\\nightowls-public-smoke400-r2.selection-proof.json','--video-root','E:\\SpectraTrack-data\\public\\NightOwls','--model','E:\\SpectraTrack\\yolo11x.onnx','--source-commit','ea1234e153a689811488e439429472c5b2a698ea','--output',($out+'\\r2-result.json'),'--runtime-output',($out+'\\r2-runtime.json')); $p=Start-Process -FilePath $py -ArgumentList $alist -WorkingDirectory ($repo+'\\pc') -RedirectStandardOutput ($out+'\\stdout.txt') -RedirectStandardError ($out+'\\stderr.txt') -PassThru; Set-Content -LiteralPath ($out+'\\pid.txt') -Value $p.Id; Write-Output ('PID='+$p.Id); Write-Output ('SOURCE_HEAD='+$head)"
+    ],
+    "cwd": "C:\\agentwork\\SpectraTrack-a1"
+  },
+  "timeout_ms": 120000,
+  "note": "Relaunch identical frozen A1 R2 run; prior attempt failed argparse before R2 preflight."
+}
