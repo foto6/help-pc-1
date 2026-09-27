@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$checks=@(\n  @{repo='foto6/help-pc-1';branch='agent/pc-relay-hardening'},\n  @{repo='foto6/help-pc-2';branch='agent/pc-ops-gateway'},\n  @{repo='foto6/help-pc-2';branch='agent/pc-control-mcp-gateway'},\n  @{repo='foto6/help-pc-2';branch='agent/pc-control-plane'},\n  @{repo='foto6/vision-2';branch='agent/vision'}\n); foreach($c in $checks){ Write-Output ('CHECK|'+$c.repo+'|'+$c.branch); gh run list --repo $c.repo --branch $c.branch --limit 3 --json databaseId,headSha,status,conclusion,workflowName,createdAt 2>&1 }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "CHECK|foto6/help-pc-1|agent/pc-relay-hardening\r\n[{\"conclusion\":\"\",\"createdAt\":\"2026-09-27T15:09:15Z\",\"databaseId\":36328498878,\"headSha\":\"7311ee517b8662013cfbf412f804e4d49c9ac9dc\",\"status\":\"in_progress\",\"workflowName\":\"pc-relay-hardening\"},{\"conclusion\":\"failure\",\"createdAt\":\"2026-09-27T15:01:20Z\",\"databaseId\":36328014685,\"headSha\":\"74fbcc2d9bc98bc2322f21e3b3b0d79a876743f0\",\"status\":\"completed\",\"workflowName\":\"pc-relay-hardening\"},{\"conclusion\":\"failure\",\"createdAt\":\"2026-09-27T15:00:14Z\",\"databaseId\":36327942164,\"headSha\":\"bcf8cf30141d8fbbb1e29f8803a557ea047e70e8\",\"status\":\"completed\",\"workflowName\":\"pc-relay-hardening\"}]\nCHECK|foto6/help-pc-2|agent/pc-ops-gateway\r\n[{\"conclusion\":\"\",\"createdAt\":\"2026-09-27T15:10:15Z\",\"databaseId\":36328560098,\"headSha\":\"f78991809f4da0d8356ee26a12b76ce1a39550c2\",\"status\":\"in_progress\",\"workflowName\":\"pc-ops-gateway\"},{\"conclusion\":\"\",\"createdAt\":\"2026-09-27T15:09:57Z\",\"databaseId\":36328543004,\"headSha\":\"52b9c47f7342d3329c3d98d25e5026e2f6c6a5e4\",\"status\":\"in_progress\",\"workflowName\":\"pc-ops-gateway\"},{\"conclusion\":\"\",\"createdAt\":\"2026-09-27T15:09:55Z\",\"databaseId\":36328540555,\"headSha\":\"0e9d9359d8e311d5cd2d4a65ca61c98f88983fd4\",\"status\":\"in_progress\",\"workflowName\":\"pc-ops-gateway\"}]\nCHECK|foto6/help-pc-2|agent/pc-control-mcp-gateway\r\n[{\"conclusion\":\"success\",\"createdAt\":\"2026-09-27T12:24:36Z\",\"databaseId\":36318885810,\"headSha\":\"5495c320304860bf190476833177f716fe9ad960\",\"status\":\"completed\",\"workflowName\":\"CI\"}]\nCHECK|foto6/help-pc-2|agent/pc-control-plane\r\n[{\"conclusion\":\"success\",\"createdAt\":\"2026-09-27T14:11:32Z\",\"databaseId\":36325018742,\"headSha\":\"801d024a4e9bf71eda0e362c64ec719efb869ddc\",\"status\":\"completed\",\"workflowName\":\"CI\"},{\"conclusion\":\"failure\",\"createdAt\":\"2026-09-27T14:09:59Z\",\"databaseId\":36324925087,\"headSha\":\"3f47ca380eadac03b23a46471a3108872b230603\",\"status\":\"completed\",\"workflowName\":\"CI\"},{\"conclusion\":\"failure\",\"createdAt\":\"2026-09-27T14:08:50Z\",\"databaseId\":36324858920,\"headSha\":\"a5bbf71b1c2a67b3d79116379cf497b200fd6235\",\"status\":\"completed\",\"workflowName\":\"CI\"}]\nCHECK|foto6/vision-2|agent/vision\r\n[{\"conclusion\":\"success\",\"createdAt\":\"2026-09-27T15:01:36Z\",\"databaseId\":36328030126,\"headSha\":\"bdfa71226a9265f9ac052ef576a6d18cada80b84\",\"status\":\"completed\",\"workflowName\":\"CI\"},{\"conclusion\":\"success\",\"createdAt\":\"2026-09-27T15:01:14Z\",\"databaseId\":36328009349,\"headSha\":\"6268821206be28c1f15af126b43e8964f6ef3c19\",\"status\":\"completed\",\"workflowName\":\"CI\"},{\"conclusion\":\"success\",\"createdAt\":\"2026-09-27T14:59:57Z\",\"databaseId\":36327922831,\"headSha\":\"ae901086499f0f3fb3b446c6c38d3a7860ddf2ac\",\"status\":\"completed\",\"workflowName\":\"CI\"}]\n",
+      "stdout_bytes": 2626,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:10:39.265Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:10:39.245Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-full-stack-ci-status-20260927-2209"
+    },
+    "request_id": "pc-full-stack-ci-status-20260927-2209",
+    "started_at": "2026-09-27T15:10:33.875Z",
+    "status": "completed"
+  },
+  "id": "pc-full-stack-ci-status-20260927-2209",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
