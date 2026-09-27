@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$cfg='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; $st='E:\\WebAIBridge\\app\\data\\state.json'; if(Test-Path $cfg){$c=Get-Content $cfg -Raw|ConvertFrom-Json; foreach($m in @($c.managedChats)){Write-Output ('CHAT|'+$m.id+'|'+$m.name+'|repo='+$m.repository+'|branch='+$m.branch+'|enabled='+$m.enabled+'|profile='+$m.profileId)}} else {Write-Output 'NO_CONFIG'}; if(Test-Path $st){$s=Get-Content $st -Raw|ConvertFrom-Json; foreach($a in @($s.agentAssignments)){Write-Output ('ASSIGN|'+$a.id+'|chat='+$a.targetChatId+'|state='+$a.state+'|repo='+$a.repository+'|branch='+$a.branch+'|expected='+$a.expectedHead+'|current='+$a.currentHead+'|ci='+$a.ciConclusion+'|diag='+$a.lastDiagnostic)}} else {Write-Output 'NO_STATE'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "CHAT|chat-6ab6703e-b760-83eb-ae7e-686637c7de67|A4|repo=|branch=|enabled=True|profile=\r\nCHAT|chat-6ab66b08-a90c-83eb-80d8-a7567d24352d|SpectraTrack Agent Watch (secondary)|repo=|branch=|enabled=True|profile=\r\nCHAT|chat-6ab67022-ae5c-83ed-a654-5dcc82c3b351|A2|repo=|branch=|enabled=True|profile=\r\nCHAT|chat-6ab67031-7290-83eb-965e-8cd7c16b3504|A3|repo=|branch=|enabled=True|profile=\r\nCHAT|chat-6ab67052-1ae8-83eb-b5bc-60ddae15aa6f|A5|repo=|branch=|enabled=True|profile=\r\nCHAT|chat-6ab67007-81fc-83eb-94e1-9511ab086c08|A1|repo=|branch=|enabled=True|profile=\r\nCHAT|chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c|SpectraTrack Round2 Watch|repo=|branch=|enabled=True|profile=\r\nCHAT|chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e|SpectraTrack Agent Watch (supervisor)|repo=|branch=|enabled=True|profile=\r\nCHAT|agent-pc-executor|PC Executor|repo=|branch=agent/pc-executor|enabled=True|profile=ef72920c-cfe7-4824-a79b-7a0e0943ce7e\r\n",
+      "stdout_bytes": 913,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:19:51.944Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:19:51.924Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-managed-state-20260927-2233"
+    },
+    "request_id": "bridge-managed-state-20260927-2233",
+    "started_at": "2026-09-27T15:19:51.273Z",
+    "status": "completed"
+  },
+  "id": "bridge-managed-state-20260927-2233",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
