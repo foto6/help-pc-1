@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$h=[System.Net.Http.HttpClientHandler]::new();$h.UseProxy=$false;$c=[System.Net.Http.HttpClient]::new($h);$c.Timeout=[TimeSpan]::FromSeconds(4);foreach($p in @(17410,17447)){try{$u='http://127.0.0.1:'+$p+'/json/list';$t=$c.GetStringAsync($u).GetAwaiter().GetResult();$j=$t|ConvertFrom-Json;foreach($x in @($j)){if($x.type -eq 'page' -and $x.url -match 'chatgpt\\.com'){Write-Output ('TAB|'+$p+'|'+$x.id+'|'+(($x.title -replace '\\s+',' ').Trim())+'|'+$x.url)}}}catch{Write-Output ('ERR|'+$p+'|'+$_.Exception.Message)}};$c.Dispose();$h.Dispose()"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "�� 㤠���� ���� ⨯ [System.Net.Http.HttpClientHandler].\r\n��ப�:1 ����:4\r\n+ $h=[System.Net.Http.HttpClientHandler]::new();$h.UseProxy=$false;$c=[ ...\r\n+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (System.Net.Http.HttpClientHandler:TypeName) [], RuntimeException\r\n    + FullyQualifiedErrorId : TypeNotFound\r\n \r\n�� 㤠���� ���� ᢮��⢮ \"UseProxy\" ��� ������� ��ꥪ�. ��������, �� ��� ������� � ��� ����� ������.\r\n��ப�:1 ����:47\r\n+ ... [System.Net.Http.HttpClientHandler]::new();$h.UseProxy=$false;$c=[Sys ...\r\n+                                                ~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException\r\n    + FullyQualifiedErrorId : PropertyNotFound\r\n \r\n�� 㤠���� ���� ⨯ [System.Net.Http.HttpClient].\r\n��ப�:1 ����:69\r\n+ ... er]::new();$h.UseProxy=$false;$c=[System.Net.Http.HttpClient]::new($h ...\r\n+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (System.Net.Http.HttpClient:TypeName) [], RuntimeException\r\n    + FullyQualifiedErrorId : TypeNotFound\r\n \r\n�� 㤠���� ���� ᢮��⢮ \"Timeout\" ��� ������� ��ꥪ�. ��������, �� ��� ������� � ��� ����� ������.\r\n��ப�:1 ����:107\r\n+ ... tp.HttpClient]::new($h);$c.Timeout=[TimeSpan]::FromSeconds(4);foreach ...\r\n+                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException\r\n    + FullyQualifiedErrorId : PropertyNotFound\r\n \r\n���������� �맢��� ��⮤ ��� ��ࠦ���� � ���祭��� NULL.\r\n��ப�:1 ����:518\r\n+ ... te-Output ('ERR|'+$p+'|'+$_.Exception.Message)}};$c.Dispose();$h.Disp ...\r\n+                                                      ~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException\r\n    + FullyQualifiedErrorId : InvokeMethodOnNull\r\n \r\n���������� �맢��� ��⮤ ��� ��ࠦ���� � ���祭��� NULL.\r\n��ப�:1 ����:531\r\n+ ... tput ('ERR|'+$p+'|'+$_.Exception.Message)}};$c.Dispose();$h.Dispose()\r\n+                                                              ~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException\r\n    + FullyQualifiedErrorId : InvokeMethodOnNull\r\n \r\n",
+      "stderr_bytes": 2250,
+      "stderr_truncated": false,
+      "stdout": "ERR|17410|���������� �맢��� ��⮤ ��� ��ࠦ���� � ���祭��� NULL.\r\nERR|17447|���������� �맢��� ��⮤ ��� ��ࠦ���� � ���祭��� NULL.\r\n",
+      "stdout_bytes": 138,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T15:42:29.696Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-27T15:42:29.673Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "cdp-tabs-httpclient-20260927-2355"
+    },
+    "request_id": "cdp-tabs-httpclient-20260927-2355",
+    "started_at": "2026-09-27T15:42:29.096Z",
+    "status": "completed"
+  },
+  "id": "cdp-tabs-httpclient-20260927-2355",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
