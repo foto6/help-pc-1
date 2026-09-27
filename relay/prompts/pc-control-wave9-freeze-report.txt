@@ -1,0 +1,23 @@
+EXECUTE NOW — PC CONTROL WAVE9 FIX / FREEZE REAL CONTEXT-EPOCH E2E REPORT. Do not acknowledge readiness.
+
+Repository: foto6/help-pc-2
+Branch: agent/pc-control-plane
+Current head: 691361ab627e6c80871e391fba8041eb5fd29319
+CI run 36324789038 failed on exactly one issue: context-epoch-e2e frozen report still contains literal pending placeholders while the generated actual report is deterministic and behavior assertions otherwise pass (22/23 tests passed).
+
+Do NOT alter the working state machine to match the placeholder.
+
+Required:
+1. Re-run focused context-epoch E2E tests and verify behavior assertions independently of golden-report equality.
+2. Deterministically regenerate/freeze the canonical pc_control.context_epoch_e2e.v1 report from the existing generator.
+3. The frozen report must contain the real producer heads, fixture hashes, scenario outcomes/counters, aggregateTransitionHash and reportHash already produced by the implementation.
+4. Preserve at-most-once side-effect semantics. In particular:
+   - same_epoch_execute_once => one side-effect provider call;
+   - process/window replacement => reacquire/re-preflight before a single side effect;
+   - unknown journal => reconciliation_wait, never replay;
+   - completed + stale Vision => recapture/reverify only.
+5. Do not hand-edit expected hashes. Keep a reproducible generator/test path and verify Linux/Windows serialization equality.
+6. Run focused tests + full suite; require exact-head Linux and Windows CI SUCCESS.
+7. Commit/push only agent/pc-control-plane. No merge/release; never touch E:\manhwa.
+
+Final: exact SHA + exact CI run/conclusion + frozen report hash.
