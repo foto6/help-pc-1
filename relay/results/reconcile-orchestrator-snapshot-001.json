@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-09-27T12:34:25.438Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "orchestrator-local-snapshot-001"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:af91fdb5935fd39bb9f43921abf22c58c1847455e05123baade7efac66002bbf",
+            "journal_sequence": 3,
+            "previous_record_sha256": "56b0e2b4250a2ad407e7de3ea859162c4a3c42c13e4e81d729d3399fe4bb2752",
+            "record_sha256": "bbf49858c78aaad029d8fa1ded9561b9c16f8f53b09c0624a0866040e3fd58eb",
+            "recorded_at": "2026-09-27T12:34:25.438Z",
+            "request_id": "orchestrator-local-snapshot-001",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-09-27T12:36:33.542Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "orchestrator-local-snapshot-001"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:af91fdb5935fd39bb9f43921abf22c58c1847455e05123baade7efac66002bbf",
+            "journal_sequence": 4,
+            "previous_record_sha256": "bbf49858c78aaad029d8fa1ded9561b9c16f8f53b09c0624a0866040e3fd58eb",
+            "record_sha256": "b58e3b0cc76b407308397c0846926bc07ff9c4c657898135deff98d7600d54bf",
+            "recorded_at": "2026-09-27T12:36:33.550Z",
+            "request_id": "orchestrator-local-snapshot-001",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-09-27T12:36:33.542Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "orchestrator-local-snapshot-001"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-09-27T12:36:33.542Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "orchestrator-local-snapshot-001"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:af91fdb5935fd39bb9f43921abf22c58c1847455e05123baade7efac66002bbf",
+          "journal_sequence": 4,
+          "previous_record_sha256": "bbf49858c78aaad029d8fa1ded9561b9c16f8f53b09c0624a0866040e3fd58eb",
+          "record_sha256": "b58e3b0cc76b407308397c0846926bc07ff9c4c657898135deff98d7600d54bf",
+          "recorded_at": "2026-09-27T12:36:33.550Z",
+          "request_id": "orchestrator-local-snapshot-001",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "ec81f5fa386c07ce20a984f7f29b658aa49d9c446b67279981cf5ef695aedb64",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 6
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "orchestrator-local-snapshot-001",
+        "request_id": "orchestrator-local-snapshot-001",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-27T13:25:13.139Z",
+    "ok": true,
+    "request_id": "reconcile-orchestrator-snapshot-001",
+    "started_at": "2026-09-27T13:25:13.133Z",
+    "status": "completed"
+  },
+  "id": "reconcile-orchestrator-snapshot-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
