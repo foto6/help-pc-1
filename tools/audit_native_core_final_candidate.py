@@ -22,6 +22,7 @@ FULL_STACK_BASE = "3a07382fa98f3e02a3d1ffbb4cc3c61b806e2e63"
 SEARCH = "c3b86fefb66348e6a78f5f555a59f81154bd357e"
 SERVICE = "e8804f116c84b74ae8e04f1c07abc3a01baf79a1"
 IMMUTABLE_SERVICE = "a906312f49c97ab0ee6ceb6cda00925d5b9ebfca"
+LSA_HOTFIX = "72b8c83d99eca8226afdd8a149cd49ea463f5013"
 STRICT_B = "fec2bc951cef3e4c9f5d31f00503277e7ed5b90b"
 OLD_TRANSPORT = "8df29aad32a6cb142dff6721f92fca74a080e441"
 OLD_RELAY = "992c66335c9e6c40d150bc10c086e97ea7600d48"
@@ -132,11 +133,13 @@ SERVICE_IMMUTABLE_EXACT = {
     "docs/NATIVE_DEVICE_SERVICE.md",
     "src/pc_remote_transport/service.py",
     "src/pc_remote_transport/service_cli.py",
-    "src/pc_remote_transport/windows_service.py",
-    "tests/test_native_device_service.py",
     "tests/test_native_service_artifact.py",
     "tools/install_pc_native_device_service.ps1",
     "tools/verify_pc_native_service_artifact.py",
+}
+LSA_HOTFIX_EXACT = {
+    "src/pc_remote_transport/windows_service.py",
+    "tests/test_native_device_service.py",
 }
 
 
@@ -223,6 +226,11 @@ def assert_layered_provenance(head: str) -> None:
 
     for path in sorted(SERVICE_IMMUTABLE_EXACT):
         assert_same_blob(IMMUTABLE_SERVICE, head, path)
+
+    assert git("merge-base", "--is-ancestor", LSA_HOTFIX, head, check=False).returncode == 0
+    for path in sorted(LSA_HOTFIX_EXACT):
+        assert_same_blob(LSA_HOTFIX, head, path)
+
 def assert_registry_and_mapping(root: Path) -> None:
     assert TOOL_REGISTRY_DIGEST == EXPECTED_COMPAT_TOOL_REGISTRY_V1_DIGEST
     assert TOOL_REGISTRY_DIGEST == (
