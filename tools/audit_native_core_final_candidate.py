@@ -28,6 +28,8 @@ LAST_GREEN_PC = "97697b340f30f0190776eba4bd6da71c1a0d28d1"
 SERVICE_HOST_HOTFIX = "93150246322636ae3ea55f59be2104a440fe2c7d"
 LAST_GREEN_SERVICE_HOST = "a42533ce655064e789fbbe17a6dc45cf0c7f6f7f"
 SERVICE_HOST_PATH_HOTFIX = "852f461c73b84aa2b642f0e89ba13e626498e5c0"
+R6_SERVICE_PROVENANCE = "64ddbeb7853982e4d4aeaa43ff624bd9849668b2"
+R7_SELECTOR_SOURCE = "20c23e8f87e32cc22c8cbb29bbe639e5ccc93bf6"
 STRICT_B = "fec2bc951cef3e4c9f5d31f00503277e7ed5b90b"
 OLD_TRANSPORT = "8df29aad32a6cb142dff6721f92fca74a080e441"
 OLD_RELAY = "992c66335c9e6c40d150bc10c086e97ea7600d48"
@@ -246,8 +248,18 @@ def assert_layered_provenance(head: str) -> None:
     assert git("merge-base", "--is-ancestor", SERVICE_HOST_PATH_HOTFIX, head, check=False).returncode == 0
     assert git("merge-base", "--is-ancestor", LAST_GREEN_SERVICE_HOST, SERVICE_HOST_PATH_HOTFIX, check=False).returncode == 0
     assert names(LAST_GREEN_SERVICE_HOST, SERVICE_HOST_PATH_HOTFIX) == SERVICE_HOST_HOTFIX_EXACT
+    # Preserve the previously accepted, exact R6 isolated-import service host.
+    # R7 may change ONLY the pinned service runner and focused service tests,
+    # in an exact two-file, one-parent overlay. The audit itself is the sole
+    # allowed follow-up file; no other producer/capability/security source may drift.
+    assert rev(f"{R7_SELECTOR_SOURCE}^") == R6_SERVICE_PROVENANCE
+    assert git("merge-base", "--is-ancestor", R6_SERVICE_PROVENANCE, head, check=False).returncode == 0
+    assert git("merge-base", "--is-ancestor", R7_SELECTOR_SOURCE, head, check=False).returncode == 0
+    assert names(R6_SERVICE_PROVENANCE, R7_SELECTOR_SOURCE) == SERVICE_HOST_HOTFIX_EXACT
+    assert names(R7_SELECTOR_SOURCE, head) == {"tools/audit_native_core_final_candidate.py"}
     for path in sorted(SERVICE_HOST_HOTFIX_EXACT):
-        assert_same_blob(SERVICE_HOST_PATH_HOTFIX, head, path)
+        assert_same_blob(SERVICE_HOST_PATH_HOTFIX, R6_SERVICE_PROVENANCE, path)
+        assert_same_blob(R7_SELECTOR_SOURCE, head, path)
 
 def assert_registry_and_mapping(root: Path) -> None:
     assert TOOL_REGISTRY_DIGEST == EXPECTED_COMPAT_TOOL_REGISTRY_V1_DIGEST
@@ -399,6 +411,7 @@ def main() -> None:
         "native PC core final candidate audit: PASS "
         f"head={head} base={BASE} search={SEARCH} service={SERVICE} "
         f"immutable_service={IMMUTABLE_SERVICE} strict_b={STRICT_B} "
+        f"r6_service={R6_SERVICE_PROVENANCE} r7_selector={R7_SELECTOR_SOURCE} "
         f"parity={NATIVE_TOOL_PARITY_VERSION}"
     )
 
