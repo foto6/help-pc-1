@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+import hashlib
 import os
+import shutil
 import subprocess
+import sys
 import threading
+from pathlib import Path
 from typing import Any, Callable
 
 from .protocol import TokenMaterial
@@ -94,23 +98,98 @@ class WindowsLsaSecretStore:
             raise RuntimeError("machine secret delete failed") from exc
 
 
+def _stage_isolated_service_host(
+    venv_root: Path, base_python_root: Path, win32_package_root: Path
+) -> Path:
+    """Stage a self-contained pywin32 service host without global Python mutations."""
+    venv_root = venv_root.resolve()
+    base_python_root = base_python_root.resolve()
+    win32_package_root = win32_package_root.resolve()
+    if venv_root == base_python_root or not (venv_root / "pyvenv.cfg").is_file():
+        raise RuntimeError("Windows service host requires an isolated Python venv")
+    if not win32_package_root.is_relative_to(venv_root):
+        raise RuntimeError("pywin32 service binaries must originate from the selected venv")
+
+    tag = f"{sys.version_info.major}{sys.version_info.minor}"
+    sources = {
+        "pythonservice.exe": win32_package_root / "win32" / "pythonservice.exe",
+        f"python{tag}.dll": base_python_root / f"python{tag}.dll",
+        f"pywintypes{tag}.dll": win32_package_root / "pywin32_system32" / f"pywintypes{tag}.dll",
+        f"pythoncom{tag}.dll": win32_package_root / "pywin32_system32" / f"pythoncom{tag}.dll",
+    }
+    optional_abi = base_python_root / "python3.dll"
+    if optional_abi.is_file():
+        sources["python3.dll"] = optional_abi
+    for name, source in sources.items():
+        if not source.is_file():
+            raise RuntimeError(f"Windows service host dependency missing: {name}")
+        target = venv_root / name
+        if target.is_symlink():
+            raise RuntimeError(f"Windows service host target is a symlink: {name}")
+        if target.exists():
+            if not target.is_file() or hashlib.sha256(target.read_bytes()).digest() != hashlib.sha256(source.read_bytes()).digest():
+                raise RuntimeError(f"Windows service host binary collision: {name}")
+        temp = venv_root / (name + ".native-staging")
+        if temp.exists() or temp.is_symlink():
+            raise RuntimeError(f"Windows service host staging collision: {name}")
+    for name, source in sources.items():
+        target = venv_root / name
+        if target.exists():
+            continue
+        temp = venv_root / (name + ".native-staging")
+        try:
+            shutil.copy2(source, temp)
+            if hashlib.sha256(temp.read_bytes()).digest() != hashlib.sha256(source.read_bytes()).digest():
+                raise RuntimeError(f"Windows service host copy verification failed: {name}")
+            os.replace(temp, target)
+        finally:
+            temp.unlink(missing_ok=True)
+    return venv_root / "pythonservice.exe"
+
+
+def _bound_service_store(registered_root: str | None) -> ConfigStore:
+    if not isinstance(registered_root, str) or not registered_root.strip():
+        raise RuntimeError("Windows service state-root binding is missing")
+    root = Path(registered_root)
+    if not root.is_absolute() or registered_root.startswith("\\\\"):
+        raise RuntimeError("Windows service state-root binding is invalid")
+    return ConfigStore(root)
+
+
 class _Win32ServiceApi:
-    def install(self) -> None:
+    def install(self, state_root: Path) -> None:
         import win32service
         import win32serviceutil
 
+        win32_path = Path(win32service.__file__).resolve().parent.parent
+        host_exe = _stage_isolated_service_host(
+            Path(sys.prefix), Path(sys.base_prefix), win32_path
+        )
         win32serviceutil.InstallService(
             pythonClassString="pc_remote_transport.windows_service.PCNativeDeviceService",
             serviceName=SERVICE_NAME,
             displayName=SERVICE_DISPLAY_NAME,
             startType=win32service.SERVICE_AUTO_START,
             description=SERVICE_DESCRIPTION,
+            exeName=str(host_exe),
         )
+        try:
+            win32serviceutil.SetServiceCustomOption(SERVICE_NAME, "StateRoot", str(state_root.resolve()))
+        except Exception:
+            win32serviceutil.RemoveService(SERVICE_NAME)
+            raise RuntimeError("Windows service state-root binding failed") from None
 
     def start(self) -> None:
         import win32serviceutil
 
-        win32serviceutil.StartService(SERVICE_NAME)
+        try:
+            win32serviceutil.StartService(SERVICE_NAME)
+        except Exception as exc:
+            code = getattr(exc, "winerror", None)
+            if code is None and getattr(exc, "args", None):
+                code = exc.args[0]
+            suffix = f" (winerror={code})" if isinstance(code, int) else ""
+            raise RuntimeError("Windows SCM service start failed" + suffix) from None
 
     def stop(self) -> None:
         import win32serviceutil
@@ -167,7 +246,7 @@ class WindowsServiceController:
 
     def install(self) -> None:
         self.config_store.initialize()
-        self.api.install()
+        self.api.install(self.config_store.root)
         try:
             self.command_runner(
                 [
@@ -237,11 +316,12 @@ if os.name == "nt":
 
         def SvcDoRun(self) -> None:
             _log_service_event("starting")
-            store = ConfigStore()
-            health = HealthStore(store.root)
-            secrets = WindowsLsaSecretStore()
-            host = DeviceServiceHost(store, health, secrets)
             try:
+                registered_root = win32serviceutil.GetServiceCustomOption(SERVICE_NAME, "StateRoot", None)
+                store = _bound_service_store(registered_root)
+                health = HealthStore(store.root)
+                secrets = WindowsLsaSecretStore()
+                host = DeviceServiceHost(store, health, secrets)
                 import asyncio
 
                 asyncio.run(host.run(self._stop_event))

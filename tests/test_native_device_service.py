@@ -5,6 +5,7 @@ import base64
 import io
 import json
 import sys
+from pathlib import Path
 import threading
 import types
 from dataclasses import replace
@@ -41,7 +42,10 @@ from pc_remote_transport.service_cli import _read_secret_input, _status_payload,
 from pc_remote_transport.windows_service import (
     WindowsLsaSecretStore,
     WindowsServiceController,
+    _Win32ServiceApi,
+    _bound_service_store,
     _log_service_event,
+    _stage_isolated_service_host,
 )
 
 
@@ -89,8 +93,9 @@ class FakeApi:
         self.calls: list[str] = []
         self.state = "not_installed"
 
-    def install(self) -> None:
+    def install(self, state_root: Path) -> None:
         self.calls.append("install")
+        self.state_root = Path(state_root)
         self.state = "stopped"
 
     def start(self) -> None:
@@ -331,6 +336,7 @@ def test_restart_and_crash_recovery_are_wired_to_scm(tmp_path) -> None:
     controller = WindowsServiceController(store, api=api, command_runner=runner)
     controller.install()
     assert api.calls == ["install"]
+    assert api.state_root == tmp_path
     assert commands[0][0][:3] == ["sc.exe", "failure", "PCNativeDeviceService"]
     assert "restart/5000/restart/15000/restart/60000" in commands[0][0]
     assert commands[1][0] == ["sc.exe", "failureflag", "PCNativeDeviceService", "1"]
@@ -664,3 +670,109 @@ async def test_service_restart_reconciles_uncertain_side_effect_without_replay(t
     record = restarted.agent.ledger.load(request["request_id"])
     assert record is not None
     assert record.status == "reconcile_required"
+
+def _fake_isolated_host_tree(root: Path) -> tuple[Path, Path, Path, dict[str, bytes]]:
+    tag = f"{sys.version_info.major}{sys.version_info.minor}"
+    base = root / "base"
+    venv = root / "venv"
+    package_root = venv / "Lib" / "site-packages"
+    (package_root / "win32").mkdir(parents=True)
+    (package_root / "pywin32_system32").mkdir()
+    base.mkdir()
+    (venv / "pyvenv.cfg").write_text("home = isolated-test-base\n", encoding="utf-8")
+    binaries = {
+        "pythonservice.exe": b"service-host-from-venv",
+        f"python{tag}.dll": b"base-interpreter-dll",
+        f"pywintypes{tag}.dll": b"venv-pywintypes-dll",
+        f"pythoncom{tag}.dll": b"venv-pythoncom-dll",
+    }
+    (package_root / "win32" / "pythonservice.exe").write_bytes(binaries["pythonservice.exe"])
+    (base / f"python{tag}.dll").write_bytes(binaries[f"python{tag}.dll"])
+    for name in (f"pywintypes{tag}.dll", f"pythoncom{tag}.dll"):
+        (package_root / "pywin32_system32" / name).write_bytes(binaries[name])
+    return venv, base, package_root, binaries
+
+def test_isolated_service_host_stages_verified_local_dlls_without_global_mutation(tmp_path) -> None:
+    venv, base, packages, binaries = _fake_isolated_host_tree(tmp_path)
+    base_before = {p.name: p.read_bytes() for p in base.iterdir()}
+    host = _stage_isolated_service_host(venv, base, packages)
+    assert host == venv / "pythonservice.exe"
+    for name, expected in binaries.items():
+        assert (venv / name).read_bytes() == expected
+    assert {p.name: p.read_bytes() for p in base.iterdir()} == base_before
+    assert _stage_isolated_service_host(venv, base, packages) == host
+    assert not list(venv.glob("*.native-staging"))
+
+
+def test_isolated_service_host_fails_closed_on_collisions_and_missing_files(tmp_path) -> None:
+    venv, base, packages, binaries = _fake_isolated_host_tree(tmp_path)
+    (venv / "pythonservice.exe").write_bytes(b"untrusted")
+    with pytest.raises(RuntimeError, match="binary collision"):
+        _stage_isolated_service_host(venv, base, packages)
+    (venv / "pythonservice.exe").unlink()
+    (packages / "pywin32_system32" / f"pythoncom{sys.version_info.major}{sys.version_info.minor}.dll").unlink()
+    with pytest.raises(RuntimeError, match="dependency missing"):
+        _stage_isolated_service_host(venv, base, packages)
+    (venv / "pyvenv.cfg").unlink()
+    with pytest.raises(RuntimeError, match="isolated Python venv"):
+        _stage_isolated_service_host(venv, base, packages)
+
+def test_bound_scm_state_root_requires_an_explicit_absolute_path(tmp_path) -> None:
+    assert _bound_service_store(str(tmp_path)).root == tmp_path
+    for bad in (None, "", "relative-state-root"):
+        with pytest.raises(RuntimeError, match="state-root binding"):
+            _bound_service_store(bad)
+
+
+def test_scm_install_uses_explicit_venv_host_and_binds_service_state(tmp_path, monkeypatch) -> None:
+    venv, base, packages, binaries = _fake_isolated_host_tree(tmp_path)
+    calls = []
+    fake_service = types.SimpleNamespace(
+        __file__=str(packages / "win32" / "win32service.pyd"), SERVICE_AUTO_START=2
+    )
+    fake_util = types.SimpleNamespace(
+        InstallService=lambda **kwargs: calls.append(("install", kwargs)),
+        SetServiceCustomOption=lambda *args: calls.append(("state", args)),
+        RemoveService=lambda *args: calls.append(("remove", args)),
+    )
+    monkeypatch.setitem(sys.modules, "win32service", fake_service)
+    monkeypatch.setitem(sys.modules, "win32serviceutil", fake_util)
+    monkeypatch.setattr(sys, "prefix", str(venv))
+    monkeypatch.setattr(sys, "base_prefix", str(base))
+    state = tmp_path / "state"
+    state.mkdir()
+    _Win32ServiceApi().install(state)
+    assert calls[0][1]["exeName"] == str(venv / "pythonservice.exe")
+    assert calls[1] == ("state", ("PCNativeDeviceService", "StateRoot", str(state)))
+    assert all(event[0] != "remove" for event in calls)
+
+def test_scm_state_binding_failure_removes_new_service(tmp_path, monkeypatch) -> None:
+    venv, base, packages, _ = _fake_isolated_host_tree(tmp_path)
+    calls = []
+    fake_service = types.SimpleNamespace(
+        __file__=str(packages / "win32" / "win32service.pyd"), SERVICE_AUTO_START=2
+    )
+    def reject_state(*args):
+        raise PermissionError("private registry location")
+    fake_util = types.SimpleNamespace(
+        InstallService=lambda **kwargs: calls.append("install"),
+        SetServiceCustomOption=reject_state,
+        RemoveService=lambda *args: calls.append("remove"),
+    )
+    monkeypatch.setitem(sys.modules, "win32service", fake_service)
+    monkeypatch.setitem(sys.modules, "win32serviceutil", fake_util)
+    monkeypatch.setattr(sys, "prefix", str(venv))
+    monkeypatch.setattr(sys, "base_prefix", str(base))
+    with pytest.raises(RuntimeError, match="state-root binding failed"):
+        _Win32ServiceApi().install(tmp_path)
+    assert calls == ["install", "remove"]
+
+
+def test_scm_start_failure_reports_only_numeric_error(monkeypatch) -> None:
+    def fail_start(name):
+        raise OSError(1053, "SENSITIVE-PRIVATE-PATH")
+    monkeypatch.setitem(sys.modules, "win32serviceutil",
+                        types.SimpleNamespace(StartService=fail_start))
+    with pytest.raises(RuntimeError, match="winerror=1053") as exc:
+        _Win32ServiceApi().start()
+    assert "SENSITIVE-PRIVATE-PATH" not in str(exc.value)
