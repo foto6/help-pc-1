@@ -24,6 +24,8 @@ SERVICE = "e8804f116c84b74ae8e04f1c07abc3a01baf79a1"
 IMMUTABLE_SERVICE = "a906312f49c97ab0ee6ceb6cda00925d5b9ebfca"
 LSA_HOTFIX = "72b8c83d99eca8226afdd8a149cd49ea463f5013"
 SECRET_STDIN_HOTFIX = "fa27d68d2f24ca9f21768b8792bf012b500aeedd"
+LAST_GREEN_PC = "97697b340f30f0190776eba4bd6da71c1a0d28d1"
+SERVICE_HOST_HOTFIX = "93150246322636ae3ea55f59be2104a440fe2c7d"
 STRICT_B = "fec2bc951cef3e4c9f5d31f00503277e7ed5b90b"
 OLD_TRANSPORT = "8df29aad32a6cb142dff6721f92fca74a080e441"
 OLD_RELAY = "992c66335c9e6c40d150bc10c086e97ea7600d48"
@@ -137,12 +139,12 @@ SERVICE_IMMUTABLE_EXACT = {
     "tools/install_pc_native_device_service.ps1",
     "tools/verify_pc_native_service_artifact.py",
 }
-LSA_HOTFIX_EXACT = {
+SERVICE_HOST_HOTFIX_EXACT = {
     "src/pc_remote_transport/windows_service.py",
+    "tests/test_native_device_service.py",
 }
 SECRET_STDIN_HOTFIX_EXACT = {
     "src/pc_remote_transport/service_cli.py",
-    "tests/test_native_device_service.py",
 }
 
 
@@ -231,12 +233,15 @@ def assert_layered_provenance(head: str) -> None:
         assert_same_blob(IMMUTABLE_SERVICE, head, path)
 
     assert git("merge-base", "--is-ancestor", LSA_HOTFIX, head, check=False).returncode == 0
-    for path in sorted(LSA_HOTFIX_EXACT):
-        assert_same_blob(LSA_HOTFIX, head, path)
-
     assert git("merge-base", "--is-ancestor", SECRET_STDIN_HOTFIX, head, check=False).returncode == 0
     for path in sorted(SECRET_STDIN_HOTFIX_EXACT):
         assert_same_blob(SECRET_STDIN_HOTFIX, head, path)
+
+    assert git("merge-base", "--is-ancestor", SERVICE_HOST_HOTFIX, head, check=False).returncode == 0
+    assert git("merge-base", "--is-ancestor", LAST_GREEN_PC, SERVICE_HOST_HOTFIX, check=False).returncode == 0
+    assert names(LAST_GREEN_PC, SERVICE_HOST_HOTFIX) == SERVICE_HOST_HOTFIX_EXACT
+    for path in sorted(SERVICE_HOST_HOTFIX_EXACT):
+        assert_same_blob(SERVICE_HOST_HOTFIX, head, path)
 
 def assert_registry_and_mapping(root: Path) -> None:
     assert TOOL_REGISTRY_DIGEST == EXPECTED_COMPAT_TOOL_REGISTRY_V1_DIGEST
