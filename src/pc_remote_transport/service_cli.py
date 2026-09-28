@@ -97,10 +97,19 @@ def _configure(args: argparse.Namespace, store: ConfigStore) -> None:
     store.update(replace(current, **updates))
 
 
+def _read_secret_input() -> str:
+    if not sys.stdin.isatty():
+        encoded = sys.stdin.readline().strip()
+        if not encoded:
+            raise ProtocolError("token input is empty")
+        return encoded
+    return getpass.getpass("Token (base64, input hidden): ").strip()
+
+
 def _set_secret(args: argparse.Namespace, store: ConfigStore, secrets: WindowsLsaSecretStore) -> None:
     if args.generation <= 0:
         raise ProtocolError("generation must be positive")
-    encoded = getpass.getpass("Token (base64, input hidden): ").strip()
+    encoded = _read_secret_input()
     try:
         raw = base64.b64decode(encoded.encode("ascii"), validate=True)
     except Exception as exc:

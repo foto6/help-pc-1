@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import io
 import json
 import sys
 import threading
@@ -35,7 +36,8 @@ from pc_remote_transport.service import (
     ServiceDeviceAgent,
     build_default_runtime,
 )
-from pc_remote_transport.service_cli import _status_payload, main as service_cli_main
+import pc_remote_transport.service_cli as service_cli_module
+from pc_remote_transport.service_cli import _read_secret_input, _status_payload, main as service_cli_main
 from pc_remote_transport.windows_service import (
     WindowsLsaSecretStore,
     WindowsServiceController,
@@ -526,6 +528,28 @@ def test_service_event_log_uses_fixed_redacted_messages(monkeypatch) -> None:
     assert errors == ["PC native device service crashed"]
     assert "token" not in rendered.lower()
     assert DEFAULT_SECRET_NAME not in rendered
+
+
+def test_secret_input_uses_redirected_stdin_without_getpass(monkeypatch) -> None:
+    monkeypatch.setattr(sys, "stdin", io.StringIO("c2VjcmV0\n"))
+    monkeypatch.setattr(service_cli_module.getpass, "getpass", lambda prompt: (_ for _ in ()).throw(AssertionError("getpass must not run for redirected stdin")))
+    assert _read_secret_input() == "c2VjcmV0"
+
+
+def test_secret_input_uses_getpass_for_interactive_tty(monkeypatch) -> None:
+    class InteractiveInput(io.StringIO):
+        def isatty(self) -> bool:
+            return True
+
+    monkeypatch.setattr(sys, "stdin", InteractiveInput())
+    monkeypatch.setattr(service_cli_module.getpass, "getpass", lambda prompt: "c2VjcmV0")
+    assert _read_secret_input() == "c2VjcmV0"
+
+
+def test_secret_input_rejects_empty_redirected_stdin(monkeypatch) -> None:
+    monkeypatch.setattr(sys, "stdin", io.StringIO(""))
+    with pytest.raises(ProtocolError, match="token input is empty"):
+        _read_secret_input()
 
 
 def test_cli_validation_error_redacts_endpoint_credentials(tmp_path, monkeypatch, capsys) -> None:
