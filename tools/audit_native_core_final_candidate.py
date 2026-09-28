@@ -30,6 +30,8 @@ LAST_GREEN_SERVICE_HOST = "a42533ce655064e789fbbe17a6dc45cf0c7f6f7f"
 SERVICE_HOST_PATH_HOTFIX = "852f461c73b84aa2b642f0e89ba13e626498e5c0"
 R6_SERVICE_PROVENANCE = "64ddbeb7853982e4d4aeaa43ff624bd9849668b2"
 R7_SELECTOR_SOURCE = "20c23e8f87e32cc22c8cbb29bbe639e5ccc93bf6"
+R7_AUDITED_HEAD = "b957763a23e8da70c55e18d15a89c2654272a2a6"
+R9_WIRE_SOURCE = "b3b59c9dd746cc6fa9ba5149893bae636528bb8d"
 STRICT_B = "fec2bc951cef3e4c9f5d31f00503277e7ed5b90b"
 OLD_TRANSPORT = "8df29aad32a6cb142dff6721f92fca74a080e441"
 OLD_RELAY = "992c66335c9e6c40d150bc10c086e97ea7600d48"
@@ -248,17 +250,21 @@ def assert_layered_provenance(head: str) -> None:
     assert git("merge-base", "--is-ancestor", SERVICE_HOST_PATH_HOTFIX, head, check=False).returncode == 0
     assert git("merge-base", "--is-ancestor", LAST_GREEN_SERVICE_HOST, SERVICE_HOST_PATH_HOTFIX, check=False).returncode == 0
     assert names(LAST_GREEN_SERVICE_HOST, SERVICE_HOST_PATH_HOTFIX) == SERVICE_HOST_HOTFIX_EXACT
-    # Preserve the previously accepted, exact R6 isolated-import service host.
-    # R7 may change ONLY the pinned service runner and focused service tests,
-    # in an exact two-file, one-parent overlay. The audit itself is the sole
-    # allowed follow-up file; no other producer/capability/security source may drift.
+    # Exact additive provenance overlays; never weaken historical R6/R7 pins.
     assert rev(f"{R7_SELECTOR_SOURCE}^") == R6_SERVICE_PROVENANCE
-    assert git("merge-base", "--is-ancestor", R6_SERVICE_PROVENANCE, head, check=False).returncode == 0
-    assert git("merge-base", "--is-ancestor", R7_SELECTOR_SOURCE, head, check=False).returncode == 0
     assert names(R6_SERVICE_PROVENANCE, R7_SELECTOR_SOURCE) == SERVICE_HOST_HOTFIX_EXACT
-    assert names(R7_SELECTOR_SOURCE, head) == {"tools/audit_native_core_final_candidate.py"}
+    assert rev(f"{R7_AUDITED_HEAD}^") == R7_SELECTOR_SOURCE
+    assert names(R7_SELECTOR_SOURCE, R7_AUDITED_HEAD) == {"tools/audit_native_core_final_candidate.py"}
+    assert rev(f"{R9_WIRE_SOURCE}^") == R7_AUDITED_HEAD
+    assert names(R7_AUDITED_HEAD, R9_WIRE_SOURCE) == {
+        "src/pc_executor/operations.py",
+        "tests/test_native_remote_executor_adapter.py",
+    }
+    assert git("merge-base", "--is-ancestor", R9_WIRE_SOURCE, head, check=False).returncode == 0
+    assert names(R9_WIRE_SOURCE, head) == {"tools/audit_native_core_final_candidate.py"}
     for path in sorted(SERVICE_HOST_HOTFIX_EXACT):
         assert_same_blob(SERVICE_HOST_PATH_HOTFIX, R6_SERVICE_PROVENANCE, path)
+        assert_same_blob(R7_SELECTOR_SOURCE, R7_AUDITED_HEAD, path)
         assert_same_blob(R7_SELECTOR_SOURCE, head, path)
 
 def assert_registry_and_mapping(root: Path) -> None:
@@ -412,6 +418,7 @@ def main() -> None:
         f"head={head} base={BASE} search={SEARCH} service={SERVICE} "
         f"immutable_service={IMMUTABLE_SERVICE} strict_b={STRICT_B} "
         f"r6_service={R6_SERVICE_PROVENANCE} r7_selector={R7_SELECTOR_SOURCE} "
+        f"r7_audited={R7_AUDITED_HEAD} r9_wire={R9_WIRE_SOURCE} "
         f"parity={NATIVE_TOOL_PARITY_VERSION}"
     )
 
