@@ -33,6 +33,7 @@ from pc_remote_transport.executor_adapter import (
     TOOL_REGISTRY_DIGEST,
     TOOL_REGISTRY_LIST,
     ExecutorRemoteDispatcher,
+    NativeAdapterError,
     _HandleRecord,
 )
 from pc_remote_transport.protocol import digest_json
@@ -189,15 +190,27 @@ def test_r16_exact_read_only_and_side_effect_route_resolution(
             assert route["target_action"] is None
             assert tool.name == "uia.find"
             continue
-        action, digest, surface = dispatcher._assert_capability_stability(
+        target_action = route["target_action"]
+        snapshot = (
+            parity_snapshot if route["surface"] == "parity" else legacy_snapshot
+        )
+        advertised = snapshot["actions"][target_action]
+        assert advertised["side_effecting"] is (tool.effect == "side_effect")
+        if advertised["supported"] is not True:
+            # Windows-only legacy backends may be unavailable on Ubuntu; do
+            # not convert an unsupported advertised action into fake parity.
+            with pytest.raises(NativeAdapterError) as rejection:
+                dispatcher._assert_capability_stability(
+                    ctx, tool, NATIVE_TOOL_REGISTRY_V1
+                )
+            assert rejection.value.code == "CAPABILITY_UNAVAILABLE"
+            continue
+        action, resolved_digest, surface = dispatcher._assert_capability_stability(
             ctx, tool, NATIVE_TOOL_REGISTRY_V1
         )
-        assert action == route["target_action"]
+        assert action == target_action
         assert surface == route["surface"]
-        snapshot = parity_snapshot if surface == "parity" else legacy_snapshot
-        assert digest == snapshot["attestation"]["digest"]
-        assert snapshot["actions"][action]["supported"] is True
-        assert snapshot["actions"][action]["side_effecting"] is (tool.effect == "side_effect")
+        assert resolved_digest == snapshot["attestation"]["digest"]
 
 
 def _element(
