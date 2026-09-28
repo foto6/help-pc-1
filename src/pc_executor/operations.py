@@ -209,6 +209,20 @@ _FORBIDDEN_SHELL_TERMS = (
 _ENV_NAME_RE = re.compile(r"^[A-Za-z_][A-Za-z0-9_]{0,127}$")
 
 
+def _wire_search_retention_seconds(value: float) -> int | float:
+    """Preserve numeric seconds while avoiding Python 300.0 vs JS 300 HMAC drift.
+
+    Node JSON.stringify emits integral numbers without ".0"; the native
+    hello capability digest and signed frame require identical wire bytes.
+    This changes only the exported JSON number, never search timers.
+    """
+    if not isinstance(value, float):
+        raise TypeError("search retention must be a float")
+    if not (value > 0 and value < float("inf")):
+        raise ValueError("search retention must be a finite positive number")
+    return int(value) if value.is_integer() else value
+
+
 def _utc_now_iso() -> str:
     from datetime import datetime, timezone
 
@@ -1509,7 +1523,7 @@ class LocalOperations:
                 "max_search_results": MAX_SEARCH_RESULTS,
                 "max_search_timeout_ms": MAX_SEARCH_TIMEOUT_MS,
                 "max_retained_search_sessions": MAX_RETAINED_SEARCH_SESSIONS,
-                "search_retention_seconds": self.searches.retention_seconds,
+                "search_retention_seconds": _wire_search_retention_seconds(self.searches.retention_seconds),
             },
         }
         digest = hashlib.sha256(
@@ -3107,7 +3121,7 @@ class LocalOperations:
                 "max_search_timeout_ms": MAX_SEARCH_TIMEOUT_MS,
                 "max_search_page_length": MAX_SEARCH_PAGE_LENGTH,
                 "max_retained_search_sessions": MAX_RETAINED_SEARCH_SESSIONS,
-                "search_retention_seconds": self.searches.retention_seconds,
+                "search_retention_seconds": _wire_search_retention_seconds(self.searches.retention_seconds),
             },
             "settings": self.settings.snapshot(),
             "mutable": True,

@@ -387,6 +387,52 @@ def make_real_executor(tmp_path: Path):
     return executor, shell, audit, observer
 
 
+def test_real_native_hello_integral_seconds_match_js_canonical_numbers(tmp_path, monkeypatch) -> None:
+    """Regression: Python 300.0 vs Node JSON.stringify 300 breaks hello HMAC."""
+    import json
+
+    monkeypatch.setenv("LOCALAPPDATA", str(tmp_path))
+    monkeypatch.setenv("XDG_STATE_HOME", str(tmp_path))
+    executor, *_ = make_real_executor(tmp_path)
+    adapter = ExecutorRemoteDispatcher(executor)
+    assert executor.operations.searches.retention_seconds == 300.0
+
+    advertised = adapter.capability_manifest()
+    safety = advertised["tool_parity"]["safety"]
+    assert type(safety["search_retention_seconds"]) is int
+    assert safety["search_retention_seconds"] == 300
+    assert type(executor.operations._config()["limits"]["search_retention_seconds"]) is int
+
+    parity = advertised["tool_parity"]
+    unsigned = {key: value for key, value in parity.items() if key != "attestation"}
+    assert parity["attestation"]["digest"] == digest_json(unsigned)
+    assert advertised["executor"]["digest"] == parity["attestation"]["digest"]
+
+    integral_floats: list[str] = []
+
+    def check_wire_numbers(value, path="$"):
+        if type(value) is float and value.is_integer():
+            integral_floats.append(path)
+        elif isinstance(value, dict):
+            for key, item in value.items():
+                check_wire_numbers(item, f"{path}.{key}")
+        elif isinstance(value, list):
+            for index, item in enumerate(value):
+                check_wire_numbers(item, f"{path}[{index}]")
+
+    check_wire_numbers(advertised)
+    assert integral_floats == [], integral_floats
+    serialized = json.dumps(advertised, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    assert '"search_retention_seconds":300' in serialized
+    assert '"search_retention_seconds":300.0' not in serialized
+
+    executor.operations.searches.retention_seconds = 1.5
+    fractional = adapter.capability_manifest()
+    assert type(fractional["tool_parity"]["safety"]["search_retention_seconds"]) is float
+    assert fractional["tool_parity"]["safety"]["search_retention_seconds"] == 1.5
+    assert executor.operations._config()["limits"]["search_retention_seconds"] == 1.5
+
+
 def test_registry_digest_matches_pc_native_control_v1_reference() -> None:
     assert TOOL_REGISTRY_DIGEST == EXPECTED_HELP_PC_2_REGISTRY_DIGEST
 
