@@ -120,6 +120,35 @@ def _stage_isolated_service_host(
     optional_abi = base_python_root / "python3.dll"
     if optional_abi.is_file():
         sources["python3.dll"] = optional_abi
+
+    base_lib = base_python_root / "Lib"
+    base_dlls = base_python_root / "DLLs"
+    manager = win32_package_root / "win32" / "servicemanager.pyd"
+    if not (base_lib / "encodings" / "__init__.py").is_file() or not base_dlls.is_dir():
+        raise RuntimeError("Windows service host standard library is unavailable")
+    if not manager.is_file():
+        raise RuntimeError("Windows service host servicemanager is unavailable")
+    # pythonservice.exe embeds Python. Unlike Scripts/python.exe, it must
+    # explicitly include pywin32's win32 and win32/lib in its import path.
+    # The executable-specific ._pth isolates its imports from HKCU/registry
+    # and process environment while retaining the selected base stdlib.
+    host_path_bytes = ("\n".join((
+        str(base_lib), str(base_dlls), ".",
+        r"Lib\site-packages", r"Lib\site-packages\win32",
+        r"Lib\site-packages\win32\lib", r"Lib\site-packages\Pythonwin",
+        "import site", "",
+    ))).encode("utf-8")
+    host_path = venv_root / "pythonservice._pth"
+    if host_path.is_symlink():
+        raise RuntimeError("Windows service host path manifest is a symlink")
+    if host_path.exists() and (
+        not host_path.is_file() or host_path.read_bytes() != host_path_bytes
+    ):
+        raise RuntimeError("Windows service host path manifest collision")
+    host_path_temp = venv_root / "pythonservice._pth.native-staging"
+    if host_path_temp.exists() or host_path_temp.is_symlink():
+        raise RuntimeError("Windows service host path manifest staging collision")
+
     for name, source in sources.items():
         if not source.is_file():
             raise RuntimeError(f"Windows service host dependency missing: {name}")
@@ -144,6 +173,17 @@ def _stage_isolated_service_host(
             os.replace(temp, target)
         finally:
             temp.unlink(missing_ok=True)
+    if not host_path.exists():
+        try:
+            with host_path_temp.open("xb") as handle:
+                handle.write(host_path_bytes)
+                handle.flush()
+                os.fsync(handle.fileno())
+            if host_path_temp.read_bytes() != host_path_bytes:
+                raise RuntimeError("Windows service host path manifest verification failed")
+            os.replace(host_path_temp, host_path)
+        finally:
+            host_path_temp.unlink(missing_ok=True)
     return venv_root / "pythonservice.exe"
 
 

@@ -678,7 +678,10 @@ def _fake_isolated_host_tree(root: Path) -> tuple[Path, Path, Path, dict[str, by
     package_root = venv / "Lib" / "site-packages"
     (package_root / "win32").mkdir(parents=True)
     (package_root / "pywin32_system32").mkdir()
-    base.mkdir()
+    (base / "Lib" / "encodings").mkdir(parents=True)
+    (base / "DLLs").mkdir()
+    (base / "Lib" / "encodings" / "__init__.py").write_text("# fixture", encoding="utf-8")
+    (package_root / "win32" / "servicemanager.pyd").write_bytes(b"fake-servicemanager")
     (venv / "pyvenv.cfg").write_text("home = isolated-test-base\n", encoding="utf-8")
     binaries = {
         "pythonservice.exe": b"service-host-from-venv",
@@ -694,12 +697,18 @@ def _fake_isolated_host_tree(root: Path) -> tuple[Path, Path, Path, dict[str, by
 
 def test_isolated_service_host_stages_verified_local_dlls_without_global_mutation(tmp_path) -> None:
     venv, base, packages, binaries = _fake_isolated_host_tree(tmp_path)
-    base_before = {p.name: p.read_bytes() for p in base.iterdir()}
+    base_before = {p.relative_to(base).as_posix(): p.read_bytes() for p in base.rglob("*") if p.is_file()}
     host = _stage_isolated_service_host(venv, base, packages)
     assert host == venv / "pythonservice.exe"
+    assert (venv / "pythonservice._pth").read_text(encoding="utf-8").splitlines() == [
+        str(base / "Lib"), str(base / "DLLs"), ".",
+        r"Lib\site-packages", r"Lib\site-packages\win32",
+        r"Lib\site-packages\win32\lib", r"Lib\site-packages\Pythonwin",
+        "import site",
+    ]
     for name, expected in binaries.items():
         assert (venv / name).read_bytes() == expected
-    assert {p.name: p.read_bytes() for p in base.iterdir()} == base_before
+    assert {p.relative_to(base).as_posix(): p.read_bytes() for p in base.rglob("*") if p.is_file()} == base_before
     assert _stage_isolated_service_host(venv, base, packages) == host
     assert not list(venv.glob("*.native-staging"))
 
@@ -776,3 +785,56 @@ def test_scm_start_failure_reports_only_numeric_error(monkeypatch) -> None:
     with pytest.raises(RuntimeError, match="winerror=1053") as exc:
         _Win32ServiceApi().start()
     assert "SENSITIVE-PRIVATE-PATH" not in str(exc.value)
+
+def test_service_host_path_manifest_collisions_fail_before_copy(tmp_path) -> None:
+    venv, base, packages, _ = _fake_isolated_host_tree(tmp_path)
+    pth = venv / "pythonservice._pth"
+    pth.write_text("C:\\untrusted\\modules\n", encoding="utf-8")
+    with pytest.raises(RuntimeError, match="path manifest collision"):
+        _stage_isolated_service_host(venv, base, packages)
+    assert not (venv / "pythonservice.exe").exists()
+    pth.unlink()
+    (packages / "win32" / "servicemanager.pyd").unlink()
+    with pytest.raises(RuntimeError, match="servicemanager is unavailable"):
+        _stage_isolated_service_host(venv, base, packages)
+    assert not (venv / "pythonservice.exe").exists()
+
+@pytest.mark.skipif(sys.platform != "win32", reason="real pywin32 service bootstrap needs Windows")
+def test_real_windows_service_host_imports_servicemanager_without_scm_install(tmp_path) -> None:
+    import shutil
+    import subprocess
+    import win32service
+
+    tag = f"{sys.version_info.major}{sys.version_info.minor}"
+    source = Path(win32service.__file__).resolve().parent.parent
+    venv = tmp_path / "venv"
+    site = venv / "Lib" / "site-packages"
+    (site / "win32").mkdir(parents=True)
+    (site / "pywin32_system32").mkdir()
+    (venv / "pyvenv.cfg").write_text(
+        f"home = {sys.base_prefix}\n", encoding="utf-8"
+    )
+    for name in ("pythonservice.exe", "servicemanager.pyd"):
+        shutil.copy2(source / "win32" / name, site / "win32" / name)
+    for name in (f"pywintypes{tag}.dll", f"pythoncom{tag}.dll"):
+        shutil.copy2(source / "pywin32_system32" / name,
+                     site / "pywin32_system32" / name)
+
+    host = _stage_isolated_service_host(venv, Path(sys.base_prefix), site)
+    assert (venv / "pythonservice._pth").is_file()
+    result = subprocess.run(
+        [str(host), "-debug", "PCNativeBootstrapProbeNotInstalled"],
+        capture_output=True, timeout=10, check=False,
+    )
+    def decode(raw: bytes) -> str:
+        if not raw:
+            return ""
+        return raw.decode(
+            "utf-16-le" if raw.count(b"\x00") > len(raw) // 8 else "utf-8",
+            errors="replace",
+        )
+
+    output = decode(result.stdout) + "\n" + decode(result.stderr)
+    assert "PythonService was unable to locate the service manager" not in output
+    assert "0xC00000F4" in output or "PythonClass" in output, output
+    assert _stage_isolated_service_host(venv, Path(sys.base_prefix), site) == host
