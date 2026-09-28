@@ -1,0 +1,108 @@
+{
+  "schema": "pc.native.executor.r16.chaos_matrix.v1",
+  "provenance": {
+    "repository": "foto6/help-pc-1",
+    "exact_base_sha": "04f817299b46ecb0ffa8aa908ce84fdb4c3300d0",
+    "surface": "ExecutorRemoteDispatcher -> Executor -> OutcomeJournal",
+    "fixture_scope": "pytest tmp_path + synthetic UIA/handle; no service or OS process dispatch"
+  },
+  "frozen_registries": {
+    "compatibility": {
+      "contract_version": "pc.native.tool_registry.v1",
+      "sha256": "58b2bde8c6a49825747dcd7010f105dad0b6d548c7e8341cdafb32d2319f6dcd"
+    },
+    "parity": {
+      "contract_version": "pc.native.parity_tool_registry.v1",
+      "sha256": "dab7ebd65dd239519c755b0521cd2068f15ae885402e37d4885f64b9c2a08c33",
+      "distinct_from_compatibility": true
+    }
+  },
+  "scenarios": [
+    {
+      "id": "R16-01",
+      "name": "frozen_registries",
+      "expected": "both independently versioned canonical SHA-256s match exact base; effect inventory equals advertised Executor actions",
+      "dispatch_started": false
+    },
+    {
+      "id": "R16-02",
+      "name": "exact_action_routing",
+      "expected": "each compatibility route uses published parity/legacy target, each parity route resolves its exact native action; read-only/effect flags identical",
+      "dispatch_started": false
+    },
+    {
+      "id": "R16-03",
+      "name": "stale_process_epoch",
+      "error": "context_mismatch",
+      "effect_state": "not_started",
+      "dispatch_started": false,
+      "adapter_effect_count": 0
+    },
+    {
+      "id": "R16-04",
+      "name": "stale_window_epoch",
+      "error": "context_mismatch",
+      "effect_state": "not_started",
+      "dispatch_started": false,
+      "adapter_effect_count": 0
+    },
+    {
+      "id": "R16-05",
+      "name": "stale_uia_runtime_epoch",
+      "error": "context_mismatch",
+      "effect_state": "not_started",
+      "dispatch_started": false,
+      "adapter_effect_count": 0
+    },
+    {
+      "id": "R16-06",
+      "name": "duplicate_request_id_after_completion",
+      "expected": "completed first attempt, same-id same-action duplicate blocked before effect, conflicting args cannot mutate",
+      "reconcile_required": true,
+      "adapter_effect_count": 1
+    },
+    {
+      "id": "R16-07",
+      "name": "effect_then_unknown",
+      "expected": "synthetic effect occurs once, injected result loss creates journal unknown, retry requires reconciliation without effect replay",
+      "effect_state": "unknown",
+      "reconcile_required": true,
+      "adapter_effect_count": 1
+    },
+    {
+      "id": "R16-08",
+      "name": "restart_and_reconnect",
+      "expected": "fresh Executor/dispatcher reloads isolated journal and settings; original request ID cannot redispatch",
+      "reconcile_required": true,
+      "adapter_effect_count": 1
+    },
+    {
+      "id": "R16-09",
+      "name": "stale_process_handle_epoch",
+      "error": "STALE_PROCESS_HANDLE",
+      "dispatch_started": false,
+      "adapter_effect_count": 0
+    },
+    {
+      "id": "R16-10",
+      "name": "stale_process_handle_restart",
+      "error": "STALE_PROCESS_HANDLE",
+      "dispatch_started": false,
+      "adapter_effect_count": 0
+    },
+    {
+      "id": "R16-11",
+      "name": "protected_path_lexical_reject",
+      "error": "PROTECTED_PATH_BLOCKED",
+      "dispatch_started": false,
+      "filesystem_probe_count": 0,
+      "adapter_effect_count": 0
+    }
+  ],
+  "semantics": {
+    "unknown_outcome": "lookup/reconcile only, automatic_replay=false",
+    "protected_path": "lexical guard in remote adapter precedes Executor preflight, operation dispatch, and any Path probe",
+    "replay": "exact logical request/action identity checked in durable journal before invoking Executor side effect",
+    "no_real_side_effects": "config settings are isolated under tmp_path; UIA and process handles are synthetic, no subprocess/service/UAC calls"
+  }
+}
