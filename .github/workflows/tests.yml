@@ -27,8 +27,35 @@ jobs:
           python-version: "3.11"
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e ".[test]"
-      - name: Final PC Core provenance and registry audit
-        run: python tools/audit_native_core_final_candidate.py
+      - name: Final PC Core provenance and registry audit (immutable pinned producer)
+        shell: bash
+        run: |
+          git worktree add --detach "$RUNNER_TEMP/r16-pinned-core" 04f817299b46ecb0ffa8aa908ce84fdb4c3300d0
+          (
+            cd "$RUNNER_TEMP/r16-pinned-core"
+            python tools/audit_native_core_final_candidate.py
+          )
+          git worktree remove "$RUNNER_TEMP/r16-pinned-core"
+      - name: R16 validation-only exact-base delta audit
+        shell: bash
+        run: |
+          python - <<'PY'
+          import subprocess
+          base = "04f817299b46ecb0ffa8aa908ce84fdb4c3300d0"
+          actual = set(subprocess.check_output(
+              ["git", "diff", "--name-only", base, "HEAD"], text=True
+          ).splitlines())
+          expected = {
+              ".github/workflows/tests.yml",
+              "docs/R16_EXECUTOR_CHAOS_CONTRACTS.md",
+              "tests/fixtures/r16_executor_chaos/matrix.v1.json",
+              "tests/test_r16_executor_chaos_contracts.py",
+          }
+          assert actual == expected, (
+              f"R16 validation-only delta mismatch: missing={sorted(expected-actual)} "
+              f"extra={sorted(actual-expected)}"
+          )
+          PY
       - name: Wave 6 focused preflight suite
         run: python -m pytest tests/test_preflight.py
       - name: Wave 7 focused context-binding suite
