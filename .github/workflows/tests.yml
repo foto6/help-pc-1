@@ -8,6 +8,7 @@ on:
       - agent/pc-native-full-stack
       - agent/pc-native-full-parity-gaps
       - agent/pc-native-core-final-candidate
+      - agent/pc-r16-executor-chaos-contracts-20260928
   workflow_dispatch:
 
 jobs:
@@ -40,6 +41,8 @@ jobs:
         run: python -m pytest tests/test_native_device_service.py
       - name: Native service immutable-artifact security suite
         run: python -m pytest tests/test_native_service_artifact.py
+      - name: R16 Executor synthetic chaos conformance
+        run: python -m pytest tests/test_r16_executor_chaos_contracts.py -v
       - name: Registry policy and direct parity suite
         run: python -m pytest tests/test_native_core_registry_policy.py tests/test_native_stack_integration.py
       - name: Native schema reproducibility
