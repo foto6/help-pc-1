@@ -26,6 +26,8 @@ LSA_HOTFIX = "72b8c83d99eca8226afdd8a149cd49ea463f5013"
 SECRET_STDIN_HOTFIX = "fa27d68d2f24ca9f21768b8792bf012b500aeedd"
 LAST_GREEN_PC = "97697b340f30f0190776eba4bd6da71c1a0d28d1"
 SERVICE_HOST_HOTFIX = "93150246322636ae3ea55f59be2104a440fe2c7d"
+LAST_GREEN_SERVICE_HOST = "a42533ce655064e789fbbe17a6dc45cf0c7f6f7f"
+SERVICE_HOST_PATH_HOTFIX = "852f461c73b84aa2b642f0e89ba13e626498e5c0"
 STRICT_B = "fec2bc951cef3e4c9f5d31f00503277e7ed5b90b"
 OLD_TRANSPORT = "8df29aad32a6cb142dff6721f92fca74a080e441"
 OLD_RELAY = "992c66335c9e6c40d150bc10c086e97ea7600d48"
@@ -240,8 +242,12 @@ def assert_layered_provenance(head: str) -> None:
     assert git("merge-base", "--is-ancestor", SERVICE_HOST_HOTFIX, head, check=False).returncode == 0
     assert git("merge-base", "--is-ancestor", LAST_GREEN_PC, SERVICE_HOST_HOTFIX, check=False).returncode == 0
     assert names(LAST_GREEN_PC, SERVICE_HOST_HOTFIX) == SERVICE_HOST_HOTFIX_EXACT
+    assert git("merge-base", "--is-ancestor", SERVICE_HOST_HOTFIX, SERVICE_HOST_PATH_HOTFIX, check=False).returncode == 0
+    assert git("merge-base", "--is-ancestor", SERVICE_HOST_PATH_HOTFIX, head, check=False).returncode == 0
+    assert git("merge-base", "--is-ancestor", LAST_GREEN_SERVICE_HOST, SERVICE_HOST_PATH_HOTFIX, check=False).returncode == 0
+    assert names(LAST_GREEN_SERVICE_HOST, SERVICE_HOST_PATH_HOTFIX) == SERVICE_HOST_HOTFIX_EXACT
     for path in sorted(SERVICE_HOST_HOTFIX_EXACT):
-        assert_same_blob(SERVICE_HOST_HOTFIX, head, path)
+        assert_same_blob(SERVICE_HOST_PATH_HOTFIX, head, path)
 
 def assert_registry_and_mapping(root: Path) -> None:
     assert TOOL_REGISTRY_DIGEST == EXPECTED_COMPAT_TOOL_REGISTRY_V1_DIGEST
