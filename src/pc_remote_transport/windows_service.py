@@ -36,6 +36,8 @@ def _log_service_event(event: str) -> None:
 
 
 class WindowsLsaSecretStore:
+    _MISSING_SECRET_CODES = {2, 1168, 0xC0000034, -1073741772}
+
     def _module(self):
         try:
             import win32security
@@ -59,7 +61,7 @@ class WindowsLsaSecretStore:
             )
             payload = win32security.LsaRetrievePrivateData(policy, name)
         except Exception as exc:
-            if self._error_code(exc) in {2, 1168}:
+            if self._error_code(exc) in self._MISSING_SECRET_CODES:
                 raise MissingSecretError("service secret is missing") from None
             raise RuntimeError("machine secret read failed") from exc
         if not isinstance(payload, (bytes, str)) or not payload:
@@ -87,7 +89,7 @@ class WindowsLsaSecretStore:
             )
             win32security.LsaStorePrivateData(policy, name, None)
         except Exception as exc:
-            if self._error_code(exc) in {2, 1168}:
+            if self._error_code(exc) in self._MISSING_SECRET_CODES:
                 return
             raise RuntimeError("machine secret delete failed") from exc
 

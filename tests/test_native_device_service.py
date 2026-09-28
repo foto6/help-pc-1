@@ -412,6 +412,26 @@ def test_lsa_secret_store_round_trip_uses_machine_private_data(monkeypatch) -> N
         secrets.read("L$test-service-secret")
 
 
+@pytest.mark.parametrize("missing_code", [2, 1168, 0xC0000034, -1073741772])
+def test_lsa_secret_store_accepts_win32_and_ntstatus_missing_codes(monkeypatch, missing_code) -> None:
+    class MissingCodeLsa(FakeLsaModule):
+        def LsaRetrievePrivateData(self, policy, name):
+            raise OSError(missing_code, "not found")
+
+        def LsaStorePrivateData(self, policy, name, value):
+            if value is None:
+                raise OSError(missing_code, "not found")
+            super().LsaStorePrivateData(policy, name, value)
+
+    fake = MissingCodeLsa()
+    secrets = WindowsLsaSecretStore()
+    monkeypatch.setattr(secrets, "_module", lambda: fake)
+
+    with pytest.raises(MissingSecretError):
+        secrets.read("L$test-service-secret")
+    secrets.delete("L$test-service-secret")
+
+
 @pytest.mark.asyncio
 async def test_stale_rotation_never_overwrites_persisted_secret(tmp_path) -> None:
     old = TokenMaterial(1, b"m" * 32)
