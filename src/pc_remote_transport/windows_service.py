@@ -196,6 +196,22 @@ def _bound_service_store(registered_root: str | None) -> ConfigStore:
     return ConfigStore(root)
 
 
+def _run_service_host(host: DeviceServiceHost, stop_event: threading.Event) -> None:
+    """Run asyncio without Windows Proactor signal setup in pywin32's SCM thread.
+
+    pywin32 may initialize embedded Python in a thread which Python considers
+    its main thread but Windows does not permit to call signal.set_wakeup_fd.
+    Windows' default ProactorEventLoop invokes that API at construction and
+    crashes the service (SCM 7024, service-specific 0x20000001). Use a
+    per-Runner selector loop; never mutate the process-wide event-loop policy.
+    asyncio.Runner(loop_factory=...) is supported by our Python >=3.11 floor.
+    """
+    import asyncio
+
+    with asyncio.Runner(loop_factory=asyncio.SelectorEventLoop) as runner:
+        runner.run(host.run(stop_event))
+
+
 class _Win32ServiceApi:
     def install(self, state_root: Path) -> None:
         import win32service
@@ -362,9 +378,7 @@ if os.name == "nt":
                 health = HealthStore(store.root)
                 secrets = WindowsLsaSecretStore()
                 host = DeviceServiceHost(store, health, secrets)
-                import asyncio
-
-                asyncio.run(host.run(self._stop_event))
+                _run_service_host(host, self._stop_event)
             except BaseException:
                 _log_service_event("crashed")
                 raise

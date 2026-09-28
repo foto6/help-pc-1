@@ -45,8 +45,56 @@ from pc_remote_transport.windows_service import (
     _Win32ServiceApi,
     _bound_service_store,
     _log_service_event,
+    _run_service_host,
     _stage_isolated_service_host,
 )
+
+
+def test_embedded_scm_runner_uses_per_instance_selector_in_a_worker_thread(monkeypatch) -> None:
+    """Regression for the R6 event-loop traceback from real SCM EventRecordID 9555."""
+    observed: list[tuple[asyncio.AbstractEventLoop, bool]] = []
+    errors: list[BaseException] = []
+    stop = threading.Event()
+
+    class ProbeHost:
+        async def run(self, received_stop: threading.Event) -> None:
+            loop = asyncio.get_running_loop()
+            observed.append((loop, received_stop is stop))
+            await asyncio.sleep(0)
+
+    def forbid_default_factory() -> None:
+        raise AssertionError("SCM runner must not construct the default Windows Proactor loop")
+
+    # Runner(loop_factory=SelectorEventLoop) must not rely on the default
+    # process-wide event loop policy or asyncio.new_event_loop.
+    monkeypatch.setattr(asyncio, "new_event_loop", forbid_default_factory)
+
+    def worker() -> None:
+        try:
+            _run_service_host(ProbeHost(), stop)
+        except BaseException as exc:
+            errors.append(exc)
+
+    thread = threading.Thread(target=worker, name="simulated-pywin32-SvcDoRun")
+    thread.start()
+    thread.join(timeout=5)
+    assert not thread.is_alive()
+    assert errors == []
+    assert len(observed) == 1
+    loop, correct_stop = observed[0]
+    assert isinstance(loop, asyncio.SelectorEventLoop)
+    assert correct_stop is True
+    assert loop.is_closed()
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="pywin32 service exists on Windows only")
+def test_real_windows_svc_do_run_calls_scoped_selector_runner() -> None:
+    """Prevent accidental reintroduction of asyncio.run into the SCM thread."""
+    import pc_remote_transport.windows_service as module
+
+    code = module.PCNativeDeviceService.SvcDoRun.__code__
+    assert "_run_service_host" in code.co_names
+    assert "run" not in code.co_names
 
 
 class MemorySecrets:
