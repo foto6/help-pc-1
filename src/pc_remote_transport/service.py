@@ -344,10 +344,20 @@ def build_default_runtime(
     config_store: ConfigStore,
     health: HealthStore,
     secret_store: SecretStore,
+    *,
+    operations_state_root: str | os.PathLike[str] | None = None,
 ) -> RuntimeBundle:
     audit = JsonlAuditSink(str(config_store.root / "audit.jsonl"))
     journal = OutcomeJournal(config_store.root / "outcome-journal.jsonl")
-    executor = Executor(dry_run=False, audit=audit, outcome_journal=journal)
+    # None retains the frozen R15c operational default. A separately named
+    # R20 candidate MUST bind its registry/search/settings under its own
+    # immutable ConfigStore root, never the shared service-account LOCALAPPDATA.
+    executor = Executor(
+        dry_run=False,
+        audit=audit,
+        outcome_journal=journal,
+        operations_state_root=operations_state_root,
+    )
     dispatcher = ExecutorRemoteDispatcher(executor)
 
     def capabilities() -> dict[str, Any]:
