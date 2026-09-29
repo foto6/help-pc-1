@@ -1,0 +1,101 @@
+name: R20 real R15c + R20 SCM coexistence — disposable Windows only
+
+on:
+  push:
+    branches:
+      - agent/r20-shadow-windows-service-20260929
+    paths:
+      - "tools/r20_ephemeral_coexistence.ps1"
+      - ".github/workflows/r20-ephemeral-coexistence.yml"
+      - "src/pc_remote_transport/r20_candidate.py"
+      - "src/pc_remote_transport/r20_candidate_cli.py"
+      - "src/pc_remote_transport/service.py"
+      - "pyproject.toml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  two-real-native-services-cold-runner:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      PIP_NO_INPUT: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Checkout EXACT frozen live R15c producer in a separate folder
+        uses: actions/checkout@v4
+        with:
+          repository: foto6/help-pc-1
+          ref: 04f817299b46ecb0ffa8aa908ce84fdb4c3300d0
+          path: r20-old-source
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify source/runner identities before ANY service mutation
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_ACTIONS -ne "true" -or $env:RUNNER_OS -ne "Windows") {
+            throw "This test must run only on a disposable Windows GitHub runner"
+          }
+          $old = git -C r20-old-source rev-parse HEAD
+          if ($old -ne "04f817299b46ecb0ffa8aa908ce84fdb4c3300d0") {
+            throw "Historical R15c checkout identity mismatch"
+          }
+          git merge-base --is-ancestor "30c65d04e905af61dd731904b454fb08153f589a" HEAD
+          if ($LASTEXITCODE -ne 0) { throw "R20 candidate lost its pinned producer ancestor" }
+          if (Get-CimInstance Win32_Service -Filter "Name='PCNativeDeviceService'") {
+            throw "Unexpected pre-existing legacy service on disposable runner"
+          }
+          if (Get-CimInstance Win32_Service -Filter "Name='PCNativeCandidateR20'") {
+            throw "Unexpected pre-existing R20 candidate service on disposable runner"
+          }
+          Write-Output "R20_TWO_SOURCE_EXACT_COLD_RUNNER_PASS"
+      - name: Install pinned Python build backend
+        run: python -m pip install --upgrade pip setuptools wheel
+      - name: Build two separate installed-Wheel/pywin32 service environments
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          function Make-ScopedWheel([string]$SourceDir,[string]$Label){
+            $wheelDir=Join-Path $env:RUNNER_TEMP ($Label+"-wheel")
+            $venv=Join-Path $env:RUNNER_TEMP ($Label+"-venv")
+            New-Item -ItemType Directory -Force -Path $wheelDir|Out-Null
+            python -m pip wheel --no-deps --no-build-isolation --wheel-dir $wheelDir $SourceDir
+            if($LASTEXITCODE -ne 0){throw ($Label+" Wheel build failed")}
+            $whl=Get-ChildItem -LiteralPath $wheelDir -Filter "*.whl"|Select-Object -First 1
+            if(!$whl){throw ($Label+" Wheel missing")}
+            python -m venv $venv
+            if($LASTEXITCODE -ne 0){throw ($Label+" venv missing")}
+            $exe=Join-Path $venv "Scripts/python.exe"
+            & $exe -m pip install --no-deps --only-binary=:all: pywin32==312
+            if($LASTEXITCODE -ne 0){throw ($Label+" private pywin32 install failed")}
+            & $exe -m pip install $whl.FullName
+            if($LASTEXITCODE -ne 0){throw ($Label+" Wheel installation failed")}
+            Write-Output ($Label+"_WHEEL_SHA256="+(Get-FileHash -Algorithm SHA256 $whl.FullName).Hash.ToLowerInvariant())
+            return $exe
+          }
+          $env:PYTHONPATH = ""
+          $legacy=Make-ScopedWheel -SourceDir (Join-Path $PWD "r20-old-source") -Label "r15-frozen"
+          $candidate=Make-ScopedWheel -SourceDir $PWD -Label "r20-candidate"
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value ("R20_OLD_PY="+$legacy)
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value ("R20_NEW_PY="+$candidate)
+      - name: Actually start frozen R15c and R20 services SIDE BY SIDE and prove isolated rollback
+        shell: pwsh
+        run: |
+          $env:PYTHONPATH = ""
+          & ./tools/r20_ephemeral_coexistence.ps1 -LegacyPython $env:R20_OLD_PY -CandidatePython $env:R20_NEW_PY
+      - name: Save only sanitized two-service outcome (never machine keys/journals)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r20-two-real-services-${{ github.run_id }}
+          path: ${{ runner.temp }}/r20-coexistence-sanitized.json
+          if-no-files-found: warn
+          retention-days: 7
