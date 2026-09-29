@@ -8,7 +8,6 @@ on:
       - agent/pc-native-full-stack
       - agent/pc-native-full-parity-gaps
       - agent/pc-native-core-final-candidate
-      - agent/pc-r17-safe-json-integers-20260929
   workflow_dispatch:
 
 jobs:
