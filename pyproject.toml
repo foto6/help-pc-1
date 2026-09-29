@@ -24,6 +24,7 @@ test = ["pytest>=8.0", "pytest-asyncio>=0.23"]
 [project.scripts]
 pc-executor = "pc_executor.__main__:main"
 pc-native-device-service = "pc_remote_transport.service_cli:main"
+pc-native-r20-service = "pc_remote_transport.r20_candidate_cli:main"
 
 [tool.pytest.ini_options]
 addopts = "-q"
