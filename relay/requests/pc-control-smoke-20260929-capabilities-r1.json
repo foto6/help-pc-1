@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-control-smoke-20260929-capabilities-r1",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 12000,
+  "note": "Read-only smoke of installed private pc-control plugin over GitHub PC Executor relay after reboot; do not dispatch side effects."
+}
