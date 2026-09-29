@@ -1,0 +1,83 @@
+name: R20 candidate REAL SCM lifecycle — disposable Windows runner only
+
+on:
+  push:
+    branches:
+      - agent/r20-shadow-windows-service-20260929
+    paths:
+      - "src/pc_remote_transport/r20_candidate.py"
+      - "src/pc_remote_transport/r20_candidate_cli.py"
+      - "src/pc_remote_transport/service.py"
+      - "pyproject.toml"
+      - "tools/r20_ephemeral_scm.ps1"
+      - ".github/workflows/r20-ephemeral-scm.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  shadow-service-cold-runner:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      PIP_NO_INPUT: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Exact frozen producer parent, disposable runner and source identity
+        shell: pwsh
+        run: |
+          $expectedParent = "30c65d04e905af61dd731904b454fb08153f589a"
+          git merge-base --is-ancestor $expectedParent HEAD
+          if ($LASTEXITCODE -ne 0) { throw "R20 source lost its frozen parent" }
+          if ($env:GITHUB_ACTIONS -ne "true" -or $env:RUNNER_OS -ne "Windows") {
+            throw "This workflow is restricted to a GitHub-hosted disposable Windows runner"
+          }
+          $old = Get-CimInstance Win32_Service -Filter "Name='PCNativeDeviceService'"
+          if ($null -ne $old) { throw "Never run a shadow SCM test where original service exists" }
+          Write-Output "R20_EPHEMERAL_RUNNER_ONLY=PASS"
+      - name: Install Python build backend (no global user service)
+        run: python -m pip install --upgrade pip setuptools wheel
+      - name: Build pinned R20 Wheel and isolated native Windows venv
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $wheelDir = Join-Path $env:RUNNER_TEMP "r20-wheel"
+          $venv = Join-Path $env:RUNNER_TEMP "r20-wheel-venv"
+          New-Item -ItemType Directory -Force -Path $wheelDir | Out-Null
+          python -m pip wheel --no-deps --no-build-isolation --wheel-dir $wheelDir .
+          if ($LASTEXITCODE -ne 0) { throw "R20 source Wheel build failed" }
+          $wheel = Get-ChildItem -LiteralPath $wheelDir -Filter "*.whl" | Select-Object -First 1
+          if ($null -eq $wheel) { throw "R20 Wheel missing" }
+          python -m venv $venv
+          if ($LASTEXITCODE -ne 0) { throw "R20 candidate private venv failed" }
+          $pythonExe = Join-Path $venv "Scripts/python.exe"
+          & $pythonExe -m pip install --no-deps --only-binary=:all: pywin32==312
+          if ($LASTEXITCODE -ne 0) { throw "R20 private pywin32 install failed" }
+          & $pythonExe -m pip install $wheel.FullName
+          if ($LASTEXITCODE -ne 0) { throw "R20 installed Wheel dependencies failed" }
+          $env:PYTHONPATH = ""
+          & $pythonExe -c "import sys,pathlib,win32service,pc_remote_transport.r20_candidate as r;v=pathlib.Path(sys.prefix).resolve();assert pathlib.Path(r.__file__).resolve().is_relative_to(v);assert pathlib.Path(win32service.__file__).resolve().is_relative_to(v);print('R20_PRIVATE_WHEEL_PYWIN32_PASS')"
+          if ($LASTEXITCODE -ne 0) { throw "Candidate was not imported exclusively from private installed venv" }
+          Write-Output ("R20_RUNNER_WHEEL_SHA256=" + (Get-FileHash -Algorithm SHA256 $wheel.FullName).Hash.ToLowerInvariant())
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value ("R20_PRIVATE_PYTHON=" + $pythonExe)
+      - name: REAL candidate-only Windows SCM install, start, restart, stop and rollback
+        shell: pwsh
+        run: |
+          $env:PYTHONPATH = ""
+          & ./tools/r20_ephemeral_scm.ps1 -CandidatePython $env:R20_PRIVATE_PYTHON
+      - name: Retain only sanitized SCM outcome (never tokens/journals)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r20-scm-sanitized-${{ github.run_id }}
+          path: ${{ runner.temp }}/r20-cold-runner-scm-result.json
+          if-no-files-found: warn
+          retention-days: 7
