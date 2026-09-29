@@ -15,3 +15,6 @@ Evidence, isolated Windows checkout rooted at source SHA 04f817299b46ecb0ffa8aa9
 - Negative boundary checks cover 2^53 and unsafe sequence/token generation.
 
 This change fixes only integer precision on the Python-originating signed relay frames. It does not provide new ChatGPT plugin registration, solve session TTL, or authorize any service upgrade. Cross-language real-host file.info/list compatibility and exact CI on Windows/Ubuntu remain separate release gates.
+
+## Reproduce
+From an isolated checkout on Windows or Ubuntu: python -m pytest tests/test_remote_protocol.py and python -m pytest. The full suite is part of the branch-scoped CI.
