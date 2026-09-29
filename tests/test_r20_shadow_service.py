@@ -188,6 +188,57 @@ class R20CandidateScopeTests(unittest.TestCase):
         r20.R20CandidateController(RecordingStore(self.candidate),api=stopped).uninstall()
         self.assertEqual(stopped.log,[("status",),("remove",)])
 
+    def test_preflight_reports_free_name_but_refuses_non_elevated_token(self):
+        api = RecordingApi(status="not_installed")
+        ctl = r20.R20CandidateController(RecordingStore(self.candidate), api=api)
+        requirements = {
+            "windows": True, "separate_venv": True,
+            "installed_wheel": True, "private_pywin32": True,
+            "elevated_token": False,
+        }
+        with patch.object(cli, "assert_r20_scope", return_value=self.candidate), patch.object(
+            cli, "_installer_environment", return_value=requirements
+        ):
+            payload = cli._preflight(ctl, ctl.config_store)
+        self.assertIs(payload["candidate_name_available"], True)
+        self.assertIs(payload["candidate_install_eligible"], False)
+        self.assertEqual(payload["blockers"], ["elevated_token"])
+        self.assertIs(payload["legacy_service_touched"], False)
+        self.assertEqual(api.log, [("status",)])
+
+    def test_preflight_only_reports_ready_when_all_private_prerequisites_are_met(self):
+        api = RecordingApi(status="not_installed")
+        ctl = r20.R20CandidateController(RecordingStore(self.candidate), api=api)
+        requirements = {
+            "windows": True, "separate_venv": True,
+            "installed_wheel": True, "private_pywin32": True,
+            "elevated_token": True,
+        }
+        with patch.object(cli, "assert_r20_scope", return_value=self.candidate), patch.object(
+            cli, "_installer_environment", return_value=requirements
+        ):
+            payload = cli._preflight(ctl, ctl.config_store)
+        self.assertEqual(payload["blockers"], [])
+        self.assertIs(payload["candidate_install_eligible"], True)
+        self.assertEqual(api.log, [("status",)])
+
+    def test_installer_rejects_non_elevated_process_before_binary_staging(self):
+        api = r20.R20CandidateServiceApi()
+        with patch.object(r20, "assert_r20_scope", return_value=self.candidate), patch.object(
+            api, "status", return_value="not_installed"
+        ), patch.object(r20, "is_elevated_admin", return_value=False), patch.object(
+            r20, "_stage_isolated_service_host"
+        ) as staged:
+            with self.assertRaisesRegex(RuntimeError, "elevated"):
+                api.install(self.candidate)
+            staged.assert_not_called()
+
+    def test_legacy_runtime_default_operations_root_is_unchanged(self):
+        import inspect
+        from pc_remote_transport.service import build_default_runtime
+        parameter=inspect.signature(build_default_runtime).parameters["operations_state_root"]
+        self.assertIsNone(parameter.default)
+
     def test_cli_has_separate_executable_entrypoint(self):
         import tomllib
         root=Path(__file__).resolve().parents[1]
