@@ -1,0 +1,55 @@
+name: R17 unsafe integer wire candidate
+
+on:
+  push:
+    branches:
+      - agent/pc-r17-safe-json-integers-20260929
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-safe-wire:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Assert exact frozen R9 ancestor and R17-only changed files
+        shell: bash
+        run: |
+          python - <<'PY'
+          import subprocess
+          base = "04f817299b46ecb0ffa8aa908ce84fdb4c3300d0"
+          subprocess.run(["git", "merge-base", "--is-ancestor", base, "HEAD"], check=True)
+          changed = set(subprocess.check_output(
+              ["git", "diff", "--name-only", base, "HEAD"], text=True
+          ).splitlines())
+          allowed = {
+              "src/pc_remote_transport/protocol.py",
+              "tests/test_remote_protocol.py",
+              "docs/R17_SAFE_JSON_INTEGER_WIRE.md",
+              ".github/workflows/r17-safe-json-integers.yml",
+          }
+          mandatory = {
+              "src/pc_remote_transport/protocol.py",
+              "tests/test_remote_protocol.py",
+              ".github/workflows/r17-safe-json-integers.yml",
+          }
+          assert mandatory <= changed, ("missing R17 changes", mandatory - changed)
+          assert changed <= allowed, ("out-of-scope files", changed - allowed)
+          print("R17_SCOPE_PASS", sorted(changed))
+          PY
+      - name: Install pinned project and test dependencies
+        run: python -m pip install -e ".[test]"
+      - name: Targeted authenticated relay protocol / safe integer tests
+        run: python -m pytest tests/test_remote_protocol.py tests/test_native_remote_transport.py
+      - name: Full Executor test suite
+        run: python -m pytest
