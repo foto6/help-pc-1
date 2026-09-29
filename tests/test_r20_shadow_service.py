@@ -3,8 +3,10 @@ from __future__ import annotations
 
 import importlib
 import os
+import sys
 import tempfile
 import unittest
+from types import ModuleType
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
@@ -238,6 +240,62 @@ class R20CandidateScopeTests(unittest.TestCase):
         from pc_remote_transport.service import build_default_runtime
         parameter=inspect.signature(build_default_runtime).parameters["operations_state_root"]
         self.assertIsNone(parameter.default)
+
+    def _fake_candidate_scm_install(self, *, fail_state_binding=False):
+        from unittest.mock import Mock
+        from types import ModuleType
+        base = self.candidate.parent / "base-python"
+        venv = self.candidate.parent / "candidate-venv"
+        win32 = ModuleType("win32service")
+        win32.__file__ = str(venv / "Lib" / "site-packages" / "win32" / "win32service.pyd")
+        win32.SERVICE_DEMAND_START = 3
+        utils = ModuleType("win32serviceutil")
+        operations = []
+        utils.InstallService = lambda **kw: operations.append(("install",kw))
+        def bind(name, option, value):
+            operations.append(("bind",name,option,value))
+            if fail_state_binding:
+                raise RuntimeError("test-only binding failure")
+        utils.SetServiceCustomOption = bind
+        utils.RemoveService = lambda name: operations.append(("remove",name))
+        api = r20.R20CandidateServiceApi()
+        fake_module_path = str(venv / "Lib" / "site-packages" /
+                               "pc_remote_transport" / "r20_candidate.py")
+        with patch.object(r20, "assert_r20_scope", return_value=self.candidate), patch.object(
+            api, "status", return_value="not_installed"
+        ), patch.object(r20, "is_elevated_admin", return_value=True), patch.object(
+            r20, "__file__", fake_module_path
+        ), patch.object(r20.sys, "prefix", str(venv)), patch.object(
+            r20.sys, "base_prefix", str(base)
+        ), patch.object(r20, "_stage_isolated_service_host",
+                       return_value=venv / "pythonservice.exe") as stage, patch.dict(
+            sys.modules, {"win32service":win32,"win32serviceutil":utils}
+        ):
+            if fail_state_binding:
+                with self.assertRaisesRegex(RuntimeError, "binding failed"):
+                    api.install(self.candidate)
+            else:
+                api.install(self.candidate)
+        stage.assert_called_once()
+        return operations
+
+    def test_real_candidate_scm_api_mock_targets_only_r20_demand_start(self):
+        observed = self._fake_candidate_scm_install()
+        self.assertEqual([name for name,*_ in observed],["install","bind"])
+        installed=observed[0][1]
+        self.assertEqual(installed["serviceName"], r20.R20_SERVICE_NAME)
+        self.assertEqual(installed["startType"],3)
+        self.assertIn("r20_candidate.PCNativeCandidateR20Service",
+                      installed["pythonClassString"])
+        self.assertEqual(observed[1][1],r20.R20_SERVICE_NAME)
+        self.assertEqual(observed[1][2],"StateRoot")
+        self.assertNotIn(r20.LEGACY_SERVICE_NAME,str(observed))
+
+    def test_real_candidate_scm_api_mock_rolls_back_only_candidate_identity(self):
+        observed=self._fake_candidate_scm_install(fail_state_binding=True)
+        self.assertEqual([name for name,*_ in observed],["install","bind","remove"])
+        self.assertEqual(observed[-1],("remove",r20.R20_SERVICE_NAME))
+        self.assertNotIn(r20.LEGACY_SERVICE_NAME,str(observed))
 
     def test_cli_has_separate_executable_entrypoint(self):
         import tomllib
