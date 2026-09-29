@@ -4,6 +4,7 @@ import base64
 import hashlib
 import hmac
 import json
+import math
 import re
 from dataclasses import dataclass
 from typing import Any, Mapping
@@ -87,6 +88,18 @@ def _js_safe_json(value: Any) -> Any:
         return value
     if isinstance(value, int):
         return str(value) if abs(value) > JS_MAX_SAFE_INTEGER else value
+    if isinstance(value, float):
+        # JSON.stringify(900.0) is "900", but Python json.dumps(900.0)
+        # yields "900.0". Re-signing this numeric payload at the Node Relay
+        # otherwise breaks HMAC and disconnects the genuine Python device.
+        if not math.isfinite(value):
+            raise ProtocolError("non-finite JSON numbers cannot be signed")
+        if value == 0.0:
+            return 0  # JS JSON.stringify(-0.0) is canonical numeric zero.
+        if value.is_integer():
+            # Protect values above 2^53-1 exactly as for integer payloads.
+            return int(value) if abs(value) <= JS_MAX_SAFE_INTEGER else format(value, ".0f")
+        return value
     if isinstance(value, dict):
         return {key: _js_safe_json(item) for key, item in value.items()}
     if isinstance(value, (list, tuple)):
