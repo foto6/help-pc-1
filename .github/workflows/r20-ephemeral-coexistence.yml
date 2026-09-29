@@ -67,18 +67,18 @@ jobs:
             $wheelDir=Join-Path $env:RUNNER_TEMP ($Label+"-wheel")
             $venv=Join-Path $env:RUNNER_TEMP ($Label+"-venv")
             New-Item -ItemType Directory -Force -Path $wheelDir|Out-Null
-            python -m pip wheel --no-deps --no-build-isolation --wheel-dir $wheelDir $SourceDir
+            python -m pip wheel --no-deps --no-build-isolation --wheel-dir $wheelDir $SourceDir | Out-Null
             if($LASTEXITCODE -ne 0){throw ($Label+" Wheel build failed")}
             $whl=Get-ChildItem -LiteralPath $wheelDir -Filter "*.whl"|Select-Object -First 1
             if(!$whl){throw ($Label+" Wheel missing")}
             python -m venv $venv
             if($LASTEXITCODE -ne 0){throw ($Label+" venv missing")}
             $exe=Join-Path $venv "Scripts/python.exe"
-            & $exe -m pip install --no-deps --only-binary=:all: pywin32==312
+            & $exe -m pip install --no-deps --only-binary=:all: pywin32==312 | Out-Null
             if($LASTEXITCODE -ne 0){throw ($Label+" private pywin32 install failed")}
-            & $exe -m pip install $whl.FullName
+            & $exe -m pip install $whl.FullName | Out-Null
             if($LASTEXITCODE -ne 0){throw ($Label+" Wheel installation failed")}
-            Write-Output ($Label+"_WHEEL_SHA256="+(Get-FileHash -Algorithm SHA256 $whl.FullName).Hash.ToLowerInvariant())
+            Write-Host ($Label+"_WHEEL_SHA256="+(Get-FileHash -Algorithm SHA256 $whl.FullName).Hash.ToLowerInvariant())
             return $exe
           }
           $env:PYTHONPATH = ""
