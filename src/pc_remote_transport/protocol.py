@@ -14,6 +14,11 @@ REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9._:-]{1,120}$")
 DEVICE_ID_RE = re.compile(r"^[A-Za-z0-9._:-]{1,120}$")
 SESSION_EPOCH_RE = re.compile(r"^[A-Za-z0-9._:-]{8,160}$")
 
+# JSON numbers above this bound are not exactly representable by JavaScript.
+# Convert only out-of-range integer payload leaves to canonical decimal strings
+# BEFORE HMAC generation and wire serialization, preserving signed bytes.
+JS_MAX_SAFE_INTEGER = (1 << 53) - 1
+
 DEFAULT_MAX_FRAME_BYTES = 1_048_576
 DEFAULT_MAX_REQUEST_BYTES = 524_288
 DEFAULT_MAX_CHUNK_BYTES = 65_536
@@ -57,8 +62,8 @@ class TokenMaterial:
     secret: bytes
 
     def __post_init__(self) -> None:
-        if isinstance(self.generation, bool) or not isinstance(self.generation, int) or self.generation <= 0:
-            raise ValueError("token generation must be a positive integer")
+        if isinstance(self.generation, bool) or not isinstance(self.generation, int) or not (0 < self.generation <= JS_MAX_SAFE_INTEGER):
+            raise ValueError("token generation must be a safe positive integer")
         if not isinstance(self.secret, bytes) or len(self.secret) < 32:
             raise ValueError("token secret must contain at least 32 bytes")
 
@@ -77,8 +82,20 @@ class TokenRing:
         self._current = TokenMaterial(generation, secret)
 
 
+def _js_safe_json(value: Any) -> Any:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, int):
+        return str(value) if abs(value) > JS_MAX_SAFE_INTEGER else value
+    if isinstance(value, dict):
+        return {key: _js_safe_json(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_js_safe_json(item) for item in value]
+    return value
+
+
 def canonical_json(value: Any) -> str:
-    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return json.dumps(_js_safe_json(value), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
 def sha256_hex(value: bytes) -> str:
@@ -108,8 +125,8 @@ def _validate_unsigned(frame: Mapping[str, Any]) -> None:
     if not isinstance(epoch, str) or not SESSION_EPOCH_RE.fullmatch(epoch):
         raise ProtocolError("invalid session_epoch")
     sequence = frame["sequence"]
-    if isinstance(sequence, bool) or not isinstance(sequence, int) or sequence <= 0:
-        raise ProtocolError("sequence must be a positive integer")
+    if isinstance(sequence, bool) or not isinstance(sequence, int) or not (0 < sequence <= JS_MAX_SAFE_INTEGER):
+        raise ProtocolError("sequence must be a safe positive integer")
     frame_type = frame["type"]
     if frame_type not in FRAME_TYPES:
         raise ProtocolError("unsupported frame type")

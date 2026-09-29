@@ -158,3 +158,39 @@ def test_invalid_stream_digest_is_rejected() -> None:
     assembler = StreamAssembler(manifest.to_dict())
     with pytest.raises(ProtocolError, match="digest"):
         assembler.accept(chunks[0])
+
+def test_nested_nanosecond_ints_are_decimal_strings_before_hmac_and_wire() -> None:
+    # Real Windows/Linux stat.st_mtime_ns can exceed JS Number.MAX_SAFE_INTEGER.
+    import json
+    high = 1_790_682_348_278_000_001
+    near = (1 << 53) - 1
+    raw = encode_frame(
+        device_id="device-1",
+        session_epoch="epoch-0001",
+        sequence=2,
+        frame_type="response",
+        payload={"data": {"modified_ns": high, "entries": [high, -high, near, True]}},
+        token=_token(),
+    )
+    frame = json.loads(raw)
+    assert frame["payload"]["data"]["modified_ns"] == str(high)
+    assert frame["payload"]["data"]["entries"] == [str(high), str(-high), near, True]
+    assert '"modified_ns":1790682348278000001' not in raw
+    decoded = decode_frame(
+        raw,
+        token=_token(),
+        expected_device_id="device-1",
+        expected_session_epoch="epoch-0001",
+    )
+    assert decoded["payload"]["data"]["modified_ns"] == str(high)
+
+
+def test_sequence_and_token_generation_refuse_unsafe_js_numbers() -> None:
+    with pytest.raises(ValueError, match="safe"):
+        TokenMaterial((1 << 53), b"a" * 32)
+    with pytest.raises(ProtocolError, match="safe"):
+        encode_frame(
+            device_id="device-1", session_epoch="epoch-0001",
+            sequence=(1 << 53), frame_type="heartbeat", payload={},
+            token=_token(),
+        )
