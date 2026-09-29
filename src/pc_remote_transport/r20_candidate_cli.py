@@ -10,6 +10,7 @@ import base64
 import json
 import os
 import sys
+from pathlib import Path
 from dataclasses import replace
 
 from .protocol import ProtocolError, TokenMaterial
@@ -22,6 +23,7 @@ from .r20_candidate import (
     R20_SERVICE_NAME,
     R20_SECRET_NAME,
     assert_r20_scope,
+    is_elevated_admin,
     r20_state_root,
 )
 
@@ -48,17 +50,44 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _installer_environment() -> dict[str, bool]:
+    """Read-only, noninteractive packaging/SCM prerequisites."""
+    venv = Path(sys.prefix).resolve()
+    requirements = {
+        "windows": os.name == "nt",
+        "separate_venv": venv != Path(sys.base_prefix).resolve(),
+        "installed_wheel": Path(__file__).resolve().is_relative_to(venv),
+        "private_pywin32": False,
+        "elevated_token": is_elevated_admin(),
+    }
+    if os.name == "nt":
+        try:
+            import win32service
+            requirements["private_pywin32"] = (
+                Path(win32service.__file__).resolve().is_relative_to(venv)
+            )
+        except ImportError:
+            pass
+    return requirements
+
+
 def _preflight(controller: R20CandidateController, store: ConfigStore) -> dict:
     root = assert_r20_scope(store.root)
     status = controller.status()
+    requirements = _installer_environment()
+    blockers = ([] if status == "not_installed" else ["candidate_service_name_occupied"])
+    blockers.extend(name for name, met in requirements.items() if not met)
     return {
         "schema": "pc_native.r20_shadow_scm_preflight.v1",
         "candidate_service": R20_SERVICE_NAME,
         "candidate_state_root": str(root),
         "candidate_scm_state": status,
+        "candidate_name_available": status == "not_installed",
+        "environment": requirements,
+        "blockers": blockers,
         "legacy_service_touched": False,
         "machine_secret_read": False,
-        "candidate_install_eligible": status == "not_installed",
+        "candidate_install_eligible": not blockers,
     }
 
 
@@ -86,6 +115,12 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(_status_payload(controller, store, HealthStore(root)), sort_keys=True))
             return 0
         if args.command == "install":
+            decision = _preflight(controller, store)
+            if not decision["candidate_install_eligible"]:
+                raise RuntimeError(
+                    "R20 installation prerequisites not satisfied: " +
+                    ", ".join(decision["blockers"])
+                )
             controller.install()
             print("R20 candidate installed in manual-start mode")
             return 0
