@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "mcp-audit-20260929-1143-capabilities-9bec",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read-only current relay health for MCP readiness audit"
+}
