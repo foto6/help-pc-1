@@ -11,6 +11,8 @@ on:
       - "pyproject.toml"
       - "tests/test_r20_shadow_service.py"
       - "docs/R20_SHADOW_SERVICE_ACCEPTANCE.md"
+      - "tools/r20_ephemeral_scm.ps1"
+      - ".github/workflows/r20-ephemeral-scm.yml"
       - ".github/workflows/r20-shadow-service.yml"
   pull_request:
     paths:
@@ -20,6 +22,8 @@ on:
       - "pyproject.toml"
       - "tests/test_r20_shadow_service.py"
       - "docs/R20_SHADOW_SERVICE_ACCEPTANCE.md"
+      - "tools/r20_ephemeral_scm.ps1"
+      - ".github/workflows/r20-ephemeral-scm.yml"
       - ".github/workflows/r20-shadow-service.yml"
   workflow_dispatch:
 
@@ -58,6 +62,8 @@ jobs:
               "src/pc_remote_transport/r20_candidate_cli.py",
               "tests/test_r20_shadow_service.py",
               "docs/R20_SHADOW_SERVICE_ACCEPTANCE.md",
+              "tools/r20_ephemeral_scm.ps1",
+              ".github/workflows/r20-ephemeral-scm.yml",
               ".github/workflows/r20-shadow-service.yml",
           }
           required={
@@ -68,6 +74,7 @@ jobs:
           }
           assert required <= changed,("missing",required-changed)
           assert changed <= allowed,("out_of_scope",changed-allowed)
+          assert "tools/r20_ephemeral_scm.ps1" in changed and ".github/workflows/r20-ephemeral-scm.yml" in changed, "missing true disposable-runner SCM lifecycle proof"
           subprocess.run(["git","diff","--check",base,"HEAD"],check=True)
           print("R20_SCOPE_PASS",len(changed))
           PY
