@@ -1,0 +1,83 @@
+name: R20 single-owner shadow SCM candidate (no installation)
+
+on:
+  push:
+    branches:
+      - agent/r20-shadow-windows-service-20260929
+    paths:
+      - "src/pc_remote_transport/service.py"
+      - "src/pc_remote_transport/r20_candidate.py"
+      - "src/pc_remote_transport/r20_candidate_cli.py"
+      - "pyproject.toml"
+      - "tests/test_r20_shadow_service.py"
+      - "docs/R20_SHADOW_SERVICE_ACCEPTANCE.md"
+      - ".github/workflows/r20-shadow-service.yml"
+  pull_request:
+    paths:
+      - "src/pc_remote_transport/service.py"
+      - "src/pc_remote_transport/r20_candidate.py"
+      - "src/pc_remote_transport/r20_candidate_cli.py"
+      - "pyproject.toml"
+      - "tests/test_r20_shadow_service.py"
+      - "docs/R20_SHADOW_SERVICE_ACCEPTANCE.md"
+      - ".github/workflows/r20-shadow-service.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-shadow-source:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: R17 ancestor and scoped R20 delta (no live SCM operation)
+        shell: bash
+        run: |
+          python - <<'PY'
+          import subprocess
+          base="30c65d04e905af61dd731904b454fb08153f589a"
+          subprocess.run(["git","merge-base","--is-ancestor",base,"HEAD"],check=True)
+          changed=set(subprocess.check_output(
+              ["git","diff","--name-only",base,"HEAD"],text=True
+          ).splitlines())
+          allowed={
+              "pyproject.toml",
+              "src/pc_remote_transport/service.py",
+              "src/pc_remote_transport/r20_candidate.py",
+              "src/pc_remote_transport/r20_candidate_cli.py",
+              "tests/test_r20_shadow_service.py",
+              "docs/R20_SHADOW_SERVICE_ACCEPTANCE.md",
+              ".github/workflows/r20-shadow-service.yml",
+          }
+          required={
+              "src/pc_remote_transport/service.py",
+              "src/pc_remote_transport/r20_candidate.py",
+              "src/pc_remote_transport/r20_candidate_cli.py",
+              "tests/test_r20_shadow_service.py",
+          }
+          assert required <= changed,("missing",required-changed)
+          assert changed <= allowed,("out_of_scope",changed-allowed)
+          subprocess.run(["git","diff","--check",base,"HEAD"],check=True)
+          print("R20_SCOPE_PASS",len(changed))
+          PY
+      - name: Build Python package and tests
+        run: python -m pip install -e ".[test]"
+      - name: Syntax check of candidate SCM code
+        run: python -m compileall -q src/pc_remote_transport/r20_candidate.py src/pc_remote_transport/r20_candidate_cli.py
+      - name: Scoped identity, rollback and safety regressions
+        run: python -m pytest -q tests/test_r20_shadow_service.py tests/test_native_device_service.py tests/test_native_service_artifact.py
+      - name: Full Python Executor regressions
+        run: python -m pytest -q
+      - name: Scope note
+        run: python -c "print('NO_WINDOWS_SCM_INSTALL_EXECUTED_BY_CI; NO_MACHINE_LSA_KEY_READ; NO_DEPLOYMENT')"
