@@ -102,3 +102,56 @@ The second condition was corrected **inside the private R20 venv only** by expli
 The original first CI failure at `68d0d860...` was a TEST EXPECTATION ERROR: it incorrectly rejected the internal protocol key `DEFAULT_SECRET_NAME`, which must be safely mapped to the distinct R20 LSA secret without ever exposing the old key to LSA. Negative tests now reject truly unknown internal names and assert the underlying recorder sees ONLY `L$OpenAI.PCNativeCandidateR20`. Do not erase that initial failure from the engineering record.
 
 No Windows SCM candidate install, OS reboot or actual LSA candidate key write has yet occurred. Final R20 source SHA, final Wheel SHA and final exact-head CI run must be recorded after all amendments.
+
+## Final verified R20 candidate artifact and read-only install readiness
+
+R20 source commit before this documentation-only evidence update:
+`7c040bc8ece85b6c130c38592992aa5c03f12943`.
+
+### Independently verified source tests
+
+- Exact source HEAD Windows+Ubuntu full targeted and complete pytest jobs: [GitHub Actions 36586579102](https://github.com/foto6/help-pc-1/actions/runs/36586579102), **both completed SUCCESS**; PR companion run [36586586321](https://github.com/foto6/help-pc-1/actions/runs/36586586321) also completed SUCCESS.
+- Fresh, separate local authorized Windows checkout at that EXACT tracked-clean source SHA: targeted R20/old-service/artifact pytest **exit 0** (two preexisting environment skips); complete pytest **exit 0** (8 expected platform/fixture skips). Both original outputs retained as `r20-final-targeted-windows.log` and `r20-final-full-windows.log` inside the isolated source clone under TEMP. Early CI failed due to an incorrectly written secret-alias negative test; that test was corrected and the exact post-fix CI independently passed.
+- Actual `pc-native-r20-service` CLI comes from the **installed candidate Wheel** in its private venv. No source checkout is injected by `PYTHONPATH`.
+
+### Byte-verified independently installed Windows package
+
+- Source SHA `7c040bc8ece85b6c130c38592992aa5c03f12943`.
+- Wheel `pc_executor-0.1.0-py3-none-any.whl` SHA-256:
+  `b6f5edd097cf996d88ef0087973d91a66b31bad0b9ef5521c60dac153602aac9`.
+- Isolated candidate package location:
+  `%TEMP%\\native-pc-r20-final-artifact-20260929\\venv\\Lib\\site-packages\\pc_remote_transport\\r20_candidate.py`.
+- `pywin32==312` independently installed in the SAME private venv; `win32service.pyd` resolves under its own `Lib/site-packages/win32`. Original isolated `_stage_isolated_service_host` successfully produced a complete private `pythonservice.exe` in that venv; binary SHA-256:
+  `e26e252534fd4833c24a6ebad8051482049ddece1b762b556dcec60ee1e03dce`.
+- Strict test invoked `<private-venv-python> -I` with `PYTHONPATH` unset and the working directory moved **outside** the source checkout, confirmed both service module and pywin32 package physically inside the isolated venv.
+- An earlier preflight after `pytest` flagged `installed_wheel=false` because the calling PowerShell still had source checkout `PYTHONPATH` in its environment; this was a VALID fail-closed signal and was corrected by explicitly removing that environment variable and using Python `-I`, **not** by bypassing the guard.
+
+### Actual installed-artifact preflight on the authorized PC
+
+Read-only command `<R20-private-venv-python> -I -m pc_remote_transport.r20_candidate_cli preflight` produced:
+
+```json
+{
+  "blockers": ["elevated_token"],
+  "candidate_install_eligible": false,
+  "candidate_name_available": true,
+  "candidate_scm_state": "not_installed",
+  "candidate_service": "PCNativeCandidateR20",
+  "candidate_state_root": "C:\\ProgramData\\PCNativeCandidateR20",
+  "environment": {
+    "elevated_token": false,
+    "installed_wheel": true,
+    "private_pywin32": true,
+    "separate_venv": true,
+    "windows": true
+  },
+  "legacy_service_touched": false,
+  "machine_secret_read": false
+}
+```
+
+Intentional code `2`: the **ONLY remaining local install prerequisite is an elevated Windows token**. The authorized Remote Desktop Commander session is not running elevated. Do not claim this is an SCM-installed or boot-tested service; the guard intentionally prevents the attempted registration before any machine mutation.
+
+Last independent live read-only check: original `PCNativeDeviceService=Running`, PID `16944`. Original frozen checkouts were previously independently confirmed tracked-clean. The R20 SCM name is currently free and no R20 service has been registered. No Windows LSA secret has been created/deleted and no real installed service has been restarted.
+
+**Precise verdict:** R20 source + Python regressions + private installed-Wheel/pywin32/service-host packaging + SCM-negative/preflight acceptance **PASS**; administrator-only candidate SCM register/start/stop/uninstall, cold restart/autostart, and production cutover **NOT EXECUTED**. Proceed only via separately approved elevated shadow-service lane, preserving old R15c.
