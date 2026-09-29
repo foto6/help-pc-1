@@ -88,3 +88,17 @@ entrypoint. All commands below address R20 alone.
 
 No new GitHub action is allowed to install a Windows service or handle a real
 machine secret. No hourly/periodic automation is created.
+
+## Windows independent packaging and observed privilege gate
+
+The first isolated R20 source SHA `975e342a76acca0e455f01a2cf3104ed1f9266fb` passed BOTH exact-head R20 GitHub Windows and Ubuntu full test jobs ([36585926816](https://github.com/foto6/help-pc-1/actions/runs/36585926816)) and a separate complete local Windows Python test run (exit `0`). Its first SHA-verified Wheel was `968a21291c781a200da41f71c470a306c32801aae49f85c93b0a15979bdc31aa`; **this is evidence for that prior SHA, NOT a hash for later R20 source changes.** Wheel module imported from the isolated venv's own `site-packages`, and the new `pc-native-r20-service` CLI resolved.
+
+Independent first read-only Windows preflight showed candidate SCM name **not registered**, with original service still running. Additional checks exposed two distinct conditions: remote interactive process did not have an elevated Administrator token and pywin32 initially resolved from the global Python 3.12 site-packages.
+
+The second condition was corrected **inside the private R20 venv only** by explicitly installing `pywin32==312` into its own site-packages. `win32service.__file__` now resolves under that R20 venv. The original service's own `_stage_isolated_service_host` routine was then invoked only against the isolated venv; it successfully staged `pythonservice.exe`, version-matching DLLs and `pythonservice._pth` there. Staged private host SHA-256: `e26e252534fd4833c24a6ebad8051482049ddece1b762b556dcec60ee1e03dce`. No SCM/LSA or global Python mutation occurred.
+
+**Remaining actual host condition:** the authorized Desktop Commander session reported `ELEVATED_ADMIN_TOKEN=False`. This cannot be turned into an actual SCM acceptance by a green unit test, and no elevation bypass, hidden UAC operation or legacy service stop is attempted. R20 CLI now reports name availability **separately** from `candidate_install_eligible`; preflight additionally checks candidate wheel import, private pywin32 location, separate venv and current Windows elevated token. An unready installer is blocked BEFORE binary staging. The tested candidate source includes explicit fake-win32 SCM API tests proving `SERVICE_DEMAND_START`, candidate-only `StateRoot` binding and candidate-only removal on installation failure.
+
+The original first CI failure at `68d0d860...` was a TEST EXPECTATION ERROR: it incorrectly rejected the internal protocol key `DEFAULT_SECRET_NAME`, which must be safely mapped to the distinct R20 LSA secret without ever exposing the old key to LSA. Negative tests now reject truly unknown internal names and assert the underlying recorder sees ONLY `L$OpenAI.PCNativeCandidateR20`. Do not erase that initial failure from the engineering record.
+
+No Windows SCM candidate install, OS reboot or actual LSA candidate key write has yet occurred. Final R20 source SHA, final Wheel SHA and final exact-head CI run must be recorded after all amendments.
