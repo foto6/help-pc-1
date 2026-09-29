@@ -20,6 +20,8 @@ $report = [ordered]@{
   private_wheel_and_pywin32 = $false
   installed_demand_start = $false
   private_state_binding = $false
+  candidate_lsa_provisioned = $false
+  candidate_lsa_removed = $false
   first_start_healthy_disabled = $false
   restart_with_distinct_pid = $false
   stop_confirmed = $false
@@ -108,6 +110,27 @@ try {
   }
   $report.private_state_binding = $true
 
+  # REAL LSA test scoped only to the R20 key. No raw generated token is
+  # printed, written to GitHub, or copied from the legacy service.
+  $makeCandidateSecret = @'
+import os
+from pc_remote_transport.r20_candidate import CandidateScopedSecretStore
+from pc_remote_transport.windows_service import WindowsLsaSecretStore
+from pc_remote_transport.service import DEFAULT_SECRET_NAME
+from pc_remote_transport.protocol import TokenMaterial
+private = CandidateScopedSecretStore(WindowsLsaSecretStore())
+token = os.urandom(32)
+private.write(DEFAULT_SECRET_NAME, TokenMaterial(1, token))
+observed = private.read(DEFAULT_SECRET_NAME)
+assert observed.secret == token and observed.generation == 1
+print("R20_PRIVATE_LSA_PROVISIONING_PASS")
+'@
+  $provisioned = $makeCandidateSecret | & $CandidatePython -
+  if ($LASTEXITCODE -ne 0 -or $provisioned -notcontains "R20_PRIVATE_LSA_PROVISIONING_PASS") {
+    throw "candidate-only LSA key provision/read verification failed"
+  }
+  $report.candidate_lsa_provisioned = $true
+
   # Default ConfigStore enabled=false; validate SCM without provisioning any
   # machine key or exposing a real device/desktop to this shared runner.
   Invoke-Candidate -Commands @("start") | Out-Null
@@ -142,6 +165,26 @@ try {
   Invoke-Candidate -Commands @("uninstall") | Out-Null
   Wait-CandidateRemoved
   $report.candidate_uninstalled = $true
+
+  # Verify candidate LSA secret was ACTUALLY removed by candidate uninstall.
+  # Do not read/print or query the original L$OpenAI.PCNativeDeviceService key.
+  $checkCandidateSecretGone = @'
+from pc_remote_transport.r20_candidate import CandidateScopedSecretStore
+from pc_remote_transport.windows_service import WindowsLsaSecretStore
+from pc_remote_transport.service import DEFAULT_SECRET_NAME, MissingSecretError
+private = CandidateScopedSecretStore(WindowsLsaSecretStore())
+try:
+    private.read(DEFAULT_SECRET_NAME)
+except MissingSecretError:
+    print("R20_PRIVATE_LSA_REMOVAL_PASS")
+else:
+    raise RuntimeError("candidate machine secret remains after uninstall")
+'@
+  $lsaGone = $checkCandidateSecretGone | & $CandidatePython -
+  if ($LASTEXITCODE -ne 0 -or $lsaGone -notcontains "R20_PRIVATE_LSA_REMOVAL_PASS") {
+    throw "candidate LSA cleanup was not independently confirmed"
+  }
+  $report.candidate_lsa_removed = $true
   Assert-OriginalAbsent
   $report.original_service_untouched = $true
   $report.rollback_complete = $true
