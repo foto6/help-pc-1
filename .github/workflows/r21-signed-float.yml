@@ -1,0 +1,107 @@
+name: R21 signed JS number canonicalization
+
+on:
+  push:
+    branches:
+      - agent/r21-js-float-canonical-20260929
+    paths:
+      - "src/pc_remote_transport/protocol.py"
+      - "tests/test_r21_signed_float_canonical.py"
+      - "docs/R21_WIRE_FLOAT_CANONICAL.md"
+      - ".github/workflows/r21-signed-float.yml"
+  pull_request:
+    paths:
+      - "src/pc_remote_transport/protocol.py"
+      - "tests/test_r21_signed_float_canonical.py"
+      - ".github/workflows/r21-signed-float.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cross-runtime-hmac:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Exact R20 ancestor and isolated protocol delta
+        shell: bash
+        run: |
+          python - <<'PY'
+          import subprocess
+          base="88258dda217e81264d815c6c8115dc14c1309460"
+          subprocess.run(["git","merge-base","--is-ancestor",base,"HEAD"],check=True)
+          changed=set(subprocess.check_output(
+            ["git","diff","--name-only",base,"HEAD"],text=True).splitlines())
+          allowed={
+            "src/pc_remote_transport/protocol.py",
+            "tests/test_r21_signed_float_canonical.py",
+            "docs/R21_WIRE_FLOAT_CANONICAL.md",
+            ".github/workflows/r21-signed-float.yml",
+          }
+          assert {"src/pc_remote_transport/protocol.py",
+            "tests/test_r21_signed_float_canonical.py"}<=changed,changed
+          assert changed<=allowed,changed-allowed
+          subprocess.run(["git","diff","--check",base,"HEAD"],check=True)
+          print("R21_FLOAT_SCOPE_PASS")
+          PY
+      - name: Install the source package and its tests
+        run: python -m pip install -e ".[test]"
+      - name: Regression against observed search.list wire failure
+        run: python -m pytest -q tests/test_r21_signed_float_canonical.py tests/test_remote_protocol.py tests/test_native_remote_transport.py
+      - name: Python signed frame verified BY NODE HMAC on exact same bytes
+        shell: bash
+        run: |
+          python - <<'PY' > r21-signature-frame.json
+          from pc_remote_transport.protocol import TokenMaterial,encode_frame
+          print(encode_frame(
+            device_id="r21-protocol-probe",
+            session_epoch="r21-boot-epoch",
+            sequence=7,frame_type="heartbeat",
+            payload={"retention_seconds":900.0,"elapsed_seconds":-0.0,
+                     "fraction_seconds":1.5},
+            token=TokenMaterial(1,b"a"*32),
+          ))
+          PY
+          node <<'JS'
+          const fs=require("node:fs");
+          const crypto=require("node:crypto");
+          const raw=fs.readFileSync("r21-signature-frame.json","utf8").trim();
+          const frame=JSON.parse(raw);
+          const auth=frame.auth;
+          const unsigned={...frame};
+          delete unsigned.auth;
+          unsigned.token_generation=auth.token_generation;
+          function canonical(value){
+            if(Array.isArray(value))return "["+value.map(canonical).join(",")+"]";
+            if(value&&typeof value==="object")
+              return "{"+Object.keys(value).sort()
+                .map(k=>JSON.stringify(k)+":"+canonical(value[k])).join(",")+"}";
+            return JSON.stringify(value);
+          }
+          const data=canonical(unsigned);
+          const mac=crypto.createHmac("sha256",Buffer.alloc(32,0x61))
+            .update(data).digest("hex");
+          if(frame.payload.retention_seconds!==900||
+             frame.payload.elapsed_seconds!==0||
+             frame.payload.fraction_seconds!==1.5||
+             auth.tag!==mac)throw new Error("CROSS_LANGUAGE_HMAC_MISMATCH");
+          console.log("R21_PYTHON_FRAME_NODE_JSON_STRINGIFY_HMAC_PASS");
+          JS
+      - name: Full Python regression suite
+        run: python -m pytest -q
+      - name: No Windows SCM, actual desktop or machine credential actions
+        run: python -c "print('R21_PROTOCOL_SOURCE_ONLY_NO_LIVE_SCM=PASS')"
