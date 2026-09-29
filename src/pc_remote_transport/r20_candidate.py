@@ -129,6 +129,17 @@ def r20_runtime(config, material, config_store, health_store, secret_store):
     )
 
 
+def is_elevated_admin() -> bool:
+    """Read-only Windows token check. Never auto-elevate or request UAC."""
+    if os.name != "nt":
+        return False
+    try:
+        import ctypes
+        return ctypes.windll.shell32.IsUserAnAdmin() == 1
+    except (AttributeError, OSError):
+        return False
+
+
 class R20CandidateServiceApi(_Win32ServiceApi):
     """Explicitly candidate-only SCM calls. Legacy API remains untouched."""
 
@@ -136,6 +147,8 @@ class R20CandidateServiceApi(_Win32ServiceApi):
         approved = assert_r20_scope(state_root)
         if self.status() != "not_installed":
             raise RuntimeError("candidate service already exists; never overwrite")
+        if not is_elevated_admin():
+            raise RuntimeError("R20 candidate SCM installation requires an elevated Windows token")
         import win32service
         import win32serviceutil
 
