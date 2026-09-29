@@ -125,7 +125,7 @@ class R20CandidateScopeTests(unittest.TestCase):
         recording = RecordingSecret()
         adapter = r20.CandidateScopedSecretStore(recording)
         for fn, args in (
-            (adapter.read, (r20.LEGACY_SECRET_NAME,)),
+            (adapter.read, ("L$OpenAI.UnexpectedOtherService",)),
             (adapter.write, ("random", TokenMaterial(1, b"C" * 32))),
             (adapter.delete, ("",)),
         ):
