@@ -155,3 +155,41 @@ Intentional code `2`: the **ONLY remaining local install prerequisite is an elev
 Last independent live read-only check: original `PCNativeDeviceService=Running`, PID `16944`. Original frozen checkouts were previously independently confirmed tracked-clean. The R20 SCM name is currently free and no R20 service has been registered. No Windows LSA secret has been created/deleted and no real installed service has been restarted.
 
 **Precise verdict:** R20 source + Python regressions + private installed-Wheel/pywin32/service-host packaging + SCM-negative/preflight acceptance **PASS**; administrator-only candidate SCM register/start/stop/uninstall, cold restart/autostart, and production cutover **NOT EXECUTED**. Proceed only via separately approved elevated shadow-service lane, preserving old R15c.
+
+## R20 final REAL dual-SCM acceptance on DISPOSABLE Windows GitHub runner
+
+**First genuinely installed Windows SCM gate now PASSED on a clean disposable Windows runner, without attempting any installation on the user's non-elevated actual PC.** The test used TWO separate SHA-pinned installed Wheels and two private pywin32 service hosts:
+
+- Original immutable live-code R15c source: `foto6/help-pc-1@04f817299b46ecb0ffa8aa908ce84fdb4c3300d0`.
+- R20 candidate source HEAD used in this test: `90fdd2aaae9ba4f2fe97fbff3ff62c97ea0645de`, code unchanged from the previously independently fully tested exact source `7c040bc8ece85b6c130c38592992aa5c03f12943` except documentation, isolated workflow, and PowerShell pipeline-output repair.
+- Disposable SCM workflow: [GitHub Actions 36588533191](https://github.com/foto6/help-pc-1/actions/runs/36588533191), job `two-real-native-services-cold-runner` **completed SUCCESS**, zero failed steps. The dedicated source workflow at this exact head [36588533097](https://github.com/foto6/help-pc-1/actions/runs/36588533097) has **Windows SUCCESS / Ubuntu SUCCESS**; duplicate [36588540366](https://github.com/foto6/help-pc-1/actions/runs/36588540366) likewise Windows+Ubuntu SUCCESS.
+- Sanitized actual dual-SCM artifact: [r20-two-real-services-36588533191](https://github.com/foto6/help-pc-1/actions/runs/36588533191/artifacts/11042976081), GitHub artifact ZIP SHA-256 `e7c454d1fc4aee06554c1c9e82e698df332d66d1e1627a68602a308a87b66988`. No service secrets, state JSON, registry binary exports or token bytes are uploaded.
+
+Verified actual Windows-SCM report from the runner's execution log (not an offline mock):
+
+```json
+{
+  "schema": "pc_native.r20_two_real_windows_scm_coexistence.v1",
+  "both_names_initially_absent": true,
+  "legacy_r15_installed_running": true,
+  "candidate_r20_installed_running": true,
+  "distinct_service_pids_and_state_roots": true,
+  "legacy_pid_unchanged_after_candidate_restart": true,
+  "candidate_removed_while_legacy_running": true,
+  "legacy_pid_unchanged_after_candidate_uninstall": true,
+  "both_services_uninstalled": true,
+  "rollback_complete": true,
+  "status": "PASS"
+}
+```
+
+Actual implementation calls the **real** frozen R15c service CLI and the **real** candidate R20 service CLI. It verifies exact pinned old source ancestry, both SCM identities absent before installing either test-owned service, two independent installed-wheel/private pywin32 service hosts, both SCM services RUNNING with distinct PID/state root, candidate initially **Manual / DEMAND_START**, candidate restart without legacy PID change, candidate-only stop/uninstall without interrupting still-running legacy, then controlled removal of original disposable test service. Both SCM entries absent after cleanup. All commands are restricted to this disposable runner by the script's environment guard; the actual user's R15c service and machine LSA are not accessed.
+
+**Repro evidence correction preserved:** the first disposable CI attempt [36588277199](https://github.com/foto6/help-pc-1/actions/runs/36588277199) failed in its PowerShell Wheel factory because pip progress stdout and a SHA Write-Output were accidentally returned with the single intended Python venv path. One narrow commit piped pip output to `Out-Null` and emitted the hash with `Write-Host`. The later exact candidate run [36588533191](https://github.com/foto6/help-pc-1/actions/runs/36588533191) passed the full REAL two-service lifecycle and rollback.
+
+**Updated R20 gate decision:**
+
+1. Source, targeted/full tests, candidate state/LSA/operations isolation and SHA-verified installed-wheel packaging: **PASS**.
+2. Real Windows SCM installation, parallel operation, candidate restart and candidate-only rollback against real frozen R15c on a disposable GitHub Windows runner: **PASS**.
+3. Same side-by-side registration on the user's real PC: **NOT ATTEMPTED** because current Desktop Commander Windows token is not elevated. Existing R15c on that PC remained Running PID `16944`, candidate name unregistered.
+4. True OS reboot/autostart (not simply SCM manual restart), long-duration stress, unrestricted full tool operation and actual cloud ChatGPT plugin registration: **NOT CLAIMED**; distinct later acceptance gates. Candidate intentionally starts as DEMAND_START while being staged; no auto-start was configured.
