@@ -171,6 +171,10 @@ class ConfigStore:
 class HealthSnapshot:
     contract_version: str = HEALTH_VERSION
     service_state: str = "stopped"
+    service_instance_id: str | None = None
+    service_pid: int | None = None
+    service_started_at: str | None = None
+    auth_state: str = "unverified"
     enabled: bool = False
     device_id: str = ""
     session_epoch: str | None = None
@@ -188,6 +192,10 @@ class HealthSnapshot:
 
 class HealthStore:
     _allowed = frozenset(HealthSnapshot().__dict__)
+    _new_fields = frozenset({
+        "service_instance_id", "service_pid", "service_started_at", "auth_state",
+    })
+    _legacy_required = _allowed - _new_fields
 
     def __init__(self, root: str | os.PathLike[str]) -> None:
         self.path = Path(root) / "health.json"
@@ -197,9 +205,33 @@ class HealthStore:
         if not self.path.exists():
             return HealthSnapshot(updated_at=_utc_now())
         raw = json.loads(self.path.read_text(encoding="utf-8"))
-        if not isinstance(raw, dict) or set(raw) != self._allowed:
+        if (
+            not isinstance(raw, dict)
+            or not self._legacy_required <= set(raw)
+            or set(raw) - self._allowed
+        ):
             raise ProtocolError("health state is invalid")
+        # Previous health.json snapshots remain readable, but no pre-R16 file
+        # carries current-instance proof and none can attest readiness.
         return HealthSnapshot(**raw)
+
+    def start_new_instance(self) -> HealthSnapshot:
+        """Invalidate persisted pre-reboot readiness before config/secret/relay work."""
+        return self.update(
+            service_instance_id=uuid.uuid4().hex,
+            service_pid=os.getpid(),
+            service_started_at=_utc_now(),
+            service_state="starting",
+            auth_state="unverified",
+            enabled=False,
+            device_id="",
+            session_epoch=None,
+            transport_state="idle",
+            last_heartbeat=None,
+            capability_digest=None,
+            config_revision=None,
+            reason_code="STARTUP_NOT_AUTHENTICATED",
+        )
 
     def update(self, **changes: Any) -> HealthSnapshot:
         forbidden = set(changes) - self._allowed
@@ -289,31 +321,22 @@ class _ObservedConnection:
         self.inner = inner
         self.health = health
 
-    def _observe(self, raw: str | bytes) -> None:
-        try:
-            obj = json.loads(raw)
-            frame_type = obj.get("type")
-        except Exception:
-            return
-        if frame_type == "welcome":
-            self.health.update(transport_state="connected", reason_code=None)
-        if frame_type in {"heartbeat", "heartbeat_ack"}:
-            self.health.update(last_heartbeat=_utc_now())
-
+    # Raw frames are deliberately NOT trusted as liveness/authentication.
+    # Only DeviceAgent can report a validated HMAC + welcome nonce + epoch.
     async def send(self, data: str) -> None:
-        self._observe(data)
         await self.inner.send(data)
 
     async def recv(self) -> str | bytes:
-        value = await self.inner.recv()
-        self._observe(value)
-        return value
+        return await self.inner.recv()
 
     async def close(self) -> None:
         try:
             await self.inner.close()
         finally:
-            self.health.update(transport_state="disconnected")
+            self.health.update(
+                transport_state="disconnected", auth_state="unverified",
+                session_epoch=None, last_heartbeat=None,
+            )
 
 
 class _ObservedConnector:
@@ -322,13 +345,19 @@ class _ObservedConnector:
         self.health = health
 
     async def open(self) -> _ObservedConnection:
-        self.health.update(transport_state="connecting", reason_code=None)
+        self.health.update(
+            transport_state="connecting", auth_state="unverified",
+            session_epoch=None, last_heartbeat=None, reason_code=None,
+        )
         try:
             connection = await self.inner.open()
         except Exception:
-            self.health.update(transport_state="backoff", reason_code="CONNECT_FAILED")
+            self.health.update(
+                transport_state="backoff", auth_state="unverified",
+                session_epoch=None, last_heartbeat=None, reason_code="CONNECT_FAILED",
+            )
             raise
-        self.health.update(transport_state="handshaking")
+        self.health.update(transport_state="handshaking", auth_state="unverified")
         return _ObservedConnection(connection, self.health)
 
 
@@ -356,9 +385,27 @@ def build_default_runtime(
         return manifest
 
     def new_epoch() -> str:
-        epoch = uuid.uuid4().hex
-        health.update(session_epoch=epoch, last_heartbeat=None)
+        # Opaque Control v1 epoch, now includes an immutable per-service-instance
+        # prefix so a fresh authenticated relay hello can bind the live process
+        # without expanding or changing the frozen tool-registry payload.
+        instance = health.read().service_instance_id
+        epoch = f"{instance}:{uuid.uuid4().hex}" if instance else uuid.uuid4().hex
+        health.update(
+            session_epoch=epoch, last_heartbeat=None,
+            auth_state="unverified", transport_state="handshaking",
+        )
         return epoch
+
+    def session_authenticated(epoch: str) -> None:
+        health.update(
+            session_epoch=epoch, transport_state="connected",
+            auth_state="authenticated", last_heartbeat=_utc_now(),
+            reason_code=None,
+        )
+
+    def authenticated_frame(epoch: str, frame_type: str) -> None:
+        if frame_type in {"heartbeat", "heartbeat_ack"}:
+            health.update(last_heartbeat=_utc_now())
 
     def persist_rotation(generation: int, secret: bytes) -> None:
         secret_store.write(DEFAULT_SECRET_NAME, TokenMaterial(generation, secret))
@@ -371,6 +418,8 @@ def build_default_runtime(
         ledger=RequestLedger(config_store.root / "request-ledger"),
         heartbeat_seconds=float(config.heartbeat_seconds),
         session_epoch_factory=new_epoch,
+        session_authenticated=session_authenticated,
+        authenticated_frame=authenticated_frame,
         rotation_persist=persist_rotation,
     )
     connector = _ObservedConnector(
@@ -408,8 +457,10 @@ class DeviceServiceHost:
         await asyncio.to_thread(stop_event.wait, self.poll_seconds)
 
     async def run(self, stop_event: threading.Event) -> None:
+        # This write is FIRST: a reboot/SCM restart must revoke historical
+        # authenticated-looking health even if later initialization crashes.
+        self.health.start_new_instance()
         self.config_store.initialize()
-        self.health.update(service_state="starting", transport_state="idle", reason_code=None)
         active: asyncio.Task[Any] | None = None
         try:
             self.health.update(service_state="running")
@@ -422,6 +473,7 @@ class DeviceServiceHost:
                         enabled=False,
                         device_id="",
                         session_epoch=None,
+                        auth_state="unverified",
                         transport_state="blocked",
                         last_heartbeat=None,
                         capability_digest=None,
@@ -436,6 +488,7 @@ class DeviceServiceHost:
                         enabled=False,
                         device_id=config.device_id,
                         session_epoch=None,
+                        auth_state="unverified",
                         transport_state="disabled",
                         last_heartbeat=None,
                         capability_digest=None,
@@ -452,6 +505,7 @@ class DeviceServiceHost:
                         enabled=True,
                         device_id=config.device_id,
                         session_epoch=None,
+                        auth_state="unverified",
                         transport_state="blocked",
                         last_heartbeat=None,
                         capability_digest=None,
@@ -465,6 +519,7 @@ class DeviceServiceHost:
                         enabled=True,
                         device_id=config.device_id,
                         session_epoch=None,
+                        auth_state="unverified",
                         transport_state="blocked",
                         last_heartbeat=None,
                         capability_digest=None,
@@ -484,13 +539,19 @@ class DeviceServiceHost:
                 )
 
                 async def backoff_sleep(delay: float) -> None:
-                    self.health.update(transport_state="backoff")
+                    self.health.update(
+                        transport_state="backoff", auth_state="unverified",
+                        session_epoch=None, last_heartbeat=None,
+                        reason_code="RELAY_BACKOFF",
+                    )
                     await asyncio.sleep(delay)
 
                 self.health.update(
                     enabled=True,
                     device_id=config.device_id,
                     config_revision=revision,
+                    auth_state="unverified",
+                    last_heartbeat=None,
                     transport_state="starting_transport",
                     reason_code=None,
                 )
@@ -527,9 +588,15 @@ class DeviceServiceHost:
                         await active
                 active = None
         finally:
-            self.health.update(service_state="stopping", transport_state="stopping")
+            self.health.update(
+                service_state="stopping", transport_state="stopping",
+                auth_state="unverified", session_epoch=None, last_heartbeat=None,
+            )
             if active is not None and not active.done():
                 active.cancel()
                 with suppress(asyncio.CancelledError):
                     await active
-            self.health.update(service_state="stopped", transport_state="stopped")
+            self.health.update(
+                service_state="stopped", transport_state="stopped",
+                auth_state="unverified", session_epoch=None, last_heartbeat=None,
+            )

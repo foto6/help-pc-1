@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -22,6 +23,47 @@ from .service import (
 SERVICE_NAME = "PCNativeDeviceService"
 SERVICE_DISPLAY_NAME = "PC Native Device Service"
 SERVICE_DESCRIPTION = "Authenticated outbound native PC device transport"
+INSTALL_POLICY_VERSION = "pc.native.windows_service.install_policy.v1"
+
+
+def planned_install_policy(
+    *, kind: str = "persistent_production_auto", fixture_id: str | None = None,
+) -> dict[str, Any]:
+    """Pure SCM policy plan; this function never installs or changes a service.
+
+    Rehearsals use a separately named, demand-start fake/isolated fixture.
+    The production installer remains AUTO_START and is never switched silently.
+    """
+    if kind == "persistent_production_auto" and fixture_id is None:
+        return {
+            "contract_version": INSTALL_POLICY_VERSION,
+            "kind": kind,
+            "service_name": SERVICE_NAME,
+            "startup": "auto",
+            "recovery": "restart/5000/restart/15000/restart/60000",
+            "reset_seconds": 86400,
+            "failure_actions_on_non_crash": True,
+            "scm_mutation_supported": True,
+        }
+    if kind == "isolated_rehearsal_demand":
+        if (
+            not isinstance(fixture_id, str)
+            or re.fullmatch(r"[a-z0-9-]{8,32}", fixture_id) is None
+            or "production" in fixture_id
+            or fixture_id.startswith("pcnative")
+        ):
+            raise ValueError("isolated rehearsal requires a valid explicit fixture_id")
+        return {
+            "contract_version": INSTALL_POLICY_VERSION,
+            "kind": kind,
+            "service_name": f"PCNativeR16Fixture-{fixture_id}",
+            "startup": "demand",
+            "recovery": "none",
+            "reset_seconds": 0,
+            "failure_actions_on_non_crash": False,
+            "scm_mutation_supported": False,
+        }
+    raise ValueError("unsupported or ambiguous Windows service install policy")
 _SERVICE_EVENTS = {
     "starting": ("info", "PC native device service starting"),
     "crashed": ("error", "PC native device service crashed"),
@@ -334,6 +376,10 @@ class WindowsServiceController:
         self.api.start()
 
     def stop(self) -> None:
+        # A repeated explicit stop is a no-op. Do not mistake stop_pending for
+        # STOPPED when uninstall subsequently needs a proven quiescent service.
+        if self.status() in {"not_installed", "stopped"}:
+            return
         self.api.stop()
 
     def restart(self) -> None:
@@ -343,13 +389,21 @@ class WindowsServiceController:
         return self.api.status()
 
     def uninstall(self) -> None:
-        try:
-            if self.status() not in {"not_installed", "stopped"}:
-                self.stop()
-        except Exception:
-            pass
+        # SCM stop may fail or be asynchronous. NEVER swallow an uncertain stop
+        # and proceed to removal while the machine service could still run.
+        state = self.status()
+        if state == "not_installed":
+            return
+        if state != "stopped":
+            self.stop()
+            state = self.status()
+            if state == "not_installed":
+                return
+            if state != "stopped":
+                raise RuntimeError("SCM_STOP_NOT_CONFIRMED: uninstall refused")
+        self.api.remove()
         if self.status() != "not_installed":
-            self.api.remove()
+            raise RuntimeError("SCM_REMOVE_NOT_CONFIRMED: credential cleanup deferred")
 
 
 if os.name == "nt":

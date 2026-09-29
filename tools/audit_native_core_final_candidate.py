@@ -32,6 +32,19 @@ R6_SERVICE_PROVENANCE = "64ddbeb7853982e4d4aeaa43ff624bd9849668b2"
 R7_SELECTOR_SOURCE = "20c23e8f87e32cc22c8cbb29bbe639e5ccc93bf6"
 R7_AUDITED_HEAD = "b957763a23e8da70c55e18d15a89c2654272a2a6"
 R9_WIRE_SOURCE = "b3b59c9dd746cc6fa9ba5149893bae636528bb8d"
+R16_BASE = "04f817299b46ecb0ffa8aa908ce84fdb4c3300d0"
+R16_CHANGED = {
+    ".github/workflows/tests.yml",
+    "docs/NATIVE_DEVICE_SERVICE.md",
+    "docs/R16_REBOOT_AUTOSTART_AUDIT.md",
+    "src/pc_remote_transport/agent.py",
+    "src/pc_remote_transport/reboot_readiness.py",
+    "src/pc_remote_transport/service.py",
+    "src/pc_remote_transport/service_cli.py",
+    "src/pc_remote_transport/windows_service.py",
+    "tests/test_r16_reboot_service_safety.py",
+    "tools/audit_native_core_final_candidate.py",
+}
 STRICT_B = "fec2bc951cef3e4c9f5d31f00503277e7ed5b90b"
 OLD_TRANSPORT = "8df29aad32a6cb142dff6721f92fca74a080e441"
 OLD_RELAY = "992c66335c9e6c40d150bc10c086e97ea7600d48"
@@ -193,6 +206,10 @@ def assert_source_deltas() -> None:
 
 
 def assert_layered_provenance(head: str) -> None:
+    # Revalidate the exact immutable R15/R9 composition first. R16 is an
+    # explicitly enumerated overlay, not a rewrite of those frozen blobs.
+    assert git("merge-base", "--is-ancestor", R16_BASE, head, check=False).returncode == 0
+    head = R16_BASE
     assert git("merge-base", "--is-ancestor", BASE, head, check=False).returncode == 0
     for source in (SEARCH, SERVICE, IMMUTABLE_SERVICE, STRICT_B):
         assert_not_ancestor(source, head)
@@ -266,6 +283,28 @@ def assert_layered_provenance(head: str) -> None:
         assert_same_blob(SERVICE_HOST_PATH_HOTFIX, R6_SERVICE_PROVENANCE, path)
         assert_same_blob(R7_SELECTOR_SOURCE, R7_AUDITED_HEAD, path)
         assert_same_blob(R7_SELECTOR_SOURCE, head, path)
+
+def assert_r16_delta(head: str) -> None:
+    assert git("merge-base", "--is-ancestor", R16_BASE, head, check=False).returncode == 0
+    changed = names(R16_BASE, head)
+    assert changed == R16_CHANGED, (
+        f"unexpected R16 reboot delta; missing={sorted(R16_CHANGED - changed)} "
+        f"extra={sorted(changed - R16_CHANGED)}"
+    )
+    for path in (
+        "src/pc_remote_transport/executor_adapter.py",
+        "src/pc_remote_transport/protocol.py",
+        "src/pc_remote_transport/ledger.py",
+        "src/pc_executor/operations.py",
+        "tests/fixtures/native_tool_parity_v1/desktop_commander_mapping.json",
+        "tools/install_pc_native_device_service.ps1",
+        "tools/verify_pc_native_service_artifact.py",
+    ):
+        assert_same_blob(R16_BASE, head, path)
+    assert not any(path.startswith("src/pc_executor/") for path in changed)
+    assert not any("search_session" in path for path in changed)
+    assert "tools/github_relay.py" not in changed
+
 
 def assert_registry_and_mapping(root: Path) -> None:
     assert TOOL_REGISTRY_DIGEST == EXPECTED_COMPAT_TOOL_REGISTRY_V1_DIGEST
@@ -377,6 +416,8 @@ def assert_ci_and_docs(root: Path) -> None:
     )
     for required in (
         "agent/pc-native-core-final-candidate",
+        "agent/pc-r16-reboot-service-audit-20260929",
+        "test_r16_reboot_service_safety.py",
         "audit_native_core_final_candidate.py",
         "test_native_full_parity_gaps.py",
         "test_search_sessions.py",
@@ -401,6 +442,7 @@ def main() -> None:
     head = rev("HEAD")
     assert_source_deltas()
     assert_layered_provenance(head)
+    assert_r16_delta(head)
     assert_registry_and_mapping(root)
     assert_search_retention(root)
     assert_service_artifact_security(root)

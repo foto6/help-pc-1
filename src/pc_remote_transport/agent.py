@@ -110,6 +110,8 @@ class DeviceAgent:
         max_chunk_bytes: int = DEFAULT_MAX_CHUNK_BYTES,
         max_stream_bytes: int = DEFAULT_MAX_STREAM_BYTES,
         session_epoch_factory: Callable[[], str] | None = None,
+        session_authenticated: Callable[[str], None] | None = None,
+        authenticated_frame: Callable[[str, str], None] | None = None,
     ) -> None:
         self.device_id = device_id
         self.token_ring = token_ring
@@ -122,6 +124,8 @@ class DeviceAgent:
         self.max_chunk_bytes = max_chunk_bytes
         self.max_stream_bytes = max_stream_bytes
         self.session_epoch_factory = session_epoch_factory or (lambda: uuid.uuid4().hex)
+        self.session_authenticated = session_authenticated
+        self.authenticated_frame = authenticated_frame
 
     def _shutdown_requested(self) -> bool:
         value = getattr(self.dispatcher, "shutdown_requested", False)
@@ -183,6 +187,10 @@ class DeviceAgent:
             "accepted": True,
         }:
             raise ProtocolError("invalid welcome payload")
+        # A raw `type=welcome` observation is never proof of authentication.
+        # Report liveness only AFTER HMAC, epoch, replay, and nonce validation.
+        if self.session_authenticated is not None:
+            self.session_authenticated(epoch)
 
         while True:
             try:
@@ -206,6 +214,8 @@ class DeviceAgent:
             inbound_guard.accept(frame["sequence"])
             frame_type = frame["type"]
             payload = frame["payload"]
+            if self.authenticated_frame is not None:
+                self.authenticated_frame(epoch, frame_type)
 
             if frame_type == "heartbeat":
                 await send("heartbeat_ack", {"relay_sequence": frame["sequence"]})

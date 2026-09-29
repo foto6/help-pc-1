@@ -9,6 +9,7 @@ import sys
 from dataclasses import replace
 
 from .protocol import ProtocolError, TokenMaterial
+from .reboot_readiness import status_without_live_witness
 from .service import DEFAULT_SECRET_NAME, ConfigStore, HealthSnapshot, HealthStore
 from .windows_service import WindowsLsaSecretStore, WindowsServiceController
 
@@ -56,8 +57,17 @@ def _status_payload(
         scm_state = controller.status()
     except Exception:
         scm_state = "unknown"
+    # This CLI can read persisted health, NOT attest a fresh relay/control
+    # handshake. Never infer READY from old ready.json/run-state.json or LSA.
+    readiness = status_without_live_witness(health, scm_state)
     return {
         "contract_version": health.contract_version,
+        "readiness": readiness.to_dict(),
+        "observation_source": "persisted_health_unverified",
+        "service_instance_id": health.service_instance_id,
+        "service_pid_observed": health.service_pid,
+        "service_started_at": health.service_started_at,
+        "auth_state": health.auth_state,
         "scm_state": scm_state,
         "service_state": health.service_state,
         "enabled": config.enabled,

@@ -171,3 +171,14 @@ request ledger and Executor outcome journal remain authoritative across service 
 uncertain side effect is surfaced as `UNKNOWN_RECONCILE` with `automatic_replay=false` rather than
 being dispatched again. The service config schema rejects extra keys, including any attempt to
 substitute an arbitrary device-agent module or executable.
+
+## R16 reboot/autostart readiness audit
+
+See [R16_REBOOT_AUTOSTART_AUDIT.md](R16_REBOOT_AUTOSTART_AUDIT.md) for the
+observed Auto-start/BACKOFF incident, per-process identity, authenticated
+transport observations, exact `pc.native.device_service.reboot_readiness.v1`
+Boss witness fields, mock-only negative matrix, and operator-safe rollback.
+Persistent production AUTO_START plus SCM recovery remains unchanged;
+isolated-demand rehearsal is a versioned plan only and cannot mutate SCM.
+`status` never promotes historical READY or surviving LSA credentials to
+current live-stack readiness without independent relay/Control attestation.
