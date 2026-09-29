@@ -156,24 +156,28 @@ try {
   # Emergency cleanup is permitted only for the two identities which were
   # VERIFIED ABSENT on this disposable runner before the test began.
   if($report.both_names_initially_absent){
-    foreach($item in @(
-      @($newName,$CandidatePython,"pc_remote_transport.r20_candidate_cli"),
-      @($oldName,$LegacyPython,"pc_remote_transport.service_cli")
+    foreach($entry in @(
+      [pscustomobject]@{
+        Name=$newName; Python=$CandidatePython; Module="pc_remote_transport.r20_candidate_cli"
+      },
+      [pscustomobject]@{
+        Name=$oldName; Python=$LegacyPython; Module="pc_remote_transport.service_cli"
+      }
     )){
       try{
-        $current=Query-ScopedService -Name $item[0]
+        $current=Query-ScopedService -Name $entry.Name
         if($null -ne $current){
           if($current.State -ne "Stopped"){
-            & sc.exe stop $item[0] *> $null
-            [void](Wait-ScopedState -Name $item[0] -Wanted "Stopped")
+            & sc.exe stop $entry.Name *> $null
+            [void](Wait-ScopedState -Name $entry.Name -Wanted "Stopped")
           }
           try{
-            Invoke-ScopedCli -Executable $item[1] -ModuleName $item[2] -Commands @("uninstall")|Out-Null
+            Invoke-ScopedCli -Executable $entry.Python -ModuleName $entry.Module -Commands @("uninstall")|Out-Null
           } catch {
-            & sc.exe delete $item[0] *> $null
+            & sc.exe delete $entry.Name *> $null
             if($null -eq $failure){$failure="Emergency cleanup required for disposable service"}
           }
-          Wait-Removed -Name $item[0]
+          Wait-Removed -Name $entry.Name
         }
       }catch{
         if($null -eq $failure){$failure="Disposable service cleanup incomplete"}
