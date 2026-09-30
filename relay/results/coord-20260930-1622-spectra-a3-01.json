@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,urllib.parse\nu='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId='+urllib.parse.quote('chat-6ab67031-7290-83eb-965e-8cd7c16b3504')\nwith urllib.request.urlopen(u,timeout=5) as r:d=json.load(r)\nxs=d.get('assignments',[]); xs.sort(key=lambda a:str(a.get('createdAt') or '')); a=xs[-1] if xs else {}\nprint(json.dumps({'chat':'a3','counts':d.get('counts',{}),'latest':{k:a.get(k) for k in ['id','state','text','repository','branch','expectedHead','currentHead','dispatchCount','lastDiagnostic','createdAt','updatedAt']}},ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"chat\":\"a3\",\"counts\":{\"failed\":1,\"completed\":1},\"latest\":{\"id\":\"98580bf5-af7e-4cf8-8397-abb2dc00931e\",\"state\":\"completed\",\"text\":\"EXECUTE NOW A3 blind Round-2 validation milestone. Repo foto6/SpectraTrack, only branch agent/vnext-enhancement, re-read actual HEAD 2b58192cfdb8c1f9581d93cc32e8651a5ff79398. Preserve existing committed pre-data R2 lock and hash; independently prove it predates any R2 scoring. Run locked candidate against frozen DISJOINT NightOwls R2 smoke400 with SAME baseline policy, explicit GT rules, positive/negative delta, extra ONNX calls, precision/recall/FP/FN and predeclared reject gates; if exact dataset/workload unavailable, produce deterministic runner/validator and BLOCKED with missing SHA, never fabricate metrics. NO param tuning after looking at R2, no holdout4200/FULL5000 inspection, no generic enhancement sweep, no neural restoration; production enhancement OFF. Own files only, nonempty code/evidence commit, targeted/full CI, exact SHA and reproducible manifest.\",\"repository\":\"foto6/SpectraTrack\",\"branch\":\"agent/vnext-enhancement\",\"expectedHead\":\"2b58192cfdb8c1f9581d93cc32e8651a5ff79398\",\"currentHead\":\"b0f677fbc13dab73e00854c6931d511b7149694d\",\"dispatchCount\":1,\"lastDiagnostic\":\"evidence_verified\",\"createdAt\":\"2026-09-28T15:37:08.114Z\",\"updatedAt\":\"2026-09-29T10:44:24.357Z\"}}\r\n",
+      "stdout_bytes": 1328,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T08:01:21.529Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T08:01:21.496Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-1622-spectra-a3-01"
+    },
+    "request_id": "coord-20260930-1622-spectra-a3-01",
+    "started_at": "2026-09-30T08:01:21.246Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-1622-spectra-a3-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
