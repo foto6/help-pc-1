@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$targets=Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 5; $urls=@('https://chatgpt.com/c/6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b24f-9c40-83eb-9b7b-766af74defe0','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b25d-b630-83eb-bed7-7d6aa135e647','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c'); @($targets)|Where-Object{$urls -contains $_.url}|Select-Object id,title,url,webSocketDebuggerUrl|ConvertTo-Json -Compress -Depth 4"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"1D296F6F215BED9914A241D5CF68BB6F\",\"title\":\"Fix Assignment Replacement Runtime\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c\",\"webSocketDebuggerUrl\":\"ws://127.0.0.1:17410/devtools/page/1D296F6F215BED9914A241D5CF68BB6F\"},{\"id\":\"5074CC2597D83163F5C160F186251FDB\",\"title\":\"Fix Assignment Replacement Runtime\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c\",\"webSocketDebuggerUrl\":\"ws://127.0.0.1:17410/devtools/page/5074CC2597D83163F5C160F186251FDB\"},{\"id\":\"B7B57B774112148169D6CB4EDC951960\",\"title\":\"Implement Media Engine Pipeline\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b24f-9c40-83eb-9b7b-766af74defe0\",\"webSocketDebuggerUrl\":\"ws://127.0.0.1:17410/devtools/page/B7B57B774112148169D6CB4EDC951960\"},{\"id\":\"158A2677AA9B81544F0C7A2F8159A998\",\"title\":\"Implement Growth Analytics\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b25d-b630-83eb-bed7-7d6aa135e647\",\"webSocketDebuggerUrl\":\"ws://127.0.0.1:17410/devtools/page/158A2677AA9B81544F0C7A2F8159A998\"}]\r\n",
+      "stdout_bytes": 1148,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T18:07:36.345Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T18:07:36.307Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-cdp-targets-video-bridge-01"
+    },
+    "request_id": "coord-20261001-cdp-targets-video-bridge-01",
+    "started_at": "2026-09-30T18:07:35.425Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-cdp-targets-video-bridge-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
