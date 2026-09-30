@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-spectra-pause-state-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 8; $ids=@('66c0cf2c-57f3-424d-9b93-431b3cbd4eaa','9f184693-c0e1-4228-a9ca-6d3a881b6a5a'); @($r.assignments)|Where-Object{$ids -contains $_.id}|Select-Object id,state,targetChatId,dispatchCount,currentHead,lastDiagnostic,updatedAt|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only state check before pausing obsolete SpectraTrack detector assignments"
+}
