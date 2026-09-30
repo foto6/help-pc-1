@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$roots=@('C:\\Users\\foto6\\Downloads','C:\\Users\\foto6\\Desktop','C:\\Users\\foto6\\Videos','E:\\');\n$files=@();\nforeach($r in $roots){\n  if(Test-Path $r){\n    $files += Get-ChildItem -Path $r -File -Recurse -ErrorAction SilentlyContinue |\n      Where-Object { $_.Name -match '_DFINE_X_c(090|350)\\.(mp4|detections\\.jsonl)$' }\n  }\n}\n$latest=$files | Sort-Object LastWriteTime -Descending | Select-Object -First 6;\n$latest | Select-Object FullName,Length,CreationTime,LastWriteTime | Format-Table -AutoSize;\n'---PROCESSES---';\nGet-CimInstance Win32_Process | Where-Object { $_.CommandLine -match 'run_dfine_video\\.py' } |\n  Select-Object ProcessId,CreationDate,CommandLine | Format-List;"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "\r\nFullName                                              Length CreationTime        LastWriteTime      \r\n--------                                              ------ ------------        -------------      \r\nE:\\SpectraTrack\\12345_DFINE_X_c350.mp4              13967512 30.09.2026 14:51:53 30.09.2026 14:54:42\r\nE:\\SpectraTrack\\12345_DFINE_X_c350.detections.jsonl  1276245 30.09.2026 14:51:53 30.09.2026 14:54:42\r\n\r\n\r\n---PROCESSES---\r\n",
+      "stdout_bytes": 431,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T07:58:32.169Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T07:58:32.125Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-dfine-latest-run-check-20260930-002"
+    },
+    "request_id": "chatgpt-dfine-latest-run-check-20260930-002",
+    "started_at": "2026-09-30T07:58:02.035Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-dfine-latest-run-check-20260930-002",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
