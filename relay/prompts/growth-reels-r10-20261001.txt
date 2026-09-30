@@ -1,0 +1,12 @@
+EXECUTE NOW — GROWTH R10 AUTONOMOUS REELS PUBLISHING + ANALYTICS.
+
+Repo ONLY: foto6/video3
+Writable branch ONLY: agent/growth-r10-autonomous-reels-20261001
+Exact start HEAD: 4bb6f12c23af5e865e52b7bcffb8ced83ecf44f1
+Issue #1.
+
+Do NOT inherit failed R9 wholesale; inspect only for verified reusable pieces.
+
+Build versioned publish package consumer from Creator: final video, caption, hashtags, cover/metadata, policy/window. Implement Instagram Reel scheduling/publishing adapter against Metricool with readiness probe and explicit BLOCKED state when Instagram is absent. Metricool contract supports getBestTimeToPostByNetwork, createScheduledPost, getScheduledPosts and analytics. Current account has no connected social network — do not fabricate real publication.
+
+Require exactly-once remote intent/receipt and unknown-result reconciliation before retry, best-time selection when allowed, analytics retrieval + source-bound feedback bundle back to Creator, deterministic fixtures for duplicate events/timeouts/lost receipt/cancelled schedule/partial analytics. Nonempty code/tests/docs + exact-head CI. No actual post, no merge/release.
