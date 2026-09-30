@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-09-30T17:50:07.089Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "coord-20261001-bridge-watchdog-live-files-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:fb7f069ef723c1bd9641646cf986de3783fba21e3b89b640b7b381f294eea989",
+            "journal_sequence": 454,
+            "previous_record_sha256": "255491f0721f89f906f4655510308642ba6bb253bd9a0d620109e22283292aa4",
+            "record_sha256": "b295401c5bbf12df4b3533a701634c256b115501c41ce9881ec972b2212cd5ca",
+            "recorded_at": "2026-09-30T17:50:07.115Z",
+            "request_id": "coord-20261001-bridge-watchdog-live-files-01",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-09-30T17:50:17.168Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "coord-20261001-bridge-watchdog-live-files-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:fb7f069ef723c1bd9641646cf986de3783fba21e3b89b640b7b381f294eea989",
+            "journal_sequence": 455,
+            "previous_record_sha256": "b295401c5bbf12df4b3533a701634c256b115501c41ce9881ec972b2212cd5ca",
+            "record_sha256": "a035e48a76236484924e9ffd80e616b9675cc7dff864a6de7a83041d5cb518bb",
+            "recorded_at": "2026-09-30T17:50:17.202Z",
+            "request_id": "coord-20261001-bridge-watchdog-live-files-01",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-09-30T17:50:17.168Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "coord-20261001-bridge-watchdog-live-files-01"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-09-30T17:50:17.168Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "coord-20261001-bridge-watchdog-live-files-01"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:fb7f069ef723c1bd9641646cf986de3783fba21e3b89b640b7b381f294eea989",
+          "journal_sequence": 455,
+          "previous_record_sha256": "b295401c5bbf12df4b3533a701634c256b115501c41ce9881ec972b2212cd5ca",
+          "record_sha256": "a035e48a76236484924e9ffd80e616b9675cc7dff864a6de7a83041d5cb518bb",
+          "recorded_at": "2026-09-30T17:50:17.202Z",
+          "request_id": "coord-20261001-bridge-watchdog-live-files-01",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "28ab1650bfdecb68753fa8853d23cdcff489e492ff5e972aa5b5a4470b1fe328",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 455
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "coord-20261001-bridge-watchdog-live-files-01",
+        "request_id": "coord-20261001-bridge-watchdog-live-files-01",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:51:28.146Z",
+    "ok": true,
+    "request_id": "coord-20261001-bridge-watchdog-live-files-reconcile-01",
+    "started_at": "2026-09-30T17:51:28.112Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-bridge-watchdog-live-files-reconcile-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
