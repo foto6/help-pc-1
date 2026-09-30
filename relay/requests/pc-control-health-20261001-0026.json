@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-control-health-20261001-0026",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read-only health check for user-visible PC Control verification"
+}
