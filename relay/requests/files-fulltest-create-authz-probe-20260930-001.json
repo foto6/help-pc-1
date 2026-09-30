@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-fulltest-create-authz-probe-20260930-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3\n$target=@($t)|Where-Object { try { ([uri]$_.url).Host -eq 'bugbountyfoto6.files.com' } catch { $false } } | Select-Object -First 1\n$ws=[Net.WebSockets.ClientWebSocket]::new();$cts=[Threading.CancellationTokenSource]::new();$cts.CancelAfter(8000)\n$ws.ConnectAsync([uri]$target.webSocketDebuggerUrl,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$expr=@'\n(async()=>{\n const d=[...document.querySelectorAll('[role=\"dialog\"]')].find(x=>(x.innerText||'').includes('New folder'));\n if(!d) return JSON.stringify({error:'New folder dialog not found'});\n const input=d.querySelector('input[name=\"name\"]');\n const create=[...d.querySelectorAll('button')].find(b=>(b.innerText||'').trim()==='Create');\n if(!input||!create) return JSON.stringify({error:'form controls missing'});\n const setter=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value').set;\n setter.call(input,'authz-probe-20260930');\n input.dispatchEvent(new Event('input',{bubbles:true}));\n input.dispatchEvent(new Event('change',{bubbles:true}));\n await new Promise(r=>setTimeout(r,100));\n create.click();\n await new Promise(r=>setTimeout(r,1200));\n return JSON.stringify({\n   path:location.pathname,\n   exists:[...document.querySelectorAll('a')].some(a=>(a.textContent||'').trim()==='authz-probe-20260930'),\n   body:(document.body.innerText||'').includes('authz-probe-20260930')\n });\n})()\n'@\n$payload=@{id=1;method='Runtime.evaluate';params=@{expression=$expr;returnByValue=$true;awaitPromise=$true}}|ConvertTo-Json -Depth 10 -Compress\n$bytes=[Text.Encoding]::UTF8.GetBytes($payload)\n$ws.SendAsync([ArraySegment[byte]]::new($bytes),[Net.WebSockets.WebSocketMessageType]::Text,$true,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$buf=New-Object byte[] 131072\nwhile($true){$ms=[IO.MemoryStream]::new();do{$r=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$cts.Token).GetAwaiter().GetResult();if($r.Count){$ms.Write($buf,0,$r.Count)}}while(-not $r.EndOfMessage);$o=([Text.Encoding]::UTF8.GetString($ms.ToArray())|ConvertFrom-Json);if($o.id -eq 1){if($o.result.exceptionDetails){throw $o.result.exceptionDetails.text};Write-Output $o.result.result.value;break}}\n$ws.Dispose()"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Create harmless authz-probe folder inside user's authorized public-b for Files.com bug bounty testing"
+}
