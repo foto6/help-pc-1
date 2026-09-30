@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=4241A4091BDEA046A344D708BC7EC9AF --prompt=E:\\pc-github-relay\\relay\\prompts\\creator-reels-r11-20261001.txt"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Error: target tab missing 4241A4091BDEA046A344D708BC7EC9AF\n    at E:\\WebAIBridge\\app\\data\\direct_send_existing_agent.js:7:96\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n",
+      "stderr_bytes": 208,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:43:46.818Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T17:43:46.781Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-send-creator-reels-r11-02"
+    },
+    "request_id": "coord-20261001-send-creator-reels-r11-02",
+    "started_at": "2026-09-30T17:43:46.432Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-send-creator-reels-r11-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
