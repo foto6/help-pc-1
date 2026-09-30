@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3\n$target=@($t)|Where-Object { try { ([uri]$_.url).Host -eq 'bugbountyfoto6.files.com' } catch { $false } } | Select-Object -First 1\n$ws=[Net.WebSockets.ClientWebSocket]::new();$cts=[Threading.CancellationTokenSource]::new();$cts.CancelAfter(7000)\n$ws.ConnectAsync([uri]$target.webSocketDebuggerUrl,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$expr=@'\n(async()=>{\n const b=[...document.querySelectorAll('button')].find(e=>(e.innerText||'').trim()==='Move' && !e.disabled);\n if(!b)return JSON.stringify({error:'Move button not found'});\n b.click(); await new Promise(r=>setTimeout(r,400));\n return JSON.stringify({\n  dialogs:[...document.querySelectorAll('[role=\"dialog\"]')].map((d,di)=>({di,text:(d.innerText||'').trim().replace(/\\s+/g,' ').slice(0,1500)})),\n  inputs:[...document.querySelectorAll('[role=\"dialog\"] input')].map((e,i)=>({i,type:e.type,name:e.name,placeholder:e.placeholder,aria:e.getAttribute('aria-label'),value:e.value})),\n  buttons:[...document.querySelectorAll('[role=\"dialog\"] button')].map((e,i)=>({i,text:(e.innerText||e.getAttribute('aria-label')||'').trim().replace(/\\s+/g,' ').slice(0,120),disabled:!!e.disabled})).filter(x=>x.text)\n });\n})()\n'@\n$payload=@{id=1;method='Runtime.evaluate';params=@{expression=$expr;returnByValue=$true;awaitPromise=$true}}|ConvertTo-Json -Depth 10 -Compress\n$bytes=[Text.Encoding]::UTF8.GetBytes($payload)\n$ws.SendAsync([ArraySegment[byte]]::new($bytes),[Net.WebSockets.WebSocketMessageType]::Text,$true,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$buf=New-Object byte[] 131072\nwhile($true){$ms=[IO.MemoryStream]::new();do{$r=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$cts.Token).GetAwaiter().GetResult();if($r.Count){$ms.Write($buf,0,$r.Count)}}while(-not $r.EndOfMessage);$o=([Text.Encoding]::UTF8.GetString($ms.ToArray())|ConvertFrom-Json);if($o.id -eq 1){Write-Output $o.result.result.value;break}}\n$ws.Dispose()"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"dialogs\":[{\"di\":0,\"text\":\"AI AssistantAsk me anythingAsk about files, transfers, automations, and more. I can read your logs, draft changes, and apply them with your approval.Files.com AI Assistant is AI and can make mistakes. Use with caution. Files.com disclaims any responsibility for errors made by AI integrations.Your optional use of the AI Agent is subject to our updated Terms of Service.\"},{\"di\":1,\"text\":\"Move Source public-b/authz-probe-20260930/ Destination Not selected Destination Select a folder in the folder tree below. You can filter the list by using the search field. Search in Root Folder Move Cancel\"}],\"inputs\":[],\"buttons\":[{\"i\":0,\"text\":\"Chat History\",\"disabled\":false},{\"i\":1,\"text\":\"New Chat\",\"disabled\":true},{\"i\":2,\"text\":\"Maximize AI Assistant\",\"disabled\":false},{\"i\":3,\"text\":\"Close AI Assistant\",\"disabled\":false},{\"i\":4,\"text\":\"Send message\",\"disabled\":false},{\"i\":5,\"text\":\"Move\",\"disabled\":false},{\"i\":6,\"text\":\"Cancel\",\"disabled\":false}]}\r\n",
+      "stdout_bytes": 978,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T09:38:43.409Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T09:38:43.372Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "files-fulltest-open-move-modal-20260930-001"
+    },
+    "request_id": "files-fulltest-open-move-modal-20260930-001",
+    "started_at": "2026-09-30T09:38:42.330Z",
+    "status": "completed"
+  },
+  "id": "files-fulltest-open-move-modal-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
