@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1' -TimeoutSec 8; $ids=@('agent-bridge-reliability','agent-creator','agent-media','agent-growth'); @($r.chats)|Where-Object{$ids -contains $_.id}|Select-Object id,name,status,generating,draftPresent,highMode,openTabs,lastProgressAt,lastSeenAt,error,activeAssignmentCount,repo,branch,expectedHead|ConvertTo-Json -Compress -Depth 6"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"agent-bridge-reliability\",\"name\":\"Bridge R6 existing agent\",\"status\":\"working\",\"generating\":true,\"draftPresent\":false,\"highMode\":true,\"openTabs\":2,\"lastProgressAt\":\"2026-09-30T17:56:39.673Z\",\"lastSeenAt\":\"2026-09-30T17:56:39.673Z\",\"error\":\"\",\"activeAssignmentCount\":1,\"repo\":null,\"branch\":\"agent/bridge-control-reliability-r6-20260928\",\"expectedHead\":null},{\"id\":\"agent-creator\",\"name\":\"Creator existing agent\",\"status\":\"closed\",\"generating\":false,\"draftPresent\":false,\"highMode\":false,\"openTabs\":0,\"lastProgressAt\":\"2026-09-30T17:18:33.817Z\",\"lastSeenAt\":\"2026-09-30T17:18:33.817Z\",\"error\":\"\",\"activeAssignmentCount\":0,\"repo\":null,\"branch\":\"agent/creator-r9-crossrepo-live-rehearsal-20260928\",\"expectedHead\":null},{\"id\":\"agent-media\",\"name\":\"Media existing agent\",\"status\":\"working\",\"generating\":true,\"draftPresent\":false,\"highMode\":true,\"openTabs\":1,\"lastProgressAt\":\"2026-09-30T17:49:39.021Z\",\"lastSeenAt\":\"2026-09-30T17:56:39.683Z\",\"error\":\"\",\"activeAssignmentCount\":0,\"repo\":null,\"branch\":\"agent/media-r10-native-mcp-consumer-20260929\",\"expectedHead\":null},{\"id\":\"agent-growth\",\"name\":\"Growth existing agent\",\"status\":\"idle\",\"generating\":false,\"draftPresent\":false,\"highMode\":true,\"openTabs\":1,\"lastProgressAt\":\"2026-09-30T17:49:39.030Z\",\"lastSeenAt\":\"2026-09-30T17:56:39.690Z\",\"error\":\"\",\"activeAssignmentCount\":0,\"repo\":null,\"branch\":\"agent/growth-r9-decision-delivery-audit-20260928\",\"expectedHead\":null}]\r\n",
+      "stdout_bytes": 1423,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:56:39.862Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T17:56:39.828Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-dispatch-readiness-01"
+    },
+    "request_id": "coord-20261001-dispatch-readiness-01",
+    "started_at": "2026-09-30T17:56:39.234Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-dispatch-readiness-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
