@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-send-creator-reels-r11-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=4241A4091BDEA046A344D708BC7EC9AF --prompt=E:\\pc-github-relay\\relay\\prompts\\creator-reels-r11-20261001.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Direct exact-target dispatch to Creator chat for autonomous Reels orchestrator"
+}
