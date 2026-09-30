@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-pccontrol-uia-schema-20260930-002",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "\n$ErrorActionPreference='Stop'\n$root='E:\\pc-github-relay'\nif (!(Test-Path $root)) { throw \"relay repo not found: $root\" }\nGet-ChildItem $root -Recurse -File -Include *.py,*.md,*.json -ErrorAction Stop |\n  Select-String -Pattern 'uia\\.inspect|uia\\.focus|uia\\.invoke|uia\\.set_value|vision\\.target\\.invoke' |\n  Select-Object -First 80 Path,LineNumber,Line | Format-List\n"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000,
+  "note": "Read local pc-control relay implementation/docs to learn UIA action parameter schemas"
+}
