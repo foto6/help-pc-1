@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p=Get-CimInstance Win32_Process | Where-Object {$_.CommandLine -match 'github_relay\\.py'} | Select-Object ProcessId,Name,CommandLine; $mem=Get-Process | Sort-Object WorkingSet64 -Descending | Select-Object -First 8 ProcessName,Id,@{N='WorkingSetMB';E={[math]::Round($_.WorkingSet64/1MB,1)}}; [pscustomobject]@{Relay=$p;TopMemory=$mem} | ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"Relay\":[{\"ProcessId\":25584,\"Name\":\"py.exe\",\"CommandLine\":\"\\\"C:\\\\Users\\\\foto6\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Launcher\\\\py.exe\\\" tools\\\\github_relay.py --repo E:\\\\pc-github-relay --live \"},{\"ProcessId\":20736,\"Name\":\"python3.13.exe\",\"CommandLine\":\"C:\\\\Users\\\\foto6\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\\\python.exe tools\\\\github_relay.py --repo E:\\\\pc-github-relay --live \"}],\"TopMemory\":[{\"ProcessName\":\"chrome\",\"Id\":14344,\"WorkingSetMB\":497.9},{\"ProcessName\":\"chrome\",\"Id\":24064,\"WorkingSetMB\":486.4},{\"ProcessName\":\"Memory Compression\",\"Id\":2908,\"WorkingSetMB\":485.4},{\"ProcessName\":\"chrome\",\"Id\":18192,\"WorkingSetMB\":472.9},{\"ProcessName\":\"firefox\",\"Id\":15800,\"WorkingSetMB\":471.4},{\"ProcessName\":\"MsMpEng\",\"Id\":4076,\"WorkingSetMB\":377.4},{\"ProcessName\":\"chrome\",\"Id\":6020,\"WorkingSetMB\":365.4},{\"ProcessName\":\"explorer\",\"Id\":9008,\"WorkingSetMB\":321.8}]}\r\n",
+      "stdout_bytes": 917,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:43:53.479Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T17:43:53.445Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-smoke-20261001-010-postrestart-health"
+    },
+    "request_id": "pc-smoke-20261001-010-postrestart-health",
+    "started_at": "2026-09-30T17:43:52.902Z",
+    "status": "completed"
+  },
+  "id": "pc-smoke-20261001-010-postrestart-health",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
