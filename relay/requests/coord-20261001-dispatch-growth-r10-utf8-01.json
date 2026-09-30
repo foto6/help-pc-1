@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-dispatch-growth-r10-utf8-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$text=Get-Content -LiteralPath 'E:\\pc-github-relay\\relay\\prompts\\growth-r10-autonomous-reels-20261001.txt' -Raw; $body=@{text=$text;repository='foto6/video3';branch='agent/growth-r10-autonomous-reels-20261001';expectedHead='4bb6f12c23af5e865e52b7bcffb8ced83ecf44f1';idempotencyKey='coord-20261001-growth-r10-autonomous-reels-v1';evidenceTimeoutMinutes=240;priority=950;supervisorVerificationRequired=$true}|ConvertTo-Json -Compress -Depth 6; $bytes=[System.Text.Encoding]::UTF8.GetBytes($body); $r=Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-growth/assignments' -ContentType 'application/json; charset=utf-8' -Body $bytes -TimeoutSec 10; $r|Select-Object id,state,targetChatId,repository,branch,expectedHead,dispatchCount,lastDiagnostic|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 20000,
+  "note": "Queue UTF-8 evidence-gated assignment for agent-growth"
+}
