@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-smoke-20261001-011-postrestart-windows",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Post-restart visible window check"
+}
