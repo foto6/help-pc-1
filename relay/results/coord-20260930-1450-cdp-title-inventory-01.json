@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nu='http://127.0.0.1:17410/json/list'\nwith urllib.request.urlopen(u,timeout=4) as r: xs=json.load(r)\nrows=[]\nfor x in xs:\n    if x.get('type')=='page' and 'chatgpt.com' in (x.get('url') or ''):\n        rows.append({'id':x.get('id',''),'title':' '.join((x.get('title') or '').split())})\nprint(json.dumps(rows,ensure_ascii=False))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\": \"79A4F5ADCAA9F6759A8207CF387BA349\", \"title\": \"��������������\"}, {\"id\": \"53438C38D25E015D4840FB93989BC0B4\", \"title\": \"PC Control | ������� ChatGPT\"}, {\"id\": \"B18CA3C5EA45FB0F06495F9E6882891D\", \"title\": \"�������� R22 ���������\"}, {\"id\": \"ED9C7E178D47179B16E55EBD4EDCD44B\", \"title\": \"Fix Assignment Replacement Runtime\"}, {\"id\": \"F6172845F3AC020B53DF44EBF5D29F9C\", \"title\": \"Fix Assignment Replacement Runtime\"}, {\"id\": \"FF5C0776367B36BFA04B14A12FBA3C0D\", \"title\": \"A 2\"}, {\"id\": \"2A1C0B21BF7D4C8E14DEEA2F0881BB7A\", \"title\": \"Implement Native Tool Parity\"}]\r\n",
+      "stdout_bytes": 564,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T07:38:20.698Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T07:38:20.661Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-1450-cdp-title-inventory-01"
+    },
+    "request_id": "coord-20260930-1450-cdp-title-inventory-01",
+    "started_at": "2026-09-30T07:38:20.251Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-1450-cdp-title-inventory-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
