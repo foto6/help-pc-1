@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-control-v020-capabilities-20260930-1351",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "PC Control v0.2.0 live read-only plugin transport verification"
+}
