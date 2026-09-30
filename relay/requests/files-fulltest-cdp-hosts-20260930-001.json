@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-fulltest-cdp-hosts-20260930-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3; $hosts=@($t)|ForEach-Object { try { ([uri]$_.url).Host } catch {} } | Where-Object { $_ } | Sort-Object -Unique; $hosts -join [Environment]::NewLine"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only list of CDP target hostnames; no paths or credentials"
+}
