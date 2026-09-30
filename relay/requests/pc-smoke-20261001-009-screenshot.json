@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-smoke-20261001-009-screenshot",
+  "action": "screenshot.capture",
+  "params": {
+    "hwnd": 68302
+  },
+  "timeout_ms": 10000,
+  "note": "PC Control smoke: screenshot adapter on visible Chrome window after UIA timeout"
+}
