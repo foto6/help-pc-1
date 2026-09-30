@@ -1,0 +1,21 @@
+{
+  "action": "uia.snapshot",
+  "executor_result": {
+    "action": "uia.snapshot",
+    "data": {},
+    "dry_run": false,
+    "error": "window not found: Not Found · [BUGBOUNTY] foto6 test - Google Chrome",
+    "error_kind": "stale_target",
+    "finished_at": "2026-09-30T09:41:58.543Z",
+    "ok": false,
+    "request_id": "chatgpt-files-uia-snapshot-valid-20260930-001",
+    "started_at": "2026-09-30T09:41:57.993Z",
+    "status": "stale_target"
+  },
+  "id": "chatgpt-files-uia-snapshot-valid-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
