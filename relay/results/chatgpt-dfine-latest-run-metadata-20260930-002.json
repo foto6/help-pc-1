@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$py='C:\\Users\\foto6\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'; & $py -c \"import cv2,pathlib; src=r'E:\\\\SpectraTrack\\\\12345.mp4'; out=r'E:\\\\SpectraTrack\\\\12345_DFINE_X_c350.mp4'; pairs=[src,out]; [(lambda c,p: (print(p),print('fps=',c.get(cv2.CAP_PROP_FPS),'frames=',int(c.get(cv2.CAP_PROP_FRAME_COUNT)),'duration_s=',c.get(cv2.CAP_PROP_FRAME_COUNT)/c.get(cv2.CAP_PROP_FPS) if c.get(cv2.CAP_PROP_FPS) else None),c.release()))(cv2.VideoCapture(p),p) for p in pairs]; j=pathlib.Path(r'E:\\\\SpectraTrack\\\\12345_DFINE_X_c350.detections.jsonl'); print('jsonl_frames=',sum(1 for _ in j.open(encoding='utf-8')))\" ; Get-Item 'E:\\SpectraTrack\\12345.mp4','E:\\SpectraTrack\\12345_DFINE_X_c350.mp4','E:\\SpectraTrack\\12345_DFINE_X_c350.detections.jsonl' | Select-Object FullName,Length,CreationTime,LastWriteTime | Format-Table -AutoSize"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "E:\\\\SpectraTrack\\\\12345.mp4\r\nfps= 25.0 frames= 125 duration_s= 5.0\r\nE:\\\\SpectraTrack\\\\12345_DFINE_X_c350.mp4\r\nfps= 25.0 frames= 125 duration_s= 5.0\r\njsonl_frames= 125\r\n\r\nFullName                                              Length CreationTime        LastWriteTime      \r\n--------                                              ------ ------------        -------------      \r\nE:\\SpectraTrack\\12345.mp4                            1917064 25.09.2026 19:09:50 25.09.2026 19:09:50\r\nE:\\SpectraTrack\\12345_DFINE_X_c350.mp4              13967512 30.09.2026 14:51:53 30.09.2026 14:54:42\r\nE:\\SpectraTrack\\12345_DFINE_X_c350.detections.jsonl  1276245 30.09.2026 14:51:53 30.09.2026 14:54:42\r\n\r\n\r\n",
+      "stdout_bytes": 684,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T07:59:34.786Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T07:59:34.755Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-dfine-latest-run-metadata-20260930-002"
+    },
+    "request_id": "chatgpt-dfine-latest-run-metadata-20260930-002",
+    "started_at": "2026-09-30T07:59:33.914Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-dfine-latest-run-metadata-20260930-002",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
