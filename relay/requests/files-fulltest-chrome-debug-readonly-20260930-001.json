@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-fulltest-chrome-debug-readonly-20260930-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p = Get-CimInstance Win32_Process -Filter \"name='chrome.exe'\" | Select-Object ProcessId,CommandLine; $p | ForEach-Object { $cl=$_.CommandLine; if($cl -match '--remote-debugging-port' -or $cl -match '--remote-debugging-pipe'){ [pscustomobject]@{ProcessId=$_.ProcessId; RemoteDebug=($cl -replace '(?i)(--user-data-dir=)[^ ]+','$1<redacted>')} } } | Format-List"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only check whether current Chrome exposes local DevTools transport; do not inspect credentials"
+}
