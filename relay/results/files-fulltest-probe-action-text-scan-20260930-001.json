@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3\n$target=@($t)|Where-Object { try { ([uri]$_.url).Host -eq 'bugbountyfoto6.files.com' } catch { $false } } | Select-Object -First 1\n$ws=[Net.WebSockets.ClientWebSocket]::new();$cts=[Threading.CancellationTokenSource]::new();$cts.CancelAfter(7000)\n$ws.ConnectAsync([uri]$target.webSocketDebuggerUrl,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$expr=@'\n(async()=>{\n const a=[...document.querySelectorAll('a')].find(e=>(e.textContent||'').trim()==='authz-probe-20260930');\n const row=a?.closest('tr'); const more=row?[...row.querySelectorAll('button')].find(e=>(e.getAttribute('aria-label')||'').trim()==='More'):null;\n if(!more) return JSON.stringify({error:'More not found'});\n more.click(); await new Promise(r=>setTimeout(r,500));\n const vis=e=>{const s=getComputedStyle(e),r=e.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&+s.opacity!==0&&r.width>0&&r.height>0};\n const keys=/^(Move|Copy|Rename|Delete|Share|Permissions|Details|Download|Open|Preview|Lock|Favorite|Pin|Create Share Link|Share Link)$/i;\n const found=[...document.querySelectorAll('*')].filter(vis).map(e=>({tag:e.tagName,text:(e.innerText||'').trim().replace(/\\s+/g,' '),role:e.getAttribute('role'),cls:(e.className||'').toString().slice(0,140),state:e.getAttribute('data-state')})).filter(x=>x.text&&x.text.length<80&&keys.test(x.text));\n return JSON.stringify({expanded:more.getAttribute('aria-expanded'),controls:more.getAttribute('aria-controls'),state:more.getAttribute('data-state'),found:found.slice(0,80)});\n})()\n'@\n$payload=@{id=1;method='Runtime.evaluate';params=@{expression=$expr;returnByValue=$true;awaitPromise=$true}}|ConvertTo-Json -Depth 10 -Compress\n$bytes=[Text.Encoding]::UTF8.GetBytes($payload)\n$ws.SendAsync([ArraySegment[byte]]::new($bytes),[Net.WebSockets.WebSocketMessageType]::Text,$true,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$buf=New-Object byte[] 131072\nwhile($true){$ms=[IO.MemoryStream]::new();do{$r=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$cts.Token).GetAwaiter().GetResult();if($r.Count){$ms.Write($buf,0,$r.Count)}}while(-not $r.EndOfMessage);$o=([Text.Encoding]::UTF8.GetString($ms.ToArray())|ConvertFrom-Json);if($o.id -eq 1){Write-Output $o.result.result.value;break}}\n$ws.Dispose()"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"expanded\":\"false\",\"controls\":null,\"state\":\"closed\",\"found\":[]}\r\n",
+      "stdout_bytes": 66,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T09:33:40.403Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T09:33:40.366Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "files-fulltest-probe-action-text-scan-20260930-001"
+    },
+    "request_id": "files-fulltest-probe-action-text-scan-20260930-001",
+    "started_at": "2026-09-30T09:33:38.619Z",
+    "status": "completed"
+  },
+  "id": "files-fulltest-probe-action-text-scan-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
