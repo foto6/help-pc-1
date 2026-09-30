@@ -1,0 +1,10 @@
+EXECUTE NOW — MEDIA R11 AUTONOMOUS VERTICAL VIDEO EDITOR.
+
+Repo ONLY: foto6/video2
+Writable branch ONLY: agent/media-r11-autonomous-reels-20261001
+Exact start HEAD: 2366b3820c2cbf429aa734f2e623689699e73003
+Issue #1.
+
+Build the actual executable editing engine for Reels, not docs-only: 9:16 timeline, multi video/audio/image ingest, deterministic trims/clip selection, jump cuts, crop/reframe, speed, B-roll/overlays, transitions, captions/subtitles, title cards, music/voiceover, loudness normalization/ducking, final render manifest/SHA, checkpoint/restart and idempotent lease semantics.
+
+Provide FFmpeg/local baseline plus real Descript adapter contract. Descript is connected and supports import_media, Agent Underlord prompt editing, publish_project and wait_for_job. Add automated technical QA: aspect/resolution/fps/duration, black/silent/frozen segments, clipping, subtitle safe-area, missing media. Output final MP4 + metadata/timing artifact for Creator. Deterministic fixtures, substantive code/tests, exact-head CI. No social publish, no merge/release.
