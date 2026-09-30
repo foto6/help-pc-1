@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-direct-send-growth-r10-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=158A2677AA9B81544F0C7A2F8159A998 --prompt=E:\\pc-github-relay\\relay\\prompts\\growth-r10-autonomous-reels-20261001.txt"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000,
+  "note": "Direct exact-target dispatch to Growth existing agent"
+}
