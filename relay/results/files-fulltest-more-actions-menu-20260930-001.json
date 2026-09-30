@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3\n$target=@($t)|Where-Object { try { ([uri]$_.url).Host -eq 'bugbountyfoto6.files.com' } catch { $false } } | Select-Object -First 1\n$ws=[Net.WebSockets.ClientWebSocket]::new();$cts=[Threading.CancellationTokenSource]::new();$cts.CancelAfter(6000)\n$ws.ConnectAsync([uri]$target.webSocketDebuggerUrl,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$expr=@'\n(async()=>{\n const b=[...document.querySelectorAll('button')].find(e=>(e.innerText||e.getAttribute('aria-label')||'').trim()==='More Actions');\n if(!b) return JSON.stringify({error:'More Actions not found'});\n b.click();\n await new Promise(r=>setTimeout(r,350));\n return JSON.stringify([...document.querySelectorAll('[role=\"menuitem\"],[role=\"option\"],button,a')].map((e,i)=>({i,text:(e.innerText||e.getAttribute('aria-label')||'').trim().replace(/\\s+/g,' ').slice(0,120),role:e.getAttribute('role'),disabled:!!e.disabled})).filter(x=>x.text).slice(0,160));\n})()\n'@\n$payload=@{id=1;method='Runtime.evaluate';params=@{expression=$expr;returnByValue=$true;awaitPromise=$true}}|ConvertTo-Json -Depth 8 -Compress\n$bytes=[Text.Encoding]::UTF8.GetBytes($payload)\n$ws.SendAsync([ArraySegment[byte]]::new($bytes),[Net.WebSockets.WebSocketMessageType]::Text,$true,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$buf=New-Object byte[] 131072\nwhile($true){$ms=[IO.MemoryStream]::new();do{$r=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$cts.Token).GetAwaiter().GetResult();if($r.Count){$ms.Write($buf,0,$r.Count)}}while(-not $r.EndOfMessage);$o=([Text.Encoding]::UTF8.GetString($ms.ToArray())|ConvertFrom-Json);if($o.id -eq 1){Write-Output $o.result.result.value;break}}\n$ws.Dispose()"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"i\":0,\"text\":\"Skip to main content\",\"role\":null,\"disabled\":false},{\"i\":1,\"text\":\"Expand navigation menu\",\"role\":null,\"disabled\":false},{\"i\":2,\"text\":\"Files.com Home\",\"role\":null,\"disabled\":false},{\"i\":3,\"text\":\"Ask AI\",\"role\":null,\"disabled\":false},{\"i\":4,\"text\":\"tetst1, profile menu\",\"role\":null,\"disabled\":false},{\"i\":5,\"text\":\"Ask AI\",\"role\":null,\"disabled\":false},{\"i\":6,\"text\":\"More Actions\",\"role\":null,\"disabled\":false},{\"i\":7,\"text\":\"tetst1, profile menu\",\"role\":null,\"disabled\":false},{\"i\":8,\"text\":\"Files\",\"role\":null,\"disabled\":false},{\"i\":9,\"text\":\"Integrations\",\"role\":null,\"disabled\":false},{\"i\":10,\"text\":\"Clients & Protocols\",\"role\":null,\"disabled\":false},{\"i\":11,\"text\":\"Toggle \\\"Clients & Protocols\\\" sub-menu items\",\"role\":null,\"disabled\":false},{\"i\":12,\"text\":\"Desktop App\",\"role\":null,\"disabled\":false},{\"i\":13,\"text\":\"CLI\",\"role\":null,\"disabled\":false},{\"i\":14,\"text\":\"SDKs and API\",\"role\":null,\"disabled\":false},{\"i\":15,\"text\":\"Mobile App\",\"role\":null,\"disabled\":false},{\"i\":16,\"text\":\"Collapse\",\"role\":null,\"disabled\":false},{\"i\":17,\"text\":\"/\",\"role\":null,\"disabled\":false},{\"i\":18,\"text\":\"public-b\",\"role\":null,\"disabled\":false},{\"i\":19,\"text\":\"Copy path\",\"role\":null,\"disabled\":false},{\"i\":20,\"text\":\"Go up to parent folder\",\"role\":null,\"disabled\":false},{\"i\":21,\"text\":\"New\",\"role\":null,\"disabled\":false},{\"i\":23,\"text\":\"Open Search this folder\",\"role\":null,\"disabled\":false},{\"i\":24,\"text\":\"Condensed view\",\"role\":null,\"disabled\":false},{\"i\":25,\"text\":\"Thumbnail view\",\"role\":null,\"disabled\":false},{\"i\":26,\"text\":\"Grid view\",\"role\":null,\"disabled\":false},{\"i\":27,\"text\":\"Refresh\",\"role\":null,\"disabled\":false},{\"i\":28,\"text\":\"Filters\",\"role\":null,\"disabled\":false},{\"i\":29,\"text\":\"Columns\",\"role\":null,\"disabled\":false},{\"i\":30,\"text\":\"Details panel\",\"role\":null,\"disabled\":false},{\"i\":31,\"text\":\"New Folder\",\"role\":null,\"disabled\":false},{\"i\":32,\"text\":\"Upload Files\",\"role\":null,\"disabled\":false},{\"i\":33,\"text\":\"Upload Folder\",\"role\":null,\"disabled\":false},{\"i\":34,\"text\":\"Chat History\",\"role\":null,\"disabled\":false},{\"i\":35,\"text\":\"New Chat\",\"role\":null,\"disabled\":true},{\"i\":36,\"text\":\"Maximize AI Assistant\",\"role\":null,\"disabled\":false},{\"i\":37,\"text\":\"Close AI Assistant\",\"role\":null,\"disabled\":false},{\"i\":38,\"text\":\"Terms of Service\",\"role\":null,\"disabled\":false},{\"i\":39,\"text\":\"Send message\",\"role\":null,\"disabled\":false}]\r\n",
+      "stdout_bytes": 2368,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T09:27:44.413Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T09:27:44.375Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "files-fulltest-more-actions-menu-20260930-001"
+    },
+    "request_id": "files-fulltest-more-actions-menu-20260930-001",
+    "started_at": "2026-09-30T09:27:43.118Z",
+    "status": "completed"
+  },
+  "id": "files-fulltest-more-actions-menu-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
