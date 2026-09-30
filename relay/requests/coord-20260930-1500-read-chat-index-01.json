@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1500-read-chat-index-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,os\np=r'C:\\rehearsal\\coord-chat-index-20260930.json'\nif not os.path.exists(p):\n print(json.dumps({'error':'INDEX_MISSING'})); raise SystemExit(0)\nwith open(p,'r',encoding='utf-8') as f: d=json.load(f)\nitems=d.get('items',[])\nprint(json.dumps({'count':len(items),'items':[{'key':x.get('key'),'title':x.get('title'),'last_visit_time':x.get('last_visit_time')} for x in items[:160]]},ensure_ascii=True))"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Read local chat index titles/hashes only; exact conversation URLs remain local"
+}
