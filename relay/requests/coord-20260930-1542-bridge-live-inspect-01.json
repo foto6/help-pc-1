@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1542-bridge-live-inspect-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1'\nwith urllib.request.urlopen(u,timeout=10) as r: d=json.load(r)\nc=next((x for x in d.get('chats',[]) if x.get('id')=='agent-bridge-reliability'),None)\nif not c:\n print(json.dumps({'found':False})); raise SystemExit\nkeys=['id','name','status','generating','draftPresent','highMode','openTabs','lastProgressAt','lastSeenAt','observedTitle','profileWorkerConnected','profileWorkerRegistrationState','error','activeAssignmentCount']\nprint(json.dumps({'found':True,**{k:c.get(k) for k in keys}},ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only live inspect of existing Bridge reliability chat; no prompt or URL output"
+}
