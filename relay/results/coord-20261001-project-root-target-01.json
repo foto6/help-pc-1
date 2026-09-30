@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$u='https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc/project'; $t=Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 5; @($t)|Where-Object{$_.url -eq $u}|Select-Object id,title,url,webSocketDebuggerUrl|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T18:12:36.792Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T18:12:36.750Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-project-root-target-01"
+    },
+    "request_id": "coord-20261001-project-root-target-01",
+    "started_at": "2026-09-30T18:12:36.359Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-project-root-target-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
