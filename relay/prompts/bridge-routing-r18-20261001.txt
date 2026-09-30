@@ -1,0 +1,17 @@
+EXECUTE NOW — BRIDGE EXACT CHAT ROUTING R18. No plan-only response.
+
+Repo ONLY: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-routing-r18-20261001
+Exact start HEAD/live source: cb852e013634287669f957253d13d8ef2b45cada
+Issue: #13.
+
+DO NOT modify/restart/deploy the current live Bridge.
+
+Observed live bug:
+- Creator conversation 6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6 is open in TWO tabs.
+- Bridge reliability 6ab958d2-a674-83ed-9c68-cbbdf253366c is open in TWO tabs.
+- user reports Bridge keeps opening Creator regardless of intended chat.
+- /managed-chats?inspect=1 timed out.
+- managed assignments show target_inspection_failed / composer_readback_ambiguous / replacement_policy_unavailable.
+
+Implement deterministic exact managedChatId -> canonical conversation URL binding; never fallback to Creator/first project tab. Deduplicate/select duplicate same-conversation tabs without opening more. Add per-chat inspection budgets so one bad DOM cannot hang roster inspect. Preserve idempotency and no blind Enter. Regressions must cover Creator, Media 6ab8b24f-9c40-83eb-9b7b-766af74defe0, Growth 6ab8b25d-b630-83eb-bed7-7d6aa135e647 and duplicate tabs. Nonempty commit + exact-head CI. No live deploy/merge/restart.
