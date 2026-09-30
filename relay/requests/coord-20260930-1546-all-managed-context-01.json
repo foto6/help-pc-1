@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1546-all-managed-context-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1'\nwith urllib.request.urlopen(u,timeout=12) as r: d=json.load(r)\nout=[]\nfor c in d.get('chats',[]):\n a=c.get('latestAssignment') or {}\n out.append({'id':c.get('id'),'name':c.get('name'),'status':c.get('status'),'generating':c.get('generating'),'draft':c.get('draftPresent'),'openTabs':c.get('openTabs'),'branch':c.get('branch'),'repo':c.get('repository'),'lastProgressAt':c.get('lastProgressAt'),'assignment':{'id':a.get('id'),'state':a.get('state'),'text':str(a.get('text') or '')[:1400],'repository':a.get('repository'),'branch':a.get('branch'),'expectedHead':a.get('expectedHead'),'currentHead':a.get('currentHead'),'dispatchCount':a.get('dispatchCount'),'lastDiagnostic':a.get('lastDiagnostic')}})\nprint(json.dumps({'count':len(out),'chats':out},ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 25000,
+  "note": "Read-only live context snapshot of all managed agent chats; URLs omitted; assignment text truncated"
+}
