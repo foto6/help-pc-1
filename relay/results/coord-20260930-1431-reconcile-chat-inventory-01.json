@@ -1,0 +1,21 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {},
+    "dry_run": false,
+    "error": "outcome.lookup action must be a non-empty string",
+    "error_kind": "policy_blocked",
+    "finished_at": "2026-09-30T08:09:18.262Z",
+    "ok": false,
+    "request_id": "coord-20260930-1431-reconcile-chat-inventory-01",
+    "started_at": "2026-09-30T08:09:18.262Z",
+    "status": "blocked"
+  },
+  "id": "coord-20260930-1431-reconcile-chat-inventory-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
