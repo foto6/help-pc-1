@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1442-windows-02",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Refresh top-level windows after Chrome recovery state changed"
+}
