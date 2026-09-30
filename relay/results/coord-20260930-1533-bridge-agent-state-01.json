@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId=agent-bridge-reliability'\nwith urllib.request.urlopen(u,timeout=5) as r: d=json.load(r)\nout={'counts':d.get('counts',{}),'assignments':[]}\nfor a in d.get('assignments',[]):\n out['assignments'].append({k:a.get(k) for k in ['id','state','repository','branch','expectedHead','currentHead','dispatchCount','lastDiagnostic','dispatchFailureCode','createdAt','updatedAt']})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"counts\":{\"blocked\":2,\"failed\":1,\"queued\":1},\"assignments\":[{\"id\":\"1bd59e1b-a015-4681-b70a-c71e82ee3c72\",\"state\":\"blocked\",\"repository\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-control-reliability-r6-20260928\",\"expectedHead\":\"28fef7aa556a49a933d9a2ae73fc033c262ffa7e\",\"currentHead\":\"7ff25eb977d19c7484f4d7d74271ddb9eb21d73e\",\"dispatchCount\":1,\"lastDiagnostic\":\"evidence_timeout\",\"dispatchFailureCode\":\"\",\"createdAt\":\"2026-09-28T15:35:54.415Z\",\"updatedAt\":\"2026-09-29T08:58:41.519Z\"},{\"id\":\"5a053f12-64d0-471e-89ed-52fb2e6174ad\",\"state\":\"failed\",\"repository\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-plugin-agent-dispatch-r7-20260929\",\"expectedHead\":\"7ff25eb977d19c7484f4d7d74271ddb9eb21d73e\",\"currentHead\":\"7ff25eb977d19c7484f4d7d74271ddb9eb21d73e\",\"dispatchCount\":0,\"lastDiagnostic\":\"Managed assignment draft verification failed; refusing submit\",\"dispatchFailureCode\":\"\",\"createdAt\":\"2026-09-29T09:30:22.791Z\",\"updatedAt\":\"2026-09-29T09:30:36.857Z\"},{\"id\":\"79be4e80-c621-4ab9-a376-385dfe60dd21\",\"state\":\"blocked\",\"repository\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-r8-native-mcp-agent-smoke-20260929\",\"expectedHead\":\"31b8842be4b283e751c5c10a05bcfc880672e672\",\"currentHead\":\"c812f5ba18943fa9d0ee23b9ee70ef9436bf6f64\",\"dispatchCount\":1,\"lastDiagnostic\":\"evidence_timeout\",\"dispatchFailureCode\":\"\",\"createdAt\":\"2026-09-29T10:35:54.728Z\",\"updatedAt\":\"2026-09-29T13:44:41.129Z\"},{\"id\":\"53fd5f58-48fc-48a1-8739-5b94187f0ed4\",\"state\":\"queued\",\"repository\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-existing-chat-stress-r17-20260929\",\"expectedHead\":\"cb852e013634287669f957253d13d8ef2b45cada\",\"currentHead\":\"cb852e013634287669f957253d13d8ef2b45cada\",\"dispatchCount\":0,\"lastDiagnostic\":\"active_generation\",\"dispatchFailureCode\":\"\",\"createdAt\":\"2026-09-29T11:07:25.259Z\",\"updatedAt\":\"2026-09-30T07:52:10.647Z\"}]}\r\n",
+      "stdout_bytes": 1815,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T07:52:12.103Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T07:52:12.053Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-1533-bridge-agent-state-01"
+    },
+    "request_id": "coord-20260930-1533-bridge-agent-state-01",
+    "started_at": "2026-09-30T07:52:11.622Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-1533-bridge-agent-state-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
