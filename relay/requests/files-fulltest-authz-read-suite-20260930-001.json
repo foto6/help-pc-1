@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-fulltest-authz-read-suite-20260930-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3\n$target=@($t)|Where-Object { try { ([uri]$_.url).Host -eq 'bugbountyfoto6.files.com' } catch { $false } } | Select-Object -First 1\nif(-not $target){ throw 'Files.com CDP target not found' }\n$ws=[System.Net.WebSockets.ClientWebSocket]::new()\n$cts=[System.Threading.CancellationTokenSource]::new()\n$cts.CancelAfter(12000)\n$ws.ConnectAsync([uri]$target.webSocketDebuggerUrl,$cts.Token).GetAwaiter().GetResult() | Out-Null\n$expr=@'\n(async()=>{\n  const sleep=ms=>new Promise(r=>setTimeout(r,ms));\n  async function get(url){\n    const r=await fetch(url,{credentials:'same-origin'});\n    const text=await r.text();\n    let j=null; try{j=JSON.parse(text)}catch{}\n    return {status:r.status, ok:r.ok, text, json:j};\n  }\n  const out={};\n  let x=await get('/api/rest/v1/permissions.json?user_id=0&include_groups=true');\n  out.permissions={status:x.status, items:Array.isArray(x.json)?x.json.map(p=>({path:p.path,permission:p.permission,recursive:p.recursive,username:p.username})):[], error:(!x.ok?x.text.slice(0,300):null)};\n  await sleep(650);\n  x=await get('/api/rest/v1/folders/public-b');\n  out.public_b={status:x.status, items:Array.isArray(x.json)?x.json.map(f=>({path:f.path,type:f.type})).slice(0,20):[], error:(!x.ok?x.text.slice(0,300):null)};\n  await sleep(650);\n  x=await get('/api/rest/v1/folders/private-a');\n  out.private_a={status:x.status, items:Array.isArray(x.json)?x.json.map(f=>({path:f.path,type:f.type})).slice(0,20):[], error:(!x.ok?x.text.slice(0,300):null)};\n  await sleep(650);\n  x=await get('/api/rest/v1/bundles.json?user_id=0');\n  out.bundles={status:x.status,count:Array.isArray(x.json)?x.json.length:null,error:(!x.ok?x.text.slice(0,300):null)};\n  return JSON.stringify(out);\n})()\n'@\n$payload=@{id=1;method='Runtime.evaluate';params=@{expression=$expr;returnByValue=$true;awaitPromise=$true}}|ConvertTo-Json -Depth 10 -Compress\n$bytes=[System.Text.Encoding]::UTF8.GetBytes($payload)\n$ws.SendAsync([System.ArraySegment[byte]]::new($bytes),[System.Net.WebSockets.WebSocketMessageType]::Text,$true,$cts.Token).GetAwaiter().GetResult() | Out-Null\n$buf=New-Object byte[] 131072\nwhile($true){\n  $ms=[System.IO.MemoryStream]::new()\n  do {\n    $r=$ws.ReceiveAsync([System.ArraySegment[byte]]::new($buf),$cts.Token).GetAwaiter().GetResult()\n    if($r.Count -gt 0){ $ms.Write($buf,0,$r.Count) }\n  } while(-not $r.EndOfMessage)\n  $txt=[System.Text.Encoding]::UTF8.GetString($ms.ToArray())\n  $obj=$txt|ConvertFrom-Json\n  if($obj.id -eq 1){\n    if($obj.result.exceptionDetails){ throw $obj.result.exceptionDetails.text }\n    Write-Output $obj.result.result.value\n    break\n  }\n}\n$ws.Dispose()"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Authorized Files.com bug bounty read-only authorization suite in tetst1 browser session; rate <=2 req/s, no credentials extracted"
+}
