@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId=agent-bridge-reliability'\nwith urllib.request.urlopen(u,timeout=5) as r: d=json.load(r)\na=next((x for x in d.get('assignments',[]) if x.get('id')=='53fd5f58-48fc-48a1-8739-5b94187f0ed4'),None)\nif not a:\n print(json.dumps({'found':False})); raise SystemExit\nprint(json.dumps({'found':True,'id':a.get('id'),'state':a.get('state'),'text':a.get('text'),'repository':a.get('repository'),'branch':a.get('branch'),'expectedHead':a.get('expectedHead'),'dispatchCount':a.get('dispatchCount'),'lastDiagnostic':a.get('lastDiagnostic')},ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"found\":true,\"id\":\"53fd5f58-48fc-48a1-8739-5b94187f0ed4\",\"state\":\"queued\",\"text\":\"EXECUTE R17 Bridge send stress. Read foto6/WebAIBridge issue 12 through GitHub. ONLY branch agent/bridge-existing-chat-stress-r17-20260929, exact initial HEAD cb852e013634287669f957253d13d8ef2b45cada. Keep live Bridge frozen: no deploy, POST to real chat, Enter, profile mutation or duplicated R7 draft. Implement deterministic message delivery and unknown-outcome stress including exact transcript receipt, idempotency and multi-line DOM semantics. Code+tests+evidence commit, focused/full Windows/Ubuntu CI, exact SHA and blockers. No new ChatGPT chats.\",\"repository\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-existing-chat-stress-r17-20260929\",\"expectedHead\":\"cb852e013634287669f957253d13d8ef2b45cada\",\"dispatchCount\":0,\"lastDiagnostic\":\"active_generation\"}\r\n",
+      "stdout_bytes": 846,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T07:53:07.370Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T07:53:07.336Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-1538-bridge-r17-assignment-text-01"
+    },
+    "request_id": "coord-20260930-1538-bridge-r17-assignment-text-01",
+    "started_at": "2026-09-30T07:53:06.988Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-1538-bridge-r17-assignment-text-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
