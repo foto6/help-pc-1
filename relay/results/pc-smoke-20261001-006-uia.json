@@ -1,0 +1,21 @@
+{
+  "action": "uia.snapshot",
+  "executor_result": {
+    "action": "uia.snapshot",
+    "data": {},
+    "dry_run": false,
+    "error": "uia.snapshot timed out",
+    "error_kind": "timeout",
+    "finished_at": "2026-09-30T17:22:45.572Z",
+    "ok": false,
+    "request_id": "pc-smoke-20261001-006-uia",
+    "started_at": "2026-09-30T17:22:35.570Z",
+    "status": "timeout"
+  },
+  "id": "pc-smoke-20261001-006-uia",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
