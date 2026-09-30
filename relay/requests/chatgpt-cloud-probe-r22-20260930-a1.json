@@ -1,8 +1,0 @@
-{
-  "version": "pc_relay.request.v1",
-  "id": "chatgpt-cloud-probe-r22-20260930-a1",
-  "action": "capabilities.get",
-  "params": {},
-  "timeout_ms": 10000,
-  "note": "Read-only ChatGPT private-plugin relay roundtrip proof; no side effects."
-}
