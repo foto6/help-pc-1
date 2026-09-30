@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1622-spectra-a4-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,urllib.parse\nu='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId='+urllib.parse.quote('chat-6ab6703e-b760-83eb-ae7e-686637c7de67')\nwith urllib.request.urlopen(u,timeout=5) as r:d=json.load(r)\nxs=d.get('assignments',[]); xs.sort(key=lambda a:str(a.get('createdAt') or '')); a=xs[-1] if xs else {}\nprint(json.dumps({'chat':'a4','counts':d.get('counts',{}),'latest':{k:a.get(k) for k in ['id','state','text','repository','branch','expectedHead','currentHead','dispatchCount','lastDiagnostic','createdAt','updatedAt']}},ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only latest Spectra a4 assignment state"
+}
