@@ -228,6 +228,7 @@ class UIObservationSnapshot:
     window: dict[str, Any]
     displays: tuple[DisplayGeometry, ...]
     nodes: tuple[UINodeSnapshot, ...]
+    observation: dict[str, Any] = field(default_factory=dict)
 
     @classmethod
     def create(
@@ -238,6 +239,7 @@ class UIObservationSnapshot:
         displays: Iterable[DisplayGeometry],
         nodes: Iterable[UINodeSnapshot],
         captured_at: str | None = None,
+        observation: dict[str, Any] | None = None,
     ) -> "UIObservationSnapshot":
         captured = captured_at or utc_now_iso()
         ordered_displays = tuple(sorted(displays, key=lambda d: d.display_id))
@@ -249,6 +251,9 @@ class UIObservationSnapshot:
             "displays": [d.to_dict() for d in ordered_displays],
             "nodes": [n.to_dict() for n in ordered_nodes],
         }
+        observation_payload = dict(observation or {})
+        if observation_payload:
+            body["observation"] = observation_payload
         digest = hashlib.sha256(canonical_json(body).encode("utf-8")).hexdigest()
         return cls(
             snapshot_id=f"uia:{digest}",
@@ -257,10 +262,11 @@ class UIObservationSnapshot:
             window=dict(window),
             displays=ordered_displays,
             nodes=ordered_nodes,
+            observation=observation_payload,
         )
 
     def to_dict(self) -> dict[str, Any]:
-        return {
+        payload = {
             "snapshot_id": self.snapshot_id,
             "captured_at": self.captured_at,
             "app": self.app,
@@ -269,6 +275,9 @@ class UIObservationSnapshot:
             "nodes": [n.to_dict() for n in self.nodes],
             "coordinate_space": "physical_screen_px",
         }
+        if self.observation:
+            payload["observation"] = dict(self.observation)
+        return payload
 
     def to_json(self) -> str:
         return canonical_json(self.to_dict())

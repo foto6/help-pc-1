@@ -34,7 +34,12 @@ from .preflight import (
 )
 from .safety import SafetyViolation, ensure_not_sensitive_text
 from .shell import SafeShellAdapter
-from .uia import AccessibilityAdapter, WindowsUIAutomationAdapter
+from .uia import (
+    DEFAULT_SNAPSHOT_BUDGET,
+    AccessibilityAdapter,
+    UIASnapshotBudget,
+    WindowsUIAutomationAdapter,
+)
 from .vision_target import GroundedTargetContractError, parse_grounded_target_v1
 from .windows import Win32WindowEnumerator, WindowEnumerator
 
@@ -583,13 +588,39 @@ class Executor:
                 raise PolicyBlockedError("uia.snapshot window_title must be a string or null")
             if dry_run:
                 return {"would_execute": action, "window_title": window_title}
-            snapshot = self._bounded(
-                request,
-                token,
-                action,
-                lambda: self.accessibility.snapshot(window_title=window_title),
-            )
-            return {"snapshot": snapshot.to_dict(), "canonical_json": snapshot.to_json()}
+            snapshot_bounded = getattr(self.accessibility, "snapshot_bounded", None)
+            if callable(snapshot_bounded):
+                outer_timeout = self._timeout(request)
+                inner_timeout = max(
+                    0.001,
+                    min(
+                        float(DEFAULT_SNAPSHOT_BUDGET.time_budget_seconds),
+                        outer_timeout * 0.60,
+                    ),
+                )
+                budget = UIASnapshotBudget(
+                    max_nodes=DEFAULT_SNAPSHOT_BUDGET.max_nodes,
+                    max_children_per_node=DEFAULT_SNAPSHOT_BUDGET.max_children_per_node,
+                    max_work_units=DEFAULT_SNAPSHOT_BUDGET.max_work_units,
+                    max_depth=DEFAULT_SNAPSHOT_BUDGET.max_depth,
+                    time_budget_seconds=inner_timeout,
+                )
+                operation = lambda: snapshot_bounded(
+                    window_title=window_title,
+                    budget=budget,
+                )
+            else:
+                operation = lambda: self.accessibility.snapshot(
+                    window_title=window_title
+                )
+            snapshot = self._bounded(request, token, action, operation)
+            payload = {
+                "snapshot": snapshot.to_dict(),
+                "canonical_json": snapshot.to_json(),
+            }
+            if snapshot.observation:
+                payload["observation"] = dict(snapshot.observation)
+            return payload
 
         if action == "vision.target.invoke":
             try:

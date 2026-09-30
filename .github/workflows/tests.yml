@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - agent/pc-executor
+      - agent/pc-control-uia-timeout-r18-20261001
   workflow_dispatch:
 
 jobs:
@@ -26,5 +27,12 @@ jobs:
         run: python -m pytest tests/test_preflight.py
       - name: Wave 7 focused context-binding suite
         run: python -m pytest tests/test_execution_context_binding.py
+      - name: R18 UIA bounded snapshot suite
+        run: python -m pytest tests/test_uia_snapshot_budget.py
+      - name: R18 Windows UIA worker-thread regression suite
+        if: runner.os == 'Windows'
+        run: python -m pytest tests/windows/test_uia_snapshot_budget_windows.py
+      - name: R18 exact-base provenance audit
+        run: python tools/audit_r18_uia_timeout.py
       - name: Full test suite
         run: python -m pytest

@@ -3,6 +3,9 @@ from __future__ import annotations
 import hashlib
 import os
 from collections import deque
+from contextlib import contextmanager
+from dataclasses import dataclass
+from time import monotonic
 from typing import Protocol
 
 from .errors import AmbiguousTargetError, PolicyBlockedError, StaleTargetError
@@ -21,6 +24,49 @@ from .windows import (
     process_start_epoch_ms,
     root_window_handle,
 )
+
+
+SNAPSHOT_OBSERVATION_VERSION = "pc_executor.uia_snapshot_observation.v1"
+_SNAPSHOT_INFO_WORK_UNITS = 8
+
+
+@dataclass(frozen=True, slots=True)
+class UIASnapshotBudget:
+    max_nodes: int = 256
+    max_children_per_node: int = 64
+    max_work_units: int = 2048
+    max_depth: int = 12
+    time_budget_seconds: float = 2.0
+
+    def validated(self) -> "UIASnapshotBudget":
+        limits = (
+            ("max_nodes", self.max_nodes, 1, 1024),
+            ("max_children_per_node", self.max_children_per_node, 1, 256),
+            ("max_work_units", self.max_work_units, 16, 8192),
+            ("max_depth", self.max_depth, 1, 20),
+        )
+        for name, value, lower, upper in limits:
+            if isinstance(value, bool) or not isinstance(value, int) or not lower <= value <= upper:
+                raise ValueError(f"{name} must be between {lower} and {upper}")
+        if (
+            isinstance(self.time_budget_seconds, bool)
+            or not isinstance(self.time_budget_seconds, (int, float))
+            or not 0.001 <= float(self.time_budget_seconds) <= 3.0
+        ):
+            raise ValueError("time_budget_seconds must be between 0.001 and 3.0")
+        return self
+
+    def to_dict(self) -> dict[str, int]:
+        return {
+            "max_nodes": self.max_nodes,
+            "max_children_per_node": self.max_children_per_node,
+            "max_work_units": self.max_work_units,
+            "max_depth": self.max_depth,
+            "time_budget_ms": max(1, int(float(self.time_budget_seconds) * 1000)),
+        }
+
+
+DEFAULT_SNAPSHOT_BUDGET = UIASnapshotBudget()
 
 
 class AccessibilityAdapter(Protocol):
@@ -42,6 +88,25 @@ class WindowsUIAutomationAdapter:
         except ImportError as exc:
             raise RuntimeError("install the Windows dependency uiautomation") from exc
         return auto
+
+    @contextmanager
+    def _uia_thread(self):
+        """Initialize UIAutomation COM state in Executor worker threads.
+
+        Upstream uiautomation requires UIAutomationInitializerInThread when
+        controls are used from a new thread. Fake adapters without that helper
+        retain the same deterministic test behavior.
+        """
+        auto = self._automation()
+        initializer = getattr(auto, "UIAutomationInitializerInThread", None)
+        if initializer is None:
+            yield
+            return
+        with initializer():
+            yield
+
+    def _clock(self) -> float:
+        return monotonic()
 
     def _root(self, window_title: str | None):
         auto = self._automation()
@@ -73,6 +138,37 @@ class WindowsUIAutomationAdapter:
             return list(control.GetChildren())
         except Exception:
             return []
+
+    @staticmethod
+    def _children_bounded(control, limit: int) -> tuple[list, bool, int]:
+        """Read at most limit children without materializing an entire UIA subtree."""
+        if limit <= 0:
+            return [], True, 0
+        first = getattr(control, "GetFirstChildControl", None)
+        if callable(first):
+            children = []
+            calls = 1
+            try:
+                child = first()
+            except Exception:
+                return [], False, calls
+            while child is not None and len(children) < limit:
+                children.append(child)
+                next_sibling = getattr(child, "GetNextSiblingControl", None)
+                if not callable(next_sibling):
+                    return children, False, calls
+                calls += 1
+                try:
+                    child = next_sibling()
+                except Exception:
+                    return children, False, calls
+            return children, child is not None, calls
+        try:
+            children = list(control.GetChildren())
+        except Exception:
+            return [], False, 1
+        truncated = len(children) > limit
+        return children[:limit], truncated, 1 + min(len(children), limit)
 
     def _walk(self, root, *, max_depth: int = 12):
         queue = deque([(root, (), 0)])
@@ -193,81 +289,187 @@ class WindowsUIAutomationAdapter:
         return candidates[0][2]
 
     def inspect(self, query: ElementQuery) -> ElementInfo:
-        return self._info(
-            self._find(query),
-            include_execution_identity=True,
-        )
+        with self._uia_thread():
+            return self._info(
+                self._find(query),
+                include_execution_identity=True,
+            )
 
     def invoke(self, query: ElementQuery) -> ElementInfo:
-        control = self._find(query)
-        info = self._info(control, include_execution_identity=True)
-        if not info.is_enabled or info.is_offscreen:
-            raise PolicyBlockedError("UIA target is not currently actionable")
-        if not info.supports_invoke:
-            raise PolicyBlockedError("UIA target does not expose a deterministic invoke capability")
-        control.GetInvokePattern().Invoke()
-        return self._info(control, include_execution_identity=True)
+        with self._uia_thread():
+            control = self._find(query)
+            info = self._info(control, include_execution_identity=True)
+            if not info.is_enabled or info.is_offscreen:
+                raise PolicyBlockedError("UIA target is not currently actionable")
+            if not info.supports_invoke:
+                raise PolicyBlockedError("UIA target does not expose a deterministic invoke capability")
+            control.GetInvokePattern().Invoke()
+            return self._info(control, include_execution_identity=True)
 
     def focus(self, query: ElementQuery) -> ElementInfo:
-        control = self._find(query)
-        info = self._info(control, include_execution_identity=True)
-        if not info.is_enabled or info.is_offscreen:
-            raise PolicyBlockedError("UIA target cannot be focused safely")
-        control.SetFocus()
-        return self._info(control, include_execution_identity=True)
+        with self._uia_thread():
+            control = self._find(query)
+            info = self._info(control, include_execution_identity=True)
+            if not info.is_enabled or info.is_offscreen:
+                raise PolicyBlockedError("UIA target cannot be focused safely")
+            control.SetFocus()
+            return self._info(control, include_execution_identity=True)
 
     def set_value(self, query: ElementQuery, value: str, *, sensitive: bool = False) -> ElementInfo:
-        control = self._find(query)
-        info = self._info(control, include_execution_identity=True)
-        ensure_not_sensitive_text(is_password=info.is_password, sensitive=sensitive)
-        if not info.is_enabled or info.is_offscreen:
-            raise PolicyBlockedError("UIA target is not currently actionable")
-        if not info.supports_value:
-            raise PolicyBlockedError("UIA target does not support deterministic value setting")
-        control.GetValuePattern().SetValue(value)
-        return self._info(control, include_execution_identity=True)
+        with self._uia_thread():
+            control = self._find(query)
+            info = self._info(control, include_execution_identity=True)
+            ensure_not_sensitive_text(is_password=info.is_password, sensitive=sensitive)
+            if not info.is_enabled or info.is_offscreen:
+                raise PolicyBlockedError("UIA target is not currently actionable")
+            if not info.supports_value:
+                raise PolicyBlockedError("UIA target does not support deterministic value setting")
+            control.GetValuePattern().SetValue(value)
+            return self._info(control, include_execution_identity=True)
+
+    @staticmethod
+    def _snapshot_node(info: ElementInfo, path: tuple[int, ...]) -> UINodeSnapshot:
+        identity = {
+            "path": list(path),
+            "automation_id": info.automation_id,
+            "name": info.name,
+            "role": info.control_type,
+            "process_id": info.process_id,
+            "bounds": info.bounds.to_dict() if info.bounds else None,
+        }
+        node_id = "uia-node:" + hashlib.sha256(
+            canonical_json(identity).encode("utf-8")
+        ).hexdigest()
+        return UINodeSnapshot(
+            node_id=node_id,
+            role=info.control_type,
+            name=info.name,
+            automation_id=info.automation_id,
+            class_name=info.class_name,
+            is_enabled=info.is_enabled,
+            is_offscreen=info.is_offscreen,
+            bounds=info.bounds,
+            display_id=info.display_id,
+            window_handle=info.window_handle,
+            process_id=info.process_id,
+            supports_invoke=info.supports_invoke,
+            supports_value=info.supports_value,
+        )
+
+    def snapshot_bounded(
+        self,
+        *,
+        window_title: str | None = None,
+        budget: UIASnapshotBudget | None = None,
+    ) -> UIObservationSnapshot:
+        selected = (budget or DEFAULT_SNAPSHOT_BUDGET).validated()
+        with self._uia_thread():
+            started = self._clock()
+            deadline = started + float(selected.time_budget_seconds)
+            root = self._root(window_title)
+            root_info = self._info(root)
+            nodes: list[UINodeSnapshot] = [self._snapshot_node(root_info, ())]
+            work_units = _SNAPSHOT_INFO_WORK_UNITS
+            queue = deque()
+            children_truncated = 0
+            depth_boundary_nodes = 0
+            max_queue_size = 0
+            stop_reason: str | None = None
+            structural_reason: str | None = None
+
+            if self._clock() >= deadline:
+                stop_reason = "time_budget_exhausted"
+            else:
+                remaining = selected.max_work_units - work_units
+                child_limit = min(selected.max_children_per_node, max(0, remaining))
+                if child_limit <= 0:
+                    stop_reason = "work_budget_exhausted"
+                else:
+                    children, truncated, calls = self._children_bounded(root, child_limit)
+                    work_units += calls
+                    if truncated:
+                        children_truncated += 1
+                        structural_reason = "child_budget_exhausted"
+                    for index, child in enumerate(children):
+                        queue.append((child, (index,), 1))
+                    max_queue_size = len(queue)
+
+            while queue and stop_reason is None:
+                if len(nodes) >= selected.max_nodes:
+                    stop_reason = "node_budget_exhausted"
+                    break
+                if work_units + _SNAPSHOT_INFO_WORK_UNITS > selected.max_work_units:
+                    stop_reason = "work_budget_exhausted"
+                    break
+                if self._clock() >= deadline:
+                    stop_reason = "time_budget_exhausted"
+                    break
+
+                control, path, depth = queue.popleft()
+                info = self._info(control)
+                work_units += _SNAPSHOT_INFO_WORK_UNITS
+                nodes.append(self._snapshot_node(info, path))
+
+                if self._clock() >= deadline:
+                    stop_reason = "time_budget_exhausted"
+                    break
+                if depth >= selected.max_depth:
+                    depth_boundary_nodes += 1
+                    if structural_reason is None:
+                        structural_reason = "depth_budget_exhausted"
+                    continue
+
+                remaining = selected.max_work_units - work_units
+                child_limit = min(selected.max_children_per_node, max(0, remaining))
+                if child_limit <= 0:
+                    stop_reason = "work_budget_exhausted"
+                    break
+                children, truncated, calls = self._children_bounded(control, child_limit)
+                work_units += calls
+                if truncated:
+                    children_truncated += 1
+                    if structural_reason is None:
+                        structural_reason = "child_budget_exhausted"
+                for index, child in enumerate(children):
+                    queue.append((child, path + (index,), depth + 1))
+                max_queue_size = max(max_queue_size, len(queue))
+                if work_units > selected.max_work_units:
+                    stop_reason = "work_budget_exhausted"
+                    break
+
+            reason = stop_reason or structural_reason
+            elapsed_ms = max(0, int((self._clock() - started) * 1000))
+            observation = {
+                "contract_version": SNAPSHOT_OBSERVATION_VERSION,
+                "status": "partial" if reason is not None else "complete",
+                "partial": reason is not None,
+                "timed_out": reason == "time_budget_exhausted",
+                "reason": reason,
+                "budget": selected.to_dict(),
+                "work": {
+                    "nodes_emitted": len(nodes),
+                    "work_units": work_units,
+                    "children_truncated": children_truncated,
+                    "depth_boundary_nodes": depth_boundary_nodes,
+                    "max_queue_size": max_queue_size,
+                    "elapsed_ms": elapsed_ms,
+                },
+                "safety": {
+                    "coordinate_fallback_used": False,
+                    "side_effects": False,
+                },
+            }
+            return UIObservationSnapshot.create(
+                app={"process_id": root_info.process_id},
+                window={
+                    "title": root_info.name or window_title or "",
+                    "handle": root_info.native_handle,
+                    "process_id": root_info.process_id,
+                },
+                displays=list_display_geometries(),
+                nodes=nodes,
+                observation=observation,
+            )
 
     def snapshot(self, *, window_title: str | None = None) -> UIObservationSnapshot:
-        root = self._root(window_title)
-        root_info = self._info(root)
-        nodes: list[UINodeSnapshot] = []
-        for control, path in self._walk(root):
-            info = self._info(control)
-            identity = {
-                "path": list(path),
-                "automation_id": info.automation_id,
-                "name": info.name,
-                "role": info.control_type,
-                "process_id": info.process_id,
-                "bounds": info.bounds.to_dict() if info.bounds else None,
-            }
-            node_id = "uia-node:" + hashlib.sha256(
-                canonical_json(identity).encode("utf-8")
-            ).hexdigest()
-            nodes.append(
-                UINodeSnapshot(
-                    node_id=node_id,
-                    role=info.control_type,
-                    name=info.name,
-                    automation_id=info.automation_id,
-                    class_name=info.class_name,
-                    is_enabled=info.is_enabled,
-                    is_offscreen=info.is_offscreen,
-                    bounds=info.bounds,
-                    display_id=info.display_id,
-                    window_handle=info.window_handle,
-                    process_id=info.process_id,
-                    supports_invoke=info.supports_invoke,
-                    supports_value=info.supports_value,
-                )
-            )
-        return UIObservationSnapshot.create(
-            app={"process_id": root_info.process_id},
-            window={
-                "title": root_info.name or window_title or "",
-                "handle": root_info.native_handle,
-                "process_id": root_info.process_id,
-            },
-            displays=list_display_geometries(),
-            nodes=nodes,
-        )
+        return self.snapshot_bounded(window_title=window_title)
