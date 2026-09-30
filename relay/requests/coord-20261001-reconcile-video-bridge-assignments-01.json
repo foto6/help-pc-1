@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-reconcile-video-bridge-assignments-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='E:\\WebAIBridge\\app\\data\\state.json'; if(!(Test-Path $p)){Write-Output 'STATE_MISSING'; exit 0}; $s=Get-Content -LiteralPath $p -Raw|ConvertFrom-Json; $keys=@('coord-20261001-bridge-r18-duplicate-chat-v1','coord-20261001-creator-r11-autonomous-reels-v1','coord-20261001-media-r11-autonomous-reels-v1','coord-20261001-growth-r10-autonomous-reels-v1'); @($s.agentAssignments)|Where-Object{$keys -contains $_.idempotencyKey}|Select-Object id,idempotencyKey,state,targetChatId,repository,branch,expectedHead,dispatchCount,lastDiagnostic,createdAt,updatedAt|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only reconcile exact Bridge/Creator/Media/Growth assignment idempotency keys"
+}
