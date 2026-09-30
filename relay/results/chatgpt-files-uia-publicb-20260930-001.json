@@ -1,0 +1,21 @@
+{
+  "action": "uia.snapshot",
+  "executor_result": {
+    "action": "uia.snapshot",
+    "data": {},
+    "dry_run": false,
+    "error": "COMError: (-2147220991, 'Событие не смогло вызвать ни одного из абонентов', (None, None, None, 0, None))",
+    "error_kind": "executor_failure",
+    "finished_at": "2026-09-30T09:44:16.020Z",
+    "ok": false,
+    "request_id": "chatgpt-files-uia-publicb-20260930-001",
+    "started_at": "2026-09-30T09:44:14.939Z",
+    "status": "error"
+  },
+  "id": "chatgpt-files-uia-publicb-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
