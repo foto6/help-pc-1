@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,urllib.parse\nu='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId='+urllib.parse.quote('chat-6ab67022-ae5c-83ed-a654-5dcc82c3b351')\nwith urllib.request.urlopen(u,timeout=5) as r:d=json.load(r)\nxs=d.get('assignments',[]); xs.sort(key=lambda a:str(a.get('createdAt') or '')); a=xs[-1] if xs else {}\nprint(json.dumps({'chat':'a2','counts':d.get('counts',{}),'latest':{k:a.get(k) for k in ['id','state','text','repository','branch','expectedHead','currentHead','dispatchCount','lastDiagnostic','createdAt','updatedAt']}},ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"chat\":\"a2\",\"counts\":{\"cancelled\":2,\"queued\":1},\"latest\":{\"id\":\"59c19a16-fd48-4723-b646-405c3dd6e17b\",\"state\":\"queued\",\"text\":\"EXECUTE NOW A2 canonical replay pack, no acknowledgement-only reply. Repo foto6/SpectraTrack, ONLY own branch agent/vnext-tracking; re-read actual starting HEAD 975740462c5b0b7bb1bc564a6f0e291b045b468d and prior canonical policy. Unblock A8 by committing reproducible, independently verifiable GT/observation/replay payload BYTES for already frozen MOT17-04 CONTIGUOUS windows frames 0-199 and 400-599 ONLY; exact frame IDs, ordering, byte hashes, original dataset provenance, no cross-window leakage, no larger tracking replay, and NEVER use NightOwls as tracking GT. Keep current tracker CONTROL, do not revive rejected global tracker replacements or inspect new holdout. If canonical original bytes are unavailable, commit fail-closed source-bound validator and document exact missing inputs, do not synthesize GT. Run focused/full relevant CI, push nonempty commit, return SHA, manifest hashes and exact-head CI.\",\"repository\":\"foto6/SpectraTrack\",\"branch\":\"agent/vnext-tracking\",\"expectedHead\":\"975740462c5b0b7bb1bc564a6f0e291b045b468d\",\"currentHead\":\"975740462c5b0b7bb1bc564a6f0e291b045b468d\",\"dispatchCount\":0,\"lastDiagnostic\":\"active_generation\",\"createdAt\":\"2026-09-28T15:36:46.959Z\",\"updatedAt\":\"2026-09-30T08:01:13.752Z\"}}\r\n",
+      "stdout_bytes": 1363,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T08:01:18.130Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T08:01:18.096Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-1622-spectra-a2-01"
+    },
+    "request_id": "coord-20260930-1622-spectra-a2-01",
+    "started_at": "2026-09-30T08:01:17.819Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-1622-spectra-a2-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
