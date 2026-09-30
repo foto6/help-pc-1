@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1' -TimeoutSec 12; $ids=@('chat-6ab67007-81fc-83eb-94e1-9511ab086c08','chat-6ab67022-ae5c-83ed-a654-5dcc82c3b351','chat-6ab67052-1ae8-83eb-b5bc-60ddae15aa6f','agent-vision-fuzz','agent-creator','agent-growth','agent-bridge-reliability'); @($r.chats)|Where-Object{$ids -contains $_.id}|Select-Object id,name,status,generating,draftPresent,highMode,openTabs,lastProgressAt,lastSeenAt,error,activeAssignmentCount|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"chat-6ab67022-ae5c-83ed-a654-5dcc82c3b351\",\"name\":\"A2\",\"status\":\"stalled\",\"generating\":true,\"draftPresent\":false,\"highMode\":true,\"openTabs\":1,\"lastProgressAt\":\"2026-09-30T07:53:38.216Z\",\"lastSeenAt\":\"2026-09-30T08:18:14.321Z\",\"error\":\"\",\"activeAssignmentCount\":1},{\"id\":\"chat-6ab67052-1ae8-83eb-b5bc-60ddae15aa6f\",\"name\":\"A5\",\"status\":\"closed\",\"generating\":false,\"draftPresent\":false,\"highMode\":true,\"openTabs\":0,\"lastProgressAt\":\"2026-09-29T09:45:16.400Z\",\"lastSeenAt\":\"2026-09-29T11:33:19.443Z\",\"error\":\"\",\"activeAssignmentCount\":0},{\"id\":\"chat-6ab67007-81fc-83eb-94e1-9511ab086c08\",\"name\":\"A1\",\"status\":\"closed\",\"generating\":false,\"draftPresent\":false,\"highMode\":true,\"openTabs\":0,\"lastProgressAt\":\"2026-09-29T09:45:16.416Z\",\"lastSeenAt\":\"2026-09-29T11:33:19.481Z\",\"error\":\"\",\"activeAssignmentCount\":0},{\"id\":\"agent-bridge-reliability\",\"name\":\"Bridge R6 existing agent\",\"status\":\"stalled\",\"generating\":true,\"draftPresent\":false,\"highMode\":true,\"openTabs\":2,\"lastProgressAt\":\"2026-09-30T07:53:38.231Z\",\"lastSeenAt\":\"2026-09-30T08:18:14.343Z\",\"error\":\"\",\"activeAssignmentCount\":1},{\"id\":\"agent-vision-fuzz\",\"name\":\"Vision existing fuzz agent\",\"status\":\"closed\",\"generating\":false,\"draftPresent\":false,\"highMode\":false,\"openTabs\":0,\"lastProgressAt\":\"\",\"lastSeenAt\":\"\",\"error\":\"\",\"activeAssignmentCount\":0},{\"id\":\"agent-creator\",\"name\":\"Creator existing agent\",\"status\":\"closed\",\"generating\":false,\"draftPresent\":false,\"highMode\":false,\"openTabs\":0,\"lastProgressAt\":\"\",\"lastSeenAt\":\"\",\"error\":\"\",\"activeAssignmentCount\":0},{\"id\":\"agent-growth\",\"name\":\"Growth existing agent\",\"status\":\"closed\",\"generating\":false,\"draftPresent\":false,\"highMode\":false,\"openTabs\":0,\"lastProgressAt\":\"\",\"lastSeenAt\":\"\",\"error\":\"\",\"activeAssignmentCount\":0}]\r\n",
+      "stdout_bytes": 1746,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T08:18:14.562Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T08:18:14.522Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-managed-inspect-03"
+    },
+    "request_id": "coord-20260930-managed-inspect-03",
+    "started_at": "2026-09-30T08:18:13.871Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-managed-inspect-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
