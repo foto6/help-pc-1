@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1559-core-agent-contexts-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,urllib.parse\nids=['agent-vision-fuzz','agent-creator','agent-media','agent-growth','agent-pc-executor','agent-boss-conformance']\nout=[]\nfor cid in ids:\n u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId='+urllib.parse.quote(cid)\n try:\n  with urllib.request.urlopen(u,timeout=4) as r: d=json.load(r)\n  xs=d.get('assignments',[])\n  xs.sort(key=lambda a:str(a.get('createdAt') or ''))\n  a=xs[-1] if xs else {}\n  out.append({'id':cid,'counts':d.get('counts',{}),'latest':{k:a.get(k) for k in ['id','state','text','repository','branch','expectedHead','currentHead','dispatchCount','lastDiagnostic','createdAt','updatedAt']}})\n except Exception as e:\n  out.append({'id':cid,'error':type(e).__name__+':'+str(e)[:160]})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only latest assignment context for core existing managed chats; no URLs"
+}
