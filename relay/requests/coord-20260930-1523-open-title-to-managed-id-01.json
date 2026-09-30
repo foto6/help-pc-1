@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1523-open-title-to-managed-id-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\ncfg=json.load(open(r'E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json','r',encoding='utf-8'))\nmanaged={str(x.get('url') or ''):{'id':x.get('id'),'name':x.get('name'),'branch':x.get('branch'),'repo':x.get('repository')} for x in (cfg.get('managedChats') or []) if x.get('url')}\nwith urllib.request.urlopen('http://127.0.0.1:17410/json/list',timeout=4) as r: tabs=json.load(r)\nout=[]\nfor x in tabs:\n u=str(x.get('url') or '')\n if x.get('type')=='page' and 'chatgpt.com' in u:\n  m=managed.get(u)\n  out.append({'title':' '.join(str(x.get('title') or '').split()),'managed':m})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only local mapping of open ChatGPT target URLs to Bridge managed IDs; exact URLs omitted from output"
+}
