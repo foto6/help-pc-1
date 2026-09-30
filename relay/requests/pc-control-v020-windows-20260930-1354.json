@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-control-v020-windows-20260930-1354",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "PC Control v0.2.0 live read-only windows.list verification"
+}
