@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-reconcile-bridge-direct-send-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$raw=node .\\inspect-page.js chatgpt http://127.0.0.1:17410 --target-id=5074CC2597D83163F5C160F186251FDB; $j=$raw|ConvertFrom-Json; [pscustomobject]@{url=$j.url;title=$j.title;generating=$j.generating;composer=$j.composer;lastPrompt=@($j.prompts)|Select-Object -Last 1}|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only reconcile exact Bridge chat after direct-send helper timeout; do not resend"
+}
