@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-send-pc-uia-r18-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=F562BB0624F3A8C7C3B9C9B9E1736606 --prompt=E:\\pc-github-relay\\relay\\prompts\\pc-uia-r18-20261001.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Direct exact-target dispatch to Implement Native Tool Parity chat for isolated PC UIA fix"
+}
