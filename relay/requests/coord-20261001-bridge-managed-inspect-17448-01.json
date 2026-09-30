@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-bridge-managed-inspect-17448-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$u='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1'; $r=Invoke-WebRequest -UseBasicParsing -TimeoutSec 5 -Uri $u; Write-Output $r.Content"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only live Bridge managed-chat inspection on known local port 17448"
+}
