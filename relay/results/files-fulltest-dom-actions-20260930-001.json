@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3\n$target=@($t)|Where-Object { try { ([uri]$_.url).Host -eq 'bugbountyfoto6.files.com' } catch { $false } } | Select-Object -First 1\n$ws=[System.Net.WebSockets.ClientWebSocket]::new(); $cts=[System.Threading.CancellationTokenSource]::new(); $cts.CancelAfter(6000)\n$ws.ConnectAsync([uri]$target.webSocketDebuggerUrl,$cts.Token).GetAwaiter().GetResult() | Out-Null\n$expr=@'\nJSON.stringify([...document.querySelectorAll('button,a')].map((e,i)=>({i,text:(e.innerText||e.getAttribute('aria-label')||'').trim().replace(/\\s+/g,' ').slice(0,120),tag:e.tagName,disabled:!!e.disabled,href:e.tagName==='A'?(new URL(e.href,location.href).pathname):null})).filter(x=>x.text).slice(0,120))\n'@\n$payload=@{id=1;method='Runtime.evaluate';params=@{expression=$expr;returnByValue=$true}}|ConvertTo-Json -Depth 8 -Compress\n$bytes=[Text.Encoding]::UTF8.GetBytes($payload)\n$ws.SendAsync([ArraySegment[byte]]::new($bytes),[Net.WebSockets.WebSocketMessageType]::Text,$true,$cts.Token).GetAwaiter().GetResult() | Out-Null\n$buf=New-Object byte[] 131072\nwhile($true){$ms=[IO.MemoryStream]::new();do{$r=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$cts.Token).GetAwaiter().GetResult();if($r.Count){$ms.Write($buf,0,$r.Count)}}while(-not $r.EndOfMessage);$o=([Text.Encoding]::UTF8.GetString($ms.ToArray())|ConvertFrom-Json);if($o.id -eq 1){Write-Output $o.result.result.value;break}}\n$ws.Dispose()"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"i\":0,\"text\":\"Skip to main content\",\"tag\":\"A\",\"disabled\":false,\"href\":\"/files/public-b\"},{\"i\":1,\"text\":\"Expand navigation menu\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":2,\"text\":\"Files.com Home\",\"tag\":\"A\",\"disabled\":false,\"href\":\"/files\"},{\"i\":3,\"text\":\"Ask AI\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":4,\"text\":\"tetst1, profile menu\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":5,\"text\":\"Ask AI\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":6,\"text\":\"More Actions\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":7,\"text\":\"Files\",\"tag\":\"A\",\"disabled\":false,\"href\":\"/files\"},{\"i\":8,\"text\":\"Integrations\",\"tag\":\"A\",\"disabled\":false,\"href\":\"/ui/integrationsCatalog\"},{\"i\":9,\"text\":\"Clients & Protocols\",\"tag\":\"A\",\"disabled\":false,\"href\":\"/ui/clientAppDesktop\"},{\"i\":10,\"text\":\"Toggle \\\"Clients & Protocols\\\" sub-menu items\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":11,\"text\":\"Desktop App\",\"tag\":\"A\",\"disabled\":false,\"href\":\"/ui/clientAppDesktop\"},{\"i\":12,\"text\":\"CLI\",\"tag\":\"A\",\"disabled\":false,\"href\":\"/ui/clientAppCLI\"},{\"i\":13,\"text\":\"SDKs and API\",\"tag\":\"A\",\"disabled\":false,\"href\":\"/ui/developerAPI\"},{\"i\":14,\"text\":\"Mobile App\",\"tag\":\"A\",\"disabled\":false,\"href\":\"/ui/clientAppMobile\"},{\"i\":15,\"text\":\"Collapse\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":16,\"text\":\"/\",\"tag\":\"A\",\"disabled\":false,\"href\":\"/files/\"},{\"i\":17,\"text\":\"public-b\",\"tag\":\"A\",\"disabled\":false,\"href\":\"/files/public-b\"},{\"i\":18,\"text\":\"Copy path\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":19,\"text\":\"Go up to parent folder\",\"tag\":\"A\",\"disabled\":false,\"href\":\"/files/\"},{\"i\":20,\"text\":\"New\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":22,\"text\":\"Open Search this folder\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":23,\"text\":\"Condensed view\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":24,\"text\":\"Thumbnail view\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":25,\"text\":\"Grid view\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":26,\"text\":\"Refresh\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":27,\"text\":\"Filters\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":28,\"text\":\"Columns\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":29,\"text\":\"Details panel\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":30,\"text\":\"New Folder\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":31,\"text\":\"Upload Files\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":32,\"text\":\"Upload Folder\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":33,\"text\":\"Chat History\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":34,\"text\":\"New Chat\",\"tag\":\"BUTTON\",\"disabled\":true,\"href\":null},{\"i\":35,\"text\":\"Maximize AI Assistant\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":36,\"text\":\"Close AI Assistant\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null},{\"i\":37,\"text\":\"Terms of Service\",\"tag\":\"A\",\"disabled\":false,\"href\":\"/legal/terms\"},{\"i\":38,\"text\":\"Send message\",\"tag\":\"BUTTON\",\"disabled\":false,\"href\":null}]\r\n",
+      "stdout_bytes": 2961,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T09:27:10.461Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T09:27:10.424Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "files-fulltest-dom-actions-20260930-001"
+    },
+    "request_id": "files-fulltest-dom-actions-20260930-001",
+    "started_at": "2026-09-30T09:27:09.841Z",
+    "status": "completed"
+  },
+  "id": "files-fulltest-dom-actions-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
