@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog-state.json'; if(!(Test-Path $p)){Write-Output 'MISSING'; exit 0}; $j=Get-Content -LiteralPath $p -Raw | ConvertFrom-Json; [pscustomobject]@{lastAction=$j.lastAction;lastError=$j.lastError;lastKickAt=$j.lastKickAt;consecutiveKicks=$j.consecutiveKicks;observedAt=$j.observedAt;observedMode=$j.observedMode;observedChatUrl=$j.observedChatUrl;observedGenerating=$j.observedGenerating;observedSurfaceReady=$j.observedSurfaceReady;providerBackoffUntil=$j.providerBackoffUntil;providerBackoffReason=$j.providerBackoffReason;progressConversationId=$j.progressConversationId;lastProgressAt=$j.lastProgressAt;lastProgressTargetId=$j.lastProgressTargetId} | ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"lastAction\":\"observe\",\"lastError\":\"\",\"lastKickAt\":\"2026-09-28T06:16:50.160Z\",\"consecutiveKicks\":0,\"observedAt\":\"2026-09-30T17:51:04.761Z\",\"observedMode\":\"full\",\"observedChatUrl\":\"https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8\",\"observedGenerating\":true,\"observedSurfaceReady\":true,\"providerBackoffUntil\":\"\",\"providerBackoffReason\":\"\",\"progressConversationId\":\"6abcb869-5688-83ed-b750-ae5f941b88c8\",\"lastProgressAt\":\"2026-09-30T17:51:19.774Z\",\"lastProgressTargetId\":\"8E39BE3474187A03439E0C74F22430E1\"}\r\n",
+      "stdout_bytes": 516,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:52:08.897Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T17:52:08.863Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-bridge-watchdog-state-fields-01"
+    },
+    "request_id": "coord-20261001-bridge-watchdog-state-fields-01",
+    "started_at": "2026-09-30T17:52:08.451Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-bridge-watchdog-state-fields-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
