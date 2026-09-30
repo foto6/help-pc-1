@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1450-cdp-title-inventory-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nu='http://127.0.0.1:17410/json/list'\nwith urllib.request.urlopen(u,timeout=4) as r: xs=json.load(r)\nrows=[]\nfor x in xs:\n    if x.get('type')=='page' and 'chatgpt.com' in (x.get('url') or ''):\n        rows.append({'id':x.get('id',''),'title':' '.join((x.get('title') or '').split())})\nprint(json.dumps(rows,ensure_ascii=False))"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only CDP inventory of current ChatGPT page titles and ephemeral target ids; omit conversation URLs"
+}
