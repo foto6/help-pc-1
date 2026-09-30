@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3; $hosts=@($t)|ForEach-Object { try { ([uri]$_.url).Host } catch {} } | Where-Object { $_ } | Sort-Object -Unique; $hosts -join [Environment]::NewLine"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "127.0.0.1\r\nbugbountyfoto6.files.com\r\ncdn.platform.openai.com\r\nchatgpt.com\r\nomnibox-popup.top-chrome\r\n",
+      "stdout_bytes": 101,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T09:20:50.848Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T09:20:50.812Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "files-fulltest-cdp-hosts-20260930-001"
+    },
+    "request_id": "files-fulltest-cdp-hosts-20260930-001",
+    "started_at": "2026-09-30T09:20:50.387Z",
+    "status": "completed"
+  },
+  "id": "files-fulltest-cdp-hosts-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
