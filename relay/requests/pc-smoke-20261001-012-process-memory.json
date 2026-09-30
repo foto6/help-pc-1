@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-smoke-20261001-012-process-memory",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p=Get-Process chrome,node,python,py,powershell -ErrorAction SilentlyContinue | Sort-Object WorkingSet64 -Descending | Select-Object -First 25 Name,Id,@{n='WorkingSetMB';e={[math]::Round($_.WorkingSet64/1MB,1)}},@{n='PrivateMB';e={[math]::Round($_.PrivateMemorySize64/1MB,1)}},CPU,StartTime; $p|ConvertTo-Json -Compress -Depth 4; try{$s=Invoke-RestMethod 'http://127.0.0.1:17448/api/status' -TimeoutSec 5; Write-Output '===BRIDGE_STATUS==='; $s|ConvertTo-Json -Compress -Depth 6}catch{Write-Output ('===BRIDGE_STATUS_ERR==='+$_.Exception.Message)}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only post-restart process memory and Bridge status"
+}
