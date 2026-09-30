@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1609-media-state-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId=agent-media'\nwith urllib.request.urlopen(u,timeout=5) as r:d=json.load(r)\nxs=d.get('assignments',[]); xs.sort(key=lambda a:str(a.get('createdAt') or '')); a=xs[-1] if xs else {}\nprint(json.dumps({'counts':d.get('counts',{}),'latest':{k:a.get(k) for k in ['id','state','text','repository','branch','expectedHead','currentHead','dispatchCount','lastDiagnostic','createdAt','updatedAt']}},ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only latest assignment state for agent-media"
+}
