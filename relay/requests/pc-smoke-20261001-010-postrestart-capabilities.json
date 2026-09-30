@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-smoke-20261001-010-postrestart-capabilities",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Post-restart PC Control liveness check"
+}
