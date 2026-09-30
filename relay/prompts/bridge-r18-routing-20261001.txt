@@ -1,0 +1,24 @@
+EXECUTE NOW — BRIDGE R18 DUPLICATE-CHAT ROUTING / IDEMPOTENCY MILESTONE. Do not stop at a plan.
+
+Writable repo ONLY: foto6/WebAIBridge
+Branch ONLY: agent/bridge-routing-r18-20261001
+Exact starting HEAD: cb852e013634287669f957253d13d8ef2b45cada
+
+USER PRIORITY: make the Bridge reliable enough to coordinate autonomous agents. DO NOT modify, restart, repoint, or deploy over the currently running live Bridge instance. All changes stay isolated on this branch/worktree until coordinator verification.
+
+Observed user-visible defect:
+- ChatGPT conversation https://chatgpt.com/c/6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6 has been repeatedly opened.
+- Current live supervisor-watchdog config is bound to a DIFFERENT conversation, so do not assume supervisorChatUrl alone is the source.
+- Source review also found risky semantics: connectSupervisor() may call /json/new when exactTargets() is empty, and openFreshSupervisor() calls openExistingTarget(), which can open the same configured conversation again during recovery/fresh verification.
+
+Required:
+1. Reproduce at least one deterministic duplicate/open-loop path, including managed-chat/assignment routing, stale binding/recovery, repeated watchdog iterations, or fresh verification as applicable.
+2. Trace the exact source of repeated opens for an old/stale managed chat. Add source-bound diagnostics that record WHY a tab is opened: managed chat id, conversation id/url, assignment id, purpose, recovery epoch, existing target count.
+3. Introduce bounded/idempotent open semantics keyed by conversation id + purpose + recovery/assignment epoch. Repeated checks must reuse/inspect an existing exact target instead of unbounded /json/new.
+4. Separate "open existing managed conversation if actually absent" from "fresh verification surface"; a fresh verification path must be explicit, bounded, and cleaned up.
+5. Stale/closed managed-chat bindings must fail closed or be repaired deterministically, not repeatedly reopen tabs.
+6. Add tests for existing exact target, duplicate exact targets, stale managed binding, closed target, repeated assignment recovery, provider load error, stalled generation, restart, and explicit fresh verification.
+7. Preserve current production behavior unless the new guard is exercised. NO live deploy/cutover.
+8. Push a NONEMPTY commit and report exact SHA, changed files, targeted/full tests, CI run, and a deterministic replay proving tab-count remains bounded.
+
+No merge. No production restart. No Desktop Commander. Do not touch E:\manhwa.
