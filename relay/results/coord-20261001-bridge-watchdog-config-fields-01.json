@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; if(!(Test-Path $p)){Write-Output 'MISSING'; exit 0}; $j=Get-Content -LiteralPath $p -Raw | ConvertFrom-Json; [pscustomobject]@{mode=$j.mode;profileId=$j.profileId;debugPort=$j.debugPort;supervisorChatUrl=$j.supervisorChatUrl;openExistingChatIfMissing=$j.openExistingChatIfMissing;freshVerifyBeforeKick=$j.freshVerifyBeforeKick;generationStallMinutes=$j.generationStallMinutes;generationStallConfirmations=$j.generationStallConfirmations;allowAutonomousSend=$j.allowAutonomousSend;allowProfileRecovery=$j.allowProfileRecovery;maxConsecutiveKicks=$j.maxConsecutiveKicks;kickCooldownMinutes=$j.kickCooldownMinutes} | ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"mode\":\"full\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"debugPort\":17410,\"supervisorChatUrl\":\"https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8\",\"openExistingChatIfMissing\":true,\"freshVerifyBeforeKick\":true,\"generationStallMinutes\":10,\"generationStallConfirmations\":2,\"allowAutonomousSend\":true,\"allowProfileRecovery\":true,\"maxConsecutiveKicks\":3,\"kickCooldownMinutes\":8}\r\n",
+      "stdout_bytes": 393,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:52:04.645Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T17:52:04.608Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-bridge-watchdog-config-fields-01"
+    },
+    "request_id": "coord-20261001-bridge-watchdog-config-fields-01",
+    "started_at": "2026-09-30T17:52:04.109Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-bridge-watchdog-config-fields-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
