@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-dispatch-growth-r10-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$body='{\"text\":\"EXECUTE NOW — GROWTH DURABLE DECISION-HANDOFF MILESTONE. Do not stop at a plan.\\n\\nWritable repo ONLY: foto6/video3\\nBranch: agent/growth-r9-decision-delivery-audit-20260928\\nExact starting HEAD: 4bb6f12c23af5e865e52b7bcffb8ced83ecf44f1\\n\\nOwn the previously unsent Growth->Creator exactly-once decision delivery gate:\\n1. Produce a signed/hashed, source-bound experiment audit bundle carrying denominators, retention, CTR/watch-time, uncertainty and multiplicity safeguards.\\n2. Deterministically prove one logical decision seed under duplicate/out-of-order provider events, partial exports, process restart, stale experiment revision and lost acknowledgement.\\n3. Prevent synthetic/fixture decision snapshots from masquerading as live performance. No fabricated analytics.\\n4. Define/version the consumer contract Creator can validate fail-closed.\\n5. Preserve read-only vidIQ/Metricool boundaries; no provider mutation or release.\\n6. NONEMPTY code+tests/docs, focused/full CI, exact SHA/run and explicit blockers.\\n\\nNo other repo changes, merge or production release.\",\"repository\":\"foto6/video3\",\"branch\":\"agent/growth-r9-decision-delivery-audit-20260928\",\"expectedHead\":\"4bb6f12c23af5e865e52b7bcffb8ced83ecf44f1\",\"idempotencyKey\":\"coord-20260930-growth-r10-handoff-v1\",\"evidenceTimeoutMinutes\":180,\"priority\":900,\"supervisorVerificationRequired\":true}'; $r=Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-growth/assignments' -ContentType 'application/json' -Body $body -TimeoutSec 10; $r | Select-Object id,state,targetChatId,repository,branch,expectedHead,dispatchCount,lastDiagnostic | ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 20000,
+  "note": "Queue evidence-gated managed assignment for agent-growth"
+}
