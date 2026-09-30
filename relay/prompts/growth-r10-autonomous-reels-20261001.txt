@@ -1,0 +1,19 @@
+EXECUTE NOW — GROWTH R10 AUTONOMOUS REELS FEEDBACK LOOP MILESTONE. Implement durable analytics-to-next-cycle output.
+
+Writable repo ONLY: foto6/video3
+Branch ONLY: agent/growth-r10-autonomous-reels-20261001
+Exact starting HEAD: 4bb6f12c23af5e865e52b7bcffb8ced83ecf44f1
+
+PRIMARY PRODUCT GOAL: after a real short-form post is published, Growth consumes source-bound result/metrics events and produces a durable next-cycle seed for Creator without fabricating live performance.
+
+Required:
+1. Define versioned publish-result and platform-metrics ingestion contracts for Reels/TikTok/Shorts style outputs.
+2. Normalize available metrics with explicit denominators/time windows/provenance: views, watch time, average watch duration, completion/retention where available, likes/comments/shares/saves, follows, CTR/link events where available.
+3. Exactly-once processing under duplicate/out-of-order events, partial exports, stale revisions, process restart and lost acknowledgement.
+4. Preserve strict separation between synthetic/offline evaluation and real platform evidence. Synthetic fixtures must never be promoted to live analytics.
+5. Link Creative/Media artifact identity -> published post identity -> metric snapshot lineage -> experiment/decision -> next-cycle Creator seed.
+6. Produce machine-readable next-cycle recommendations with evidence references and uncertainty/insufficient-data states, not fabricated certainty.
+7. No provider mutation/publishing. Read/decision path only.
+8. NONEMPTY source/tests/docs commit, focused/full tests, exact SHA, CI and deterministic replay evidence.
+
+No merge/release. Do not modify Creator/Media repos.
