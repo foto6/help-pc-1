@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1456-chat-history-index-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,sqlite3,json,hashlib\nroot=r'E:\\WebAIBridge\\chrome-profiles\\chatgpt-ChatGPT_2-ef72920c'\ncands=[os.path.join(root,'History'),os.path.join(root,'Default','History')]\nhist=next((p for p in cands if os.path.exists(p)),None)\nif not hist:\n    print(json.dumps({'error':'HISTORY_NOT_FOUND','checked':cands},ensure_ascii=False)); raise SystemExit(0)\nuri='file:'+hist.replace('\\\\','/')+'?mode=ro&immutable=1'\ncon=sqlite3.connect(uri,uri=True)\nrows=con.execute(\"SELECT url,title,last_visit_time FROM urls WHERE url LIKE 'https://chatgpt.com/%' AND instr(url,'/c/')>0 ORDER BY last_visit_time DESC\").fetchall()\ncon.close()\nseen=set(); items=[]\nfor url,title,ts in rows:\n    if url in seen: continue\n    seen.add(url)\n    items.append({'key':hashlib.sha256(url.encode()).hexdigest()[:16],'title':' '.join((title or '').split()),'url':url,'last_visit_time':int(ts or 0)})\nos.makedirs(r'C:\\rehearsal',exist_ok=True)\nout=r'C:\\rehearsal\\coord-chat-index-20260930.json'\nwith open(out,'w',encoding='utf-8') as f: json.dump({'history':hist,'items':items},f,ensure_ascii=False,indent=2)\nprint(json.dumps({'count':len(items),'local_index':out,'items':[{'key':x['key'],'title':x['title'],'last_visit_time':x['last_visit_time']} for x in items[:120]]},ensure_ascii=False))"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 15000,
+  "note": "Build local-only index of ChatGPT conversation history for Bridge profile; exact URLs remain local and are not emitted"
+}
