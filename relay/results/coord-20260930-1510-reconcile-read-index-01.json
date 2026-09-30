@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-09-30T07:40:32.867Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "coord-20260930-1500-read-chat-index-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:00f5ef68a3306ab7c4f9c747e2bbfa50436f7a0a6f5cad75efa2061a628b4497",
+            "journal_sequence": 309,
+            "previous_record_sha256": "6121feb73c3a7284c7fae42c1e9e3a3069dd67865e085ba1cf2e8dfcc3195ee6",
+            "record_sha256": "d8f6b4a3d200faedec3f8a143fba7a7090127a6607dc1da38bf7684efc99cc9d",
+            "recorded_at": "2026-09-30T07:40:32.886Z",
+            "request_id": "coord-20260930-1500-read-chat-index-01",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-09-30T07:40:42.980Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "coord-20260930-1500-read-chat-index-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:00f5ef68a3306ab7c4f9c747e2bbfa50436f7a0a6f5cad75efa2061a628b4497",
+            "journal_sequence": 310,
+            "previous_record_sha256": "d8f6b4a3d200faedec3f8a143fba7a7090127a6607dc1da38bf7684efc99cc9d",
+            "record_sha256": "cad1ed15b991700fa45d589a9dd2e9487aea22940d62030c04eb080acfe5a78f",
+            "recorded_at": "2026-09-30T07:40:43.005Z",
+            "request_id": "coord-20260930-1500-read-chat-index-01",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-09-30T07:40:42.980Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "coord-20260930-1500-read-chat-index-01"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-09-30T07:40:42.980Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "coord-20260930-1500-read-chat-index-01"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:00f5ef68a3306ab7c4f9c747e2bbfa50436f7a0a6f5cad75efa2061a628b4497",
+          "journal_sequence": 310,
+          "previous_record_sha256": "d8f6b4a3d200faedec3f8a143fba7a7090127a6607dc1da38bf7684efc99cc9d",
+          "record_sha256": "cad1ed15b991700fa45d589a9dd2e9487aea22940d62030c04eb080acfe5a78f",
+          "recorded_at": "2026-09-30T07:40:43.005Z",
+          "request_id": "coord-20260930-1500-read-chat-index-01",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "af10ddbbf53bc85714db7072581bdcc3c0a042cdf87eb7a6566d94eb0d5acdfb",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 310
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "coord-20260930-1500-read-chat-index-01",
+        "request_id": "coord-20260930-1500-read-chat-index-01",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T07:43:49.639Z",
+    "ok": true,
+    "request_id": "coord-20260930-1510-reconcile-read-index-01",
+    "started_at": "2026-09-30T07:43:49.613Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-1510-reconcile-read-index-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
