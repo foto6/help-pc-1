@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=0' -TimeoutSec 8; $ids=@('agent-creator','agent-media','agent-growth','agent-bridge-reliability'); @($r.chats)|Where-Object{$ids -contains $_.id}|Select-Object id,name,url,chatUrl,conversationUrl,targetId,providerTargetId,debugPort,profileId,repository,branch,projectId|ConvertTo-Json -Compress -Depth 6"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"agent-bridge-reliability\",\"name\":\"Bridge R6 existing agent\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c\",\"chatUrl\":null,\"conversationUrl\":null,\"targetId\":null,\"providerTargetId\":null,\"debugPort\":null,\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"repository\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-control-reliability-r6-20260928\",\"projectId\":\"\"},{\"id\":\"agent-creator\",\"name\":\"Creator existing agent\",\"url\":\"https://chatgpt.com/c/6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6\",\"chatUrl\":null,\"conversationUrl\":null,\"targetId\":null,\"providerTargetId\":null,\"debugPort\":null,\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"repository\":\"foto6/video1\",\"branch\":\"agent/creator-r9-crossrepo-live-rehearsal-20260928\",\"projectId\":\"\"},{\"id\":\"agent-media\",\"name\":\"Media existing agent\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b24f-9c40-83eb-9b7b-766af74defe0\",\"chatUrl\":null,\"conversationUrl\":null,\"targetId\":null,\"providerTargetId\":null,\"debugPort\":null,\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"repository\":\"foto6/video2\",\"branch\":\"agent/media-r10-native-mcp-consumer-20260929\",\"projectId\":\"\"},{\"id\":\"agent-growth\",\"name\":\"Growth existing agent\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b25d-b630-83eb-bed7-7d6aa135e647\",\"chatUrl\":null,\"conversationUrl\":null,\"targetId\":null,\"providerTargetId\":null,\"debugPort\":null,\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"repository\":\"foto6/video3\",\"branch\":\"agent/growth-r9-decision-delivery-audit-20260928\",\"projectId\":\"\"}]\r\n",
+      "stdout_bytes": 1619,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T18:06:57.505Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T18:06:57.465Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-managed-chat-bindings-api-01"
+    },
+    "request_id": "coord-20261001-managed-chat-bindings-api-01",
+    "started_at": "2026-09-30T18:06:57.034Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-managed-chat-bindings-api-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
