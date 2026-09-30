@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/projects?inspect=0' -TimeoutSec 8; $r.projects | Select-Object id,name,url,profileId,enabled | ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"project-g-p-6ab839fa4f8c81919adad01c4a5497dc\",\"name\":\"sv\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc/project\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"enabled\":true}\r\n",
+      "stdout_bytes": 208,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T18:11:58.454Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T18:11:58.415Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-managed-projects-read-01"
+    },
+    "request_id": "coord-20261001-managed-projects-read-01",
+    "started_at": "2026-09-30T18:11:57.985Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-managed-projects-read-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
