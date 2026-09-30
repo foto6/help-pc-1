@@ -1,0 +1,44 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "capabilities.get",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [],
+        "latest_valid_evidence": null,
+        "latest_valid_record": null,
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "e22bc522f7bc10b9917a25ede9d5a05148363aa34c504d8a5063a03c31d659dd",
+          "matched_records": 0,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 426
+        },
+        "reason": "no_evidence",
+        "replay_authorized": false,
+        "requestId": "pc-smoke-20261001-001-capabilities",
+        "request_id": "pc-smoke-20261001-001-capabilities",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:19:47.738Z",
+    "ok": true,
+    "request_id": "pc-smoke-20261001-002-outcome",
+    "started_at": "2026-09-30T17:19:47.702Z",
+    "status": "completed"
+  },
+  "id": "pc-smoke-20261001-002-outcome",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
