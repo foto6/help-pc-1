@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-smoke-20261001-010-postrestart-health",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p=Get-CimInstance Win32_Process | Where-Object {$_.CommandLine -match 'github_relay\\.py'} | Select-Object ProcessId,Name,CommandLine; $mem=Get-Process | Sort-Object WorkingSet64 -Descending | Select-Object -First 8 ProcessName,Id,@{N='WorkingSetMB';E={[math]::Round($_.WorkingSet64/1MB,1)}}; [pscustomobject]@{Relay=$p;TopMemory=$mem} | ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Post-restart PC Control health and bounded memory/process check"
+}
