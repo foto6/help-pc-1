@@ -1,0 +1,19 @@
+EXECUTE NOW — MEDIA R11 AUTONOMOUS SHORT-FORM EDITOR MILESTONE. Build the actual editing engine, not a plan.
+
+Writable repo ONLY: foto6/video2
+Branch ONLY: agent/media-r11-autonomous-reels-20261001
+Exact starting HEAD: 2366b3820c2cbf429aa734f2e623689699e73003
+
+PRIMARY PRODUCT GOAL: Creator can submit a durable media job and receive a finished 9:16 Reel/Short/TikTok artifact plus machine-readable QA without manual editing.
+
+Required:
+1. Build/extend a deterministic timeline compiler for 9:16 short-form video.
+2. Support real editing operations: trim/cut, concatenate, crop/scale/reframe, speed changes, freeze/hold where appropriate, fades/transitions when requested, text overlays, subtitles/captions, voiceover sync, background music, audio ducking/mix, loudness normalization, intro/outro/CTA.
+3. Use ffmpeg-first local execution behind the existing durable job/runtime protocol. Optional model-based adapters must be isolated and not required for the deterministic baseline.
+4. Produce final render + artifact manifest + preview/thumbnail + exact timeline/spec + source hashes.
+5. Add machine QA gates for duration, 9:16 dimensions, missing/corrupt assets, black/frozen frames, prolonged silence, clipped/over-loud audio, subtitle safe-area/bounds, empty output, render corruption, and source/provenance mismatch.
+6. Preserve idempotency, crash recovery, unknown-outcome reconciliation, artifact pin/lease/retention semantics already built.
+7. Provide at least one reproducible synthetic/demo vertical render fixture exercising cuts + subtitles + voice/music mix + overlay + QA.
+8. NONEMPTY source/tests/docs commit, focused/full tests, exact SHA, CI and reproducible render/QA evidence.
+
+No provider publishing, no credentials, no merge/release. Do not modify Creator/Growth repos.
