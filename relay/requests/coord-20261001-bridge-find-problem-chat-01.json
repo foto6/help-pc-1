@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-bridge-find-problem-chat-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$root='E:\\WebAIBridge\\app\\data'; $needle='6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6'; $files=Get-ChildItem -LiteralPath $root -File -Recurse -ErrorAction SilentlyContinue | Where-Object {$_.Extension -in '.json','.jsonl','.log','.txt'}; $m=$files | Select-String -SimpleMatch -Pattern $needle -ErrorAction SilentlyContinue | Select-Object -First 30 Path,LineNumber,Line; if($m){$m | ConvertTo-Json -Depth 3 -Compress}else{Write-Output 'NO_MATCH'}"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only bounded search for user-reported repeatedly opened ChatGPT conversation id in Bridge data"
+}
