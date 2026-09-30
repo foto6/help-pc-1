@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; try { $v=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/version' -TimeoutSec 3; $t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3; [pscustomobject]@{Browser=$v.Browser; Protocol=$v.'Protocol-Version'; TargetCount=@($t).Count; HasFilesTab=(@($t) | Where-Object { $_.url -like 'https://bugbountyfoto6.files.com/*' }).Count -gt 0 } | ConvertTo-Json -Compress } catch { Write-Output ('NOT_CDP: '+$_.Exception.Message) }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"Browser\":\"Chrome/154.0.8037.58\",\"Protocol\":\"1.3\",\"TargetCount\":17,\"HasFilesTab\":false}\r\n",
+      "stdout_bytes": 90,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T09:20:16.052Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T09:20:16.017Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "files-fulltest-cdp-probe-20260930-001"
+    },
+    "request_id": "files-fulltest-cdp-probe-20260930-001",
+    "started_at": "2026-09-30T09:20:15.611Z",
+    "status": "completed"
+  },
+  "id": "files-fulltest-cdp-probe-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
