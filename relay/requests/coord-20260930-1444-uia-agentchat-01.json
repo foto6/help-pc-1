@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1444-uia-agentchat-01",
+  "action": "uia.snapshot",
+  "params": {
+    "window_title": "Fix Assignment Replacement Runtime - Google Chrome"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only UIA snapshot of recovered agent chat to test transcript visibility"
+}
