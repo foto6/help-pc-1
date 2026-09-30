@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-send-creator-projectroot-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "node .\\data\\direct_send_existing_agent.js --target=1BB185F00B04952BF81584B2C130FEDD --prompt=E:\\pc-github-relay\\relay\\prompts\\creator-r11-autonomous-reels-20261001.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000
+}
