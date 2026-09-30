@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1533-bridge-agent-state-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId=agent-bridge-reliability'\nwith urllib.request.urlopen(u,timeout=5) as r: d=json.load(r)\nout={'counts':d.get('counts',{}),'assignments':[]}\nfor a in d.get('assignments',[]):\n out['assignments'].append({k:a.get(k) for k in ['id','state','repository','branch','expectedHead','currentHead','dispatchCount','lastDiagnostic','dispatchFailureCode','createdAt','updatedAt']})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only filtered Bridge assignment state for agent-bridge-reliability"
+}
