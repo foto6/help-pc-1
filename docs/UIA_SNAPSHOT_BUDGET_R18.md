@@ -1,7 +1,7 @@
 # R18 PC Control UIA snapshot timeout audit
 
-Issue: `foto6/help-pc-1#5`  
-Branch: `agent/pc-control-uia-timeout-r18-20261001`  
+Issue: `foto6/help-pc-1#5`
+Branch: `agent/pc-control-uia-timeout-r18-20261001`
 Exact base: `2cc1e40f792a3d74560b726a0d246c90b7f077e9`
 
 ## Live evidence and root cause
