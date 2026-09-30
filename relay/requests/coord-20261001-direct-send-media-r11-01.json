@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-direct-send-media-r11-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=B7B57B774112148169D6CB4EDC951960 --prompt=E:\\pc-github-relay\\relay\\prompts\\media-r11-autonomous-reels-20261001.txt"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000,
+  "note": "Direct exact-target dispatch to Media existing agent"
+}
