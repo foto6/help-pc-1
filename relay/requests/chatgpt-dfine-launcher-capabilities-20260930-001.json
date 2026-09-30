@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-dfine-launcher-capabilities-20260930-001",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Verify pc-control relay capabilities before creating D-FINE drag-and-drop launcher"
+}
