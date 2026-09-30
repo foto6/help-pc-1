@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-dispatch-a1-detector-teacher-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$body='{\"text\":\"EXECUTE NOW — A1 DETECTOR TEACHER / FINE-TUNE READINESS MILESTONE. Do not reply with a plan only.\\n\\nRepo: foto6/SpectraTrack\\nWritable branch ONLY: agent/vnext-detection\\nExact starting HEAD: ac658109de255485ce4fa629197b8b1a0b927645\\n\\nUser priority is now maximum person-detection recall while materially reducing false positives. Preserve prior frozen decisions and do not pretend old evidence is blind again.\\n\\nNew already-observed benchmark evidence to incorporate, not rerun/tune against as a blind holdout:\\n- frozen NightOwls smoke400, D-FINE-X Objects365→COCO: recall 93.15%, precision 41.46%, 5 FN / 96 FP;\\n- YOLO11x: recall 73.97%, precision 67.50%, 19 FN / 26 FP;\\n- RF-DETR-L: recall 83.56%, 12 FN / 45 FP.\\nD-FINE-X found all people found by the others but is slow on CPU (~0.60 FPS). NightOwls used for this model comparison is EVAL-ONLY and MUST NOT become training/tuning data.\\n\\nOwn a substantive implementation milestone:\\n1. Add a deterministic optional D-FINE-X offline-teacher / benchmark adapter behind an explicit non-production feature path. Normalize person boxes/scores/classes into existing detector contracts; preserve model/source/version/hash provenance.\\n2. Add reproducible CLI/harness support for same-frame comparison against current detector without changing production defaults.\\n3. Add FP/FN/hard-negative diagnostics suitable for selecting a future verifier/fine-tune dataset.\\n4. Prelock a DISJOINT fine-tune/hard-negative data manifest contract for night/small/occluded people and negatives. No NightOwls leakage, no holdout4200/FULL5000 tuning.\\n5. Add deterministic unit/contract tests for remap, coordinate scaling, score handling, duplicate boxes and provenance. If external D-FINE package/model is unavailable in CI, use a strict fixture/stub contract and document exact runtime dependency rather than fabricating inference.\\n6. Run focused + full relevant CI, push a NONEMPTY commit, report exact SHA, changed files, test output, CI run and remaining runtime/training blocker.\\n\\nDo not merge main/integration, do not silently replace YOLO/current production detector, do not train on evaluation data, and do not touch other repos.\",\"repository\":\"foto6/SpectraTrack\",\"branch\":\"agent/vnext-detection\",\"expectedHead\":\"ac658109de255485ce4fa629197b8b1a0b927645\",\"idempotencyKey\":\"coord-20260930-a1-dfine-teacher-v1\",\"evidenceTimeoutMinutes\":180,\"priority\":900,\"supervisorVerificationRequired\":true}'; $r=Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ab67007-81fc-83eb-94e1-9511ab086c08/assignments' -ContentType 'application/json' -Body $body -TimeoutSec 10; $r | Select-Object id,state,targetChatId,repository,branch,expectedHead,dispatchCount,lastDiagnostic | ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 20000,
+  "note": "Queue evidence-gated managed assignment for chat-6ab67007-81fc-83eb-94e1-9511ab086c08"
+}
