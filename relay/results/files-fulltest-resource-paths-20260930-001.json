@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3\n$target=@($t)|Where-Object { try { ([uri]$_.url).Host -eq 'bugbountyfoto6.files.com' } catch { $false } } | Select-Object -First 1\n$ws=[Net.WebSockets.ClientWebSocket]::new();$cts=[Threading.CancellationTokenSource]::new();$cts.CancelAfter(6000)\n$ws.ConnectAsync([uri]$target.webSocketDebuggerUrl,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$expr=@'\nJSON.stringify([...new Set(performance.getEntriesByType('resource').map(e=>{try{const u=new URL(e.name);return u.origin===location.origin?u.pathname+u.search:null}catch{return null}}).filter(Boolean).filter(x=>/api|folder|file|permission|bundle|share/i.test(x)))].slice(-120))\n'@\n$payload=@{id=1;method='Runtime.evaluate';params=@{expression=$expr;returnByValue=$true}}|ConvertTo-Json -Depth 8 -Compress\n$bytes=[Text.Encoding]::UTF8.GetBytes($payload)\n$ws.SendAsync([ArraySegment[byte]]::new($bytes),[Net.WebSockets.WebSocketMessageType]::Text,$true,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$buf=New-Object byte[] 131072\nwhile($true){$ms=[IO.MemoryStream]::new();do{$r=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$cts.Token).GetAwaiter().GetResult();if($r.Count){$ms.Write($buf,0,$r.Count)}}while(-not $r.EndOfMessage);$o=([Text.Encoding]::UTF8.GetString($ms.ToArray())|ConvertFrom-Json);if($o.id -eq 1){Write-Output $o.result.result.value;break}}\n$ws.Dispose()"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[\"/api/rest/v1/settings\",\"/api/rest/v1/behaviors?filter[impacts_ui]=true&per_page=2500\",\"/api/rest/v1/workspaces\",\"/api/rest/v1/labels\",\"/api/rest/v1/styles/public-b\",\"/FilesPage.15b4a63c45cd5cef.js\",\"/api/rest/v1/folders/public-b?per_page=100&with_priority_color=true&sort_by[path]=asc\",\"/api/rest/v1/file_migrations\",\"/api/rest/v1/folders/public-b\",\"/api/rest/v1/permissions.json?user_id=0&include_groups=true\",\"/api/rest/v1/folders/private-a\",\"/api/rest/v1/bundles.json?user_id=0\",\"/api/rest/v1/folders/public-b%2Fauthz-probe-20260930\"]\r\n",
+      "stdout_bytes": 541,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T09:34:44.230Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T09:34:44.192Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "files-fulltest-resource-paths-20260930-001"
+    },
+    "request_id": "files-fulltest-resource-paths-20260930-001",
+    "started_at": "2026-09-30T09:34:43.220Z",
+    "status": "completed"
+  },
+  "id": "files-fulltest-resource-paths-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
