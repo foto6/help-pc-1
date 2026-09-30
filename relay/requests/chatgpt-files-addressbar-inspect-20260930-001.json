@@ -1,0 +1,14 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-addressbar-inspect-20260930-001",
+  "action": "uia.inspect",
+  "params": {
+    "query": {
+      "name": "Address and search bar",
+      "control_type": "Edit",
+      "window_title": "public-b · Folder · [BUGBOUNTY] foto6 test - Google Chrome"
+    }
+  },
+  "timeout_ms": 10000,
+  "note": "Inspect Chrome address bar for structured navigation during authorized Files.com testing"
+}
