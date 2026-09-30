@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-chat-bindings-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='E:\\WebAIBridge\\app\\data\\state.json'; $s=Get-Content -LiteralPath $p -Raw|ConvertFrom-Json; $ids=@('agent-creator','agent-media','agent-growth','agent-bridge-reliability'); @($s.chats)|Where-Object{$ids -contains $_.id}|Select-Object id,name,url,chatUrl,conversationUrl,targetId,providerTargetId,debugPort,profileId,repository,branch,projectId,managed|ConvertTo-Json -Compress -Depth 6"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only exact chat bindings for direct agent dispatch"
+}
