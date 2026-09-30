@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3\n$target=@($t)|Where-Object { try { ([uri]$_.url).Host -eq 'bugbountyfoto6.files.com' } catch { $false } } | Select-Object -First 1\n$ws=[Net.WebSockets.ClientWebSocket]::new();$cts=[Threading.CancellationTokenSource]::new();$cts.CancelAfter(6000)\n$ws.ConnectAsync([uri]$target.webSocketDebuggerUrl,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$expr=@'\n(()=>{\n const a=[...document.querySelectorAll('a')].find(e=>(e.textContent||'').trim()==='authz-probe-20260930');\n if(!a) return JSON.stringify({error:'probe link not found'});\n let n=a; let best=null;\n for(let k=0;k<8 && n;k++,n=n.parentElement){\n   const btn=[...n.querySelectorAll('button')].map((b,i)=>({i,text:(b.innerText||b.getAttribute('aria-label')||b.title||'').trim().replace(/\\s+/g,' ').slice(0,100),aria:b.getAttribute('aria-label'),title:b.title,disabled:!!b.disabled})).filter(x=>x.text||x.aria||x.title);\n   if(btn.length){best={tag:n.tagName,role:n.getAttribute('role'),cls:(n.className||'').toString().slice(0,180),text:(n.innerText||'').trim().replace(/\\s+/g,' ').slice(0,500),buttons:btn};break;}\n }\n return JSON.stringify({href:new URL(a.href,location.href).pathname,best});\n})()\n'@\n$payload=@{id=1;method='Runtime.evaluate';params=@{expression=$expr;returnByValue=$true}}|ConvertTo-Json -Depth 10 -Compress\n$bytes=[Text.Encoding]::UTF8.GetBytes($payload)\n$ws.SendAsync([ArraySegment[byte]]::new($bytes),[Net.WebSockets.WebSocketMessageType]::Text,$true,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$buf=New-Object byte[] 131072\nwhile($true){$ms=[IO.MemoryStream]::new();do{$r=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$cts.Token).GetAwaiter().GetResult();if($r.Count){$ms.Write($buf,0,$r.Count)}}while(-not $r.EndOfMessage);$o=([Text.Encoding]::UTF8.GetString($ms.ToArray())|ConvertFrom-Json);if($o.id -eq 1){Write-Output $o.result.result.value;break}}\n$ws.Dispose()"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"href\":\"/files/public-b/authz-probe-20260930\",\"best\":{\"tag\":\"TR\",\"role\":null,\"cls\":\"DragDropTr row FilesPageTable-FilesPageTableRow mainNavHotkey tw-opacity-100\",\"text\":\"authz-probe-20260930 Sep 30, 2026, 5:30 AM\",\"buttons\":[{\"i\":0,\"text\":\"Sep 30, 2026, 5:30 AM\",\"aria\":null,\"title\":\"\",\"disabled\":false},{\"i\":1,\"text\":\"Show size\",\"aria\":\"Show size\",\"title\":\"\",\"disabled\":false},{\"i\":2,\"text\":\"Download\",\"aria\":\"Download\",\"title\":\"\",\"disabled\":false},{\"i\":3,\"text\":\"More\",\"aria\":\"More\",\"title\":\"\",\"disabled\":false}]}}\r\n",
+      "stdout_bytes": 519,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T09:30:56.380Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T09:30:56.345Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "files-fulltest-probe-row-actions-20260930-001"
+    },
+    "request_id": "files-fulltest-probe-row-actions-20260930-001",
+    "started_at": "2026-09-30T09:30:55.878Z",
+    "status": "completed"
+  },
+  "id": "files-fulltest-probe-row-actions-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
