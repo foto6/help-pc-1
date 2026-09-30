@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$body='{\"text\":\"EXECUTE NOW — CREATOR R10 REAL CONTRACT / MEDIA RECOVERY INTEGRATION MILESTONE.\\n\\nWritable repo ONLY: foto6/video1\\nBranch: agent/creator-r9-crossrepo-live-rehearsal-20260928\\nExact starting HEAD: 1bbb88ef4c168e460cddaa1693c3c84a0aad7517\\n\\nMedia''s isolated R10 branch has independently produced exact commit 2366b3820c2cbf429aa734f2e623689699e73003 with GitHub Actions run 36554412749 SUCCESS. Treat it as an isolated producer candidate, not merged production.\\n\\nRequired:\\n1. Re-read the source-bound Media R10 contract/evidence at that exact SHA and implement/extend Creator-side fail-closed adapter fixtures for its pin-lease / crash-recovery / unknown-outcome semantics without copying unverifiable claims.\\n2. Preserve the current stable Media/Growth producer pins where R10 is incompatible; document explicit compatibility matrix and migration gate instead of silently repinning.\\n3. Exercise deterministic 3-cycle campaign transitions, duplicate request, restart, lost acknowledgement/result-after-effect, durable Growth decision-seed consumption, release audit and human approval gate.\\n4. No provider publishing, charging, live production mutation, other-repo writes or fake analytics.\\n5. NONEMPTY source/tests/docs commit, focused/full CI, exact SHA/run, and concrete blocker report.\\n\\nNo merge/release.\",\"repository\":\"foto6/video1\",\"branch\":\"agent/creator-r9-crossrepo-live-rehearsal-20260928\",\"expectedHead\":\"1bbb88ef4c168e460cddaa1693c3c84a0aad7517\",\"idempotencyKey\":\"coord-20260930-creator-r10-media-consumer-v1\",\"evidenceTimeoutMinutes\":180,\"priority\":900,\"supervisorVerificationRequired\":true}'; $r=Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-creator/assignments' -ContentType 'application/json' -Body $body -TimeoutSec 10; $r | Select-Object id,state,targetChatId,repository,branch,expectedHead,dispatchCount,lastDiagnostic | ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"e7b09880-daef-43b7-afd8-fb0af2f92626\",\"state\":\"queued\",\"targetChatId\":\"agent-creator\",\"repository\":\"foto6/video1\",\"branch\":\"agent/creator-r9-crossrepo-live-rehearsal-20260928\",\"expectedHead\":\"1bbb88ef4c168e460cddaa1693c3c84a0aad7517\",\"dispatchCount\":0,\"lastDiagnostic\":\"\"}\r\n",
+      "stdout_bytes": 281,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T08:21:12.331Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T08:21:12.243Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-dispatch-creator-r10-01"
+    },
+    "request_id": "coord-20260930-dispatch-creator-r10-01",
+    "started_at": "2026-09-30T08:21:11.483Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-dispatch-creator-r10-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
