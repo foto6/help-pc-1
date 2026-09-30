@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-bridge-watchdog-config-fields-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; if(!(Test-Path $p)){Write-Output 'MISSING'; exit 0}; $j=Get-Content -LiteralPath $p -Raw | ConvertFrom-Json; [pscustomobject]@{mode=$j.mode;profileId=$j.profileId;debugPort=$j.debugPort;supervisorChatUrl=$j.supervisorChatUrl;openExistingChatIfMissing=$j.openExistingChatIfMissing;freshVerifyBeforeKick=$j.freshVerifyBeforeKick;generationStallMinutes=$j.generationStallMinutes;generationStallConfirmations=$j.generationStallConfirmations;allowAutonomousSend=$j.allowAutonomousSend;allowProfileRecovery=$j.allowProfileRecovery;maxConsecutiveKicks=$j.maxConsecutiveKicks;kickCooldownMinutes=$j.kickCooldownMinutes} | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 8000,
+  "note": "Read only selected watchdog config fields"
+}
