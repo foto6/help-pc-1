@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-pccontrol-uia-schema-outcome-20260930-001",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "chatgpt-pccontrol-uia-schema-20260930-002"
+  },
+  "timeout_ms": 10000,
+  "note": "Reconcile timed-out read-only schema lookup"
+}
