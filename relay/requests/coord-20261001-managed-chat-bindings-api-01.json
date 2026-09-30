@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-managed-chat-bindings-api-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=0' -TimeoutSec 8; $ids=@('agent-creator','agent-media','agent-growth','agent-bridge-reliability'); @($r.chats)|Where-Object{$ids -contains $_.id}|Select-Object id,name,url,chatUrl,conversationUrl,targetId,providerTargetId,debugPort,profileId,repository,branch,projectId|ConvertTo-Json -Compress -Depth 6"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only managed chat binding API for direct dispatch fallback"
+}
