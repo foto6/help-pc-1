@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1'\nwith urllib.request.urlopen(u,timeout=10) as r: d=json.load(r)\nc=next((x for x in d.get('chats',[]) if x.get('id')=='agent-bridge-reliability'),None)\nif not c:\n print(json.dumps({'found':False})); raise SystemExit\nkeys=['id','name','status','generating','draftPresent','highMode','openTabs','lastProgressAt','lastSeenAt','observedTitle','profileWorkerConnected','profileWorkerRegistrationState','error','activeAssignmentCount']\nprint(json.dumps({'found':True,**{k:c.get(k) for k in keys}},ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"found\":true,\"id\":\"agent-bridge-reliability\",\"name\":\"Bridge R6 existing agent\",\"status\":\"working\",\"generating\":true,\"draftPresent\":false,\"highMode\":true,\"openTabs\":2,\"lastProgressAt\":\"2026-09-30T07:53:38.231Z\",\"lastSeenAt\":\"2026-09-30T07:53:38.231Z\",\"observedTitle\":\"Fix Assignment Replacement Runtime\",\"profileWorkerConnected\":true,\"profileWorkerRegistrationState\":\"registered\",\"error\":\"\",\"activeAssignmentCount\":1}\r\n",
+      "stdout_bytes": 419,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T07:53:38.326Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T07:53:38.294Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-1542-bridge-live-inspect-01"
+    },
+    "request_id": "coord-20260930-1542-bridge-live-inspect-01",
+    "started_at": "2026-09-30T07:53:37.839Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-1542-bridge-live-inspect-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
