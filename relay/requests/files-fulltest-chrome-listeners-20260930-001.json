@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-fulltest-chrome-listeners-20260930-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ids=(Get-Process chrome -ErrorAction SilentlyContinue).Id; Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue | Where-Object { $ids -contains $_.OwningProcess -and ($_.LocalAddress -eq '127.0.0.1' -or $_.LocalAddress -eq '::1') } | Select-Object LocalAddress,LocalPort,OwningProcess | Sort-Object LocalPort | Format-Table -AutoSize"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only check for Chrome local listening ports without reading browser credentials"
+}
