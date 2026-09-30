@@ -1,0 +1,19 @@
+EXECUTE NOW — CREATOR R11 AUTONOMOUS REELS ORCHESTRATOR MILESTONE. Produce implementation and evidence, not acknowledgement.
+
+Writable repo ONLY: foto6/video1
+Branch ONLY: agent/creator-r11-autonomous-reels-20261001
+Exact starting HEAD: 1bbb88ef4c168e460cddaa1693c3c84a0aad7517
+
+PRIMARY PRODUCT GOAL: an agent receives a short-video goal and can drive the FULL autonomous cycle through planning -> script -> media job -> critic/QA -> publish authorization -> Growth handoff, with no manual editing in the happy path.
+
+Required:
+1. Extend the durable campaign state machine for short-form vertical video: brief/topic, research evidence, idea/hook, script, asset plan, voice/music/subtitles/edit request, Media render, critic/QA, publish queue, publish result, analytics handoff.
+2. Define a canonical Reels/TikTok/Shorts profile: 9:16, target duration range, hook window, caption/CTA metadata, platform-safe output metadata.
+3. Consume Media R11 through a versioned source-bound contract; do NOT copy rendering/editing logic into Creator.
+4. Consume Growth R10 next-cycle seeds through a fail-closed versioned contract; preserve exactly-once semantics under duplicates/out-of-order/restart/lost acknowledgements.
+5. Persist provenance for every external asset, script revision, render job, QA decision, publish intent/result.
+6. Publishing must be gated by explicit release authorization and provider adapter state; never invent credentials or claim a live post without provider evidence.
+7. Add deterministic end-to-end simulation covering crash/restart at every stage, duplicate Media result, stale Growth seed, lost publish acknowledgement/result-after-effect, and resumability.
+8. NONEMPTY source/tests/docs commit, focused/full tests, exact SHA, CI run, and reproducible end-to-end evidence.
+
+No merge/release. Do not modify Media/Growth repos.
