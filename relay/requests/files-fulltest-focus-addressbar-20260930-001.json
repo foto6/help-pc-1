@@ -1,0 +1,13 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-fulltest-focus-addressbar-20260930-001",
+  "action": "keyboard.press",
+  "params": {
+    "keys": [
+      "CTRL",
+      "L"
+    ]
+  },
+  "timeout_ms": 10000,
+  "note": "Authorized Files.com bug bounty: focus Chrome address bar for same-origin server-side authorization probe"
+}
