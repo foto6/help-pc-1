@@ -1,0 +1,21 @@
+{
+  "action": "uia.snapshot",
+  "executor_result": {
+    "action": "uia.snapshot",
+    "data": {},
+    "dry_run": false,
+    "error": "uia.snapshot timed out",
+    "error_kind": "timeout",
+    "finished_at": "2026-09-30T08:57:23.501Z",
+    "ok": false,
+    "request_id": "chatgpt-files-bounty-uia-snapshot-20260930-001",
+    "started_at": "2026-09-30T08:57:13.493Z",
+    "status": "timeout"
+  },
+  "id": "chatgpt-files-bounty-uia-snapshot-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
