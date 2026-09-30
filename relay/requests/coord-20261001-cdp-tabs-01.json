@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-cdp-tabs-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$xs=Invoke-RestMethod 'http://127.0.0.1:17410/json/list' -TimeoutSec 8; $xs|Where-Object{$_.url -like 'https://chatgpt.com/*'}|Select-Object id,title,url,type|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only exact ChatGPT CDP tabs for safe direct agent routing while Bridge inspect is unhealthy"
+}
