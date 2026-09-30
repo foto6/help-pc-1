@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-direct-send-creator-r11-retry-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=8279385CD3F7274EB0A1BBF29C3E9917 --prompt=E:\\pc-github-relay\\relay\\prompts\\creator-r11-autonomous-reels-20261001.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Retry Creator direct dispatch; previous attempt failed before send because composer missing"
+}
