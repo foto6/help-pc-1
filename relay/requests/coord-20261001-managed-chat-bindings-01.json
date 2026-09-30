@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-managed-chat-bindings-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='E:\\WebAIBridge\\app\\data\\state.json'; if(!(Test-Path $p)){Write-Output 'STATE_MISSING'; exit 0}; $s=Get-Content -LiteralPath $p -Raw|ConvertFrom-Json; $ids=@('agent-creator','agent-media','agent-growth','agent-bridge-reliability'); $props=@(); foreach($name in 'managedChats','supervisorManagedChats','agentChats'){ if($s.PSObject.Properties.Name -contains $name){ foreach($c in @($s.$name)){ if($ids -contains $c.id){$props += $c} } } }; $props|Select-Object id,name,url,chatUrl,conversationUrl,targetId,providerTargetId,debugPort,profileId,repository,branch|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only exact managed chat bindings for direct dispatch fallback"
+}
