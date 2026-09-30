@@ -1,0 +1,103 @@
+{
+  "action": "shell.run",
+  "executor_result": null,
+  "id": "coord-20261001-reconcile-bridge-direct-send-01",
+  "live": true,
+  "reconciliation": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-09-30T17:36:42.519Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "coord-20261001-reconcile-bridge-direct-send-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:ba978b3d6a9ff5479b62932f98444e0698134849497dbe3faed87f65bc271f9d",
+            "journal_sequence": 441,
+            "previous_record_sha256": "70eb240d2ae70a5a11a4b0a15315175b1b6e2054391f5ce682f6e2cbc11ba296",
+            "record_sha256": "76dc49170c44c18ad18ea9b94b891c3fb1810de031ecdd264253a37095df6279",
+            "recorded_at": "2026-09-30T17:36:42.545Z",
+            "request_id": "coord-20261001-reconcile-bridge-direct-send-01",
+            "transition": "dispatch_started"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-09-30T17:36:42.519Z",
+          "reason": "dispatch_started",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "coord-20261001-reconcile-bridge-direct-send-01"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-09-30T17:36:42.519Z",
+            "reason": "dispatch_started",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "coord-20261001-reconcile-bridge-direct-send-01"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:ba978b3d6a9ff5479b62932f98444e0698134849497dbe3faed87f65bc271f9d",
+          "journal_sequence": 441,
+          "previous_record_sha256": "70eb240d2ae70a5a11a4b0a15315175b1b6e2054391f5ce682f6e2cbc11ba296",
+          "record_sha256": "76dc49170c44c18ad18ea9b94b891c3fb1810de031ecdd264253a37095df6279",
+          "recorded_at": "2026-09-30T17:36:42.545Z",
+          "request_id": "coord-20261001-reconcile-bridge-direct-send-01",
+          "transition": "dispatch_started"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "a57c63aba958792cc66fffcbe23285e5353d392adec75a2f9177fe5313a1669a",
+          "matched_records": 1,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 443
+        },
+        "reason": "dispatch_started",
+        "replay_authorized": false,
+        "requestId": "coord-20261001-reconcile-bridge-direct-send-01",
+        "request_id": "coord-20261001-reconcile-bridge-direct-send-01",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": true,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:43:42.709Z",
+    "ok": true,
+    "request_id": "coord-20261001-reconcile-bridge-direct-send-01.relay-reconcile",
+    "started_at": "2026-09-30T17:43:42.660Z",
+    "status": "dry_run"
+  },
+  "reexecuted": false,
+  "relay_status": "interrupted_requires_reconciliation",
+  "version": "pc_relay.result.v1"
+}
