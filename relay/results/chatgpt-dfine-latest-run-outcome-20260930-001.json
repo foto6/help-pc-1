@@ -1,0 +1,21 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {},
+    "dry_run": false,
+    "error": "outcome.lookup action must be a non-empty string",
+    "error_kind": "policy_blocked",
+    "finished_at": "2026-09-30T07:59:08.083Z",
+    "ok": false,
+    "request_id": "chatgpt-dfine-latest-run-outcome-20260930-001",
+    "started_at": "2026-09-30T07:59:08.083Z",
+    "status": "blocked"
+  },
+  "id": "chatgpt-dfine-latest-run-outcome-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
