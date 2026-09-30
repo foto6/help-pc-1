@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p='E:\\WebAIBridge\\app\\data\\state.json'; if(!(Test-Path $p)){Write-Output 'STATE_MISSING'; exit 0}; $s=Get-Content -LiteralPath $p -Raw|ConvertFrom-Json; $keys=@('coord-20261001-bridge-r18-duplicate-chat-v1','coord-20261001-creator-r11-autonomous-reels-v1','coord-20261001-media-r11-autonomous-reels-v1','coord-20261001-growth-r10-autonomous-reels-v1'); @($s.agentAssignments)|Where-Object{$keys -contains $_.idempotencyKey}|Select-Object id,idempotencyKey,state,targetChatId,repository,branch,expectedHead,dispatchCount,lastDiagnostic,createdAt,updatedAt|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T18:02:10.083Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T18:02:10.045Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-reconcile-video-bridge-assignments-01"
+    },
+    "request_id": "coord-20261001-reconcile-video-bridge-assignments-01",
+    "started_at": "2026-09-30T18:02:09.337Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-reconcile-video-bridge-assignments-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
