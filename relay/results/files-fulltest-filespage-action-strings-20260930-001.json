@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3\n$target=@($t)|Where-Object { try { ([uri]$_.url).Host -eq 'bugbountyfoto6.files.com' } catch { $false } } | Select-Object -First 1\n$ws=[Net.WebSockets.ClientWebSocket]::new();$cts=[Threading.CancellationTokenSource]::new();$cts.CancelAfter(8000)\n$ws.ConnectAsync([uri]$target.webSocketDebuggerUrl,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$expr=@'\n(async()=>{\n const p=[...performance.getEntriesByType('resource')].map(e=>{try{return new URL(e.name)}catch{return null}}).find(u=>u&&/\\/FilesPage\\.[^.]+\\.js$/.test(u.pathname));\n if(!p) return JSON.stringify({error:'FilesPage bundle not found'});\n const t=await (await fetch(p.pathname,{credentials:'omit'})).text();\n const needles=['Move','Copy','Rename','Share Link','bundles','file_actions','move','copy','rename'];\n const out={path:p.pathname,length:t.length,hits:{}};\n for(const n of needles){ const i=t.indexOf(n); out.hits[n]=i>=0?{index:i,snippet:t.slice(Math.max(0,i-180),Math.min(t.length,i+360)).replace(/\\s+/g,' ')}:null; }\n return JSON.stringify(out);\n})()\n'@\n$payload=@{id=1;method='Runtime.evaluate';params=@{expression=$expr;returnByValue=$true;awaitPromise=$true}}|ConvertTo-Json -Depth 10 -Compress\n$bytes=[Text.Encoding]::UTF8.GetBytes($payload)\n$ws.SendAsync([ArraySegment[byte]]::new($bytes),[Net.WebSockets.WebSocketMessageType]::Text,$true,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$buf=New-Object byte[] 131072\nwhile($true){$ms=[IO.MemoryStream]::new();do{$r=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$cts.Token).GetAwaiter().GetResult();if($r.Count){$ms.Write($buf,0,$r.Count)}}while(-not $r.EndOfMessage);$o=([Text.Encoding]::UTF8.GetString($ms.ToArray())|ConvertFrom-Json);if($o.id -eq 1){Write-Output $o.result.result.value;break}}\n$ws.Dispose()"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"path\":\"/FilesPage.15b4a63c45cd5cef.js\",\"length\":341551,\"hits\":{\"Move\":{\"index\":60160,\"snippet\":\"l.onlyUserLink\\\"})})}})}),x]})};var tR=i(72178),tk=i(43798),tE=i(34703),tL=i(96187),tO=i(12872),tD=i(5198),tM=i(98668),tB=i(18050),tq=i(76205);let tG={threshold:{x:0,y:.2}},tz=({canMoveRename:e,checkmarkedPaths:t,children:i,currentPath:a,searchAll:s,searchOnly:n,updateAllPaths:d})=>{let c=(0,tM.MS)(tM.cA,{activationConstraint:{distance:5}}),u=(0,tM.FR)(c),m=(0,o.wA)(),[p,h]=(0,l.useState)(!1),x=(0,l.useMemo)(()=>({droppable:{frequency:p?500:tM.qJ.Optimized,strategy:tM.Pf.Always}}),[p]),[f,A]=(0,l.useState)(!1);return(0,g.jsx)(tM.Mp,{au\"},\"Copy\":{\"index\":9837,\"snippet\":\"ation:()=>eF,FileInput:()=>I.A,Modal:()=>X.A,Markdown:()=>H.A,withIntermediateState:()=>eP.A,Percent:()=>ei,FullPageSpinner:()=>M.A,RefreshButton:()=>r.A,InlineLoadingIcon:()=>G.A,CopyToClipboard:()=>v.Ay,TokenInserterInput:()=>eg.A,Radio:()=>el.A,withTheme:()=>eN.A,GroupIcon:()=>B.A,CopyToClipboardButton:()=>y.TN,DateDisplay:()=>j.A,Button:()=>f.A,LikeAButton:()=>W.A,TrialGate:()=>ef.A,Drawer:()=>P.A,ErrorStatus:()=>N.Ay,Select:()=>eu.A,SearchHighlightedText:()=>ed.A,CursorPagination:()=>w.A,ProtectedEntry:()=>es.A,ActionButtons:()=>\"},\"Rename\":{\"index\":60164,\"snippet\":\"lyUserLink\\\"})})}})}),x]})};var tR=i(72178),tk=i(43798),tE=i(34703),tL=i(96187),tO=i(12872),tD=i(5198),tM=i(98668),tB=i(18050),tq=i(76205);let tG={threshold:{x:0,y:.2}},tz=({canMoveRename:e,checkmarkedPaths:t,children:i,currentPath:a,searchAll:s,searchOnly:n,updateAllPaths:d})=>{let c=(0,tM.MS)(tM.cA,{activationConstraint:{distance:5}}),u=(0,tM.FR)(c),m=(0,o.wA)(),[p,h]=(0,l.useState)(!1),x=(0,l.useMemo)(()=>({droppable:{frequency:p?500:tM.qJ.Optimized,strategy:tM.Pf.Always}}),[p]),[f,A]=(0,l.useState)(!1);return(0,g.jsx)(tM.Mp,{autoSc\"},\"Share Link\":null,\"bundles\":null,\"file_actions\":null,\"move\":{\"index\":11153,\"snippet\":\"ges\\\",children:e.map(({id:e,message:t,type:i})=>(0,d.jsx)(n.A,{className:\\\"tw-my-3\\\",type:i,children:t},e))})}}let u=(0,l.Ng)(e=>({messages:e.message}),{messageClearAll:o.Om,messageRemove:o.QJ})(c);var m=i(47754),p=i(75461),h=i(72721);let g=e=>{let t={...e},i=e?.avatarFile?.avatarDelete,r=e?.avatarFile?.encodedContent;return i?(t.avatarDelete=!0,delete t.avatarFile):r&&(t.avatarFile={...e?.avatarFile,encodedContent:(0,h.rN)(r)}),t},x=e=>t=>{let i=r=>{let{fields:a}=r;i.displayName=`WithAvatar(${(0,p.Mn)(t)})`;let s=!!a?.[e]?.input?.value?\"},\"copy\":{\"index\":116838,\"snippet\":\"iption:I?C({id:\\\"FilesPageHeader.duplicateNameTooltip\\\"},{action:\\\"move\\\"}):void 0}),S>0&&s.canCopy&&t&&(0,g.jsx)(rL.A,{ariaHasPopup:\\\"dialog\\\",className:\\\"FilesPageSelectedHeader-button-copy\\\",disabled:I,iconName:\\\"ui-duplicate\\\",labelId:\\\"FilesPage.copy\\\",onClick:p,showTextOnSmViewport:!0,tooltipDescription:I?C({id:\\\"FilesPageHeader.duplicateNameTooltip\\\"},{action:\\\"copy\\\"}):void 0}),S>0&&!D&&s.canCopy&&t&&(0,g.jsx)(rL.A,{ariaHasPopup:\\\"dialog\\\",className:\\\"FilesPageSelectedHeader-button-zip\\\",disabled:I,iconName:\\\"ui-fileZip\\\",labelId:\\\"FilesPage.saveAsZ\"},\"rename\":{\"index\":134950,\"snippet\":\"..Q,updateAllPaths:j})),openZipModal:()=>S(tB.Ir({...Q,updateAllPaths:j})),preview:()=>()=>{S((0,iD.jp)({returnFocus:N,type:\\\"preview\\\"})),F.push((0,eO.MG)(x,P))},publicHostingUrl:z,rename:()=>E(x.id),shareFiles:()=>e=>{let[t,i]=(0,r.partition)(Y,eO.MZ);if(i.length){let e=i.map(({displayName:e})=>e);S(iO.mG(e))}else S(iO.mG(null));return e.currentTarget.closest(\\\"li.MoreMenu-action\\\")&&S((0,iD.jp)({id:\\\"ShareBundleDrawer\\\",returnFocus:N,type:\\\"component\\\"})),S(iO.y_((0,r.values)(t)))}})},aR={canShare:s().bool,currentPath:s().string,editorFile\"}}}\r\n",
+      "stdout_bytes": 3618,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T09:35:46.243Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T09:35:46.205Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "files-fulltest-filespage-action-strings-20260930-001"
+    },
+    "request_id": "files-fulltest-filespage-action-strings-20260930-001",
+    "started_at": "2026-09-30T09:35:45.198Z",
+    "status": "completed"
+  },
+  "id": "files-fulltest-filespage-action-strings-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
