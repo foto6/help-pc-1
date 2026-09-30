@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-bounty-windows-20260930-001",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Locate authenticated Files.com trial browser window for authorized bug-bounty UI testing"
+}
