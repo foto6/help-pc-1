@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 8; $ids=@('66c0cf2c-57f3-424d-9b93-431b3cbd4eaa','9f184693-c0e1-4228-a9ca-6d3a881b6a5a','1b6417bf-6e3e-4c60-b7ef-ed1fae543de7','e7b09880-daef-43b7-afd8-fb0af2f92626','755062a5-9ee1-4971-8653-0a9c636c6c74'); @($r.assignments)|Where-Object{$ids -contains $_.id}|Select-Object id,state,targetChatId,currentHead,dispatchCount,lastDiagnostic,lastPreflightReason,dispatchFailureCode,updatedAt|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"66c0cf2c-57f3-424d-9b93-431b3cbd4eaa\",\"state\":\"awaiting_evidence\",\"targetChatId\":\"chat-6ab67007-81fc-83eb-94e1-9511ab086c08\",\"currentHead\":\"ac658109de255485ce4fa629197b8b1a0b927645\",\"dispatchCount\":1,\"lastDiagnostic\":\"git_head_unchanged\",\"lastPreflightReason\":\"ready\",\"dispatchFailureCode\":\"\",\"updatedAt\":\"2026-09-30T08:22:43.102Z\"},{\"id\":\"9f184693-c0e1-4228-a9ca-6d3a881b6a5a\",\"state\":\"awaiting_evidence\",\"targetChatId\":\"chat-6ab67052-1ae8-83eb-b5bc-60ddae15aa6f\",\"currentHead\":\"a339da324ea0df682179097d7d6810b6fc250240\",\"dispatchCount\":1,\"lastDiagnostic\":\"git_head_unchanged\",\"lastPreflightReason\":\"ready\",\"dispatchFailureCode\":\"\",\"updatedAt\":\"2026-09-30T08:22:32.496Z\"},{\"id\":\"e7b09880-daef-43b7-afd8-fb0af2f92626\",\"state\":\"queued\",\"targetChatId\":\"agent-creator\",\"currentHead\":\"1bbb88ef4c168e460cddaa1693c3c84a0aad7517\",\"dispatchCount\":0,\"lastDiagnostic\":\"composer_readback_ambiguous\",\"lastPreflightReason\":\"composer_readback_ambiguous\",\"dispatchFailureCode\":\"\",\"updatedAt\":\"2026-09-30T08:22:43.362Z\"},{\"id\":\"755062a5-9ee1-4971-8653-0a9c636c6c74\",\"state\":\"queued\",\"targetChatId\":\"agent-growth\",\"currentHead\":\"4bb6f12c23af5e865e52b7bcffb8ced83ecf44f1\",\"dispatchCount\":0,\"lastDiagnostic\":\"composer_readback_ambiguous\",\"lastPreflightReason\":\"composer_readback_ambiguous\",\"dispatchFailureCode\":\"\",\"updatedAt\":\"2026-09-30T08:22:43.493Z\"},{\"id\":\"1b6417bf-6e3e-4c60-b7ef-ed1fae543de7\",\"state\":\"queued\",\"targetChatId\":\"agent-vision-fuzz\",\"currentHead\":\"bdfa71226a9265f9ac052ef576a6d18cada80b84\",\"dispatchCount\":0,\"lastDiagnostic\":\"composer_readback_ambiguous\",\"lastPreflightReason\":\"composer_readback_ambiguous\",\"dispatchFailureCode\":\"\",\"updatedAt\":\"2026-09-30T08:22:43.298Z\"}]\r\n",
+      "stdout_bytes": 1682,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T08:22:46.885Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T08:22:46.832Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-wave1-assignment-state-01"
+    },
+    "request_id": "coord-20260930-wave1-assignment-state-01",
+    "started_at": "2026-09-30T08:22:46.037Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-wave1-assignment-state-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
