@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-dispatch-creator-r10-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$body='{\"text\":\"EXECUTE NOW — CREATOR R10 REAL CONTRACT / MEDIA RECOVERY INTEGRATION MILESTONE.\\n\\nWritable repo ONLY: foto6/video1\\nBranch: agent/creator-r9-crossrepo-live-rehearsal-20260928\\nExact starting HEAD: 1bbb88ef4c168e460cddaa1693c3c84a0aad7517\\n\\nMedia''s isolated R10 branch has independently produced exact commit 2366b3820c2cbf429aa734f2e623689699e73003 with GitHub Actions run 36554412749 SUCCESS. Treat it as an isolated producer candidate, not merged production.\\n\\nRequired:\\n1. Re-read the source-bound Media R10 contract/evidence at that exact SHA and implement/extend Creator-side fail-closed adapter fixtures for its pin-lease / crash-recovery / unknown-outcome semantics without copying unverifiable claims.\\n2. Preserve the current stable Media/Growth producer pins where R10 is incompatible; document explicit compatibility matrix and migration gate instead of silently repinning.\\n3. Exercise deterministic 3-cycle campaign transitions, duplicate request, restart, lost acknowledgement/result-after-effect, durable Growth decision-seed consumption, release audit and human approval gate.\\n4. No provider publishing, charging, live production mutation, other-repo writes or fake analytics.\\n5. NONEMPTY source/tests/docs commit, focused/full CI, exact SHA/run, and concrete blocker report.\\n\\nNo merge/release.\",\"repository\":\"foto6/video1\",\"branch\":\"agent/creator-r9-crossrepo-live-rehearsal-20260928\",\"expectedHead\":\"1bbb88ef4c168e460cddaa1693c3c84a0aad7517\",\"idempotencyKey\":\"coord-20260930-creator-r10-media-consumer-v1\",\"evidenceTimeoutMinutes\":180,\"priority\":900,\"supervisorVerificationRequired\":true}'; $r=Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-creator/assignments' -ContentType 'application/json' -Body $body -TimeoutSec 10; $r | Select-Object id,state,targetChatId,repository,branch,expectedHead,dispatchCount,lastDiagnostic | ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 20000,
+  "note": "Queue evidence-gated managed assignment for agent-creator"
+}
