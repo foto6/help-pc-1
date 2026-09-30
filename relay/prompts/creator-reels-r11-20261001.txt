@@ -1,0 +1,12 @@
+EXECUTE NOW — CREATOR R11 AUTONOMOUS REELS ORCHESTRATOR.
+
+Repo ONLY: foto6/video1
+Writable branch ONLY: agent/creator-r11-autonomous-reels-20261001
+Exact start HEAD: 1bbb88ef4c168e460cddaa1693c3c84a0aad7517
+Issue #1.
+
+Primary product goal: from a content goal/assets, agents should autonomously create, edit, QA, package, schedule/publish an Instagram Reel and feed analytics back into the next decision.
+
+Own orchestration, not low-level render implementation. Build durable exactly-once state machine: brief -> hook/script -> asset plan -> Media edit job -> QA decision -> caption/package -> publish intent -> remote receipt -> analytics feedback. Crash resume and duplicate/lost callback handling required.
+
+Descript is really connected and supports import_media, Agent Underlord editing, publish_project, wait_for_job. Metricool contract exists but current account has NO social network connected; implement readiness/blocking honestly, never fake publish success. Support explicit autonomous_publish policy once authorization/network exists. Produce audit bundle per Reel (sources, prompts/provider versions, render SHA, caption, publish receipt, analytics linkage). Deterministic tests, substantive code, exact-head CI. No actual post in this milestone, no merge/release.
