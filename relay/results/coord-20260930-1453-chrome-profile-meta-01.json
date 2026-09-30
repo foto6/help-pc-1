@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p=Get-CimInstance Win32_Process -Filter \"ProcessId=24180\"; if(-not $p){Write-Output 'NO_PROCESS'; exit 0}; $cmd=[string]$p.CommandLine; $m=[regex]::Matches($cmd,'--(?:user-data-dir|profile-directory|remote-debugging-port)=(?:\"[^\"]+\"|\\S+)'); foreach($x in $m){Write-Output $x.Value}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "--user-data-dir=E:\\WebAIBridge\\chrome-profiles\\chatgpt-ChatGPT_2-ef72920c\r\n--remote-debugging-port=17410\r\n",
+      "stdout_bytes": 106,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T07:38:44.599Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T07:38:44.572Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-1453-chrome-profile-meta-01"
+    },
+    "request_id": "coord-20260930-1453-chrome-profile-meta-01",
+    "started_at": "2026-09-30T07:38:44.192Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-1453-chrome-profile-meta-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
