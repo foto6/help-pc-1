@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "\n$ids=@('agent-pc-executor','agent-creator','agent-media','agent-growth','agent-bridge-reliability');\n$assign=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 8;\n$chat=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1' -TimeoutSec 12;\n$out=@();\nforeach($id in $ids){\n  $rows=@($assign.assignments)|Where-Object{$_.targetChatId -eq $id}|Sort-Object createdAt;\n  $last=$rows|Select-Object -Last 1;\n  $c=@($chat.chats)|Where-Object{$_.id -eq $id}|Select-Object -First 1;\n  $out += [pscustomobject]@{\n    id=$id; chatStatus=$c.status; generating=$c.generating; draftPresent=$c.draftPresent; openTabs=$c.openTabs;\n    activeAssignmentCount=$c.activeAssignmentCount; assignmentId=$last.id; assignmentState=$last.state;\n    dispatchCount=$last.dispatchCount; repo=$last.repository; branch=$last.branch; currentHead=$last.currentHead;\n    lastDiagnostic=$last.lastDiagnostic\n  }\n}\n$out|ConvertTo-Json -Compress -Depth 6\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Invoke-RestMethod : �६� �������� �����襭�� ����樨 ��⥪��.\r\n��ப�:4 ����:7\r\n+ $chat=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-w ...\r\n+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestMethod], WebExc \r\n   eption\r\n    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand\r\n \r\n",
+      "stderr_bytes": 482,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"agent-pc-executor\",\"chatStatus\":null,\"generating\":null,\"draftPresent\":null,\"openTabs\":null,\"activeAssignmentCount\":null,\"assignmentId\":\"101801ad-3489-4fb9-9f56-2c06d7f999f3\",\"assignmentState\":\"cancelled\",\"dispatchCount\":0,\"repo\":\"foto6/help-pc-1\",\"branch\":\"agent/pc-service-r6-live-harness-20260928\",\"currentHead\":\"64ddbeb7853982e4d4aeaa43ff624bd9849668b2\",\"lastDiagnostic\":\"cancelled_by_operator\"},{\"id\":\"agent-creator\",\"chatStatus\":null,\"generating\":null,\"draftPresent\":null,\"openTabs\":null,\"activeAssignmentCount\":null,\"assignmentId\":\"e7b09880-daef-43b7-afd8-fb0af2f92626\",\"assignmentState\":\"blocked\",\"dispatchCount\":0,\"repo\":\"foto6/video1\",\"branch\":\"agent/creator-r9-crossrepo-live-rehearsal-20260928\",\"currentHead\":\"1bbb88ef4c168e460cddaa1693c3c84a0aad7517\",\"lastDiagnostic\":\"replacement_policy_unavailable\"},{\"id\":\"agent-media\",\"chatStatus\":null,\"generating\":null,\"draftPresent\":null,\"openTabs\":null,\"activeAssignmentCount\":null,\"assignmentId\":\"cc2aeb2b-1baa-4a18-a9f7-579548f8dac2\",\"assignmentState\":\"completed\",\"dispatchCount\":1,\"repo\":\"foto6/video2\",\"branch\":\"agent/media-r10-native-mcp-consumer-20260929\",\"currentHead\":\"2366b3820c2cbf429aa734f2e623689699e73003\",\"lastDiagnostic\":\"evidence_verified\"},{\"id\":\"agent-growth\",\"chatStatus\":null,\"generating\":null,\"draftPresent\":null,\"openTabs\":null,\"activeAssignmentCount\":null,\"assignmentId\":\"755062a5-9ee1-4971-8653-0a9c636c6c74\",\"assignmentState\":\"blocked\",\"dispatchCount\":1,\"repo\":\"foto6/video3\",\"branch\":\"agent/growth-r9-decision-delivery-audit-20260928\",\"currentHead\":\"a2a26bb943708f2fa034154376719bb6b81a63bf\",\"lastDiagnostic\":\"ci_failed\"},{\"id\":\"agent-bridge-reliability\",\"chatStatus\":null,\"generating\":null,\"draftPresent\":null,\"openTabs\":null,\"activeAssignmentCount\":null,\"assignmentId\":\"53fd5f58-48fc-48a1-8739-5b94187f0ed4\",\"assignmentState\":\"queued\",\"dispatchCount\":0,\"repo\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-existing-chat-stress-r17-20260929\",\"currentHead\":\"cb852e013634287669f957253d13d8ef2b45cada\",\"lastDiagnostic\":\"target_inspection_failed\"}]\r\n",
+      "stdout_bytes": 2031,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:27:43.552Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T17:27:43.512Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-priority-agent-state-01"
+    },
+    "request_id": "coord-20261001-priority-agent-state-01",
+    "started_at": "2026-09-30T17:27:30.601Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-priority-agent-state-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
