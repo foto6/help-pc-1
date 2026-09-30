@@ -1,0 +1,12 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-uia-publicb-name-20260930-001",
+  "action": "uia.inspect",
+  "params": {
+    "query": {
+      "name": "public-b"
+    }
+  },
+  "timeout_ms": 10000,
+  "note": "Find public-b UI element in authorized Files.com trial session"
+}
