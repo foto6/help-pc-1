@@ -1,0 +1,21 @@
+{
+  "action": "uia.inspect",
+  "executor_result": {
+    "action": "uia.inspect",
+    "data": {},
+    "dry_run": false,
+    "error": "invalid UIA query: UIA query requires at least one non-empty selector",
+    "error_kind": "policy_blocked",
+    "finished_at": "2026-09-30T09:49:15.610Z",
+    "ok": false,
+    "request_id": "chatgpt-files-uia-inspect-20260930-001",
+    "started_at": "2026-09-30T09:49:15.610Z",
+    "status": "blocked"
+  },
+  "id": "chatgpt-files-uia-inspect-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
