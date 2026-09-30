@@ -1,0 +1,21 @@
+{
+  "action": "uia.snapshot",
+  "executor_result": {
+    "action": "uia.snapshot",
+    "data": {},
+    "dry_run": false,
+    "error": "window not found: Восстановление - Google Chrome",
+    "error_kind": "stale_target",
+    "finished_at": "2026-09-30T07:31:51.948Z",
+    "ok": false,
+    "request_id": "coord-20260930-1438-uia-chrome-01",
+    "started_at": "2026-09-30T07:31:50.372Z",
+    "status": "stale_target"
+  },
+  "id": "coord-20260930-1438-uia-chrome-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
