@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 8; $ids=@('66c0cf2c-57f3-424d-9b93-431b3cbd4eaa','9f184693-c0e1-4228-a9ca-6d3a881b6a5a'); @($r.assignments)|Where-Object{$ids -contains $_.id}|Select-Object id,state,targetChatId,dispatchCount,currentHead,lastDiagnostic,updatedAt|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"66c0cf2c-57f3-424d-9b93-431b3cbd4eaa\",\"state\":\"blocked\",\"targetChatId\":\"chat-6ab67007-81fc-83eb-94e1-9511ab086c08\",\"dispatchCount\":1,\"currentHead\":\"ac658109de255485ce4fa629197b8b1a0b927645\",\"lastDiagnostic\":\"evidence_timeout\",\"updatedAt\":\"2026-09-30T17:12:10.636Z\"},{\"id\":\"9f184693-c0e1-4228-a9ca-6d3a881b6a5a\",\"state\":\"blocked\",\"targetChatId\":\"chat-6ab67052-1ae8-83eb-b5bc-60ddae15aa6f\",\"dispatchCount\":1,\"currentHead\":\"a339da324ea0df682179097d7d6810b6fc250240\",\"lastDiagnostic\":\"evidence_timeout\",\"updatedAt\":\"2026-09-30T17:12:10.636Z\"}]\r\n",
+      "stdout_bytes": 549,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:26:19.259Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T17:26:19.220Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-spectra-pause-state-01"
+    },
+    "request_id": "coord-20261001-spectra-pause-state-01",
+    "started_at": "2026-09-30T17:26:18.627Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-spectra-pause-state-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
