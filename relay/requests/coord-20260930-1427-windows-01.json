@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1427-windows-01",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Coordinator read-only inventory of visible top-level windows before chat recovery"
+}
