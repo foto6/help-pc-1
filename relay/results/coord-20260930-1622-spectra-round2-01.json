@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,urllib.parse\nu='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId='+urllib.parse.quote('chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c')\nwith urllib.request.urlopen(u,timeout=5) as r:d=json.load(r)\nxs=d.get('assignments',[]); xs.sort(key=lambda a:str(a.get('createdAt') or '')); a=xs[-1] if xs else {}\nprint(json.dumps({'chat':'round2','counts':d.get('counts',{}),'latest':{k:a.get(k) for k in ['id','state','text','repository','branch','expectedHead','currentHead','dispatchCount','lastDiagnostic','createdAt','updatedAt']}},ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"chat\":\"round2\",\"counts\":{\"blocked\":3},\"latest\":{\"id\":\"814c957a-efb7-4401-9675-bf7997fdc278\",\"state\":\"blocked\",\"text\":\"EXECUTE NOW. PC NATIVE CUTOVER CHAOS PREP. Repo foto6/help-pc-2, branch agent/pc-ops-chaos, expected HEAD 53bf83a63cb4137c5e41fbd06cd18863f890d730. Independent validation only; do not modify primary gateway policy. Extend adversarial coverage for MCP disconnect after dispatch, Control Plane restart, Executor restart, stale context binding, duplicate request id, journal unknown, result lost after side effect, managed process/session reconnect, and UI observation epoch change. Prove fail-closed and at-most-once side effects with no blind replay. Prove E:\\\\manhwa rejection occurs before dispatch and no protected-path access occurs. Bind deterministic chaos provenance to current exact-green producer heads. Add exact-head CI, push non-empty commit, report SHA and tests. No merge or release.\",\"repository\":\"foto6/help-pc-2\",\"branch\":\"agent/pc-ops-chaos\",\"expectedHead\":\"e1871ae37e6b1a7c457297b214d5c8b129252df7\",\"currentHead\":\"e1871ae37e6b1a7c457297b214d5c8b129252df7\",\"dispatchCount\":0,\"lastDiagnostic\":\"replacement_policy_unavailable\",\"createdAt\":\"2026-09-27T16:12:03.786Z\",\"updatedAt\":\"2026-09-27T16:12:04.817Z\"}}\r\n",
+      "stdout_bytes": 1243,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T08:01:32.069Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T08:01:32.025Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-1622-spectra-round2-01"
+    },
+    "request_id": "coord-20260930-1622-spectra-round2-01",
+    "started_at": "2026-09-30T08:01:31.747Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-1622-spectra-round2-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
