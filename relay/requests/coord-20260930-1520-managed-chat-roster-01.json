@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1520-managed-chat-roster-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; if(!(Test-Path $p)){Write-Output 'CONFIG_MISSING'; exit 0}; $j=Get-Content $p -Raw|ConvertFrom-Json; foreach($m in @($j.managedChats)){ Write-Output ('M|'+$m.id+'|name='+$m.name+'|branch='+$m.branch+'|repo='+$m.repository+'|enabled='+$m.enabled+'|profile='+$m.profileId) }; foreach($pjt in @($j.managedProjects)){ Write-Output ('P|'+$pjt.id+'|name='+$pjt.name+'|repo='+$pjt.repository+'|branch='+$pjt.branch+'|agents='+(@($pjt.agents|ForEach-Object{$_.id})-join ',')) }"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only Bridge managed-chat/project roster without conversation URLs or prompt content"
+}
