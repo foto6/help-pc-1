@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$body='{\"text\":\"EXECUTE NOW — GROWTH DURABLE DECISION-HANDOFF MILESTONE. Do not stop at a plan.\\n\\nWritable repo ONLY: foto6/video3\\nBranch: agent/growth-r9-decision-delivery-audit-20260928\\nExact starting HEAD: 4bb6f12c23af5e865e52b7bcffb8ced83ecf44f1\\n\\nOwn the previously unsent Growth->Creator exactly-once decision delivery gate:\\n1. Produce a signed/hashed, source-bound experiment audit bundle carrying denominators, retention, CTR/watch-time, uncertainty and multiplicity safeguards.\\n2. Deterministically prove one logical decision seed under duplicate/out-of-order provider events, partial exports, process restart, stale experiment revision and lost acknowledgement.\\n3. Prevent synthetic/fixture decision snapshots from masquerading as live performance. No fabricated analytics.\\n4. Define/version the consumer contract Creator can validate fail-closed.\\n5. Preserve read-only vidIQ/Metricool boundaries; no provider mutation or release.\\n6. NONEMPTY code+tests/docs, focused/full CI, exact SHA/run and explicit blockers.\\n\\nNo other repo changes, merge or production release.\",\"repository\":\"foto6/video3\",\"branch\":\"agent/growth-r9-decision-delivery-audit-20260928\",\"expectedHead\":\"4bb6f12c23af5e865e52b7bcffb8ced83ecf44f1\",\"idempotencyKey\":\"coord-20260930-growth-r10-handoff-v1\",\"evidenceTimeoutMinutes\":180,\"priority\":900,\"supervisorVerificationRequired\":true}'; $r=Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-growth/assignments' -ContentType 'application/json' -Body $body -TimeoutSec 10; $r | Select-Object id,state,targetChatId,repository,branch,expectedHead,dispatchCount,lastDiagnostic | ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"755062a5-9ee1-4971-8653-0a9c636c6c74\",\"state\":\"queued\",\"targetChatId\":\"agent-growth\",\"repository\":\"foto6/video3\",\"branch\":\"agent/growth-r9-decision-delivery-audit-20260928\",\"expectedHead\":\"4bb6f12c23af5e865e52b7bcffb8ced83ecf44f1\",\"dispatchCount\":0,\"lastDiagnostic\":\"\"}\r\n",
+      "stdout_bytes": 278,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T08:21:16.912Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T08:21:16.852Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-dispatch-growth-r10-01"
+    },
+    "request_id": "coord-20260930-dispatch-growth-r10-01",
+    "started_at": "2026-09-30T08:21:16.053Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-dispatch-growth-r10-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
