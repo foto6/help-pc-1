@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-bridge-local-health-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='SilentlyContinue'; $ports=@(17373,17374,3000,5173,9222); $out=@(); foreach($p in $ports){ try { $r=Invoke-WebRequest -UseBasicParsing -TimeoutSec 2 -Uri ('http://127.0.0.1:'+$p+'/api/supervisor-watchdog/managed-chats?inspect=1'); if($r.StatusCode -eq 200){ $out += [pscustomobject]@{Port=$p;Status=$r.StatusCode;Body=$r.Content.Substring(0,[Math]::Min(12000,$r.Content.Length))} } } catch {} }; $procs=Get-CimInstance Win32_Process | Where-Object {$_.Name -match 'node|chrome|python' -and ($_.CommandLine -match 'WebAIBridge|bridge|supervisor-watchdog')} | Select-Object ProcessId,Name,CommandLine; [pscustomobject]@{Endpoints=$out;Processes=$procs} | ConvertTo-Json -Depth 6 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only local Bridge health and managed-chat inspection; do not mutate live bridge"
+}
