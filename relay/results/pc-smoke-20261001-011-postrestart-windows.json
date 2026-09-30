@@ -1,0 +1,101 @@
+{
+  "action": "windows.list",
+  "executor_result": {
+    "action": "windows.list",
+    "data": {
+      "windows": [
+        {
+          "app_name": null,
+          "hwnd": 66560,
+          "pid": 4056,
+          "title": "Discord Updater",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 131140,
+          "pid": 24676,
+          "title": "History for relay/results - foto6/help-pc-1 — Mozilla Firefox",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 328834,
+          "pid": 9008,
+          "title": "pc-github-relay — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 197526,
+          "pid": 9008,
+          "title": "Program Manager",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 526008,
+          "pid": 4468,
+          "title": "Windows PowerShell",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 27133792,
+          "pid": 2708,
+          "title": "Диспетчер задач",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 197206,
+          "pid": 24504,
+          "title": "Интерфейс ввода Windows",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 459196,
+          "pid": 14392,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 592362,
+          "pid": 1152,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 68302,
+          "pid": 11412,
+          "title": "Отчёт о прогрессе - Google Chrome",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 131970,
+          "pid": 11672,
+          "title": "Хост Windows Shell Experience",
+          "visible": true
+        }
+      ]
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:43:56.832Z",
+    "ok": true,
+    "request_id": "pc-smoke-20261001-011-postrestart-windows",
+    "started_at": "2026-09-30T17:43:56.827Z",
+    "status": "completed"
+  },
+  "id": "pc-smoke-20261001-011-postrestart-windows",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
