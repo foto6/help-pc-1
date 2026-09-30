@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-fulltest-cdp-probe-20260930-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; try { $v=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/version' -TimeoutSec 3; $t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3; [pscustomobject]@{Browser=$v.Browser; Protocol=$v.'Protocol-Version'; TargetCount=@($t).Count; HasFilesTab=(@($t) | Where-Object { $_.url -like 'https://bugbountyfoto6.files.com/*' }).Count -gt 0 } | ConvertTo-Json -Compress } catch { Write-Output ('NOT_CDP: '+$_.Exception.Message) }"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only local DevTools probe; report no debugger URL or browser credentials"
+}
