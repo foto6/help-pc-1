@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-bounty-uia-snapshot-20260930-001",
+  "action": "uia.snapshot",
+  "params": {
+    "hwnd": 2165622
+  },
+  "timeout_ms": 10000,
+  "note": "Inspect Files.com trial page UI for authorized authorization testing"
+}
