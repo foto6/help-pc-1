@@ -1,0 +1,94 @@
+{
+  "action": "windows.list",
+  "executor_result": {
+    "action": "windows.list",
+    "data": {
+      "windows": [
+        {
+          "app_name": null,
+          "hwnd": 66560,
+          "pid": 4056,
+          "title": "Discord Updater",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 131140,
+          "pid": 24676,
+          "title": "Manhwa Studio — ранобэ в манхву — Mozilla Firefox",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 9701010,
+          "pid": 18056,
+          "title": "pc-github-relay — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 65826,
+          "pid": 18056,
+          "title": "Program Manager",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 66672,
+          "pid": 6448,
+          "title": "Proxifier Trial",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 27133792,
+          "pid": 2708,
+          "title": "Диспетчер задач",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 656102,
+          "pid": 24968,
+          "title": "Интерфейс ввода Windows",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 262722,
+          "pid": 23476,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 262752,
+          "pid": 14392,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 68302,
+          "pid": 11412,
+          "title": "Отчёт о прогрессе - Google Chrome",
+          "visible": true
+        }
+      ]
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:21:58.993Z",
+    "ok": true,
+    "request_id": "pc-smoke-20261001-004-windows",
+    "started_at": "2026-09-30T17:21:58.989Z",
+    "status": "completed"
+  },
+  "id": "pc-smoke-20261001-004-windows",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
