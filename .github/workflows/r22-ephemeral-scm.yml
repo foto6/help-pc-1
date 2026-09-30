@@ -1,0 +1,89 @@
+name: R22 producer REAL SCM lifecycle — disposable Windows
+
+on:
+  push:
+    branches:
+      - agent/r22-scm-acceptance-20260930
+    paths:
+      - ".github/workflows/r22-ephemeral-scm.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  r22-scm-lifecycle:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      PIP_NO_INPUT: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Verify exact R22 producer ancestry and disposable host
+        shell: pwsh
+        run: |
+          $base='f1678ee924552d85bb1ae9094268c79fb75712da'
+          git merge-base --is-ancestor $base HEAD
+          if($LASTEXITCODE -ne 0){throw 'R22 producer base lost'}
+          $changed=@(git diff --name-only $base HEAD)
+          if(@($changed).Count -ne 1 -or $changed[0] -ne '.github/workflows/r22-ephemeral-scm.yml'){
+            throw ('Unexpected source delta: '+($changed -join ','))
+          }
+          if($env:GITHUB_ACTIONS -ne 'true' -or $env:RUNNER_OS -ne 'Windows' -or !$env:RUNNER_TEMP){
+            throw 'Not disposable GitHub Windows'
+          }
+          if(Get-CimInstance Win32_Service -Filter "Name='PCNativeDeviceService'"){
+            throw 'Legacy service unexpectedly exists'
+          }
+          if(Get-CimInstance Win32_Service -Filter "Name='PCNativeCandidateR20'"){
+            throw 'Candidate service unexpectedly exists'
+          }
+          Write-Output 'R22_SCM_DISPOSABLE_GUARD_PASS'
+
+      - name: Build exact-source private installed Wheel
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          python -m pip install --disable-pip-version-check --upgrade setuptools wheel | Out-Null
+          $wheelDir=Join-Path $env:RUNNER_TEMP 'r22-scm-wheel'
+          $venv=Join-Path $env:RUNNER_TEMP 'r22-scm-venv'
+          New-Item -ItemType Directory -Force -Path $wheelDir|Out-Null
+          python -m pip wheel --no-deps --no-build-isolation --wheel-dir $wheelDir . | Out-Null
+          if($LASTEXITCODE -ne 0){throw 'R22 Wheel build failed'}
+          $wheel=Get-ChildItem $wheelDir -Filter '*.whl'|Select-Object -First 1
+          if(!$wheel){throw 'R22 Wheel missing'}
+          python -m venv $venv
+          if($LASTEXITCODE -ne 0){throw 'R22 venv failed'}
+          $python=Join-Path $venv 'Scripts/python.exe'
+          & $python -m pip install --no-deps --only-binary=:all: pywin32==312 | Out-Null
+          if($LASTEXITCODE -ne 0){throw 'private pywin32 failed'}
+          & $python -m pip install $wheel.FullName | Out-Null
+          if($LASTEXITCODE -ne 0){throw 'private Wheel install failed'}
+          $env:PYTHONPATH=''
+          & $python -I -c "import sys,pathlib,win32service,pc_remote_transport.r20_candidate as r;v=pathlib.Path(sys.prefix).resolve();assert pathlib.Path(r.__file__).resolve().is_relative_to(v);assert pathlib.Path(win32service.__file__).resolve().is_relative_to(v);print('R22_PRIVATE_WHEEL_PYWIN32_PASS')"
+          if($LASTEXITCODE -ne 0){throw 'private import identity failed'}
+          Write-Output ('R22_RUNNER_WHEEL_SHA256='+(Get-FileHash -Algorithm SHA256 $wheel.FullName).Hash.ToLowerInvariant())
+          Add-Content -LiteralPath $env:GITHUB_ENV -Value ('R22_PRIVATE_PYTHON='+$python)
+
+      - name: REAL candidate-only SCM install start restart stop rollback
+        shell: pwsh
+        run: |
+          $env:PYTHONPATH=''
+          & ./tools/r20_ephemeral_scm.ps1 -CandidatePython $env:R22_PRIVATE_PYTHON
+
+      - name: Retain sanitized SCM outcome only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: r22-scm-${{ github.run_id }}
+          path: ${{ runner.temp }}/r20-cold-runner-scm-result.json
+          if-no-files-found: warn
+          retention-days: 7
