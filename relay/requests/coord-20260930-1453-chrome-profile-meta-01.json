@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1453-chrome-profile-meta-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p=Get-CimInstance Win32_Process -Filter \"ProcessId=24180\"; if(-not $p){Write-Output 'NO_PROCESS'; exit 0}; $cmd=[string]$p.CommandLine; $m=[regex]::Matches($cmd,'--(?:user-data-dir|profile-directory|remote-debugging-port)=(?:\"[^\"]+\"|\\S+)'); foreach($x in $m){Write-Output $x.Value}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only extraction of non-secret Chrome profile/debug arguments for recovering Bridge profile chat history"
+}
