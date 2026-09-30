@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$body='{\"text\":\"EXECUTE NOW — A5 INDEPENDENT DETECTOR-TEACHER QA / ANTI-LEAKAGE GATE.\\n\\nRepo: foto6/SpectraTrack\\nWritable branch ONLY: agent/vnext-qa\\nExact starting HEAD: a339da324ea0df682179097d7d6810b6fc250240\\n\\nIndependently QA the new direction without tuning the detector yourself. User priority: raise person recall and reduce false positives. Existing smoke400 comparison already exposed D-FINE-X to NightOwls, so that corpus must remain evaluation-only and cannot be used as future training/tuning discovery.\\n\\nRequired milestone:\\n1. Encode/extend deterministic dataset-role and anti-leakage validation so NightOwls frozen partitions (including smoke400/holdout/full semantics already committed) cannot be consumed by training/fine-tune/hard-negative mining.\\n2. Add a source-bound benchmark evidence schema for heavy-detector comparisons: exact model/source hash, frame manifest, TP/FP/FN, precision/recall, size/occlusion/night slices where GT supports, timing and detector-call count.\\n3. Add hard-negative QA fixtures and gates that catch a candidate improving recall by exploding FP; include explicit Pareto-style acceptance data, but do not invent one scalar score or tune thresholds after seeing protected eval.\\n4. Prepare an independent consumer/validator for A1''s D-FINE-X adapter/teacher manifest. A1 may work concurrently: validate the declared contract, do not fabricate its runtime results.\\n5. Preserve NightOwls tracking_supported=false and prior MOT17 tracking replay semantics.\\n6. Focused/full CI, NONEMPTY commit, exact SHA/run, blocker/dependency matrix.\\n\\nNo FULL5000 or holdout4200 peeking for tuning, no model training, no merge/release, no other repo changes.\",\"repository\":\"foto6/SpectraTrack\",\"branch\":\"agent/vnext-qa\",\"expectedHead\":\"a339da324ea0df682179097d7d6810b6fc250240\",\"idempotencyKey\":\"coord-20260930-a5-dfine-qa-v1\",\"evidenceTimeoutMinutes\":180,\"priority\":900,\"supervisorVerificationRequired\":true}'; $r=Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ab67052-1ae8-83eb-b5bc-60ddae15aa6f/assignments' -ContentType 'application/json' -Body $body -TimeoutSec 10; $r | Select-Object id,state,targetChatId,repository,branch,expectedHead,dispatchCount,lastDiagnostic | ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"9f184693-c0e1-4228-a9ca-6d3a881b6a5a\",\"state\":\"queued\",\"targetChatId\":\"chat-6ab67052-1ae8-83eb-b5bc-60ddae15aa6f\",\"repository\":\"foto6/SpectraTrack\",\"branch\":\"agent/vnext-qa\",\"expectedHead\":\"a339da324ea0df682179097d7d6810b6fc250240\",\"dispatchCount\":0,\"lastDiagnostic\":\"\"}\r\n",
+      "stdout_bytes": 279,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T08:21:07.307Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T08:21:07.234Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-dispatch-a5-detector-qa-01"
+    },
+    "request_id": "coord-20260930-dispatch-a5-detector-qa-01",
+    "started_at": "2026-09-30T08:21:06.332Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-dispatch-a5-detector-qa-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
