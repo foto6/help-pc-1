@@ -1,0 +1,12 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-smoke-20261001-002-outcome",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "pc-smoke-20261001-001-capabilities",
+    "action": "capabilities.get",
+    "execution_attempt": 1
+  },
+  "timeout_ms": 10000,
+  "note": "Reconcile missing capabilities result without replay"
+}
