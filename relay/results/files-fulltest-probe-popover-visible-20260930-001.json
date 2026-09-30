@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3\n$target=@($t)|Where-Object { try { ([uri]$_.url).Host -eq 'bugbountyfoto6.files.com' } catch { $false } } | Select-Object -First 1\n$ws=[Net.WebSockets.ClientWebSocket]::new();$cts=[Threading.CancellationTokenSource]::new();$cts.CancelAfter(6000)\n$ws.ConnectAsync([uri]$target.webSocketDebuggerUrl,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$expr=@'\n(async()=>{\n const a=[...document.querySelectorAll('a')].find(e=>(e.textContent||'').trim()==='authz-probe-20260930');\n const row=a?.closest('tr');\n const b=row?[...row.querySelectorAll('button')].find(e=>(e.getAttribute('aria-label')||e.innerText||'').trim()==='More'):null;\n if(!b) return JSON.stringify({error:'row More not found'});\n if(!(b.getAttribute('aria-expanded')==='true')) { b.click(); await new Promise(r=>setTimeout(r,250)); }\n const vis=e=>{const s=getComputedStyle(e),r=e.getBoundingClientRect();return s.display!=='none'&&s.visibility!=='hidden'&&+s.opacity!==0&&r.width>0&&r.height>0};\n const cand=[...document.querySelectorAll('button,a,[tabindex=\"0\"],[role]')].filter(vis).map((e,i)=>({\n  i,tag:e.tagName,role:e.getAttribute('role'),text:(e.innerText||e.getAttribute('aria-label')||e.title||'').trim().replace(/\\s+/g,' ').slice(0,140),\n  aria:e.getAttribute('aria-label'),expanded:e.getAttribute('aria-expanded'),\n  x:Math.round(e.getBoundingClientRect().x),y:Math.round(e.getBoundingClientRect().y)\n })).filter(x=>x.text && x.y>200 && x.y<900);\n return JSON.stringify(cand.slice(0,180));\n})()\n'@\n$payload=@{id=1;method='Runtime.evaluate';params=@{expression=$expr;returnByValue=$true;awaitPromise=$true}}|ConvertTo-Json -Depth 10 -Compress\n$bytes=[Text.Encoding]::UTF8.GetBytes($payload)\n$ws.SendAsync([ArraySegment[byte]]::new($bytes),[Net.WebSockets.WebSocketMessageType]::Text,$true,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$buf=New-Object byte[] 131072\nwhile($true){$ms=[IO.MemoryStream]::new();do{$r=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$cts.Token).GetAwaiter().GetResult();if($r.Count){$ms.Write($buf,0,$r.Count)}}while(-not $r.EndOfMessage);$o=([Text.Encoding]::UTF8.GetString($ms.ToArray())|ConvertFrom-Json);if($o.id -eq 1){Write-Output $o.result.result.value;break}}\n$ws.Dispose()"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"i\":9,\"tag\":\"BUTTON\",\"role\":null,\"text\":\"Collapse\",\"aria\":\"Minimize menu\",\"expanded\":\"true\",\"x\":0,\"y\":897},{\"i\":23,\"tag\":\"BUTTON\",\"role\":null,\"text\":\"Sort column by descending\",\"aria\":\"Sort column by descending\",\"expanded\":null,\"x\":897,\"y\":243},{\"i\":24,\"tag\":\"BUTTON\",\"role\":null,\"text\":\"Resize Name column\",\"aria\":\"Resize Name column\",\"expanded\":\"false\",\"x\":920,\"y\":241},{\"i\":25,\"tag\":\"BUTTON\",\"role\":null,\"text\":\"Relative Times\",\"aria\":\"Relative Times\",\"expanded\":null,\"x\":1145,\"y\":243},{\"i\":26,\"tag\":\"BUTTON\",\"role\":null,\"text\":\"Sort column\",\"aria\":\"Sort column\",\"expanded\":null,\"x\":1169,\"y\":243},{\"i\":27,\"tag\":\"BUTTON\",\"role\":null,\"text\":\"Resize Last Modified At column\",\"aria\":\"Resize Last Modified At column\",\"expanded\":\"false\",\"x\":1192,\"y\":241},{\"i\":28,\"tag\":\"BUTTON\",\"role\":null,\"text\":\"Sort column\",\"aria\":\"Sort column\",\"expanded\":null,\"x\":1441,\"y\":243},{\"i\":29,\"tag\":\"TR\",\"role\":null,\"text\":\"authz-probe-20260930 Sep 30, 2026, 5:30 AM\",\"aria\":null,\"expanded\":null,\"x\":272,\"y\":270},{\"i\":30,\"tag\":\"A\",\"role\":null,\"text\":\"authz-probe-20260930\",\"aria\":null,\"expanded\":null,\"x\":381,\"y\":281},{\"i\":31,\"tag\":\"BUTTON\",\"role\":null,\"text\":\"Sep 30, 2026, 5:30 AM\",\"aria\":null,\"expanded\":null,\"x\":1047,\"y\":284},{\"i\":32,\"tag\":\"BUTTON\",\"role\":null,\"text\":\"Show size\",\"aria\":\"Show size\",\"expanded\":null,\"x\":1431,\"y\":278},{\"i\":33,\"tag\":\"BUTTON\",\"role\":null,\"text\":\"Download\",\"aria\":\"Download\",\"expanded\":null,\"x\":1830,\"y\":278},{\"i\":34,\"tag\":\"BUTTON\",\"role\":null,\"text\":\"More\",\"aria\":\"More\",\"expanded\":\"false\",\"x\":1866,\"y\":278}]\r\n",
+      "stdout_bytes": 1524,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T09:32:37.418Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T09:32:37.378Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "files-fulltest-probe-popover-visible-20260930-001"
+    },
+    "request_id": "files-fulltest-probe-popover-visible-20260930-001",
+    "started_at": "2026-09-30T09:32:36.308Z",
+    "status": "completed"
+  },
+  "id": "files-fulltest-probe-popover-visible-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
