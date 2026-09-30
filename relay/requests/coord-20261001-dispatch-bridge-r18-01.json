@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-dispatch-bridge-r18-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$text=Get-Content -LiteralPath 'E:\\pc-github-relay\\relay\\prompts\\bridge-r18-routing-20261001.txt' -Raw; $body=@{text=$text;repository='foto6/WebAIBridge';branch='agent/bridge-routing-r18-20261001';expectedHead='cb852e013634287669f957253d13d8ef2b45cada';idempotencyKey='coord-20261001-bridge-r18-duplicate-chat-v1';evidenceTimeoutMinutes=240;priority=950;supervisorVerificationRequired=$true}|ConvertTo-Json -Compress; $r=Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-bridge-reliability/assignments' -ContentType 'application/json' -Body $body -TimeoutSec 10; $r|Select-Object id,state,targetChatId,repository,branch,expectedHead,dispatchCount,lastDiagnostic|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 20000,
+  "note": "Queue isolated evidence-gated assignment for agent-bridge-reliability"
+}
