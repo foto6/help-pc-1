@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=5074CC2597D83163F5C160F186251FDB --prompt=E:\\pc-github-relay\\relay\\prompts\\bridge-routing-r18-20261001.txt"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Error: timeout\n    at Timeout._onTimeout (E:\\WebAIBridge\\app\\data\\direct_send_existing_agent.js:10:235)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)\n",
+      "stderr_bytes": 213,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:35:18.611Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T17:35:18.573Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-send-bridge-routing-r18-01"
+    },
+    "request_id": "coord-20261001-send-bridge-routing-r18-01",
+    "started_at": "2026-09-30T17:35:08.007Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-send-bridge-routing-r18-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
