@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3\n$target=@($t)|Where-Object { try { ([uri]$_.url).Host -eq 'bugbountyfoto6.files.com' } catch { $false } } | Select-Object -First 1\nif(-not $target){ throw 'Files.com CDP target not found' }\n$ws=[System.Net.WebSockets.ClientWebSocket]::new()\n$cts=[System.Threading.CancellationTokenSource]::new()\n$cts.CancelAfter(12000)\n$ws.ConnectAsync([uri]$target.webSocketDebuggerUrl,$cts.Token).GetAwaiter().GetResult() | Out-Null\n$expr=@'\n(async()=>{\n  const sleep=ms=>new Promise(r=>setTimeout(r,ms));\n  async function get(url){\n    const r=await fetch(url,{credentials:'same-origin'});\n    const text=await r.text();\n    let j=null; try{j=JSON.parse(text)}catch{}\n    return {status:r.status, ok:r.ok, text, json:j};\n  }\n  const out={};\n  let x=await get('/api/rest/v1/permissions.json?user_id=0&include_groups=true');\n  out.permissions={status:x.status, items:Array.isArray(x.json)?x.json.map(p=>({path:p.path,permission:p.permission,recursive:p.recursive,username:p.username})):[], error:(!x.ok?x.text.slice(0,300):null)};\n  await sleep(650);\n  x=await get('/api/rest/v1/folders/public-b');\n  out.public_b={status:x.status, items:Array.isArray(x.json)?x.json.map(f=>({path:f.path,type:f.type})).slice(0,20):[], error:(!x.ok?x.text.slice(0,300):null)};\n  await sleep(650);\n  x=await get('/api/rest/v1/folders/private-a');\n  out.private_a={status:x.status, items:Array.isArray(x.json)?x.json.map(f=>({path:f.path,type:f.type})).slice(0,20):[], error:(!x.ok?x.text.slice(0,300):null)};\n  await sleep(650);\n  x=await get('/api/rest/v1/bundles.json?user_id=0');\n  out.bundles={status:x.status,count:Array.isArray(x.json)?x.json.length:null,error:(!x.ok?x.text.slice(0,300):null)};\n  return JSON.stringify(out);\n})()\n'@\n$payload=@{id=1;method='Runtime.evaluate';params=@{expression=$expr;returnByValue=$true;awaitPromise=$true}}|ConvertTo-Json -Depth 10 -Compress\n$bytes=[System.Text.Encoding]::UTF8.GetBytes($payload)\n$ws.SendAsync([System.ArraySegment[byte]]::new($bytes),[System.Net.WebSockets.WebSocketMessageType]::Text,$true,$cts.Token).GetAwaiter().GetResult() | Out-Null\n$buf=New-Object byte[] 131072\nwhile($true){\n  $ms=[System.IO.MemoryStream]::new()\n  do {\n    $r=$ws.ReceiveAsync([System.ArraySegment[byte]]::new($buf),$cts.Token).GetAwaiter().GetResult()\n    if($r.Count -gt 0){ $ms.Write($buf,0,$r.Count) }\n  } while(-not $r.EndOfMessage)\n  $txt=[System.Text.Encoding]::UTF8.GetString($ms.ToArray())\n  $obj=$txt|ConvertFrom-Json\n  if($obj.id -eq 1){\n    if($obj.result.exceptionDetails){ throw $obj.result.exceptionDetails.text }\n    Write-Output $obj.result.result.value\n    break\n  }\n}\n$ws.Dispose()"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"permissions\":{\"status\":401,\"items\":[],\"error\":\"{\\\"error\\\":\\\"Unauthorized. The API key or Session token is either missing or invalid.\\\",\\\"http-code\\\":401,\\\"instance\\\":\\\"0f0d6c5e8907c887d0067dd6feb6d23c\\\",\\\"title\\\":\\\"Authentication Required\\\",\\\"type\\\":\\\"not-authenticated/authentication-required\\\"}\"},\"public_b\":{\"status\":401,\"items\":[],\"error\":\"{\\\"error\\\":\\\"Unauthorized. The API key or Session token is either missing or invalid.\\\",\\\"http-code\\\":401,\\\"instance\\\":\\\"8de9f8361381d68e88cb7e0ee5e4db21\\\",\\\"title\\\":\\\"Authentication Required\\\",\\\"type\\\":\\\"not-authenticated/authentication-required\\\"}\"},\"private_a\":{\"status\":401,\"items\":[],\"error\":\"{\\\"error\\\":\\\"Unauthorized. The API key or Session token is either missing or invalid.\\\",\\\"http-code\\\":401,\\\"instance\\\":\\\"262efb8936ae28a1c4c3be94dfd5e3e6\\\",\\\"title\\\":\\\"Authentication Required\\\",\\\"type\\\":\\\"not-authenticated/authentication-required\\\"}\"},\"bundles\":{\"status\":401,\"count\":null,\"error\":\"{\\\"error\\\":\\\"Unauthorized. The API key or Session token is either missing or invalid.\\\",\\\"http-code\\\":401,\\\"instance\\\":\\\"9ae130b0b836412f6c7f6fa1217afd59\\\",\\\"title\\\":\\\"Authentication Required\\\",\\\"type\\\":\\\"not-authenticated/authentication-required\\\"}\"}}\r\n",
+      "stdout_bytes": 1196,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T09:25:58.809Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T09:25:58.773Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "files-fulltest-authz-read-suite-20260930-001"
+    },
+    "request_id": "files-fulltest-authz-read-suite-20260930-001",
+    "started_at": "2026-09-30T09:25:54.281Z",
+    "status": "completed"
+  },
+  "id": "files-fulltest-authz-read-suite-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
