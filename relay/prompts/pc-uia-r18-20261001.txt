@@ -1,0 +1,11 @@
+EXECUTE NOW — PC CONTROL UIA TIMEOUT R18. Do not stop at a plan.
+
+Repo ONLY: foto6/help-pc-1
+Writable branch ONLY: agent/pc-control-uia-timeout-r18-20261001
+Exact start HEAD: 2cc1e40f792a3d74560b726a0d246c90b7f077e9
+Issue: #5 R18: fix PC Control UIA snapshot timeouts.
+
+Live smoke evidence already obtained:
+capabilities/windows/shell/screenshot/outcome journal PASS; uia.snapshot TIMEOUT on both Chrome hwnd 68302 and File Explorer hwnd 9701010. This is adapter-wide. Do not rerun destructive UI actions or touch E:\manhwa.
+
+Find root cause, add bounded traversal/work budget + structured partial/timeout semantics, preserve safety/context binding/no coordinate fallback, add deterministic Windows regressions for deep Chrome-like and native Explorer-like trees. Nonempty source/tests/docs commit, exact SHA, focused/full CI and evidence. Do not change Native MCP, relay deployment, main, or live processes.
