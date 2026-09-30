@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-wave1-draft-recovery-preview-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ids=@('1b6417bf-6e3e-4c60-b7ef-ed1fae543de7','e7b09880-daef-43b7-afd8-fb0af2f92626','755062a5-9ee1-4971-8653-0a9c636c6c74'); foreach($x in $ids){ try{$r=Invoke-RestMethod -Uri ('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/'+$x+'/recover-unsent-draft') -TimeoutSec 8; [pscustomobject]@{id=$x;state=$r.state;recoverable=$r.recoverable;reason=$r.reason;exactDraft=$r.exactDraft;draftMatches=$r.draftMatches;submitAttempted=$r.dispatchSubmitAttempted;targetOpen=$r.targetOpen;diagnostic=$r.lastDiagnostic}|ConvertTo-Json -Compress -Depth 6}catch{Write-Output ('ERR|'+$x+'|'+$_.Exception.Message)}}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only preview of safe unsent-draft recovery for Vision/Creator/Growth"
+}
