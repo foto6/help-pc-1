@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-fulltest-bundle-can-share-snippets-20260930-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$t=Invoke-RestMethod -UseBasicParsing 'http://127.0.0.1:17410/json/list' -TimeoutSec 3\n$target=@($t)|Where-Object { try { ([uri]$_.url).Host -eq 'bugbountyfoto6.files.com' } catch { $false } } | Select-Object -First 1\n$ws=[Net.WebSockets.ClientWebSocket]::new();$cts=[Threading.CancellationTokenSource]::new();$cts.CancelAfter(8000)\n$ws.ConnectAsync([uri]$target.webSocketDebuggerUrl,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$expr=@'\n(async()=>{\n const p=[...performance.getEntriesByType('resource')].map(e=>{try{return new URL(e.name)}catch{return null}}).find(u=>u&&/\\/FilesPage\\.[^.]+\\.js$/.test(u.pathname));\n const t=await (await fetch(p.pathname,{credentials:'omit'})).text();\n function all(term,limit=12){let out=[],pos=0;while(out.length<limit){let i=t.indexOf(term,pos);if(i<0)break;out.push({i,s:t.slice(Math.max(0,i-260),Math.min(t.length,i+520)).replace(/\\s+/g,' ')});pos=i+term.length;}return out}\n return JSON.stringify({canShare:all('canShare',16),shareFiles:all('shareFiles',12),openMoveModal:all('openMoveModal',8),openCopyModal:all('openCopyModal',8),MoreMenuAction:all('MoreMenu-action',8)});\n})()\n'@\n$payload=@{id=1;method='Runtime.evaluate';params=@{expression=$expr;returnByValue=$true;awaitPromise=$true}}|ConvertTo-Json -Depth 10 -Compress\n$bytes=[Text.Encoding]::UTF8.GetBytes($payload)\n$ws.SendAsync([ArraySegment[byte]]::new($bytes),[Net.WebSockets.WebSocketMessageType]::Text,$true,$cts.Token).GetAwaiter().GetResult()|Out-Null\n$buf=New-Object byte[] 262144\nwhile($true){$ms=[IO.MemoryStream]::new();do{$r=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$cts.Token).GetAwaiter().GetResult();if($r.Count){$ms.Write($buf,0,$r.Count)}}while(-not $r.EndOfMessage);$o=([Text.Encoding]::UTF8.GetString($ms.ToArray())|ConvertFrom-Json);if($o.id -eq 1){Write-Output $o.result.result.value;break}}\n$ws.Dispose()"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Inspect public FilesPage bundle permission gates and action handlers for authorized Files.com bug bounty research"
+}
