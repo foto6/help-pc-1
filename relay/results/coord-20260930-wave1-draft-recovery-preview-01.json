@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ids=@('1b6417bf-6e3e-4c60-b7ef-ed1fae543de7','e7b09880-daef-43b7-afd8-fb0af2f92626','755062a5-9ee1-4971-8653-0a9c636c6c74'); foreach($x in $ids){ try{$r=Invoke-RestMethod -Uri ('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/'+$x+'/recover-unsent-draft') -TimeoutSec 8; [pscustomobject]@{id=$x;state=$r.state;recoverable=$r.recoverable;reason=$r.reason;exactDraft=$r.exactDraft;draftMatches=$r.draftMatches;submitAttempted=$r.dispatchSubmitAttempted;targetOpen=$r.targetOpen;diagnostic=$r.lastDiagnostic}|ConvertTo-Json -Compress -Depth 6}catch{Write-Output ('ERR|'+$x+'|'+$_.Exception.Message)}}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"1b6417bf-6e3e-4c60-b7ef-ed1fae543de7\",\"state\":null,\"recoverable\":null,\"reason\":\"assignment_not_failed\",\"exactDraft\":null,\"draftMatches\":null,\"submitAttempted\":null,\"targetOpen\":null,\"diagnostic\":null}\r\n{\"id\":\"e7b09880-daef-43b7-afd8-fb0af2f92626\",\"state\":null,\"recoverable\":null,\"reason\":\"assignment_not_failed\",\"exactDraft\":null,\"draftMatches\":null,\"submitAttempted\":null,\"targetOpen\":null,\"diagnostic\":null}\r\n{\"id\":\"755062a5-9ee1-4971-8653-0a9c636c6c74\",\"state\":null,\"recoverable\":null,\"reason\":\"assignment_not_failed\",\"exactDraft\":null,\"draftMatches\":null,\"submitAttempted\":null,\"targetOpen\":null,\"diagnostic\":null}\r\n",
+      "stdout_bytes": 627,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T08:23:33.913Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T08:23:33.862Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-wave1-draft-recovery-preview-01"
+    },
+    "request_id": "coord-20260930-wave1-draft-recovery-preview-01",
+    "started_at": "2026-09-30T08:23:32.954Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-wave1-draft-recovery-preview-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
