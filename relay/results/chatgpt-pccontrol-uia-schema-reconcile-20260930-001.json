@@ -1,0 +1,21 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {},
+    "dry_run": false,
+    "error": "outcome.lookup action must be a non-empty string",
+    "error_kind": "policy_blocked",
+    "finished_at": "2026-09-30T09:42:01.627Z",
+    "ok": false,
+    "request_id": "chatgpt-pccontrol-uia-schema-reconcile-20260930-001",
+    "started_at": "2026-09-30T09:42:01.626Z",
+    "status": "blocked"
+  },
+  "id": "chatgpt-pccontrol-uia-schema-reconcile-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
