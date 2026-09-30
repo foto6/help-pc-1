@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$xs=Invoke-RestMethod 'http://127.0.0.1:17410/json/list' -TimeoutSec 8; $xs|Where-Object{$_.url -like 'https://chatgpt.com/*'}|Select-Object id,title,url,type|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"2F1320E46CD7BEED3EC12F5AB823A386\",\"title\":\"����� � �ண���\",\"url\":\"https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8\",\"type\":\"page\"},{\"id\":\"4241A4091BDEA046A344D708BC7EC9AF\",\"title\":\"Creator Orchestrator MVP\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6\",\"type\":\"page\"},{\"id\":\"F562BB0624F3A8C7C3B9C9B9E1736606\",\"title\":\"Implement Native Tool Parity\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab9467b-02e0-83eb-83b6-6f9b93835f46\",\"type\":\"page\"},{\"id\":\"B7F1404991E785AB1D27DCE410B9CF4D\",\"title\":\"A 2\",\"url\":\"https://chatgpt.com/c/6ab67022-ae5c-83ed-a654-5dcc82c3b351\",\"type\":\"page\"},{\"id\":\"5074CC2597D83163F5C160F186251FDB\",\"title\":\"Fix Assignment Replacement Runtime\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c\",\"type\":\"page\"},{\"id\":\"1D296F6F215BED9914A241D5CF68BB6F\",\"title\":\"Fix Assignment Replacement Runtime\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c\",\"type\":\"page\"},{\"id\":\"D4DE4DB46DE45F1C889F93B5581A2FAA\",\"title\":\"Creator Orchestrator MVP\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6\",\"type\":\"page\"}]\r\n",
+      "stdout_bytes": 1315,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:28:56.404Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T17:28:56.341Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-cdp-tabs-01"
+    },
+    "request_id": "coord-20261001-cdp-tabs-01",
+    "started_at": "2026-09-30T17:28:55.470Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-cdp-tabs-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
