@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$body='{\"text\":\"EXECUTE NOW — VISION CROSS-SYSTEM PERCEPTION TRUST MILESTONE. Produce evidence, not acknowledgement.\\n\\nWritable repo ONLY: foto6/vision-2\\nBranch: agent/vision-r9-epoch-fuzz-20260928\\nExact starting HEAD: bdfa71226a9265f9ac052ef576a6d18cada80b84\\n\\nContinue the previously unsent milestone without modifying PC/MCP producers:\\n- prove stable mapping vision.perception_snapshot.v2 -> frozen vision.grounded_target.v1 -> PC Executor contract for moving/restarted windows, stale observation epoch, lease expiry, duplicate capture, changed display identity, screenshot/UIA coordinate drift and post-action verification;\\n- build deterministic adversarial/property/metamorphic fixtures with seeds and strict provenance/hash outputs;\\n- malformed/stale targets must fail closed before any side-effect boundary;\\n- consume only pinned/read-only PC contract artifacts; do NOT develop Native PC/MCP, inspect user screens, access protected E:\\\\manhwa, or send live UI side effects;\\n- add substantive source/tests/docs, run full focused CI, push NONEMPTY commit and report exact SHA/run plus cross-repo blockers.\\n\\nNo merge/release.\",\"repository\":\"foto6/vision-2\",\"branch\":\"agent/vision-r9-epoch-fuzz-20260928\",\"expectedHead\":\"bdfa71226a9265f9ac052ef576a6d18cada80b84\",\"idempotencyKey\":\"coord-20260930-vision-r10-contract-v1\",\"evidenceTimeoutMinutes\":180,\"priority\":900,\"supervisorVerificationRequired\":true}'; $r=Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-vision-fuzz/assignments' -ContentType 'application/json' -Body $body -TimeoutSec 10; $r | Select-Object id,state,targetChatId,repository,branch,expectedHead,dispatchCount,lastDiagnostic | ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"1b6417bf-6e3e-4c60-b7ef-ed1fae543de7\",\"state\":\"queued\",\"targetChatId\":\"agent-vision-fuzz\",\"repository\":\"foto6/vision-2\",\"branch\":\"agent/vision-r9-epoch-fuzz-20260928\",\"expectedHead\":\"bdfa71226a9265f9ac052ef576a6d18cada80b84\",\"dispatchCount\":0,\"lastDiagnostic\":\"\"}\r\n",
+      "stdout_bytes": 272,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T08:21:21.672Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T08:21:21.608Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-dispatch-vision-r10-01"
+    },
+    "request_id": "coord-20260930-dispatch-vision-r10-01",
+    "started_at": "2026-09-30T08:21:20.760Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-dispatch-vision-r10-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
