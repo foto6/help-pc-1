@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-bridge-watchdog-live-files-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$base='E:\\WebAIBridge\\app\\data'; $cfg=Join-Path $base 'supervisor-watchdog.json'; $st=Join-Path $base 'supervisor-watchdog-state.json'; $lg=Join-Path $base 'supervisor-watchdog.log'; Write-Output '===CONFIG==='; if(Test-Path $cfg){Get-Content -LiteralPath $cfg -Raw}; Write-Output '===STATE==='; if(Test-Path $st){Get-Content -LiteralPath $st -Raw}; Write-Output '===LOGTAIL==='; if(Test-Path $lg){Get-Content -LiteralPath $lg -Tail 80}"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only live WebAIBridge watchdog config/state/log tail; do not modify live bridge"
+}
