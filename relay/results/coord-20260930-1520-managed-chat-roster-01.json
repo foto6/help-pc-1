@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; if(!(Test-Path $p)){Write-Output 'CONFIG_MISSING'; exit 0}; $j=Get-Content $p -Raw|ConvertFrom-Json; foreach($m in @($j.managedChats)){ Write-Output ('M|'+$m.id+'|name='+$m.name+'|branch='+$m.branch+'|repo='+$m.repository+'|enabled='+$m.enabled+'|profile='+$m.profileId) }; foreach($pjt in @($j.managedProjects)){ Write-Output ('P|'+$pjt.id+'|name='+$pjt.name+'|repo='+$pjt.repository+'|branch='+$pjt.branch+'|agents='+(@($pjt.agents|ForEach-Object{$_.id})-join ',')) }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "M|chat-6ab6703e-b760-83eb-ae7e-686637c7de67|name=A4|branch=|repo=|enabled=True|profile=\r\nM|chat-6ab66b08-a90c-83eb-80d8-a7567d24352d|name=SpectraTrack Agent Watch (secondary)|branch=|repo=|enabled=True|profile=\r\nM|chat-6ab67022-ae5c-83ed-a654-5dcc82c3b351|name=A2|branch=|repo=|enabled=True|profile=\r\nM|chat-6ab67031-7290-83eb-965e-8cd7c16b3504|name=A3|branch=agent/vnext-enhancement|repo=|enabled=True|profile=ef72920c-cfe7-4824-a79b-7a0e0943ce7e\r\nM|chat-6ab67052-1ae8-83eb-b5bc-60ddae15aa6f|name=A5|branch=|repo=|enabled=True|profile=\r\nM|chat-6ab67007-81fc-83eb-94e1-9511ab086c08|name=A1|branch=|repo=|enabled=True|profile=\r\nM|chat-6ab69af7-68c0-83ed-8552-f5f41d97a00c|name=SpectraTrack Round2 Watch|branch=|repo=|enabled=True|profile=\r\nM|chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e|name=SpectraTrack Agent Watch (supervisor)|branch=|repo=|enabled=True|profile=\r\nM|agent-pc-executor|name=PC Executor|branch=agent/pc-executor|repo=|enabled=True|profile=ef72920c-cfe7-4824-a79b-7a0e0943ce7e\r\nM|agent-bridge-reliability|name=Bridge R6 existing agent|branch=agent/bridge-control-reliability-r6-20260928|repo=foto6/WebAIBridge|enabled=True|profile=ef72920c-cfe7-4824-a79b-7a0e0943ce7e\r\nM|agent-boss-conformance|name=Boss conformance existing agent|branch=|repo=foto6/boss|enabled=True|profile=ef72920c-cfe7-4824-a79b-7a0e0943ce7e\r\nM|agent-pc-control|name=Native PC Control existing agent|branch=|repo=foto6/help-pc-2|enabled=True|profile=ef72920c-cfe7-4824-a79b-7a0e0943ce7e\r\nM|agent-pc-parity|name=PC parity existing agent|branch=|repo=foto6/help-pc-1|enabled=True|profile=ef72920c-cfe7-4824-a79b-7a0e0943ce7e\r\nM|agent-vision-fuzz|name=Vision existing fuzz agent|branch=agent/vision-r9-epoch-fuzz-20260928|repo=foto6/vision-2|enabled=True|profile=ef72920c-cfe7-4824-a79b-7a0e0943ce7e\r\nM|agent-creator|name=Creator existing agent|branch=agent/creator-r9-crossrepo-live-rehearsal-20260928|repo=foto6/video1|enabled=True|profile=ef72920c-cfe7-4824-a79b-7a0e0943ce7e\r\nM|agent-media|name=Media existing agent|branch=agent/media-r10-native-mcp-consumer-20260929|repo=foto6/video2|enabled=True|profile=ef72920c-cfe7-4824-a79b-7a0e0943ce7e\r\nM|agent-growth|name=Growth existing agent|branch=agent/growth-r9-decision-delivery-audit-20260928|repo=foto6/video3|enabled=True|profile=ef72920c-cfe7-4824-a79b-7a0e0943ce7e\r\nM|agent-pc-tool-parity-implementation|name=Implement Native Tool Parity (existing)|branch=|repo=foto6/help-pc-1|enabled=True|profile=ef72920c-cfe7-4824-a79b-7a0e0943ce7e\r\nP|project-g-p-6ab839fa4f8c81919adad01c4a5497dc|name=sv|repo=|branch=|agents=\r\n",
+      "stdout_bytes": 2553,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T07:49:27.089Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T07:49:27.061Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-1520-managed-chat-roster-01"
+    },
+    "request_id": "coord-20260930-1520-managed-chat-roster-01",
+    "started_at": "2026-09-30T07:49:26.675Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-1520-managed-chat-roster-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
