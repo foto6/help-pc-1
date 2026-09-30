@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-uia-publicb-20260930-001",
+  "action": "uia.snapshot",
+  "params": {
+    "window_title": "public-b · Folder · [BUGBOUNTY] foto6 test - Google Chrome"
+  },
+  "timeout_ms": 10000,
+  "note": "Inspect authorized public-b UI for permission-boundary tests"
+}
