@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-1538-bridge-r17-assignment-text-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId=agent-bridge-reliability'\nwith urllib.request.urlopen(u,timeout=5) as r: d=json.load(r)\na=next((x for x in d.get('assignments',[]) if x.get('id')=='53fd5f58-48fc-48a1-8739-5b94187f0ed4'),None)\nif not a:\n print(json.dumps({'found':False})); raise SystemExit\nprint(json.dumps({'found':True,'id':a.get('id'),'state':a.get('state'),'text':a.get('text'),'repository':a.get('repository'),'branch':a.get('branch'),'expectedHead':a.get('expectedHead'),'dispatchCount':a.get('dispatchCount'),'lastDiagnostic':a.get('lastDiagnostic')},ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only current R17 Bridge assignment text/state; omit target URL"
+}
