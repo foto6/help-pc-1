@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p='E:\\WebAIBridge\\app\\data\\state.json'; $s=Get-Content -LiteralPath $p -Raw|ConvertFrom-Json; $ids=@('agent-creator','agent-media','agent-growth','agent-bridge-reliability'); @($s.chats)|Where-Object{$ids -contains $_.id}|Select-Object id,name,url,chatUrl,conversationUrl,targetId,providerTargetId,debugPort,profileId,repository,branch,projectId,managed|ConvertTo-Json -Compress -Depth 6"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T18:06:18.725Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T18:06:18.680Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-chat-bindings-02"
+    },
+    "request_id": "coord-20261001-chat-bindings-02",
+    "started_at": "2026-09-30T18:06:17.951Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-chat-bindings-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
