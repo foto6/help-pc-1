@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-uia-snapshot-valid-20260930-001",
+  "action": "uia.snapshot",
+  "params": {
+    "window_title": "Not Found · [BUGBOUNTY] foto6 test - Google Chrome"
+  },
+  "timeout_ms": 10000,
+  "note": "Snapshot Files.com trial Chrome UI with valid schema"
+}
