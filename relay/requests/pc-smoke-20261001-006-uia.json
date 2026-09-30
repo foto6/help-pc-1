@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-smoke-20261001-006-uia",
+  "action": "uia.snapshot",
+  "params": {
+    "hwnd": 68302
+  },
+  "timeout_ms": 10000,
+  "note": "PC Control smoke: read-only UIA snapshot of visible Chrome window"
+}
