@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; $j=Get-Content $p -Raw|ConvertFrom-Json; $ids=@('agent-creator','agent-media','agent-growth','agent-pc-tool-parity-implementation','agent-bridge-reliability'); @($j.managedChats)|Where-Object{$ids -contains $_.id}|Select-Object id,name,url,repository,branch,profileId|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"agent-bridge-reliability\",\"name\":\"Bridge R6 existing agent\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c\",\"repository\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-control-reliability-r6-20260928\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\"},{\"id\":\"agent-creator\",\"name\":\"Creator existing agent\",\"url\":\"https://chatgpt.com/c/6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6\",\"repository\":\"foto6/video1\",\"branch\":\"agent/creator-r9-crossrepo-live-rehearsal-20260928\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\"},{\"id\":\"agent-media\",\"name\":\"Media existing agent\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b24f-9c40-83eb-9b7b-766af74defe0\",\"repository\":\"foto6/video2\",\"branch\":\"agent/media-r10-native-mcp-consumer-20260929\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\"},{\"id\":\"agent-growth\",\"name\":\"Growth existing agent\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b25d-b630-83eb-bed7-7d6aa135e647\",\"repository\":\"foto6/video3\",\"branch\":\"agent/growth-r9-decision-delivery-audit-20260928\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\"},{\"id\":\"agent-pc-tool-parity-implementation\",\"name\":\"Implement Native Tool Parity (existing)\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab9467b-02e0-83eb-83b6-6f9b93835f46\",\"repository\":\"foto6/help-pc-1\",\"branch\":\"\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\"}]\r\n",
+      "stdout_bytes": 1476,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:30:41.572Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T17:30:41.534Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-agent-url-map-01"
+    },
+    "request_id": "coord-20261001-agent-url-map-01",
+    "started_at": "2026-09-30T17:30:40.742Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-agent-url-map-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
