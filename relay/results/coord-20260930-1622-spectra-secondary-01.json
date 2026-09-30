@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,urllib.parse\nu='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId='+urllib.parse.quote('chat-6ab66b08-a90c-83eb-80d8-a7567d24352d')\nwith urllib.request.urlopen(u,timeout=5) as r:d=json.load(r)\nxs=d.get('assignments',[]); xs.sort(key=lambda a:str(a.get('createdAt') or '')); a=xs[-1] if xs else {}\nprint(json.dumps({'chat':'secondary','counts':d.get('counts',{}),'latest':{k:a.get(k) for k in ['id','state','text','repository','branch','expectedHead','currentHead','dispatchCount','lastDiagnostic','createdAt','updatedAt']}},ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"chat\":\"secondary\",\"counts\":{\"failed\":1},\"latest\":{\"id\":\"8664aaf2-0e58-482e-9b39-6dc71e89da1e\",\"state\":\"failed\",\"text\":\"EXECUTE NOW \\u2014 NATIVE PC MCP CUTOVER PREPARATION, NO CUTOVER YET.\\n\\nRepo: foto6/help-pc-2\\nBranch: agent/pc-control-mcp-gateway\\nExpected HEAD: 5495c320304860bf190476833177f716fe9ad960\\n\\nGoal: make MCP gateway technically ready to become ChatGPT PC backend once PC Ops says READY_TO_MIGRATE. Do not switch live plugin/transport yet.\\n\\nRequired:\\n1. Integrate structured PC Ops v1 catalog into MCP surface without bypassing Control Plane/Executor safety.\\n2. Structured fs/log/process/shell.session/system/UI observation tools first-class; raw shell.run fallback, argv-only, policy-gated.\\n3. Add machine-readable readiness/health binding exact Control Plane, Executor, Vision, Relay/PC-Ops producer SHAs and pc-ops report digest.\\n4. Refuse live native structured side effects unless migration gate green and explicit live feature gate enabled. Dry-run/read-only default.\\n5. Preserve protected paths, credentials/CAPTCHA prohibition, context binding, durable outcome reconciliation, no blind retry.\\n6. Prepare connector/backend registration contract for current private ChatGPT PC Control plugin, but DO NOT replace working GitHub relay transport yet.\\n7. Add focused integration tests and exact-head CI; push non-empty commit and report exact SHA + CI. No merge/release/live cutover.\",\"repository\":\"foto6/help-pc-2\",\"branch\":\"agent/pc-control-mcp-gateway\",\"expectedHead\":\"5495c320304860bf190476833177f716fe9ad960\",\"currentHead\":\"5495c320304860bf190476833177f716fe9ad960\",\"dispatchCount\":0,\"lastDiagnostic\":\"Managed assignment draft verification failed; refusing submit\",\"createdAt\":\"2026-09-27T15:51:56.162Z\",\"updatedAt\":\"2026-09-27T15:52:06.995Z\"}}\r\n",
+      "stdout_bytes": 1782,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T08:01:35.545Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T08:01:35.505Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-1622-spectra-secondary-01"
+    },
+    "request_id": "coord-20260930-1622-spectra-secondary-01",
+    "started_at": "2026-09-30T08:01:35.216Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-1622-spectra-secondary-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
