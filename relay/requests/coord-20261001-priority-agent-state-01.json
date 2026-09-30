@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-priority-agent-state-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "\n$ids=@('agent-pc-executor','agent-creator','agent-media','agent-growth','agent-bridge-reliability');\n$assign=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 8;\n$chat=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1' -TimeoutSec 12;\n$out=@();\nforeach($id in $ids){\n  $rows=@($assign.assignments)|Where-Object{$_.targetChatId -eq $id}|Sort-Object createdAt;\n  $last=$rows|Select-Object -Last 1;\n  $c=@($chat.chats)|Where-Object{$_.id -eq $id}|Select-Object -First 1;\n  $out += [pscustomobject]@{\n    id=$id; chatStatus=$c.status; generating=$c.generating; draftPresent=$c.draftPresent; openTabs=$c.openTabs;\n    activeAssignmentCount=$c.activeAssignmentCount; assignmentId=$last.id; assignmentState=$last.state;\n    dispatchCount=$last.dispatchCount; repo=$last.repository; branch=$last.branch; currentHead=$last.currentHead;\n    lastDiagnostic=$last.lastDiagnostic\n  }\n}\n$out|ConvertTo-Json -Compress -Depth 6\n"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only state snapshot for PC Executor, video agents and Bridge before reprioritization"
+}
