@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-09-30T17:46:48.342Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "coord-20261001-bridge-local-health-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:b772a0304c5a4e931a6e30fa70958d5422628809d3b764ed1eaff140060506f1",
+            "journal_sequence": 450,
+            "previous_record_sha256": "12c2dd44f076e1de498358212659698a3d34a5d9bff9be0c76dd5fc68b08f3b1",
+            "record_sha256": "d675124cc7e73757002b5b8bd4fe642ff177ebe0f10e1af9f0bd36354857decd",
+            "recorded_at": "2026-09-30T17:46:48.369Z",
+            "request_id": "coord-20261001-bridge-local-health-01",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-09-30T17:47:08.448Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "coord-20261001-bridge-local-health-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:b772a0304c5a4e931a6e30fa70958d5422628809d3b764ed1eaff140060506f1",
+            "journal_sequence": 451,
+            "previous_record_sha256": "d675124cc7e73757002b5b8bd4fe642ff177ebe0f10e1af9f0bd36354857decd",
+            "record_sha256": "a5e4583ad6a5c20f1f945b0911e98b70ce07a8032f9c739ee392c1c5741264dd",
+            "recorded_at": "2026-09-30T17:47:08.482Z",
+            "request_id": "coord-20261001-bridge-local-health-01",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-09-30T17:47:08.448Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "coord-20261001-bridge-local-health-01"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-09-30T17:47:08.448Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "coord-20261001-bridge-local-health-01"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:b772a0304c5a4e931a6e30fa70958d5422628809d3b764ed1eaff140060506f1",
+          "journal_sequence": 451,
+          "previous_record_sha256": "d675124cc7e73757002b5b8bd4fe642ff177ebe0f10e1af9f0bd36354857decd",
+          "record_sha256": "a5e4583ad6a5c20f1f945b0911e98b70ce07a8032f9c739ee392c1c5741264dd",
+          "recorded_at": "2026-09-30T17:47:08.482Z",
+          "request_id": "coord-20261001-bridge-local-health-01",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "e6249ff5c64169714042cc8126a135a5e706be9ee7ee4ff513d0d09d85d9f556",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 451
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "coord-20261001-bridge-local-health-01",
+        "request_id": "coord-20261001-bridge-local-health-01",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T17:47:44.923Z",
+    "ok": true,
+    "request_id": "coord-20261001-bridge-local-health-reconcile-01",
+    "started_at": "2026-09-30T17:47:44.890Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-bridge-local-health-reconcile-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
