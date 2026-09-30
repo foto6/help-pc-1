@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$text=Get-Content -LiteralPath 'E:\\pc-github-relay\\relay\\prompts\\creator-r11-autonomous-reels-20261001.txt' -Raw; $body=@{text=$text;repository='foto6/video1';branch='agent/creator-r11-autonomous-reels-20261001';expectedHead='1bbb88ef4c168e460cddaa1693c3c84a0aad7517';idempotencyKey='coord-20261001-creator-r11-autonomous-reels-v1';evidenceTimeoutMinutes=240;priority=950;supervisorVerificationRequired=$true}|ConvertTo-Json -Compress -Depth 6; $bytes=[System.Text.Encoding]::UTF8.GetBytes($body); $r=Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-creator/assignments' -ContentType 'application/json; charset=utf-8' -Body $bytes -TimeoutSec 10; $r|Select-Object id,state,targetChatId,repository,branch,expectedHead,dispatchCount,lastDiagnostic|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Invoke-RestMethod : ������� ᮥ������� ������: ���।�������� �訡�� �� �ਥ��.\r\n��ப�:1 ����:502\r\n+ ... ($body); $r=Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:174 ...\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestMethod], WebExc \r\n   eption\r\n    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand\r\n \r\n",
+      "stderr_bytes": 510,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T18:00:46.602Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T18:00:46.562Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-dispatch-creator-r11-utf8-01"
+    },
+    "request_id": "coord-20261001-dispatch-creator-r11-utf8-01",
+    "started_at": "2026-09-30T18:00:28.236Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-dispatch-creator-r11-utf8-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
