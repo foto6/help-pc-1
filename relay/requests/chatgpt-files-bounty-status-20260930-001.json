@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-bounty-status-20260930-001",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Check current Files.com authorized test session before continuing bounty tests"
+}
