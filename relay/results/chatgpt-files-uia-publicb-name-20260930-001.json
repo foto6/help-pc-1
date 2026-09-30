@@ -1,0 +1,21 @@
+{
+  "action": "uia.inspect",
+  "executor_result": {
+    "action": "uia.inspect",
+    "data": {},
+    "dry_run": false,
+    "error": "uia.inspect timed out",
+    "error_kind": "timeout",
+    "finished_at": "2026-09-30T09:52:41.461Z",
+    "ok": false,
+    "request_id": "chatgpt-files-uia-publicb-name-20260930-001",
+    "started_at": "2026-09-30T09:52:31.457Z",
+    "status": "timeout"
+  },
+  "id": "chatgpt-files-uia-publicb-name-20260930-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
