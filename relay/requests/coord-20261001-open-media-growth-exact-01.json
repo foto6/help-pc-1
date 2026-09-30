@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-open-media-growth-exact-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$urls=@('https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b24f-9c40-83eb-9b7b-766af74defe0','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b25d-b630-83eb-bed7-7d6aa135e647'); foreach($u in $urls){$e=[uri]::EscapeDataString($u); Invoke-WebRequest -UseBasicParsing -Method Put -Uri (\"http://127.0.0.1:17410/json/new?\"+$e)|Out-Null}; Write-Output ('OPENED='+$urls.Count)"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 20000,
+  "note": "Open exact Media and Growth ChatGPT conversation URLs via CDP; bypass broken Bridge routing"
+}
