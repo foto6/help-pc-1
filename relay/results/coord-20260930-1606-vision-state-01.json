@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId=agent-vision-fuzz'\nwith urllib.request.urlopen(u,timeout=5) as r:d=json.load(r)\nxs=d.get('assignments',[]); xs.sort(key=lambda a:str(a.get('createdAt') or '')); a=xs[-1] if xs else {}\nprint(json.dumps({'counts':d.get('counts',{}),'latest':{k:a.get(k) for k in ['id','state','text','repository','branch','expectedHead','currentHead','dispatchCount','lastDiagnostic','createdAt','updatedAt']}},ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"counts\":{\"blocked\":1},\"latest\":{\"id\":\"c3c03cb2-b9f4-4f2f-8925-a55ff40c6163\",\"state\":\"blocked\",\"text\":\"EXECUTE NOW in this EXISTING Vision fuzz/contract chat. Writable repository ONLY foto6/vision-2, precreated isolated branch agent/vision-r9-epoch-fuzz-20260928 from exact current agent/vision baseline bdfa71226a9265f9ac052ef576a6d18cada80b84. Own R9 cross-system perception trust milestone: prove stable mapping vision.perception_snapshot.v2 -> frozen vision.grounded_target.v1 -> PC Executor for moving/restarted windows, stale observation epoch, liveness lease expiry, duplicate capture, changed display identity, screenshot/UIA coordinate drift and post-action verification. Build adversarial property/metamorphic fixture generator with deterministic seeds, strict provenance/sha outputs, no malformed target dispatch; compare against the actual pinned PC contracts through read-only contract artifacts only. Never inspect user screens or protected root, send side effects, change PC producer or merge/release. Substantive source/tests, exact SHA, full focused CI and documented cross-repo blockers are required; acknowledgement is not completion.\",\"repository\":\"foto6/vision-2\",\"branch\":\"agent/vision-r9-epoch-fuzz-20260928\",\"expectedHead\":\"bdfa71226a9265f9ac052ef576a6d18cada80b84\",\"currentHead\":\"bdfa71226a9265f9ac052ef576a6d18cada80b84\",\"dispatchCount\":0,\"lastDiagnostic\":\"replacement_policy_unavailable\",\"createdAt\":\"2026-09-28T15:50:04.874Z\",\"updatedAt\":\"2026-09-28T15:51:25.916Z\"}}\r\n",
+      "stdout_bytes": 1497,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T07:57:05.367Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-09-30T07:57:05.332Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20260930-1606-vision-state-01"
+    },
+    "request_id": "coord-20260930-1606-vision-state-01",
+    "started_at": "2026-09-30T07:57:05.065Z",
+    "status": "completed"
+  },
+  "id": "coord-20260930-1606-vision-state-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
