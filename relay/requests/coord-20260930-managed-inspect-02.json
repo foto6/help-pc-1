@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20260930-managed-inspect-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1' -TimeoutSec 8; $ids=@('chat-6ab67007-81fc-83eb-94e1-9511ab086c08','chat-6ab67022-ae5c-83ed-a654-5dcc82c3b351','chat-6ab67052-1ae8-83eb-b5bc-60ddae15aa6f','agent-vision-fuzz','agent-creator','agent-growth','agent-bridge-reliability'); @($r.managedChats)|Where-Object{$ids -contains $_.id}|Select-Object id,name,status,generating,draftPresent,highMode,openTabs,lastProgressAt,lastSeenAt,error,activeAssignmentCount|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only Bridge managed-chat inspect for dispatch eligibility"
+}
