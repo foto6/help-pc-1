@@ -1,0 +1,136 @@
+{
+  "action": "windows.list",
+  "executor_result": {
+    "action": "windows.list",
+    "data": {
+      "windows": [
+        {
+          "app_name": null,
+          "hwnd": 526766,
+          "pid": 2996,
+          "title": "C:\\WINDOWS\\SYSTEM32\\cmd.exe",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 722748,
+          "pid": 2996,
+          "title": "C:\\WINDOWS\\system32\\cmd.exe ",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 66630,
+          "pid": 1608,
+          "title": "Discord Updater",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 6358730,
+          "pid": 13764,
+          "title": "manhwa — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 65834,
+          "pid": 13764,
+          "title": "Program Manager",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 66748,
+          "pid": 15460,
+          "title": "Proxifier Trial",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 1248254,
+          "pid": 2996,
+          "title": "Windows PowerShell",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 198312,
+          "pid": 10824,
+          "title": "Администратор: Windows PowerShell",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 855112,
+          "pid": 7536,
+          "title": "Выбрать Администратор: Windows PowerShell",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 592000,
+          "pid": 8008,
+          "title": "Диспетчер задач",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 263082,
+          "pid": 6652,
+          "title": "Дообучение SpectraTrack датасетами — Mozilla Firefox",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 393244,
+          "pid": 19232,
+          "title": "Интерфейс ввода Windows",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 1247106,
+          "pid": 2996,
+          "title": "Командная строка",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 131538,
+          "pid": 22392,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 2165622,
+          "pid": 24180,
+          "title": "Проверка R22 завершена - Google Chrome",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 131758,
+          "pid": 5376,
+          "title": "‎Носок С мылом (1174143)",
+          "visible": true
+        }
+      ]
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-09-30T07:00:01.520Z",
+    "ok": true,
+    "request_id": "pc-control-v020-windows-20260930-1354",
+    "started_at": "2026-09-30T07:00:01.515Z",
+    "status": "completed"
+  },
+  "id": "pc-control-v020-windows-20260930-1354",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
