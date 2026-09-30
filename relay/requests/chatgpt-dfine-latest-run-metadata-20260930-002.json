@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-dfine-latest-run-metadata-20260930-002",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$py='C:\\Users\\foto6\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'; & $py -c \"import cv2,pathlib; src=r'E:\\\\SpectraTrack\\\\12345.mp4'; out=r'E:\\\\SpectraTrack\\\\12345_DFINE_X_c350.mp4'; pairs=[src,out]; [(lambda c,p: (print(p),print('fps=',c.get(cv2.CAP_PROP_FPS),'frames=',int(c.get(cv2.CAP_PROP_FRAME_COUNT)),'duration_s=',c.get(cv2.CAP_PROP_FRAME_COUNT)/c.get(cv2.CAP_PROP_FPS) if c.get(cv2.CAP_PROP_FPS) else None),c.release()))(cv2.VideoCapture(p),p) for p in pairs]; j=pathlib.Path(r'E:\\\\SpectraTrack\\\\12345_DFINE_X_c350.detections.jsonl'); print('jsonl_frames=',sum(1 for _ in j.open(encoding='utf-8')))\" ; Get-Item 'E:\\SpectraTrack\\12345.mp4','E:\\SpectraTrack\\12345_DFINE_X_c350.mp4','E:\\SpectraTrack\\12345_DFINE_X_c350.detections.jsonl' | Select-Object FullName,Length,CreationTime,LastWriteTime | Format-Table -AutoSize"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Measure latest D-FINE source/output duration and processed frame count"
+}
