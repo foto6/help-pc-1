@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-2240-relay-health-before-video-rule-broadcast",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read-only health probe before broadcasting direct-video-input rule to active agents"
+}
