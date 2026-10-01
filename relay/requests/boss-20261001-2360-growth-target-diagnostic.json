@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-2360-growth-target-diagnostic",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const t=tabs.find(x=>x.id===\"DBC6BC28E04127D1821830B232E048EB\");const c=\"6abda63c-98d8-83ed-b365-d423b7563c4b\";process.stdout.write(JSON.stringify({found:!!t,url:t?.url||\"\",urlLength:(t?.url||\"\").length,conv:c,convLength:c.length,needle:\"/c/\"+c,includes:!!t&&String(t.url||\"\").includes(\"/c/\"+c),id:t?.id||\"\"}))\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only diagnostic for Growth chat target binding"
+}
