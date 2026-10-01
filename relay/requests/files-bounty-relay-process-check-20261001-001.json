@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-bounty-relay-process-check-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match 'github_relay\\.py' } | Select-Object ProcessId,ParentProcessId,CommandLine | Format-List"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only inspect current GitHub relay process command line before deciding whether to create an isolated bounty relay"
+}
