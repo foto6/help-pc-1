@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-2000-wave3-chat-state",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst items=[\n{name:\"media\",id:\"312D0941F3A5138C71E55254EAEBBEC8\",needle:\"MEDIA R16 CANDIDATE BATCH RUNTIME\"},\n{name:\"creator\",id:\"B0559FFE7843B036079007016E7351FF\",needle:\"CREATOR R24 EXACT-PIN CLOSED-LOOP RUNNER\"},\n{name:\"growth\",id:\"DBC6BC28E04127D1821830B232E048EB\",needle:\"GROWTH R20 CLOSED-LOOP FEEDBACK BUNDLE\"},\n{name:\"human\",id:\"74BDC2B5E97107BBA7ACDB858F2D03BB\",needle:\"HUMAN EDITING GATE V4 REAL-ARTIFACT CLOSED-LOOP REHEARSAL\"},\n{name:\"bridge\",id:\"A88E3157A8078B7DA32FC62848071CC3\",needle:\"WEB AI BRIDGE R24 LIVE READ-ONLY PREFLIGHT COLLECTOR\"},\n{name:\"pc\",id:\"F85160E9CD245D0085D51163204FDD58\",needle:\"PC RELAY R27 EXACT PROGRESS-EVIDENCE DELIVERY\"}\n];\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nasync function inspect(it){\n const tab=tabs.find(x=>x.id===it.id);if(!tab)return{name:it.name,found:false};\n const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,p=new Map();\n ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\n const expr=\"JSON.stringify((()=>{const body=document.body?.innerText||'';const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});const generating=bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'));return {visible:body.includes(\"+JSON.stringify(it.needle)+\"),generating,draftLength:text.trim().length,title:document.title,url:location.href}})())\";\n const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});ws.close();return{name:it.name,...JSON.parse(rr.result.value)};\n}\nconst out=[];for(const it of items){try{out.push(await inspect(it))}catch(e){out.push({name:it.name,error:String(e.message||e)})}}process.stdout.write(JSON.stringify(out));\n\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only Wave3 task visibility/generation state in six existing chats"
+}
