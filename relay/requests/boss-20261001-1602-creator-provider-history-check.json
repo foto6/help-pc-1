@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1602-creator-provider-history-check",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst targetId=\"B0559FFE7843B036079007016E7351FF\";\nconst conversationId=\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\";\nconst needles=[\"CREATOR R21 PRODUCTION PUBLISH EXECUTION LAYER\",\"agent/creator-r21-publish-execution-20261001\"];\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst tab=tabs.find(x=>x.id===targetId);\nif(!tab){process.stdout.write(JSON.stringify({ok:false,reason:\"target_missing\"}));process.exit(0)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);\nawait new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\nlet seq=1;const pending=new Map();\nws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};\nconst call=(method,params={})=>new Promise((r,j)=>{const id=seq++;pending.set(id,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id,method,params}))});\nconst expr=`(async()=>{try{\n const r=await fetch(\"/backend-api/conversation/\"+\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",{method:\"GET\",credentials:\"include\",headers:{Accept:\"application/json\"},cache:\"no-store\"});\n let text=\"\"; try{text=await r.text()}catch{}\n return {ok:r.ok,status:r.status,matches:[\"CREATOR R21 PRODUCTION PUBLISH EXECUTION LAYER\",\"agent/creator-r21-publish-execution-20261001\"].map(n=>text.includes(n)),bytes:text.length};\n}catch(e){return {ok:false,status:0,error:String(e&&e.message||e)}}})()`;\nconst rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true,awaitPromise:true});\nws.close();process.stdout.write(JSON.stringify(rr.result.value));\n\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only authoritative ChatGPT conversation GET; returns only task-phrase matches and byte count"
+}
