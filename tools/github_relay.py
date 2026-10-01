@@ -410,43 +410,7 @@ class Relay:
         self.publish_result(result)
         return result
 
-    def publish_result(self, result: dict[str, Any]) -> None:
-        request_id = result["id"]
-        result_path = self._result_path(request_id)
-        if not result_path.exists():
-            _atomic_json(result_path, result)
-
-        self.progress.state("publishing")
-        _run_git(self.repo, "add", result_path.relative_to(self.repo).as_posix())
-        diff = _run_git(self.repo, "diff", "--cached", "--quiet", check=False)
-        committed_sha: str | None = None
-        if diff.returncode != 0:
-            commit = _run_git(
-                self.repo,
-                "-c",
-                "user.name=PC GitHub Relay",
-                "-c",
-                "user.email=pc-relay@local.invalid",
-                "commit",
-                "-m",
-                f"relay result {request_id}",
-                check=False,
-            )
-            if commit.returncode != 0:
-                raise RelayTransportError(
-                    {
-                        "classification": "publish_error",
-                        "retryable": False,
-                        "operation": "commit",
-                        "returncode": commit.returncode,
-                        "message": commit.stderr.strip() or commit.stdout.strip(),
-                    }
-                )
-            head = _run_git(self.repo, "rev-parse", "HEAD", check=False)
-            if head.returncode == 0:
-                committed_sha = head.stdout.strip() or None
-            self.progress.result_committed(request_id, commit_sha=committed_sha)
-
+    def _push_head_with_recovery(self) -> None:
         last_error: dict[str, Any] | None = None
         for attempt in range(MAX_GIT_ATTEMPTS):
             pushed = _run_git(
@@ -480,10 +444,92 @@ class Relay:
         assert last_error is not None
         raise RelayTransportError(last_error)
 
-    def _publish_pending_results(self) -> None:
-        # Recover only dirty/untracked result files. Historical committed results
-        # are not re-walked every cycle, keeping memory and Git work bounded.
+    def _recover_local_ahead_commits(self) -> None:
+        """Push durable local result commits left by a prior interrupted process."""
+        ahead = _run_git(
+            self.repo,
+            "rev-list",
+            "--count",
+            f"origin/{self.branch}..HEAD",
+            check=False,
+        )
+        if ahead.returncode != 0:
+            return
+        try:
+            count = int(ahead.stdout.strip() or "0")
+        except ValueError:
+            return
+        if count <= 0:
+            return
+
+        latest = _run_git(
+            self.repo,
+            "log",
+            "-1",
+            "--format=%H%x00%s",
+            check=False,
+        )
+        if latest.returncode == 0 and "\x00" in latest.stdout:
+            commit_sha, subject = latest.stdout.strip().split("\x00", 1)
+            prefix = "relay result "
+            if subject.startswith(prefix):
+                request_id = subject[len(prefix):].strip()
+                if REQUEST_ID_RE.fullmatch(request_id):
+                    self.progress.result_committed(
+                        request_id,
+                        commit_sha=commit_sha or None,
+                    )
         self.progress.state("publishing_pending")
+        self._push_head_with_recovery()
+
+    def publish_result(self, result: dict[str, Any]) -> None:
+        request_id = result["id"]
+        result_path = self._result_path(request_id)
+        if not result_path.exists():
+            _atomic_json(result_path, result)
+
+        self.progress.state("publishing")
+        _run_git(self.repo, "add", result_path.relative_to(self.repo).as_posix())
+        diff = _run_git(self.repo, "diff", "--cached", "--quiet", check=False)
+        if diff.returncode != 0:
+            commit = _run_git(
+                self.repo,
+                "-c",
+                "user.name=PC GitHub Relay",
+                "-c",
+                "user.email=pc-relay@local.invalid",
+                "commit",
+                "-m",
+                f"relay result {request_id}",
+                check=False,
+            )
+            if commit.returncode != 0:
+                raise RelayTransportError(
+                    {
+                        "classification": "publish_error",
+                        "retryable": False,
+                        "operation": "commit",
+                        "returncode": commit.returncode,
+                        "message": commit.stderr.strip() or commit.stdout.strip(),
+                    }
+                )
+            head = _run_git(self.repo, "rev-parse", "HEAD", check=False)
+            committed_sha = (
+                head.stdout.strip()
+                if head.returncode == 0 and head.stdout.strip()
+                else None
+            )
+            self.progress.result_committed(request_id, commit_sha=committed_sha)
+
+        self._push_head_with_recovery()
+
+    def _publish_pending_results(self) -> None:
+        # First recover clean local commits that were durable before a prior
+        # process died during push. This never executes a request again.
+        self.progress.state("publishing_pending")
+        self._recover_local_ahead_commits()
+        # Then recover dirty/untracked result files. Historical committed results
+        # are not re-walked every cycle, keeping memory and Git work bounded.
         status = _run_git(
             self.repo,
             "status",
