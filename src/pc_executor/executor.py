@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 from time import monotonic
 from typing import Any, Callable, TypeVar
@@ -27,6 +28,7 @@ from .input import InputAdapter, WindowsInputAdapter
 from .models import ActionRequest, ActionResult, AuditEvent, ElementQuery, utc_now_iso
 from .operations import (
     OPS_ACTIONS,
+    OPS_CONTRACT_VERSION,
     OPS_SIDE_EFFECT_ACTIONS,
     LocalOperations,
     register_native_outcome_actions,
@@ -965,7 +967,7 @@ class Executor:
             "probe_budget_ms": max(1, int(budget * 1000)),
             "elapsed_ms": elapsed_ms,
             "generation": {
-                "executor_process_id": __import__("os").getpid(),
+                "executor_process_id": os.getpid(),
                 "operations_generation_id": generation_id,
             },
             "adapters": entries,
@@ -998,10 +1000,7 @@ class Executor:
             )
         except (OperationTimeoutError, OperationCancelledError):
             legacy = {
-                "contract_version": getattr(
-                    __import__("pc_executor.operations", fromlist=["OPS_CONTRACT_VERSION"]),
-                    "OPS_CONTRACT_VERSION",
-                ),
+                "contract_version": OPS_CONTRACT_VERSION,
                 "status": "degraded",
                 "generation_id": getattr(self.operations, "generation_id", None),
                 "managed_processes_live": -1,
