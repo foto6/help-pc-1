@@ -2,8 +2,13 @@ from __future__ import annotations
 
 import hashlib
 import os
+import threading
 from collections import deque
-from typing import Protocol
+from time import monotonic
+from typing import Any, Protocol
+
+from .cancellation import CancellationToken
+from .errors import OperationTimeoutError
 
 from .errors import AmbiguousTargetError, PolicyBlockedError, StaleTargetError
 from .models import (
@@ -24,15 +29,139 @@ from .windows import (
 
 
 class AccessibilityAdapter(Protocol):
-    def inspect(self, query: ElementQuery) -> ElementInfo: ...
-    def invoke(self, query: ElementQuery) -> ElementInfo: ...
-    def focus(self, query: ElementQuery) -> ElementInfo: ...
-    def set_value(self, query: ElementQuery, value: str, *, sensitive: bool = False) -> ElementInfo: ...
+    def inspect(
+        self,
+        query: ElementQuery,
+        *,
+        cancellation: CancellationToken | None = None,
+        deadline_monotonic: float | None = None,
+    ) -> ElementInfo:
+        control = self._find(
+            query,
+            cancellation=cancellation,
+            deadline_monotonic=deadline_monotonic,
+        )
+        info = self._info(control, include_execution_identity=True)
+        self._set_diagnostics(
+            operation="inspect",
+            target_process_id=info.process_id,
+            target_window_handle=info.window_handle,
+        )
+        return info
+
+    def invoke(
+        self,
+        query: ElementQuery,
+        *,
+        cancellation: CancellationToken | None = None,
+        deadline_monotonic: float | None = None,
+    ) -> ElementInfo:
+        control = self._find(
+            query,
+            cancellation=cancellation,
+            deadline_monotonic=deadline_monotonic,
+        )
+        info = self._info(control, include_execution_identity=True)
+        self._set_diagnostics(
+            operation="invoke",
+            target_process_id=info.process_id,
+            target_window_handle=info.window_handle,
+        )
+        if not info.is_enabled or info.is_offscreen:
+            raise PolicyBlockedError("UIA target is not currently actionable")
+        if not info.supports_invoke:
+            raise PolicyBlockedError("UIA target does not expose a deterministic invoke capability")
+        self._check_budget(cancellation, deadline_monotonic)
+        control.GetInvokePattern().Invoke()
+        self._check_budget(cancellation, deadline_monotonic)
+        return self._info(control, include_execution_identity=True)
+
+    def focus(
+        self,
+        query: ElementQuery,
+        *,
+        cancellation: CancellationToken | None = None,
+        deadline_monotonic: float | None = None,
+    ) -> ElementInfo:
+        control = self._find(
+            query,
+            cancellation=cancellation,
+            deadline_monotonic=deadline_monotonic,
+        )
+        info = self._info(control, include_execution_identity=True)
+        if not info.is_enabled or info.is_offscreen:
+            raise PolicyBlockedError("UIA target cannot be focused safely")
+        self._check_budget(cancellation, deadline_monotonic)
+        control.SetFocus()
+        self._check_budget(cancellation, deadline_monotonic)
+        return self._info(control, include_execution_identity=True)
+
+    def set_value(
+        self,
+        query: ElementQuery,
+        value: str,
+        *,
+        sensitive: bool = False,
+        cancellation: CancellationToken | None = None,
+        deadline_monotonic: float | None = None,
+    ) -> ElementInfo:
+        control = self._find(
+            query,
+            cancellation=cancellation,
+            deadline_monotonic=deadline_monotonic,
+        )
+        info = self._info(control, include_execution_identity=True)
+        ensure_not_sensitive_text(is_password=info.is_password, sensitive=sensitive)
+        if not info.is_enabled or info.is_offscreen:
+            raise PolicyBlockedError("UIA target is not currently actionable")
+        if not info.supports_value:
+            raise PolicyBlockedError("UIA target does not support deterministic value setting")
+        self._check_budget(cancellation, deadline_monotonic)
+        control.GetValuePattern().SetValue(value)
+        self._check_budget(cancellation, deadline_monotonic)
+        return self._info(control, include_execution_identity=True)
+
     def snapshot(self, *, window_title: str | None = None) -> UIObservationSnapshot: ...
 
 
+MAX_UIA_WALK_DEPTH = 12
+MAX_UIA_WALK_NODES = 2000
+
+
 class WindowsUIAutomationAdapter:
-    """Deterministic UIA adapter. Action methods always re-resolve current controls."""
+    """Deterministic UIA adapter with cooperative deadline/cancellation checks.
+
+    Windows UI Automation COM calls can still be slow or uninterruptible. The
+    Executor supplies an outer worker deadline; these checks ensure a walk that
+    resumes after such a call exits promptly instead of continuing to traverse.
+    """
+
+    def _diagnostic_lock_value(self):
+        lock = getattr(self, "_diagnostic_lock", None)
+        if lock is None:
+            lock = threading.RLock()
+            self._diagnostic_lock = lock
+        return lock
+
+    def _set_diagnostics(self, **values: Any) -> None:
+        with self._diagnostic_lock_value():
+            current = dict(getattr(self, "_last_diagnostics", {}) or {})
+            current.update(values)
+            self._last_diagnostics = current
+
+    def diagnostics_snapshot(self) -> dict[str, Any]:
+        with self._diagnostic_lock_value():
+            return dict(getattr(self, "_last_diagnostics", {}) or {})
+
+    @staticmethod
+    def _check_budget(
+        cancellation: CancellationToken | None,
+        deadline_monotonic: float | None,
+    ) -> None:
+        if cancellation is not None:
+            cancellation.raise_if_cancelled()
+        if deadline_monotonic is not None and monotonic() >= deadline_monotonic:
+            raise OperationTimeoutError("UIA traversal deadline exceeded")
 
     def _automation(self):
         if os.name != "nt":
@@ -43,14 +172,26 @@ class WindowsUIAutomationAdapter:
             raise RuntimeError("install the Windows dependency uiautomation") from exc
         return auto
 
-    def _root(self, window_title: str | None):
+    def _root(
+        self,
+        window_title: str | None,
+        *,
+        cancellation: CancellationToken | None = None,
+        deadline_monotonic: float | None = None,
+    ):
+        self._check_budget(cancellation, deadline_monotonic)
         auto = self._automation()
         desktop = auto.GetRootControl()
+        self._check_budget(cancellation, deadline_monotonic)
         if not window_title:
             return desktop
         matches = [
             child
-            for child in self._children(desktop)
+            for child in self._children(
+                desktop,
+                cancellation=cancellation,
+                deadline_monotonic=deadline_monotonic,
+            )
             if (getattr(child, "Name", "") or "").casefold() == window_title.casefold()
         ]
         matches.sort(
@@ -67,21 +208,57 @@ class WindowsUIAutomationAdapter:
             )
         return matches[0]
 
-    @staticmethod
-    def _children(control) -> list:
+    @classmethod
+    def _children(
+        cls,
+        control,
+        *,
+        cancellation: CancellationToken | None = None,
+        deadline_monotonic: float | None = None,
+    ) -> list:
+        cls._check_budget(cancellation, deadline_monotonic)
         try:
-            return list(control.GetChildren())
+            children = list(control.GetChildren())
+        except OperationTimeoutError:
+            raise
         except Exception:
-            return []
+            children = []
+        cls._check_budget(cancellation, deadline_monotonic)
+        return children
 
-    def _walk(self, root, *, max_depth: int = 12):
+    def _walk(
+        self,
+        root,
+        *,
+        max_depth: int = MAX_UIA_WALK_DEPTH,
+        max_nodes: int = MAX_UIA_WALK_NODES,
+        cancellation: CancellationToken | None = None,
+        deadline_monotonic: float | None = None,
+    ):
         queue = deque([(root, (), 0)])
+        visited = 0
         while queue:
+            self._check_budget(cancellation, deadline_monotonic)
+            if visited >= max_nodes:
+                raise OperationTimeoutError(
+                    f"UIA traversal node budget exceeded ({max_nodes})"
+                )
             control, path, depth = queue.popleft()
+            visited += 1
+            self._set_diagnostics(
+                nodes_visited=visited,
+                current_depth=depth,
+                max_depth=max_depth,
+                max_nodes=max_nodes,
+            )
             yield control, path
             if depth >= max_depth:
                 continue
-            children = self._children(control)
+            children = self._children(
+                control,
+                cancellation=cancellation,
+                deadline_monotonic=deadline_monotonic,
+            )
             for index, child in enumerate(children):
                 queue.append((child, path + (index,), depth + 1))
 
@@ -165,10 +342,39 @@ class WindowsUIAutomationAdapter:
                 return False
         return True
 
-    def _find(self, query: ElementQuery):
-        root = self._root(query.window_title)
+    def _find(
+        self,
+        query: ElementQuery,
+        *,
+        cancellation: CancellationToken | None = None,
+        deadline_monotonic: float | None = None,
+    ):
+        self._set_diagnostics(
+            operation="find",
+            window_title_sha256=(
+                hashlib.sha256(query.window_title.encode("utf-8")).hexdigest()
+                if query.window_title else None
+            ),
+            selector_fields=sorted(
+                name for name, value in (
+                    ("automation_id", query.automation_id),
+                    ("name", query.name),
+                    ("control_type", query.control_type),
+                    ("class_name", query.class_name),
+                ) if value is not None
+            ),
+        )
+        root = self._root(
+            query.window_title,
+            cancellation=cancellation,
+            deadline_monotonic=deadline_monotonic,
+        )
         candidates = []
-        for control, path in self._walk(root):
+        for control, path in self._walk(
+            root,
+            cancellation=cancellation,
+            deadline_monotonic=deadline_monotonic,
+        ):
             info = self._info(control)
             if self._matches(info, query):
                 candidates.append((path, info, control))
@@ -227,11 +433,43 @@ class WindowsUIAutomationAdapter:
         control.GetValuePattern().SetValue(value)
         return self._info(control, include_execution_identity=True)
 
-    def snapshot(self, *, window_title: str | None = None) -> UIObservationSnapshot:
-        root = self._root(window_title)
+    def snapshot(
+        self,
+        *,
+        window_title: str | None = None,
+        cancellation: CancellationToken | None = None,
+        deadline_monotonic: float | None = None,
+        max_nodes: int = MAX_UIA_WALK_NODES,
+        max_depth: int = MAX_UIA_WALK_DEPTH,
+    ) -> UIObservationSnapshot:
+        self._set_diagnostics(
+            operation="snapshot",
+            window_title_sha256=(
+                hashlib.sha256(window_title.encode("utf-8")).hexdigest()
+                if window_title else None
+            ),
+            nodes_visited=0,
+            max_nodes=max_nodes,
+            max_depth=max_depth,
+        )
+        root = self._root(
+            window_title,
+            cancellation=cancellation,
+            deadline_monotonic=deadline_monotonic,
+        )
         root_info = self._info(root)
+        self._set_diagnostics(
+            target_process_id=root_info.process_id,
+            target_window_handle=root_info.window_handle,
+        )
         nodes: list[UINodeSnapshot] = []
-        for control, path in self._walk(root):
+        for control, path in self._walk(
+            root,
+            max_nodes=max_nodes,
+            max_depth=max_depth,
+            cancellation=cancellation,
+            deadline_monotonic=deadline_monotonic,
+        ):
             info = self._info(control)
             identity = {
                 "path": list(path),
@@ -271,3 +509,29 @@ class WindowsUIAutomationAdapter:
             displays=list_display_geometries(),
             nodes=nodes,
         )
+
+    def health_probe(
+        self,
+        *,
+        cancellation: CancellationToken | None = None,
+        deadline_monotonic: float | None = None,
+    ) -> dict[str, Any]:
+        """Minimal read-only UIA liveness probe; never walks the desktop tree."""
+        self._set_diagnostics(operation="health_probe")
+        self._check_budget(cancellation, deadline_monotonic)
+        root = self._root(
+            None,
+            cancellation=cancellation,
+            deadline_monotonic=deadline_monotonic,
+        )
+        process_id = int(getattr(root, "ProcessId", 0) or 0) or None
+        handle = int(getattr(root, "NativeWindowHandle", 0) or 0) or None
+        self._check_budget(cancellation, deadline_monotonic)
+        diagnostics = {
+            "probe": "root_control_only",
+            "root_process_id": process_id,
+            "root_window_handle": handle,
+            "tree_walk_performed": False,
+        }
+        self._set_diagnostics(**diagnostics)
+        return diagnostics
