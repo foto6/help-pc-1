@@ -1,0 +1,14 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1412-focus-webai-bridge",
+  "action": "uia.focus",
+  "params": {
+    "query": {
+      "name": "Web AI Bridge",
+      "control_type": "TabItemControl",
+      "window_title": "ChatGPT - Shared Content - Google Chrome"
+    }
+  },
+  "timeout_ms": 10000,
+  "note": "Focus existing Web AI Bridge tab only; no bridge files or runtime changes"
+}
