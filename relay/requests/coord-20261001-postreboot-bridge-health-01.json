@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-postreboot-bridge-health-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Invoke-RestMethod -Uri 'http://127.0.0.1:17448/v1/bridge/health' -TimeoutSec 3 | ConvertTo-Json -Compress -Depth 4"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only local Bridge health after PC reboot"
+}
