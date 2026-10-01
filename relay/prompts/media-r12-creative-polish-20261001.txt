@@ -1,0 +1,34 @@
+EXECUTE NOW — MEDIA R12 CREATIVE POLISH / HUMAN-QUALITY SHORT-FORM EDITING. Continue in this SAME existing Media chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video2
+Branch ONLY: agent/media-r12-creative-polish-20261001
+Exact starting HEAD: 57110dc92a8d30dd3e931d1dd810a0597834d184
+
+R11 is green. Preserve all R11 render/QA/idempotency/provenance guarantees.
+
+PRIMARY GOAL:
+Improve output quality so autonomous shorts look intentionally edited rather than merely technically valid.
+
+Required:
+1. Add a versioned creative-edit plan layer above the R11 deterministic timeline.
+2. Add deterministic/heuristic support for:
+   - hook-first pacing in first 1-3 seconds;
+   - dead-air removal and jump-cut tightening;
+   - beat-aware cut alignment when music beat markers are available;
+   - auto crop/reframe with face/person/subject saliency inputs when supplied;
+   - caption styling presets with emphasis/highlight timing;
+   - motion text / kinetic caption variants without unsafe out-of-frame placement;
+   - B-roll/insert placement from source-bound candidate assets;
+   - zoom/punch-in/pan patterns with bounded frequency;
+   - silence-aware and sentence-aware cut points;
+   - loop-friendly ending option;
+   - CTA/end-card templates.
+3. Add objective guardrails against over-editing: maximum cut rate, zoom rate, transition density, text density and music loudness.
+4. Preserve deterministic fallback when CV/beat/saliency metadata is absent.
+5. Produce at least 3 distinct fixture styles: clean podcast, aggressive short-form, cinematic/minimal.
+6. Add visual QA heuristics for subtitle occlusion, excessive motion, unsafe crop, repeated frames, text collision and transition spam.
+7. Add reproducible before/after demo evidence and machine-readable creative-quality report.
+8. Keep ffmpeg-first deterministic baseline; optional model-assisted hints must be adapters only.
+9. NONEMPTY source/tests/docs commit, focused/full tests, exact SHA, CI, reproducible renders.
+
+No publishing, no credentials, no merge/release. Do not modify Creator/Growth repos.
