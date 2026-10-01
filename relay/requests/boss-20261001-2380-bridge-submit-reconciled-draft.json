@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-2380-bridge-submit-reconciled-draft",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===\"A88E3157A8078B7DA32FC62848071CC3\");if(!tab){process.stdout.write(JSON.stringify({ok:false,reason:\"tab_missing\"}));process.exit(2)}const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value' in c?c.value:(c.innerText||c.textContent||''))||''):'';return {found:!!c,text}})())\",returnByValue:true});const s=JSON.parse(rr.result.value);if(!s.found||!s.text.startsWith(\"EXECUTE NOW — BRIDGE R25 SAFE FILE ATTACHMENT TO EXISTING CHAT.\")||!s.text.includes(\"agent/bridge-r25-file-attachment-20261001\")){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"draft_not_expected\",length:s.text.length}));process.exit(3)}await call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await new Promise(r=>setTimeout(r,1000));const post=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value' in c?c.value:(c.innerText||c.textContent||''))||''):'';return {text,cleared:!text.trim()}})())\",returnByValue:true});ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true,post:JSON.parse(post.result.value)}));\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Reconcile observed unsent Bridge R25 draft by submitting exactly that existing composer content once"
+}
