@@ -1,0 +1,34 @@
+EXECUTE NOW — NATIVE MCP R25 CONSUME PC EXECUTOR R24 RUNTIME HEALTH. Continue in the SAME existing Native MCP/PC Control chat; do not create a new chat.
+
+Writable repo ONLY: foto6/help-pc-2
+Branch ONLY: agent/native-mcp-r25-r24-health-consumer-20261001
+Exact starting HEAD: f2b984c3e6a14e0e1d930c1c14253bd48f294f65
+
+Producer evidence:
+- foto6/help-pc-1
+- branch agent/pc-executor-r24-runtime-health-20261001
+- exact green producer SHA 60ba0ce92bf2f3cdd89e3213dba40793c6a90d8b
+- workflow 36806258696 SUCCESS
+- contract: pc_executor.runtime_health.v1
+
+R23 already identified runtime adapter health/UIA uncertainty as a cutover blocker. R24 now provides the producer-side contract. Consume it rather than probing/guessing independently.
+
+PRIMARY GOAL:
+Make R23/R25 system health and cutover gating source-bound to the exact R24 producer contract while keeping NO_LIVE_CUTOVER.
+
+Required:
+1. Vendor/pin exact R24 runtime-health schema/consumer fixture/blob identities and producer SHA.
+2. Add strict consumer validation for per-adapter health, UIA timeout/degraded state, outcome-journal integrity, generation/process identity and freshness.
+3. Fail closed on producer SHA/schema/blob drift, stale health, corrupt journal, unknown generation, UIA unhealthy where an action requires UIA.
+4. Do NOT let a degraded UIA adapter mark unrelated shell/windows/screenshot/outcome lanes unhealthy.
+5. Extend R23 health model/canary/readiness report to distinguish:
+   system healthy,
+   adapter-specific degraded,
+   action-specific blocked,
+   stale/unknown producer health.
+6. Add deterministic cross-repo fixture proving exact R24 envelope ingestion and regressions for changed producer SHA, schema drift, stale evidence, corrupt journal and UIA timeout.
+7. Define cutover prerequisites but keep release gate NO_LIVE_CUTOVER pending independent end-to-end verification.
+8. No live service restart/install/repoint.
+9. NONEMPTY source/tests/docs commit, focused/full CI, exact SHA/run IDs.
+
+No Desktop Commander, no E:\manhwa, no live deployment.
