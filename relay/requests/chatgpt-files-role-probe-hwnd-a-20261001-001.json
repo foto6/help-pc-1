@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-role-probe-hwnd-a-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "\n$ErrorActionPreference='Stop'\nAdd-Type @\"\nusing System;\nusing System.Runtime.InteropServices;\npublic static class Win32Focus {\n  [DllImport(\"user32.dll\")] public static extern bool SetForegroundWindow(IntPtr hWnd);\n  [DllImport(\"user32.dll\")] public static extern IntPtr GetForegroundWindow();\n}\n\"@\nAdd-Type -AssemblyName System.Windows.Forms\n$hwnd=[IntPtr]67948\nif(-not [Win32Focus]::SetForegroundWindow($hwnd)){ throw 'SetForegroundWindow failed' }\nStart-Sleep -Milliseconds 500\n$fg=[Win32Focus]::GetForegroundWindow()\nWrite-Output (\"foreground=\" + $fg.ToInt64())\nif($fg.ToInt64() -ne 67948){ throw \"Foreground mismatch: $($fg.ToInt64())\" }\n[System.Windows.Forms.SendKeys]::SendWait('^l')\nStart-Sleep -Milliseconds 150\n[System.Windows.Forms.SendKeys]::SendWait('https://bugbountyfoto6.files.com/ui/users')\n[System.Windows.Forms.SendKeys]::SendWait('{ENTER}')\nStart-Sleep -Seconds 3\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only role probe by exact HWND 67948 on own Files.com trial"
+}
