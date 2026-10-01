@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-send-supervisor-human-editing-gate-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "node .\\data\\direct_send_existing_agent.js --target=EFB77A02D8EBD4B3E47A600E35230743 --prompt=E:\\pc-github-relay\\relay\\prompts\\supervisor-human-level-editing-gate-20261001-v2.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Send exact human-level editing benchmark task to existing supervisor conversation; no new chat"
+}
