@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "node .\\data\\direct_send_existing_agent.js --target=7A34228044768E0A16C0E0D853DA4598 --prompt=E:\\pc-github-relay\\relay\\prompts\\supervisor-human-level-editing-gate-user-exact-20261001.txt"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Error: chat is generating\n    at E:\\WebAIBridge\\app\\data\\direct_send_existing_agent.js:13:76\n",
+      "stderr_bytes": 93,
+      "stderr_truncated": false,
+      "stdout": "PRE {\"url\":\"https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8\",\"title\":\"Отчёт о прогрессе\",\"high\":true,\"stop\":true,\"composer\":true,\"draft\":\"\\n\"}\n",
+      "stdout_bytes": 169,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T02:52:15.508Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T02:52:15.457Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-send-supervisor-human-level-gate-user-exact-05"
+    },
+    "request_id": "coord-20261001-send-supervisor-human-level-gate-user-exact-05",
+    "started_at": "2026-10-01T02:52:15.094Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-send-supervisor-human-level-gate-user-exact-05",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
