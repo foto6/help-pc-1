@@ -1,0 +1,21 @@
+FOLLOW-UP AFTER YOUR CURRENT Growth R15 critic implementation — CONCRETE GEMINI VIDEO CRITIC PROVIDER.
+
+Stay on SAME repo/branch/chat:
+repo foto6/video3
+branch agent/growth-r15-visual-critic-20261001
+
+Once the base critic is substantive and committed, add an optional real Google Gemini video-understanding provider.
+
+Requirements:
+1. Enabled only via explicit configuration (GEMINI_API_KEY, configurable GEMINI_MODEL); no secrets in repo/logs.
+2. Prefer native finished-video input plus structured contextual metadata (source semantics, edit timeline, QA) rather than only a contact-sheet approximation.
+3. Ask for strict time-coded JSON observations tied to critic dimensions: hook, pacing, semantic cuts, crop/framing, B-roll relevance, captions, continuity, motion, audio, payoff/CTA/loop, awkward/dead moments.
+4. Preserve provider/model/mode/request digest and confidence as model opinion, never human truth.
+5. Pairwise mode must compare A and B in randomized order and preserve blind labels internally; expose mapping only after scoring.
+6. Validate timestamps against probed duration; reject malformed/unsupported output fail-closed.
+7. Bound upload/retries/timeouts and clean provider file handles where possible.
+8. CI uses fake transport only. Add optional live smoke command guarded by credentials.
+9. Human parity remains UNPROVEN until actual blinded human labels are evaluated with the calibration harness.
+10. Keep model configurable; do not hard-code a permanently 'best' model.
+
+Reference capability verified from current Google AI Gemini video-understanding docs: direct video inputs, timestamped content understanding, configurable static FPS/clips, and agentic processing on supported current models.
