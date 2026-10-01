@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-dual-browser-check-20261001-001",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Identify separate admin and tetst1 browser windows for authorized Files.com testing"
+}
