@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst id=\"DBC6BC28E04127D1821830B232E048EB\",url=\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda63c-98d8-83eb-b365-d423b7563c4b\",prompt=\"EXECUTE NOW — GROWTH R17 PRODUCTION PLATFORM METRICS RUNTIME. Continue in the SAME existing Growth provider-ingestion chat. Do not create another chat.\\n\\nRepo: foto6/video3\\nWritable branch ONLY: agent/growth-r17-platform-metrics-runtime-20261001\\nExact starting HEAD: cb50a3d78a18e6db1ebef1be69fdf11ff2e27385\\n\\nPreserve R10-R16 event, scheduler, experiment, visual-critic and benchmark-export contracts. Do not modify Creator or Media repositories.\\n\\nPRIMARY GOAL:\\nTurn the existing provider-ingestion/collection contracts into a production-capable read-only metrics runtime for posts published by Creator to Instagram Reels, TikTok and YouTube Shorts, while keeping CI synthetic and keeping credentials/secrets outside git and durable evidence.\\n\\nRequired:\\n1. Verify the CURRENT official platform API/docs before implementing each adapter. Record source/date/capability limitations in a source-bound readiness report; do not assume old endpoints remain valid.\\n2. Implement provider adapters behind the existing normalized metrics ingestion boundary for the metrics actually exposed by each platform/account/API tier. Unsupported metrics must be explicit unavailable_evidence, never zeros.\\n3. Credential material stays external. Durable state stores only opaque credential/account references and provider post IDs/URLs.\\n4. Polling/collection must be read-only, bounded, rate-limit aware, idempotent, restart-safe and exactly-once at normalized-event level.\\n5. Handle 401/403, revoked auth, 404/deleted post, 429 Retry-After, partial metrics, changing platform counters, delayed availability, out-of-order samples, duplicate snapshots, clock skew and provider outages.\\n6. Bind every normalized metric snapshot to exact Creator publish receipt/post identity and exact Media artifact/render SHA when available. Unknown lineage fails closed for live-performance claims.\\n7. Separate platform-reported observed metrics from derived analytics and from synthetic/offline fixtures. Synthetic data can never be presented as live platform evidence.\\n8. Add collection freshness, lag, last-success, error classification and backfill/recovery state so Creator/coordinator can tell \\\"no new data\\\" from \\\"collector broken\\\".\\n9. Produce a one-command sandbox/replay showing Creator receipt -> provider adapter -> normalized snapshots -> Growth decision/next-cycle seed without any provider mutation.\\n10. No posting/deleting/editing social content in this milestone. No credentials, CAPTCHA/2FA automation, or live account mutation.\\n\\nCompletion:\\n- substantive code/tests/docs;\\n- exact HEAD;\\n- targeted/full tests;\\n- exact-head CI;\\n- deterministic duplicate/out-of-order/restart/rate-limit fixtures;\\n- source-bound readiness matrix stating what is genuinely production-capable versus blocked by account/API permissions.\\n\";const sleep=ms=>new Promise(r=>setTimeout(r,ms));const tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(x=>x.id===id);if(!tab||tab.url!==url){process.stdout.write(JSON.stringify({ok:false,phase:\"preflight\",reason:\"target_mismatch\"}));process.exit(2)}const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;pending.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});const readFn=`function readManagedComposer(composer){if(!composer)return{text:'',exact:false};const nodes=Array.from(composer.childNodes||[]);if(!nodes.length)return{text:String(composer.textContent??''),exact:String(composer.textContent??'')===''};if(nodes.length===1&&nodes[0]?.nodeType===3)return{text:String(nodes[0].nodeValue??''),exact:true};if(!nodes.every(n=>n?.nodeType===1&&String(n.tagName||'').toUpperCase()==='P'))return{text:String(composer.innerText??composer.textContent??''),exact:false};const lines=[];for(const p of nodes){const parts=Array.from(p.childNodes||[]);if(parts.length===1&&parts[0]?.nodeType===1&&String(parts[0].tagName||'').toUpperCase()==='BR'&&!String(p.textContent??'')){lines.push('');continue}let line='';for(const n of parts){if(n.nodeType===3){line+=String(n.nodeValue??'');continue}if(n.nodeType===1&&String(n.tagName||'').toUpperCase()==='BR'){line+='\\\\n';continue}if(n.nodeType===1&&['SPAN','A','B','STRONG','EM','I','U','S','CODE','MARK'].includes(String(n.tagName||'').toUpperCase())){line+=String(n.textContent??'');continue}return{text:String(composer.innerText??composer.textContent??''),exact:false}}lines.push(line)}return{text:lines.join('\\\\n'),exact:true}}`;const stateExpr=\"JSON.stringify((()=>{\"+readFn+\";const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const rb=readManagedComposer(c);const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});const generating=bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'));return {found:!!c,text:rb.text,exact:rb.exact,generating}})())\";const getState=async()=>{const r=await call(\"Runtime.evaluate\",{expression:stateExpr,returnByValue:true});return JSON.parse(r.result.value)};const pre=await getState();if(!pre.found||pre.generating||pre.text.trim().length){ws.close();process.stdout.write(JSON.stringify({ok:false,phase:\"preflight\",reason:!pre.found?\"no_composer\":pre.generating?\"generating\":\"draft_present\"}));process.exit(3)}const clear=\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});if(!c)return false;c.focus();if('value'in c)c.value='';else c.textContent='';c.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'deleteContentBackward',data:null}));return true})()\";await call(\"Runtime.evaluate\",{expression:clear,returnByValue:true});await call(\"Input.insertText\",{text:prompt});await sleep(900);const typed=await getState();if(!typed.exact||typed.text!==prompt||typed.generating){await call(\"Runtime.evaluate\",{expression:clear,returnByValue:true});ws.close();process.stdout.write(JSON.stringify({ok:false,phase:\"readback\",reason:!typed.exact?\"non_exact\":\"mismatch_or_generating\"}));process.exit(4)}const focused=await call(\"Runtime.evaluate\",{expression:\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});if(!c)return false;c.focus();return document.activeElement===c||c.contains(document.activeElement)})()\",returnByValue:true});if(!focused.result.value){await call(\"Runtime.evaluate\",{expression:clear,returnByValue:true});ws.close();process.stdout.write(JSON.stringify({ok:false,phase:\"focus_failed\"}));process.exit(5)}await call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await sleep(1500);const post=await getState();const vis=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify({visible:(document.body?.innerText||'').includes('GROWTH R17 PRODUCTION PLATFORM METRICS RUNTIME')})\",returnByValue:true});ws.close();const vv=JSON.parse(vis.result.value);process.stdout.write(JSON.stringify({ok:vv.visible||post.generating,submitted:true,visible:vv.visible,started:post.generating,composerCleared:post.text.trim().length===0}));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":false,\"submitted\":true,\"visible\":false,\"started\":false,\"composerCleared\":true}",
+      "stdout_bytes": 84,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T07:46:36.202Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T07:46:36.145Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-1558-dispatch-growth-r17"
+    },
+    "request_id": "boss-20261001-1558-dispatch-growth-r17",
+    "started_at": "2026-10-01T07:46:31.906Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-1558-dispatch-growth-r17",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
