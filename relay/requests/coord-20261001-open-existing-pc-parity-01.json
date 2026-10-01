@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-open-existing-pc-parity-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$u='https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab94f1d-a604-83eb-ae1b-258ac27e6544'; $e=[uri]::EscapeDataString($u); Invoke-RestMethod -UseBasicParsing -Method Put -Uri (\"http://127.0.0.1:17410/json/new?\"+$e) -TimeoutSec 8 | Select-Object id,url,webSocketDebuggerUrl | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 12000,
+  "note": "Open existing PC parity conversation in a tab; no new conversation"
+}
