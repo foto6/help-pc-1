@@ -1,0 +1,11 @@
+{
+  "action": null,
+  "error": "ValueError: action is not enabled by relay: 'keyboard.press'",
+  "executor_result": null,
+  "id": "files-bounty-nav-f6-exec-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "relay_error",
+  "version": "pc_relay.result.v1"
+}
