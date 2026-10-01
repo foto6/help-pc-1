@@ -1,0 +1,275 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pc_relay.progress_evidence.v1",
+  "title": "PC Relay Atomic Progress Evidence v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "status",
+    "observed_at_unix",
+    "delivery_source",
+    "delivery_semantics",
+    "binding",
+    "progress_sha256",
+    "progress",
+    "liveness",
+    "error",
+    "evidence_sha256"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "pc_relay.progress_evidence.v1"
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "blocked"
+      ]
+    },
+    "observed_at_unix": {
+      "type": "number",
+      "minimum": 0
+    },
+    "delivery_source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "mechanism",
+        "reader_script_sha256",
+        "evidence_module_sha256"
+      ],
+      "properties": {
+        "repository": {
+          "const": "foto6/help-pc-1"
+        },
+        "mechanism": {
+          "const": "bounded_local_file_stdio"
+        },
+        "reader_script_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "evidence_module_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "delivery_semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "read_only",
+        "queue_acknowledged",
+        "lease_created",
+        "retry_triggered",
+        "replay_triggered"
+      ],
+      "properties": {
+        "read_only": {
+          "const": true
+        },
+        "queue_acknowledged": {
+          "const": false
+        },
+        "lease_created": {
+          "const": false
+        },
+        "retry_triggered": {
+          "const": false
+        },
+        "replay_triggered": {
+          "const": false
+        }
+      }
+    },
+    "binding": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "relay_startup_head",
+            "relay_script_sha256",
+            "process_pid",
+            "process_started_at_unix",
+            "process_instance_id",
+            "loop_generation_id",
+            "loop_epoch",
+            "progress_recorded_at_unix"
+          ],
+          "properties": {
+            "relay_startup_head": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "relay_script_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "process_pid": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "process_started_at_unix": {
+              "type": "number",
+              "minimum": 0
+            },
+            "process_instance_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "loop_generation_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "loop_epoch": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "progress_recorded_at_unix": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        }
+      ]
+    },
+    "progress_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "progress": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "pc_relay.progress.v1.schema.json"
+        }
+      ]
+    },
+    "liveness": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "pc_relay.liveness_probe.v1.schema.json"
+        }
+      ]
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "classification",
+            "reason",
+            "retryable"
+          ],
+          "properties": {
+            "classification": {
+              "enum": [
+                "missing_snapshot",
+                "oversized_snapshot",
+                "invalid_json",
+                "unknown_version",
+                "schema_invalid",
+                "source_identity_invalid",
+                "stale_snapshot",
+                "future_snapshot",
+                "atomic_binding_invalid",
+                "read_error"
+              ]
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "retryable": {
+              "const": false
+            }
+          }
+        }
+      ]
+    },
+    "evidence_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "ok"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "binding": {
+            "type": "object"
+          },
+          "progress_sha256": {
+            "type": "string"
+          },
+          "progress": {
+            "type": "object"
+          },
+          "liveness": {
+            "type": "object"
+          },
+          "error": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "blocked"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "binding": {
+            "type": "null"
+          },
+          "progress_sha256": {
+            "type": "null"
+          },
+          "progress": {
+            "type": "null"
+          },
+          "liveness": {
+            "type": "null"
+          },
+          "error": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  ]
+}
