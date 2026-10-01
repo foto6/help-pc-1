@@ -9,7 +9,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
-from .cancellation import CancellationToken
 from .outcome import ActionOutcomeEvidence, parse_action_outcome
 
 
@@ -468,85 +467,10 @@ class OutcomeJournal:
                 f"journal durable append failed: {type(exc).__name__}: {exc}"
             ) from exc
 
-    def integrity_status(
-        self,
-        *,
-        max_bytes: int = 2 * 1024 * 1024,
-        cancellation: CancellationToken | None = None,
-    ) -> dict[str, Any]:
-        """Read-only bounded integrity validation for runtime health.
-
-        The health path never repairs/truncates the journal. Large journals are
-        reported as unknown/bounded rather than forcing an unbounded scan.
-        """
-        token = cancellation or CancellationToken()
-        token.raise_if_cancelled()
-        if isinstance(max_bytes, bool) or not isinstance(max_bytes, int) or max_bytes <= 0:
-            raise ValueError("max_bytes must be a positive integer")
-        with self._lock:
-            token.raise_if_cancelled()
-            if not self.path.exists():
-                return {
-                    "configured": True,
-                    "integrity": "healthy",
-                    "reason": "empty_or_missing",
-                    "bytes_checked": 0,
-                    "record_count": 0,
-                    "journal_sha256": hashlib.sha256(b"").hexdigest(),
-                    "corruption": None,
-                    "bounded": True,
-                    "max_bytes": max_bytes,
-                }
-            size = self.path.stat().st_size
-            token.raise_if_cancelled()
-            if size > max_bytes:
-                return {
-                    "configured": True,
-                    "integrity": "unknown",
-                    "reason": "size_limit_exceeded",
-                    "bytes_checked": 0,
-                    "record_count": None,
-                    "journal_sha256": None,
-                    "corruption": None,
-                    "bounded": True,
-                    "max_bytes": max_bytes,
-                }
-            raw = self.path.read_bytes()
-            token.raise_if_cancelled()
-            scan = self._scan_raw(raw)
-        corruption = (
-            None
-            if scan.corruption is None
-            else {
-                "kind": scan.corruption.kind,
-                "line_number": scan.corruption.line_number,
-                "byte_offset": scan.corruption.byte_offset,
-                "safe_prefix_bytes": scan.corruption.safe_prefix_bytes,
-            }
-        )
-        return {
-            "configured": True,
-            "integrity": "healthy" if corruption is None else "corrupt",
-            "reason": "validated" if corruption is None else "integrity_failure",
-            "bytes_checked": len(raw),
-            "record_count": len(scan.records),
-            "journal_sha256": scan.journal_sha256,
-            "corruption": corruption,
-            "bounded": True,
-            "max_bytes": max_bytes,
-        }
-
     def _scan_locked(self) -> _ScanResult:
         if not self.path.exists():
-            return _ScanResult(
-                records=(),
-                corruption=None,
-                journal_sha256=hashlib.sha256(b"").hexdigest(),
-            )
-        return self._scan_raw(self.path.read_bytes())
-
-    @staticmethod
-    def _scan_raw(raw: bytes) -> _ScanResult:
+            return _ScanResult(records=(), corruption=None, journal_sha256=hashlib.sha256(b"").hexdigest())
+        raw = self.path.read_bytes()
         digest = hashlib.sha256(raw).hexdigest()
         records: list[OutcomeJournalRecord] = []
         previous_hash: str | None = None
