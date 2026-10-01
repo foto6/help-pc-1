@@ -1,0 +1,26 @@
+FOLLOW-UP / PRIORITY AMENDMENT — DO NOT CREATE A NEW CHAT AND DO NOT TOUCH THE LIVE BRIDGE.
+
+Continue your existing Bridge R19 work in this SAME chat/branch.
+
+Additional mandatory user requirement:
+The Bridge UI/API must discover and display ALL currently working ChatGPT chats, not only chats already registered in managedChats.
+
+Observed problem after reboot:
+- several active development chats exist in Chrome/ChatGPT but do not appear in Bridge;
+- chats created from a ChatGPT Project root can initially use local-chatgpt:* conversation URLs and later canonicalize;
+- browser/PC restart can restore tabs that Bridge does not re-discover;
+- legacy chats may exist outside the current managed registry.
+
+Required additions to R19:
+1. Implement read-only discovery that enumerates existing ChatGPT page targets from the configured profile(s) and normalizes canonical conversation identity.
+2. Include project conversations, ordinary /c/<id> conversations, newly-created local-chatgpt conversations, and restored tabs.
+3. Reconcile local-chatgpt -> canonical URL transitions without creating duplicate chat records.
+4. Bridge must show active discovered chats even when they are not yet in managedChats; distinguish discovered/unmanaged vs managed.
+5. Deduplicate multiple tabs of the same conversation while preserving tab-count/target diagnostics.
+6. Discovery MUST NOT call /json/new or open tabs. Discovery is observation-only.
+7. On PC/browser restart, re-discovery must converge deterministically and restore visibility.
+8. Add tests/fixtures for: unmanaged open chat, managed open chat, duplicate tabs, local->canonical transition, project chat, plain /c chat, restored tabs after restart, closed chat, stale registry entry.
+9. Add an API/UI-facing snapshot contract for "all visible working chats" with source/provenance and managed/unmanaged status.
+10. Keep the current live Bridge untouched. Isolated branch only; no deploy/restart/repoint/config mutation.
+
+Also preserve the existing R19 assignment-API/stale-binding work. Return one combined NONEMPTY commit/series with tests, CI, exact SHA, replay/soak evidence and migration notes.
