@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pc_executor.runtime_health.v1",
+  "title": "PC Executor Runtime Health v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "observed_at",
+    "complete",
+    "probe_budget_ms",
+    "elapsed_ms",
+    "generation",
+    "adapters",
+    "outcome_journal",
+    "summary"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "pc_executor.runtime_health.v1"
+    },
+    "observed_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "complete": {
+      "type": "boolean"
+    },
+    "probe_budget_ms": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "elapsed_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "generation": {
+      "$ref": "#/$defs/generation"
+    },
+    "adapters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "uia",
+        "screenshot",
+        "windows",
+        "shell",
+        "clipboard",
+        "input",
+        "outcome_journal",
+        "search",
+        "process"
+      ],
+      "properties": {
+        "uia": {
+          "$ref": "#/$defs/adapter"
+        },
+        "screenshot": {
+          "$ref": "#/$defs/adapter"
+        },
+        "windows": {
+          "$ref": "#/$defs/adapter"
+        },
+        "shell": {
+          "$ref": "#/$defs/adapter"
+        },
+        "clipboard": {
+          "$ref": "#/$defs/adapter"
+        },
+        "input": {
+          "$ref": "#/$defs/adapter"
+        },
+        "outcome_journal": {
+          "$ref": "#/$defs/adapter"
+        },
+        "search": {
+          "$ref": "#/$defs/adapter"
+        },
+        "process": {
+          "$ref": "#/$defs/adapter"
+        }
+      }
+    },
+    "outcome_journal": {
+      "$ref": "#/$defs/journal"
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "responsive",
+        "degraded",
+        "unhealthy",
+        "unknown"
+      ],
+      "properties": {
+        "responsive": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "degraded": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unhealthy": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unknown": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    }
+  },
+  "$defs": {
+    "generation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "executor_process_id",
+        "operations_generation_id"
+      ],
+      "properties": {
+        "executor_process_id": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "operations_generation_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "circuit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "timeout_threshold",
+        "consecutive_timeouts",
+        "opened_at",
+        "cooldown_ms"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "closed",
+            "open",
+            "half_open"
+          ]
+        },
+        "timeout_threshold": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "consecutive_timeouts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "opened_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "cooldown_ms": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "available",
+        "state",
+        "provider",
+        "last_success_at",
+        "last_failure_at",
+        "last_failure_kind",
+        "timeout_count",
+        "error_count",
+        "bounded_operation_timeout_ms",
+        "circuit",
+        "generation",
+        "diagnostics"
+      ],
+      "properties": {
+        "available": {
+          "type": "boolean"
+        },
+        "state": {
+          "enum": [
+            "responsive",
+            "degraded",
+            "unhealthy",
+            "unknown"
+          ]
+        },
+        "provider": {
+          "type": "string"
+        },
+        "last_success_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "last_failure_at": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "last_failure_kind": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "timeout_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "error_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "bounded_operation_timeout_ms": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "circuit": {
+          "$ref": "#/$defs/circuit"
+        },
+        "generation": {
+          "$ref": "#/$defs/generation"
+        },
+        "diagnostics": {
+          "type": "object"
+        }
+      }
+    },
+    "journal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "configured",
+        "integrity",
+        "reason",
+        "bytes_checked",
+        "record_count",
+        "journal_sha256",
+        "corruption",
+        "bounded",
+        "max_bytes"
+      ],
+      "properties": {
+        "configured": {
+          "type": "boolean"
+        },
+        "integrity": {
+          "enum": [
+            "healthy",
+            "corrupt",
+            "unknown",
+            "unconfigured"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "bytes_checked": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "record_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "journal_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "corruption": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "bounded": {
+          "const": true
+        },
+        "max_bytes": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  }
+}
