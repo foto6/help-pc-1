@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pc_relay.liveness_probe.v1",
+  "title": "PC Control GitHub Relay Liveness Probe v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "state",
+    "reason",
+    "observed_pids",
+    "progress_age_seconds",
+    "queue_progress_age_seconds",
+    "successful_cycle_age_seconds",
+    "consecutive_cycle_failures",
+    "pending_count",
+    "loop_generation_id",
+    "loop_epoch",
+    "process_pid",
+    "last_error_classification"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "pc_relay.liveness_probe.v1"
+    },
+    "state": {
+      "enum": [
+        "unknown",
+        "no_process",
+        "alive_unknown",
+        "duplicate_processes_ambiguous",
+        "stale_record_no_process",
+        "alive_ambiguous_identity",
+        "healthy_progressing",
+        "alive_stalled",
+        "progress_record_current",
+        "stalled_record"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "observed_pids": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "uniqueItems": true,
+      "maxItems": 64
+    },
+    "progress_age_seconds": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "queue_progress_age_seconds": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "successful_cycle_age_seconds": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "consecutive_cycle_failures": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "pending_count": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "loop_generation_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 128
+    },
+    "loop_epoch": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "process_pid": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "last_error_classification": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "enum": [
+        null,
+        "none",
+        "transient_network",
+        "transient_git_lock",
+        "remote_advanced",
+        "rebase_conflict",
+        "git_auth_or_permission",
+        "checkout_dirty",
+        "request_invalid",
+        "executor_error",
+        "publish_error",
+        "unknown"
+      ]
+    }
+  }
+}
