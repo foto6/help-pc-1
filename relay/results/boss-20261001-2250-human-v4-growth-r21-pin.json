@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst prompt=\"EXECUTE NOW — HUMAN GATE V4 INDEPENDENT GROWTH R21 EXACT-PIN INTAKE.\\n\\nRepo: foto6/boss\\nWritable branch ONLY: agent/human-editing-gate-supervisor-20261001-v4\\nCurrent observed V4 HEAD: 674deff7a5d59320b83a26ebc035e4bcf2adce33\\n\\nIndependently verify this newly exact-green producer; do not trust coordinator assertions without checking repository/CI/artifact bytes.\\n\\nGrowth R21:\\n- repo: foto6/video3\\n- branch: agent/growth-r21-real-artifact-decision-20261001\\n- exact final SHA: be45ddf026f4a18cd40c9f9ddb43e9628a796ef7\\n- exact-head CI: 36877213747 SUCCESS\\n- workflow artifact ID: 11169687540\\n- name: growth-r21-real-artifact-decision\\n- size: 14941 bytes\\n- GitHub artifact digest: sha256:d7699871ece68ba733f858b419ae0c501a8c743f1d675a1600fd8087d2d3611c\\n\\nObserved final artifact manifest claims:\\n- growth_commit_sha = be45ddf026f4a18cd40c9f9ddb43e9628a796ef7\\n- growth_run_id = 36877213747\\n- Media producer SHA = 231a0680c8939cfec77aaa283e507e93f383ad73\\n- Media artifact = 11163920921 / sha256:d929b592c76ec93e41b54701376f4b02366a3bdbd127d3472d73ae277d450d0f\\n- exact candidate render SHA values are source-bound\\n- human_ground_truth=false\\n- decision=insufficient_evidence; winner=null\\n\\nRequired:\\n1. Download and independently verify final Growth artifact, internal output manifest, exact SHA/run binding, Media archive digest/source/candidate hashes.\\n2. Reject if final artifact is merely a stale replay or its internal binding differs.\\n3. If valid, mark the Growth producer blocker resolved in V4 evidence.\\n4. Do NOT advance REAL_ARTIFACT_REHEARSAL_PASS until Creator exact-pin real-artifact evidence is also independently valid.\\n5. Do NOT fabricate ratings or treat Growth model/rule evidence as human labels.\\n6. Preserve current state-machine semantics and exact-head CI.\\n7. Produce substantive commit/report update + exact-head green CI.\\n\\nCurrent Creator remains independently pending; do not infer it passed from this task.\",id=\"74BDC2B5E97107BBA7ACDB858F2D03BB\",url=\"https://chatgpt.com/c/6abdcea3-b724-83ed-b43b-982f00854e3c\";const sleep=ms=>new Promise(r=>setTimeout(r,ms));const tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===id);if(!tab||tab.url!==url){process.stdout.write(JSON.stringify({ok:false,reason:\"target_mismatch\",actual:tab?.url||\"\"}));process.exit(2)}const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});const st=async()=>JSON.parse((await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});return {found:!!c,text,generating:bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'))}})())\",returnByValue:true})).result.value);const pre=await st();if(!pre.found||pre.generating||pre.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:pre.generating?\"generating\":\"draft_or_no_composer\"}));process.exit(3)}await call(\"Runtime.evaluate\",{expression:\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});c.focus();return true})()\",returnByValue:true});await call(\"Input.insertText\",{text:prompt});await sleep(500);const typed=await st(),norm=s=>String(s||\"\").replace(/\\s+/g,\" \").trim();if(norm(typed.text)!==norm(prompt)){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"readback_mismatch\"}));process.exit(4)}await call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await sleep(900);const post=await st();ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true,started:post.generating,composerCleared:!post.text.trim()}));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"submitted\":true,\"started\":false,\"composerCleared\":true}",
+      "stdout_bytes": 67,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T15:39:44.635Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T15:39:44.557Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-2250-human-v4-growth-r21-pin"
+    },
+    "request_id": "boss-20261001-2250-human-v4-growth-r21-pin",
+    "started_at": "2026-10-01T15:39:41.742Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-2250-human-v4-growth-r21-pin",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
