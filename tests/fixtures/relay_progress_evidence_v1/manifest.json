@@ -1,0 +1,99 @@
+{
+  "schema": "pc_relay.progress_evidence.consumer_manifest.v1",
+  "producer_repository": "foto6/help-pc-1",
+  "producer_branch": "agent/pc-relay-r27-evidence-delivery-20261001",
+  "exact_start_sha": "96d453bcdc866bfd26c06ad88e2ec0c033fbccdd",
+  "upstream_r26_ci": 36833819136,
+  "envelope_contract_version": "pc_relay.progress_evidence.v1",
+  "paired_contracts": [
+    "pc_relay.progress.v1",
+    "pc_relay.liveness_probe.v1"
+  ],
+  "delivery": {
+    "mechanism": "bounded_local_file_stdio",
+    "command": "python tools/read_relay_progress_evidence.py --repo <dedicated-relay-checkout>",
+    "source_path": ".pc-relay/progress.v1.json",
+    "queue_side_effects": false,
+    "acknowledges_requests": false,
+    "creates_leases": false,
+    "triggers_retry": false,
+    "triggers_replay": false,
+    "process_enumeration": false,
+    "git_operations": false
+  },
+  "source_blobs": [
+    {
+      "path": "src/pc_relay/evidence.py",
+      "git_blob_sha": "4dd89a2102c8c16d04073260f43c3aa8c93fcd0c"
+    },
+    {
+      "path": "tools/read_relay_progress_evidence.py",
+      "git_blob_sha": "bba58cf4e6baa9d5ecc4e5435e6b684cd5272314"
+    },
+    {
+      "path": "schemas/pc_relay.progress_evidence.v1.schema.json",
+      "git_blob_sha": "73962a7a51e01f72c8e58f240339f4bb4d30714d"
+    },
+    {
+      "path": "src/pc_relay/progress.py",
+      "git_blob_sha": "c00ccc58f75de463898cd26bb6c4cfeab25a2ca6"
+    },
+    {
+      "path": "schemas/pc_relay.progress.v1.schema.json",
+      "git_blob_sha": "04b8da53f638a244a668c8f0a9be4c9b165e1c5e"
+    },
+    {
+      "path": "schemas/pc_relay.liveness_probe.v1.schema.json",
+      "git_blob_sha": "7990e850ef2c143a3d718bd15101c142feb80e1e"
+    },
+    {
+      "path": "tests/fixtures/relay_progress_evidence_v1/evidence.example.json",
+      "git_blob_sha": "d088407f9bfc41acb43cc7a0c980b1341625a920"
+    }
+  ],
+  "atomic_binding_fields": [
+    "binding.relay_startup_head",
+    "binding.relay_script_sha256",
+    "binding.process_pid",
+    "binding.process_started_at_unix",
+    "binding.process_instance_id",
+    "binding.loop_generation_id",
+    "binding.loop_epoch",
+    "binding.progress_recorded_at_unix",
+    "observed_at_unix",
+    "progress_sha256",
+    "evidence_sha256"
+  ],
+  "failure_classifications": [
+    "missing_snapshot",
+    "oversized_snapshot",
+    "invalid_json",
+    "unknown_version",
+    "schema_invalid",
+    "source_identity_invalid",
+    "stale_snapshot",
+    "future_snapshot",
+    "atomic_binding_invalid",
+    "read_error"
+  ],
+  "bounds": {
+    "default_max_snapshot_bytes": 65536,
+    "hard_max_snapshot_bytes": 1048576,
+    "default_max_age_seconds": 30,
+    "hard_max_age_seconds": 300,
+    "allowed_future_clock_skew_seconds": 5
+  },
+  "unknown_semantics": {
+    "pending_or_unknown_effect_is_observation_only": true,
+    "replay_authorized_by_reader": false,
+    "reader_consults_state_files": false,
+    "reader_consults_outcome_journal": false
+  },
+  "consumer_rules": [
+    "Accept status=ok only after validating the envelope digest and paired generation/epoch/process binding.",
+    "Treat status=blocked as unavailable evidence and never consume partial progress or liveness fields.",
+    "Do not infer replay authorization, lease ownership, or queue acknowledgement from liveness recovery.",
+    "Pin exact source blobs before enabling a Native MCP runtime reader."
+  ],
+  "live_cutover_authorized": false
+}
