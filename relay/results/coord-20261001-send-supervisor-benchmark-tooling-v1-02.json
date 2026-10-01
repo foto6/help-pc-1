@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "node .\\data\\direct_send_existing_agent.js --target=EFB77A02D8EBD4B3E47A600E35230743 --prompt=E:\\pc-github-relay\\relay\\prompts\\supervisor-human-editorial-benchmark-tooling-v1-20261001.txt"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "PRE {\"url\":\"https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8\",\"title\":\"Отчёт о прогрессе\",\"high\":true,\"stop\":false,\"composer\":true,\"draft\":\"\\n\"}\nCLICK {\"ok\":true,\"aria\":\"Отправить\",\"testid\":\"\"}\nSTART {\"url\":\"https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8\",\"title\":\"Отчёт о прогрессе\",\"high\":true,\"stop\":true,\"composer\":true,\"draft\":\"\\n\"}\n",
+      "stdout_bytes": 399,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T03:00:06.913Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T03:00:06.855Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-send-supervisor-benchmark-tooling-v1-02"
+    },
+    "request_id": "coord-20261001-send-supervisor-benchmark-tooling-v1-02",
+    "started_at": "2026-10-01T02:59:54.738Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-send-supervisor-benchmark-tooling-v1-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
