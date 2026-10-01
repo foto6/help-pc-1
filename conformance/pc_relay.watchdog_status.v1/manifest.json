@@ -9,7 +9,7 @@
   "producer_blobs": {
     "relay": {
       "path": "tools/github_relay.py",
-      "git_blob_sha1": "3e4a35e3bb0a2ec14fd331db4a73ff9339b3234e"
+      "git_blob_sha1": "b87ef62c6e55eb071e6180780f56343deacd4cb0"
     },
     "launcher": {
       "path": "tools/start_pc_control_relay.ps1",
