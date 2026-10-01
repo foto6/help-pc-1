@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-relay-health-probe-01",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read-only relay health probe after user confirmed py->python relay process chain is running"
+}
