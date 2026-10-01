@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "\n$ErrorActionPreference='Stop'\nAdd-Type @\"\nusing System;\nusing System.Runtime.InteropServices;\npublic static class Win32Ctl {\n  [DllImport(\"user32.dll\")] public static extern bool ShowWindowAsync(IntPtr hWnd,int nCmdShow);\n  [DllImport(\"user32.dll\")] public static extern bool BringWindowToTop(IntPtr hWnd);\n  [DllImport(\"user32.dll\")] public static extern bool SetForegroundWindow(IntPtr hWnd);\n  [DllImport(\"user32.dll\")] public static extern IntPtr SetFocus(IntPtr hWnd);\n  [DllImport(\"user32.dll\")] public static extern IntPtr GetForegroundWindow();\n  [DllImport(\"user32.dll\")] public static extern uint GetWindowThreadProcessId(IntPtr hWnd, IntPtr lpdwProcessId);\n  [DllImport(\"kernel32.dll\")] public static extern uint GetCurrentThreadId();\n  [DllImport(\"user32.dll\")] public static extern bool AttachThreadInput(uint idAttach,uint idAttachTo,bool fAttach);\n}\n\"@\nAdd-Type -AssemblyName System.Windows.Forms\n$h=[IntPtr]67948\n[Win32Ctl]::ShowWindowAsync($h,9) | Out-Null\n$targetThread=[Win32Ctl]::GetWindowThreadProcessId($h,[IntPtr]::Zero)\n$currentThread=[Win32Ctl]::GetCurrentThreadId()\n[Win32Ctl]::AttachThreadInput($currentThread,$targetThread,$true) | Out-Null\n[Win32Ctl]::BringWindowToTop($h) | Out-Null\n[Win32Ctl]::SetForegroundWindow($h) | Out-Null\n[Win32Ctl]::SetFocus($h) | Out-Null\n[Win32Ctl]::AttachThreadInput($currentThread,$targetThread,$false) | Out-Null\nStart-Sleep -Milliseconds 500\n$fg=[Win32Ctl]::GetForegroundWindow().ToInt64()\nWrite-Output \"foreground=$fg\"\nif($fg -ne 67948){ throw \"Foreground mismatch $fg\" }\n[System.Windows.Forms.SendKeys]::SendWait('^l')\nStart-Sleep -Milliseconds 150\n[System.Windows.Forms.SendKeys]::SendWait('https://bugbountyfoto6.files.com/ui/users')\n[System.Windows.Forms.SendKeys]::SendWait('{ENTER}')\nStart-Sleep -Seconds 3\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Foreground mismatch 66522\r\n��ப�:30 ����:20\r\n+ if($fg -ne 67948){ throw \"Foreground mismatch $fg\" }\r\n+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (Foreground mismatch 66522:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : Foreground mismatch 66522\r\n \r\n",
+      "stderr_bytes": 321,
+      "stderr_truncated": false,
+      "stdout": "foreground=66522\r\n",
+      "stdout_bytes": 18,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T02:13:44.308Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T02:13:44.255Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-files-robust-focus-67948-20261001-001"
+    },
+    "request_id": "chatgpt-files-robust-focus-67948-20261001-001",
+    "started_at": "2026-10-01T02:13:43.108Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-files-robust-focus-67948-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
