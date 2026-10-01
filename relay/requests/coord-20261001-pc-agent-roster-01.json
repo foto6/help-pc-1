@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-pc-agent-roster-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; $j=Get-Content -LiteralPath $p -Raw|ConvertFrom-Json; @($j.managedChats)|Where-Object{$_.id -match 'pc|native|parity'}|Select-Object id,name,url,profileId,repository,branch,projectId,enabled|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only existing PC/MCP development chat roster; do not create new chats"
+}
