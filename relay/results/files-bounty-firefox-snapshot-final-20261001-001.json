@@ -1,0 +1,21 @@
+{
+  "action": "uia.snapshot",
+  "executor_result": {
+    "action": "uia.snapshot",
+    "data": {},
+    "dry_run": false,
+    "error": "window not found: Подать заявление о выплате — Mozilla Firefox",
+    "error_kind": "stale_target",
+    "finished_at": "2026-10-01T01:21:57.786Z",
+    "ok": false,
+    "request_id": "files-bounty-firefox-snapshot-final-20261001-001",
+    "started_at": "2026-10-01T01:21:57.367Z",
+    "status": "stale_target"
+  },
+  "id": "files-bounty-firefox-snapshot-final-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
