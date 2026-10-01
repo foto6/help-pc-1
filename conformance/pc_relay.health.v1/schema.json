@@ -24,7 +24,14 @@
     "current_request_id",
     "last_error",
     "last_reconciliation_request_id",
-    "reconciliation_required"
+    "reconciliation_required",
+    "last_fetch_success_at_unix",
+    "last_request_processed_at_unix",
+    "last_request_processed_id",
+    "last_result_published_id",
+    "remote_head_observed_at_unix",
+    "last_backlog_change_at_unix",
+    "backlog_high_watermark"
   ],
   "properties": {
     "health_version": {
@@ -59,7 +66,8 @@
         "reconcile_interrupted_side_effect",
         "result_published",
         "idle",
-        "cycle_error"
+        "cycle_error",
+        "request_processed"
       ]
     },
     "updated_at_unix": {
@@ -128,7 +136,8 @@
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "maxLength": 512
     },
     "last_reconciliation_request_id": {
       "type": [
@@ -139,6 +148,52 @@
     },
     "reconciliation_required": {
       "type": "boolean"
+    },
+    "last_fetch_success_at_unix": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "last_request_processed_at_unix": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "last_request_processed_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Za-z0-9._-]{1,80}$"
+    },
+    "last_result_published_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Za-z0-9._-]{1,80}$"
+    },
+    "remote_head_observed_at_unix": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "last_backlog_change_at_unix": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "backlog_high_watermark": {
+      "type": "integer",
+      "minimum": 0
     }
   }
 }
