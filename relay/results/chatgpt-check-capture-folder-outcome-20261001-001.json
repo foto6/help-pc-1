@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T01:41:05.014Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "chatgpt-check-capture-folder-20261001-001"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:115925e8d6e05f3ea94dfaeaa1fb294c03ba61f22e1de1290f262b9b8f1892a3",
+            "journal_sequence": 632,
+            "previous_record_sha256": "ebf42dbc407f9402ef155764bb09bd2102bf2e12174c15640d73349cde00c8a3",
+            "record_sha256": "d373687f82ebc46af9e034e065d0720cb7d32a7afc030e413bf8dd6a75853f96",
+            "recorded_at": "2026-10-01T01:41:05.052Z",
+            "request_id": "chatgpt-check-capture-folder-20261001-001",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T01:41:35.108Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "chatgpt-check-capture-folder-20261001-001"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:115925e8d6e05f3ea94dfaeaa1fb294c03ba61f22e1de1290f262b9b8f1892a3",
+            "journal_sequence": 633,
+            "previous_record_sha256": "d373687f82ebc46af9e034e065d0720cb7d32a7afc030e413bf8dd6a75853f96",
+            "record_sha256": "1e4427df2b6b5226552ae1f62ff8a31991ceeabbcf96c66942d54ae514679b4e",
+            "recorded_at": "2026-10-01T01:41:35.159Z",
+            "request_id": "chatgpt-check-capture-folder-20261001-001",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-01T01:41:35.108Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "chatgpt-check-capture-folder-20261001-001"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-01T01:41:35.108Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "chatgpt-check-capture-folder-20261001-001"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:115925e8d6e05f3ea94dfaeaa1fb294c03ba61f22e1de1290f262b9b8f1892a3",
+          "journal_sequence": 633,
+          "previous_record_sha256": "d373687f82ebc46af9e034e065d0720cb7d32a7afc030e413bf8dd6a75853f96",
+          "record_sha256": "1e4427df2b6b5226552ae1f62ff8a31991ceeabbcf96c66942d54ae514679b4e",
+          "recorded_at": "2026-10-01T01:41:35.159Z",
+          "request_id": "chatgpt-check-capture-folder-20261001-001",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "6de63aa1798a965d354ee21183f49aefad77f38b59523c75a28362fa0bb2b3ef",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 635
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "chatgpt-check-capture-folder-20261001-001",
+        "request_id": "chatgpt-check-capture-folder-20261001-001",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T01:42:36.786Z",
+    "ok": true,
+    "request_id": "chatgpt-check-capture-folder-outcome-20261001-001",
+    "started_at": "2026-10-01T01:42:36.727Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-check-capture-folder-outcome-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
