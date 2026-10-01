@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-2018-check-wave3-stalls",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst items=[\n{name:\"creator\",id:\"B0559FFE7843B036079007016E7351FF\",needles:[\"CREATOR R24 EXACT-PIN CLOSED-LOOP RUNNER\"]},\n{name:\"growth\",id:\"DBC6BC28E04127D1821830B232E048EB\",needles:[\"GROWTH R20 CLOSED-LOOP FEEDBACK BUNDLE\"]},\n{name:\"human\",id:\"74BDC2B5E97107BBA7ACDB858F2D03BB\",needles:[\"HUMAN EDITING GATE V4 REAL-ARTIFACT CLOSED-LOOP REHEARSAL\"]},\n{name:\"bridge\",id:\"A88E3157A8078B7DA32FC62848071CC3\",needles:[\"WEB AI BRIDGE R24 LIVE READ-ONLY PREFLIGHT COLLECTOR\",\"EXECUTION PUSH — BRIDGE R24\"]}\n];\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nasync function inspect(it){\n const tab=tabs.find(x=>x.id===it.id);if(!tab)return{name:it.name,found:false};\n const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,p=new Map();\n ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\n const expr=\"JSON.stringify((()=>{const body=document.body?.innerText||'';const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});const generating=bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'));const alerts=[...document.querySelectorAll('[role=\\\\\\\"alert\\\\\\\"],.error-message,.error-container')].filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0}).map(e=>(e.innerText||e.textContent||'').trim().slice(0,160)).filter(Boolean);return {matches:\"+JSON.stringify(it.needles)+\".map(n=>body.includes(n)),generating,draftLength:text.trim().length,alertsCount:alerts.length,title:document.title,url:location.href}})())\";\n const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});ws.close();return{name:it.name,...JSON.parse(rr.result.value)};\n}\nconst out=[];for(const it of items){try{out.push(await inspect(it))}catch(e){out.push({name:it.name,error:String(e.message||e)})}}process.stdout.write(JSON.stringify(out));\n\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only check Creator Growth Human Bridge task visibility/generation after Wave3 followups"
+}
