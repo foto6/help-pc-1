@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-bounty-focus-firefox-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "\nAdd-Type @\"\nusing System;\nusing System.Runtime.InteropServices;\npublic static class Win32 {\n  [DllImport(\"user32.dll\")] public static extern bool SetForegroundWindow(IntPtr hWnd);\n  [DllImport(\"user32.dll\")] public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);\n}\n\"@;\n$h=[IntPtr]66522;\n[Win32]::ShowWindow($h,9) | Out-Null;\nStart-Sleep -Milliseconds 300;\n[Win32]::SetForegroundWindow($h)\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Bring authorized Files.com Firefox window to foreground by HWND; no coordinate interaction"
+}
