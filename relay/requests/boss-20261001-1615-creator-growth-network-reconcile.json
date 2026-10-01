@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1615-creator-growth-network-reconcile",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst items=[{\"name\":\"creator\",\"target\":\"B0559FFE7843B036079007016E7351FF\"},{\"name\":\"growth\",\"target\":\"DBC6BC28E04127D1821830B232E048EB\"}];\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nasync function inspect(it){\n const tab=tabs.find(x=>x.id===it.target);if(!tab)return{name:it.name,found:false};\n const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1;const pending=new Map();\n ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};\n const call=(method,params={})=>new Promise((r,j)=>{const id=seq++;pending.set(id,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id,method,params}))});\n const expr=\"JSON.stringify((()=>{const now=performance.now();const rows=performance.getEntriesByType('resource').filter(e=>now-e.startTime<300000&&/conversation|sentinel|backend-api|messages|thread/i.test(e.name)).slice(-60).map(e=>{let u='';try{const x=new URL(e.name);u=x.pathname+x.search}catch{u=String(e.name).slice(0,300)}return {url:u,startMs:Math.round(e.startTime),ageMs:Math.round(now-e.startTime),durationMs:Math.round(e.duration),initiator:e.initiatorType||''}});return {rows,count:rows.length,nowMs:Math.round(now),title:document.title,url:location.href}})())\";\n const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});ws.close();return{name:it.name,...JSON.parse(rr.result.value)};\n}\nconst out=[];for(const it of items){try{out.push(await inspect(it))}catch(e){out.push({name:it.name,error:String(e.message||e)})}}process.stdout.write(JSON.stringify(out));\n\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only recent ResourceTiming for Creator/Growth submit reconciliation; paths/timing only"
+}
