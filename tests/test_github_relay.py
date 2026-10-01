@@ -201,3 +201,23 @@ def test_health_long_running_phase_uses_bounded_extended_freshness() -> None:
         process_exists=True,
         stale_after_seconds=30.0,
     ) == "STALE"
+
+
+def test_phase_aware_health_producer_pin_matches_committed_blobs() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    pin = json.loads(
+        (root / "conformance" / "pc_relay.health.v1" / "producer-pin.r2.json").read_text(encoding="utf-8")
+    )
+    assert pin["contract"] == HEALTH_VERSION
+    assert pin["freshness"]["default_seconds"] == 30
+    assert pin["freshness"]["long_running_phase_seconds"] == 150
+    assert pin["recovery"]["pid_only_is_healthy"] is False
+    assert pin["recovery"]["automatic_restart"] is False
+    assert pin["recovery"]["automatic_side_effect_replay"] is False
+    assert pin["recovery"]["interrupted_side_effect_sets_reconciliation_required"] is True
+    assert pin["scaling"]["historical_results_rechecked_per_cycle"] is False
+    assert pin["scaling"]["pending_results_use_single_git_status"] is True
+    assert pin["release_gate"] == "NO_LIVE_CUTOVER"
