@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-title-focus-a-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "\n$ErrorActionPreference='Stop'\n$ws=New-Object -ComObject WScript.Shell\n$title='public-b · Folder · [BUGBOUNTY] foto6 test - Google Chrome'\nif(-not $ws.AppActivate($title)){ throw \"AppActivate failed: $title\" }\nStart-Sleep -Milliseconds 400\n$ws.SendKeys('^l')\nStart-Sleep -Milliseconds 150\n$ws.SendKeys('https://bugbountyfoto6.files.com/ui/users')\n$ws.SendKeys('{ENTER}')\nStart-Sleep -Seconds 3\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Activate exact Files.com Chrome window by title and navigate read-only to Users page for role identification"
+}
