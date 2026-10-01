@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst prompt=\"EXECUTE NOW — GROWTH R20 CLOSED-LOOP FEEDBACK BUNDLE.\\n\\nRepo: foto6/video3\\nWritable branch ONLY: agent/growth-r20-feedback-bundle-20261001\\nExact starting HEAD: a802a1c0eed5ae564e7e67236e986bff560c58a9\\n\\nR18 and R19 are exact-head green. Define growth.closed_loop_feedback.v1 that binds exact cycle/source, R18 candidate decision digest, optional R19 post-publish learning digest, render/publish lineage, evidence availability and next-cycle brief seed. Keep objective defects, model judgment, human evidence, observed platform metrics, derived analytics and hypotheses strictly separated. Never treat model scores as human labels or synthetic metrics as live. If post-publish evidence is unavailable, preserve a bounded decision-only path with unavailable_evidence. Output concrete testable hypotheses with target segment/directive and falsification criterion. Add restart/idempotency/order/hash/conflict/clock-skew tests, conformance schema/manifest, replay, readiness report and exact-head CI. No provider mutation or cross-repo changes.\",id=\"DBC6BC28E04127D1821830B232E048EB\",url=\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda63c-98d8-83eb-b365-d423b7563c4b\",needle=\"GROWTH R20 CLOSED-LOOP FEEDBACK BUNDLE\";const sleep=ms=>new Promise(r=>setTimeout(r,ms));\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===id);if(!tab||tab.url!==url){process.stdout.write(JSON.stringify({ok:false,phase:\"preflight\",reason:\"target_mismatch\"}));process.exit(2)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\nconst state=async()=>JSON.parse((await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const body=document.body?.innerText||'';const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});return {visible:body.includes(\"+JSON.stringify(needle)+\"),found:!!c,text,generating:bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'))}})())\",returnByValue:true})).result.value);\nconst pre=await state();if(pre.visible){ws.close();process.stdout.write(JSON.stringify({ok:true,phase:\"already_present\",visible:true}));process.exit(0)}if(!pre.found||pre.generating||pre.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,phase:\"preflight\",reason:\"busy_or_draft\"}));process.exit(3)}\nawait call(\"Runtime.evaluate\",{expression:\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});c.focus();return true})()\",returnByValue:true});await call(\"Input.insertText\",{text:prompt});await sleep(600);\nconst typed=await state(),norm=s=>String(s||\"\").replace(/\\s+/g,\" \").trim();if(norm(typed.text)!==norm(prompt)){ws.close();process.stdout.write(JSON.stringify({ok:false,phase:\"readback\",reason:\"mismatch\"}));process.exit(4)}\nconst clickExpr=\"(()=>{const ru='\\\\u041e\\\\u0442\\\\u043f\\\\u0440\\\\u0430\\\\u0432\\\\u0438\\\\u0442\\\\u044c';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0&&!b.disabled&&b.getAttribute('aria-disabled')!=='true'});const b=bs.find(x=>{const a=(x.getAttribute('aria-label')||'').trim(),t=x.getAttribute('data-testid')||'';return a===ru||/send/i.test(a)||t==='send-button'||x.id==='composer-submit-button'||/send-button/.test(String(x.className||''))});if(!b)return false;b.click();return true})()\";\nconst cr=await call(\"Runtime.evaluate\",{expression:clickExpr,returnByValue:true});if(!cr.result.value){ws.close();process.stdout.write(JSON.stringify({ok:false,phase:\"click\",reason:\"send_button_not_found\"}));process.exit(5)}\nawait sleep(1800);const post=await state();ws.close();process.stdout.write(JSON.stringify({ok:post.visible||post.generating,clicked:true,visible:post.visible,started:post.generating,composerCleared:!post.text.trim()}));\n\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"phase\":\"already_present\",\"visible\":true}",
+      "stdout_bytes": 52,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T12:48:03.347Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T12:48:03.268Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-2007-growth-r20-resend"
+    },
+    "request_id": "boss-20261001-2007-growth-r20-resend",
+    "started_at": "2026-10-01T12:48:02.631Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-2007-growth-r20-resend",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
