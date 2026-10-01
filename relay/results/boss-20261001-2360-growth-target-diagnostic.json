@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const t=tabs.find(x=>x.id===\"DBC6BC28E04127D1821830B232E048EB\");const c=\"6abda63c-98d8-83ed-b365-d423b7563c4b\";process.stdout.write(JSON.stringify({found:!!t,url:t?.url||\"\",urlLength:(t?.url||\"\").length,conv:c,convLength:c.length,needle:\"/c/\"+c,includes:!!t&&String(t.url||\"\").includes(\"/c/\"+c),id:t?.id||\"\"}))\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"found\":true,\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda63c-98d8-83eb-b365-d423b7563c4b\",\"urlLength\":100,\"conv\":\"6abda63c-98d8-83ed-b365-d423b7563c4b\",\"convLength\":36,\"needle\":\"/c/6abda63c-98d8-83ed-b365-d423b7563c4b\",\"includes\":false,\"id\":\"DBC6BC28E04127D1821830B232E048EB\"}",
+      "stdout_bytes": 309,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T15:46:02.795Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T15:46:02.725Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-2360-growth-target-diagnostic"
+    },
+    "request_id": "boss-20261001-2360-growth-target-diagnostic",
+    "started_at": "2026-10-01T15:46:02.255Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-2360-growth-target-diagnostic",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
