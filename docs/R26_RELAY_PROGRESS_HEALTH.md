@@ -1,7 +1,7 @@
 # R26 PC Control Relay Queue Progress / Liveness
 
-Repository: `foto6/help-pc-1`  
-Branch: `agent/pc-relay-r26-progress-health-20261001`  
+Repository: `foto6/help-pc-1`
+Branch: `agent/pc-relay-r26-progress-health-20261001`
 Exact base: `4ce8901221ad994ae5b44299d6601e1c9cc6a047`
 
 R26 is an isolated producer hardening change. It does not deploy, restart, repoint,
