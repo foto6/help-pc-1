@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-role-probe-a-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "\n$ErrorActionPreference='Stop'\n$ws=New-Object -ComObject WScript.Shell\nif(-not $ws.AppActivate(4244)){ throw 'Could not activate Chrome PID 4244' }\nStart-Sleep -Milliseconds 300\n$ws.SendKeys('^l')\nStart-Sleep -Milliseconds 150\n$ws.SendKeys('https://bugbountyfoto6.files.com/ui/users')\n$ws.SendKeys('{ENTER}')\nStart-Sleep -Seconds 3\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only role probe: navigate Chrome PID 4244 to own Files.com trial Users page"
+}
