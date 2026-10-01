@@ -1,0 +1,52 @@
+EXECUTE NOW — CREATOR R16 MEDIA R13 PRODUCTION PIN / REAL CROSS-REPO E2E. Continue in this SAME existing Creator chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video1
+Branch ONLY: agent/creator-r16-media-r13-production-pin-20261001
+Exact starting HEAD: 03b8461b83906c551c094d58a21dbc9fa978d6d2
+
+Media R13 is now GREEN and provides the official Creator-consumer compatibility contract.
+
+Exact Media producer:
+- repository: foto6/video2
+- branch: agent/media-r13-creator-compat-20261001
+- producer SHA: ad4e0ba487a3cabc84dd339d412e19a0db0f9add
+- CI run: 36801556474 SUCCESS
+- contract: media.creator_consumer_compat.r13.v1
+
+Pinned Media blob IDs:
+- media.job.v1 consumer manifest: 96b252acae743f8fe059fd634ee320f92bd9c79c
+- media.artifact_manifest.v1 manifest: 42aed1ca4720cddd4a5e48af076bc73b663322b0
+- creative-plan manifest: d031a07f1d392c690942bd5f8288a1713f1af791
+- creative-plan contract: 5298aeb2a9e4e13ed31b1610ce88778b7a911592
+- shortform editor manifest: 07c38a048d23490b8e55924697650e9969bf089f
+- shortform profile: d8f19d9a9d117c5736238159bd5e6d2491370986
+- compatibility contract: ecfeaed347b53ed549124b9d1701ebf70b37eea3
+- result envelope schema: 119b26b494df77c4ce8d83ffd63791afc112d264
+- technical QA schema: 1b2f71e443b0038736e8be99f544493965693658
+- creative-quality schema: c63f95b45f5440aabd8c14dc5fcb8eeae1fc8535
+
+PRIMARY GOAL:
+Remove the stale failed Media R12 production blocker in Creator and prove a real source-bound cross-repo Creator -> Media R13 -> Creator roundtrip with no synthetic substitution.
+
+Required:
+1. Replace R15's stale failed Media candidate pin with the exact green Media R13 producer + compatibility contract above.
+2. Consume media.creator_consumer_compat.r13.v1 directly; no field guessing or sibling implementation import.
+3. Validate all pinned Git blob IDs and exact producer SHA before accepting a Media candidate.
+4. Update readiness so production Media is READY only when the exact producer SHA and compatibility bundle pass validation.
+5. Add a real cross-repo fixture/reproduction path that:
+   - emits the Media R13 compatibility bundle/demo envelope from the exact producer;
+   - ingests it in Creator;
+   - validates technical QA + creative guardrails;
+   - runs it through R15 candidate-tournament acceptance;
+   - persists exact provenance.
+6. Do NOT fake multiple real renders if only the single R13 demo envelope exists. Synthetic tournament breadth may remain conformance-only and must be labeled.
+7. Add regression proving the old failed SHA 98f298... remains rejected.
+8. Add regression proving changed producer SHA/blob IDs/schema fail closed.
+9. Update R13/R15 readiness docs to distinguish:
+   - real Media R13 compatibility proven;
+   - synthetic multi-candidate tournament conformance;
+   - live publishing still disabled.
+10. Add a source-bound cross-repo acceptance report with exact repo/SHA/blob/CI evidence.
+11. NONEMPTY source/tests/docs commit, focused/full CI, exact final SHA and workflow run IDs.
+
+No live publishing. No credentials. No merge/release. Do not modify Media/Growth repos.
