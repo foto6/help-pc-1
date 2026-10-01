@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ws=New-Object -ComObject WScript.Shell; $ok=$ws.AppActivate(12212); Start-Sleep -Milliseconds 300; if(-not $ok){throw 'Firefox activate failed'}; $ws.SendKeys('^l'); Start-Sleep -Milliseconds 150; $ws.SendKeys('https://bugbountyfoto6.files.com/files/public-b'); $ws.SendKeys('{ENTER}'); Start-Sleep -Seconds 3; Write-Output 'navigated'"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "navigated\r\n",
+      "stdout_bytes": 11,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T01:14:00.819Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T01:14:00.771Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "files-bounty-nav-publicb-20261001-001"
+    },
+    "request_id": "files-bounty-nav-publicb-20261001-001",
+    "started_at": "2026-10-01T01:13:56.405Z",
+    "status": "completed"
+  },
+  "id": "files-bounty-nav-publicb-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
