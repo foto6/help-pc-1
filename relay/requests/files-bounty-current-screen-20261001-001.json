@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-bounty-current-screen-20261001-001",
+  "action": "screenshot.capture",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read-only current screen check before native keyboard navigation; no input"
+}
