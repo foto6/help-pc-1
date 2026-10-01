@@ -13,7 +13,11 @@ from pc_executor.executor import Executor
 from pc_executor.models import ActionRequest, ElementInfo, Rect
 from pc_executor.operations import LocalOperations
 from pc_executor.outcome_journal import OutcomeJournal
-from pc_executor.runtime_health import CONTRACT_VERSION, validate_runtime_health
+from pc_executor.runtime_health import (
+    CONTRACT_VERSION,
+    probe_outcome_journal_integrity,
+    validate_runtime_health,
+)
 from pc_executor.shell import SafeShellAdapter, ShellResult
 from pc_executor.uia import WindowsUIAutomationAdapter
 
@@ -336,7 +340,10 @@ def test_large_journal_health_is_unknown_without_unbounded_scan(tmp_path: Path):
     journal_path = executor.outcome_journal.path
     journal_path.write_bytes(b"x" * (2 * 1024 * 1024 + 1))
 
-    status = executor.outcome_journal.integrity_status(max_bytes=2 * 1024 * 1024)
+    status = probe_outcome_journal_integrity(
+        executor.outcome_journal,
+        max_bytes=2 * 1024 * 1024,
+    )
 
     assert status["integrity"] == "unknown"
     assert status["reason"] == "size_limit_exceeded"
