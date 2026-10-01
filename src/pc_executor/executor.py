@@ -1188,13 +1188,18 @@ class Executor:
             button = str(p.get("button", "left"))
             if dry_run:
                 return {"would_execute": action, "x": x, "y": y, "button": button}
-            self._bounded_effectful(
+            self._effectful(
                 request,
                 dry_run,
-                token,
                 tracker,
-                action,
-                lambda: self.input.click(x, y, button=button),
+                lambda: self._adapter_bounded(
+                    "input",
+                    request,
+                    token,
+                    action,
+                    lambda: self.input.click(x, y, button=button),
+                ),
+                token=token,
             )
             return {"x": x, "y": y, "button": button}
 
@@ -1202,13 +1207,18 @@ class Executor:
             key = str(p["key"])
             if dry_run:
                 return {"would_execute": action, "key": key}
-            self._bounded_effectful(
+            self._effectful(
                 request,
                 dry_run,
-                token,
                 tracker,
-                action,
-                lambda: self.input.press(key),
+                lambda: self._adapter_bounded(
+                    "input",
+                    request,
+                    token,
+                    action,
+                    lambda: self.input.press(key),
+                ),
+                token=token,
             )
             return {"key": key}
 
@@ -1218,20 +1228,31 @@ class Executor:
             ensure_not_sensitive_text(is_password=False, sensitive=sensitive)
             if dry_run:
                 return {"would_execute": action, "text_length": len(text)}
-            self._bounded_effectful(
+            self._effectful(
                 request,
                 dry_run,
-                token,
                 tracker,
-                action,
-                lambda: self.input.type_text(text),
+                lambda: self._adapter_bounded(
+                    "input",
+                    request,
+                    token,
+                    action,
+                    lambda: self.input.type_text(text),
+                ),
+                token=token,
             )
             return {"text_length": len(text)}
 
         if action == "clipboard.get":
             if dry_run:
                 return {"would_execute": action}
-            value = self._bounded(request, token, action, self.input.clipboard_get)
+            value = self._adapter_bounded(
+                "clipboard",
+                request,
+                token,
+                action,
+                self.input.clipboard_get,
+            )
             return {"text": value}
 
         if action == "clipboard.set":
@@ -1240,13 +1261,18 @@ class Executor:
                 raise PolicyBlockedError("credential/sensitive clipboard entry is not supported")
             if dry_run:
                 return {"would_execute": action, "text_length": len(value)}
-            self._bounded_effectful(
+            self._effectful(
                 request,
                 dry_run,
-                token,
                 tracker,
-                action,
-                lambda: self.input.clipboard_set(value),
+                lambda: self._adapter_bounded(
+                    "clipboard",
+                    request,
+                    token,
+                    action,
+                    lambda: self.input.clipboard_set(value),
+                ),
+                token=token,
             )
             return {"text_length": len(value)}
 
@@ -1313,11 +1339,17 @@ class Executor:
                 request,
                 dry_run,
                 tracker,
-                lambda: self.shell.run(
-                    validated,
-                    cwd=cwd,
-                    timeout_seconds=self._timeout(request),
-                    cancellation=token,
+                lambda: self._adapter_bounded(
+                    "shell",
+                    request,
+                    token,
+                    action,
+                    lambda: self.shell.run(
+                        validated,
+                        cwd=cwd,
+                        timeout_seconds=self._timeout(request),
+                        cancellation=token,
+                    ),
                 ),
                 token=token,
             )
