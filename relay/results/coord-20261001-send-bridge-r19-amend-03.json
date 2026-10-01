@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "node .\\data\\direct_send_existing_agent.js --target=A88E3157A8078B7DA32FC62848071CC3 --prompt=E:\\pc-github-relay\\relay\\prompts\\bridge-r19-all-chats-delete-amendment-20261001.txt"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Error: chat is generating\n    at E:\\WebAIBridge\\app\\data\\direct_send_existing_agent.js:13:76\n",
+      "stderr_bytes": 93,
+      "stderr_truncated": false,
+      "stdout": "PRE {\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\",\"title\":\"Implement Assignment Reliability\",\"high\":true,\"stop\":true,\"composer\":true,\"draft\":\"\\n\"}\n",
+      "stdout_bytes": 211,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T00:23:27.023Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T00:23:26.981Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-send-bridge-r19-amend-03"
+    },
+    "request_id": "coord-20261001-send-bridge-r19-amend-03",
+    "started_at": "2026-10-01T00:23:26.639Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-send-bridge-r19-amend-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
