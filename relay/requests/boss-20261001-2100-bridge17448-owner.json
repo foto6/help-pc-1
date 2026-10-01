@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-2100-bridge17448-owner",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$r=@(Get-NetTCPConnection -State Listen -LocalPort 17448 -ErrorAction SilentlyContinue); $owners=@($r|Select-Object -ExpandProperty OwningProcess -Unique); [pscustomobject]@{port=17448;listenerCount=$r.Count;owners=$owners}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only get listener count and owning PID(s) for known Bridge port 17448 only"
+}
