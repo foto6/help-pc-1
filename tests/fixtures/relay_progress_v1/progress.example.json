@@ -1,0 +1,51 @@
+{
+  "contract_version": "pc_relay.progress.v1",
+  "source": {
+    "repository": "foto6/help-pc-1",
+    "branch": "agent/pc-relay-r26-progress-health-20261001",
+    "startup_head": "1111111111111111111111111111111111111111",
+    "relay_script_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "process": {
+    "pid": 4242,
+    "started_at_unix": 1790820000,
+    "instance_id": "r26-fixture-instance"
+  },
+  "loop_generation_id": "r26-fixture-generation",
+  "loop_epoch": 17,
+  "last_fetch_success": {
+    "at_unix": 1790820012,
+    "remote_head": "3333333333333333333333333333333333333333"
+  },
+  "last_request_observed": {
+    "id": "fixture-request-001",
+    "action": "windows.list",
+    "at_unix": 1790820013
+  },
+  "last_result_committed": {
+    "id": "fixture-request-000",
+    "at_unix": 1790820010,
+    "commit_sha": "4444444444444444444444444444444444444444"
+  },
+  "last_successful_cycle_at_unix": 1790820014,
+  "consecutive_cycle_failures": 0,
+  "queue": {
+    "pending_count": 1,
+    "oldest_pending_request_id": "fixture-request-001",
+    "oldest_pending_age_seconds": 4.5,
+    "last_progress_at_unix": 1790820010
+  },
+  "current_cycle": {
+    "state": "sleeping",
+    "started_at_unix": 1790820014,
+    "updated_at_unix": 1790820014,
+    "deadline_at_unix": null
+  },
+  "last_error": null,
+  "limits": {
+    "max_batch_per_cycle": 64,
+    "max_error_chars": 512,
+    "poll_seconds": 3
+  },
+  "recorded_at_unix": 1790820014
+}
