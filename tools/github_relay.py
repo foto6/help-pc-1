@@ -392,6 +392,7 @@ def build_watchdog_status(
         },
         "stale_reasons": stale_reasons,
         "health": safe_snapshot,
+        "error": None,
         "recovery": {
             "automatic_restart": False,
             "automatic_kill": False,
