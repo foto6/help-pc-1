@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-firefox-shallow-uia-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$code=@'\nimport uiautomation as auto\ntitle='public-b · Folder · [BUGBOUNTY] foto6 test — Mozilla Firefox'\nroot=auto.GetRootControl()\nwins=[c for c in root.GetChildren() if (getattr(c,'Name','') or '')==title]\nprint('windows',len(wins))\nif not wins: raise SystemExit(3)\nq=[(wins[0],0)]\nn=0\nwhile q and n<300:\n    c,d=q.pop(0)\n    try:\n        name=getattr(c,'Name','') or ''\n        aid=getattr(c,'AutomationId','') or ''\n        typ=getattr(c,'ControlTypeName','') or ''\n        cls=getattr(c,'ClassName','') or ''\n        if name or aid or typ:\n            print(d,typ,repr(name[:180]),repr(aid[:100]),repr(cls[:100]))\n        n+=1\n        if d<4:\n            for ch in c.GetChildren():\n                q.append((ch,d+1))\n    except Exception as e:\n        print('ERR',d,type(e).__name__)\nprint('nodes',n)\n'@; py -c $code"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read shallow Firefox UIA tree to locate DevTools controls without deep DOM traversal"
+}
