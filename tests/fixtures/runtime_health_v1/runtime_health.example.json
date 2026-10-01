@@ -1,0 +1,264 @@
+{
+  "contract_version": "pc_executor.runtime_health.v1",
+  "observed_at": "2026-10-01T00:00:00.000Z",
+  "complete": true,
+  "probe_budget_ms": 1200,
+  "elapsed_ms": 287,
+  "generation": {
+    "executor_process_id": 4242,
+    "operations_generation_id": "r24-fixture-generation"
+  },
+  "adapters": {
+    "uia": {
+      "available": true,
+      "state": "degraded",
+      "provider": "native",
+      "last_success_at": null,
+      "last_failure_at": "2026-10-01T00:00:00.000Z",
+      "last_failure_kind": "timeout",
+      "timeout_count": 1,
+      "error_count": 0,
+      "bounded_operation_timeout_ms": 250,
+      "circuit": {
+        "state": "closed",
+        "timeout_threshold": 2,
+        "consecutive_timeouts": 0,
+        "opened_at": null,
+        "cooldown_ms": 10000
+      },
+      "generation": {
+        "executor_process_id": 4242,
+        "operations_generation_id": "r24-fixture-generation"
+      },
+      "diagnostics": {
+        "operation": "snapshot",
+        "target_process_id": 7001,
+        "window_title_sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+        "nodes_visited": 73,
+        "max_nodes": 2000,
+        "max_depth": 12
+      }
+    },
+    "screenshot": {
+      "available": true,
+      "state": "unknown",
+      "provider": "native",
+      "last_success_at": null,
+      "last_failure_at": null,
+      "last_failure_kind": null,
+      "timeout_count": 0,
+      "error_count": 0,
+      "bounded_operation_timeout_ms": 250,
+      "circuit": {
+        "state": "closed",
+        "timeout_threshold": 2,
+        "consecutive_timeouts": 0,
+        "opened_at": null,
+        "cooldown_ms": 10000
+      },
+      "generation": {
+        "executor_process_id": 4242,
+        "operations_generation_id": "r24-fixture-generation"
+      },
+      "diagnostics": {}
+    },
+    "windows": {
+      "available": true,
+      "state": "responsive",
+      "provider": "native",
+      "last_success_at": "2026-10-01T00:00:00.000Z",
+      "last_failure_at": null,
+      "last_failure_kind": null,
+      "timeout_count": 0,
+      "error_count": 0,
+      "bounded_operation_timeout_ms": 250,
+      "circuit": {
+        "state": "closed",
+        "timeout_threshold": 2,
+        "consecutive_timeouts": 0,
+        "opened_at": null,
+        "cooldown_ms": 10000
+      },
+      "generation": {
+        "executor_process_id": 4242,
+        "operations_generation_id": "r24-fixture-generation"
+      },
+      "diagnostics": {
+        "window_count": 12,
+        "window_metadata_emitted": false
+      }
+    },
+    "shell": {
+      "available": true,
+      "state": "unknown",
+      "provider": "native",
+      "last_success_at": null,
+      "last_failure_at": null,
+      "last_failure_kind": null,
+      "timeout_count": 0,
+      "error_count": 0,
+      "bounded_operation_timeout_ms": 250,
+      "circuit": {
+        "state": "closed",
+        "timeout_threshold": 2,
+        "consecutive_timeouts": 0,
+        "opened_at": null,
+        "cooldown_ms": 10000
+      },
+      "generation": {
+        "executor_process_id": 4242,
+        "operations_generation_id": "r24-fixture-generation"
+      },
+      "diagnostics": {}
+    },
+    "clipboard": {
+      "available": true,
+      "state": "unknown",
+      "provider": "native",
+      "last_success_at": null,
+      "last_failure_at": null,
+      "last_failure_kind": null,
+      "timeout_count": 0,
+      "error_count": 0,
+      "bounded_operation_timeout_ms": 250,
+      "circuit": {
+        "state": "closed",
+        "timeout_threshold": 2,
+        "consecutive_timeouts": 0,
+        "opened_at": null,
+        "cooldown_ms": 10000
+      },
+      "generation": {
+        "executor_process_id": 4242,
+        "operations_generation_id": "r24-fixture-generation"
+      },
+      "diagnostics": {}
+    },
+    "input": {
+      "available": true,
+      "state": "unknown",
+      "provider": "native",
+      "last_success_at": null,
+      "last_failure_at": null,
+      "last_failure_kind": null,
+      "timeout_count": 0,
+      "error_count": 0,
+      "bounded_operation_timeout_ms": 250,
+      "circuit": {
+        "state": "closed",
+        "timeout_threshold": 2,
+        "consecutive_timeouts": 0,
+        "opened_at": null,
+        "cooldown_ms": 10000
+      },
+      "generation": {
+        "executor_process_id": 4242,
+        "operations_generation_id": "r24-fixture-generation"
+      },
+      "diagnostics": {}
+    },
+    "outcome_journal": {
+      "available": true,
+      "state": "responsive",
+      "provider": "OutcomeJournal",
+      "last_success_at": "2026-10-01T00:00:00.000Z",
+      "last_failure_at": null,
+      "last_failure_kind": null,
+      "timeout_count": 0,
+      "error_count": 0,
+      "bounded_operation_timeout_ms": 250,
+      "circuit": {
+        "state": "closed",
+        "timeout_threshold": 2,
+        "consecutive_timeouts": 0,
+        "opened_at": null,
+        "cooldown_ms": 10000
+      },
+      "generation": {
+        "executor_process_id": 4242,
+        "operations_generation_id": "r24-fixture-generation"
+      },
+      "diagnostics": {
+        "integrity": "healthy",
+        "reason": "validated",
+        "bytes_checked": 2048,
+        "record_count": 4,
+        "journal_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "corruption": null,
+        "bounded": true,
+        "max_bytes": 2097152
+      }
+    },
+    "search": {
+      "available": true,
+      "state": "responsive",
+      "provider": "SearchSessionManager",
+      "last_success_at": "2026-10-01T00:00:00.000Z",
+      "last_failure_at": null,
+      "last_failure_kind": null,
+      "timeout_count": 0,
+      "error_count": 0,
+      "bounded_operation_timeout_ms": 250,
+      "circuit": {
+        "state": "closed",
+        "timeout_threshold": 2,
+        "consecutive_timeouts": 0,
+        "opened_at": null,
+        "cooldown_ms": 10000
+      },
+      "generation": {
+        "executor_process_id": 4242,
+        "operations_generation_id": "r24-fixture-generation"
+      },
+      "diagnostics": {
+        "recent_count": 2,
+        "running_count": 0,
+        "result_payload_emitted": false
+      }
+    },
+    "process": {
+      "available": true,
+      "state": "responsive",
+      "provider": "ManagedProcessRegistry",
+      "last_success_at": "2026-10-01T00:00:00.000Z",
+      "last_failure_at": null,
+      "last_failure_kind": null,
+      "timeout_count": 0,
+      "error_count": 0,
+      "bounded_operation_timeout_ms": 250,
+      "circuit": {
+        "state": "closed",
+        "timeout_threshold": 2,
+        "consecutive_timeouts": 0,
+        "opened_at": null,
+        "cooldown_ms": 10000
+      },
+      "generation": {
+        "executor_process_id": 4242,
+        "operations_generation_id": "r24-fixture-generation"
+      },
+      "diagnostics": {
+        "managed_count": 1,
+        "current_generation_count": 1,
+        "process_arguments_emitted": false
+      }
+    }
+  },
+  "outcome_journal": {
+    "configured": true,
+    "integrity": "healthy",
+    "reason": "validated",
+    "bytes_checked": 2048,
+    "record_count": 4,
+    "journal_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "corruption": null,
+    "bounded": true,
+    "max_bytes": 2097152
+  },
+  "summary": {
+    "responsive": 4,
+    "degraded": 1,
+    "unhealthy": 0,
+    "unknown": 4
+  }
+}
