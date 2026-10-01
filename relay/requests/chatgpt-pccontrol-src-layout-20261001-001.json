@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-pccontrol-src-layout-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "\n$ErrorActionPreference='Stop'\nGet-ChildItem 'E:\\pc-github-relay\\src' -Recurse -File | Select-Object FullName,Length | Format-Table -AutoSize\n"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Locate pc-control executor UIA implementation files"
+}
