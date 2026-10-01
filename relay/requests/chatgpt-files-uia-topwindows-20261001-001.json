@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-uia-topwindows-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$code=@'\nimport uiautomation as auto\nroot=auto.GetRootControl()\nfor i,c in enumerate(root.GetChildren()):\n    try:\n        print(i, getattr(c,'ProcessId',0), getattr(c,'ControlTypeName',''), repr((getattr(c,'Name','') or '')[:220]), repr((getattr(c,'ClassName','') or '')[:120]))\n    except Exception as e:\n        print(i,'ERR',type(e).__name__)\n'@; py -c $code"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "List top-level UIA windows to bind Firefox by PID for authorized Files.com testing"
+}
