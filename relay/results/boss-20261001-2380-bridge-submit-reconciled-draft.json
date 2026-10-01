@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===\"A88E3157A8078B7DA32FC62848071CC3\");if(!tab){process.stdout.write(JSON.stringify({ok:false,reason:\"tab_missing\"}));process.exit(2)}const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value' in c?c.value:(c.innerText||c.textContent||''))||''):'';return {found:!!c,text}})())\",returnByValue:true});const s=JSON.parse(rr.result.value);if(!s.found||!s.text.startsWith(\"EXECUTE NOW — BRIDGE R25 SAFE FILE ATTACHMENT TO EXISTING CHAT.\")||!s.text.includes(\"agent/bridge-r25-file-attachment-20261001\")){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"draft_not_expected\",length:s.text.length}));process.exit(3)}await call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await new Promise(r=>setTimeout(r,1000));const post=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value' in c?c.value:(c.innerText||c.textContent||''))||''):'';return {text,cleared:!text.trim()}})())\",returnByValue:true});ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true,post:JSON.parse(post.result.value)}));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"submitted\":true,\"post\":{\"text\":\"\\n\",\"cleared\":true}}",
+      "stdout_bytes": 64,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T15:49:15.554Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T15:49:15.463Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-2380-bridge-submit-reconciled-draft"
+    },
+    "request_id": "boss-20261001-2380-bridge-submit-reconciled-draft",
+    "started_at": "2026-10-01T15:49:12.575Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-2380-bridge-submit-reconciled-draft",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
