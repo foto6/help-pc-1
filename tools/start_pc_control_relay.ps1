@@ -32,9 +32,13 @@ if ($existing.Count -gt 0) {
         try {
             $snapshot = Get-Content -LiteralPath $Health -Raw | ConvertFrom-Json
             $healthAge = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds() - [double]$snapshot.updated_at_unix
-            if ($snapshot.health_version -eq 'pc_relay.health.v1' -and $snapshot.status -eq 'healthy' -and $healthAge -le $StaleAfterSeconds) {
+            $effectiveStaleAfter = $StaleAfterSeconds
+            if ($snapshot.phase -in @('execute_request','reconcile_interrupted_side_effect')) {
+                $effectiveStaleAfter = 150
+            }
+            if ($snapshot.health_version -eq 'pc_relay.health.v1' -and $snapshot.status -eq 'healthy' -and $healthAge -le $effectiveStaleAfter) {
                 $healthState = 'HEALTHY'
-            } elseif ($healthAge -gt $StaleAfterSeconds) {
+            } elseif ($healthAge -gt $effectiveStaleAfter) {
                 $healthState = 'STALE'
             }
         } catch {
