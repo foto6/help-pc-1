@@ -71,6 +71,16 @@ def _finite_number(value: object) -> bool:
     )
 
 
+def _delivery_semantics() -> dict[str, bool]:
+    return {
+        "read_only": True,
+        "queue_acknowledged": False,
+        "lease_created": False,
+        "retry_triggered": False,
+        "replay_triggered": False,
+    }
+
+
 def _delivery_source(
     *,
     reader_script_sha256: str,
@@ -100,6 +110,7 @@ def _empty_envelope(
         "status": "blocked",
         "observed_at_unix": observed_at_unix,
         "delivery_source": delivery_source,
+        "delivery_semantics": _delivery_semantics(),
         "binding": None,
         "progress_sha256": None,
         "progress": None,
@@ -312,6 +323,7 @@ def read_progress_evidence(
             "status": "ok",
             "observed_at_unix": observed_at,
             "delivery_source": source,
+            "delivery_semantics": _delivery_semantics(),
             "binding": binding,
             "progress_sha256": _sha256(progress),
             "progress": progress,
@@ -345,6 +357,7 @@ def validate_evidence_envelope(payload: Any) -> None:
         "status",
         "observed_at_unix",
         "delivery_source",
+        "delivery_semantics",
         "binding",
         "progress_sha256",
         "progress",
@@ -372,6 +385,9 @@ def validate_evidence_envelope(payload: Any) -> None:
         raise ValueError("relay progress evidence repository mismatch")
     if source["mechanism"] != DELIVERY_MECHANISM:
         raise ValueError("relay progress evidence mechanism mismatch")
+    semantics = payload["delivery_semantics"]
+    if semantics != _delivery_semantics():
+        raise ValueError("relay progress evidence delivery semantics mismatch")
     if not _HEX64.fullmatch(str(source["reader_script_sha256"])):
         raise ValueError("relay progress reader script digest invalid")
     if not _HEX64.fullmatch(str(source["evidence_module_sha256"])):
