@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-find-pc-executor-chat-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$raw=(Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 5).Content; $t=$raw|ConvertFrom-Json; @($t)|Where-Object{$_.url -match '6ab8bed2-8d0c-83eb-b793-8e504335a57d|6ab94f1d-a604-83eb-ae1b-258ac27e6544|6ab9467b-02e0-83eb-83b6-6f9b93835f46'}|Select-Object id,title,url,webSocketDebuggerUrl|ConvertTo-Json -Compress -Depth 3"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Locate existing PC Executor/parity chats; do not create new chat"
+}
