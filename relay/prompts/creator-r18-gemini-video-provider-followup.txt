@@ -1,0 +1,22 @@
+FOLLOW-UP AFTER YOUR CURRENT R18 IMPLEMENTATION — REAL VIDEO VLM PROVIDER, NOT JUST AN INTERFACE.
+
+Stay on the SAME Creator R18 branch/chat:
+repo foto6/video1
+branch agent/creator-r18-semantic-director-20261001
+
+Once the base semantic-director work is substantive and committed, add one concrete optional provider implementation for Google Gemini video understanding.
+
+Requirements:
+1. Provider enabled ONLY when explicitly configured, e.g. GEMINI_API_KEY plus configurable GEMINI_MODEL. Never commit or log credentials.
+2. Accept a real local MP4 and use Gemini's native video input path; do not reduce everything to a text-only fake.
+3. For short-form videos default to a bounded static video analysis mode with configurable FPS/time clipping; allow an explicit agentic mode for longer/complex videos where the API/model supports it.
+4. Ask for strict structured JSON matching the R18 semantic contract with time-bounded events, evidence/confidence and timestamps.
+5. Validate every model-returned timestamp/range against actual ffprobe duration and reject malformed/out-of-range evidence.
+6. Separate model observations from deterministic evidence; provenance must identify provider/model/mode/request digest.
+7. Bound upload size/time/retries; no infinite polling. Fail to explicit provider_unavailable/provider_timeout/provider_invalid_output and continue with labeled local fallback when policy permits.
+8. Add redaction/logging rules: never persist API key or auth headers; do not retain uploaded provider file handles beyond configured cleanup.
+9. Unit tests must use a fake transport; no paid/network API call in CI.
+10. Add an operator integration command that can perform a live provider smoke only when credentials are explicitly present.
+11. Do not claim HUMAN_LEVEL from provider availability alone.
+
+Reference capability verified from current Google AI Gemini video-understanding docs: native video input, timestamped understanding, static processing with configurable FPS/clips, and agentic processing on supported current models. Keep model name configurable rather than freezing a moving default.
