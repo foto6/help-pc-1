@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-visible-window-role-20261001-001",
+  "action": "screenshot.capture",
+  "params": {
+    "hwnd": 462320
+  },
+  "timeout_ms": 10000,
+  "note": "Capture currently visible Files.com Chrome window to identify admin vs tetst1 without changing focus"
+}
