@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-pccontrol-layout-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "\n$ErrorActionPreference='Stop'\n'ROOT'\nGet-ChildItem 'E:\\pc-github-relay' -Force | Select-Object Name,Mode,Length\n'TOOLS'\nif(Test-Path 'E:\\pc-github-relay\\tools'){Get-ChildItem 'E:\\pc-github-relay\\tools' -File | Select-Object Name,Length}\n'PKG'\nif(Test-Path 'E:\\pc-github-relay\\pc_executor'){Get-ChildItem 'E:\\pc-github-relay\\pc_executor' -File | Select-Object Name,Length}\n"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Inspect pc-control relay file layout to locate UIA schemas"
+}
