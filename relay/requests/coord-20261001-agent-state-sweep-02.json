@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-agent-state-sweep-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "\n$targets = @(\n  @{name='media'; id='312D0941F3A5138C71E55254EAEBBEC8'},\n  @{name='creator'; id='B0559FFE7843B036079007016E7351FF'},\n  @{name='growth'; id='DBC6BC28E04127D1821830B232E048EB'},\n  @{name='bridge'; id='A88E3157A8078B7DA32FC62848071CC3'},\n  @{name='mcp'; id='9BAA48607EDE0A4DFA73EAD8396BA451'}\n)\n$raw=(Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 5).Content\n$list=$raw|ConvertFrom-Json\n$out=@()\nforeach($x in $targets){\n  $t=@($list)|Where-Object{$_.id -eq $x.id}|Select-Object -First 1\n  if($t){$out += [pscustomobject]@{name=$x.name;id=$t.id;title=$t.title;url=$t.url;open=$true}}\n  else{$out += [pscustomobject]@{name=$x.name;id=$x.id;title='';url='';open=$false}}\n}\n$out|ConvertTo-Json -Compress -Depth 3\n"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only open-target sweep for existing agent chats"
+}
