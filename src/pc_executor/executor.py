@@ -577,14 +577,11 @@ class Executor:
     def _validate_execution_context(
         self,
         request: ActionRequest,
-        *,
-        token: CancellationToken | None = None,
     ) -> dict[str, Any] | None:
         binding = request.execution_context_binding
         if binding is None:
             return None
-
-        def validate() -> dict[str, Any]:
+        try:
             return validate_bound_execution_context(
                 request_id=request.request_id,
                 action=request.action,
@@ -594,22 +591,6 @@ class Executor:
                 shell_adapter=self.shell,
                 observer=self.context_observer,
             )
-
-        try:
-            if request.action in {
-                "vision.target.invoke",
-                "uia.invoke",
-                "uia.focus",
-                "uia.set_value",
-            }:
-                return self._adapter_bounded(
-                    "uia",
-                    request,
-                    token or CancellationToken(),
-                    "uia.context.validate",
-                    validate,
-                )
-            return validate()
         except ContextMismatchBlockedError:
             raise
         except (
@@ -631,7 +612,21 @@ class Executor:
         *,
         token: CancellationToken | None = None,
     ) -> T:
-        self._validate_execution_context(request, token=token)
+        if request.action in {
+            "vision.target.invoke",
+            "uia.invoke",
+            "uia.focus",
+            "uia.set_value",
+        }:
+            self._adapter_bounded(
+                "uia",
+                request,
+                token or CancellationToken(),
+                "uia.context.validate",
+                lambda: self._validate_execution_context(request),
+            )
+        else:
+            self._validate_execution_context(request)
         if token is not None:
             token.raise_if_cancelled()
         provisional = ActionOutcomeEvidence.create(
