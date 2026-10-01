@@ -1,0 +1,97 @@
+{
+  "schema": "pc_executor.runtime_health.consumer_manifest.v1",
+  "producer_repository": "foto6/help-pc-1",
+  "producer_branch": "agent/pc-executor-r24-runtime-health-20261001",
+  "source_base_sha": "7eed906976d092e3216f50b0f52e6cb422392979",
+  "contract_version": "pc_executor.runtime_health.v1",
+  "delivery": {
+    "native_tool": "device.health",
+    "executor_action": "health.get",
+    "response_field": "runtime_health",
+    "registry_changes_required": false,
+    "compatibility_registry_digest_must_remain": "58b2bde8c6a49825747dcd7010f105dad0b6d548c7e8341cdafb32d2319f6dcd"
+  },
+  "source_blobs": [
+    {
+      "path": "src/pc_executor/runtime_health.py",
+      "git_blob_sha": "ea305cdf1aa1eff503a80594a7c7c9b53c90e002"
+    },
+    {
+      "path": "schemas/pc_executor.runtime_health.v1.schema.json",
+      "git_blob_sha": "62d691862c4c66088bdb55b5fe35193529b6532f"
+    },
+    {
+      "path": "tests/fixtures/runtime_health_v1/runtime_health.example.json",
+      "git_blob_sha": "aee3ce093250a0ca3659496c20ccb37940ec76cb"
+    }
+  ],
+  "required_consumer_paths": [
+    "contract_version",
+    "complete",
+    "probe_budget_ms",
+    "elapsed_ms",
+    "generation.executor_process_id",
+    "generation.operations_generation_id",
+    "adapters.uia.available",
+    "adapters.uia.state",
+    "adapters.uia.timeout_count",
+    "adapters.uia.error_count",
+    "adapters.uia.bounded_operation_timeout_ms",
+    "adapters.uia.circuit.state",
+    "adapters.uia.generation.operations_generation_id",
+    "adapters.uia.diagnostics.target_process_id",
+    "adapters.windows.state",
+    "adapters.screenshot.state",
+    "adapters.shell.state",
+    "adapters.clipboard.state",
+    "adapters.input.state",
+    "adapters.search.state",
+    "adapters.process.state",
+    "outcome_journal.configured",
+    "outcome_journal.integrity",
+    "outcome_journal.reason",
+    "outcome_journal.bounded",
+    "outcome_journal.bytes_checked",
+    "outcome_journal.record_count",
+    "outcome_journal.corruption",
+    "summary.responsive",
+    "summary.degraded",
+    "summary.unhealthy",
+    "summary.unknown"
+  ],
+  "state_enum": [
+    "responsive",
+    "degraded",
+    "unhealthy",
+    "unknown"
+  ],
+  "integrity_enum": [
+    "healthy",
+    "corrupt",
+    "unknown",
+    "unconfigured"
+  ],
+  "circuit_enum": [
+    "closed",
+    "open",
+    "half_open"
+  ],
+  "safety": {
+    "read_only": true,
+    "health_probe_may_capture_screen": false,
+    "health_probe_may_read_clipboard": false,
+    "health_probe_may_send_input": false,
+    "uia_probe": "root_control_only",
+    "journal_probe": "read_only_max_2MiB",
+    "raw_window_titles_in_uia_diagnostics": false,
+    "raw_process_arguments_in_health": false,
+    "protected_path_policy_unchanged": true,
+    "outcome_lookup_semantics_unchanged": true
+  },
+  "consumer_notes": [
+    "available=true with state=unknown is valid when no non-invasive runtime probe exists.",
+    "UIA timeout is distinct from unavailable and from a successful empty/root-only tree.",
+    "integrity=unknown is fail-closed evidence when bounded journal validation cannot complete.",
+    "Do not infer live cutover readiness from this contract alone."
+  ]
+}
