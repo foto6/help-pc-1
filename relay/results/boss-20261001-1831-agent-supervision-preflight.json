@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst known=[\n{name:\"media\",id:\"312D0941F3A5138C71E55254EAEBBEC8\"},\n{name:\"bridge\",id:\"A88E3157A8078B7DA32FC62848071CC3\"},\n{name:\"creator\",id:\"B0559FFE7843B036079007016E7351FF\"},\n{name:\"growth\",id:\"DBC6BC28E04127D1821830B232E048EB\"},\n{name:\"pc\",id:\"F85160E9CD245D0085D51163204FDD58\"},\n{name:\"native_mcp\",id:\"9BAA48607EDE0A4DFA73EAD8396BA451\"}];\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nasync function inspect(k){\n const tab=tabs.find(x=>x.id===k.id); if(!tab)return{name:k.name,found:false};\n const ws=new WebSocket(tab.webSocketDebuggerUrl); await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\n let seq=1; const pending=new Map();\n ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};\n const call=(method,params={})=>new Promise((r,j)=>{const id=seq++;pending.set(id,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id,method,params}))});\n const expr=\"JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const c=[document.querySelector('#prompt-textarea'),...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"]'),...document.querySelectorAll('textarea')].find(vis)||null;const txt=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(vis);const generating=bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'));return {title:document.title,url:location.href,generating,draftLength:txt.trim().length}})())\";\n const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true}); ws.close(); return{name:k.name,found:true,...JSON.parse(rr.result.value)};\n}\nconst out={known:[],all:tabs.filter(t=>String(t.url||\"\").startsWith(\"https://chatgpt.com/\")).map(t=>({id:t.id,title:t.title,url:t.url}))};\nfor(const k of known){try{out.known.push(await inspect(k))}catch(e){out.known.push({name:k.name,error:String(e.message||e)})}}\nprocess.stdout.write(JSON.stringify(out));\n\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"known\":[{\"name\":\"media\",\"found\":true,\"title\":\"Deliver R11 Editor\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"generating\":false,\"draftLength\":0},{\"name\":\"bridge\",\"found\":true,\"title\":\"Bridge R19 Implementation Report\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\",\"generating\":false,\"draftLength\":0},{\"name\":\"creator\",\"found\":true,\"title\":\"Implement Publish Provider Layer\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"generating\":false,\"draftLength\":0},{\"name\":\"growth\",\"found\":true,\"title\":\"Implement Provider Ingestion Layer\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda63c-98d8-83eb-b365-d423b7563c4b\",\"generating\":false,\"draftLength\":0},{\"name\":\"pc\",\"found\":true,\"title\":\"Parity Gate Validation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab94f1d-a604-83eb-ae1b-258ac27e6544\",\"generating\":false,\"draftLength\":0},{\"name\":\"native_mcp\",\"found\":true,\"title\":\"Native Connector Implementation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"generating\":false,\"draftLength\":0}],\"all\":[{\"id\":\"903139550E371E4327AE07E7AA5FBDAB\",\"title\":\"Соберу реальное\",\"url\":\"https://chatgpt.com/c/6abe03fa-9728-83eb-90d2-5ee81bbac12c\"},{\"id\":\"B0559FFE7843B036079007016E7351FF\",\"title\":\"Implement Publish Provider Layer\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\"},{\"id\":\"DBC6BC28E04127D1821830B232E048EB\",\"title\":\"Implement Provider Ingestion Layer\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda63c-98d8-83eb-b365-d423b7563c4b\"},{\"id\":\"7F16BDD2DDFB331C616A1A8A1874B44E\",\"title\":\"Соберу реальное\",\"url\":\"https://chatgpt.com/c/6abe03fa-9728-83eb-90d2-5ee81bbac12c\"},{\"id\":\"74BDC2B5E97107BBA7ACDB858F2D03BB\",\"title\":\"Разработка гуманного бенчмарка\",\"url\":\"https://chatgpt.com/c/6abdcea3-b724-83ed-b43b-982f00854e3c\"},{\"id\":\"EFB77A02D8EBD4B3E47A600E35230743\",\"title\":\"Отчёт о прогрессе\",\"url\":\"https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8\"},{\"id\":\"FC15D22F67F888C4FF699ADF9223EB10\",\"title\":\"Отчёт о прогрессе\",\"url\":\"https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8\"},{\"id\":\"F85160E9CD245D0085D51163204FDD58\",\"title\":\"Parity Gate Validation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab94f1d-a604-83eb-ae1b-258ac27e6544\"},{\"id\":\"3F220AF76D2DBBF9F18258FEA22F8108\",\"title\":\"Fix Assignment Replacement Runtime\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c\"},{\"id\":\"312D0941F3A5138C71E55254EAEBBEC8\",\"title\":\"Deliver R11 Editor\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\"},{\"id\":\"A88E3157A8078B7DA32FC62848071CC3\",\"title\":\"Bridge R19 Implementation Report\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\"},{\"id\":\"64AB230E05263013F9FE4AD5F6BBEFD6\",\"title\":\"A2 Integration Verified\",\"url\":\"https://chatgpt.com/c/6ab8bed2-8d0c-83eb-b793-8e504335a57d\"},{\"id\":\"9BAA48607EDE0A4DFA73EAD8396BA451\",\"title\":\"Native Connector Implementation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\"},{\"id\":\"3AB2BC0EB7B81A999FCAE7175F494B3E\",\"title\":\"ChatGPT\",\"url\":\"https://chatgpt.com/\"},{\"id\":\"66026F188DF08158917B366CF7FE29B9\",\"title\":\"A 2\",\"url\":\"https://chatgpt.com/c/6ab67022-ae5c-83ed-a654-5dcc82c3b351\"}]}",
+      "stdout_bytes": 3776,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T11:44:13.836Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T11:44:13.775Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-1831-agent-supervision-preflight"
+    },
+    "request_id": "boss-20261001-1831-agent-supervision-preflight",
+    "started_at": "2026-10-01T11:44:13.096Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-1831-agent-supervision-preflight",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
