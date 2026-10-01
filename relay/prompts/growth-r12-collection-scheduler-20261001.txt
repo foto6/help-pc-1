@@ -1,0 +1,24 @@
+EXECUTE NOW — GROWTH R12 DURABLE METRICS COLLECTION SCHEDULER. Continue in this SAME existing Growth chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video3
+Branch ONLY: agent/growth-r12-collection-scheduler-20261001
+Exact starting HEAD: c4ed94d3e76b75d36bf8cc8280f6937f455133a6
+
+R10 feedback loop and R11 read-only provider ingestion are green. Preserve both.
+
+PRIMARY GOAL:
+Turn provider ingestion into a durable autonomous collection loop that can periodically refresh published Reel/Short/TikTok metrics and emit new Creator seeds only when evidence meaningfully changes.
+
+Required:
+1. Add durable schedule/state for metric collection per published post: first collection, follow-up windows, terminal/expired state.
+2. Preserve read-only provider boundary. No publish/edit/delete/account mutation.
+3. Handle provider rate limits/backoff, delayed metrics, pagination, partial windows, missing metrics, provider revisions and temporary failures.
+4. Avoid duplicate work: same post/window/provider revision should not create duplicate snapshots/seeds.
+5. Add change detection so a new Creator next-cycle seed is emitted only when the normalized evidence revision actually changes.
+6. Add bounded retry/backoff and restart-safe recovery; no tight polling loops.
+7. Add deterministic scheduler simulation for 100+ posts across Instagram/TikTok/YouTube fixtures with bounded queue/memory and no duplicate seeds.
+8. Add operator-readable state: next_due_at, last_success_at, last_error, backoff_until, latest_snapshot_digest, latest_seed_digest.
+9. Add conformance manifest/docs and exact provenance for R11 adapter contracts.
+10. NONEMPTY source/tests/docs commit, focused/full tests, exact SHA, CI and deterministic replay report.
+
+No live provider mutation. No merge/release. Do not modify Creator/Media repos.
