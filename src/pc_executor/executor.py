@@ -250,16 +250,33 @@ class Executor:
         capture_id: str | None = None,
         display_id: str | None = None,
     ) -> dict[str, Any]:
-        return derive_execution_context_binding(
-            request_id=request.request_id,
-            action=request.action,
-            params=request.params,
-            accessibility=self.accessibility,
-            shell_adapter=self.shell,
-            observer=self.context_observer,
-            capture_id=capture_id,
-            display_id=display_id,
-        ).to_dict()
+        def derive() -> dict[str, Any]:
+            return derive_execution_context_binding(
+                request_id=request.request_id,
+                action=request.action,
+                params=request.params,
+                accessibility=self.accessibility,
+                shell_adapter=self.shell,
+                observer=self.context_observer,
+                capture_id=capture_id,
+                display_id=display_id,
+            ).to_dict()
+
+        if request.action in {
+            "vision.target.invoke",
+            "uia.invoke",
+            "uia.focus",
+            "uia.set_value",
+        }:
+            token = CancellationToken()
+            return self._adapter_bounded(
+                "uia",
+                request,
+                token,
+                "uia.context.bind",
+                derive,
+            )
+        return derive()
 
     def execute(
         self,
@@ -560,11 +577,14 @@ class Executor:
     def _validate_execution_context(
         self,
         request: ActionRequest,
+        *,
+        token: CancellationToken | None = None,
     ) -> dict[str, Any] | None:
         binding = request.execution_context_binding
         if binding is None:
             return None
-        try:
+
+        def validate() -> dict[str, Any]:
             return validate_bound_execution_context(
                 request_id=request.request_id,
                 action=request.action,
@@ -574,6 +594,22 @@ class Executor:
                 shell_adapter=self.shell,
                 observer=self.context_observer,
             )
+
+        try:
+            if request.action in {
+                "vision.target.invoke",
+                "uia.invoke",
+                "uia.focus",
+                "uia.set_value",
+            }:
+                return self._adapter_bounded(
+                    "uia",
+                    request,
+                    token or CancellationToken(),
+                    "uia.context.validate",
+                    validate,
+                )
+            return validate()
         except ContextMismatchBlockedError:
             raise
         except (
@@ -595,7 +631,7 @@ class Executor:
         *,
         token: CancellationToken | None = None,
     ) -> T:
-        self._validate_execution_context(request)
+        self._validate_execution_context(request, token=token)
         if token is not None:
             token.raise_if_cancelled()
         provisional = ActionOutcomeEvidence.create(
