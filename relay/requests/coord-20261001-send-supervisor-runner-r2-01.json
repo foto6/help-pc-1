@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-send-supervisor-runner-r2-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "node .\\data\\direct_send_existing_agent.js --target=74BDC2B5E97107BBA7ACDB858F2D03BB --prompt=E:\\pc-github-relay\\relay\\prompts\\supervisor-human-gate-runner-r2-20261001.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Reuse existing agent chat; no new conversation"
+}
