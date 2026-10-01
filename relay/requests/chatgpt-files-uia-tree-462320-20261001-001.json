@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-uia-tree-462320-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python",
+      "-c",
+      "import uiautomation as auto\nauto.SetGlobalSearchTimeout(1)\nroot=auto.ControlFromHandle(462320)\ncount=0\ndef walk(c,depth=0):\n    global count\n    if count>=500 or depth>7:\n        return\n    try:\n        name=c.Name\n    except Exception:\n        name=\"\"\n    try:\n        aid=c.AutomationId\n    except Exception:\n        aid=\"\"\n    try:\n        ct=c.ControlTypeName\n    except Exception:\n        ct=\"\"\n    try:\n        cls=c.ClassName\n    except Exception:\n        cls=\"\"\n    if name or aid or ct:\n        print(f\"{depth}|{ct}|{aid}|{cls}|{name}\")\n        count+=1\n    try:\n        kids=c.GetChildren()\n    except Exception:\n        return\n    for k in kids:\n        walk(k,depth+1)\nwalk(root)\nprint(\"COUNT\",count)\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only enumerate UIAutomation tree of Files.com Chrome HWND 462320 only"
+}
