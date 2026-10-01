@@ -1,0 +1,27 @@
+EXECUTE NOW — CREATOR R13 END-TO-END INTEGRATION ACCEPTANCE. Continue in this SAME existing Creator chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video1
+Branch ONLY: agent/creator-r13-integration-acceptance-20261001
+Exact starting HEAD: 3594a907bb0c16469f33909af102714bdecaaafd
+
+Known green inputs:
+- Creator R11 autonomous orchestration is already green.
+- Creator R12 durable publish provider layer is green at the starting HEAD.
+- Growth R11 provider ingestion is green at c4ed94d3e76b75d36bf8cc8280f6937f455133a6.
+- Media R11 is STILL IN PROGRESS and must remain fail-closed until an exact compatible producer SHA/contract exists.
+
+PRIMARY GOAL:
+Build the integration acceptance layer that proves the whole autonomous Reel lifecycle can run deterministically once Media R11 becomes available, without weakening any fail-closed boundary.
+
+Required:
+1. Add a versioned integration acceptance harness covering:
+   brief -> script -> asset plan -> Media request -> Media result -> critic/QA -> release authorization -> publish provider -> publish receipt -> Growth handoff -> Growth next-cycle seed.
+2. Preserve Media fail-closed semantics. If Media R11 exact producer SHA/contract is unavailable or incompatible, report BLOCKED_MEDIA instead of using synthetic provider evidence as if production.
+3. Consume exact Growth R11 provider-ingestion contract/source hashes and verify live-vs-synthetic provenance.
+4. Add deterministic mocked platform provider flows for Instagram/TikTok/YouTube that exercise R12 publish recovery without real posting.
+5. Add restart/crash/replay tests across every cross-repo boundary and prove exactly-once logical side effects.
+6. Add an integration-readiness report with explicit green/blocked gates and exact producer SHAs/blob hashes.
+7. Prepare one command that an independent coordinator can run after Media R11 lands to execute the full synthetic E2E acceptance without editing code.
+8. NONEMPTY source/tests/docs commit, focused/full tests, exact SHA, CI run ids.
+
+No live publishing. No credentials. No merge/release. Do not modify Media/Growth repos.
