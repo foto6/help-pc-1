@@ -440,6 +440,90 @@ def test_git_fetch_retry_exhaustion_is_explicit_and_bounded(
     assert caught.value.error["retryable"] is True
 
 
+def test_recover_local_ahead_commit_pushes_without_duplicate_commit(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(progress_module, "_atomic_json", _fast_atomic)
+    progress = RelayProgress(
+        tmp_path / "progress.json",
+        branch="agent/test",
+        startup_head="a" * 40,
+        relay_script_sha256="b" * 64,
+        poll_seconds=3,
+        pid=900,
+    )
+    relay = Relay.__new__(Relay)
+    relay.repo = tmp_path
+    relay.branch = "agent/test"
+    relay.progress = progress
+    relay.sleep_fn = lambda _value: None
+
+    pushes = 0
+    commits = 0
+
+    def fake_run_git(repo, *args, check=True):
+        nonlocal pushes, commits
+        if args[:2] == ("rev-list", "--count"):
+            return subprocess.CompletedProcess([], 0, "1\n", "")
+        if args[:2] == ("log", "-1"):
+            return subprocess.CompletedProcess(
+                [], 0, f"{'c' * 40}\x00relay result ahead-result\n", ""
+            )
+        if args and args[0] == "push":
+            pushes += 1
+            if pushes == 1:
+                return subprocess.CompletedProcess(
+                    [], 128, "", "fatal: connection timed out"
+                )
+            return subprocess.CompletedProcess([], 0, "", "")
+        if "commit" in args:
+            commits += 1
+        raise AssertionError(f"unexpected git call: {args}")
+
+    monkeypatch.setattr(relay_module, "_run_git", fake_run_git)
+
+    relay._recover_local_ahead_commits()
+
+    assert pushes == 2
+    assert commits == 0
+    assert progress.snapshot()["last_result_committed"]["id"] == "ahead-result"
+
+
+def test_rebase_conflict_is_bounded_and_requires_manual_reconciliation(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    calls: list[tuple[str, ...]] = []
+
+    def fake_run_git(repo, *args, check=True):
+        calls.append(args)
+        if args[:2] == ("rev-parse", "--git-path"):
+            return subprocess.CompletedProcess([], 0, str(tmp_path / args[-1]), "")
+        if args and args[0] == "fetch":
+            return subprocess.CompletedProcess([], 0, "", "")
+        if args[:2] == ("rev-parse", "origin/branch"):
+            return subprocess.CompletedProcess([], 0, "d" * 40 + "\n", "")
+        if args and args[0] == "rebase" and args[1:] == ("origin/branch",):
+            return subprocess.CompletedProcess([], 1, "", "CONFLICT content")
+        if args and args[0] == "rebase" and args[1:] == ("--abort",):
+            return subprocess.CompletedProcess([], 0, "", "")
+        raise AssertionError(f"unexpected git call: {args}")
+
+    monkeypatch.setattr(relay_module, "_run_git", fake_run_git)
+
+    with pytest.raises(RelayTransportError) as caught:
+        relay_module._rebase_onto_remote(
+            tmp_path,
+            "branch",
+            sleep_fn=lambda _value: None,
+        )
+
+    assert caught.value.error["classification"] == "rebase_conflict"
+    assert caught.value.error["retryable"] is False
+    assert ("rebase", "--abort") in calls
+
+
 def test_stale_rebase_marker_is_aborted_in_isolated_git_fixture(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     repo.mkdir()
