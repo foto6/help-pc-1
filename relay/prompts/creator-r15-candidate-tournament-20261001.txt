@@ -1,0 +1,31 @@
+EXECUTE NOW — CREATOR R15 MULTI-CANDIDATE EDIT TOURNAMENT. Continue in this SAME existing Creator chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video1
+Branch ONLY: agent/creator-r15-candidate-tournament-20261001
+Exact starting HEAD: 6975917bb4f150936c76e749fb7248c8713b91cf
+
+R14 batch campaign runner is green. Preserve R11-R14 durability, provenance, budget, exactly-once, release authorization and publish safety.
+
+PRIMARY GOAL:
+For each Reel/Short, Creator should be able to request multiple bounded edit variants from Media, score them with objective + source-bound creative evidence, and select one winner before release instead of blindly publishing the first render.
+
+Required:
+1. Add versioned candidate-tournament model:
+   one creative item -> N bounded Media edit variants -> QA/creative evidence -> deterministic selection -> selected artifact -> release flow.
+2. Candidate dimensions may include pacing preset, caption style, B-roll density, hook cut, punch-in/zoom pattern, loop ending, CTA treatment and music/voice balance.
+3. Hard budget/concurrency ceilings. Never spawn unbounded variants.
+4. Reject any candidate failing Media technical QA before creative comparison.
+5. Selection must separate objective hard gates from heuristic creative preference. Do not fabricate quality certainty.
+6. Add tie/insufficient-evidence state; allow explicit human override without losing provenance.
+7. Persist all candidate identities, Media producer SHA, timeline/artifact digests, scores/evidence, rejection reasons and winner decision.
+8. Exactly-once semantics under duplicate Media results, restart, partial candidate completion and lost acknowledgement.
+9. If Media R12 producer contract is not yet finalized/compatible, fail closed to synthetic/conformance mode and record exact missing producer pin. Do not fake production readiness.
+10. Add deterministic fixture with at least 4 candidate variants where:
+    - one fails technical QA,
+    - one violates over-editing guardrail,
+    - two remain valid,
+    - winner is selected reproducibly.
+11. Add campaign interaction: R14 batch runner can run a tournament per selected item without multiplying campaign work beyond budget.
+12. NONEMPTY source/tests/docs commit, focused/full tests, exact SHA, CI and replay report.
+
+No live publishing. No credentials. No merge/release. Do not modify Media/Growth repos.
