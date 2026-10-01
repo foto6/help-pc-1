@@ -1,0 +1,94 @@
+{
+  "action": "windows.list",
+  "executor_result": {
+    "action": "windows.list",
+    "data": {
+      "windows": [
+        {
+          "app_name": null,
+          "hwnd": 66670,
+          "pid": 10932,
+          "title": "Discord Updater",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 198624,
+          "pid": 12744,
+          "title": "pc-github-relay — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 65782,
+          "pid": 12744,
+          "title": "Program Manager",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 66522,
+          "pid": 12212,
+          "title": "public-b · Folder · [BUGBOUNTY] foto6 test — Mozilla Firefox",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 459356,
+          "pid": 15736,
+          "title": "Диспетчер задач",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 197020,
+          "pid": 13788,
+          "title": "Интерфейс ввода Windows",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 5311122,
+          "pid": 18064,
+          "title": "Командная строка",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 133168,
+          "pid": 18092,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 527046,
+          "pid": 19444,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 67948,
+          "pid": 4244,
+          "title": "Отчёт о прогрессе - Google Chrome",
+          "visible": true
+        }
+      ]
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T00:38:36.530Z",
+    "ok": true,
+    "request_id": "chatgpt-files-windows-after-open-20261001-001",
+    "started_at": "2026-10-01T00:38:36.529Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-files-windows-after-open-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
