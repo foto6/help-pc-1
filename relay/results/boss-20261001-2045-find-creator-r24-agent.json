@@ -1,0 +1,103 @@
+{
+  "action": "shell.run",
+  "executor_result": null,
+  "id": "boss-20261001-2045-find-creator-r24-agent",
+  "live": true,
+  "reconciliation": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T14:07:06.210Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "boss-20261001-2045-find-creator-r24-agent"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:25fce7cf7f9ad2ee30f224de8dc4e87c746a98a397fa0e988e134a0107d25326",
+            "journal_sequence": 937,
+            "previous_record_sha256": "23214e8801bf5e05b7349196dce7f8cffeebb35dfb984368b2eeadd69ecfcd90",
+            "record_sha256": "bd0a9172ae574fb35874a1acd2c477cd19a222d5a4860ea7913f1c53aac82d80",
+            "recorded_at": "2026-10-01T14:07:06.269Z",
+            "request_id": "boss-20261001-2045-find-creator-r24-agent",
+            "transition": "dispatch_started"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-01T14:07:06.210Z",
+          "reason": "dispatch_started",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "boss-20261001-2045-find-creator-r24-agent"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-01T14:07:06.210Z",
+            "reason": "dispatch_started",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "boss-20261001-2045-find-creator-r24-agent"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:25fce7cf7f9ad2ee30f224de8dc4e87c746a98a397fa0e988e134a0107d25326",
+          "journal_sequence": 937,
+          "previous_record_sha256": "23214e8801bf5e05b7349196dce7f8cffeebb35dfb984368b2eeadd69ecfcd90",
+          "record_sha256": "bd0a9172ae574fb35874a1acd2c477cd19a222d5a4860ea7913f1c53aac82d80",
+          "recorded_at": "2026-10-01T14:07:06.269Z",
+          "request_id": "boss-20261001-2045-find-creator-r24-agent",
+          "transition": "dispatch_started"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "7f40e52a393c45781a28500a8ddfdb6286fe89a3c3a867d637c0571e3e7a2008",
+          "matched_records": 1,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 937
+        },
+        "reason": "dispatch_started",
+        "replay_authorized": false,
+        "requestId": "boss-20261001-2045-find-creator-r24-agent",
+        "request_id": "boss-20261001-2045-find-creator-r24-agent",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": true,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T15:38:19.190Z",
+    "ok": true,
+    "request_id": "boss-20261001-2045-find-creator-r24-agent.relay-reconcile",
+    "started_at": "2026-10-01T15:38:19.122Z",
+    "status": "dry_run"
+  },
+  "reexecuted": false,
+  "relay_status": "interrupted_requires_reconciliation",
+  "version": "pc_relay.result.v1"
+}
