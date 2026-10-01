@@ -729,3 +729,124 @@ def test_health_probe_payload_contains_no_request_params_or_environment(
     assert "environment" not in rendered
     assert "authorization" not in rendered
     assert "credential" not in rendered
+
+
+def _git_blob_sha(root: Path, relative: str) -> str:
+    return subprocess.check_output(
+        ["git", "rev-parse", f"HEAD:{relative}"],
+        cwd=root,
+        text=True,
+    ).strip()
+
+
+def test_r26_consumer_fixture_schema_and_source_blob_bindings() -> None:
+    root = Path(__file__).resolve().parents[1]
+    fixture_dir = root / "tests" / "fixtures" / "relay_progress_v1"
+    example = json.loads(
+        (fixture_dir / "progress.example.json").read_text(encoding="utf-8")
+    )
+    manifest = json.loads(
+        (fixture_dir / "manifest.json").read_text(encoding="utf-8")
+    )
+    progress_schema = json.loads(
+        (root / "schemas" / "pc_relay.progress.v1.schema.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    liveness_schema = json.loads(
+        (root / "schemas" / "pc_relay.liveness_probe.v1.schema.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    progress_module.validate_progress(example)
+    assert progress_schema["$id"] == PROGRESS_VERSION
+    assert liveness_schema["$id"] == LIVENESS_VERSION
+    assert set(progress_schema["required"]) == {
+        "contract_version",
+        "source",
+        "process",
+        "loop_generation_id",
+        "loop_epoch",
+        "last_fetch_success",
+        "last_request_observed",
+        "last_result_committed",
+        "last_successful_cycle_at_unix",
+        "consecutive_cycle_failures",
+        "queue",
+        "current_cycle",
+        "last_error",
+        "limits",
+        "recorded_at_unix",
+    }
+    assert set(liveness_schema["required"]) == {
+        "contract_version",
+        "state",
+        "reason",
+        "observed_pids",
+        "progress_age_seconds",
+        "queue_progress_age_seconds",
+        "successful_cycle_age_seconds",
+        "consecutive_cycle_failures",
+        "pending_count",
+        "loop_generation_id",
+        "loop_epoch",
+        "process_pid",
+        "last_error_classification",
+    }
+
+    assert manifest["schema"] == "pc_relay.progress.consumer_manifest.v1"
+    assert manifest["source_base_sha"] == (
+        "4ce8901221ad994ae5b44299d6601e1c9cc6a047"
+    )
+    assert manifest["runtime_delivery"]["committed_to_git"] is False
+    assert (
+        manifest["recovery_invariants"][
+            "side_effect_replay_authorized_after_liveness_recovery"
+        ]
+        is False
+    )
+    for item in manifest["source_blobs"]:
+        assert _git_blob_sha(root, item["path"]) == item["git_blob_sha"], item["path"]
+
+
+def test_invalid_progress_probe_keeps_stable_nonsecret_liveness_shape(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    progress_path = tmp_path / ".pc-relay" / "progress.v1.json"
+    progress_path.parent.mkdir(parents=True)
+    progress_path.write_text(
+        '{"credential":"must-not-be-rendered-as-probe-detail"}\n',
+        encoding="utf-8",
+    )
+    args = argparse.Namespace(
+        observed_pid=[1234],
+        expected_pid=1234,
+        stall_seconds=15.0,
+    )
+
+    assert relay_module._health_probe(args, tmp_path) == 0
+    payload = json.loads(capsys.readouterr().out)
+    probe = payload["probe"]
+
+    assert payload["progress"] is None
+    assert probe["contract_version"] == LIVENESS_VERSION
+    assert probe["state"] == "unknown"
+    assert probe["reason"] == "progress_record_invalid"
+    assert set(probe) == {
+        "contract_version",
+        "state",
+        "reason",
+        "observed_pids",
+        "progress_age_seconds",
+        "queue_progress_age_seconds",
+        "successful_cycle_age_seconds",
+        "consecutive_cycle_failures",
+        "pending_count",
+        "loop_generation_id",
+        "loop_epoch",
+        "process_pid",
+        "last_error_classification",
+    }
+    assert "must-not-be-rendered" not in json.dumps(payload)
