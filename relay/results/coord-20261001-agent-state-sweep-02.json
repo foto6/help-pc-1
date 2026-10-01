@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "\n$targets = @(\n  @{name='media'; id='312D0941F3A5138C71E55254EAEBBEC8'},\n  @{name='creator'; id='B0559FFE7843B036079007016E7351FF'},\n  @{name='growth'; id='DBC6BC28E04127D1821830B232E048EB'},\n  @{name='bridge'; id='A88E3157A8078B7DA32FC62848071CC3'},\n  @{name='mcp'; id='9BAA48607EDE0A4DFA73EAD8396BA451'}\n)\n$raw=(Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 5).Content\n$list=$raw|ConvertFrom-Json\n$out=@()\nforeach($x in $targets){\n  $t=@($list)|Where-Object{$_.id -eq $x.id}|Select-Object -First 1\n  if($t){$out += [pscustomobject]@{name=$x.name;id=$t.id;title=$t.title;url=$t.url;open=$true}}\n  else{$out += [pscustomobject]@{name=$x.name;id=$x.id;title='';url='';open=$false}}\n}\n$out|ConvertTo-Json -Compress -Depth 3\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"name\":\"media\",\"id\":\"312D0941F3A5138C71E55254EAEBBEC8\",\"title\":\"Deliver R11 Editor\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"open\":true},{\"name\":\"creator\",\"id\":\"B0559FFE7843B036079007016E7351FF\",\"title\":\"Implement Publish Provider Layer\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"open\":true},{\"name\":\"growth\",\"id\":\"DBC6BC28E04127D1821830B232E048EB\",\"title\":\"Implement Provider Ingestion Layer\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda63c-98d8-83eb-b365-d423b7563c4b\",\"open\":true},{\"name\":\"bridge\",\"id\":\"A88E3157A8078B7DA32FC62848071CC3\",\"title\":\"Bridge R19 Implementation Report\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\",\"open\":true},{\"name\":\"mcp\",\"id\":\"9BAA48607EDE0A4DFA73EAD8396BA451\",\"title\":\"Native Connector Implementation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"open\":true}]\r\n",
+      "stdout_bytes": 1097,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T01:05:48.701Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T01:05:48.653Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-agent-state-sweep-02"
+    },
+    "request_id": "coord-20261001-agent-state-sweep-02",
+    "started_at": "2026-10-01T01:05:48.057Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-agent-state-sweep-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
