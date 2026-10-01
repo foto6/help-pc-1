@@ -152,3 +152,30 @@ def test_pending_result_paths_only_returns_git_dirty_results(tmp_path, monkeypat
 
     monkeypatch.setattr("tools.github_relay._run_git", lambda *args, **kwargs: Probe())
     assert _pending_result_paths(repo, results) == [pending.resolve()]
+
+
+def test_committed_health_schema_and_manifest_are_fail_safe() -> None:
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parents[1]
+    schema = json.loads(
+        (root / "conformance" / "pc_relay.health.v1" / "schema.json").read_text(encoding="utf-8")
+    )
+    manifest = json.loads(
+        (root / "conformance" / "pc_relay.health.v1" / "manifest.json").read_text(encoding="utf-8")
+    )
+    assert schema["$id"] == HEALTH_VERSION
+    assert "updated_at_unix" in schema["required"]
+    assert "last_cycle_completed_at_unix" in schema["required"]
+    assert "local_head" in schema["required"]
+    assert "remote_head" in schema["required"]
+    assert "backlog_count" in schema["required"]
+    assert "reconciliation_required" in schema["required"]
+    assert manifest["contract"] == HEALTH_VERSION
+    safety = manifest["safety_invariants"]
+    assert safety["pid_presence_is_health"] is False
+    assert safety["automatic_restart"] is False
+    assert safety["automatic_kill"] is False
+    assert safety["automatic_side_effect_replay"] is False
+    assert safety["unknown_effect_requires_reconciliation"] is True
