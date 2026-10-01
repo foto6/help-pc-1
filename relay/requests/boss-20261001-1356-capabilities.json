@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1356-capabilities",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Supervisor read-only capability probe before project orchestration"
+}
