@@ -24,7 +24,7 @@
   "source_blobs": [
     {
       "path": "src/pc_relay/evidence.py",
-      "git_blob_sha": "4dd89a2102c8c16d04073260f43c3aa8c93fcd0c"
+      "git_blob_sha": "665684b937b7e1d2e06ef3541bc535082b6a47a2"
     },
     {
       "path": "tools/read_relay_progress_evidence.py",
