@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import hashlib
+import json
 import os
 import threading
 from dataclasses import dataclass
@@ -9,6 +11,7 @@ from typing import Any, Callable
 from .cancellation import CancellationToken, run_bounded
 from .errors import OperationCancelledError, OperationTimeoutError
 from .models import utc_now_iso
+from .outcome_journal import OutcomeJournal, OutcomeJournalRecord
 
 
 CONTRACT_VERSION = "pc_executor.runtime_health.v1"
@@ -273,6 +276,98 @@ class RuntimeHealthMonitor:
                 generation_id=generation_id,
             )
 
+
+
+def probe_outcome_journal_integrity(
+    journal: OutcomeJournal,
+    *,
+    max_bytes: int = 2 * 1024 * 1024,
+    cancellation: CancellationToken | None = None,
+) -> dict[str, Any]:
+    """Read-only bounded validation without changing the frozen journal module."""
+    token = cancellation or CancellationToken()
+    token.raise_if_cancelled()
+    if isinstance(max_bytes, bool) or not isinstance(max_bytes, int) or max_bytes <= 0:
+        raise ValueError("max_bytes must be a positive integer")
+    path = journal.path
+    lock = getattr(journal, "_lock", None)
+    if lock is None:
+        raise RuntimeError("outcome journal lock unavailable")
+    with lock:
+        token.raise_if_cancelled()
+        if not path.exists():
+            return {
+                "configured": True,
+                "integrity": "healthy",
+                "reason": "empty_or_missing",
+                "bytes_checked": 0,
+                "record_count": 0,
+                "journal_sha256": hashlib.sha256(b"").hexdigest(),
+                "corruption": None,
+                "bounded": True,
+                "max_bytes": max_bytes,
+            }
+        size = path.stat().st_size
+        token.raise_if_cancelled()
+        if size > max_bytes:
+            return {
+                "configured": True,
+                "integrity": "unknown",
+                "reason": "size_limit_exceeded",
+                "bytes_checked": 0,
+                "record_count": None,
+                "journal_sha256": None,
+                "corruption": None,
+                "bounded": True,
+                "max_bytes": max_bytes,
+            }
+        raw = path.read_bytes()
+    token.raise_if_cancelled()
+    digest = hashlib.sha256(raw).hexdigest()
+    previous_hash: str | None = None
+    record_count = 0
+    offset = 0
+    corruption: dict[str, Any] | None = None
+    for line_number, line in enumerate(raw.splitlines(keepends=True), start=1):
+        token.raise_if_cancelled()
+        line_start = offset
+        offset += len(line)
+        if not line.endswith(b"\\n"):
+            corruption = {
+                "kind": "truncated_tail",
+                "line_number": line_number,
+                "byte_offset": line_start,
+                "safe_prefix_bytes": line_start,
+            }
+            break
+        try:
+            decoded = json.loads(line[:-1].decode("utf-8"))
+            record = OutcomeJournalRecord.from_dict(decoded)
+            if record.journal_sequence != record_count + 1:
+                raise ValueError("journal_sequence is not contiguous")
+            if record.previous_record_sha256 != previous_hash:
+                raise ValueError("previous_record_sha256 chain mismatch")
+        except Exception:
+            corruption = {
+                "kind": "malformed_tail" if offset == len(raw) else "malformed_record",
+                "line_number": line_number,
+                "byte_offset": line_start,
+                "safe_prefix_bytes": line_start,
+            }
+            break
+        record_count += 1
+        previous_hash = record.record_sha256
+    return {
+        "configured": True,
+        "integrity": "healthy" if corruption is None else "corrupt",
+        "reason": "validated" if corruption is None else "integrity_failure",
+        "bytes_checked": len(raw),
+        "record_count": record_count,
+        "journal_sha256": digest,
+        "corruption": corruption,
+        "bounded": True,
+        "max_bytes": max_bytes,
+    }
 
 def validate_runtime_health(payload: Any) -> None:
     if not isinstance(payload, dict):
