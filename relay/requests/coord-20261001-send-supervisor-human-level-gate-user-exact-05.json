@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-send-supervisor-human-level-gate-user-exact-05",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "node .\\data\\direct_send_existing_agent.js --target=7A34228044768E0A16C0E0D853DA4598 --prompt=E:\\pc-github-relay\\relay\\prompts\\supervisor-human-level-editing-gate-user-exact-20261001.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Retry exact user benchmark task only when existing supervisor chat is idle; no new conversation"
+}
