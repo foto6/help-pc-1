@@ -1,0 +1,129 @@
+{
+  "action": "windows.list",
+  "executor_result": {
+    "action": "windows.list",
+    "data": {
+      "windows": [
+        {
+          "app_name": null,
+          "hwnd": 198624,
+          "pid": 12744,
+          "title": "01_site_overview — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 67948,
+          "pid": 4244,
+          "title": "ChatGPT - Google Chrome",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 462320,
+          "pid": 8432,
+          "title": "ChatGPT - Shared Content - Google Chrome",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 63507208,
+          "pid": 10932,
+          "title": "Discord",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 66670,
+          "pid": 10932,
+          "title": "Discord Updater",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 65782,
+          "pid": 12744,
+          "title": "Program Manager",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 14158676,
+          "pid": 25564,
+          "title": "reloadcG.txt — Блокнот",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 330970,
+          "pid": 2784,
+          "title": "SCREENSHOT_REQUESTS.md - Visual Studio Code",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 459356,
+          "pid": 15736,
+          "title": "Диспетчер задач",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 66522,
+          "pid": 12212,
+          "title": "Дообучение SpectraTrack датасетами — Mozilla Firefox",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 197020,
+          "pid": 13788,
+          "title": "Интерфейс ввода Windows",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 5311122,
+          "pid": 18064,
+          "title": "Командная строка",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 133168,
+          "pid": 18092,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 527046,
+          "pid": 19444,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 199352,
+          "pid": 13872,
+          "title": "‎11 а @ ‎Носок С мылом (1192683)",
+          "visible": true
+        }
+      ]
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T06:59:10.195Z",
+    "ok": true,
+    "request_id": "boss-20261001-1359-windows",
+    "started_at": "2026-10-01T06:59:10.172Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-1359-windows",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
