@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-2382-growth-url-byte-diagnostic",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const t=tabs.find(x=>x.id===\"DBC6BC28E04127D1821830B232E048EB\");const c=\"6abda63c-98d8-83ed-b365-d423b7563c4b\";const u=String(t?.url||\"\");const last=u.split(\"/\").pop()||\"\";process.stdout.write(JSON.stringify({found:!!t,title:t?.title||\"\",url:u,last,lastLen:last.length,conv:c,equal:last===c,urlHex:Buffer.from(u,\"utf8\").toString(\"hex\"),convHex:Buffer.from(c,\"utf8\").toString(\"hex\"),lastHex:Buffer.from(last,\"utf8\").toString(\"hex\")}))\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only byte diagnostic for Growth conversation URL binding"
+}
