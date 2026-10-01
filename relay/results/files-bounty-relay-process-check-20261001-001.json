@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match 'github_relay\\.py' } | Select-Object ProcessId,ParentProcessId,CommandLine | Format-List"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "\r\n\r\nProcessId       : 4612\r\nParentProcessId : 9484\r\nCommandLine     : \"C:\\Users\\foto6\\AppData\\Local\\Programs\\Python\\Launcher\\py.exe\" tools\\github_relay.py --repo E:\\pc-git\r\n                  hub-relay --live \r\n\r\nProcessId       : 15056\r\nParentProcessId : 4612\r\nCommandLine     : C:\\Users\\foto6\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\r\n                  \\python.exe tools\\github_relay.py --repo E:\\pc-github-relay --live \r\n\r\n\r\n\r\n",
+      "stdout_bytes": 475,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T01:27:28.628Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T01:27:28.575Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "files-bounty-relay-process-check-20261001-001"
+    },
+    "request_id": "files-bounty-relay-process-check-20261001-001",
+    "started_at": "2026-10-01T01:27:27.926Z",
+    "status": "completed"
+  },
+  "id": "files-bounty-relay-process-check-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
