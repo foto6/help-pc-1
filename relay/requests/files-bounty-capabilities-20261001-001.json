@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-bounty-capabilities-20261001-001",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read pc-control capabilities before continuing authorized Files.com testing without shell browser automation"
+}
