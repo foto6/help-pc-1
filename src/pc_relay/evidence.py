@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import ctypes
 import hashlib
 import json
 import math
+import os
 import re
 import time
 from pathlib import Path
@@ -179,6 +181,77 @@ def _freshness_deadline(
     return deadline
 
 
+def _read_bounded_bytes(path: Path, max_bytes: int) -> bytes:
+    """Read one file identity without preventing atomic replace on Windows."""
+    if os.name != "nt":
+        with path.open("rb") as fh:
+            return fh.read(max_bytes + 1)
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    create_file = kernel32.CreateFileW
+    create_file.argtypes = [
+        ctypes.c_wchar_p,
+        ctypes.c_uint32,
+        ctypes.c_uint32,
+        ctypes.c_void_p,
+        ctypes.c_uint32,
+        ctypes.c_uint32,
+        ctypes.c_void_p,
+    ]
+    create_file.restype = ctypes.c_void_p
+    read_file = kernel32.ReadFile
+    read_file.argtypes = [
+        ctypes.c_void_p,
+        ctypes.c_void_p,
+        ctypes.c_uint32,
+        ctypes.POINTER(ctypes.c_uint32),
+        ctypes.c_void_p,
+    ]
+    read_file.restype = ctypes.c_int
+    close_handle = kernel32.CloseHandle
+    close_handle.argtypes = [ctypes.c_void_p]
+    close_handle.restype = ctypes.c_int
+
+    GENERIC_READ = 0x80000000
+    FILE_SHARE_READ = 0x00000001
+    FILE_SHARE_WRITE = 0x00000002
+    FILE_SHARE_DELETE = 0x00000004
+    OPEN_EXISTING = 3
+    FILE_ATTRIBUTE_NORMAL = 0x00000080
+    INVALID_HANDLE_VALUE = ctypes.c_void_p(-1).value
+
+    handle = create_file(
+        str(path),
+        GENERIC_READ,
+        FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+        None,
+        OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL,
+        None,
+    )
+    if handle == INVALID_HANDLE_VALUE:
+        error = ctypes.get_last_error()
+        if error in {2, 3}:
+            raise FileNotFoundError(str(path))
+        raise ctypes.WinError(error)
+
+    try:
+        buffer = ctypes.create_string_buffer(max_bytes + 1)
+        read_count = ctypes.c_uint32(0)
+        ok = read_file(
+            handle,
+            buffer,
+            max_bytes + 1,
+            ctypes.byref(read_count),
+            None,
+        )
+        if not ok:
+            raise ctypes.WinError(ctypes.get_last_error())
+        return bytes(buffer.raw[: read_count.value])
+    finally:
+        close_handle(handle)
+
+
 def _read_one_progress_snapshot(
     path: Path,
     *,
@@ -192,8 +265,7 @@ def _read_one_progress_snapshot(
     ):
         raise ValueError("max_snapshot_bytes must be an integer in [1, 1048576]")
     try:
-        with path.open("rb") as fh:
-            raw = fh.read(max_snapshot_bytes + 1)
+        raw = _read_bounded_bytes(path, max_snapshot_bytes)
     except FileNotFoundError as exc:
         raise EvidenceReadError(
             "missing_snapshot",
