@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T07:08:29.038Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "boss-20261001-1425-bridge-status"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:9b431997aef214fd1a9ea79328b548604d18c026da4bdde552311788583e1de1",
+            "journal_sequence": 760,
+            "previous_record_sha256": "6db50ef35f87ec7434853ac5050b667c6843d352e3b3fc0d11ecae7509be2e76",
+            "record_sha256": "83671ac900cadfab056d557b0516bb40e0f99f756e0ddd1e46fbddc290b5c4f2",
+            "recorded_at": "2026-10-01T07:08:29.082Z",
+            "request_id": "boss-20261001-1425-bridge-status",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T07:08:44.149Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "boss-20261001-1425-bridge-status"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:9b431997aef214fd1a9ea79328b548604d18c026da4bdde552311788583e1de1",
+            "journal_sequence": 761,
+            "previous_record_sha256": "83671ac900cadfab056d557b0516bb40e0f99f756e0ddd1e46fbddc290b5c4f2",
+            "record_sha256": "b1e193f802d51d457c076e6219b509cf6ba78f62ef4353392fe4470abaafcc7a",
+            "recorded_at": "2026-10-01T07:08:44.202Z",
+            "request_id": "boss-20261001-1425-bridge-status",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-01T07:08:44.149Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "boss-20261001-1425-bridge-status"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-01T07:08:44.149Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "boss-20261001-1425-bridge-status"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:9b431997aef214fd1a9ea79328b548604d18c026da4bdde552311788583e1de1",
+          "journal_sequence": 761,
+          "previous_record_sha256": "83671ac900cadfab056d557b0516bb40e0f99f756e0ddd1e46fbddc290b5c4f2",
+          "record_sha256": "b1e193f802d51d457c076e6219b509cf6ba78f62ef4353392fe4470abaafcc7a",
+          "recorded_at": "2026-10-01T07:08:44.202Z",
+          "request_id": "boss-20261001-1425-bridge-status",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "379ebb86b058931ccf3d4432158c42be50bc2716dd2d89fa4b3042447858ab2b",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 761
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "boss-20261001-1425-bridge-status",
+        "request_id": "boss-20261001-1425-bridge-status",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T07:10:46.029Z",
+    "ok": true,
+    "request_id": "boss-20261001-1427-lookup-bridge-status",
+    "started_at": "2026-10-01T07:10:45.977Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-1427-lookup-bridge-status",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
