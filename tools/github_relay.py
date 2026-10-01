@@ -503,14 +503,21 @@ class Relay:
             "phase": "startup",
             "updated_at_unix": now,
             "started_at_unix": now,
+            "last_fetch_success_at_unix": None,
             "last_sync_at_unix": None,
             "last_cycle_completed_at_unix": None,
+            "last_request_processed_at_unix": None,
+            "last_request_processed_id": None,
             "last_result_published_at_unix": None,
+            "last_result_published_id": None,
             "local_head": _git_head(self.repo),
             "remote_head": _git_head(self.repo, f"origin/{self.branch}"),
+            "remote_head_observed_at_unix": None,
             "request_count": 0,
             "result_count": 0,
             "backlog_count": 0,
+            "last_backlog_change_at_unix": None,
+            "backlog_high_watermark": 0,
             "current_request_id": None,
             "last_error": None,
             "last_reconciliation_request_id": None,
@@ -522,9 +529,17 @@ class Relay:
     def _refresh_queue_counts(self) -> None:
         request_names = {path.name for path in self.requests_dir.glob("*.json")}
         result_names = {path.name for path in self.results_dir.glob("*.json")}
+        backlog = len(request_names - result_names)
+        previous_backlog = int(self._health.get("backlog_count", 0))
         self._health["request_count"] = len(request_names)
         self._health["result_count"] = len(result_names)
-        self._health["backlog_count"] = len(request_names - result_names)
+        self._health["backlog_count"] = backlog
+        self._health["backlog_high_watermark"] = max(
+            int(self._health.get("backlog_high_watermark", 0)),
+            backlog,
+        )
+        if backlog != previous_backlog:
+            self._health["last_backlog_change_at_unix"] = time.time()
 
     def _write_health(
         self,
@@ -532,9 +547,12 @@ class Relay:
         *,
         status: str | None = None,
         current_request_id: str | None = None,
+        mark_fetch: bool = False,
         mark_sync: bool = False,
         mark_cycle: bool = False,
+        mark_request: bool = False,
         mark_result: bool = False,
+        event_request_id: str | None = None,
         local_head: str | None = None,
         remote_head: str | None = None,
         error: str | None = None,
@@ -545,17 +563,24 @@ class Relay:
         if status is not None:
             self._health["status"] = status
         self._health["current_request_id"] = current_request_id
+        if mark_fetch:
+            self._health["last_fetch_success_at_unix"] = now
         if mark_sync:
             self._health["last_sync_at_unix"] = now
         if mark_cycle:
             self._health["last_cycle_completed_at_unix"] = now
+        if mark_request:
+            self._health["last_request_processed_at_unix"] = now
+            self._health["last_request_processed_id"] = event_request_id
         if mark_result:
             self._health["last_result_published_at_unix"] = now
+            self._health["last_result_published_id"] = event_request_id
         if local_head is not None:
             self._health["local_head"] = local_head
         if remote_head is not None:
             self._health["remote_head"] = remote_head
-        self._health["last_error"] = error
+            self._health["remote_head_observed_at_unix"] = now
+        self._health["last_error"] = None if error is None else _bounded_error(error)
         _atomic_json(self.health_path, self._health)
 
     def sync(self) -> None:
@@ -576,6 +601,7 @@ class Relay:
         self._write_health(
             "sync_complete",
             status="healthy",
+            mark_fetch=True,
             mark_sync=True,
             local_head=local_head,
             remote_head=remote_head,
@@ -609,6 +635,7 @@ class Relay:
             "executor_result": None,
             "reconciliation": result,
             "reexecuted": False,
+            "replay_authorized": False,
         }
 
     def execute_one(self, request_path: Path) -> dict[str, Any]:
@@ -708,7 +735,12 @@ class Relay:
                 check=False,
             )
             if pushed.returncode == 0:
-                self._write_health("result_published", status="healthy", mark_result=True)
+                self._write_health(
+                    "result_published",
+                    status="healthy",
+                    mark_result=True,
+                    event_request_id=request_id,
+                )
                 return
             # Remote queue advanced between our commit and push. Rebase the local
             # result commit over it, and always clean up failed rebase state.
@@ -739,6 +771,12 @@ class Relay:
                 if isinstance(request_id, str) and self._result_path(request_id).exists():
                     continue
                 self.execute_one(request_path)
+                self._write_health(
+                    "request_processed",
+                    status="healthy",
+                    mark_request=True,
+                    event_request_id=request_id,
+                )
                 processed += 1
             except Exception as exc:
                 request_id = request_path.stem
