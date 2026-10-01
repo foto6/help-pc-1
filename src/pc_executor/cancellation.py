@@ -46,6 +46,11 @@ def run_bounded(
             token.raise_if_cancelled()
             remaining = deadline - monotonic()
             if remaining <= 0:
+                # Propagate the deadline into cooperative adapters before
+                # returning. The worker remains isolated if an underlying OS
+                # API ignores cancellation, but unrelated request lanes are
+                # not forced to wait for that thread.
+                token.cancel()
                 future.cancel()
                 raise OperationTimeoutError(f"{label} timed out")
             try:
