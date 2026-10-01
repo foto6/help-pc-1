@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst items=[{\"name\":\"bridge\",\"id\":\"A88E3157A8078B7DA32FC62848071CC3\",\"needle\":\"WEB AI BRIDGE R22 OPERATIONAL READINESS\"},{\"name\":\"media\",\"id\":\"312D0941F3A5138C71E55254EAEBBEC8\",\"needle\":\"MEDIA R14 FAILURE CLOSURE\"},{\"name\":\"pc\",\"id\":\"F85160E9CD245D0085D51163204FDD58\",\"needle\":\"PC CONTROL RELAY R26 QUEUE-PROGRESS / LIVENESS HARDENING\"},{\"name\":\"creator\",\"id\":\"B0559FFE7843B036079007016E7351FF\",\"needle\":\"CREATOR R21 PRODUCTION PUBLISH EXECUTION LAYER\"}];const tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nasync function inspect(it){const tab=tabs.find(x=>x.id===it.id);if(!tab)return{name:it.name,found:false};const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const id=seq++;pending.set(id,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id,method,params}))});const expr=\"JSON.stringify((()=>{const t=document.body?.innerText||'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});const generating=bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'));return {bodyHasNeedle:t.includes(\"+JSON.stringify(it.needle)+\"),generating,bodyLength:t.length,title:document.title,url:location.href}})())\";const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});ws.close();return{name:it.name,...JSON.parse(rr.result.value)}}const out=[];for(const it of items){try{out.push(await inspect(it))}catch(e){out.push({name:it.name,error:String(e.message||e)})}}process.stdout.write(JSON.stringify(out));\n\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"name\":\"bridge\",\"bodyHasNeedle\":true,\"generating\":false,\"bodyLength\":27730,\"title\":\"Bridge R19 Implementation Report\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\"},{\"name\":\"media\",\"bodyHasNeedle\":true,\"generating\":false,\"bodyLength\":23606,\"title\":\"Deliver R11 Editor\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\"},{\"name\":\"pc\",\"bodyHasNeedle\":true,\"generating\":false,\"bodyLength\":16637,\"title\":\"Parity Gate Validation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab94f1d-a604-83eb-ae1b-258ac27e6544\"},{\"name\":\"creator\",\"bodyHasNeedle\":false,\"generating\":false,\"bodyLength\":36099,\"title\":\"Implement Publish Provider Layer\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\"}]",
+      "stdout_bytes": 890,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T07:40:57.170Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T07:40:57.113Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-1545-verify-visible-task-text"
+    },
+    "request_id": "boss-20261001-1545-verify-visible-task-text",
+    "started_at": "2026-10-01T07:40:56.476Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-1545-verify-visible-task-text",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
