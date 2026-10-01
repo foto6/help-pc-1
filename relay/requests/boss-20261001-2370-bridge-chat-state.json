@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-2370-bridge-chat-state",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===\"A88E3157A8078B7DA32FC62848071CC3\");if(!tab||!String(tab.url||\"\").includes(\"6abda61c-a440-83ed-9482-1d0fc7923e03\")){process.stdout.write(JSON.stringify({ok:false,reason:\"target_mismatch\",url:tab?.url||\"\"}));process.exit(2)}const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});const expr=\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const composer=c?(('value' in c?c.value:(c.innerText||c.textContent||''))||''):'';const msgs=[...document.querySelectorAll('[data-message-author-role]')].slice(-8).map(n=>({role:n.getAttribute('data-message-author-role'),text:(n.innerText||n.textContent||'').slice(0,1200)}));return {composer,composerLength:composer.length,messages:msgs}})())\";const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});ws.close();process.stdout.write(rr.result.value)\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only reconcile Bridge chat composer and recent message state after ambiguous send"
+}
