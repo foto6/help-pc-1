@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-send-creator-r18b-gemini-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "node .\\data\\direct_send_existing_agent.js --target=B0559FFE7843B036079007016E7351FF --prompt=E:\\pc-github-relay\\relay\\prompts\\creator-r18b-gemini-native-video-20261001.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Continue existing green branch/chat; no new conversation"
+}
