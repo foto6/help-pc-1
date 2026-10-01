@@ -121,13 +121,13 @@ def _git_head(repo: Path, ref: str = "HEAD") -> str | None:
 def _bounded_error(value: object, limit: int = 512) -> str:
     text = str(value).replace("\r", " ").replace("\n", " ")
     text = re.sub(
-        r"([A-Za-z][A-Za-z0-9+.-]*://)[^/@\\s]+@",
-        r"\\1<redacted>@",
+        r"([A-Za-z][A-Za-z0-9+.-]*://)[^/@\s]+@",
+        r"\1<redacted>@",
         text,
     )
     text = re.sub(
-        r"(?i)\\b(token|password|authorization|credential)\\s*[:=]\\s*[^\\s]+",
-        r"\\1=<redacted>",
+        r"(?i)\b(token|password|authorization|credential)\s*[:=]\s*[^\s]+",
+        r"\1=<redacted>",
         text,
     )
     return text[:limit]
