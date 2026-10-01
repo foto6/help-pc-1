@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-bounty-resume-windows-20261001-001",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Resume authorized Files.com bounty testing; locate current trial browser window"
+}
