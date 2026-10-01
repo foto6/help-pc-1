@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1450-agent-chat-preflight",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$code=@'\n\nconst targets=[\n{name:\"media\",id:\"312D0941F3A5138C71E55254EAEBBEC8\"},\n{name:\"bridge\",id:\"A88E3157A8078B7DA32FC62848071CC3\"},\n{name:\"creator_publish\",id:\"B0559FFE7843B036079007016E7351FF\"},\n{name:\"growth\",id:\"DBC6BC28E04127D1821830B232E048EB\"},\n{name:\"pc_executor\",id:\"F85160E9CD245D0085D51163204FDD58\"},\n{name:\"native_mcp\",id:\"9BAA48607EDE0A4DFA73EAD8396BA451\"}];\nconst tabs=await (await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nasync function evalTarget(t){\n const tab=tabs.find(x=>x.id===t.id); if(!tab)return {name:t.name,found:false};\n const ws=new WebSocket(tab.webSocketDebuggerUrl);\n await new Promise((res,rej)=>{ws.onopen=res;ws.onerror=rej});\n let seq=1; const pending=new Map();\n ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};\n const call=(method,params={})=>new Promise((res,rej)=>{const id=seq++;pending.set(id,m=>m.error?rej(new Error(JSON.stringify(m.error))):res(m.result));ws.send(JSON.stringify({id,method,params}))});\n const expression=\"(()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect();const s=getComputedStyle(e);return r.width>0&&r.height>0&&s.visibility!=='hidden'&&s.display!=='none'};const cs=[document.querySelector('#prompt-textarea'),...document.querySelectorAll('textarea,[contenteditable=\\\"true\\\"]')].filter(Boolean);const composer=cs.find(vis)||null;const txt=composer?((composer.value??composer.innerText??composer.textContent??'')) : '';const buttons=[...document.querySelectorAll('button')].filter(vis);const stop=buttons.find(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.textContent||''))||/stop-button/i.test(b.getAttribute('data-testid')||''))||null;const send=buttons.find(b=>/send message|отправ/i.test((b.getAttribute('aria-label')||'')+' '+(b.textContent||''))||/send-button/i.test(b.getAttribute('data-testid')||'')||b.id==='composer-submit-button')||null;const high=[...document.querySelectorAll('button,[role=\\\"button\\\"]')].filter(vis).find(e=>/^high$/i.test((e.textContent||'').trim())||/thinking.*high|high.*thinking/i.test((e.getAttribute('aria-label')||'')+' '+(e.textContent||'')))||null;return {title:document.title,url:location.href,composerFound:!!composer,draftEmpty:txt.trim().length===0,draftLength:txt.length,stopFound:!!stop,sendFound:!!send,sendDisabled:send?!!send.disabled:null,highVisible:!!high}})()\";\n const r=await call(\"Runtime.evaluate\",{expression,returnByValue:true,awaitPromise:true});\n ws.close(); return {name:t.name,found:true,...r.result.value};\n}\nconst out=[]; for(const t of targets){try{out.push(await evalTarget(t))}catch(e){out.push({name:t.name,found:true,error:String(e.message||e)})}}\nprocess.stdout.write(JSON.stringify(out));\n\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only CDP preflight of existing agent chats: composer/draft/generation only; no prompt content read"
+}
