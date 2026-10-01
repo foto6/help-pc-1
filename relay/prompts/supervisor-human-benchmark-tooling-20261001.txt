@@ -1,0 +1,45 @@
+EXECUTE NOW — HUMAN EDITORIAL BENCHMARK TOOLING V1. Continue in SAME existing supervisor chat; do not create a new chat.
+
+Writable repo ONLY: foto6/boss
+Branch ONLY: agent/human-editorial-benchmark-tooling-20261001
+Exact starting HEAD: 912fb4b937ec3bd0c1752fe198a41d60236a20dc
+
+The benchmark protocol GATES/EDITORIAL_PARITY_BENCHMARK_V1.md is already defined. Implement tooling that makes it executable without fabricating any human evidence.
+
+Required:
+1. Build a deterministic blind-pack generator:
+   - input manifest binds source video digest, brief digest, system edit artifact/digest, human reference artifact/digest, category;
+   - randomized A/B labels using recorded seed;
+   - output never exposes origin in rater-facing pack;
+   - sealed mapping stored separately.
+2. Generate rater ballot templates for the exact 11 rubric dimensions + pairwise choice + mandatory time-coded notes on <=2/major defect/DQ.
+3. Validate eligibility:
+   - 10 required categories;
+   - source counts for pilot/full;
+   - no source flagged as used for tuning;
+   - editor/rater self-conflict checks where metadata exists;
+   - exact artifact bytes/digests.
+4. Implement ingestion of human-provided ballots ONLY:
+   - reject model/synthetic/generated labels;
+   - bind each ballot to exact comparison/artifact digests;
+   - duplicate/conflicting ballot handling.
+5. Implement deterministic statistics:
+   - source-level aggregation;
+   - overall/category pairwise preference;
+   - rubric system-human paired deltas;
+   - deterministic stratified bootstrap 95% CI >=10,000 replicates with recorded seed;
+   - raw agreement;
+   - majority fraction;
+   - Krippendorff alpha for pairwise and ordinal dimensions or an explicitly validated equivalent implementation.
+6. Emit gate state per protocol:
+   MVP_READY, CONTENT_AWARE_READY, HUMAN_LEVEL_UNPROVEN, HUMAN_PARITY_CANDIDATE, INCONCLUSIVE_LOW_AGREEMENT.
+   HUMAN_LEVEL must not be emitted by v1.
+7. Add fixture data ONLY for parser/statistical tests and label it synthetic; fixture results must never satisfy parity gates.
+8. Add CLI commands:
+   prepare-pack, validate-pack, ingest-ballots, score, gate.
+9. Add docs and machine-readable schemas.
+10. Tests for tampered artifact, unblinding leak, duplicate rater, missing timecode note, tuning leakage, insufficient categories, low agreement, bootstrap reproducibility.
+11. No Creator/Media/Growth implementation changes. No live deployment.
+12. Nonempty code/tests/docs commit and CI if repo supports it; exact SHA and reproducible commands.
+
+No fake human labels, no new ChatGPT chats, no credentials, no Desktop Commander, no E:\manhwa.
