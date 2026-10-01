@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-firefox-snapshot-20261001-001",
+  "action": "uia.snapshot",
+  "params": {
+    "window_title": "public-b · Folder · [BUGBOUNTY] foto6 test — Mozilla Firefox"
+  },
+  "timeout_ms": 60000,
+  "note": "Capture Files.com Firefox accessibility tree for authorized bounty testing"
+}
