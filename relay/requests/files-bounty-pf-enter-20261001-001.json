@@ -1,0 +1,19 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-bounty-pf-enter-20261001-001",
+  "action": "action.preflight",
+  "params": {
+    "contract_version": "pc_executor.action_preflight.v1",
+    "request": {
+      "request_id": "files-bounty-nav-enter-action",
+      "action": "keyboard.press",
+      "params": {
+        "key": "enter"
+      },
+      "dry_run": null,
+      "timeout_ms": 10000
+    }
+  },
+  "timeout_ms": 10000,
+  "note": "Preflight native keyboard navigation for user's authorized Files.com trial"
+}
