@@ -234,6 +234,8 @@ def classify_health_snapshot(
         return "PROCESS_MISSING"
     if not snapshot:
         return "PROCESS_EXISTS"
+    if snapshot.get("health_version") != HEALTH_VERSION:
+        return "PROCESS_EXISTS"
     if snapshot.get("reconciliation_required") is True:
         return "RECONCILIATION_REQUIRED"
     if not health_pid_observed:
@@ -273,7 +275,7 @@ def classify_health_snapshot(
         sync_age = effective_stale_after + 1.0
 
     if (
-        head_relation == "local_behind_remote"
+        head_relation in {"local_behind_remote", "diverged"}
         and sync_age > effective_stale_after
     ):
         return "STALE"
