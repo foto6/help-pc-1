@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-send-mcp-r25-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "node .\\data\\direct_send_existing_agent.js --target=9BAA48607EDE0A4DFA73EAD8396BA451 --prompt=E:\\pc-github-relay\\relay\\prompts\\mcp-r25-r24-health-consumer-20261001.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Reuse existing development chat; no new conversation"
+}
