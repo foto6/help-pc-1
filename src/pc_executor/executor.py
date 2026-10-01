@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from time import monotonic
 from typing import Any, Callable, TypeVar
 
 from .audit import AuditSink, InMemoryAuditSink
@@ -15,7 +16,13 @@ from .context_binding import (
     validate_bound_execution_context,
 )
 from .capture import PillowScreenCapture, ScreenshotProvider, screenshot_payload
-from .errors import ExecutorError, ExecutorFailureError, PolicyBlockedError
+from .errors import (
+    ExecutorError,
+    ExecutorFailureError,
+    OperationCancelledError,
+    OperationTimeoutError,
+    PolicyBlockedError,
+)
 from .input import InputAdapter, WindowsInputAdapter
 from .models import ActionRequest, ActionResult, AuditEvent, ElementQuery, utc_now_iso
 from .operations import (
@@ -31,6 +38,12 @@ from .outcome_journal import (
     SOURCE as OUTCOME_JOURNAL_SOURCE,
     OutcomeJournal,
     OutcomeJournalError,
+)
+from .runtime_health import (
+    CONTRACT_VERSION as RUNTIME_HEALTH_VERSION,
+    DEFAULT_PROBE_TIMEOUT_SECONDS,
+    RuntimeHealthMonitor,
+    validate_runtime_health,
 )
 from .preflight import (
     PreflightRequest,
@@ -142,6 +155,9 @@ class Executor:
         self.dry_run = dry_run
         self.allow_coordinate_fallback = allow_coordinate_fallback
         self.operation_timeout_seconds = operation_timeout_seconds
+        self.runtime_health = RuntimeHealthMonitor(
+            operation_timeout_seconds=operation_timeout_seconds,
+        )
 
     def capabilities_snapshot(self) -> dict[str, Any]:
         return build_capabilities(
