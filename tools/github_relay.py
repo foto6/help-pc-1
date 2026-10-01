@@ -19,7 +19,10 @@ from pc_executor.shell import SafeShellAdapter
 
 REQUEST_VERSION = "pc_relay.request.v1"
 RESULT_VERSION = "pc_relay.result.v1"
+HEALTH_VERSION = "pc_relay.health.v1"
 REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,80}$")
+GIT_TIMEOUT_SECONDS = 30.0
+DEFAULT_STALE_AFTER_SECONDS = 30.0
 
 READ_ONLY_ACTIONS = {
     "capabilities.get",
@@ -52,6 +55,7 @@ def _run_git(repo: Path, *args: str, check: bool = True) -> subprocess.Completed
         text=True,
         capture_output=True,
         check=check,
+        timeout=GIT_TIMEOUT_SECONDS,
     )
 
 
@@ -105,6 +109,69 @@ def _load_json(path: Path) -> dict[str, Any]:
     return raw
 
 
+def _git_head(repo: Path, ref: str = "HEAD") -> str | None:
+    probe = _run_git(repo, "rev-parse", ref, check=False)
+    if probe.returncode != 0:
+        return None
+    value = probe.stdout.strip()
+    return value or None
+
+
+def classify_health_snapshot(
+    snapshot: dict[str, Any] | None,
+    *,
+    now_unix: float,
+    process_exists: bool,
+    stale_after_seconds: float = DEFAULT_STALE_AFTER_SECONDS,
+) -> str:
+    if not process_exists:
+        return "PROCESS_MISSING"
+    if not snapshot:
+        return "PROCESS_EXISTS"
+    if snapshot.get("reconciliation_required") is True:
+        return "RECONCILIATION_REQUIRED"
+    try:
+        updated_at = float(snapshot.get("updated_at_unix"))
+    except (TypeError, ValueError):
+        return "PROCESS_EXISTS"
+    if now_unix - updated_at > stale_after_seconds:
+        return "STALE"
+    if snapshot.get("status") == "healthy":
+        return "HEALTHY"
+    return "PROCESS_EXISTS"
+
+
+def _pending_result_paths(repo: Path, results_dir: Path) -> list[Path]:
+    rel_dir = results_dir.relative_to(repo).as_posix()
+    status = _run_git(
+        repo,
+        "status",
+        "--porcelain",
+        "--untracked-files=all",
+        "--",
+        rel_dir,
+        check=False,
+    )
+    if status.returncode != 0:
+        raise RuntimeError(status.stderr.strip() or "git status failed for relay results")
+    root = results_dir.resolve()
+    pending: list[Path] = []
+    for line in status.stdout.splitlines():
+        if len(line) < 4:
+            continue
+        rel = line[3:].strip()
+        if " -> " in rel:
+            rel = rel.split(" -> ", 1)[1]
+        candidate = (repo / rel).resolve()
+        try:
+            candidate.relative_to(root)
+        except ValueError:
+            continue
+        if candidate.suffix == ".json" and candidate.exists():
+            pending.append(candidate)
+    return sorted(set(pending))
+
+
 def _validate_request(raw: dict[str, Any], allowed_actions: set[str]) -> dict[str, Any]:
     allowed_keys = {"version", "id", "action", "params", "timeout_ms", "note"}
     unknown = set(raw) - allowed_keys
@@ -154,6 +221,7 @@ class Relay:
         self.state_dir = self.runtime_dir / "state"
         self.audit_path = self.runtime_dir / "audit.jsonl"
         self.journal_path = self.runtime_dir / "outcomes.jsonl"
+        self.health_path = self.runtime_dir / "health.json"
         self.requests_dir = repo / "relay" / "requests"
         self.results_dir = repo / "relay" / "results"
 
@@ -171,11 +239,76 @@ class Relay:
             allow_coordinate_fallback=False,
             operation_timeout_seconds=120.0,
         )
+        now = time.time()
+        self._health: dict[str, Any] = {
+            "health_version": HEALTH_VERSION,
+            "pid": os.getpid(),
+            "branch": self.branch,
+            "live": self.live,
+            "status": "starting",
+            "phase": "startup",
+            "updated_at_unix": now,
+            "started_at_unix": now,
+            "last_sync_at_unix": None,
+            "last_cycle_completed_at_unix": None,
+            "last_result_published_at_unix": None,
+            "local_head": _git_head(self.repo),
+            "remote_head": _git_head(self.repo, f"origin/{self.branch}"),
+            "request_count": 0,
+            "result_count": 0,
+            "backlog_count": 0,
+            "current_request_id": None,
+            "last_error": None,
+            "last_reconciliation_request_id": None,
+            "reconciliation_required": False,
+        }
+        self._refresh_queue_counts()
+        self._write_health("startup", status="starting")
+
+    def _refresh_queue_counts(self) -> None:
+        request_names = {path.name for path in self.requests_dir.glob("*.json")}
+        result_names = {path.name for path in self.results_dir.glob("*.json")}
+        self._health["request_count"] = len(request_names)
+        self._health["result_count"] = len(result_names)
+        self._health["backlog_count"] = len(request_names - result_names)
+
+    def _write_health(
+        self,
+        phase: str,
+        *,
+        status: str | None = None,
+        current_request_id: str | None = None,
+        mark_sync: bool = False,
+        mark_cycle: bool = False,
+        mark_result: bool = False,
+        local_head: str | None = None,
+        remote_head: str | None = None,
+        error: str | None = None,
+    ) -> None:
+        now = time.time()
+        self._health["phase"] = phase
+        self._health["updated_at_unix"] = now
+        if status is not None:
+            self._health["status"] = status
+        self._health["current_request_id"] = current_request_id
+        if mark_sync:
+            self._health["last_sync_at_unix"] = now
+        if mark_cycle:
+            self._health["last_cycle_completed_at_unix"] = now
+        if mark_result:
+            self._health["last_result_published_at_unix"] = now
+        if local_head is not None:
+            self._health["local_head"] = local_head
+        if remote_head is not None:
+            self._health["remote_head"] = remote_head
+        self._health["last_error"] = error
+        _atomic_json(self.health_path, self._health)
 
     def sync(self) -> None:
         # The remote queue may advance while this checkout creates local result commits.
         # Rebase preserves those local result commits over newly queued remote requests
         # and clears any stale relay-owned rebase state before trying again.
+        self._write_health("sync_fetch", status="process_exists")
         _rebase_onto_remote(self.repo, self.branch)
         status = _run_git(self.repo, "status", "--porcelain").stdout.strip()
         tracked_dirty = [
@@ -184,6 +317,15 @@ class Relay:
         ]
         if tracked_dirty:
             raise RuntimeError(f"relay checkout has uncommitted tracked changes: {tracked_dirty[:5]}")
+        local_head = _git_head(self.repo)
+        remote_head = _git_head(self.repo, f"origin/{self.branch}")
+        self._write_health(
+            "sync_complete",
+            status="healthy",
+            mark_sync=True,
+            local_head=local_head,
+            remote_head=remote_head,
+        )
 
     def _state_path(self, request_id: str) -> Path:
         return self.state_dir / f"{request_id}.json"
@@ -234,6 +376,12 @@ class Relay:
                 if req["action"] in READ_ONLY_ACTIONS:
                     pass
                 else:
+                    self._health["last_reconciliation_request_id"] = request_id
+                    self._write_health(
+                        "reconcile_interrupted_side_effect",
+                        status="healthy",
+                        current_request_id=request_id,
+                    )
                     result = self._reconcile_after_interrupted_side_effect(req)
                     _atomic_json(state_path, {"status": "finished", "result": result})
                     self.publish_result(result)
@@ -245,6 +393,11 @@ class Relay:
             "live": self.live,
             "started_at_unix": time.time(),
         })
+        self._write_health(
+            "execute_request",
+            status="healthy",
+            current_request_id=request_id,
+        )
 
         action_payload = {
             "request_id": request_id,
@@ -300,6 +453,7 @@ class Relay:
                 check=False,
             )
             if pushed.returncode == 0:
+                self._write_health("result_published", status="healthy", mark_result=True)
                 return
             # Remote queue advanced between our commit and push. Rebase the local
             # result commit over it, and always clean up failed rebase state.
@@ -307,16 +461,19 @@ class Relay:
         raise RuntimeError(f"failed to push relay result {request_id}")
 
     def _publish_pending_results(self) -> None:
-        # Recover results that were produced before a crash or Git commit failure.
-        # This is deliberately done before sync so a locally staged/untracked result
-        # can be committed and pushed instead of being mistaken for checkout dirt.
-        for result_path in sorted(self.results_dir.glob("*.json")):
+        # Recover only result files that Git says are uncommitted/untracked.
+        # Scanning every historical result and running git add/diff for each one
+        # made cycle cost grow linearly with the lifetime result corpus and could
+        # make an alive relay appear hung before it ever reached sync().
+        for result_path in _pending_result_paths(self.repo, self.results_dir):
             result = _load_json(result_path)
             request_id = result.get("id")
             if isinstance(request_id, str) and REQUEST_ID_RE.fullmatch(request_id):
                 self.publish_result(result)
 
     def cycle(self) -> int:
+        self._refresh_queue_counts()
+        self._write_health("publish_pending", status="process_exists")
         self._publish_pending_results()
         self.sync()
         processed = 0
@@ -349,6 +506,13 @@ class Relay:
                     self.publish_result(error_result)
                 else:
                     print(f"[relay] invalid request file {request_path.name}: {exc}", file=sys.stderr)
+        self._refresh_queue_counts()
+        self._write_health(
+            "idle",
+            status="healthy",
+            current_request_id=None,
+            mark_cycle=True,
+        )
         return processed
 
     def run_forever(self) -> None:
@@ -362,7 +526,9 @@ class Relay:
             except KeyboardInterrupt:
                 raise
             except Exception as exc:
-                print(f"[relay] cycle error: {type(exc).__name__}: {exc}", file=sys.stderr, flush=True)
+                message = f"{type(exc).__name__}: {exc}"
+                self._write_health("cycle_error", status="degraded", error=message)
+                print(f"[relay] cycle error: {message}", file=sys.stderr, flush=True)
             time.sleep(self.poll_seconds)
 
 
@@ -379,6 +545,13 @@ def build_parser() -> argparse.ArgumentParser:
         help="additional Executor action to expose through relay",
     )
     parser.add_argument("--once", action="store_true", help="process one sync cycle and exit")
+    parser.add_argument("--status", action="store_true", help="print the durable relay health snapshot and exit")
+    parser.add_argument(
+        "--stale-after-seconds",
+        type=float,
+        default=DEFAULT_STALE_AFTER_SECONDS,
+        help="freshness threshold used by --status",
+    )
     return parser
 
 
@@ -387,6 +560,21 @@ def main() -> int:
     repo = Path(args.repo).resolve()
     if not (repo / ".git").exists():
         raise SystemExit(f"not a git checkout: {repo}")
+    if args.status:
+        health_path = repo / ".pc-relay" / "health.json"
+        snapshot = _load_json(health_path) if health_path.exists() else None
+        state = classify_health_snapshot(
+            snapshot,
+            now_unix=time.time(),
+            process_exists=True,
+            stale_after_seconds=max(1.0, args.stale_after_seconds),
+        )
+        print(json.dumps({
+            "state": state,
+            "health": snapshot,
+        }, ensure_ascii=False, sort_keys=True))
+        return 0 if state == "HEALTHY" else 2
+
     allowed = set(DEFAULT_ALLOWED_ACTIONS) | set(args.allow_action)
     relay = Relay(
         repo,
