@@ -1,0 +1,52 @@
+FOLLOW-UP #2 / SAME BRIDGE R19 CHAT — ALL CHAT VISIBILITY + SAFE DELETE CAPABILITY.
+
+Continue in the SAME existing Bridge R19 chat and SAME isolated branch:
+foto6/WebAIBridge
+agent/bridge-assignment-r19-20261001
+
+Do NOT create another ChatGPT development chat.
+Do NOT modify/restart/repoint/deploy over the current live Bridge.
+
+Additional mandatory user requirement:
+The Bridge must expose ALL accessible ChatGPT conversations, not merely managed/active ones, and it must provide a deliberate chat-deletion capability.
+
+Visibility/discovery requirements:
+1. Discover all accessible chats for the configured ChatGPT profile(s), including:
+   - currently open tabs;
+   - ordinary /c/<conversation-id> chats;
+   - chats inside ChatGPT Projects;
+   - restored chats after browser/PC reboot;
+   - chats not registered in managedChats;
+   - legacy/stale registry entries;
+   - newly created local-chatgpt:* conversations and their later canonical URLs.
+2. Do not limit "all chats" to CDP-open tabs. Add a source-backed inventory path for conversations that exist in the ChatGPT account/history but are not currently open, using only supported authenticated UI/API surfaces available to the Bridge profile.
+3. Merge sources deterministically into one canonical chat inventory. Each row must identify source(s), canonical conversation id/url, project if known, managed/unmanaged state, open tab count, live/stale status, title, last-seen/updated evidence when available.
+4. Deduplicate the same conversation seen via open tabs, project lists, history/sidebar, managed registry, or local->canonical transition.
+5. Discovery/inventory MUST be read-only. It must never call /json/new merely to make a chat visible.
+
+Safe deletion capability:
+6. Add an explicit user-initiated Delete Chat operation for an exact canonical conversation.
+7. Deletion must NEVER happen from discovery, cleanup, stale detection, rotation, assignment recovery, or startup.
+8. Require a deliberate confirmation boundary:
+   - exact conversation id/url;
+   - explicit confirmation in UI/API;
+   - show title/project/managed status before confirmation;
+   - default deny if identity is ambiguous.
+9. Managed/active chats must be protected from accidental deletion. Deleting one must require an additional explicit override/confirmation and return a clear impact summary.
+10. Deletion should be idempotent: already-deleted/not-found should converge to a terminal non-retry loop state.
+11. Record a non-secret audit event containing conversation identity, source, requested_at, confirmed_at, outcome, and error classification. Do not log message contents.
+12. Add dry-run/preview support so the Bridge can show exactly what would be deleted without performing it.
+13. During R19 development/tests DO NOT delete any real user conversation. Use mocks/fixtures or a dedicated synthetic disposable fixture only if a real-provider test is absolutely required and separately gated.
+14. If the provider does not expose a stable supported delete API, implement the capability behind a provider adapter and fail closed rather than relying on brittle blind coordinates.
+15. Add tests for delete preview, cancel, explicit confirm, ambiguous identity, already deleted, provider failure, managed-active protection, project chat, ordinary chat, local->canonical identity, and restart after an unknown outcome.
+16. Add API/UI contract for inventory + delete preview + delete confirm, with tests proving the live default remains non-destructive.
+
+Preserve the earlier R19 requirements:
+- fix hanging /managed-chats/:id/assignments POST;
+- stale-binding handling;
+- bounded tab opening;
+- all working/open chats visible;
+- restart convergence;
+- no live deployment.
+
+Return NONEMPTY implementation, tests, exact SHA, CI, replay/soak evidence, and migration notes.
