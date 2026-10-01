@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-bounty-statuscheck-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "\n$ErrorActionPreference='Stop'\n$root='E:\\ChatGPT-Security-Audit\\FilesCom'\nWrite-Output '=== TEST_CASES ==='\nGet-Content (Join-Path $root 'TEST_CASES.md') -Raw\nWrite-Output '=== AUDIT_TAIL ==='\nGet-Content (Join-Path $root 'SECURITY_TEST_AUDIT.md') -Tail 120\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Read current Files.com bounty audit and test case statuses"
+}
