@@ -1,0 +1,41 @@
+EXECUTE NOW — PC EXECUTOR R24 RUNTIME ADAPTER HEALTH / UIA BOUNDING. Continue in an existing PC Executor/parity development chat; do not create a new chat.
+
+Writable repo ONLY: foto6/help-pc-1
+Branch ONLY: agent/pc-executor-r24-runtime-health-20261001
+Exact starting HEAD: 7eed906976d092e3216f50b0f52e6cb422392979
+
+This task closes the producer-side blockers identified by green help-pc-2 R23. Do NOT modify help-pc-2 and do NOT touch the installed/live PC Control stack.
+
+PRIMARY GOAL:
+Expose truthful, bounded runtime adapter health from the Executor and stop UIA timeouts from degrading unrelated capabilities.
+
+Required:
+1. Add versioned read-only producer health contract consumable by R23, e.g. pc_executor.runtime_health.v1.
+2. Report per-adapter runtime health for at least UIA, screenshot, windows, shell, clipboard, input, outcome journal, search/process where available:
+   - available;
+   - responsive/degraded/unhealthy/unknown;
+   - last success/failure;
+   - timeout/error counters;
+   - bounded operation timeout;
+   - circuit/breaker state where implemented;
+   - generation/process identity.
+3. Add explicit outcome-journal integrity status with read-only bounded validation.
+4. Make health probing itself bounded/cancellable and incapable of hanging the health endpoint.
+5. UIA:
+   - bound snapshot/walk execution;
+   - cancellation/deadline propagation;
+   - distinguish timeout from unavailable/empty tree;
+   - prevent a stuck Chrome/File Explorer UIA walk from blocking shell/windows/screenshot/outcome lanes;
+   - add per-target/process diagnostic evidence where safe.
+6. Do not claim to fix Chrome/Explorer UIA if underlying Windows automation remains slow; fail boundedly and expose truthful state.
+7. Add deterministic fake + Windows-safe tests for timeout, recovery, breaker/open state, healthy unrelated adapters, corrupt journal, restart/generation change.
+8. Preserve R22 action schemas, safety gates, protected-path rules, credentials/CAPTCHA protections, outcome.lookup semantics and at-most-once behavior.
+9. Add consumer fixture/manifest showing exact fields help-pc-2 R23 can ingest without schema guessing.
+10. Run focused + full relevant CI; Windows evidence required where available.
+11. Produce source-bound report with exact SHA, test/CI run IDs, measured UIA timeout behavior, and explicit NO_LIVE_CUTOVER until independent verification.
+
+HARD ISOLATION:
+- No live service restart/deploy/install/repoint.
+- No Desktop Commander.
+- Do not access E:\manhwa.
+- Do not modify help-pc-2.
