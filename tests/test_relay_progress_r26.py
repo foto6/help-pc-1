@@ -275,6 +275,15 @@ def test_alive_process_with_no_queue_progress_is_stalled_not_healthy(
     )
     store.cycle_success()
     now[0] += 20
+    # The process is still actively cycling/heartbeating, but no pending
+    # request has produced a committed result during the stall window.
+    store.start_cycle()
+    store.queue_metrics(
+        pending_count=1,
+        oldest_pending_request_id="pending-1",
+        oldest_pending_age_seconds=20,
+    )
+    store.cycle_success()
 
     probe = liveness_probe(
         store.snapshot(),
