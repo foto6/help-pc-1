@@ -23,6 +23,7 @@ HEALTH_VERSION = "pc_relay.health.v1"
 REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,80}$")
 GIT_TIMEOUT_SECONDS = 30.0
 DEFAULT_STALE_AFTER_SECONDS = 30.0
+LONG_RUNNING_PHASE_STALE_AFTER_SECONDS = 150.0
 
 READ_ONLY_ACTIONS = {
     "capabilities.get",
@@ -134,7 +135,10 @@ def classify_health_snapshot(
         updated_at = float(snapshot.get("updated_at_unix"))
     except (TypeError, ValueError):
         return "PROCESS_EXISTS"
-    if now_unix - updated_at > stale_after_seconds:
+    effective_stale_after = stale_after_seconds
+    if snapshot.get("phase") in {"execute_request", "reconcile_interrupted_side_effect"}:
+        effective_stale_after = max(effective_stale_after, LONG_RUNNING_PHASE_STALE_AFTER_SECONDS)
+    if now_unix - updated_at > effective_stale_after:
         return "STALE"
     if snapshot.get("status") == "healthy":
         return "HEALTHY"
@@ -377,6 +381,7 @@ class Relay:
                     pass
                 else:
                     self._health["last_reconciliation_request_id"] = request_id
+                    self._health["reconciliation_required"] = True
                     self._write_health(
                         "reconcile_interrupted_side_effect",
                         status="healthy",
