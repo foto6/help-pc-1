@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-bounty-window-refresh-20261001-001",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Refresh Firefox window title after stale UIA preflight before authorized Files.com test"
+}
