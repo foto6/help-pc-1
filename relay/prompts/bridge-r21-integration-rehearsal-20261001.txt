@@ -1,0 +1,41 @@
+EXECUTE NOW — BRIDGE R21 INTEGRATION / MIGRATION REHEARSAL. Continue in this SAME existing Bridge chat; do not create a new chat.
+
+Writable repo ONLY: foto6/WebAIBridge
+Branch ONLY: agent/bridge-r21-integration-rehearsal-20261001
+Exact starting HEAD: 9386e4ac64a4b2db736a43c5fd8547807547b088
+
+R19 inventory/delete and R20 lifecycle are green. Preserve all safety properties and keep current live Bridge untouched.
+
+PRIMARY GOAL:
+Prove that R18 routing + R19 assignment/inventory/delete + R20 lifecycle work coherently as one restart-safe system, and produce a migration/cutover rehearsal without deploying it.
+
+Required:
+1. Build an isolated integrated fixture covering:
+   - account/history all-chat inventory;
+   - managed/unmanaged dedup;
+   - local->canonical reconciliation;
+   - assignment submission and stale binding recovery;
+   - import/rebind/detach lifecycle;
+   - safe delete preview/confirm;
+   - browser/PC restart reconstruction.
+2. Reproduce the previously observed real failure classes:
+   - assignment POST hanging;
+   - stale managed chat with composer=false;
+   - duplicate exact conversation tabs;
+   - blank/legacy projectId;
+   - newly-created local-chatgpt:* before canonical transition;
+   - reboot with chats not restored as tabs.
+3. Assert bounded tab-opening and ZERO accidental /json/new from discovery/lifecycle/recovery paths.
+4. Assert no lifecycle/delete path can run implicitly from startup/discovery/cleanup.
+5. Add deterministic migration of legacy state schema into current R20 schema with conflict report and dry-run.
+6. Add an isolated 500-operation mixed soak: inventory/assignment/import/rebind/detach/delete-preview/restart, with bounded state/audit growth and no duplicate managed records.
+7. Produce a source-bound R21 readiness report with exact SHA, workflow run IDs, known blockers, and explicit NO_LIVE_DEPLOY until independent verification.
+8. Add one reproducible command for independent coordinator validation.
+9. NONEMPTY source/tests/docs commit, focused/full CI.
+
+HARD RULES:
+- Do NOT deploy/restart/repoint/configure the current live Bridge.
+- Do NOT delete any real user chat.
+- Do NOT create new ChatGPT conversations.
+- No Desktop Commander.
+- Do not access E:\manhwa.
