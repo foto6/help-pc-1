@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1435-chrome-debug-ports",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\" | ForEach-Object { $c=[string]$_.CommandLine; if($c -match '--remote-debugging-port=(\\d+)'){ [pscustomobject]@{Pid=$_.ProcessId;DebugPort=$Matches[1];HasUserDataDir=($c -match '--user-data-dir=')} } } | Sort-Object DebugPort,Pid -Unique | ConvertTo-Json -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only enumerate Chrome remote-debugging ports only; no command-line secrets emitted"
+}
