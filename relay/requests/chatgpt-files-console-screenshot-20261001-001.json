@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-console-screenshot-20261001-001",
+  "action": "screenshot.capture",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Capture Firefox Web Console state for authorized Files.com testing"
+}
