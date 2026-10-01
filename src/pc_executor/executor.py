@@ -663,6 +663,361 @@ class Executor:
             label=label,
         )
 
+    def _uia_diagnostics(self) -> dict[str, Any]:
+        if isinstance(self.accessibility, WindowsUIAutomationAdapter):
+            snapshot = getattr(self.accessibility, "diagnostics_snapshot", None)
+            if callable(snapshot):
+                value = snapshot()
+                if isinstance(value, dict):
+                    allowed = {
+                        "operation",
+                        "window_title_sha256",
+                        "selector_fields",
+                        "nodes_visited",
+                        "current_depth",
+                        "max_depth",
+                        "max_nodes",
+                        "target_process_id",
+                        "target_window_handle",
+                        "probe",
+                        "root_process_id",
+                        "root_window_handle",
+                        "tree_walk_performed",
+                    }
+                    return {
+                        key: value[key]
+                        for key in sorted(allowed)
+                        if key in value
+                    }
+        return {}
+
+    def _adapter_bounded(
+        self,
+        adapter: str,
+        request: ActionRequest,
+        token: CancellationToken,
+        label: str,
+        operation: Callable[[], T],
+    ) -> T:
+        if adapter == "uia" and not self.runtime_health.operation_allowed("uia"):
+            raise OperationTimeoutError(
+                "UIA runtime circuit is open after repeated bounded timeouts"
+            )
+        try:
+            result = self._bounded(request, token, label, operation)
+        except OperationTimeoutError:
+            self.runtime_health.record_failure(
+                adapter,
+                kind="timeout",
+                diagnostics=self._uia_diagnostics() if adapter == "uia" else None,
+            )
+            raise
+        except OperationCancelledError:
+            self.runtime_health.record_failure(
+                adapter,
+                kind="cancelled",
+                diagnostics=self._uia_diagnostics() if adapter == "uia" else None,
+            )
+            raise
+        except ExecutorError:
+            # Stale/ambiguous/policy failures describe a target/request, not a
+            # runtime adapter outage. Keep the last runtime state truthful.
+            raise
+        except Exception as exc:
+            self.runtime_health.record_failure(
+                adapter,
+                kind=type(exc).__name__,
+                diagnostics=self._uia_diagnostics() if adapter == "uia" else None,
+            )
+            raise
+        self.runtime_health.record_success(
+            adapter,
+            diagnostics=self._uia_diagnostics() if adapter == "uia" else None,
+        )
+        return result
+
+    def _uia_call(
+        self,
+        method: str,
+        request: ActionRequest,
+        token: CancellationToken,
+        *args: Any,
+        **kwargs: Any,
+    ) -> Any:
+        target = getattr(self.accessibility, method)
+        deadline = monotonic() + self._timeout(request)
+
+        def invoke() -> Any:
+            if isinstance(self.accessibility, WindowsUIAutomationAdapter):
+                native_kwargs = dict(kwargs)
+                native_kwargs["cancellation"] = token
+                native_kwargs["deadline_monotonic"] = deadline
+                return target(*args, **native_kwargs)
+            return target(*args, **kwargs)
+
+        return self._adapter_bounded("uia", request, token, f"uia.{method}", invoke)
+
+    def _runtime_health_snapshot(
+        self,
+        *,
+        cancellation: CancellationToken,
+        budget_seconds: float,
+    ) -> dict[str, Any]:
+        started = monotonic()
+        budget = max(0.01, min(float(budget_seconds), 2.0))
+        deadline = started + budget
+        generation_id = getattr(self.operations, "generation_id", None)
+        capabilities = self.capabilities_snapshot()
+        adapter_caps = capabilities.get("adapters", {})
+
+        def available(name: str) -> bool:
+            entry = adapter_caps.get(name)
+            return bool(isinstance(entry, dict) and entry.get("available") is True)
+
+        def provider(name: str, fallback: object | None = None) -> str:
+            entry = adapter_caps.get(name)
+            if isinstance(entry, dict) and isinstance(entry.get("provider"), str):
+                return entry["provider"]
+            if fallback is None:
+                return "missing"
+            return type(fallback).__name__
+
+        def remaining() -> float:
+            cancellation.raise_if_cancelled()
+            return max(0.0, deadline - monotonic())
+
+        def bounded_timeout() -> float:
+            return max(
+                0.001,
+                min(DEFAULT_PROBE_TIMEOUT_SECONDS, remaining()),
+            )
+
+        def probe_uia(child: CancellationToken, probe_deadline: float) -> dict[str, Any]:
+            if not isinstance(self.accessibility, WindowsUIAutomationAdapter):
+                return {"probe": "not_available_for_injected_adapter"}
+            return self.accessibility.health_probe(
+                cancellation=child,
+                deadline_monotonic=probe_deadline,
+            )
+
+        def probe_windows(child: CancellationToken, _probe_deadline: float) -> dict[str, Any]:
+            child.raise_if_cancelled()
+            rows = self.windows.list_windows()
+            child.raise_if_cancelled()
+            return {"window_count": len(rows), "window_metadata_emitted": False}
+
+        journal_result: dict[str, Any] = {}
+        def probe_journal(child: CancellationToken, _probe_deadline: float) -> dict[str, Any]:
+            nonlocal journal_result
+            if self.outcome_journal is None:
+                return {}
+            journal_result = self.outcome_journal.integrity_status(
+                max_bytes=2 * 1024 * 1024,
+                cancellation=child,
+            )
+            return {
+                key: journal_result[key]
+                for key in (
+                    "integrity",
+                    "reason",
+                    "bytes_checked",
+                    "record_count",
+                    "journal_sha256",
+                    "corruption",
+                    "bounded",
+                    "max_bytes",
+                )
+            }
+
+        def probe_search(child: CancellationToken, _probe_deadline: float) -> dict[str, Any]:
+            child.raise_if_cancelled()
+            manager = getattr(self.operations, "searches", None)
+            if manager is None:
+                raise RuntimeError("search manager unavailable")
+            data = manager.list()
+            child.raise_if_cancelled()
+            rows = data.get("searches", []) if isinstance(data, dict) else []
+            running = sum(
+                1 for row in rows
+                if isinstance(row, dict) and row.get("status") == "running"
+            )
+            return {
+                "recent_count": len(rows),
+                "running_count": running,
+                "result_payload_emitted": False,
+            }
+
+        def probe_process(child: CancellationToken, _probe_deadline: float) -> dict[str, Any]:
+            child.raise_if_cancelled()
+            registry = getattr(self.operations, "registry", None)
+            if registry is None:
+                raise RuntimeError("managed process registry unavailable")
+            rows, _ = registry.list_handles(
+                include_stale=True,
+                max_results=500,
+            )
+            child.raise_if_cancelled()
+            live = sum(
+                1 for row in rows
+                if isinstance(row, dict) and row.get("owned_by_current_gateway") is True
+            )
+            return {
+                "managed_count": len(rows),
+                "current_generation_count": live,
+                "process_arguments_emitted": False,
+            }
+
+        specs: list[tuple[str, bool, str, Callable[[CancellationToken, float], dict[str, Any]] | None, dict[str, Any] | None]] = [
+            (
+                "uia",
+                available("uia"),
+                provider("uia", self.accessibility),
+                probe_uia if available("uia") else None,
+                self._uia_diagnostics(),
+            ),
+            ("screenshot", available("screenshot"), provider("screenshot", self.screenshot), None, None),
+            ("windows", available("windows"), provider("windows", self.windows), probe_windows if available("windows") else None, None),
+            ("shell", available("shell"), provider("shell", self.shell), None, None),
+            ("clipboard", available("clipboard"), provider("clipboard", self.input), None, None),
+            ("input", available("input"), provider("input", self.input), None, None),
+            (
+                "outcome_journal",
+                self.outcome_journal is not None,
+                type(self.outcome_journal).__name__ if self.outcome_journal is not None else "missing",
+                probe_journal if self.outcome_journal is not None else None,
+                None,
+            ),
+            (
+                "search",
+                getattr(self.operations, "searches", None) is not None,
+                type(getattr(self.operations, "searches", None)).__name__
+                if getattr(self.operations, "searches", None) is not None else "missing",
+                probe_search if getattr(self.operations, "searches", None) is not None else None,
+                None,
+            ),
+            (
+                "process",
+                getattr(self.operations, "registry", None) is not None,
+                type(getattr(self.operations, "registry", None)).__name__
+                if getattr(self.operations, "registry", None) is not None else "missing",
+                probe_process if getattr(self.operations, "registry", None) is not None else None,
+                None,
+            ),
+        ]
+        entries: dict[str, dict[str, Any]] = {}
+        complete = True
+        for name, is_available, provider_name, probe_fn, passive in specs:
+            left = remaining()
+            if left <= 0.002:
+                complete = False
+                probe_fn = None
+                left = 0.001
+            entries[name] = self.runtime_health.probe(
+                name,
+                available=is_available,
+                provider=provider_name,
+                probe=probe_fn,
+                parent_cancellation=cancellation,
+                timeout_seconds=min(DEFAULT_PROBE_TIMEOUT_SECONDS, left),
+                generation_id=generation_id,
+                passive_diagnostics=passive,
+            )
+
+        if self.outcome_journal is None:
+            journal_result = {
+                "configured": False,
+                "integrity": "unconfigured",
+                "reason": "journal_not_configured",
+                "bytes_checked": 0,
+                "record_count": None,
+                "journal_sha256": None,
+                "corruption": None,
+                "bounded": True,
+                "max_bytes": 2 * 1024 * 1024,
+            }
+        elif not journal_result:
+            state = entries["outcome_journal"]["state"]
+            journal_result = {
+                "configured": True,
+                "integrity": "unknown",
+                "reason": "probe_timeout_or_error" if state != "responsive" else "unknown",
+                "bytes_checked": 0,
+                "record_count": None,
+                "journal_sha256": None,
+                "corruption": None,
+                "bounded": True,
+                "max_bytes": 2 * 1024 * 1024,
+            }
+        if journal_result["integrity"] == "corrupt":
+            entries["outcome_journal"]["state"] = "unhealthy"
+        elif journal_result["integrity"] == "unknown" and entries["outcome_journal"]["available"]:
+            entries["outcome_journal"]["state"] = "degraded"
+
+        counts = {
+            state: sum(1 for entry in entries.values() if entry["state"] == state)
+            for state in ("responsive", "degraded", "unhealthy", "unknown")
+        }
+        elapsed_ms = max(0, int((monotonic() - started) * 1000))
+        payload = {
+            "contract_version": RUNTIME_HEALTH_VERSION,
+            "observed_at": utc_now_iso(),
+            "complete": complete and monotonic() <= deadline,
+            "probe_budget_ms": max(1, int(budget * 1000)),
+            "elapsed_ms": elapsed_ms,
+            "generation": {
+                "executor_process_id": __import__("os").getpid(),
+                "operations_generation_id": generation_id,
+            },
+            "adapters": entries,
+            "outcome_journal": journal_result,
+            "summary": counts,
+        }
+        validate_runtime_health(payload)
+        return payload
+
+    def _health_get(
+        self,
+        request: ActionRequest,
+        token: CancellationToken,
+    ) -> dict[str, Any]:
+        started = monotonic()
+        overall_budget = max(0.01, min(self._timeout(request), 2.0))
+        deadline = started + overall_budget
+        child = CancellationToken()
+        legacy_timeout = min(0.2, max(0.001, deadline - monotonic()))
+        try:
+            legacy = run_bounded(
+                lambda: self.operations.execute(
+                    "health.get",
+                    {},
+                    cancellation=child,
+                ),
+                timeout_seconds=legacy_timeout,
+                cancellation=child,
+                label="legacy health.get",
+            )
+        except (OperationTimeoutError, OperationCancelledError):
+            legacy = {
+                "contract_version": getattr(
+                    __import__("pc_executor.operations", fromlist=["OPS_CONTRACT_VERSION"]),
+                    "OPS_CONTRACT_VERSION",
+                ),
+                "status": "degraded",
+                "generation_id": getattr(self.operations, "generation_id", None),
+                "managed_processes_live": -1,
+                "managed_processes_stale": -1,
+                "managed_searches_running": -1,
+                "managed_searches_recent": -1,
+                "state_root": None,
+            }
+        token.raise_if_cancelled()
+        remaining_budget = max(0.01, deadline - monotonic())
+        runtime = self._runtime_health_snapshot(
+            cancellation=token,
+            budget_seconds=remaining_budget,
+        )
+        return {**legacy, "runtime_health": runtime}
+
     def _query(self, raw: object) -> ElementQuery:
         try:
             return ElementQuery.from_dict(dict(raw or {}))
