@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$raw=(Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 5).Content; $t=$raw|ConvertFrom-Json; $x=@($t)|Where-Object{$_.id -eq '74BDC2B5E97107BBA7ACDB858F2D03BB'}|Select-Object -First 1 id,title,url; if($x){$x|ConvertTo-Json -Compress}else{'{\"missing\":true}'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"74BDC2B5E97107BBA7ACDB858F2D03BB\",\"title\":\"Define human benchmark\",\"url\":\"https://chatgpt.com/c/6abdcea3-b724-83ed-b43b-982f00854e3c\"}\r\n",
+      "stdout_bytes": 143,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T03:11:54.852Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T03:11:54.797Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-read-new-supervisor-url-01"
+    },
+    "request_id": "coord-20261001-read-new-supervisor-url-01",
+    "started_at": "2026-10-01T03:11:54.335Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-read-new-supervisor-url-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
