@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-bounty-window-recheck-20261001-001",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Recheck browser window titles after attempted navigation; do not assume Files.com test executed"
+}
