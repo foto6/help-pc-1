@@ -48,7 +48,7 @@
     },
     {
       "path": "tests/fixtures/relay_progress_evidence_v1/evidence.example.json",
-      "git_blob_sha": "d088407f9bfc41acb43cc7a0c980b1341625a920"
+      "git_blob_sha": "1c75abe63a5cf5af1531d6a21371d437cfa8a178"
     }
   ],
   "atomic_binding_fields": [
