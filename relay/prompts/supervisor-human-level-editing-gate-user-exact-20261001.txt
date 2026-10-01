@@ -1,0 +1,35 @@
+EXECUTE NOW — INDEPENDENT HUMAN-LEVEL EDITING GATE / BENCHMARK DESIGN. Use this SAME existing supervisor conversation; do not create new chats and do not duplicate implementation work.
+
+Coordinator context:
+- Creator R17 green one-command MVP: foto6/video1 @ d8b7c0f72381912f6c477ebc6eaa9ac43d81166e, CI 36805132912 SUCCESS.
+- Creator R18 active on agent/creator-r18-semantic-director-20261001: semantic timeline, auto-style, editorial directives.
+- Media R14 active on agent/media-r14-realworld-acceptance-20261001: diverse actual-video acceptance and human-review artifacts.
+- Growth R15 active on agent/growth-r15-visual-critic-20261001: post-render visual critic, pairwise evaluation, human-label calibration.
+- Creator R16 / Media R13 cross-repo production pin already green.
+- Bridge/MCP are outside the human-editing-quality benchmark.
+
+GOAL:
+Define and independently enforce a benchmark that prevents us from claiming "human-level" from synthetic tests, rules, or self-scoring.
+
+Required:
+1. Define a versioned human editorial benchmark protocol for short-form video.
+2. Minimum corpus design must cover real user-like categories:
+   talking-head explainer, product/demo, story/punchline, gaming/action, cinematic montage, screen/tutorial, low-light/noisy, landscape-to-vertical, subtitle-heavy, mixed speech+music.
+3. Define pairwise blind evaluation: system edit vs competent human edit and A/B system variants, randomized labels/order.
+4. Define human rubric with separate dimensions:
+   hook, pacing, semantic cut correctness, framing/crop, B-roll relevance, captions, continuity, motion appropriateness, audio balance, payoff/CTA/loop, overall preference.
+5. Define hard technical disqualifiers separately from subjective preference.
+6. Require time-coded evaluator notes for major defects.
+7. Specify minimum sample size / rater count and agreement reporting; do not fabricate labels or pretend statistical certainty.
+8. Define measurable release gates for statuses such as:
+   MVP_READY,
+   CONTENT_AWARE_READY,
+   HUMAN_LEVEL_UNPROVEN,
+   HUMAN_PARITY_CANDIDATE.
+   "HUMAN_LEVEL" itself must remain unavailable unless actual blinded human data supports it.
+9. Define exactly what artifacts Creator R18, Media R14 and Growth R15 must emit so the benchmark can consume them without repo-specific guessing.
+10. Independently inspect current remote evidence and list current gaps against this benchmark.
+11. Do NOT modify Creator/Media/Growth implementation repos and do NOT deploy anything.
+12. If committing, write only a concise benchmark/gate artifact into foto6/boss on a dedicated non-conflicting branch with exact source SHAs.
+
+No new ChatGPT chats, no publishing, no credentials, no Desktop Commander, no E:\manhwa.
