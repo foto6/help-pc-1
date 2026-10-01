@@ -25,7 +25,7 @@
     "loop_epoch": 27,
     "progress_recorded_at_unix": 1790820014
   },
-  "progress_sha256": "c07498f853d57f292f6ae4ef5df6a6ca539ac3f1eacacf045533e03039c708ba",
+  "progress_sha256": "974d64c37529621fcd4e531865ae0de14535ae5f14017dfc6f97deee11363b53",
   "progress": {
     "contract_version": "pc_relay.progress.v1",
     "source": {
@@ -95,5 +95,5 @@
     "last_error_classification": null
   },
   "error": null,
-  "evidence_sha256": "0775b5ac06c12c3a997cc700a67b35ea10857ee7a0b8a35458701f74df9a708d"
+  "evidence_sha256": "c788f609fccac88f78fa21517f7dbc342f634d97d877d1ff38479dd35217fd7b"
 }
