@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst prompt=\"EXECUTE NOW — PC RELAY STALE-SYNC WATCHDOG / SELF-HEALING DEVELOPMENT MILESTONE.\\n\\nRepo: foto6/help-pc-1\\nWritable branch ONLY: agent/pc-relay-stale-sync-watchdog-20261001\\nExact starting HEAD: 85877d46e2d51f5d0b1c1b35abc23f032bfedbee\\nLive production branch agent/pc-github-relay MUST NOT be modified, restarted, repointed, or cut over by you.\\n\\nA real recurring incident has been recorded in docs/PC_RELAY_STALE_SYNC_INCIDENT_2026-10-01.md. Re-read it first.\\n\\nObserved failure mode to eliminate:\\n- py.exe -> python3.13.exe process remained alive.\\n- launcher reported \\\"already running\\\".\\n- local relay checkout stayed at be374169e51309bbc943f68e7965f23f53c85380 while remote queue advanced.\\n- manual git fetch succeeded, checkout was clean, stderr empty, but relay cycle made no progress.\\n- a new read-only capabilities.get probe was not consumed.\\n- 22 requests accumulated without results.\\n- restarting the stale process tree restored processing of the EXISTING request IDs.\\n\\nPRIMARY GOAL:\\nMake stale-but-alive relay state detectable and fail-safe, with deterministic recovery semantics that never blind-replay unknown side effects.\\n\\nRequired:\\n1. Introduce explicit health/freshness state, not PID-only liveness. Distinguish PROCESS_EXISTS / HEALTHY / STALE / RECONCILIATION_REQUIRED (names may vary but semantics must be machine-readable).\\n2. Expose durable timestamps/phase evidence for last sync, last completed cycle, last request processed/result published, current phase, local HEAD, observed remote HEAD/fetch freshness, backlog count.\\n3. Add a bounded stale detector for alive process + no forward progress while remote/backlog advances.\\n4. Harden launcher/status logic so \\\"already running\\\" is not equivalent to healthy. It must surface stale evidence and a safe operator recovery path.\\n5. Preserve .pc-relay state and outcome journal. Unknown side-effect outcomes require outcome.lookup/reconciliation; no automatic replay.\\n6. Add deterministic tests for:\\n   - alive process + stale local HEAD;\\n   - manual fetch success but no cycle progress;\\n   - backlog grows with no results;\\n   - interrupted side effect;\\n   - safe restart preserving state/outcomes;\\n   - normal py.exe -> python.exe parent/child chain not misclassified as duplicate relay;\\n   - healthy active queue processing.\\n7. Add a read-only health/status command or structured status artifact that independent consumers can validate.\\n8. No automatic production restart, no live branch mutation, no credential/env dumps.\\n9. Full targeted + repo CI. Produce exact SHA and reproducible evidence.\\n\\nCompletion is substantive code/tests/docs + exact HEAD + green exact-head CI. A plan/acknowledgement is zero progress.\",id=\"F85160E9CD245D0085D51163204FDD58\",url=\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab94f1d-a604-83eb-ae1b-258ac27e6544\";\nconst sleep=ms=>new Promise(r=>setTimeout(r,ms));\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst tab=tabs.find(t=>t.id===id);\nif(!tab||tab.url!==url){process.stdout.write(JSON.stringify({ok:false,reason:\"target_mismatch\",actual:tab?.url||\"\"}));process.exit(2)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\nlet seq=1,pending=new Map();\nws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};\nconst call=(method,params={})=>new Promise((r,j)=>{const k=seq++;pending.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\nconst state=async()=>{const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});const generating=bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'));return {found:!!c,text,generating}})())\",returnByValue:true});return JSON.parse(rr.result.value)};\nconst pre=await state();\nif(!pre.found||pre.generating||pre.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:pre.generating?\"generating\":\"draft_or_no_composer\"}));process.exit(3)}\nawait call(\"Runtime.evaluate\",{expression:\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});c.focus();return true})()\",returnByValue:true});\nawait call(\"Input.insertText\",{text:prompt});await sleep(500);\nconst typed=await state();const norm=s=>String(s||\"\").replace(/\\s+/g,\" \").trim();\nif(norm(typed.text)!==norm(prompt)){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"readback_mismatch\"}));process.exit(4)}\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});\nawait sleep(900);const post=await state();ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true,started:post.generating,composerCleared:!post.text.trim()}));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"submitted\":true,\"started\":false,\"composerCleared\":true}",
+      "stdout_bytes": 67,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T15:38:46.945Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T15:38:46.877Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-2210-pc-relay-stale-sync-watchdog"
+    },
+    "request_id": "boss-20261001-2210-pc-relay-stale-sync-watchdog",
+    "started_at": "2026-10-01T15:38:42.584Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-2210-pc-relay-stale-sync-watchdog",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
