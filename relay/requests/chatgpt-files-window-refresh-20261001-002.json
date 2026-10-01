@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-window-refresh-20261001-002",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Refresh exact Chrome HWNDs before robust non-coordinate focus control"
+}
