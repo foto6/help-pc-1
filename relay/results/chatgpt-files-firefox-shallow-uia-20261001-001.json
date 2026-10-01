@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$code=@'\nimport uiautomation as auto\ntitle='public-b · Folder · [BUGBOUNTY] foto6 test — Mozilla Firefox'\nroot=auto.GetRootControl()\nwins=[c for c in root.GetChildren() if (getattr(c,'Name','') or '')==title]\nprint('windows',len(wins))\nif not wins: raise SystemExit(3)\nq=[(wins[0],0)]\nn=0\nwhile q and n<300:\n    c,d=q.pop(0)\n    try:\n        name=getattr(c,'Name','') or ''\n        aid=getattr(c,'AutomationId','') or ''\n        typ=getattr(c,'ControlTypeName','') or ''\n        cls=getattr(c,'ClassName','') or ''\n        if name or aid or typ:\n            print(d,typ,repr(name[:180]),repr(aid[:100]),repr(cls[:100]))\n        n+=1\n        if d<4:\n            for ch in c.GetChildren():\n                q.append((ch,d+1))\n    except Exception as e:\n        print('ERR',d,type(e).__name__)\nprint('nodes',n)\n'@; py -c $code"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "windows 0\r\n",
+      "stdout_bytes": 11,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T00:45:37.512Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T00:45:37.466Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-files-firefox-shallow-uia-20261001-001"
+    },
+    "request_id": "chatgpt-files-firefox-shallow-uia-20261001-001",
+    "started_at": "2026-10-01T00:45:36.548Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-files-firefox-shallow-uia-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
