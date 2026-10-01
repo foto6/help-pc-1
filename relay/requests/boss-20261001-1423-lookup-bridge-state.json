@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1423-lookup-bridge-state",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "boss-20261001-1420-bridge-readonly-state",
+    "action": "shell.run"
+  },
+  "timeout_ms": 10000,
+  "note": "Reconcile timed-out read-only Bridge GET shell batch before any retry"
+}
