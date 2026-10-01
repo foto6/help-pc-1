@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-title-focus-shot-a-20261001-001",
+  "action": "screenshot.capture",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Capture foreground after exact-title Files.com role probe"
+}
