@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst known=[\n{name:\"media\",id:\"312D0941F3A5138C71E55254EAEBBEC8\"},\n{name:\"creator\",id:\"B0559FFE7843B036079007016E7351FF\"},\n{name:\"growth\",id:\"DBC6BC28E04127D1821830B232E048EB\"},\n{name:\"human\",id:\"74BDC2B5E97107BBA7ACDB858F2D03BB\"},\n{name:\"bridge\",id:\"A88E3157A8078B7DA32FC62848071CC3\"},\n{name:\"pc\",id:\"F85160E9CD245D0085D51163204FDD58\"}\n];\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nasync function inspect(k){\n const tab=tabs.find(x=>x.id===k.id);if(!tab)return{name:k.name,found:false};\n const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\n let seq=1,pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};\n const call=(method,params={})=>new Promise((r,j)=>{const id=seq++;pending.set(id,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id,method,params}))});\n const expr=\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});const generating=bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'));return {title:document.title,url:location.href,generating,draftLength:text.trim().length}})())\";\n const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});ws.close();return{name:k.name,found:true,...JSON.parse(rr.result.value)};\n}\nconst out=[];for(const k of known){try{out.push(await inspect(k))}catch(e){out.push({name:k.name,error:String(e.message||e)})}}process.stdout.write(JSON.stringify(out));\n\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"name\":\"media\",\"found\":true,\"title\":\"Deliver R11 Editor\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"generating\":false,\"draftLength\":0},{\"name\":\"creator\",\"found\":true,\"title\":\"Implement Publish Provider Layer\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"generating\":false,\"draftLength\":0},{\"name\":\"growth\",\"found\":true,\"title\":\"Implement Provider Ingestion Layer\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda63c-98d8-83eb-b365-d423b7563c4b\",\"generating\":false,\"draftLength\":0},{\"name\":\"human\",\"found\":true,\"title\":\"Разработка гуманного бенчмарка\",\"url\":\"https://chatgpt.com/c/6abdcea3-b724-83ed-b43b-982f00854e3c\",\"generating\":false,\"draftLength\":0},{\"name\":\"bridge\",\"found\":true,\"title\":\"Bridge R19 Implementation Report\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\",\"generating\":false,\"draftLength\":0},{\"name\":\"pc\",\"found\":true,\"title\":\"Parity Gate Validation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab94f1d-a604-83eb-ae1b-258ac27e6544\",\"generating\":false,\"draftLength\":0}]",
+      "stdout_bytes": 1266,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T12:39:16.238Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T12:39:16.176Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-1940-wave3-preflight"
+    },
+    "request_id": "boss-20261001-1940-wave3-preflight",
+    "started_at": "2026-10-01T12:39:15.503Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-1940-wave3-preflight",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
