@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-find-bridge-r19-target-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$raw=(Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 5).Content; $t=$raw|ConvertFrom-Json; @($t)|Where-Object{$_.url -match '6abda61c-a440-83ed-9482-1d0fc7923e03'}|Select-Object id,title,url,webSocketDebuggerUrl|ConvertTo-Json -Compress -Depth 3"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Locate existing Bridge R19 chat target only; no new tab"
+}
