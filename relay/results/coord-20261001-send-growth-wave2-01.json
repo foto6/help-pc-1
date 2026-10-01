@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "node .\\data\\direct_send_existing_agent.js --target=DBC6BC28E04127D1821830B232E048EB --prompt=E:\\pc-github-relay\\relay\\prompts\\growth-r11-provider-ingest-20261001.txt"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "PRE {\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc/project\",\"title\":\"ChatGPT - sv\",\"high\":true,\"stop\":false,\"composer\":true,\"draft\":\"\\n\"}\nCLICK {\"ok\":true,\"aria\":\"Отправить\",\"testid\":\"\"}\nSTART {\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/local-chatgpt%3A53b33c35-3d40-4e04-9a59-d460c2d13c33\",\"title\":\"EXECUTE NOW — GROWTH R11 REAL PROVIDER METRICS INGESTION LAYER. Produce implementation and evidence. Writable repo ONLY: foto6/video3 Branch ONLY: agent/growth-r11-provider-ingest-20261001 Exact starting HEAD: 7209a2a9033c4ced0690b8311e6f1661681e7ca2 R10 feedback loop is green and already consumed by Creator R11. Preserve its contracts and exactly-once semantics. PRIMARY GOAL: make real post-publication metric collection pluggable and durable without provider mutation. Required: Add a versioned read-only provider adapter boundary for Instagram Reels, TikTok and YouTube Shorts style metrics/export sources. Support pagination, rate-limit/backoff, partial windows, delayed metrics, provider revisions and unavailable fields without fabricating zeros. Normalize adapter output into the existing growth.shortform_platform_metrics.v1 contract with exact provenance, captured_at, window bounds, source identity and raw export digest. Provider adapters are read-only only. No publish/delete/edit/account mutation. Add credential-reference plumbing without storing secrets in fixtures/ledger. Add mocked provider fixtures for differing metric surfaces and regression tests proving unsupported metrics remain null/unavailable. Add restart/retry tests for rate limit, partial page, duplicate page, stale export revision, out-of-order windows and lost acknowledgement. Preserve synthetic/live separation: mocked fixtures cannot become live evidence. Produce a provider-ingestion conformance manifest for Creator/Growth integration and exact source/blob hashes. NONEMPTY source/tests/docs commit; focused/full tests; exact SHA; CI; deterministic ingest replay report. No live provider mutation. No merge/release. Do not modify Creator/Media repos.\",\"high\":true,\"stop\":true,\"composer\":true,\"draft\":\"\\n\"}\n",
+      "stdout_bytes": 2157,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T00:16:09.722Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T00:16:09.680Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-send-growth-wave2-01"
+    },
+    "request_id": "coord-20261001-send-growth-wave2-01",
+    "started_at": "2026-10-01T00:15:57.507Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-send-growth-wave2-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
