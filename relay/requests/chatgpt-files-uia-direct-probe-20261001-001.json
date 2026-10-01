@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-uia-direct-probe-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python",
+      "-c",
+      "import uiautomation as auto\nauto.SetGlobalSearchTimeout(2)\nfor hwnd in (462320,67948):\n    print(\"HWND\", hwnd)\n    try:\n        c=auto.ControlFromHandle(hwnd)\n        print(\"ROOT\", c.Name, c.ControlTypeName, c.ClassName)\n        kids=c.GetChildren()\n        print(\"CHILDREN\", len(kids))\n        for k in kids[:30]:\n            try:\n                print(\" -\", repr(k.Name), k.ControlTypeName, k.ClassName)\n            except Exception as e:\n                print(\" - ERR\",e)\n    except Exception as e:\n        print(\"ERR\",repr(e))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only direct UIAutomation probe of the two Chrome HWNDs for authorized Files.com testing"
+}
