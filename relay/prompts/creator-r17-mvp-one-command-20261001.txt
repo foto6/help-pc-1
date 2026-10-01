@@ -1,0 +1,33 @@
+EXECUTE NOW — CREATOR R17 FIRST MVP ONE-COMMAND PIPELINE. Continue in this SAME existing Creator chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video1
+Branch ONLY: agent/creator-r17-mvp-one-command-20261001
+Exact starting HEAD: 4a176c56b68b8949651eb45e5bd26d2cbdbd02ee
+
+Creator R16 is green and real Media R13 cross-repo compatibility is proven. Stop adding architecture for architecture's sake.
+
+PRIMARY MVP GOAL:
+A normal operator should be able to provide a local source video + short brief and receive a finished vertical MP4 + preview + QA report with ONE reproducible command, using the exact pinned Media R13 producer contract.
+
+Required:
+1. Add one-command MVP entrypoint, CLI or script, e.g.:
+   creator-mvp --input <video> --brief <text|file> --out <dir> [--style clean|aggressive|cinematic]
+2. It must execute a complete local flow:
+   input validation -> brief normalization -> script/edit request -> exact Media R13 compatible render request -> Media result ingest -> technical QA -> creative QA -> final artifact export.
+3. For MVP, publishing/Growth/analytics are OUT OF SCOPE and must remain disabled.
+4. If external AI generation is unavailable, use explicit deterministic local/conformance fallback and label it; do not fake model output.
+5. No hidden repo state: validate exact Media producer SHA/compatibility blobs before run.
+6. Produce simple operator outputs:
+   final.mp4
+   preview.mp4 or preview image/contact sheet
+   qa.json
+   run-summary.json
+7. Clear exit codes and actionable errors for missing ffmpeg, bad input, Media mismatch, QA fail, insufficient evidence.
+8. Restart-safe temp/work directory cleanup without deleting user source files.
+9. Add reproducible E2E fixture using an actual generated/test video file, not JSON-only mocks, and prove final MP4 exists, probes correctly, and passes QA.
+10. Add README section with exact copy-paste command for Windows and Linux.
+11. Add machine-readable MVP readiness report with gates:
+   input_ok, media_pin_ok, render_ok, technical_qa_ok, creative_qa_ok, artifact_export_ok.
+12. NONEMPTY source/tests/docs commit, focused/full CI, exact SHA, workflow run IDs.
+
+No live publishing. No credentials. No merge/release. Do not modify Media/Growth repos. Do not access E:\manhwa.
