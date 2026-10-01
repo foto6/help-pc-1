@@ -1,0 +1,13 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-bounty-keyboard-preflight-20261001-001",
+  "action": "action.preflight",
+  "params": {
+    "action": "keyboard.press",
+    "params": {
+      "key": "CTRL+N"
+    }
+  },
+  "timeout_ms": 10000,
+  "note": "Validate keyboard.press parameter contract without executing input"
+}
