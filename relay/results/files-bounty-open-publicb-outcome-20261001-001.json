@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T01:08:43.690Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "files-bounty-open-publicb-20261001-001"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:8ff5bdde665f1d194f5ff480ac1d8f5c59cf8679bc4f7cb06bec46ffd13118f1",
+            "journal_sequence": 602,
+            "previous_record_sha256": "cd9e0626031bded3682f7586a5f680cd5707c59bc0a77f499ce38bf40a83e909",
+            "record_sha256": "25afb4dd9c39051ee49d4d8b094d065bad324f2f0a8171ef337a25543b9b8f2b",
+            "recorded_at": "2026-10-01T01:08:43.730Z",
+            "request_id": "files-bounty-open-publicb-20261001-001",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": true,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "completed",
+              "observed_at": "2026-10-01T01:08:44.147Z",
+              "reason": "completed",
+              "reconciliation_required": false,
+              "reexecution_safe": false,
+              "request_id": "files-bounty-open-publicb-20261001-001"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:8ff5bdde665f1d194f5ff480ac1d8f5c59cf8679bc4f7cb06bec46ffd13118f1",
+            "journal_sequence": 603,
+            "previous_record_sha256": "25afb4dd9c39051ee49d4d8b094d065bad324f2f0a8171ef337a25543b9b8f2b",
+            "record_sha256": "5ef39d54b702820d873cced1eb30ae04bf0a5e4fbe295a6748a3672e2db93b36",
+            "recorded_at": "2026-10-01T01:08:44.205Z",
+            "request_id": "files-bounty-open-publicb-20261001-001",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": true,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "completed",
+          "observed_at": "2026-10-01T01:08:44.147Z",
+          "reason": "completed",
+          "reconciliation_required": false,
+          "reexecution_safe": false,
+          "request_id": "files-bounty-open-publicb-20261001-001"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": true,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "completed",
+            "observed_at": "2026-10-01T01:08:44.147Z",
+            "reason": "completed",
+            "reconciliation_required": false,
+            "reexecution_safe": false,
+            "request_id": "files-bounty-open-publicb-20261001-001"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:8ff5bdde665f1d194f5ff480ac1d8f5c59cf8679bc4f7cb06bec46ffd13118f1",
+          "journal_sequence": 603,
+          "previous_record_sha256": "25afb4dd9c39051ee49d4d8b094d065bad324f2f0a8171ef337a25543b9b8f2b",
+          "record_sha256": "5ef39d54b702820d873cced1eb30ae04bf0a5e4fbe295a6748a3672e2db93b36",
+          "recorded_at": "2026-10-01T01:08:44.205Z",
+          "request_id": "files-bounty-open-publicb-20261001-001",
+          "transition": "terminal"
+        },
+        "outcome": "succeeded",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "4febc3ea37f1f51ce795acfeb8d6b21334f024b29ffd8f7e007c5704b9eb55c3",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 603
+        },
+        "reason": "completed",
+        "replay_authorized": false,
+        "requestId": "files-bounty-open-publicb-20261001-001",
+        "request_id": "files-bounty-open-publicb-20261001-001",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T01:09:29.500Z",
+    "ok": true,
+    "request_id": "files-bounty-open-publicb-outcome-20261001-001",
+    "started_at": "2026-10-01T01:09:29.454Z",
+    "status": "completed"
+  },
+  "id": "files-bounty-open-publicb-outcome-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
