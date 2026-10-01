@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "\n$ErrorActionPreference='Stop'\n$root='E:\\ChatGPT-Security-Audit\\FilesCom'\nWrite-Output '=== TEST_CASES ==='\nGet-Content (Join-Path $root 'TEST_CASES.md') -Raw\nWrite-Output '=== AUDIT_TAIL ==='\nGet-Content (Join-Path $root 'SECURITY_TEST_AUDIT.md') -Tail 120\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "=== TEST_CASES ===\r\n# Test Cases\n\nLegend: PLANNED | RUNNING | PASS | CANDIDATE | BLOCKED | STOPPED\n\n## Authorization\n\n### TC-AUTH-001 �?\" Direct forbidden-folder access\nStatus: PASS\nActor: tetst1\nAllowed: public-b\nForbidden: private-a\nObserved: direct URL to private-a returned Not Found / permission denial.\nConclusion: no bypass observed.\n\n### TC-AUTH-002 �?\" Share-permission bypass\nStatus: PLANNED\nGoal: verify whether a Standard User with Full Access to public-b but no separate sharing permission can create a Share Link.\nExpected: server rejects creation if documented sharing permission is absent.\nSafety: own trial site, own folder, own user/data only.\n\n### TC-AUTH-003 �?\" Cross-folder move/copy into forbidden folder\nStatus: PLANNED\nGoal: attempt move/copy from allowed public-b into forbidden private-a using documented interfaces.\nExpected: server rejects operation due to destination permissions.\nSafety: own test files only.\n\n### TC-AUTH-004 �?\" Cross-folder read/copy from forbidden folder\nStatus: PLANNED\nGoal: verify tetst1 cannot retrieve/copy a known researcher-owned marker from private-a.\nExpected: denied.\nStopping rule: do not generalize to any customer or unknown object IDs.\n\n### TC-AUTH-005 �?\" API parity\nStatus: PLANNED\nGoal: verify API enforces the same permissions as UI for public-b/private-a.\nExpected: allowed object works; forbidden object is denied.\nConstraint: do not record API keys in audit files.\n\r\n=== AUDIT_TAIL ===\r\n# Security Test Audit\r\n\r\n## 2026-10-01 �?\" Audit initialized\r\n\r\nSCOPE_CHECK:\r\n- Program: Files.com HackerOne bug bounty\r\n- Authorized hosted target in current testing: bugbountyfoto6.files.com\r\n- Testing must remain on researcher-created trial site and researcher-created test users/data.\r\n- Automated testing limit: maximum 2 requests/second combined.\r\n- In-app AI Assistant is out of scope.\r\n- Customer sites/accounts/data must never be tested.\r\n- Burp Suite material must not be used as report evidence for this program.\r\n\r\nUSER_ACTION:\r\n- User created Files.com bug-bounty trial site.\r\n- User created Standard User: tetst1.\r\n- User granted tetst1 Full Access to public-b.\r\n- User did not grant tetst1 access to private-a.\r\n\r\nAI_ACTION:\r\n- Guided setup of controlled authorization boundary.\r\n- Used pc-control for read-only window/process/screenshot diagnostics.\r\n- Attempted UIA snapshot/inspect; UIA timed out.\r\n- No credential/session extraction was performed.\r\n- No customer asset was accessed.\r\n\r\nRESULT:\r\n- Direct access by tetst1 to /files/private-a returned Not Found / permission-style denial.\r\n- Basic UI authorization boundary behaved as expected.\r\n- No vulnerability confirmed yet.\r\n\r\nBLOCKED:\r\n- Share-permission bypass, cross-folder move/copy, and API authorization tests are not yet completed.\r\n- pc-control UIA interaction with Chrome timed out; no unsafe coordinate fallback was used.\r\n\r\n\r\n## 2026-10-01 �?\" Tooling history expanded\r\n\r\nAI_ACTION:\r\n- Added a complete tooling history to TOOLING_HISTORY.md.\r\n- Recorded that Remote Desktop Commander was only discovered before the user's explicit pc-control preference; it was not used to execute Files.com security tests.\r\n- Recorded the pc-control GitHub-relay architecture, relevant request IDs, successful read-only probes, screenshot captures, UIA failures/timeouts, and actions intentionally not performed.\r\n- Recorded use of the Files.com policy text as the scope authority and distinguished public web research from target testing.\r\n- Recorded that DevTools/fetch was discussed but had not yet been executed as a completed authorization test.\r\n- Reconfirmed current status: no confirmed Files.com vulnerability.\r\n\r\nRESULT:\r\n- Audit now distinguishes tool discovery, actual execution, failed attempts, and prohibited/not-performed actions.\r\n",
+      "stdout_bytes": 3775,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T01:28:21.023Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T01:28:20.975Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-files-bounty-statuscheck-20261001-001"
+    },
+    "request_id": "chatgpt-files-bounty-statuscheck-20261001-001",
+    "started_at": "2026-10-01T01:28:20.561Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-files-bounty-statuscheck-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
