@@ -1,0 +1,24 @@
+EXECUTE NOW — GROWTH R14 CREATOR BATCH HANDOFF / EXPERIMENT CONTRACT. Continue in this SAME existing Growth chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video3
+Branch ONLY: agent/growth-r14-creator-batch-handoff-20261001
+Exact starting HEAD: d4e610e43759c9892309f878d3524220f21be76c
+
+R13 experiment allocator is green. Preserve R10-R13 contracts, read-only provider boundary, provenance, exactly-once semantics, and non-causal language.
+
+PRIMARY GOAL:
+Produce a strict, durable contract that Creator R14 batch campaigns can consume directly: one source-bound experiment plan -> bounded set of next-batch creative cells, with no publish authority.
+
+Required:
+1. Add versioned growth.creator_batch_experiment_handoff.v1.
+2. Bind exact source post/metric/experiment evidence and allocator revision into one content-addressed handoff.
+3. Encode batch constraints: max cells, control quota, exploration quota, minimum evidence gate, per-cell target count, allowed dimensions, mutually exclusive constraints.
+4. Add explicit Creator-consumer eligibility rules and fail-closed validation for stale/future cycle, wrong campaign, duplicate/conflicting handoff, synthetic/live mismatch, missing evidence.
+5. Add exactly-once outbox/ack semantics for handoff delivery and restart/lost-ack replay.
+6. Add deterministic 12-reel batch handoff fixture compatible with Creator R14 campaign semantics.
+7. Add a reference Creator-side validator in Growth ONLY; do not modify Creator repo.
+8. Add tests for duplicate plan, changed bytes same idempotency key, stale campaign revision, allocator restart, lost ack, conflicting control cells, unsupported edit dimensions.
+9. Add conformance manifest/docs with exact source/blob hashes.
+10. NONEMPTY source/tests/docs commit, focused/full tests, exact SHA, CI and replay evidence.
+
+No provider mutation. No live publishing. No merge/release. Do not modify Creator/Media repos.
