@@ -1,0 +1,103 @@
+{
+  "action": "shell.run",
+  "executor_result": null,
+  "id": "boss-20261001-2030-alt-bridge-preflight",
+  "live": true,
+  "reconciliation": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T12:54:30.578Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "boss-20261001-2030-alt-bridge-preflight"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:31d259f08f81dec5704b32d2d52568230fe13bdfff892770f62ef6c2e76c8c6f",
+            "journal_sequence": 908,
+            "previous_record_sha256": "8f947ac3b3d4e8c3924ff485dfe8a5e6c0dfda89de3be4a57eef9101b346f68c",
+            "record_sha256": "075c2bc112a930d62bdb2df7c397096224c654418884e1d3b54c78a98d452ed6",
+            "recorded_at": "2026-10-01T12:54:30.637Z",
+            "request_id": "boss-20261001-2030-alt-bridge-preflight",
+            "transition": "dispatch_started"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-01T12:54:30.578Z",
+          "reason": "dispatch_started",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "boss-20261001-2030-alt-bridge-preflight"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-01T12:54:30.578Z",
+            "reason": "dispatch_started",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "boss-20261001-2030-alt-bridge-preflight"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:31d259f08f81dec5704b32d2d52568230fe13bdfff892770f62ef6c2e76c8c6f",
+          "journal_sequence": 908,
+          "previous_record_sha256": "8f947ac3b3d4e8c3924ff485dfe8a5e6c0dfda89de3be4a57eef9101b346f68c",
+          "record_sha256": "075c2bc112a930d62bdb2df7c397096224c654418884e1d3b54c78a98d452ed6",
+          "recorded_at": "2026-10-01T12:54:30.637Z",
+          "request_id": "boss-20261001-2030-alt-bridge-preflight",
+          "transition": "dispatch_started"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "c7a8becedf35e17cc5b27f446b2554da1d35038fed9705e8df9605be3de7fea2",
+          "matched_records": 1,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 922
+        },
+        "reason": "dispatch_started",
+        "replay_authorized": false,
+        "requestId": "boss-20261001-2030-alt-bridge-preflight",
+        "request_id": "boss-20261001-2030-alt-bridge-preflight",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": true,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T14:06:17.379Z",
+    "ok": true,
+    "request_id": "boss-20261001-2030-alt-bridge-preflight.relay-reconcile",
+    "started_at": "2026-10-01T14:06:17.315Z",
+    "status": "dry_run"
+  },
+  "reexecuted": false,
+  "relay_status": "interrupted_requires_reconciliation",
+  "version": "pc_relay.result.v1"
+}
