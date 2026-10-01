@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python",
+        "-c",
+        "import uiautomation as auto\nauto.SetGlobalSearchTimeout(1)\nroot=auto.ControlFromHandle(462320)\ncount=0\ndef walk(c,d=0):\n    global count\n    if d>4 or count>=250: return\n    try:\n        print(d,c.ControlTypeName,repr(c.Name),repr(c.AutomationId),repr(c.ClassName))\n        count+=1\n    except Exception:\n        pass\n    if d==4:return\n    try:kids=c.GetChildren()\n    except Exception:return\n    for k in kids: walk(k,d+1)\nwalk(root)\nprint(\"COUNT\",count)\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "0 WindowControl 'public-b � Folder � [BUGBOUNTY] foto6 test - Google Chrome' '' 'Chrome_WidgetWin_1'\r\n1 PaneControl '' '' 'Intermediate D3D Window'\r\n1 PaneControl 'public-b � Folder � [BUGBOUNTY] foto6 test - Google Chrome' '' 'BrowserRootView'\r\n2 PaneControl '' '' 'NonClientView'\r\n3 PaneControl '' '' 'BrowserFrameViewWin'\r\n4 PaneControl '' '' 'BrowserCaptionButtonContainer'\r\n4 PaneControl '' '' 'BrowserView'\r\n3 PaneControl '' '' 'TopContainerOverlayView'\r\nCOUNT 8\r\n",
+      "stdout_bytes": 470,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T02:20:39.175Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T02:20:39.118Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-files-uia-chrome-top-462320-20261001-001"
+    },
+    "request_id": "chatgpt-files-uia-chrome-top-462320-20261001-001",
+    "started_at": "2026-10-01T02:20:38.660Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-files-uia-chrome-top-462320-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
