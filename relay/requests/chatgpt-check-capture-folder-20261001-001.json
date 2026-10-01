@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-check-capture-folder-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "\n$ErrorActionPreference='Stop'\n$path='E:\\ChatGPT-Security-Audit\\FilesCom\\capture-pack\\01_site_overview'\nif (!(Test-Path $path)) { throw \"Folder not found: $path\" }\nWrite-Output '=== FILES ==='\nGet-ChildItem $path -Force | Sort-Object LastWriteTime |\n  Select-Object Name,FullName,Length,LastWriteTime,Extension | Format-Table -AutoSize\nWrite-Output '=== HASHES ==='\nGet-ChildItem $path -File -ErrorAction SilentlyContinue |\n  Get-FileHash -Algorithm SHA256 | Sort-Object Path | Format-Table -AutoSize\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Inspect Files.com capture-pack 01_site_overview folder for user-provided evidence"
+}
