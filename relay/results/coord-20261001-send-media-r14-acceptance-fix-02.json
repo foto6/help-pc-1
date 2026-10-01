@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "node .\\data\\direct_send_existing_agent.js --target=312D0941F3A5138C71E55254EAEBBEC8 --prompt=E:\\pc-github-relay\\relay\\prompts\\media-r14-acceptance-failures-20261001.txt"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Error: chat is generating\n    at E:\\WebAIBridge\\app\\data\\direct_send_existing_agent.js:13:76\n",
+      "stderr_bytes": 93,
+      "stderr_truncated": false,
+      "stdout": "PRE {\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"title\":\"Deliver R11 Editor\",\"high\":true,\"stop\":true,\"composer\":true,\"draft\":\"\\n\"}\n",
+      "stdout_bytes": 197,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T03:10:57.611Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T03:10:57.560Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-send-media-r14-acceptance-fix-02"
+    },
+    "request_id": "coord-20261001-send-media-r14-acceptance-fix-02",
+    "started_at": "2026-10-01T03:10:57.170Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-send-media-r14-acceptance-fix-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
