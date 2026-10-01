@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python",
+        "-c",
+        "import uiautomation as auto\nauto.SetGlobalSearchTimeout(2)\nroot=auto.ControlFromHandle(462320)\nprint(\"ROOT\",root.Name)\ntests=[\n    (\"address\", lambda: root.EditControl(Name=\"Address and search bar\", searchDepth=8)),\n    (\"doc\", lambda: root.DocumentControl(searchDepth=8)),\n]\nfor label,fn in tests:\n    try:\n        c=fn()\n        print(label,\"EXISTS\",c.Exists(0,0))\n        if c.Exists(0,0):\n            print(label,\"NAME\",repr(c.Name),\"AID\",repr(c.AutomationId),\"CLASS\",repr(c.ClassName),\"VALUE\",repr(c.GetValuePattern().Value if c.GetValuePattern() else None))\n            kids=c.GetChildren()\n            print(label,\"KIDS\",len(kids))\n            for k in kids[:40]:\n                print(\" \",k.ControlTypeName,repr(k.Name),repr(k.AutomationId),repr(k.ClassName))\n    except Exception as e:\n        print(label,\"ERR\",repr(e))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "ROOT public-b � Folder � [BUGBOUNTY] foto6 test - Google Chrome\r\naddress EXISTS False\r\ndoc EXISTS True\r\ndoc NAME '' AID 'view_1034' CLASS 'WebView' VALUE None\r\ndoc KIDS 1\r\n  PaneControl '' '' 'NativeViewHost'\r\n",
+      "stdout_bytes": 210,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T02:19:39.588Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T02:19:39.517Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-files-uia-targeted-462320-20261001-001"
+    },
+    "request_id": "chatgpt-files-uia-targeted-462320-20261001-001",
+    "started_at": "2026-10-01T02:19:38.564Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-files-uia-targeted-462320-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
