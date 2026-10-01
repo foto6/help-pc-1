@@ -329,6 +329,12 @@ def build_watchdog_status(
     process_exists = bool(matching_pids)
     health_pid_observed = health_pid is not None and health_pid in matching_pids
 
+    safe_snapshot = None
+    if isinstance(snapshot, dict):
+        safe_snapshot = dict(snapshot)
+        if safe_snapshot.get("last_error") is not None:
+            safe_snapshot["last_error"] = _bounded_error(safe_snapshot["last_error"])
+
     state = classify_health_snapshot(
         snapshot,
         now_unix=now_unix,
@@ -383,7 +389,7 @@ def build_watchdog_status(
             "remote_observation_source": "local_remote_tracking_ref_no_network",
         },
         "stale_reasons": stale_reasons,
-        "health": snapshot,
+        "health": safe_snapshot,
         "recovery": {
             "automatic_restart": False,
             "automatic_kill": False,
