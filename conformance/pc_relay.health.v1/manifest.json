@@ -1,0 +1,35 @@
+{
+  "manifest_version": "pc_relay.health_conformance.r1.v1",
+  "contract": "pc_relay.health.v1",
+  "repository": "foto6/help-pc-1",
+  "branch": "agent/pc-relay-stale-sync-watchdog-20261001",
+  "incident": "docs/PC_RELAY_STALE_SYNC_INCIDENT_2026-10-01.md",
+  "producer_blobs": {
+    "health_schema": {
+      "path": "conformance/pc_relay.health.v1/schema.json",
+      "git_blob_sha1": "2a2f4e88e3b483db768fc95972c2ed25fa9a187e"
+    },
+    "relay": {
+      "path": "tools/github_relay.py",
+      "git_blob_sha1": "6e5212b01114c87af80662269f7d9478979e5b96"
+    },
+    "launcher": {
+      "path": "tools/start_pc_control_relay.ps1",
+      "git_blob_sha1": "68124edf833e54ae1dc7538be15f043f13587c67"
+    }
+  },
+  "safety_invariants": {
+    "pid_presence_is_health": false,
+    "automatic_restart": false,
+    "automatic_kill": false,
+    "automatic_side_effect_replay": false,
+    "unknown_effect_requires_reconciliation": true,
+    "health_is_durable_local_evidence": true
+  },
+  "stale_sync_regression": {
+    "historical_results_rechecked_per_cycle": false,
+    "pending_results_discovered_by_single_git_status": true,
+    "git_operation_timeout_seconds": 30,
+    "health_freshness_default_seconds": 30
+  }
+}
