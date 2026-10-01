@@ -1,0 +1,51 @@
+EXECUTE NOW — MEDIA R13 CREATOR-CONSUMER COMPATIBILITY / PRODUCTION PIN. Continue in this SAME existing Media chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video2
+Branch ONLY: agent/media-r13-creator-compat-20261001
+Exact starting HEAD: 3472934e6fbdc4e756aeb0bb79ea11c5b3464499
+
+R12 creative polish is green at the starting HEAD with CI run 36799925623 SUCCESS. Preserve all R11/R12 contracts, render behavior, QA, idempotency, provenance and creative guardrails.
+
+KNOWN BLOCKER FROM CREATOR R15:
+Creator R15 currently fails production readiness because it still observes the older failed Media candidate SHA 98f298b88faaef106fb412712d6c9824e2b926d9 and requires an exact Creator-consumer compatibility blob in addition to:
+- exact producer SHA;
+- media.creative_edit_plan.r12.v1 manifest blob;
+- creative-plan contract blob;
+- preserved media.job.v1 contract blob;
+- preserved media.artifact_manifest.v1 blob;
+- successful exact-head CI.
+
+PRIMARY GOAL:
+Publish a stable, source-bound Media R13 compatibility bundle that Creator can pin without guessing field mappings or scraping implementation details.
+
+Required:
+1. Add a versioned Creator-consumer compatibility contract, e.g. media.creator_consumer_compat.r13.v1.
+2. Bind exact current Media producer SHA and exact Git blob hashes for:
+   - media.job.v1 consumer manifest;
+   - media.artifact_manifest.v1 manifest;
+   - media.creative_edit_plan.r12.v1 manifest;
+   - media.creative_edit_plan.r12.v1 contract;
+   - short-form profile/timeline contract;
+   - QA/creative-quality report schema.
+3. Define the exact result envelope Creator may consume for tournament candidates:
+   - logical job id;
+   - idempotency key;
+   - render fingerprint;
+   - profile digest;
+   - creative plan digest;
+   - final content SHA-256 and size;
+   - artifact manifest digest;
+   - probe evidence;
+   - technical QA;
+   - creative QA/guardrail evidence;
+   - timeline digest;
+   - producer SHA and contract digests.
+4. Add deterministic validator/fixture proving one real R12 demo artifact can be consumed through this envelope without bypassing QA.
+5. Add explicit compatibility guarantees and fail-closed semantics for future Media schema changes.
+6. Add a machine-readable compatibility manifest intended for downstream pinning by Creator.
+7. Add exact-head regression proving the compatibility bundle refers to the SAME commit that passes CI; no stale self-reported SHA.
+8. Keep compatibility export read-only. No Creator repo mutation.
+9. Add reproduction command that emits the compatibility bundle + demo consumer envelope deterministically.
+10. NONEMPTY source/tests/docs commit, focused/full tests, exact final SHA, CI run id and blob hashes.
+
+No publishing. No credentials. No merge/release. Do not modify Creator/Growth repos. No Desktop Commander. Do not access E:\manhwa.
