@@ -1,0 +1,25 @@
+INDEPENDENT REVIEW ONLY — SAME EXISTING SUPERVISOR CONVERSATION.
+
+Review benchmark commit:
+- repo: foto6/boss
+- branch: agent/human-editorial-benchmark-v1-20261001
+- commit: 679da9721bea488b619f8857b3b0fc3f03ea571d
+- file: GATES/EDITORIAL_PARITY_BENCHMARK_V1.md
+
+Independently verify current remote heads/evidence for:
+- Creator R18 agent/creator-r18-semantic-director-20261001
+- Media R14 agent/media-r14-realworld-acceptance-20261001
+- Growth R15 agent/growth-r15-visual-critic-20261001
+
+Check that the benchmark:
+1. cannot award human parity from synthetic fixtures, rules, critic/self scores;
+2. covers all 10 required real-user-like categories;
+3. has blind system-v-human and system A/B evaluation;
+4. separates hard technical DQ from subjective rubric;
+5. requires time-coded major-defect notes;
+6. has explicit sample/rater/agreement/statistical gates;
+7. defines MVP_READY, CONTENT_AWARE_READY, HUMAN_LEVEL_UNPROVEN, HUMAN_PARITY_CANDIDATE and keeps HUMAN_LEVEL unavailable without independent blinded replication;
+8. specifies repo-agnostic artifacts for Creator R18, Media R14 and Growth R15;
+9. lists current gaps using exact SHAs/CI, not branch names or plans.
+
+Do not modify Creator/Media/Growth. Do not deploy. Do not create chats. If corrections are necessary, amend ONLY the existing benchmark branch/file and push a nonempty commit; otherwise produce an evidence-backed PASS report in this chat. Respect all existing safety/protected-path restrictions.
