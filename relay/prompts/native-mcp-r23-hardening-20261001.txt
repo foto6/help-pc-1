@@ -1,0 +1,55 @@
+EXECUTE NOW — NATIVE MCP / PC CONTROL R23 HARDENING. Do not stop at a plan.
+
+Writable repo ONLY: foto6/help-pc-2
+Branch ONLY: agent/native-mcp-r23-hardening-20261001
+Exact starting HEAD: 47f54210128488171e34186182d6d2e382ba7552
+
+HARD ISOLATION:
+- The currently working PC Control / GitHub relay / installed live stack MUST remain untouched.
+- Do NOT deploy, install, restart, repoint, replace services, overwrite launchers, or cut over the live R22/current stack.
+- Work only in the isolated branch/worktree and CI/synthetic test environments.
+- No Desktop Commander.
+- Do not access E:\manhwa.
+
+Goal: polish the native MCP/PC Control system beyond the accepted R22 baseline so it is robust enough for long autonomous agent sessions.
+
+Observed real defects/evidence to incorporate:
+1. The live GitHub relay can have a Python process that exists while request consumption is stalled; process-exists is not sufficient liveness.
+2. Launcher can report started/already-running while queue progress is unhealthy.
+3. After reboot the lane can recover, but startup/liveness convergence is inconsistent.
+4. UIA snapshot has repeatedly timed out on Chrome and File Explorer in the current Executor lane; R23 must expose/propagate bounded adapter health and not hang the MCP/control plane around a sick adapter.
+5. shell/windows/screenshot/outcome-journal have worked; preserve these green paths.
+6. Timed-out side effects require outcome.lookup reconciliation; never encourage blind replay.
+7. Existing R22/full-surface work and safety gates are authoritative; do not relabel old evidence as new.
+
+Required R23 milestone:
+1. Add end-to-end health model across MCP gateway/control plane/device/executor:
+   - process_alive;
+   - transport_connected;
+   - queue_progressing;
+   - executor_responsive;
+   - per-adapter health;
+   - outcome-journal integrity;
+   - last successful request/result age.
+   A process that is alive but not progressing must become DEGRADED/UNHEALTHY.
+2. Add a deterministic heartbeat/canary that is read-only and cannot queue behind indefinitely without surfacing stale progress.
+3. Add bounded request lifecycle states and diagnostics for queued/dispatched/executing/completed/timeout/unknown/reconciled.
+4. Preserve at-most-once/unknown-outcome semantics for side-effecting actions. Add restart/reboot/crash tests proving no accidental replay.
+5. Add adapter isolation/circuit-breaker semantics so UIA timeout does not poison shell/windows/screenshot/outcome paths. Per-adapter timeout/breaker state must be visible via MCP capabilities/health.
+6. Add startup/reboot convergence tests: stale PID, duplicate process, crashed relay, executor absent, network unavailable, journal present/corrupt, delayed GitHub/transport.
+7. Add launcher/service liveness contract: "already running" only means healthy if a freshness/handshake gate passes; otherwise provide safe recovery instructions/state without killing the known-good live stack.
+8. Re-run/full encode the canonical tool-surface parity manifest from the R22 baseline and detect regressions in supported actions, schemas, safety gates, numeric/wire behavior and output bounds.
+9. Add soak/chaos test for long autonomous use: >=1000 read-only/mixed synthetic requests, bounded memory/queue, deterministic recovery from injected stalls/timeouts/restarts, no unbounded thread/process growth.
+10. Produce a source-bound R23 report with exact baseline SHA, changed files, tests, measured latencies/queue recovery, known blockers, and explicit NO_CUTOVER decision until independent verification.
+
+Cross-repo boundary:
+- help-pc-1 is READ-ONLY for this task. You may consume exact contracts/evidence from its current branches, but do not write there.
+- If an observed defect fundamentally requires help-pc-1 changes (e.g. UIA implementation itself), encode the required producer contract/blocker precisely instead of modifying that repo.
+
+Completion gate:
+- NONEMPTY commit(s) on the R23 branch.
+- Focused tests + full relevant CI.
+- Exact HEAD SHA and CI run ids.
+- Reproducible soak/chaos evidence.
+- No live deployment/cutover/service changes.
+- Report what remains blocked on help-pc-1 separately.
