@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$u='https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab94f1d-a604-83eb-ae1b-258ac27e6544'; $e=[uri]::EscapeDataString($u); Invoke-RestMethod -UseBasicParsing -Method Put -Uri (\"http://127.0.0.1:17410/json/new?\"+$e) -TimeoutSec 8 | Select-Object id,url,webSocketDebuggerUrl | ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"F85160E9CD245D0085D51163204FDD58\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab94f1d-a604-83eb-ae1b-258ac27e6544\",\"webSocketDebuggerUrl\":\"ws://127.0.0.1:17410/devtools/page/F85160E9CD245D0085D51163204FDD58\"}\r\n",
+      "stdout_bytes": 245,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T01:41:38.827Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T01:41:38.777Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-open-existing-pc-parity-01"
+    },
+    "request_id": "coord-20261001-open-existing-pc-parity-01",
+    "started_at": "2026-10-01T01:41:38.284Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-open-existing-pc-parity-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
