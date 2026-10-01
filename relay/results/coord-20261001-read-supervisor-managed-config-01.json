@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; if(Test-Path $p){$j=Get-Content -Raw -LiteralPath $p|ConvertFrom-Json; $rows=@($j.managedChats)|Where-Object{$_.url -eq 'https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8' -or $_.chatUrl -eq 'https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8' -or $_.supervisorChatUrl -eq 'https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8'}; [pscustomobject]@{supervisorChatUrl=$j.supervisorChatUrl;managed=$rows}|ConvertTo-Json -Depth 8 -Compress}else{'{\"error\":\"config_missing\"}'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"supervisorChatUrl\":\"https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8\",\"managed\":{}}\r\n",
+      "stdout_bytes": 97,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T02:55:20.980Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T02:55:20.928Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-read-supervisor-managed-config-01"
+    },
+    "request_id": "coord-20261001-read-supervisor-managed-config-01",
+    "started_at": "2026-10-01T02:55:20.012Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-read-supervisor-managed-config-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
