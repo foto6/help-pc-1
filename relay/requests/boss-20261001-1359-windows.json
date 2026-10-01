@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1359-windows",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Supervisor enumerate open windows to locate existing agent chats without touching protected bridge files"
+}
