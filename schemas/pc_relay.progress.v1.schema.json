@@ -1,0 +1,373 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pc_relay.progress.v1",
+  "title": "PC Control GitHub Relay Progress v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "source",
+    "process",
+    "loop_generation_id",
+    "loop_epoch",
+    "last_fetch_success",
+    "last_request_observed",
+    "last_result_committed",
+    "last_successful_cycle_at_unix",
+    "consecutive_cycle_failures",
+    "queue",
+    "current_cycle",
+    "last_error",
+    "limits",
+    "recorded_at_unix"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "pc_relay.progress.v1"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "branch",
+        "startup_head",
+        "relay_script_sha256"
+      ],
+      "properties": {
+        "repository": {
+          "const": "foto6/help-pc-1"
+        },
+        "branch": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "startup_head": {
+          "type": "string",
+          "pattern": "^(?:[0-9a-f]{40}|unknown)$"
+        },
+        "relay_script_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "process": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pid",
+        "started_at_unix",
+        "instance_id"
+      ],
+      "properties": {
+        "pid": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "started_at_unix": {
+          "type": "number",
+          "minimum": 0
+        },
+        "instance_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      }
+    },
+    "loop_generation_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "loop_epoch": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "last_fetch_success": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/fetch"
+        }
+      ]
+    },
+    "last_request_observed": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/request"
+        }
+      ]
+    },
+    "last_result_committed": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/result"
+        }
+      ]
+    },
+    "last_successful_cycle_at_unix": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "consecutive_cycle_failures": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "queue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pending_count",
+        "oldest_pending_request_id",
+        "oldest_pending_age_seconds",
+        "last_progress_at_unix"
+      ],
+      "properties": {
+        "pending_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "oldest_pending_request_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 80
+        },
+        "oldest_pending_age_seconds": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "last_progress_at_unix": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "current_cycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "started_at_unix",
+        "updated_at_unix",
+        "deadline_at_unix"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "starting",
+            "publishing_pending",
+            "fetching",
+            "rebasing",
+            "scanning",
+            "executing",
+            "publishing",
+            "sleeping",
+            "recovering",
+            "error",
+            "stopped"
+          ]
+        },
+        "started_at_unix": {
+          "type": "number",
+          "minimum": 0
+        },
+        "updated_at_unix": {
+          "type": "number",
+          "minimum": 0
+        },
+        "deadline_at_unix": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        }
+      }
+    },
+    "last_error": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/error"
+        }
+      ]
+    },
+    "limits": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_batch_per_cycle",
+        "max_error_chars",
+        "poll_seconds"
+      ],
+      "properties": {
+        "max_batch_per_cycle": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1024
+        },
+        "max_error_chars": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4096
+        },
+        "poll_seconds": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 3600
+        }
+      }
+    },
+    "recorded_at_unix": {
+      "type": "number",
+      "minimum": 0
+    }
+  },
+  "$defs": {
+    "fetch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "at_unix",
+        "remote_head"
+      ],
+      "properties": {
+        "at_unix": {
+          "type": "number",
+          "minimum": 0
+        },
+        "remote_head": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "action",
+        "at_unix"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]{1,80}$"
+        },
+        "action": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 128
+        },
+        "at_unix": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "at_unix",
+        "commit_sha"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._-]{1,80}$"
+        },
+        "at_unix": {
+          "type": "number",
+          "minimum": 0
+        },
+        "commit_sha": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{40}$"
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "retryable",
+        "operation",
+        "returncode",
+        "message",
+        "at_unix"
+      ],
+      "properties": {
+        "classification": {
+          "enum": [
+            "none",
+            "transient_network",
+            "transient_git_lock",
+            "remote_advanced",
+            "rebase_conflict",
+            "git_auth_or_permission",
+            "checkout_dirty",
+            "request_invalid",
+            "executor_error",
+            "publish_error",
+            "unknown"
+          ]
+        },
+        "retryable": {
+          "type": "boolean"
+        },
+        "operation": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "returncode": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "maxLength": 512
+        },
+        "at_unix": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    }
+  }
+}
