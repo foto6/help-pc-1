@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$raw=(Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 5).Content; $t=$raw|ConvertFrom-Json; @($t)|Select-Object id,title,url|ConvertTo-Json -Compress -Depth 3"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"9BE25FA3BEA10BA4803D877F9F01772A\",\"title\":\"����� � �ண���\",\"url\":\"https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8\"},{\"id\":\"C7994A3D3C193DA40F1BF3FF27C8291E\",\"title\":\"A 2\",\"url\":\"https://chatgpt.com/c/6ab67022-ae5c-83ed-a654-5dcc82c3b351\"},{\"id\":\"5B491E8914FF73B735525274C17A2540\",\"title\":\"ChatGPT\",\"url\":\"https://chatgpt.com/\"},{\"id\":\"FDC2CC2BF84A35C4229BE5975AD03622\",\"title\":\"Fix Assignment Replacement Runtime\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c\"},{\"id\":\"E45A6CCA15EA8AE7DA77526D60A69921\",\"title\":\"https://cdn.platform.openai.com/deployments/dil/v13/runner.html\",\"url\":\"https://cdn.platform.openai.com/deployments/dil/v13/runner.html\"},{\"id\":\"122EC0EABA370B9F54EFA5080C379A52\",\"title\":\"Web AI Bridge\",\"url\":\"http://127.0.0.1:17448/\"},{\"id\":\"A648074A3192DAC9CA041BE57609928F\",\"title\":\"Omnibox Popup\",\"url\":\"chrome://omnibox-popup.top-chrome/\"},{\"id\":\"348A0F495A5578B0A3686FD8EC8150D0\",\"title\":\"Omnibox Popup\",\"url\":\"chrome://omnibox-popup.top-chrome/omnibox_popup_aim.html\"},{\"id\":\"96FD9201EB9B743C61EA518EE01E16C0\",\"title\":\"\",\"url\":\"\"}]\r\n",
+      "stdout_bytes": 1136,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T00:11:03.291Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T00:11:03.250Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-postreboot-cdp-list-02"
+    },
+    "request_id": "coord-20261001-postreboot-cdp-list-02",
+    "started_at": "2026-10-01T00:11:02.832Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-postreboot-cdp-list-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
