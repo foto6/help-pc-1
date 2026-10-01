@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T07:05:22.717Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "boss-20261001-1420-bridge-readonly-state"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:38129363ba55e6c4cae8e20d46b383e277dfff679fcc89ca4236a1813593a296",
+            "journal_sequence": 758,
+            "previous_record_sha256": "4f552aef52e320abef8d04d7f1d6585890b0283be7368240e0e26050dda082e2",
+            "record_sha256": "3e6f893e829c198d2bbc499bf2a765d279c876158aaeb9215bbd3e8b51490abe",
+            "recorded_at": "2026-10-01T07:05:22.763Z",
+            "request_id": "boss-20261001-1420-bridge-readonly-state",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T07:06:22.832Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "boss-20261001-1420-bridge-readonly-state"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:38129363ba55e6c4cae8e20d46b383e277dfff679fcc89ca4236a1813593a296",
+            "journal_sequence": 759,
+            "previous_record_sha256": "3e6f893e829c198d2bbc499bf2a765d279c876158aaeb9215bbd3e8b51490abe",
+            "record_sha256": "6db50ef35f87ec7434853ac5050b667c6843d352e3b3fc0d11ecae7509be2e76",
+            "recorded_at": "2026-10-01T07:06:22.883Z",
+            "request_id": "boss-20261001-1420-bridge-readonly-state",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-01T07:06:22.832Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "boss-20261001-1420-bridge-readonly-state"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-01T07:06:22.832Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "boss-20261001-1420-bridge-readonly-state"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:38129363ba55e6c4cae8e20d46b383e277dfff679fcc89ca4236a1813593a296",
+          "journal_sequence": 759,
+          "previous_record_sha256": "3e6f893e829c198d2bbc499bf2a765d279c876158aaeb9215bbd3e8b51490abe",
+          "record_sha256": "6db50ef35f87ec7434853ac5050b667c6843d352e3b3fc0d11ecae7509be2e76",
+          "recorded_at": "2026-10-01T07:06:22.883Z",
+          "request_id": "boss-20261001-1420-bridge-readonly-state",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "3d04e3bfe00d2c60f7e66c9862bd892e408e1bd49d0aa3cf6dd6b537b76e7d14",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 759
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "boss-20261001-1420-bridge-readonly-state",
+        "request_id": "boss-20261001-1420-bridge-readonly-state",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T07:07:24.286Z",
+    "ok": true,
+    "request_id": "boss-20261001-1423-lookup-bridge-state",
+    "started_at": "2026-10-01T07:07:24.232Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-1423-lookup-bridge-state",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
