@@ -1,0 +1,21 @@
+{
+  "action": "uia.snapshot",
+  "executor_result": {
+    "action": "uia.snapshot",
+    "data": {},
+    "dry_run": false,
+    "error": "window not found: Web AI Bridge - Google Chrome",
+    "error_kind": "stale_target",
+    "finished_at": "2026-10-01T07:22:32.240Z",
+    "ok": false,
+    "request_id": "boss-supervisor-bridge-ui-snapshot-20261001T1425p0700-01",
+    "started_at": "2026-10-01T07:22:31.836Z",
+    "status": "stale_target"
+  },
+  "id": "boss-supervisor-bridge-ui-snapshot-20261001T1425p0700-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
