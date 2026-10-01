@@ -613,7 +613,7 @@ def test_r27_fixture_manifest_schema_and_exact_source_bindings() -> None:
         (fixture_dir / "evidence.example.json").read_text(encoding="utf-8")
     )
     manifest = json.loads(
-        (fixture_dir / "manifest.json").read_text(encoding="utf-8")
+        (root / "conformance" / "pc_relay.progress_evidence.v1" / "manifest.json").read_text(encoding="utf-8")
     )
     schema = json.loads(
         (root / "schemas" / "pc_relay.progress_evidence.v1.schema.json")
@@ -654,7 +654,7 @@ def test_r27_fixture_manifest_schema_and_exact_source_bindings() -> None:
 def test_r26_producer_blobs_remain_exactly_pinned_in_r27_manifest() -> None:
     root = Path(__file__).resolve().parents[1]
     manifest = json.loads(
-        (root / "tests" / "fixtures" / "relay_progress_evidence_v1" / "manifest.json")
+        (root / "conformance" / "pc_relay.progress_evidence.v1" / "manifest.json")
         .read_text(encoding="utf-8")
     )
     blobs = {item["path"]: item["git_blob_sha"] for item in manifest["source_blobs"]}
