@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1420-bridge-readonly-state",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$base='http://127.0.0.1:17448'\nfunction Get-Safe($path) {\n  try { return Invoke-RestMethod -UseBasicParsing -Method Get -Uri ($base+$path) -TimeoutSec 15 }\n  catch { return [pscustomobject]@{ endpoint=$path; error=$_.Exception.Message } }\n}\n$out=[ordered]@{}\n$out.status=Get-Safe '/api/status'\n$out.managedChats=Get-Safe '/api/supervisor-watchdog/managed-chats'\n$out.assignments=Get-Safe '/api/supervisor-watchdog/agent-assignments'\n$out.dryRun=Get-Safe '/api/supervisor-watchdog/agent-assignments/dry-run'\n$out.inventory=Get-Safe '/api/chat-inventory'\n$out | ConvertTo-Json -Depth 12 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 60000,
+  "note": "Read-only loopback GETs against live WebAIBridge status, managed chats, assignments, scheduler dry-run, and canonical inventory; no secrets or protected paths"
+}
