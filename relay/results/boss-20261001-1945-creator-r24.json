@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst prompt=\"EXECUTE NOW — CREATOR R24 FULL LIFECYCLE SYNTHETIC REHEARSAL.\\n\\nRepo: foto6/video1\\nWritable branch ONLY: agent/creator-r24-full-lifecycle-rehearsal-20261001\\nExact start: 8914a1207241115a9cb9e1d666a3cf6955ec4190\\n\\nExact-green upstreams:\\n- Creator R22 autonomous editor: 351df0d455557fb20b47f0fd2ab806c4281ed5ee, CI 36859291553\\n- Creator R23 editor-to-publish handoff: 8914a1207241115a9cb9e1d666a3cf6955ec4190, CI 36861170789\\n- Growth R19 learning loop: a802a1c0eed5ae564e7e67236e986bff560c58a9, CI 36861560705\\n- Growth R18 decision: 2d3bf275c5b456d53384073fb7ec1ed992e6b996, CI 36859378847\\n- Media R15 canonical render export: a17f782da8144d1e890ac83195396a3192df93c2, CI 36860193113\\n\\nPRIMARY GOAL:\\nBuild one deterministic, bounded, synthetic full-lifecycle rehearsal:\\nsource+brief -> R22 editor loop -> Media R15 render-export adapter -> Growth R18 decision -> final editor bundle -> R23 publish handoff -> synthetic provider receipt -> Growth R19 learning record -> next-cycle brief seed.\\n\\nRequirements:\\n1. Consume exact pinned schemas/manifests; no moving refs.\\n2. Preserve exact source/render/decision/publish/metrics lineage through the entire lifecycle.\\n3. No live provider mutation, no credentials, no real social post, no fake live metrics.\\n4. Bound editor re-edits <=2 and learning output to explicit testable hypotheses only.\\n5. Cover winner/tie/insufficient_evidence/human_review_required and provider-auth-required branches.\\n6. Restart/idempotency/lost-ACK/duplicate receipt/out-of-order metrics/hash mismatch tests.\\n7. Produce a single lifecycle manifest/report with all producer SHAs and artifact digests.\\n8. Fail closed on any schema/provenance drift.\\n9. One-command rehearsal must exit nonzero on injected invariant violation.\\n10. Exact-head CI and source-bound readiness report required.\\n\\nDo not mutate Media/Growth repos. No HUMAN_LEVEL claim.\",id=\"B0559FFE7843B036079007016E7351FF\",url=\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\";const sleep=ms=>new Promise(r=>setTimeout(r,ms));const tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===id);if(!tab||tab.url!==url){process.stdout.write(JSON.stringify({ok:false,reason:\"target_mismatch\"}));process.exit(2)}const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;pending.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});const state=async()=>{const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});const generating=bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'));return {found:!!c,text,generating}})())\",returnByValue:true});return JSON.parse(rr.result.value)};const pre=await state();if(!pre.found||pre.generating||pre.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:pre.generating?\"generating\":\"draft_or_no_composer\"}));process.exit(3)}await call(\"Runtime.evaluate\",{expression:\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});c.focus();return true})()\",returnByValue:true});await call(\"Input.insertText\",{text:prompt});await sleep(500);const typed=await state();const norm=s=>String(s||\"\").replace(/\\s+/g,\" \").trim();if(norm(typed.text)!==norm(prompt)){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"readback_mismatch\"}));process.exit(4)}await call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await sleep(900);const post=await state();ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true,started:post.generating,composerCleared:!post.text.trim()}));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"submitted\":true,\"started\":false,\"composerCleared\":true}",
+      "stdout_bytes": 67,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T12:28:02.556Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T12:28:02.487Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-1945-creator-r24"
+    },
+    "request_id": "boss-20261001-1945-creator-r24",
+    "started_at": "2026-10-01T12:27:58.530Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-1945-creator-r24",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
