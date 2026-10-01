@@ -1,0 +1,24 @@
+CONTINUE CURRENT MEDIA R14 MILESTONE — DO NOT START A NEW CHAT OR NEW BRANCH.
+
+Repo: foto6/video2
+Branch: agent/media-r14-realworld-acceptance-20261001
+Current observed remote head: b5cf20f28316ce87214fa174856f1e086aaa078f
+
+Coordinator verification:
+- GitHub Actions run 36805376050 is FAILED.
+- job 110188419024 reached step "npm run verify:r14"; that step ended cancelled and all later R13/R12/R11/full tests were skipped.
+- Previous R14 runs on 26adbd68..., 9f2148a5..., c77bfd0d..., 4f9ccb5..., 2e3b639... also failed.
+- latest commit message: "R14 regress dead-air minimum-duration acceptance bug".
+
+EXECUTE NOW:
+1. Inspect exact failing/cancelled R14 command and logs/evidence for run 36805376050; do not guess.
+2. Determine whether this is timeout/hang, child-process leak, ffmpeg process lifetime, fixture duration/QA failure, dead-air regression, or CI workflow issue.
+3. Fix only the smallest justified R14 defect.
+4. Add regression proving the exact failure class cannot recur.
+5. Re-run focused verify:r14, then preserved R13/R12/R11/full suite.
+6. Push substantive commit(s) to SAME R14 branch.
+7. Require exact-head GitHub Actions SUCCESS before claiming complete.
+8. Preserve actual-video acceptance outputs and do not weaken QA/guardrails or skip failing cases merely to turn CI green.
+9. If one real-world case is fundamentally invalid, report BLOCKED with exact evidence rather than deleting the case.
+
+No new chat, no publishing, no credentials, no merge/release, no Desktop Commander, no E:\manhwa.
