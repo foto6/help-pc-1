@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-open-devtools-20261001-001",
+  "action": "keyboard.press",
+  "params": {
+    "key": "f12"
+  },
+  "timeout_ms": 10000,
+  "note": "Open Firefox DevTools for authorized Files.com testing"
+}
