@@ -1,0 +1,49 @@
+EXECUTE NOW — GROWTH R16 CANONICAL HUMAN-BENCHMARK CRITIC EXPORT. Continue in this SAME Growth chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video3
+Branch ONLY: agent/growth-r16-benchmark-export-20261001
+Exact starting HEAD: 3c328d4feb922888ed2600b6c0cf7d5d7920cf3b
+
+Independent benchmark authority:
+- foto6/boss
+- branch agent/human-editing-gate-supervisor-20261001-v2
+- benchmark head e0763bebf2aad9402f8de8c60edb1b9eb8c4be8e
+- protocol boss.human_editing_gate.v1
+
+R15/R15B visual critic is green, CI 36808587656 SUCCESS.
+The independent benchmark explicitly says model/VLM pairwise is advisory and MUST NOT count as human ground truth.
+
+PRIMARY GOAL:
+Emit the exact canonical critic export required by the benchmark, with strict separation between model evidence and actual human labels.
+
+Required file:
+growth.critic_export.v1.json
+
+Required keys:
+contract_version
+repository
+commit_sha
+source_id
+render_sha256
+critic_mode
+model_or_rule_identity
+dimension_observations
+timecoded_evidence
+hard_failure_observations
+pairwise_if_used
+human_ground_truth
+
+Required:
+1. Add stable growth.critic_export.v1 schema/validator/exporter.
+2. Bind exact Growth commit and exact render SHA.
+3. Map R15/R15B observations into benchmark rubric dimensions where evidence exists; leave unavailable fields explicit rather than inventing scores.
+4. Preserve time-coded visual evidence and hard-failure observations.
+5. For EVERY model/rule/VLM critic output, human_ground_truth MUST be false.
+6. Add hard regression: no critic/model pairwise decision may be serialized into a human_ratings artifact or represented as a human label.
+7. Add validation rejecting any model/VLM export with human_ground_truth=true.
+8. Pairwise model preference remains advisory only.
+9. Add fixture/conformance pack proving fake transport/Gemini mock remains NON-HUMAN evidence.
+10. Do NOT implement or fabricate the actual human ratings study in Growth; benchmark-owned human-label ingestion stays in foto6/boss.
+11. NONEMPTY source/tests/docs commit, focused/full CI, exact final SHA/run IDs.
+
+No publishing, no credentials, no Creator/Media mutation, no merge/release, no Desktop Commander, no E:\manhwa.
