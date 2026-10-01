@@ -1,0 +1,99 @@
+{
+  "contract_version": "pc_relay.progress_evidence.v1",
+  "status": "ok",
+  "observed_at_unix": 1790820015,
+  "delivery_source": {
+    "repository": "foto6/help-pc-1",
+    "mechanism": "bounded_local_file_stdio",
+    "reader_script_sha256": "5555555555555555555555555555555555555555555555555555555555555555",
+    "evidence_module_sha256": "6666666666666666666666666666666666666666666666666666666666666666"
+  },
+  "delivery_semantics": {
+    "read_only": true,
+    "queue_acknowledged": false,
+    "lease_created": false,
+    "retry_triggered": false,
+    "replay_triggered": false
+  },
+  "binding": {
+    "relay_startup_head": "1111111111111111111111111111111111111111",
+    "relay_script_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "process_pid": 4242,
+    "process_started_at_unix": 1790820000,
+    "process_instance_id": "r27-fixture-instance",
+    "loop_generation_id": "r27-fixture-generation",
+    "loop_epoch": 27,
+    "progress_recorded_at_unix": 1790820014
+  },
+  "progress_sha256": "c07498f853d57f292f6ae4ef5df6a6ca539ac3f1eacacf045533e03039c708ba",
+  "progress": {
+    "contract_version": "pc_relay.progress.v1",
+    "source": {
+      "repository": "foto6/help-pc-1",
+      "branch": "agent/pc-github-relay",
+      "startup_head": "1111111111111111111111111111111111111111",
+      "relay_script_sha256": "2222222222222222222222222222222222222222222222222222222222222222"
+    },
+    "process": {
+      "pid": 4242,
+      "started_at_unix": 1790820000,
+      "instance_id": "r27-fixture-instance"
+    },
+    "loop_generation_id": "r27-fixture-generation",
+    "loop_epoch": 27,
+    "last_fetch_success": {
+      "at_unix": 1790820012,
+      "remote_head": "3333333333333333333333333333333333333333"
+    },
+    "last_request_observed": {
+      "id": "fixture-request-001",
+      "action": "windows.list",
+      "at_unix": 1790820013
+    },
+    "last_result_committed": {
+      "id": "fixture-request-000",
+      "at_unix": 1790820010,
+      "commit_sha": "4444444444444444444444444444444444444444"
+    },
+    "last_successful_cycle_at_unix": 1790820014,
+    "consecutive_cycle_failures": 0,
+    "queue": {
+      "pending_count": 1,
+      "oldest_pending_request_id": "fixture-request-001",
+      "oldest_pending_age_seconds": 4.5,
+      "last_progress_at_unix": 1790820010
+    },
+    "current_cycle": {
+      "state": "sleeping",
+      "started_at_unix": 1790820014,
+      "updated_at_unix": 1790820014,
+      "deadline_at_unix": null
+    },
+    "last_error": null,
+    "limits": {
+      "max_batch_per_cycle": 64,
+      "max_error_chars": 512,
+      "poll_seconds": 3
+    },
+    "recorded_at_unix": 1790820014
+  },
+  "liveness": {
+    "contract_version": "pc_relay.liveness_probe.v1",
+    "state": "healthy_progressing",
+    "reason": "cycle_and_queue_progress_within_bound",
+    "observed_pids": [
+      4242
+    ],
+    "progress_age_seconds": 1,
+    "queue_progress_age_seconds": 5,
+    "successful_cycle_age_seconds": 1,
+    "consecutive_cycle_failures": 0,
+    "pending_count": 1,
+    "loop_generation_id": "r27-fixture-generation",
+    "loop_epoch": 27,
+    "process_pid": 4242,
+    "last_error_classification": null
+  },
+  "error": null,
+  "evidence_sha256": "0775b5ac06c12c3a997cc700a67b35ea10857ee7a0b8a35458701f74df9a708d"
+}
