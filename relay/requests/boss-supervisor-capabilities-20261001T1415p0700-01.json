@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-supervisor-capabilities-20261001T1415p0700-01",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Supervisor bootstrap: verify pc-control relay capabilities before project orchestration"
+}
