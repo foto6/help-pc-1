@@ -8,7 +8,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 from pc_executor.audit import JsonlAuditSink
 from pc_executor.executor import Executor
@@ -118,31 +118,281 @@ def _git_head(repo: Path, ref: str = "HEAD") -> str | None:
     return value or None
 
 
+def _bounded_error(value: object, limit: int = 512) -> str:
+    text = str(value).replace("\r", " ").replace("\n", " ")
+    text = re.sub(
+        r"([A-Za-z][A-Za-z0-9+.-]*://)[^/@\\s]+@",
+        r"\\1<redacted>@",
+        text,
+    )
+    text = re.sub(
+        r"(?i)\\b(token|password|authorization|credential)\\s*[:=]\\s*[^\\s]+",
+        r"\\1=<redacted>",
+        text,
+    )
+    return text[:limit]
+
+
+def _git_head_relation(repo: Path, local_head: str | None, remote_head: str | None) -> str:
+    if not local_head or not remote_head:
+        return "unknown"
+    if local_head == remote_head:
+        return "equal"
+    local_ancestor = _run_git(
+        repo,
+        "merge-base",
+        "--is-ancestor",
+        local_head,
+        remote_head,
+        check=False,
+    )
+    if local_ancestor.returncode == 0:
+        return "local_behind_remote"
+    remote_ancestor = _run_git(
+        repo,
+        "merge-base",
+        "--is-ancestor",
+        remote_head,
+        local_head,
+        check=False,
+    )
+    if remote_ancestor.returncode == 0:
+        return "local_ahead_remote"
+    return "diverged"
+
+
+def _tree_queue_counts(repo: Path, ref: str) -> dict[str, int] | None:
+    probe = _run_git(
+        repo,
+        "ls-tree",
+        "-r",
+        "--name-only",
+        ref,
+        "--",
+        "relay/requests",
+        "relay/results",
+        check=False,
+    )
+    if probe.returncode != 0:
+        return None
+    request_names: set[str] = set()
+    result_names: set[str] = set()
+    for raw in probe.stdout.splitlines():
+        path = raw.strip().replace("\\", "/")
+        if path.startswith("relay/requests/") and path.endswith(".json"):
+            request_names.add(Path(path).name)
+        elif path.startswith("relay/results/") and path.endswith(".json"):
+            result_names.add(Path(path).name)
+    return {
+        "request_count": len(request_names),
+        "result_count": len(result_names),
+        "backlog_count": len(request_names - result_names),
+    }
+
+
+def _parse_observed_processes(values: Iterable[str]) -> dict[str, Any]:
+    rows: list[dict[str, int]] = []
+    seen: set[int] = set()
+    for raw in values:
+        text = str(raw)
+        if ":" not in text:
+            raise ValueError("observed process must be PID:PARENTPID")
+        pid_text, parent_text = text.split(":", 1)
+        pid = int(pid_text)
+        parent_pid = int(parent_text)
+        if pid <= 0 or parent_pid < 0 or pid in seen:
+            raise ValueError("observed process identities must be unique positive PIDs")
+        seen.add(pid)
+        rows.append({"pid": pid, "parent_pid": parent_pid})
+    roots = sorted(
+        row["pid"]
+        for row in rows
+        if row["parent_pid"] not in seen
+    )
+    return {
+        "matching_pids": sorted(seen),
+        "logical_roots": roots,
+        "logical_process_count": len(roots),
+    }
+
+
 def classify_health_snapshot(
     snapshot: dict[str, Any] | None,
     *,
     now_unix: float,
     process_exists: bool,
     stale_after_seconds: float = DEFAULT_STALE_AFTER_SECONDS,
+    logical_process_count: int = 1,
+    health_pid_observed: bool = True,
+    head_relation: str = "unknown",
+    observed_remote_head: str | None = None,
+    observed_remote_backlog_count: int | None = None,
 ) -> str:
+    if logical_process_count > 1:
+        return "DUPLICATE_AMBIGUOUS"
     if not process_exists:
         return "PROCESS_MISSING"
     if not snapshot:
         return "PROCESS_EXISTS"
     if snapshot.get("reconciliation_required") is True:
         return "RECONCILIATION_REQUIRED"
+    if not health_pid_observed:
+        return "PROCESS_EXISTS"
     try:
         updated_at = float(snapshot.get("updated_at_unix"))
     except (TypeError, ValueError):
         return "PROCESS_EXISTS"
-    effective_stale_after = stale_after_seconds
+    effective_stale_after = max(1.0, float(stale_after_seconds))
     if snapshot.get("phase") in {"execute_request", "reconcile_interrupted_side_effect"}:
-        effective_stale_after = max(effective_stale_after, LONG_RUNNING_PHASE_STALE_AFTER_SECONDS)
-    if now_unix - updated_at > effective_stale_after:
+        effective_stale_after = max(
+            effective_stale_after,
+            LONG_RUNNING_PHASE_STALE_AFTER_SECONDS,
+        )
+    updated_age = max(0.0, now_unix - updated_at)
+    if updated_age > effective_stale_after:
         return "STALE"
+
+    cycle_at = snapshot.get("last_cycle_completed_at_unix")
+    try:
+        cycle_age = (
+            max(0.0, now_unix - float(cycle_at))
+            if cycle_at is not None
+            else max(0.0, now_unix - float(snapshot.get("started_at_unix", now_unix)))
+        )
+    except (TypeError, ValueError):
+        cycle_age = effective_stale_after + 1.0
+
+    sync_at = snapshot.get("last_sync_at_unix")
+    try:
+        sync_age = (
+            max(0.0, now_unix - float(sync_at))
+            if sync_at is not None
+            else max(0.0, now_unix - float(snapshot.get("started_at_unix", now_unix)))
+        )
+    except (TypeError, ValueError):
+        sync_age = effective_stale_after + 1.0
+
+    if (
+        head_relation == "local_behind_remote"
+        and sync_age > effective_stale_after
+    ):
+        return "STALE"
+    if (
+        observed_remote_head
+        and snapshot.get("remote_head")
+        and observed_remote_head != snapshot.get("remote_head")
+        and cycle_age > effective_stale_after
+    ):
+        return "STALE"
+    if observed_remote_backlog_count is not None:
+        try:
+            recorded_backlog = int(snapshot.get("backlog_count", 0))
+        except (TypeError, ValueError):
+            recorded_backlog = 0
+        if (
+            observed_remote_backlog_count > recorded_backlog
+            and cycle_age > effective_stale_after
+        ):
+            return "STALE"
     if snapshot.get("status") == "healthy":
         return "HEALTHY"
     return "PROCESS_EXISTS"
+
+
+def build_watchdog_status(
+    repo: Path,
+    *,
+    snapshot: dict[str, Any] | None,
+    observed_processes: Iterable[str],
+    now_unix: float,
+    stale_after_seconds: float = DEFAULT_STALE_AFTER_SECONDS,
+) -> dict[str, Any]:
+    process = _parse_observed_processes(observed_processes)
+    local_head = _git_head(repo)
+    branch = (
+        snapshot.get("branch")
+        if isinstance(snapshot, dict) and isinstance(snapshot.get("branch"), str)
+        else "agent/pc-github-relay"
+    )
+    remote_ref = f"origin/{branch}"
+    remote_head = _git_head(repo, remote_ref)
+    relation = _git_head_relation(repo, local_head, remote_head)
+    remote_counts = _tree_queue_counts(repo, remote_ref)
+    health_pid = (
+        int(snapshot["pid"])
+        if isinstance(snapshot, dict)
+        and isinstance(snapshot.get("pid"), int)
+        and not isinstance(snapshot.get("pid"), bool)
+        else None
+    )
+    matching_pids = process["matching_pids"]
+    process_exists = bool(matching_pids)
+    health_pid_observed = health_pid is not None and health_pid in matching_pids
+
+    state = classify_health_snapshot(
+        snapshot,
+        now_unix=now_unix,
+        process_exists=process_exists,
+        stale_after_seconds=stale_after_seconds,
+        logical_process_count=process["logical_process_count"],
+        health_pid_observed=health_pid_observed,
+        head_relation=relation,
+        observed_remote_head=remote_head,
+        observed_remote_backlog_count=(
+            None if remote_counts is None else remote_counts["backlog_count"]
+        ),
+    )
+    stale_reasons: list[str] = []
+    if state == "STALE":
+        try:
+            updated_age = max(0.0, now_unix - float(snapshot["updated_at_unix"]))
+        except Exception:
+            updated_age = None
+        if updated_age is None or updated_age > stale_after_seconds:
+            stale_reasons.append("health_record_age_exceeded")
+        if relation == "local_behind_remote":
+            stale_reasons.append("local_head_behind_remote_tracking_head")
+        if (
+            isinstance(snapshot, dict)
+            and remote_head
+            and snapshot.get("remote_head")
+            and remote_head != snapshot.get("remote_head")
+        ):
+            stale_reasons.append("remote_tracking_head_advanced_since_last_relay_sync")
+        if (
+            remote_counts is not None
+            and isinstance(snapshot, dict)
+            and remote_counts["backlog_count"] > int(snapshot.get("backlog_count", 0))
+        ):
+            stale_reasons.append("remote_backlog_advanced_without_completed_cycle")
+
+    return {
+        "status_version": "pc_relay.watchdog_status.v1",
+        "state": state,
+        "observed_at_unix": now_unix,
+        "process": {
+            **process,
+            "health_pid": health_pid,
+            "health_pid_observed": health_pid_observed,
+        },
+        "observations": {
+            "local_head": local_head,
+            "remote_tracking_head": remote_head,
+            "head_relation": relation,
+            "remote_tracking_queue": remote_counts,
+            "remote_observation_source": "local_remote_tracking_ref_no_network",
+        },
+        "stale_reasons": stale_reasons,
+        "health": snapshot,
+        "recovery": {
+            "automatic_restart": False,
+            "automatic_kill": False,
+            "automatic_side_effect_replay": False,
+            "preserve_state_dir": ".pc-relay/state",
+            "preserve_outcome_journal": ".pc-relay/outcomes.jsonl",
+            "unknown_side_effect_requires_outcome_lookup": True,
+        },
+    }
 
 
 def _pending_result_paths(repo: Path, results_dir: Path) -> list[Path]:
