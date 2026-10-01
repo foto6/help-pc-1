@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T02:54:08.499Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "coord-20261001-query-managed-supervisor-chat-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:72ea47ae0c40e9ba5ebc9d8f134a93e034b1bb7e9c7e06494b4083bbcd5c75bc",
+            "journal_sequence": 716,
+            "previous_record_sha256": "ae9d5fa04212926edff0dd960ed1ec7492747d3ae907bd58d072ae2f0f8a27eb",
+            "record_sha256": "fb135539159b065c6dbe7eacd025ecb9adfffa37d577bf46bc44efe0db6168c6",
+            "recorded_at": "2026-10-01T02:54:08.540Z",
+            "request_id": "coord-20261001-query-managed-supervisor-chat-01",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T02:54:18.601Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "coord-20261001-query-managed-supervisor-chat-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:72ea47ae0c40e9ba5ebc9d8f134a93e034b1bb7e9c7e06494b4083bbcd5c75bc",
+            "journal_sequence": 717,
+            "previous_record_sha256": "fb135539159b065c6dbe7eacd025ecb9adfffa37d577bf46bc44efe0db6168c6",
+            "record_sha256": "0d55dd9a8d0aaf06ca2120b78e3a2db7b4987fed9665a2a94fd2db669d41b919",
+            "recorded_at": "2026-10-01T02:54:18.648Z",
+            "request_id": "coord-20261001-query-managed-supervisor-chat-01",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-01T02:54:18.601Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "coord-20261001-query-managed-supervisor-chat-01"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-01T02:54:18.601Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "coord-20261001-query-managed-supervisor-chat-01"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:72ea47ae0c40e9ba5ebc9d8f134a93e034b1bb7e9c7e06494b4083bbcd5c75bc",
+          "journal_sequence": 717,
+          "previous_record_sha256": "fb135539159b065c6dbe7eacd025ecb9adfffa37d577bf46bc44efe0db6168c6",
+          "record_sha256": "0d55dd9a8d0aaf06ca2120b78e3a2db7b4987fed9665a2a94fd2db669d41b919",
+          "recorded_at": "2026-10-01T02:54:18.648Z",
+          "request_id": "coord-20261001-query-managed-supervisor-chat-01",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "5c4ef7e2d44012b5b1c6d47cfdd829e8153c9e9b1da01a8f901ebc8193bcdcdb",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 721
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "coord-20261001-query-managed-supervisor-chat-01",
+        "request_id": "coord-20261001-query-managed-supervisor-chat-01",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T02:55:23.642Z",
+    "ok": true,
+    "request_id": "coord-20261001-reconcile-managed-supervisor-query-01",
+    "started_at": "2026-10-01T02:55:23.591Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-reconcile-managed-supervisor-query-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
