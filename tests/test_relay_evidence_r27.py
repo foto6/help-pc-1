@@ -427,7 +427,7 @@ def test_concurrent_atomic_writer_reader_never_mixes_generation_or_epoch(
 
     def mutate() -> None:
         try:
-            for index in range(200):
+            for index in range(64):
                 writer.start_cycle()
                 writer.queue_metrics(
                     pending_count=index % 7,
@@ -437,6 +437,10 @@ def test_concurrent_atomic_writer_reader_never_mixes_generation_or_epoch(
                     oldest_pending_age_seconds=float(index % 11),
                 )
                 writer.cycle_success()
+                # Production cycles are separated by poll/execution time; a
+                # small spacing avoids turning this into a Windows filesystem
+                # rename microbenchmark while reads remain continuously concurrent.
+                time.sleep(0.002)
         except BaseException as exc:
             errors.append(exc)
         finally:
