@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeout
-from threading import Event
+from queue import Empty, Queue
+from threading import Event, Thread
 from time import monotonic
 from typing import Callable, TypeVar
 
@@ -33,31 +33,55 @@ def run_bounded(
     cancellation: CancellationToken | None = None,
     label: str = "operation",
 ) -> T:
+    """Run one operation behind a hard caller-side deadline.
+
+    The worker is daemonized intentionally: some Windows APIs can ignore Python
+    cancellation while blocked inside native code. A timeout therefore returns
+    control immediately and cannot make interpreter shutdown wait for a wedged
+    adapter thread. Cooperative adapters still receive the shared token and
+    should stop as soon as it is cancelled. Higher layers use circuit breakers
+    to avoid accumulating workers for a persistently wedged adapter.
+    """
     token = cancellation or CancellationToken()
     token.raise_if_cancelled()
     if timeout_seconds <= 0:
         raise OperationTimeoutError(f"{label} timed out before execution")
 
-    pool = ThreadPoolExecutor(max_workers=1, thread_name_prefix="pc-executor")
-    future = pool.submit(operation)
-    deadline = monotonic() + timeout_seconds
-    try:
-        while True:
-            token.raise_if_cancelled()
-            remaining = deadline - monotonic()
-            if remaining <= 0:
-                # Propagate the deadline into cooperative adapters before
-                # returning. The worker remains isolated if an underlying OS
-                # API ignores cancellation, but unrelated request lanes are
-                # not forced to wait for that thread.
-                token.cancel()
-                future.cancel()
-                raise OperationTimeoutError(f"{label} timed out")
+    result: Queue[tuple[str, object]] = Queue(maxsize=1)
+
+    def worker() -> None:
+        try:
+            value = operation()
+        except BaseException as exc:
             try:
-                result = future.result(timeout=min(0.05, remaining))
-                token.raise_if_cancelled()
-                return result
-            except FutureTimeout:
-                continue
-    finally:
-        pool.shutdown(wait=False, cancel_futures=True)
+                result.put_nowait(("error", exc))
+            except Exception:
+                pass
+            return
+        try:
+            result.put_nowait(("result", value))
+        except Exception:
+            pass
+
+    thread = Thread(
+        target=worker,
+        name="pc-executor-bounded",
+        daemon=True,
+    )
+    thread.start()
+    deadline = monotonic() + timeout_seconds
+    while True:
+        token.raise_if_cancelled()
+        remaining = deadline - monotonic()
+        if remaining <= 0:
+            token.cancel()
+            raise OperationTimeoutError(f"{label} timed out")
+        try:
+            kind, value = result.get(timeout=min(0.05, remaining))
+        except Empty:
+            continue
+        token.raise_if_cancelled()
+        if kind == "error":
+            assert isinstance(value, BaseException)
+            raise value
+        return value  # type: ignore[return-value]
