@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst prompt=\"EXECUTE NOW — INDEPENDENT RELAY FRESHNESS QA / AUTHORITY GATE.\\n\\nRepo: foto6/help-pc-2\\nWritable branch ONLY: agent/native-mcp-r28-relay-freshness-qa-20261001\\nExact starting HEAD: 75b2794821160b240c7eef1410a81fddbe795948\\n\\nIndependent QA only. Do NOT modify foto6/help-pc-1 implementation and do NOT touch live PC relay/Bridge services.\\n\\nReal incident facts to encode as fixtures:\\n- relay process chain py.exe -> python3.13.exe stayed alive;\\n- local relay HEAD remained be374169e51309bbc943f68e7965f23f53c85380 while remote advanced to e29d3746d2fbdc35b26e4b0725a63b78100a07c6;\\n- checkout clean, stderr empty;\\n- read-only capabilities.get probe not consumed;\\n- 22 request files had no result;\\n- restart restored processing of existing request IDs.\\n\\nPRIMARY GOAL:\\nBuild an independent freshness/authority gate that will reject a relay as usable when only PID presence is proven.\\n\\nRequired:\\n1. Define/extend a source-bound evidence schema for relay health/freshness: producer revision, observed local/remote refs, timestamps, backlog/result progress, current phase, journal/reconciliation state.\\n2. Gate states must distinguish usable/healthy from stale, missing evidence, and reconciliation-required.\\n3. Explicit anti-false-green rule: PID/process presence alone can never satisfy READY/HEALTHY.\\n4. Deterministic fixtures covering this exact incident, normal parent-child py->python process chain, remote unchanged/no backlog, active progressing backlog, stale remote-ahead checkout, interrupted side-effect journal.\\n5. Consumer must fail closed on stale producer evidence, mismatched producer SHA/schema, missing timestamps, impossible monotonicity, or unexplained side-effect replay.\\n6. Preserve R27 rule: no live cutover authorization, no automatic mutation/restart, no provider/process kill.\\n7. Add tests + report with exact evidence and compatibility expectations for the future help-pc-1 watchdog branch.\\n8. Do not claim integration PASS against unimplemented producer fields; report BLOCKED/WAITING_FOR_PRODUCER_SCHEMA where appropriate.\\n\\nCompletion requires substantive code/tests/report, exact SHA, exact-head CI, and clear independently reproducible PASS/BLOCKED semantics.\",id=\"9BAA48607EDE0A4DFA73EAD8396BA451\",url=\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83eb-bc98-dc74acc6e810\";\nconst sleep=ms=>new Promise(r=>setTimeout(r,ms));\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst tab=tabs.find(t=>t.id===id);\nif(!tab||tab.url!==url){process.stdout.write(JSON.stringify({ok:false,reason:\"target_mismatch\",actual:tab?.url||\"\"}));process.exit(2)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\nlet seq=1,pending=new Map();\nws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};\nconst call=(method,params={})=>new Promise((r,j)=>{const k=seq++;pending.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\nconst state=async()=>{const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});const generating=bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'));return {found:!!c,text,generating}})())\",returnByValue:true});return JSON.parse(rr.result.value)};\nconst pre=await state();\nif(!pre.found||pre.generating||pre.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:pre.generating?\"generating\":\"draft_or_no_composer\"}));process.exit(3)}\nawait call(\"Runtime.evaluate\",{expression:\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});c.focus();return true})()\",returnByValue:true});\nawait call(\"Input.insertText\",{text:prompt});await sleep(500);\nconst typed=await state();const norm=s=>String(s||\"\").replace(/\\s+/g,\" \").trim();\nif(norm(typed.text)!==norm(prompt)){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"readback_mismatch\"}));process.exit(4)}\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});\nawait sleep(900);const post=await state();ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true,started:post.generating,composerCleared:!post.text.trim()}));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":false,\"reason\":\"target_mismatch\",\"actual\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\"}",
+      "stdout_bytes": 151,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T15:38:50.582Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T15:38:50.499Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-2212-native-relay-freshness-qa"
+    },
+    "request_id": "boss-20261001-2212-native-relay-freshness-qa",
+    "started_at": "2026-10-01T15:38:49.996Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-2212-native-relay-freshness-qa",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
