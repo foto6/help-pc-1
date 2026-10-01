@@ -71,15 +71,10 @@ jobs:
           assert subprocess.run(["git","diff","--check",base,head]).returncode == 0
           print("R24 exact-base/delta PASS", head, len(changed))
           PY
-      - name: Pinned R22 producer audit remains green
+      - name: Frozen R22 action registry and native schemas are byte-identical
         shell: bash
         run: |
-          git worktree add --detach "$RUNNER_TEMP/r22-base" 7eed906976d092e3216f50b0f52e6cb422392979
-          (
-            cd "$RUNNER_TEMP/r22-base"
-            python tools/audit_native_core_final_candidate.py
-          )
-          git worktree remove "$RUNNER_TEMP/r22-base"
+          git diff --exit-code 7eed906976d092e3216f50b0f52e6cb422392979 HEAD --             src/pc_remote_transport/executor_adapter.py             src/pc_executor/operations.py             schemas/pc_executor.native_tool_capabilities.v1.schema.json             schemas/pc_executor.native_tool_request.v1.schema.json             schemas/pc_executor.native_tool_result.v1.schema.json
       - name: R24 focused runtime health and UIA bounding
         run: python -m pytest tests/test_runtime_health_r24.py tests/test_runtime_health_fixture_pack.py tests/test_runtime_hardening.py tests/test_windows_uia_adapter.py tests/test_outcome_journal.py -v -s
       - name: Windows-safe R24 UIA producer evidence
