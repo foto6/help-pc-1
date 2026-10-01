@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-uia-targeted-462320-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python",
+      "-c",
+      "import uiautomation as auto\nauto.SetGlobalSearchTimeout(2)\nroot=auto.ControlFromHandle(462320)\nprint(\"ROOT\",root.Name)\ntests=[\n    (\"address\", lambda: root.EditControl(Name=\"Address and search bar\", searchDepth=8)),\n    (\"doc\", lambda: root.DocumentControl(searchDepth=8)),\n]\nfor label,fn in tests:\n    try:\n        c=fn()\n        print(label,\"EXISTS\",c.Exists(0,0))\n        if c.Exists(0,0):\n            print(label,\"NAME\",repr(c.Name),\"AID\",repr(c.AutomationId),\"CLASS\",repr(c.ClassName),\"VALUE\",repr(c.GetValuePattern().Value if c.GetValuePattern() else None))\n            kids=c.GetChildren()\n            print(label,\"KIDS\",len(kids))\n            for k in kids[:40]:\n                print(\" \",k.ControlTypeName,repr(k.Name),repr(k.AutomationId),repr(k.ClassName))\n    except Exception as e:\n        print(label,\"ERR\",repr(e))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Targeted read-only UIAutomation inspection of Files.com Chrome window"
+}
