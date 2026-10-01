@@ -433,3 +433,102 @@ def test_watchdog_conformance_persists_future_attachment_handoff_safety_rule() -
     assert attachment["blind_large_upload_retry_allowed"] is False
     assert attachment["direct_chat_single_file_max_bytes"] == 500_000_000
     assert manifest["release_gate"] == "NO_LIVE_CUTOVER"
+
+
+def _git_blob_sha(root: Path, relative: str) -> str:
+    return subprocess.check_output(
+        ["git", "rev-parse", f"HEAD:{relative}"],
+        cwd=root,
+        text=True,
+    ).strip()
+
+
+def test_watchdog_and_health_schemas_expose_required_progress_fields() -> None:
+    root = Path(__file__).resolve().parents[1]
+    health = json.loads(
+        (root / "conformance" / "pc_relay.health.v1" / "schema.json")
+        .read_text(encoding="utf-8")
+    )
+    watchdog = json.loads(
+        (root / "conformance" / "pc_relay.watchdog_status.v1" / "schema.json")
+        .read_text(encoding="utf-8")
+    )
+
+    assert health["$id"] == HEALTH_VERSION
+    assert {
+        "last_fetch_success_at_unix",
+        "last_sync_at_unix",
+        "last_cycle_completed_at_unix",
+        "last_request_processed_at_unix",
+        "last_request_processed_id",
+        "last_result_published_at_unix",
+        "last_result_published_id",
+        "local_head",
+        "remote_head",
+        "remote_head_observed_at_unix",
+        "backlog_count",
+        "last_backlog_change_at_unix",
+        "backlog_high_watermark",
+        "reconciliation_required",
+    } <= set(health["required"])
+    assert "request_processed" in health["properties"]["phase"]["enum"]
+    assert watchdog["$id"] == "pc_relay.watchdog_status.v1"
+    assert {
+        "PROCESS_MISSING",
+        "PROCESS_EXISTS",
+        "HEALTHY",
+        "STALE",
+        "RECONCILIATION_REQUIRED",
+        "DUPLICATE_AMBIGUOUS",
+    } == set(watchdog["properties"]["state"]["enum"])
+
+
+def test_conformance_manifests_pin_current_producer_blobs() -> None:
+    root = Path(__file__).resolve().parents[1]
+    manifests = [
+        json.loads(
+            (root / "conformance" / "pc_relay.health.v1" / "manifest.json")
+            .read_text(encoding="utf-8")
+        ),
+        json.loads(
+            (root / "conformance" / "pc_relay.watchdog_status.v1" / "manifest.json")
+            .read_text(encoding="utf-8")
+        ),
+    ]
+
+    for manifest in manifests:
+        blobs = manifest["producer_blobs"]
+        for item in blobs.values():
+            assert _git_blob_sha(root, item["path"]) == item["git_blob_sha1"], item["path"]
+
+
+def test_status_probe_does_not_perform_network_fetch_or_queue_mutation(
+    monkeypatch,
+    tmp_path: Path,
+) -> None:
+    calls: list[tuple[str, ...]] = []
+
+    def fake_run_git(repo, *args, check=True):
+        calls.append(tuple(args))
+        if args[:2] == ("rev-parse", "HEAD"):
+            return subprocess.CompletedProcess([], 0, "a" * 40 + "\n", "")
+        if args[:2] == ("rev-parse", "origin/agent/pc-github-relay"):
+            return subprocess.CompletedProcess([], 0, "a" * 40 + "\n", "")
+        if args[:2] == ("ls-tree", "-r"):
+            return subprocess.CompletedProcess([], 0, "", "")
+        raise AssertionError(f"unexpected git operation from status: {args}")
+
+    monkeypatch.setattr(relay_module, "_run_git", fake_run_git)
+    snapshot = _health(now=70_000.0)
+    status = build_watchdog_status(
+        tmp_path,
+        snapshot=snapshot,
+        observed_processes=["15056:4612", "4612:1000"],
+        now_unix=70_000.0,
+    )
+
+    assert status["state"] == "HEALTHY"
+    assert all(call[0] not in {"fetch", "pull", "push", "reset", "checkout", "rebase"} for call in calls)
+    assert status["observations"]["remote_observation_source"] == (
+        "local_remote_tracking_ref_no_network"
+    )
