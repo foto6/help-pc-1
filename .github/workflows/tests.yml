@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - agent/pc-executor
+      - agent/pc-relay-stale-sync-watchdog-20261001
   workflow_dispatch:
 
 jobs:
