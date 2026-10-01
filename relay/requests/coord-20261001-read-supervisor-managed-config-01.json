@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-read-supervisor-managed-config-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; if(Test-Path $p){$j=Get-Content -Raw -LiteralPath $p|ConvertFrom-Json; $rows=@($j.managedChats)|Where-Object{$_.url -eq 'https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8' -or $_.chatUrl -eq 'https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8' -or $_.supervisorChatUrl -eq 'https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8'}; [pscustomobject]@{supervisorChatUrl=$j.supervisorChatUrl;managed=$rows}|ConvertTo-Json -Depth 8 -Compress}else{'{\"error\":\"config_missing\"}'}"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Read exact existing supervisor managed-chat binding from local Bridge config"
+}
