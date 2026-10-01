@@ -1,0 +1,25 @@
+EXECUTE NOW — GROWTH R13 SHORT-FORM EXPERIMENT ALLOCATOR. Continue in this SAME existing Growth chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video3
+Branch ONLY: agent/growth-r13-experiment-allocator-20261001
+Exact starting HEAD: 2633aee487b126ce97bbd0fa79b9b8b1fd76f2e7
+
+R10-R12 are green. Preserve read-only provider boundary, source provenance and exactly-once semantics.
+
+PRIMARY GOAL:
+Turn collected metrics into a bounded experiment plan for the next batch: which hook, structure, CTA, duration or edit style should be tested next.
+
+Required:
+1. Add a versioned experiment allocator contract producing advisory test cells, not publish authority.
+2. Support dimensions such as hook type, first-3s pacing, caption density, CTA, duration bucket, loop ending, B-roll density and edit style.
+3. Use only source-bound historical evidence; synthetic fixtures remain synthetic.
+4. Prevent overfitting: minimum evidence gates, holdback/control cells, exploration quota and uncertainty state.
+5. Never claim causal lift from observational metrics. Mark directional vs randomized evidence explicitly.
+6. Deduplicate experiments and prevent the same low-value test from being reissued indefinitely.
+7. Add campaign/batch allocation with bounded number of cells and per-cell sample targets.
+8. Add restart-safe durable allocator state and exactly-once seed consumption/output.
+9. Add deterministic simulation over 100 historical posts and a 12-reel next batch.
+10. Produce machine-readable experiment plan consumable by Creator without granting mutation/publish authority.
+11. NONEMPTY source/tests/docs commit, focused/full tests, exact SHA, CI and replay report.
+
+No provider mutation. No merge/release. Do not modify Creator/Media repos.
