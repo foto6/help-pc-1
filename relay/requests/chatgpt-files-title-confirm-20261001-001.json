@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-title-confirm-20261001-001",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Confirm Files.com tab is active in Firefox"
+}
