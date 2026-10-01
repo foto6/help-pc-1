@@ -423,6 +423,8 @@ def liveness_probe(
             "observed_pids": pids,
             "progress_age_seconds": None,
             "queue_progress_age_seconds": None,
+            "successful_cycle_age_seconds": None,
+            "consecutive_cycle_failures": None,
             "pending_count": None,
             "loop_generation_id": None,
             "loop_epoch": None,
@@ -436,6 +438,16 @@ def liveness_probe(
     queue = progress["queue"]
     queue_progress_age = max(0.0, current_time - float(queue["last_progress_at_unix"]))
     pending = int(queue["pending_count"])
+    last_cycle = progress["last_successful_cycle_at_unix"]
+    successful_cycle_age = max(
+        0.0,
+        current_time - float(
+            progress["process"]["started_at_unix"]
+            if last_cycle is None
+            else last_cycle
+        ),
+    )
+    cycle_failures = int(progress["consecutive_cycle_failures"])
     current_cycle = progress["current_cycle"]
     deadline = current_cycle["deadline_at_unix"]
     within_execution_deadline = (
@@ -457,6 +469,8 @@ def liveness_probe(
             state, reason = "healthy_progressing", "bounded_request_execution_in_progress"
         elif record_age > stall_after:
             state, reason = "alive_stalled", "progress_record_not_updating"
+        elif cycle_failures > 0 and successful_cycle_age > stall_after:
+            state, reason = "alive_stalled", "no_successful_cycle_with_repeated_failures"
         elif pending > 0 and queue_progress_age > stall_after:
             state, reason = "alive_stalled", "pending_queue_has_no_result_progress"
         else:
@@ -464,7 +478,11 @@ def liveness_probe(
     else:
         if within_execution_deadline:
             state, reason = "progress_record_current", "bounded_request_execution_in_progress"
-        elif record_age > stall_after or (pending > 0 and queue_progress_age > stall_after):
+        elif (
+            record_age > stall_after
+            or (cycle_failures > 0 and successful_cycle_age > stall_after)
+            or (pending > 0 and queue_progress_age > stall_after)
+        ):
             state, reason = "stalled_record", "progress_age_exceeds_bound"
         else:
             state, reason = "progress_record_current", "progress_age_within_bound"
@@ -476,6 +494,8 @@ def liveness_probe(
         "observed_pids": pids,
         "progress_age_seconds": round(record_age, 3),
         "queue_progress_age_seconds": round(queue_progress_age, 3),
+        "successful_cycle_age_seconds": round(successful_cycle_age, 3),
+        "consecutive_cycle_failures": cycle_failures,
         "pending_count": pending,
         "loop_generation_id": progress["loop_generation_id"],
         "loop_epoch": progress["loop_epoch"],
