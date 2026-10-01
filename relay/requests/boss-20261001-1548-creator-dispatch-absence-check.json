@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1548-creator-dispatch-absence-check",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst id=\"B0559FFE7843B036079007016E7351FF\";const needles=[\"CREATOR R21 PRODUCTION PUBLISH EXECUTION LAYER\",\"agent/creator-r21-publish-execution-20261001\",\"Turn the durable R12 publish-provider contract\"];\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(x=>x.id===id);const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;pending.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});const expr=\"JSON.stringify((()=>{const body=document.body?.innerText||'';const html=document.documentElement?.innerHTML||'';const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const ct=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const alerts=[...document.querySelectorAll('[role=\\\\\\\"alert\\\\\\\"],.error-message,.error-container')].filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0}).map(e=>(e.innerText||e.textContent||'').slice(0,200));return {bodyMatches:\"+JSON.stringify([\"CREATOR R21 PRODUCTION PUBLISH EXECUTION LAYER\",\"agent/creator-r21-publish-execution-20261001\",\"Turn the durable R12 publish-provider contract\"])+\".map(n=>body.includes(n)),htmlMatches:\"+JSON.stringify([\"CREATOR R21 PRODUCTION PUBLISH EXECUTION LAYER\",\"agent/creator-r21-publish-execution-20261001\",\"Turn the durable R12 publish-provider contract\"])+\".map(n=>html.includes(n)),composerEmpty:ct.trim().length===0,composerLength:ct.length,alertsCount:alerts.length,title:document.title,url:location.href}})())\";const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});ws.close();process.stdout.write(rr.result.value);\n\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only Creator existing-chat absence check before any resend; compare only task needles and composer state"
+}
