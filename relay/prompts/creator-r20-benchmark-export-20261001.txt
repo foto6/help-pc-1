@@ -1,0 +1,55 @@
+EXECUTE NOW — CREATOR R20 CANONICAL HUMAN-BENCHMARK SEMANTIC EXPORT. Continue in this SAME Creator chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video1
+Branch ONLY: agent/creator-r20-benchmark-export-20261001
+Exact starting HEAD: ec5d1d51f277e9fcb0fe609bf6f2092b3836a0e0
+
+Independent benchmark authority:
+- foto6/boss
+- branch agent/human-editing-gate-supervisor-20261001-v2
+- benchmark head e0763bebf2aad9402f8de8c60edb1b9eb8c4be8e
+- protocol boss.human_editing_gate.v1
+
+R19 content-aware MVP is green, CI 36809780328 SUCCESS.
+
+PRIMARY GOAL:
+Emit the exact benchmark-owned Creator producer contract without changing R19 semantic/editorial behavior.
+
+Required canonical file per run:
+creator.semantic_export.v1.json
+
+Required keys EXACTLY supported:
+contract_version
+repository
+commit_sha
+source_id
+source_sha256
+brief_digest
+analysis_contract
+director_report_contract
+semantic_timeline
+unavailable_evidence
+auto_style
+effective_style
+style_confidence
+edit_directives
+analysis_digest
+directives_digest
+generation_mode
+
+Required:
+1. Add a stable creator.semantic_export.v1 contract/schema + validator.
+2. Export from the R19 content-aware run without scraping test internals.
+3. Bind exact Creator commit SHA, source SHA, brief digest and semantic/directive digests.
+4. Ensure every semantic timestamp is source-bounded.
+5. Explicitly represent unavailable semantics/evidence.
+6. generation_mode must distinguish Gemini/model evidence from deterministic local fallback.
+7. Never mark fixture/model output as human ground truth.
+8. Preserve existing content-aware-run envelope and one-command UX; this is an additive benchmark export.
+9. Add real generated-video E2E proving export generation for talking-head, action and landscape/screen-like sources.
+10. Add fail-closed regressions for source SHA mismatch, out-of-bounds timestamps, missing required fields, changed commit binding.
+11. Add conformance manifest intended for boss benchmark consumer.
+12. Do NOT create a fake 30-source corpus or human ratings.
+13. NONEMPTY source/tests/docs commit, focused/full CI, exact final SHA/run IDs.
+
+No publishing, no credentials, no Media/Growth mutation, no merge/release, no Desktop Commander, no E:\manhwa.
