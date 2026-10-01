@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();process.stdout.write(JSON.stringify(tabs.filter(t=>t.type===\"page\").map(t=>({id:t.id,title:t.title,url:t.url}))))\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"4D24F5A66E2E3B781A4B81ACD42167C0\",\"title\":\"Project Agent Supervision\",\"url\":\"https://chatgpt.com/c/6abe03fa-9728-83eb-90d2-5ee81bbac12c\"},{\"id\":\"903139550E371E4327AE07E7AA5FBDAB\",\"title\":\"Project Agent Supervision\",\"url\":\"https://chatgpt.com/c/6abe03fa-9728-83eb-90d2-5ee81bbac12c\"},{\"id\":\"EFB77A02D8EBD4B3E47A600E35230743\",\"title\":\"Отчёт о прогрессе\",\"url\":\"https://chatgpt.com/c/6abcb869-5688-83ed-b750-ae5f941b88c8\"},{\"id\":\"F85160E9CD245D0085D51163204FDD58\",\"title\":\"Parity Gate Validation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab94f1d-a604-83eb-ae1b-258ac27e6544\"},{\"id\":\"0764FC84DDA0721E2581DC67E9E53957\",\"title\":\"A2 Integration Verified\",\"url\":\"https://chatgpt.com/c/6ab8bed2-8d0c-83eb-b793-8e504335a57d\"},{\"id\":\"74BDC2B5E97107BBA7ACDB858F2D03BB\",\"title\":\"Разработка гуманного бенчмарка\",\"url\":\"https://chatgpt.com/c/6abdcea3-b724-83ed-b43b-982f00854e3c\"},{\"id\":\"66026F188DF08158917B366CF7FE29B9\",\"title\":\"A 2\",\"url\":\"https://chatgpt.com/c/6ab67022-ae5c-83ed-a654-5dcc82c3b351\"},{\"id\":\"3F220AF76D2DBBF9F18258FEA22F8108\",\"title\":\"Fix Assignment Replacement Runtime\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c\"},{\"id\":\"312D0941F3A5138C71E55254EAEBBEC8\",\"title\":\"Deliver R11 Editor\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\"},{\"id\":\"A88E3157A8078B7DA32FC62848071CC3\",\"title\":\"Bridge R19 Implementation Report\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\"},{\"id\":\"B0559FFE7843B036079007016E7351FF\",\"title\":\"Implement Publish Provider Layer\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\"},{\"id\":\"DBC6BC28E04127D1821830B232E048EB\",\"title\":\"Implement Provider Ingestion Layer\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda63c-98d8-83eb-b365-d423b7563c4b\"},{\"id\":\"9BAA48607EDE0A4DFA73EAD8396BA451\",\"title\":\"Native Connector Implementation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\"},{\"id\":\"122EC0EABA370B9F54EFA5080C379A52\",\"title\":\"Web AI Bridge\",\"url\":\"http://127.0.0.1:17448/\"},{\"id\":\"A614D22670EE9155E5171C965844E21E\",\"title\":\"public-b · Folder · [BUGBOUNTY] foto6 test\",\"url\":\"https://bugbountyfoto6.files.com/files/public-b\"},{\"id\":\"3AB2BC0EB7B81A999FCAE7175F494B3E\",\"title\":\"ChatGPT\",\"url\":\"https://chatgpt.com/\"},{\"id\":\"AFBE61EFE13C7CBEB4BA0F75C8C2CA64\",\"title\":\"смешная машина - Поиск в Google\",\"url\":\"https://www.google.com/search?q=%D1%81%D0%BC%D0%B5%D1%88%D0%BD%D0%B0%D1%8F+%D0%BC%D0%B0%D1%88%D0%B8%D0%BD%D0%B0&sca_esv=f3de7034d550a016&udm=2&biw=1920&bih=945&sxsrf=APpeQnuOScXrDYAJpLBuKQqbtGVAWOJUCw%3A1790817069891&ei=LbO9aoP9NfXj7_UP5d3m0AI&ved=2ahUKEwjDx7u60ZeXAxX18bsIHeWuGSoQ4dUDegQIBhAN&uact=5&oq=%D1%81%D0%BC%D0%B5%D1%88%D0%BD%D0%B0%D1%8F+%D0%BC%D0%B0%D1%88%D0%B8%D0%BD%D0%B0&gs_lp=Egtnd3Mtd2l6LWltZyIb0YHQvNC10YjQvdCw0Y8g0LzQsNGI0LjQvdCwMgUQABiABDIFEAAYgAQyBRAAGIAEMgQQABgeMgQQABgeMgQQABgeMgQQABgeMgQQABgeMgQQABgeMgQQABgeSKUgUJMIWJ4fcAN4AJABAJgBlAKgAfoVqgEFMC40Ljm4AQPIAQD4AQGYAhCgAs4WwgIKEAAYgAQYigUYQ8ICBhAAGAcYHsICBxAjGMkCGCeYAwCIBgGSBwUzLjQuOaAH_UuyBwUwLjQuObgHuhbCBwYwLjMuMTPIBz6ACAE&sclient=gws-wiz-img\"}]",
+      "stdout_bytes": 3393,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T15:41:40.982Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T15:41:40.915Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-2340-refresh-chat-tabs"
+    },
+    "request_id": "boss-20261001-2340-refresh-chat-tabs",
+    "started_at": "2026-10-01T15:41:40.488Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-2340-refresh-chat-tabs",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
