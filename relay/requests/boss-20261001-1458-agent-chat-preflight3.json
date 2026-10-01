@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1458-agent-chat-preflight3",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$code=@'\n\nconst targets=[\n{name:\"media\",id:\"312D0941F3A5138C71E55254EAEBBEC8\"},\n{name:\"bridge\",id:\"A88E3157A8078B7DA32FC62848071CC3\"},\n{name:\"creator_publish\",id:\"B0559FFE7843B036079007016E7351FF\"},\n{name:\"growth\",id:\"DBC6BC28E04127D1821830B232E048EB\"},\n{name:\"pc_executor\",id:\"F85160E9CD245D0085D51163204FDD58\"},\n{name:\"native_mcp\",id:\"9BAA48607EDE0A4DFA73EAD8396BA451\"}];\nconst tabs=await (await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nasync function inspect(t){\n const tab=tabs.find(x=>x.id===t.id); if(!tab)return {name:t.name,found:false};\n const ws=new WebSocket(tab.webSocketDebuggerUrl); await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\n let seq=1; const pending=new Map();\n ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};\n const call=(method,params={})=>new Promise((r,j)=>{const id=seq++;pending.set(id,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id,method,params}))});\n const expr=\"JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const c=[document.querySelector('#prompt-textarea'),...document.querySelectorAll('textarea'),...document.querySelectorAll('[contenteditable=\\\"true\\\"]')].find(vis)||null;let d='';if(c){d=('value'in c?c.value:(c.innerText||c.textContent||''))||''};const bs=[...document.querySelectorAll('button')].filter(vis);const stop=bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'));const send=bs.find(b=>(b.getAttribute('data-testid')||'').includes('send')||b.id==='composer-submit-button'||(b.getAttribute('aria-label')||'').toLowerCase().includes('send'));return {title:document.title,url:location.href,composerFound:!!c,draftEmpty:d.trim().length===0,draftLength:d.length,stopFound:stop,sendFound:!!send,sendDisabled:send?!!send.disabled:null}})())\";\n const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});\n ws.close();\n if(rr.exceptionDetails)return {name:t.name,found:true,error:rr.exceptionDetails.text,description:rr.result&&rr.result.description};\n return {name:t.name,found:true,...JSON.parse(rr.result.value)};\n}\nconst out=[];for(const t of targets){try{out.push(await inspect(t))}catch(e){out.push({name:t.name,error:String(e.message||e)})}}\nprocess.stdout.write(JSON.stringify(out));\n\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only ASCII-safe CDP idle/composer preflight of existing agent chats"
+}
