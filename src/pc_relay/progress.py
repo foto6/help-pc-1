@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import threading
 import time
 from pathlib import Path
@@ -64,6 +65,18 @@ def _atomic_json(path: Path, payload: dict[str, Any]) -> None:
 
 def _bounded_text(value: object, limit: int = MAX_ERROR_CHARS) -> str:
     text = str(value).replace("\r", " ").replace("\n", " ")
+    # Git diagnostics may echo credential-bearing remotes. Keep health safe for
+    # read-only inspection without publishing URL userinfo or secret-like values.
+    text = re.sub(
+        r"([A-Za-z][A-Za-z0-9+.-]*://)[^/@\\s]+@",
+        r"\\1<redacted>@",
+        text,
+    )
+    text = re.sub(
+        r"(?i)\\b(token|password|authorization|credential)\\s*[:=]\\s*[^\\s]+",
+        r"\\1=<redacted>",
+        text,
+    )
     return text[:limit]
 
 
@@ -207,7 +220,6 @@ class RelayProgress:
     def start_cycle(self) -> None:
         self._record["loop_epoch"] += 1
         self._record["current_cycle"]["started_at_unix"] = self.clock()
-        self._record["last_error"] = None
         self._touch("publishing_pending")
 
     def state(self, value: str, *, deadline_at_unix: float | None = None) -> None:
