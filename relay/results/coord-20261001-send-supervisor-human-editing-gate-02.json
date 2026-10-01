@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "node .\\data\\direct_send_existing_agent.js --target=97152F10665B323368CE6A55368AAC5F --prompt=E:\\pc-github-relay\\relay\\prompts\\supervisor-human-level-editing-gate-20261001-v2.txt"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Error: target tab missing 97152F10665B323368CE6A55368AAC5F\n    at E:\\WebAIBridge\\app\\data\\direct_send_existing_agent.js:7:96\n    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)\n",
+      "stderr_bytes": 208,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T02:53:12.957Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T02:53:12.904Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-send-supervisor-human-editing-gate-02"
+    },
+    "request_id": "coord-20261001-send-supervisor-human-editing-gate-02",
+    "started_at": "2026-10-01T02:53:12.374Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-send-supervisor-human-editing-gate-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
