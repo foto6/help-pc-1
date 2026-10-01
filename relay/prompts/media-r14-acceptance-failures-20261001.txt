@@ -1,0 +1,35 @@
+CONTINUE CURRENT MEDIA R14 MILESTONE — SAME existing Media chat, SAME branch, no new chat.
+
+Repo: foto6/video2
+Branch: agent/media-r14-realworld-acceptance-20261001
+Current observed head: 2188708f214a0546a656b31b80ddc2a067ff7f0b
+Observed workflow: 36808124205
+
+Coordinator verified:
+- node-test full preserved suite SUCCESS.
+- clean_podcast acceptance passes for talking-head, fast-motion, landscape-reframe, low-motion, speech-music, B-roll.
+- current failing R14 acceptance jobs are concentrated in aggressive_shortform:
+  fast-motion, landscape-reframe, subtitle-heavy, low-motion, speech-music, B-roll.
+- subtitle-heavy clean_podcast also failed.
+
+EXECUTE NOW:
+1. Inspect exact logs/artifacts for each failing matrix job; do not guess.
+2. Classify each failure as:
+   true editor defect,
+   acceptance metric/threshold defect,
+   fixture-generation defect,
+   or legitimate WARN/non-hard subjective issue.
+3. Fix only justified defects. Do NOT weaken technical QA or delete difficult cases merely to turn CI green.
+4. If aggressive_shortform violates objective guardrails for particular content, auto-degrade/bound the effect or return a truthful acceptance WARN where the issue is subjective; preserve hard failures for real technical defects.
+5. Specifically verify:
+   motion/cut density on fast-motion and low-motion,
+   crop/safe-area on landscape-reframe,
+   text density/overlap on subtitle-heavy,
+   audio ducking/loudness on speech-music,
+   B-roll source/timing correctness on B-roll.
+6. Every case must still emit MP4 + probe + QA + creative-quality + preview/contact sheet even when subjective WARNs exist, unless a hard technical disqualifier makes artifact use unsafe.
+7. Add regressions for every root cause actually fixed.
+8. Re-run full R14 matrix and preserved R13/R12/R11/full suite.
+9. Require exact-head CI SUCCESS before completion. If a case remains legitimately blocked, document exact evidence and leave HUMAN_LEVEL/real-world readiness blocked rather than hiding it.
+
+No publishing, no credentials, no merge/release, no Desktop Commander, no E:\manhwa.
