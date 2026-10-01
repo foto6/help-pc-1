@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "\n$ErrorActionPreference='Stop'\n$roots=@('E:\\pc-github-relay','E:\\help-pc-1')\nforeach($r in $roots){\n  if(Test-Path $r){\n    Write-Output \"=== $r ===\"\n    Get-ChildItem $r -Force | Select-Object Name,FullName,PSIsContainer | Format-Table -AutoSize\n  }\n}\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "=== E:\\pc-github-relay ===\r\n\r\nName                 FullName                                PSIsContainer\r\n----                 --------                                -------------\r\n.git                 E:\\pc-github-relay\\.git                          True\r\n.github              E:\\pc-github-relay\\.github                       True\r\n.pc-relay            E:\\pc-github-relay\\.pc-relay                     True\r\n.pytest_cache        E:\\pc-github-relay\\.pytest_cache                 True\r\ndocs                 E:\\pc-github-relay\\docs                          True\r\nrelay                E:\\pc-github-relay\\relay                         True\r\nsrc                  E:\\pc-github-relay\\src                           True\r\ntests                E:\\pc-github-relay\\tests                         True\r\ntools                E:\\pc-github-relay\\tools                         True\r\n.gitattributes       E:\\pc-github-relay\\.gitattributes               False\r\n.gitignore           E:\\pc-github-relay\\.gitignore                   False\r\npyproject.toml       E:\\pc-github-relay\\pyproject.toml               False\r\nREADME.md            E:\\pc-github-relay\\README.md                    False\r\nSTART_PC_CONTROL.cmd E:\\pc-github-relay\\START_PC_CONTROL.cmd         False\r\n\r\n\r\n",
+      "stdout_bytes": 1250,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T02:05:57.062Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T02:05:57.016Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-pccontrol-docs-shallow-20261001-001"
+    },
+    "request_id": "chatgpt-pccontrol-docs-shallow-20261001-001",
+    "started_at": "2026-10-01T02:05:56.627Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-pccontrol-docs-shallow-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
