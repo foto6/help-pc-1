@@ -8,6 +8,7 @@ from pathlib import Path
 import pytest
 
 from pc_executor.cancellation import CancellationToken
+from pc_executor.context_binding import binding_from_uia_element
 from pc_executor.errors import OperationCancelledError, OperationTimeoutError
 from pc_executor.executor import Executor
 from pc_executor.models import ActionRequest, ElementInfo, Rect
@@ -92,6 +93,38 @@ class SlowCooperativeUIA:
             cancellation=cancellation,
             deadline_monotonic=deadline_monotonic,
         )
+
+
+class UncooperativeUIA:
+    """Synthetic native-call stand-in that deliberately ignores cancellation."""
+
+    def __init__(self) -> None:
+        self.inspect_calls = 0
+        self.effect_calls = 0
+
+    def _slow_info(self):
+        self.inspect_calls += 1
+        time.sleep(0.25)
+        return _element()
+
+    def inspect(self, query):
+        return self._slow_info()
+
+    def invoke(self, query):
+        self.effect_calls += 1
+        raise AssertionError("UIA effect must not dispatch after stale/bounded validation")
+
+    def focus(self, query):
+        self.effect_calls += 1
+        raise AssertionError("UIA focus must not dispatch")
+
+    def set_value(self, query, value, *, sensitive=False):
+        self.effect_calls += 1
+        raise AssertionError("UIA set_value must not dispatch")
+
+    def snapshot(self, *, window_title=None):
+        time.sleep(0.25)
+        raise AssertionError("uncooperative snapshot should be abandoned by caller deadline")
 
 
 class FastWindows:
@@ -402,6 +435,59 @@ def test_health_probe_timeout_does_not_cancel_parent_or_skip_windows(tmp_path: P
     assert runtime["adapters"]["windows"]["state"] == "responsive"
     assert elapsed < 0.75
 
+
+
+def test_uia_context_binding_is_bounded_before_remote_dispatch(tmp_path: Path):
+    uia = UncooperativeUIA()
+    executor = _executor(tmp_path, uia=uia)
+    request = _request(
+        "uia.invoke",
+        {"query": {"automation_id": "r24"}},
+        rid="bind-timeout",
+        timeout_ms=30,
+    )
+
+    started = time.monotonic()
+    with pytest.raises(OperationTimeoutError):
+        executor.bind_execution_context(request)
+    elapsed = time.monotonic() - started
+
+    assert elapsed < 0.15
+    assert uia.effect_calls == 0
+    # A wedged UIA worker is daemon-isolated; unrelated lanes remain usable.
+    windows = executor.execute(
+        _request("windows.list", rid="bind-timeout-windows", timeout_ms=100)
+    )
+    assert windows.ok
+
+
+def test_uia_context_revalidation_timeout_is_not_started_and_no_effect(tmp_path: Path):
+    uia = UncooperativeUIA()
+    executor = _executor(tmp_path, uia=uia)
+    binding = binding_from_uia_element(
+        request_id="revalidate-timeout",
+        action="uia.invoke",
+        element=_element(),
+    ).to_dict()
+    request = _request(
+        "uia.invoke",
+        {"query": {"automation_id": "r24"}},
+        rid="revalidate-timeout",
+        timeout_ms=30,
+    )
+    request.execution_context_binding = binding
+
+    started = time.monotonic()
+    result = executor.execute(request)
+    elapsed = time.monotonic() - started
+
+    assert elapsed < 0.15
+    assert result.status == "timeout"
+    assert result.error_kind == "timeout"
+    assert result.outcome_evidence is not None
+    assert result.outcome_evidence.effect_state == "not_started"
+    assert result.outcome_evidence.dispatch_started is False
+    assert uia.effect_calls == 0
 
 def test_r22_native_registry_action_inventory_not_changed_by_runtime_health():
     from pc_executor.operations import OPS_ACTIONS
