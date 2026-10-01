@@ -1,0 +1,12 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-reconcile-real-supervisor-index-01",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "coord-20261001-find-real-supervisor-from-index-01",
+    "action": "shell.run",
+    "execution_attempt": 1
+  },
+  "timeout_ms": 10000,
+  "note": "Reconcile timed-out local chat index read; do not replay"
+}
