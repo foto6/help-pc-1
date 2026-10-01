@@ -1,0 +1,23 @@
+EXECUTE NOW — GROWTH R11 REAL PROVIDER METRICS INGESTION LAYER. Produce implementation and evidence.
+
+Writable repo ONLY: foto6/video3
+Branch ONLY: agent/growth-r11-provider-ingest-20261001
+Exact starting HEAD: 7209a2a9033c4ced0690b8311e6f1661681e7ca2
+
+R10 feedback loop is green and already consumed by Creator R11. Preserve its contracts and exactly-once semantics.
+
+PRIMARY GOAL: make real post-publication metric collection pluggable and durable without provider mutation.
+
+Required:
+1. Add a versioned read-only provider adapter boundary for Instagram Reels, TikTok and YouTube Shorts style metrics/export sources.
+2. Support pagination, rate-limit/backoff, partial windows, delayed metrics, provider revisions and unavailable fields without fabricating zeros.
+3. Normalize adapter output into the existing growth.shortform_platform_metrics.v1 contract with exact provenance, captured_at, window bounds, source identity and raw export digest.
+4. Provider adapters are read-only only. No publish/delete/edit/account mutation.
+5. Add credential-reference plumbing without storing secrets in fixtures/ledger.
+6. Add mocked provider fixtures for differing metric surfaces and regression tests proving unsupported metrics remain null/unavailable.
+7. Add restart/retry tests for rate limit, partial page, duplicate page, stale export revision, out-of-order windows and lost acknowledgement.
+8. Preserve synthetic/live separation: mocked fixtures cannot become live evidence.
+9. Produce a provider-ingestion conformance manifest for Creator/Growth integration and exact source/blob hashes.
+10. NONEMPTY source/tests/docs commit; focused/full tests; exact SHA; CI; deterministic ingest replay report.
+
+No live provider mutation. No merge/release. Do not modify Creator/Media repos.
