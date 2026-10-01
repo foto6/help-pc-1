@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1442-chatgpt-cdp-tabs",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $ports=17410,17447; $out=@(); foreach($p in $ports){ try{ $tabs=Invoke-RestMethod -UseBasicParsing -Uri (\"http://127.0.0.1:$p/json/list\") -TimeoutSec 5; foreach($t in $tabs){ if(([string]$t.url) -match '^https://chatgpt\\.com/'){ $out += [pscustomobject]@{Port=$p;Id=$t.id;Title=$t.title;Url=$t.url;Type=$t.type} } } } catch { $out += [pscustomobject]@{Port=$p;Error=$_.Exception.Message} } }; $out|ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only enumerate existing ChatGPT CDP tabs on known debug ports; output only target id/title/url"
+}
