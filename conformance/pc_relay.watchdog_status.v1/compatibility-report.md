@@ -1,7 +1,7 @@
 # Stale-sync watchdog compatibility report
 
-Producer repository: `foto6/help-pc-1`  
-Development branch: `agent/pc-relay-stale-sync-watchdog-20261001`  
+Producer repository: `foto6/help-pc-1`
+Development branch: `agent/pc-relay-stale-sync-watchdog-20261001`
 Exact development base: `85877d46e2d51f5d0b1c1b35abc23f032bfedbee`
 
 ## Incident compatibility
