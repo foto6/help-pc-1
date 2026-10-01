@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst prompt=\"EXECUTE NOW — PC RELAY R27 EXACT PROGRESS-EVIDENCE DELIVERY.\\n\\nRepo: foto6/help-pc-1\\nWritable branch ONLY: agent/pc-relay-r27-evidence-delivery-20261001\\nExact starting HEAD: 96d453bcdc866bfd26c06ad88e2ec0c033fbccdd\\nR26 progress-health producer CI 36833819136 is GREEN.\\nConsumer blocker from Native MCP R26: exact pc_relay.progress.v1 / pc_relay.liveness_probe.v1 evidence exists, but an exact runtime delivery reader is not yet wired. Preserve all R26 at-most-once and UNKNOWN semantics.\\n\\nPRIMARY GOAL:\\nProvide a read-only, source-bound delivery surface that Native MCP can consume without translating/guessing fields and without mutating the live relay.\\n\\nRequired:\\n1. Add one exact read-only delivery mechanism for paired pc_relay.progress.v1 + pc_relay.liveness_probe.v1 envelopes. Prefer a local bounded file/stdio/loopback read surface that exposes only committed schema fields and source identity.\\n2. Bind evidence to exact relay startup HEAD, relay script SHA256, process instance, loop generation/epoch and observed_at.\\n3. Never expose secrets, request parameters, env vars, auth tokens or raw shell command lines.\\n4. Reading health must have zero queue/request side effects and must not acknowledge, lease, retry or replay anything.\\n5. Atomic snapshot semantics: consumer must not receive mismatched progress/liveness generations.\\n6. Stale/partial/corrupt/unknown-version evidence fails closed with explicit bounded error classification.\\n7. Add deterministic tests for concurrent writer/read, restart generation change, torn write, stale snapshot, schema drift, pending UNKNOWN effect, duplicate process ambiguity and 1000-cycle read soak.\\n8. Produce a conformance manifest/schema/binding report that future Native MCP R27 can pin exactly.\\n9. Isolated only: do not restart/repoint/replace the current live relay, do not touch E:\\\\manhwa, no Desktop Commander.\\n10. Exact-head CI and explicit NO_LIVE_CUTOVER.\\n\\nCompletion = substantive code/tests/docs, exact HEAD, exact-head CI, source-bound delivery report.\",id=\"F85160E9CD245D0085D51163204FDD58\",url=\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab94f1d-a604-83eb-ae1b-258ac27e6544\";const sleep=ms=>new Promise(r=>setTimeout(r,ms));\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===id);if(!tab||tab.url!==url){process.stdout.write(JSON.stringify({ok:false,reason:\"target_mismatch\"}));process.exit(2)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\nconst st=async()=>JSON.parse((await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});return {found:!!c,text,generating:bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'))}})())\",returnByValue:true})).result.value);\nconst pre=await st();if(!pre.found||pre.generating||pre.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"busy_or_draft\"}));process.exit(3)}\nawait call(\"Runtime.evaluate\",{expression:\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});c.focus();return true})()\",returnByValue:true});await call(\"Input.insertText\",{text:prompt});await sleep(500);\nconst typed=await st(),norm=s=>String(s||\"\").replace(/\\s+/g,\" \").trim();if(norm(typed.text)!==norm(prompt)){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"readback_mismatch\"}));process.exit(4)}\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await sleep(900);const post=await st();ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true,started:post.generating,composerCleared:!post.text.trim()}));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"submitted\":true,\"started\":false,\"composerCleared\":true}",
+      "stdout_bytes": 67,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T12:43:47.960Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T12:43:47.867Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-1955-pc-r27"
+    },
+    "request_id": "boss-20261001-1955-pc-r27",
+    "started_at": "2026-10-01T12:43:43.976Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-1955-pc-r27",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
