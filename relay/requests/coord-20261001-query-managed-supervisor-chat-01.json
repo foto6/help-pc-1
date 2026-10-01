@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-query-managed-supervisor-chat-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$r=Invoke-RestMethod -UseBasicParsing -Method Get -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats'; $r | ConvertTo-Json -Depth 8 -Compress"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Read managed chat registry to locate existing supervisor conversation"
+}
