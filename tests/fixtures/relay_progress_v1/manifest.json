@@ -1,0 +1,105 @@
+{
+  "schema": "pc_relay.progress.consumer_manifest.v1",
+  "producer_repository": "foto6/help-pc-1",
+  "producer_branch": "agent/pc-relay-r26-progress-health-20261001",
+  "source_base_sha": "4ce8901221ad994ae5b44299d6601e1c9cc6a047",
+  "progress_contract_version": "pc_relay.progress.v1",
+  "liveness_contract_version": "pc_relay.liveness_probe.v1",
+  "runtime_delivery": {
+    "progress_path": ".pc-relay/progress.v1.json",
+    "committed_to_git": false,
+    "read_only_probe": "python tools/github_relay.py --repo <dedicated-checkout> --health",
+    "launcher_consumer": "tools/start_pc_control_relay.ps1",
+    "launcher_auto_kill_on_ambiguous_ownership": false
+  },
+  "source_blobs": [
+    {
+      "path": "src/pc_relay/progress.py",
+      "git_blob_sha": "c00ccc58f75de463898cd26bb6c4cfeab25a2ca6"
+    },
+    {
+      "path": "tools/github_relay.py",
+      "git_blob_sha": "022cef2a800772c755f34a75faa76b7f54589c94"
+    },
+    {
+      "path": "tools/start_pc_control_relay.ps1",
+      "git_blob_sha": "7f0add5fb528526336a6caa1f534c2551983f653"
+    },
+    {
+      "path": "schemas/pc_relay.progress.v1.schema.json",
+      "git_blob_sha": "04b8da53f638a244a668c8f0a9be4c9b165e1c5e"
+    },
+    {
+      "path": "schemas/pc_relay.liveness_probe.v1.schema.json",
+      "git_blob_sha": "7990e850ef2c143a3d718bd15101c142feb80e1e"
+    },
+    {
+      "path": "tests/fixtures/relay_progress_v1/progress.example.json",
+      "git_blob_sha": "4025cb31ae48e0032215bd38edf1c2acaf5d90e1"
+    }
+  ],
+  "required_progress_fields": [
+    "source.repository",
+    "source.branch",
+    "source.startup_head",
+    "source.relay_script_sha256",
+    "process.pid",
+    "process.started_at_unix",
+    "process.instance_id",
+    "loop_generation_id",
+    "loop_epoch",
+    "last_fetch_success.at_unix",
+    "last_request_observed.id",
+    "last_result_committed.id",
+    "last_successful_cycle_at_unix",
+    "consecutive_cycle_failures",
+    "queue.pending_count",
+    "queue.oldest_pending_request_id",
+    "queue.oldest_pending_age_seconds",
+    "queue.last_progress_at_unix",
+    "current_cycle.state",
+    "current_cycle.updated_at_unix",
+    "current_cycle.deadline_at_unix",
+    "last_error.classification",
+    "last_error.retryable",
+    "limits.max_batch_per_cycle"
+  ],
+  "liveness_states": [
+    "healthy_progressing",
+    "alive_stalled",
+    "duplicate_processes_ambiguous",
+    "alive_ambiguous_identity",
+    "stale_record_no_process",
+    "no_process",
+    "alive_unknown",
+    "progress_record_current",
+    "stalled_record",
+    "unknown"
+  ],
+  "recovery_invariants": {
+    "transient_fetch_retries_bounded": 3,
+    "transient_push_retries_bounded": 3,
+    "queue_batch_bound": 64,
+    "dirty_result_recovery_bound_per_cycle": 64,
+    "side_effect_started_without_terminal_result": "reconciliation_required",
+    "side_effect_replay_authorized_after_liveness_recovery": false,
+    "durable_local_result_commit_ahead_of_origin": "push_without_reexecution",
+    "duplicate_result_commit_allowed": false
+  },
+  "safety": {
+    "probe_reads_request_params": false,
+    "probe_reads_environment": false,
+    "probe_reads_credentials": false,
+    "probe_enumerates_processes": false,
+    "launcher_process_observation_scope": "matching github_relay.py command lines for the configured checkout only",
+    "health_record_committed_to_git": false,
+    "protected_path_policy_unchanged": true,
+    "live_service_mutation_required": false
+  },
+  "consumer_notes": [
+    "PID presence alone is never healthy evidence.",
+    "A current heartbeat with pending queue and no result progress past the stall bound is alive_stalled.",
+    "A side-effect request left started/unknown remains reconciliation-only after relay recovery.",
+    "This contract does not authorize live cutover or automatic process termination."
+  ]
+}
