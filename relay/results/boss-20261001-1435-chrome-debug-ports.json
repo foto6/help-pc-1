@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\" | ForEach-Object { $c=[string]$_.CommandLine; if($c -match '--remote-debugging-port=(\\d+)'){ [pscustomobject]@{Pid=$_.ProcessId;DebugPort=$Matches[1];HasUserDataDir=($c -match '--user-data-dir=')} } } | Sort-Object DebugPort,Pid -Unique | ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"Pid\":1784,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":2676,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":4204,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":4244,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":4524,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":10400,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":12348,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":12736,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":13200,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":15064,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":15596,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":15740,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":18792,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":19952,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":20392,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":24164,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":24888,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":25448,\"DebugPort\":\"17410\",\"HasUserDataDir\":true},{\"Pid\":8432,\"DebugPort\":\"17447\",\"HasUserDataDir\":true},{\"Pid\":8632,\"DebugPort\":\"17447\",\"HasUserDataDir\":true},{\"Pid\":8872,\"DebugPort\":\"17447\",\"HasUserDataDir\":true},{\"Pid\":9904,\"DebugPort\":\"17447\",\"HasUserDataDir\":true},{\"Pid\":18604,\"DebugPort\":\"17447\",\"HasUserDataDir\":true},{\"Pid\":20208,\"DebugPort\":\"17447\",\"HasUserDataDir\":true},{\"Pid\":20292,\"DebugPort\":\"17447\",\"HasUserDataDir\":true},{\"Pid\":22992,\"DebugPort\":\"17447\",\"HasUserDataDir\":true},{\"Pid\":24188,\"DebugPort\":\"17447\",\"HasUserDataDir\":true}]\r\n",
+      "stdout_bytes": 1506,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T07:15:46.193Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T07:15:46.133Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-1435-chrome-debug-ports"
+    },
+    "request_id": "boss-20261001-1435-chrome-debug-ports",
+    "started_at": "2026-10-01T07:15:45.585Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-1435-chrome-debug-ports",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
