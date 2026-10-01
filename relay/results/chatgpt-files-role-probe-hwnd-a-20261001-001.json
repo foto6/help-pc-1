@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "\n$ErrorActionPreference='Stop'\nAdd-Type @\"\nusing System;\nusing System.Runtime.InteropServices;\npublic static class Win32Focus {\n  [DllImport(\"user32.dll\")] public static extern bool SetForegroundWindow(IntPtr hWnd);\n  [DllImport(\"user32.dll\")] public static extern IntPtr GetForegroundWindow();\n}\n\"@\nAdd-Type -AssemblyName System.Windows.Forms\n$hwnd=[IntPtr]67948\nif(-not [Win32Focus]::SetForegroundWindow($hwnd)){ throw 'SetForegroundWindow failed' }\nStart-Sleep -Milliseconds 500\n$fg=[Win32Focus]::GetForegroundWindow()\nWrite-Output (\"foreground=\" + $fg.ToInt64())\nif($fg.ToInt64() -ne 67948){ throw \"Foreground mismatch: $($fg.ToInt64())\" }\n[System.Windows.Forms.SendKeys]::SendWait('^l')\nStart-Sleep -Milliseconds 150\n[System.Windows.Forms.SendKeys]::SendWait('https://bugbountyfoto6.files.com/ui/users')\n[System.Windows.Forms.SendKeys]::SendWait('{ENTER}')\nStart-Sleep -Seconds 3\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "SetForegroundWindow failed\r\n��ப�:13 ����:52\r\n+ ... s]::SetForegroundWindow($hwnd)){ throw 'SetForegroundWindow failed' }\r\n+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (SetForegroundWindow failed:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : SetForegroundWindow failed\r\n \r\n",
+      "stderr_bytes": 366,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T02:05:04.877Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T02:05:04.830Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-files-role-probe-hwnd-a-20261001-001"
+    },
+    "request_id": "chatgpt-files-role-probe-hwnd-a-20261001-001",
+    "started_at": "2026-10-01T02:05:04.093Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-files-role-probe-hwnd-a-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
