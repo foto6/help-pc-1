@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$r=@(Get-NetTCPConnection -State Listen -LocalPort 17448 -ErrorAction SilentlyContinue); $owners=@($r|Select-Object -ExpandProperty OwningProcess -Unique); [pscustomobject]@{port=17448;listenerCount=$r.Count;owners=$owners}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"port\":17448,\"listenerCount\":1,\"owners\":[14276]}\r\n",
+      "stdout_bytes": 51,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T15:38:31.756Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T15:38:31.686Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-2100-bridge17448-owner"
+    },
+    "request_id": "boss-20261001-2100-bridge17448-owner",
+    "started_at": "2026-10-01T15:38:29.042Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-2100-bridge17448-owner",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
