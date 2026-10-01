@@ -1,0 +1,35 @@
+CONTINUE CURRENT CREATOR R18 — FIX EXACT CI FAILURE, THEN ADD CONCRETE GEMINI VIDEO PROVIDER. SAME chat/branch only.
+
+Repo: foto6/video1
+Branch: agent/creator-r18-semantic-director-20261001
+Current observed head: f8bf7829fe3cc45e17cb1e5b0a4bfa1532305f7d
+Failed workflow: 36806950457
+
+Coordinator evidence:
+- focused-r11/r12/r13/r14/r15/r16/r17 jobs all passed.
+- focused-r18 job 110193305684 FAILED at "Run Creator R18 semantic director tests".
+- full job 110193305501 FAILED at "Run full unit test suite".
+- Do not weaken tests or remove R18 coverage.
+
+Phase A — repair:
+1. Reproduce exact R18/full failures locally/CI and identify root cause.
+2. Apply smallest justified fix.
+3. Add regression for exact failure.
+4. Require exact-head focused R18 + full CI SUCCESS before calling base semantic director green.
+
+Phase B — concrete real video VLM provider (only after Phase A base is green):
+1. Implement optional Google Gemini native-video semantic provider, not merely another interface.
+2. Enable only via explicit GEMINI_API_KEY plus configurable GEMINI_MODEL. Never commit/log credentials.
+3. Accept real local MP4 through Gemini video input. For short-form use bounded static processing with configurable FPS/clips; optionally support agentic mode for longer/complex clips when the configured model supports it.
+4. Request strict structured JSON matching creator.semantic_video_analysis.r18.v1 with timestamped events/evidence/confidence.
+5. Validate all returned time ranges against ffprobe duration; reject malformed/out-of-range evidence.
+6. Keep deterministic evidence and model observations distinct; provenance must include provider/model/mode/request digest.
+7. Bound upload polling/retries/timeouts; fail explicitly to provider_unavailable/provider_timeout/provider_invalid_output and use labeled fallback only when policy allows.
+8. No auth headers/API keys in logs or artifacts. Clean remote file handles where API allows.
+9. CI must use fake transport only; no paid network call.
+10. Add opt-in live smoke command that runs only when credentials are explicitly present.
+11. Prove that a provider response changes semantic timeline/director decisions and actual Media creative-plan digest versus no-provider fallback.
+12. HUMAN_LEVEL remains UNPROVEN.
+
+Keep model configurable; do not freeze a moving model name as permanent default.
+No publishing, no merge/release, no Media/Growth mutation, no Desktop Commander, no E:\manhwa.
