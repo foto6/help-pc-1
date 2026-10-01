@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-send-media-r13-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "node .\\data\\direct_send_existing_agent.js --target=312D0941F3A5138C71E55254EAEBBEC8 --prompt=E:\\pc-github-relay\\relay\\prompts\\media-r13-creator-compat-20261001.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Reuse existing Media chat; no new chat"
+}
