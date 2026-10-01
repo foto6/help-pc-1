@@ -1,0 +1,23 @@
+EXECUTE NOW — CREATOR R12 DURABLE PUBLISH PROVIDER LAYER. Build implementation and evidence.
+
+Writable repo ONLY: foto6/video1
+Branch ONLY: agent/creator-r12-publish-providers-20261001
+Exact starting HEAD: 763571604b6373f8886eced393d3a8fdc545e80f
+
+R11 is already green and pinned to Growth R10. Media R11 is still unavailable, so preserve the R11 fail-closed Media boundary. Do NOT fake a Media success.
+
+PRIMARY GOAL: make the post-render side ready for fully autonomous Reels/Shorts/TikTok publishing once credentials/provider authorization exist.
+
+Required:
+1. Add a versioned PublishProvider contract for instagram_reels, tiktok, youtube_shorts with prepare/submit/recover/status semantics and durable idempotency.
+2. Provider adapters must keep secrets outside the durable ledger. Store only credential references/authorization lineage, never tokens/passwords/Authorization headers.
+3. Support asynchronous provider flows: create/upload container/session, poll processing, publish/commit, recover after lost acknowledgement, and terminal provider receipt.
+4. Guarantee at-most-one logical publish per Creator publish idempotency key, including crash between provider side effect and local acknowledgement.
+5. Add provider capability gating so unsupported account/media combinations fail before side effect.
+6. Add mocked conformance adapters/fixtures for all three platforms. CI MUST NOT publish live.
+7. Bind provider receipt to exact Media content SHA, platform/account/destination, caption/CTA, release.authorization.v1 and expiry.
+8. Add operator-visible states: waiting_for_credentials, waiting_for_provider_processing, recoverable_unknown, published, failed_terminal.
+9. Keep Growth handoff source-bound: only validated provider receipts may produce live-performance-claim-eligible handoff.
+10. NONEMPTY source/tests/docs commit; focused/full tests; exact SHA; CI; deterministic crash/lost-ack replay evidence.
+
+No live publishing. No secrets. No merge/release. Do not modify Media/Growth repos.
