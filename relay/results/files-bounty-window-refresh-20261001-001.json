@@ -1,0 +1,101 @@
+{
+  "action": "windows.list",
+  "executor_result": {
+    "action": "windows.list",
+    "data": {
+      "windows": [
+        {
+          "app_name": null,
+          "hwnd": 66670,
+          "pid": 10932,
+          "title": "Discord Updater",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 198624,
+          "pid": 12744,
+          "title": "FilesCom — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 65782,
+          "pid": 12744,
+          "title": "Program Manager",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 14158676,
+          "pid": 25564,
+          "title": "reloadcG.txt — Блокнот",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 459356,
+          "pid": 15736,
+          "title": "Диспетчер задач",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 197020,
+          "pid": 13788,
+          "title": "Интерфейс ввода Windows",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 5311122,
+          "pid": 18064,
+          "title": "Командная строка",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 133168,
+          "pid": 18092,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 527046,
+          "pid": 19444,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 66522,
+          "pid": 12212,
+          "title": "Подать заявление о выплате — Mozilla Firefox",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 67948,
+          "pid": 4244,
+          "title": "смешная машина - Поиск в Google - Google Chrome",
+          "visible": true
+        }
+      ]
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T01:21:02.577Z",
+    "ok": true,
+    "request_id": "files-bounty-window-refresh-20261001-001",
+    "started_at": "2026-10-01T01:21:02.575Z",
+    "status": "completed"
+  },
+  "id": "files-bounty-window-refresh-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
