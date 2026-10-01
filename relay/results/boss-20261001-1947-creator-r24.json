@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst prompt=\"EXECUTE NOW — CREATOR R24 EXACT-PIN CLOSED-LOOP RUNNER.\\n\\nRepo: foto6/video1\\nWritable branch ONLY: agent/creator-r24-exact-pin-closed-loop-20261001\\nExact starting HEAD: 8914a1207241115a9cb9e1d666a3cf6955ec4190\\n\\nAccepted exact-green dependencies:\\n- Media R15: foto6/video2@a17f782da8144d1e890ac83195396a3192df93c2, CI 36860193113\\n- Growth R18: foto6/video3@2d3bf275c5b456d53384073fb7ec1ed992e6b996, CI 36859378847\\nCreator R22/R23 are green. Preserve all contracts and safety.\\n\\nPRIMARY GOAL:\\nProvide one command that executes a real artifact closed-loop rehearsal from source video + brief through 2-4 candidates, Media renders, Growth decision, max 2 targeted re-edit rounds, final bundle, and R23 editor-to-publish handoff preparation — with no real provider side effect.\\n\\nRequired:\\n1. Exact dependency manifest pins Media R15 and Growth R18 by immutable SHA plus contract manifests; moving refs fail closed.\\n2. Runner accepts explicit checkout/tool paths and exchanges only versioned artifacts; no cross-repo mutation.\\n3. Use real Media-generated MP4s and real media.render_export.v1 artifacts; no fake renders.\\n4. Consume Growth candidate decision output; preserve winner/tie/insufficient_evidence/human_review_required semantics.\\n5. Max 2 re-edit rounds enforced at runtime and replay.\\n6. Exact source/semantic/candidate/render/decision/final-bundle lineage with digest checks at every boundary.\\n7. Restart/resume/lost-ACK/duplicate/stale artifact/wrong producer SHA/out-of-order decision tests.\\n8. Produce a closed_loop_rehearsal.v1 report and final publish-handoff-ready bundle only for eligible terminal winner.\\n9. No live social post, credentials, CAPTCHA/2FA or provider mutation.\\n10. Exact-head CI plus source-bound readiness report.\\n\\nCompletion = substantive commits, exact HEAD, exact-head CI and one reproducible real-artifact rehearsal.\",id=\"B0559FFE7843B036079007016E7351FF\",url=\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\";const sleep=ms=>new Promise(r=>setTimeout(r,ms));\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===id);if(!tab||tab.url!==url){process.stdout.write(JSON.stringify({ok:false,reason:\"target_mismatch\"}));process.exit(2)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\nconst st=async()=>JSON.parse((await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});return {found:!!c,text,generating:bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'))}})())\",returnByValue:true})).result.value);\nconst pre=await st();if(!pre.found||pre.generating||pre.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"busy_or_draft\"}));process.exit(3)}\nawait call(\"Runtime.evaluate\",{expression:\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});c.focus();return true})()\",returnByValue:true});await call(\"Input.insertText\",{text:prompt});await sleep(500);\nconst typed=await st(),norm=s=>String(s||\"\").replace(/\\s+/g,\" \").trim();if(norm(typed.text)!==norm(prompt)){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"readback_mismatch\"}));process.exit(4)}\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await sleep(900);const post=await st();ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true,started:post.generating,composerCleared:!post.text.trim()}));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"submitted\":true,\"started\":false,\"composerCleared\":true}",
+      "stdout_bytes": 67,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T12:42:04.952Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T12:42:04.871Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-1947-creator-r24"
+    },
+    "request_id": "boss-20261001-1947-creator-r24",
+    "started_at": "2026-10-01T12:42:01.165Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-1947-creator-r24",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
