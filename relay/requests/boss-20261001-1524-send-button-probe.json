@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1524-send-button-probe",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst targetId=\"A88E3157A8078B7DA32FC62848071CC3\";\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(x=>x.id===targetId);const sleep=ms=>new Promise(r=>setTimeout(r,ms));\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const id=seq++;pending.set(id,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id,method,params}))});\nconst clear=\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});if(!c)return false;c.focus();if('value'in c)c.value='';else c.textContent='';c.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'deleteContentBackward',data:null}));return true})()\";\nawait call(\"Runtime.evaluate\",{expression:clear,returnByValue:true});await call(\"Input.insertText\",{text:\"dispatch-probe\"});await sleep(1200);\nconst expr=\"JSON.stringify([...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0}).map(b=>({id:b.id||'',testid:b.getAttribute('data-testid')||'',aria:(b.getAttribute('aria-label')||'').slice(0,80),cls:String(b.className||'').slice(0,120),disabled:!!b.disabled,ariaDisabled:b.getAttribute('aria-disabled')||'',text:(b.textContent||'').trim().slice(0,60)})).filter(x=>/send|submit|stop|composer/i.test(x.id+' '+x.testid+' '+x.aria+' '+x.cls+' '+x.text)).slice(0,20))\";\nconst rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});await call(\"Runtime.evaluate\",{expression:clear,returnByValue:true});ws.close();process.stdout.write(rr.result.value);\n\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Harmless existing-chat send-button DOM probe; inserts unsent probe text then clears"
+}
