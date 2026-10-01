@@ -1,0 +1,26 @@
+EXECUTE NOW — BRIDGE R19 ASSIGNMENT API + STALE MANAGED CHAT RELIABILITY MILESTONE. Do not deploy live.
+
+Writable repo ONLY: foto6/WebAIBridge
+Branch ONLY: agent/bridge-assignment-r19-20261001
+Exact starting HEAD: 1a13fe49e9e600da6ac540b6bbdd46aca7a45671
+
+R18 duplicate-tab routing is green. Preserve it.
+
+NEW OBSERVED LIVE DEFECTS:
+- POST /api/supervisor-watchdog/managed-chats/:id/assignments repeatedly took ~18s then the HTTP client connection failed; reconciliation of state.json showed ZERO assignments created.
+- Old managed agent-creator points to conversation 6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6. The page opens but composer=false, so repeated delivery attempts reopen a dead/stale chat.
+- After reboot, direct CDP/project-root delivery is reliable, but managed assignment API is not.
+
+Required:
+1. Reproduce the assignment POST hang/failure deterministically and identify the synchronous blocking path.
+2. Make assignment creation durable + idempotent and return promptly after persistence; browser/composer dispatch must not block the HTTP request lifecycle.
+3. Move dispatch to a bounded background/maintenance step with explicit queued -> dispatching -> awaiting_evidence / blocked transitions.
+4. Add exact idempotency regression: same key/same payload returns same assignment; same key/different payload fails closed.
+5. Detect stale managed bindings: existing tab/page with missing composer must become stale_binding, not repeated /json/new.
+6. Add bounded recovery semantics: one explicit replacement/rotation attempt per recovery epoch only when a configured project/profile replacement path exists; otherwise block with actionable evidence.
+7. Add a migration/rebind path for legacy managed chats with blank projectId without silently mutating live config.
+8. Add endpoint tests for response latency/boundedness, restart, duplicate POST, stale chat, missing target, provider load error, and R18 tab-open guard interaction.
+9. Produce deterministic soak/replay proving bounded tab count AND bounded HTTP response time under 100 repeated assignment submissions.
+10. NONEMPTY source/tests/docs commit; targeted/full tests; exact SHA; CI; report changed files and blocker list.
+
+HARD RULE: isolated branch only. NO live deploy, restart, repoint, or config mutation. No Desktop Commander. Do not access E:\manhwa.
