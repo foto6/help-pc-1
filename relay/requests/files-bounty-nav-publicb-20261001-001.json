@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-bounty-nav-publicb-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ws=New-Object -ComObject WScript.Shell; $ok=$ws.AppActivate(12212); Start-Sleep -Milliseconds 300; if(-not $ok){throw 'Firefox activate failed'}; $ws.SendKeys('^l'); Start-Sleep -Milliseconds 150; $ws.SendKeys('https://bugbountyfoto6.files.com/files/public-b'); $ws.SendKeys('{ENTER}'); Start-Sleep -Seconds 3; Write-Output 'navigated'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Navigate active Firefox to authorized Files.com trial public-b using keyboard only"
+}
