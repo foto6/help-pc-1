@@ -838,7 +838,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="additional Executor action to expose through relay",
     )
     parser.add_argument("--once", action="store_true", help="process one sync cycle and exit")
-    parser.add_argument("--status", action="store_true", help="print the durable relay health snapshot and exit")
+    parser.add_argument("--status", action="store_true", help="print the read-only relay watchdog status and exit")
+    parser.add_argument(
+        "--observed-process",
+        action="append",
+        default=[],
+        metavar="PID:PARENTPID",
+        help="matching relay process identity already observed by the caller; repeatable",
+    )
     parser.add_argument(
         "--stale-after-seconds",
         type=float,
@@ -856,17 +863,40 @@ def main() -> int:
     if args.status:
         health_path = repo / ".pc-relay" / "health.json"
         snapshot = _load_json(health_path) if health_path.exists() else None
-        state = classify_health_snapshot(
-            snapshot,
-            now_unix=time.time(),
-            process_exists=True,
-            stale_after_seconds=max(1.0, args.stale_after_seconds),
-        )
-        print(json.dumps({
-            "state": state,
-            "health": snapshot,
-        }, ensure_ascii=False, sort_keys=True))
-        return 0 if state == "HEALTHY" else 2
+        try:
+            status = build_watchdog_status(
+                repo,
+                snapshot=snapshot,
+                observed_processes=args.observed_process,
+                now_unix=time.time(),
+                stale_after_seconds=max(1.0, args.stale_after_seconds),
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            status = {
+                "status_version": "pc_relay.watchdog_status.v1",
+                "state": "PROCESS_EXISTS" if args.observed_process else "PROCESS_MISSING",
+                "observed_at_unix": time.time(),
+                "process": None,
+                "observations": None,
+                "stale_reasons": ["status_probe_error"],
+                "health": snapshot,
+                "error": {
+                    "classification": type(exc).__name__,
+                    "message": _bounded_error(exc),
+                },
+                "recovery": {
+                    "automatic_restart": False,
+                    "automatic_kill": False,
+                    "automatic_side_effect_replay": False,
+                    "preserve_state_dir": ".pc-relay/state",
+                    "preserve_outcome_journal": ".pc-relay/outcomes.jsonl",
+                    "unknown_side_effect_requires_outcome_lookup": True,
+                },
+            }
+        else:
+            status["error"] = None
+        print(json.dumps(status, ensure_ascii=False, sort_keys=True))
+        return 0 if status["state"] == "HEALTHY" else 2
 
     allowed = set(DEFAULT_ALLOWED_ACTIONS) | set(args.allow_action)
     relay = Relay(
