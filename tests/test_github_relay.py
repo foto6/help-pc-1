@@ -179,3 +179,25 @@ def test_committed_health_schema_and_manifest_are_fail_safe() -> None:
     assert safety["automatic_kill"] is False
     assert safety["automatic_side_effect_replay"] is False
     assert safety["unknown_effect_requires_reconciliation"] is True
+
+
+def test_health_long_running_phase_uses_bounded_extended_freshness() -> None:
+    snapshot = {
+        "health_version": HEALTH_VERSION,
+        "status": "healthy",
+        "phase": "execute_request",
+        "updated_at_unix": 0.0,
+        "reconciliation_required": False,
+    }
+    assert classify_health_snapshot(
+        snapshot,
+        now_unix=120.0,
+        process_exists=True,
+        stale_after_seconds=30.0,
+    ) == "HEALTHY"
+    assert classify_health_snapshot(
+        snapshot,
+        now_unix=151.0,
+        process_exists=True,
+        stale_after_seconds=30.0,
+    ) == "STALE"
