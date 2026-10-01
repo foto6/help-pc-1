@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1425-bridge-status",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $r=Invoke-RestMethod -UseBasicParsing -Method Get -Uri 'http://127.0.0.1:17448/api/status' -TimeoutSec 5; $o=[ordered]@{startedAt=$r.startedAt;agentControlHealth=$r.agentControlHealth;supervisor=$r.supervisorWatchdog;profiles=$r.aiProfiles;queue=$r.queue}; $o|ConvertTo-Json -Depth 8 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only live WebAIBridge /api/status probe only"
+}
