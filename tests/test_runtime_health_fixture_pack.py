@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 from pc_executor.runtime_health import CONTRACT_VERSION, validate_runtime_health
@@ -16,10 +16,12 @@ FIXTURE_DIR = ROOT / "tests" / "fixtures" / "runtime_health_v1"
 
 
 def _git_blob_sha(path: Path) -> str:
-    raw = path.read_bytes()
-    return hashlib.sha1(
-        f"blob {len(raw)}\0".encode("ascii") + raw
-    ).hexdigest()
+    relative = path.relative_to(ROOT).as_posix()
+    return subprocess.check_output(
+        ["git", "rev-parse", f"HEAD:{relative}"],
+        cwd=ROOT,
+        text=True,
+    ).strip()
 
 
 def test_runtime_health_fixture_matches_producer_validator_and_schema_shape():
