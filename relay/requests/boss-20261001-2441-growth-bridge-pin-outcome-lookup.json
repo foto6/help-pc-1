@@ -1,0 +1,12 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-2441-growth-bridge-pin-outcome-lookup",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "boss-20261001-2440-growth-r22-pin-bridge-r25",
+    "action": "shell.run",
+    "execution_attempt": 1
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only reconciliation for unknown Growth R22 Bridge R25 follow-up outcome"
+}
