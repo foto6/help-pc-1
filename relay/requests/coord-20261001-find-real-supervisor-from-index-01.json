@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-find-real-supervisor-from-index-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='C:\\rehearsal\\coord-chat-index-20260930.json'; if(!(Test-Path -LiteralPath $p)){Write-Output '{\"error\":\"index_missing\"}'; exit 0}; $j=Get-Content -Raw -LiteralPath $p | ConvertFrom-Json; $all=@(); if($j -is [System.Collections.IEnumerable]){$all=@($j)} elseif($j.items){$all=@($j.items)} elseif($j.chats){$all=@($j.chats)} else {$all=@($j)}; $hits=$all | Where-Object { (($_.title|Out-String) -match 'supervisor|agent watch') -or (($_.name|Out-String) -match 'supervisor|agent watch') -or (($_.url|Out-String) -match 'supervisor') }; $hits | Select-Object id,title,name,url,projectId,profileId | ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Read existing local chat index to identify actual supervisor conversation; no new chat"
+}
