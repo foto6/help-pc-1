@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "\n$ErrorActionPreference='Stop'\nGet-ChildItem 'E:\\pc-github-relay\\src' -Recurse -File | Select-Object FullName,Length | Format-Table -AutoSize\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "\r\nFullName                                                                       Length\r\n--------                                                                       ------\r\nE:\\pc-github-relay\\src\\pc_executor\\audit.py                                       782\r\nE:\\pc-github-relay\\src\\pc_executor\\cancellation.py                               1746\r\nE:\\pc-github-relay\\src\\pc_executor\\capabilities.py                              13851\r\nE:\\pc-github-relay\\src\\pc_executor\\capture.py                                    1789\r\nE:\\pc-github-relay\\src\\pc_executor\\errors.py                                     1659\r\nE:\\pc-github-relay\\src\\pc_executor\\executor.py                                  26244\r\nE:\\pc-github-relay\\src\\pc_executor\\fakes.py                                      6300\r\nE:\\pc-github-relay\\src\\pc_executor\\input.py                                      1863\r\nE:\\pc-github-relay\\src\\pc_executor\\models.py                                     7683\r\nE:\\pc-github-relay\\src\\pc_executor\\outcome.py                                    7057\r\nE:\\pc-github-relay\\src\\pc_executor\\outcome_journal.py                           26451\r\nE:\\pc-github-relay\\src\\pc_executor\\preflight.py                                 25130\r\nE:\\pc-github-relay\\src\\pc_executor\\safety.py                                     2450\r\nE:\\pc-github-relay\\src\\pc_executor\\shell.py                                      4021\r\nE:\\pc-github-relay\\src\\pc_executor\\uia.py                                        9783\r\nE:\\pc-github-relay\\src\\pc_executor\\vision_target.py                              5758\r\nE:\\pc-github-relay\\src\\pc_executor\\windows.py                                    3527\r\nE:\\pc-github-relay\\src\\pc_executor\\__init__.py                                   1964\r\nE:\\pc-github-relay\\src\\pc_executor\\__main__.py                                   2068\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\audit.cpython-313.pyc             2284\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\cancellation.cpython-313.pyc      3109\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\capabilities.cpython-313.pyc     14671\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\capture.cpython-313.pyc           3129\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\errors.cpython-313.pyc            4018\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\executor.cpython-313.pyc         27420\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\input.cpython-313.pyc             3855\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\models.cpython-313.pyc           13053\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\outcome.cpython-313.pyc           7453\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\outcome_journal.cpython-313.pyc  32536\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\preflight.cpython-313.pyc        24111\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\safety.cpython-313.pyc            3625\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\shell.cpython-313.pyc             5226\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\uia.cpython-313.pyc              14225\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\vision_target.cpython-313.pyc     7793\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\windows.cpython-313.pyc           7513\r\nE:\\pc-github-relay\\src\\pc_executor\\__pycache__\\__init__.cpython-313.pyc          1532\r\nE:\\pc-github-relay\\src\\pc_executor.egg-info\\dependency_links.txt                    1\r\nE:\\pc-github-relay\\src\\pc_executor.egg-info\\entry_points.txt                       58\r\nE:\\pc-github-relay\\src\\pc_executor.egg-info\\PKG-INFO                              437\r\nE:\\pc-github-relay\\src\\pc_executor.egg-info\\requires.txt                          117\r\nE:\\pc-github-relay\\src\\pc_executor.egg-info\\SOURCES.txt                          1059\r\nE:\\pc-github-relay\\src\\pc_executor.egg-info\\top_level.txt                          12\r\n\r\n\r\n",
+      "stdout_bytes": 3834,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T00:35:03.125Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T00:35:03.078Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-pccontrol-src-layout-20261001-001"
+    },
+    "request_id": "chatgpt-pccontrol-src-layout-20261001-001",
+    "started_at": "2026-10-01T00:35:02.448Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-pccontrol-src-layout-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
