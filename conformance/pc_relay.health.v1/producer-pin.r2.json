@@ -1,0 +1,31 @@
+{
+  "pin_version": "pc_relay.health_producer_pin.r2.v1",
+  "contract": "pc_relay.health.v1",
+  "repository": "foto6/help-pc-1",
+  "branch": "agent/pc-relay-stale-sync-watchdog-20261001",
+  "source_blobs": {
+    "conformance/pc_relay.health.v1/schema.json": "2a2f4e88e3b483db768fc95972c2ed25fa9a187e",
+    "tools/github_relay.py": "d10c3064ae21833cc7288d37adead7dc0f67e15d",
+    "tools/start_pc_control_relay.ps1": "c9545f09b8dc6eb2d10cf1903736e95829cbaba0"
+  },
+  "freshness": {
+    "default_seconds": 30,
+    "long_running_phase_seconds": 150,
+    "long_running_phases": [
+      "execute_request",
+      "reconcile_interrupted_side_effect"
+    ]
+  },
+  "recovery": {
+    "pid_only_is_healthy": false,
+    "automatic_restart": false,
+    "automatic_side_effect_replay": false,
+    "interrupted_side_effect_sets_reconciliation_required": true
+  },
+  "scaling": {
+    "historical_results_rechecked_per_cycle": false,
+    "pending_results_use_single_git_status": true,
+    "git_timeout_seconds": 30
+  },
+  "release_gate": "NO_LIVE_CUTOVER"
+}
