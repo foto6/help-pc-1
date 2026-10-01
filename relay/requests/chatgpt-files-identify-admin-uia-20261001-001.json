@@ -1,0 +1,12 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-identify-admin-uia-20261001-001",
+  "action": "uia.inspect",
+  "params": {
+    "query": {
+      "name": "Users & Groups"
+    }
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only identify Files.com admin browser via admin-only Users & Groups UI element"
+}
