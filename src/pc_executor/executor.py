@@ -46,6 +46,7 @@ from .runtime_health import (
     CONTRACT_VERSION as RUNTIME_HEALTH_VERSION,
     DEFAULT_PROBE_TIMEOUT_SECONDS,
     RuntimeHealthMonitor,
+    probe_outcome_journal_integrity,
     validate_runtime_health,
 )
 from .preflight import (
@@ -828,7 +829,8 @@ class Executor:
             nonlocal journal_result
             if self.outcome_journal is None:
                 return {}
-            journal_result = self.outcome_journal.integrity_status(
+            journal_result = probe_outcome_journal_integrity(
+                self.outcome_journal,
                 max_bytes=2 * 1024 * 1024,
                 cancellation=child,
             )
