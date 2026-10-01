@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T16:06:43.596Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "boss-20261001-2440-growth-r22-pin-bridge-r25"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:261f82a616c941a88fe226833bc1058ea2677cb5b29b17cf40a692e49325e75a",
+            "journal_sequence": 994,
+            "previous_record_sha256": "077e61d89014cfc2cda91b9aa002499afe9b2f5d232e354b581e93ac345612ec",
+            "record_sha256": "7d2e10d43aeeab55b11ef74d6db27874752f12189f944d39412e83401932163e",
+            "recorded_at": "2026-10-01T16:06:43.692Z",
+            "request_id": "boss-20261001-2440-growth-r22-pin-bridge-r25",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T16:08:17.644Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "boss-20261001-2440-growth-r22-pin-bridge-r25"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:261f82a616c941a88fe226833bc1058ea2677cb5b29b17cf40a692e49325e75a",
+            "journal_sequence": 995,
+            "previous_record_sha256": "7d2e10d43aeeab55b11ef74d6db27874752f12189f944d39412e83401932163e",
+            "record_sha256": "9c43388694a3bf38d3a859b94547212bbad92d9d76ed3402b6f25bf663ec0ea4",
+            "recorded_at": "2026-10-01T16:08:17.710Z",
+            "request_id": "boss-20261001-2440-growth-r22-pin-bridge-r25",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-01T16:08:17.644Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "boss-20261001-2440-growth-r22-pin-bridge-r25"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-01T16:08:17.644Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "boss-20261001-2440-growth-r22-pin-bridge-r25"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:261f82a616c941a88fe226833bc1058ea2677cb5b29b17cf40a692e49325e75a",
+          "journal_sequence": 995,
+          "previous_record_sha256": "7d2e10d43aeeab55b11ef74d6db27874752f12189f944d39412e83401932163e",
+          "record_sha256": "9c43388694a3bf38d3a859b94547212bbad92d9d76ed3402b6f25bf663ec0ea4",
+          "recorded_at": "2026-10-01T16:08:17.710Z",
+          "request_id": "boss-20261001-2440-growth-r22-pin-bridge-r25",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "d7b43a5ac084e576ab35f1375b6ac39b46d260db2618972fcf954d0aadc3cf8f",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 995
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "boss-20261001-2440-growth-r22-pin-bridge-r25",
+        "request_id": "boss-20261001-2440-growth-r22-pin-bridge-r25",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T16:11:06.295Z",
+    "ok": true,
+    "request_id": "boss-20261001-2441-growth-bridge-pin-outcome-lookup",
+    "started_at": "2026-10-01T16:11:06.230Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-2441-growth-bridge-pin-outcome-lookup",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
