@@ -702,13 +702,26 @@ def _health_probe(args: argparse.Namespace, repo: Path) -> int:
             "probe": probe,
             "progress": progress,
         }
-    except Exception as exc:
+    except Exception:
         payload = {
             "probe": {
                 "contract_version": "pc_relay.liveness_probe.v1",
                 "state": "unknown",
                 "reason": "progress_record_invalid",
-                "error_kind": type(exc).__name__,
+                "observed_pids": (
+                    sorted({int(pid) for pid in args.observed_pid if int(pid) > 0})
+                    if args.observed_pid
+                    else None
+                ),
+                "progress_age_seconds": None,
+                "queue_progress_age_seconds": None,
+                "successful_cycle_age_seconds": None,
+                "consecutive_cycle_failures": None,
+                "pending_count": None,
+                "loop_generation_id": None,
+                "loop_epoch": None,
+                "process_pid": None,
+                "last_error_classification": None,
             },
             "progress": None,
         }
