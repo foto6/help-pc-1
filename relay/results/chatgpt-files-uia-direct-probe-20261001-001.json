@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python",
+        "-c",
+        "import uiautomation as auto\nauto.SetGlobalSearchTimeout(2)\nfor hwnd in (462320,67948):\n    print(\"HWND\", hwnd)\n    try:\n        c=auto.ControlFromHandle(hwnd)\n        print(\"ROOT\", c.Name, c.ControlTypeName, c.ClassName)\n        kids=c.GetChildren()\n        print(\"CHILDREN\", len(kids))\n        for k in kids[:30]:\n            try:\n                print(\" -\", repr(k.Name), k.ControlTypeName, k.ClassName)\n            except Exception as e:\n                print(\" - ERR\",e)\n    except Exception as e:\n        print(\"ERR\",repr(e))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "HWND 462320\r\nROOT public-b � Folder � [BUGBOUNTY] foto6 test - Google Chrome WindowControl Chrome_WidgetWin_1\r\nCHILDREN 2\r\n - '' PaneControl Intermediate D3D Window\r\n - 'public-b � Folder � [BUGBOUNTY] foto6 test - Google Chrome' PaneControl BrowserRootView\r\nHWND 67948\r\nROOT ����� � ��������� - Google Chrome WindowControl Chrome_WidgetWin_1\r\nCHILDREN 2\r\n - '' PaneControl Intermediate D3D Window\r\n - '����� � ��������� - Google Chrome' PaneControl BrowserRootView\r\n",
+      "stdout_bytes": 467,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T02:17:25.742Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T02:17:25.687Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-files-uia-direct-probe-20261001-001"
+    },
+    "request_id": "chatgpt-files-uia-direct-probe-20261001-001",
+    "started_at": "2026-10-01T02:17:25.072Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-files-uia-direct-probe-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
