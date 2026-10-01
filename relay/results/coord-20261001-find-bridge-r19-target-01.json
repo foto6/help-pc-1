@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$raw=(Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 5).Content; $t=$raw|ConvertFrom-Json; @($t)|Where-Object{$_.url -match '6abda61c-a440-83ed-9482-1d0fc7923e03'}|Select-Object id,title,url,webSocketDebuggerUrl|ConvertTo-Json -Compress -Depth 3"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"A88E3157A8078B7DA32FC62848071CC3\",\"title\":\"Implement Assignment Reliability\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\",\"webSocketDebuggerUrl\":\"ws://127.0.0.1:17410/devtools/page/A88E3157A8078B7DA32FC62848071CC3\"}\r\n",
+      "stdout_bytes": 288,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T00:19:09.672Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T00:19:09.628Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-find-bridge-r19-target-01"
+    },
+    "request_id": "coord-20261001-find-bridge-r19-target-01",
+    "started_at": "2026-10-01T00:19:09.132Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-find-bridge-r19-target-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
