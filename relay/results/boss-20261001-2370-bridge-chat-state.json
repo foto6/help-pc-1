@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===\"A88E3157A8078B7DA32FC62848071CC3\");if(!tab||!String(tab.url||\"\").includes(\"6abda61c-a440-83ed-9482-1d0fc7923e03\")){process.stdout.write(JSON.stringify({ok:false,reason:\"target_mismatch\",url:tab?.url||\"\"}));process.exit(2)}const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});const expr=\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const composer=c?(('value' in c?c.value:(c.innerText||c.textContent||''))||''):'';const msgs=[...document.querySelectorAll('[data-message-author-role]')].slice(-8).map(n=>({role:n.getAttribute('data-message-author-role'),text:(n.innerText||n.textContent||'').slice(0,1200)}));return {composer,composerLength:composer.length,messages:msgs}})())\";const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});ws.close();process.stdout.write(rr.result.value)\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"composer\":\"EXECUTE NOW — BRIDGE R25 SAFE FILE ATTACHMENT TO EXISTING CHAT.\\n\\n\\n\\n\\nRepo: foto6/WebAIBridge\\n\\nWritable branch ONLY: agent/bridge-r25-file-attachment-20261001\\n\\nExact starting HEAD: 37f6e7a0fe65ad48f555021fdf4cd64ff2f2ddfa\\n\\nLive Bridge remains untouched. NO_LIVE_DEPLOY / NO_CUTOVER.\\n\\n\\n\\n\\nNew required capability:\\n\\nAttach an actual local video file to an already bound ChatGPT web conversation so the agent can directly analyze the MP4. User-specified working cap: <=500 MB per file.\\n\\n\\n\\n\\nPRIMARY GOAL:\\n\\nImplement an isolated, fail-closed file-attachment primitive and rehearsal that can later be used by Creator/Media/Growth agents.\\n\\n\\n\\n\\nRequired:\\n\\n1. Bind every upload to exact target tab/chat URL + file path + expected size/hash before side effect.\\n\\n2. Enforce <=500 MB/file before UI interaction.\\n\\n3. Use the web UI's actual file input/upload mechanism; no raw-coordinate clicking when structured DOM/file input is available.\\n\\n4. Verify upload completion from DOM/UI state and filename/size where observable before sending any prompt.\\n\\n5. Durable idempotency/outcome journal: UNKNOWN upload/send outcome => reconcile first, never blind duplicate upload.\\n\\n6. Distinguish FILE_SELECTED / UPLOAD_IN_PROGRESS / UPLOAD_READY / PROMPT_SENT / COMPLETED / RECONCILIATION_REQUIRED (names may vary).\\n\\n7. Tests/fixtures for wrong tab, tab URL drift, missing file, changed hash/size, >500MB, upload timeout, duplicate request, interrupted upload, prompt not sent, and successful exact-chat binding.\\n\\n8. Isolated rehearsal only. Do NOT upload to the user's live active chats during CI, do not deploy/restart/repoint live Bridge.\\n\\n9. Expose a machine-readable request/result contract for PC Executor/Creator.\\n\\n10. Exact-head CI SUCCESS with deterministic evidence. If browser fixture cannot prove real attachment semantics in CI, report READY_FOR_EXPLICIT_LIVE_REHEARSAL, not LIVE_PASS.\\n\\n\\n\\n\\nNo credentials, no protected-path access, no live cutover.\",\"composerLength\":1934,\"messages\":[]}",
+      "stdout_bytes": 2042,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T15:46:06.597Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T15:46:06.519Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-2370-bridge-chat-state"
+    },
+    "request_id": "boss-20261001-2370-bridge-chat-state",
+    "started_at": "2026-10-01T15:46:05.880Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-2370-bridge-chat-state",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
