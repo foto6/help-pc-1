@@ -1,0 +1,35 @@
+EXECUTE NOW — MEDIA R14 REAL-WORLD MVP ACCEPTANCE HARNESS. Continue in this SAME existing Media chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video2
+Branch ONLY: agent/media-r14-realworld-acceptance-20261001
+Exact starting HEAD: 5c675c232cad4f8a004385042e6c3ab63a90fe00
+
+Media R13 is green and deterministic compatibility export is proven. Stop expanding protocol surface unless needed by observed failures.
+
+PRIMARY MVP GOAL:
+Prove the editor behaves sensibly on a small but diverse set of real video shapes and produce artifacts a human can visually judge.
+
+Required:
+1. Add an acceptance runner that can take arbitrary local videos without modifying them.
+2. Build/commit a deterministic small fixture corpus representing at least:
+   - talking head with pauses;
+   - landscape source reframed to 9:16;
+   - fast-motion clip;
+   - low-motion/static clip;
+   - speech + music;
+   - subtitle-heavy sample;
+   - B-roll insert sample.
+   Fixtures may be generated reproducibly with ffmpeg if licensing/size makes committed real clips impractical, but must be actual video/audio files, not JSON-only mocks.
+3. For each case run at least clean_podcast and aggressive_shortform where applicable.
+4. Emit final MP4, probe report, QA report, creative-quality report, and preview/contact sheet.
+5. Add acceptance metrics:
+   render success, duration, cut rate, motion rate, text density, black/freeze/silence checks, crop/safe-area checks, loudness.
+6. Add FAIL/WARN separation. Human-aesthetic concerns that cannot be proven objectively must be WARN, not fabricated PASS.
+7. Add one operator command that can run the harness against a folder of user videos and preserve source files.
+8. Add a compact human-review checklist/report listing which outputs need visual inspection and why.
+9. Run deterministic CI fixture acceptance and publish artifacts where CI supports it.
+10. Add machine-readable MVP acceptance summary with exact producer SHA and all failures/warnings.
+11. Preserve R11-R13 contracts; if acceptance exposes a real bug, fix the smallest justified defect and document it.
+12. NONEMPTY source/tests/docs commit, exact SHA, CI and reproduction command.
+
+No publishing. No credentials. No merge/release. Do not modify Creator/Growth repos. No Desktop Commander. Do not access E:\manhwa.
