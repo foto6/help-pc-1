@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-bounty-activate-firefox-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ws=New-Object -ComObject WScript.Shell; $ok=$ws.AppActivate(12212); Start-Sleep -Milliseconds 500; Write-Output $ok"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Activate Firefox process containing authorized Files.com trial page without coordinate interaction"
+}
