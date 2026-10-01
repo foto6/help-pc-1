@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import os
 from pathlib import Path
 from time import monotonic
@@ -750,12 +751,16 @@ class Executor:
         deadline = monotonic() + self._timeout(request)
 
         def invoke() -> Any:
-            if isinstance(self.accessibility, WindowsUIAutomationAdapter):
-                native_kwargs = dict(kwargs)
+            native_kwargs = dict(kwargs)
+            try:
+                parameters = inspect.signature(target).parameters
+            except (TypeError, ValueError):
+                parameters = {}
+            if "cancellation" in parameters:
                 native_kwargs["cancellation"] = token
+            if "deadline_monotonic" in parameters:
                 native_kwargs["deadline_monotonic"] = deadline
-                return target(*args, **native_kwargs)
-            return target(*args, **kwargs)
+            return target(*args, **native_kwargs)
 
         return self._adapter_bounded("uia", request, token, f"uia.{method}", invoke)
 
@@ -795,12 +800,22 @@ class Executor:
             )
 
         def probe_uia(child: CancellationToken, probe_deadline: float) -> dict[str, Any]:
-            if not isinstance(self.accessibility, WindowsUIAutomationAdapter):
-                return {"probe": "not_available_for_injected_adapter"}
-            return self.accessibility.health_probe(
+            health_probe = getattr(self.accessibility, "health_probe", None)
+            if not callable(health_probe):
+                raise RuntimeError("UIA health probe unavailable")
+            result = health_probe(
                 cancellation=child,
                 deadline_monotonic=probe_deadline,
             )
+            if isinstance(self.accessibility, WindowsUIAutomationAdapter):
+                return self._uia_diagnostics() or {
+                    "probe": "native_root_control_only",
+                    "tree_walk_performed": False,
+                }
+            return {
+                "probe": "injected_health_probe",
+                "returned_mapping": isinstance(result, dict),
+            }
 
         def probe_windows(child: CancellationToken, _probe_deadline: float) -> dict[str, Any]:
             child.raise_if_cancelled()
@@ -874,7 +889,7 @@ class Executor:
                 "uia",
                 available("uia"),
                 provider("uia", self.accessibility),
-                probe_uia if available("uia") else None,
+                probe_uia if available("uia") and callable(getattr(self.accessibility, "health_probe", None)) else None,
                 self._uia_diagnostics(),
             ),
             ("screenshot", available("screenshot"), provider("screenshot", self.screenshot), None, None),
