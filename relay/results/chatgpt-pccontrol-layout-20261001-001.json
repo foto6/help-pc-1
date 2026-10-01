@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "\n$ErrorActionPreference='Stop'\n'ROOT'\nGet-ChildItem 'E:\\pc-github-relay' -Force | Select-Object Name,Mode,Length\n'TOOLS'\nif(Test-Path 'E:\\pc-github-relay\\tools'){Get-ChildItem 'E:\\pc-github-relay\\tools' -File | Select-Object Name,Length}\n'PKG'\nif(Test-Path 'E:\\pc-github-relay\\pc_executor'){Get-ChildItem 'E:\\pc-github-relay\\pc_executor' -File | Select-Object Name,Length}\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "ROOT\r\n\r\nName                       Mode   Length\r\n----                       ----   ------\r\n.git                       d--h--       \r\n.github                    d-----       \r\n.pc-relay                  d-----       \r\n.pytest_cache              d-----       \r\ndocs                       d-----       \r\nrelay                      d-----       \r\nsrc                        d-----       \r\ntests                      d-----       \r\ntools                      d-----       \r\n.gitattributes             -a---- 126   \r\n.gitignore                 -a---- 66    \r\npyproject.toml             -a---- 688   \r\nREADME.md                  -a---- 2022  \r\nSTART_PC_CONTROL.cmd       -a---- 251   \r\nTOOLS\r\ngithub_relay.py                   15432 \r\nstart_pc_control_relay.ps1        1795  \r\nPKG\r\n\r\n\r\n",
+      "stdout_bytes": 780,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T00:34:14.177Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T00:34:14.135Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-pccontrol-layout-20261001-001"
+    },
+    "request_id": "chatgpt-pccontrol-layout-20261001-001",
+    "started_at": "2026-10-01T00:34:13.763Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-pccontrol-layout-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
