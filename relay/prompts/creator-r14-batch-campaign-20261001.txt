@@ -1,0 +1,25 @@
+EXECUTE NOW — CREATOR R14 BATCH CAMPAIGN RUNNER. Continue in this SAME existing Creator chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video1
+Branch ONLY: agent/creator-r14-batch-campaign-20261001
+Exact starting HEAD: e8bc2ed365d6ca4c512079ff9cccd7543575f052
+
+Creator R13 integration acceptance is green. Preserve R11-R13 contracts and fail-closed producer pins.
+
+PRIMARY GOAL:
+One campaign brief should autonomously produce and manage a batch of distinct short-form videos without duplicate ideas or runaway cost/work.
+
+Required:
+1. Add durable batch campaign model: campaign brief -> N reel concepts -> scripts -> asset plans -> Media jobs -> QA -> publish queues -> Growth handoffs.
+2. Support configurable batch size and platform mix with hard concurrency/budget ceilings.
+3. Add idea/script semantic deduplication and hook diversity constraints.
+4. Track per-item state independently so one failed reel does not block the whole batch.
+5. Add campaign-level pause/resume/cancel and restart-safe recovery.
+6. Add deterministic cost/work budget accounting for external generation, render time and provider actions; fail closed before exceeding budget.
+7. Add staggered scheduling metadata and publish-window constraints without doing live publish in CI.
+8. Add campaign summary/report: ready, blocked_media, qa_failed, awaiting_release, published, analytics_pending.
+9. Consume Growth experiment/seed input only as advisory evidence; never let Growth authorize publication.
+10. Add a deterministic 12-reel synthetic campaign replay with injected duplicate concepts, one Media failure, one QA failure, one lost publish ack and restart.
+11. NONEMPTY source/tests/docs commit, focused/full tests, exact SHA and CI.
+
+No live publishing. No credentials. No merge/release. Do not modify Media/Growth repos.
