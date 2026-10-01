@@ -1,0 +1,86 @@
+name: R26 relay queue progress health
+
+on:
+  push:
+    branches:
+      - agent/pc-relay-r26-progress-health-20261001
+    paths:
+      - "src/pc_relay/**"
+      - "tools/github_relay.py"
+      - "tools/start_pc_control_relay.ps1"
+      - "tests/test_github_relay.py"
+      - "tests/test_relay_progress_r26.py"
+      - "tests/fixtures/relay_progress_v1/**"
+      - "schemas/pc_relay.progress.v1.schema.json"
+      - "schemas/pc_relay.liveness_probe.v1.schema.json"
+      - "docs/R26_RELAY_PROGRESS_HEALTH.md"
+      - ".github/workflows/r26-relay-progress.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  r26-relay-progress:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e ".[test]"
+      - name: Exact R26 base and isolated file delta
+        shell: bash
+        run: |
+          python - <<'PY'
+          import subprocess
+          base = "4ce8901221ad994ae5b44299d6601e1c9cc6a047"
+          head = subprocess.check_output(["git","rev-parse","HEAD"], text=True).strip()
+          branch = subprocess.check_output(["git","branch","--show-current"], text=True).strip()
+          assert head != base
+          assert branch == "agent/pc-relay-r26-progress-health-20261001", branch
+          assert subprocess.run(["git","merge-base","--is-ancestor",base,head]).returncode == 0
+          changed = set(subprocess.check_output(
+              ["git","diff","--name-only",base,head], text=True
+          ).splitlines())
+          allowed = {
+              ".github/workflows/r26-relay-progress.yml",
+              "docs/R26_RELAY_PROGRESS_HEALTH.md",
+              "schemas/pc_relay.progress.v1.schema.json",
+              "schemas/pc_relay.liveness_probe.v1.schema.json",
+              "src/pc_relay/__init__.py",
+              "src/pc_relay/progress.py",
+              "tests/fixtures/relay_progress_v1/manifest.json",
+              "tests/fixtures/relay_progress_v1/progress.example.json",
+              "tests/test_relay_progress_r26.py",
+              "tools/github_relay.py",
+              "tools/start_pc_control_relay.ps1",
+          }
+          assert changed <= allowed, f"unexpected R26 files: {sorted(changed-allowed)}"
+          assert changed, "R26 branch must be nonempty"
+          assert subprocess.run(["git","diff","--check",base,head]).returncode == 0
+          print("R26 exact-base/delta PASS", head, len(changed))
+          PY
+      - name: Compile relay source
+        run: python -m compileall -q src/pc_relay tools/github_relay.py
+      - name: Focused relay progress, recovery and chaos suite
+        run: python -m pytest tests/test_github_relay.py tests/test_relay_progress_r26.py -v -s
+      - name: Windows launcher syntax only
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $text = Get-Content -LiteralPath tools/start_pc_control_relay.ps1 -Raw
+          [scriptblock]::Create($text) | Out-Null
+          Write-Host "R26 launcher syntax: PASS"
+      - name: Full repository test suite
+        run: python -m pytest
