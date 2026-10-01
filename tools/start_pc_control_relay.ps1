@@ -1,4 +1,7 @@
-param()
+param(
+    [switch]$StatusOnly,
+    [double]$StaleAfterSeconds = 30
+)
 
 $ErrorActionPreference = 'Stop'
 
@@ -7,8 +10,6 @@ $RelayScript = Join-Path $Repo 'tools\github_relay.py'
 $LogDir = Join-Path $Repo '.pc-relay'
 $Stdout = Join-Path $LogDir 'live.stdout.log'
 $Stderr = Join-Path $LogDir 'live.stderr.log'
-$Health = Join-Path $LogDir 'health.json'
-$StaleAfterSeconds = 30
 
 if (-not (Test-Path -LiteralPath (Join-Path $Repo '.git'))) {
     throw "PC Control repo is not a Git checkout: $Repo"
@@ -21,38 +22,88 @@ $py = Get-Command py.exe -ErrorAction SilentlyContinue
 if (-not $py) { $py = Get-Command py -ErrorAction SilentlyContinue }
 if (-not $py) { throw 'Python launcher "py" was not found.' }
 
-$repoPattern = [regex]::Escape($Repo)
-$existing = @(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue | Where-Object { $_.CommandLine -match 'github_relay\.py' -and $_.CommandLine -match $repoPattern })
+function Get-RelayProcesses {
+    $repoPattern = [regex]::Escape($Repo)
+    return @(
+        Get-CimInstance Win32_Process -ErrorAction SilentlyContinue |
+            Where-Object {
+                $_.CommandLine -match 'github_relay\.py' -and
+                $_.CommandLine -match $repoPattern
+            }
+    )
+}
 
-if ($existing.Count -gt 0) {
-    $ids = ($existing | ForEach-Object ProcessId) -join ', '
-    $healthState = 'PROCESS_EXISTS'
-    $healthAge = $null
-    if (Test-Path -LiteralPath $Health) {
-        try {
-            $snapshot = Get-Content -LiteralPath $Health -Raw | ConvertFrom-Json
-            $healthAge = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds() - [double]$snapshot.updated_at_unix
-            $effectiveStaleAfter = $StaleAfterSeconds
-            if ($snapshot.phase -in @('execute_request','reconcile_interrupted_side_effect')) {
-                $effectiveStaleAfter = 150
-            }
-            if ($snapshot.health_version -eq 'pc_relay.health.v1' -and $snapshot.status -eq 'healthy' -and $healthAge -le $effectiveStaleAfter) {
-                $healthState = 'HEALTHY'
-            } elseif ($healthAge -gt $effectiveStaleAfter) {
-                $healthState = 'STALE'
-            }
-        } catch {
-            $healthState = 'PROCESS_EXISTS'
+function Invoke-RelayStatus([object[]]$Processes) {
+    $args = @(
+        'tools\github_relay.py',
+        '--repo', $Repo,
+        '--status',
+        '--stale-after-seconds', ([string]$StaleAfterSeconds)
+    )
+    foreach ($proc in $Processes) {
+        $args += @(
+            '--observed-process',
+            ('{0}:{1}' -f [int]$proc.ProcessId, [int]$proc.ParentProcessId)
+        )
+    }
+
+    $raw = & $py.Source @args
+    $exitCode = $LASTEXITCODE
+    if (-not $raw) {
+        throw "Relay status command returned no JSON. Exit code: $exitCode"
+    }
+    $status = ($raw | Out-String | ConvertFrom-Json)
+    return [pscustomobject]@{
+        ExitCode = $exitCode
+        Status = $status
+    }
+}
+
+function Show-UnhealthyRecovery([object]$Status) {
+    Write-Host ("Relay state: {0}" -f $Status.state)
+    if ($Status.stale_reasons) {
+        Write-Host ("Stale reasons: {0}" -f (($Status.stale_reasons | ForEach-Object { [string]$_ }) -join ', '))
+    }
+    if ($Status.observations) {
+        Write-Host ("Local HEAD: {0}" -f $Status.observations.local_head)
+        Write-Host ("Remote-tracking HEAD: {0}" -f $Status.observations.remote_tracking_head)
+        Write-Host ("HEAD relation: {0}" -f $Status.observations.head_relation)
+        if ($Status.observations.remote_tracking_queue) {
+            Write-Host ("Remote-tracking backlog: {0}" -f $Status.observations.remote_tracking_queue.backlog_count)
         }
     }
-    if ($healthState -eq 'HEALTHY') {
-        Write-Host "PC Control relay is already running and healthy. PID: $ids"
+    if ($Status.process) {
+        Write-Host ("Matching PIDs: {0}" -f (($Status.process.matching_pids | ForEach-Object { [string]$_ }) -join ', '))
+        Write-Host ("Logical relay roots: {0}" -f (($Status.process.logical_roots | ForEach-Object { [string]$_ }) -join ', '))
+    }
+    Write-Host ''
+    Write-Host 'SAFE RECOVERY REQUIRES OPERATOR ACTION:'
+    Write-Host '1. Preserve .pc-relay\state and .pc-relay\outcomes.jsonl.'
+    Write-Host '2. Do not submit replacement side-effect requests.'
+    Write-Host '3. Verify ownership of the stale logical process tree before terminating it manually.'
+    Write-Host '4. Restart only through this launcher after the old tree is confirmed absent.'
+    Write-Host '5. Existing started side-effect request IDs must reconcile through outcome.lookup; liveness recovery never authorizes replay.'
+    Write-Host 'No process was killed or restarted automatically.'
+}
+
+$existing = Get-RelayProcesses
+$statusResult = Invoke-RelayStatus -Processes $existing
+$status = $statusResult.Status
+
+if ($StatusOnly) {
+    Write-Output ($status | ConvertTo-Json -Depth 8 -Compress)
+    exit $statusResult.ExitCode
+}
+
+if ($existing.Count -gt 0) {
+    if ($status.state -eq 'HEALTHY') {
+        Write-Host "PC Control relay is already running and healthy."
+        Write-Host ("Logical roots: {0}" -f (($status.process.logical_roots | ForEach-Object { [string]$_ }) -join ', '))
         exit 0
     }
-    Write-Host "PC Control relay process exists but health is $healthState. PID: $ids"
-    if ($null -ne $healthAge) { Write-Host "Health age seconds: $([math]::Round($healthAge, 1))" }
-    Write-Host 'Do not blind-replay queued side effects. Inspect health/logs and reconcile before restart.'
-    Write-Host "Health: $Health"
+
+    Write-Host 'PC Control relay process exists but is not proven healthy.'
+    Show-UnhealthyRecovery -Status $status
     Write-Host "Logs: $LogDir"
     exit 2
 }
@@ -64,33 +115,23 @@ $p = Start-Process -FilePath $py.Source -ArgumentList $args -WorkingDirectory $R
 
 Start-Sleep -Seconds 2
 
-if (-not (Get-Process -Id $p.Id -ErrorAction SilentlyContinue)) {
+$startedProcesses = Get-RelayProcesses
+if ($startedProcesses.Count -eq 0) {
     Write-Host 'PC Control relay failed to stay running.'
     if (Test-Path -LiteralPath $Stderr) { Get-Content -LiteralPath $Stderr -Tail 30 }
     exit 1
 }
 
-$healthy = $false
-for ($i = 0; $i -lt 8; $i++) {
-    if (Test-Path -LiteralPath $Health) {
-        try {
-            $snapshot = Get-Content -LiteralPath $Health -Raw | ConvertFrom-Json
-            $age = [DateTimeOffset]::UtcNow.ToUnixTimeSeconds() - [double]$snapshot.updated_at_unix
-            if ($snapshot.health_version -eq 'pc_relay.health.v1' -and $age -le $StaleAfterSeconds) {
-                $healthy = $true
-                break
-            }
-        } catch {}
-    }
-    Start-Sleep -Milliseconds 500
+$startedStatusResult = Invoke-RelayStatus -Processes $startedProcesses
+$startedStatus = $startedStatusResult.Status
+if ($startedStatus.state -eq 'HEALTHY') {
+    Write-Host "PC Control relay started and is producing healthy forward-progress evidence."
+    Write-Host ("Logical roots: {0}" -f (($startedStatus.process.logical_roots | ForEach-Object { [string]$_ }) -join ', '))
+    Write-Host "Logs: $LogDir"
+    exit 0
 }
 
-if ($healthy) {
-    Write-Host "PC Control relay started and is producing fresh health evidence. PID: $($p.Id)"
-} else {
-    Write-Host "PC Control relay process started, but fresh health evidence is not available yet. PID: $($p.Id)"
-    Write-Host 'Treat this as PROCESS_EXISTS, not HEALTHY.'
-}
-Write-Host 'You may close this window.'
-Write-Host "Health: $Health"
+Write-Host "PC Control relay started, but health is not yet proven."
+Show-UnhealthyRecovery -Status $startedStatus
 Write-Host "Logs: $LogDir"
+exit 2
