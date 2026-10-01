@@ -1,0 +1,56 @@
+EXECUTE NOW — INDEPENDENT SUPERVISOR FOLLOW-UP: HUMAN EDITING BENCHMARK RUNNER / VALIDATION HARNESS.
+
+Continue in this SAME independent supervisor chat. Do not create another chat.
+
+Writable repo ONLY: foto6/boss
+Writable branch ONLY: agent/human-editing-gate-supervisor-20261001-v2
+Exact current starting HEAD: e0763bebf2aad9402f8de8c60edb1b9eb8c4be8e
+
+Your v1 protocol is now accepted as the benchmark authority:
+- benchmarks/HUMAN_EDITING_GATE_V1.md
+- benchmarks/human_editing_gate_v1.json
+- benchmarks/test_human_editing_gate_v1.py
+
+PRIMARY GOAL:
+Turn the protocol into a deterministic benchmark harness that can consume canonical Creator/Media/Growth exports plus real blinded human labels without fabricating any labels or quality claims.
+
+Required:
+1. Add machine-readable schemas/validators for:
+   - corpus_manifest.v1.json
+   - creator.semantic_export.v1.json
+   - media.render_export.v1.json
+   - growth.critic_export.v1.json
+   - blind_pairs.v1.json
+   - human_ratings.v1.ndjson
+   - hard_disqualifiers.v1.json
+   - agreement_report.v1.json
+   - statistics_report.v1.json
+   - gate_decision.v1.json
+2. Add deterministic blind-pair generator:
+   - randomizes A/B with recorded seed;
+   - seals mapping separately from rater-visible package;
+   - prevents filename/metadata provenance leakage;
+   - supports system-vs-human and system A/B modes.
+3. Add human-rating validator enforcing:
+   - >=3 independent raters/pair where required;
+   - no editor rating own reference;
+   - mandatory time-coded notes for score <=2 / hard DQ / major-critical defect;
+   - no model/VLM rows in human_ratings.
+4. Add statistics implementation:
+   - source-pair clustered bootstrap, >=10,000 resamples, fixed/recorded seed;
+   - system preference estimate and 95% CI;
+   - Krippendorff alpha nominal for A/B/tie;
+   - ordinal alpha per rubric dimension;
+   - per-category summaries;
+   - dimension mean system-minus-human deltas.
+5. Add technical DQ evaluator that consumes objective Media evidence but keeps taste warnings separate.
+6. Add deterministic gate evaluator for MVP_READY, CONTENT_AWARE_READY, HUMAN_LEVEL_UNPROVEN, HUMAN_PARITY_CANDIDATE exactly as v1 defines.
+7. Add fixtures with synthetic/mock METADATA ONLY to test the harness; they must be explicitly NON-EVIDENCE and cannot satisfy the real 30-source or human-label gate.
+8. Add regression proving empty/fake/model human labels can NEVER emit HUMAN_PARITY_CANDIDATE.
+9. Add CLI/readme for an operator to:
+   validate-corpus -> generate-blind-pack -> ingest-human-ratings -> compute-statistics -> decide-gate.
+10. Do NOT create or invent real human ratings, human edits, or 30-source corpus.
+11. Do NOT modify Creator/Media/Growth repos.
+12. NONEMPTY source/tests/docs commit; run tests; exact final SHA and evidence.
+
+No publishing, no credentials, no Desktop Commander, no E:\manhwa.
