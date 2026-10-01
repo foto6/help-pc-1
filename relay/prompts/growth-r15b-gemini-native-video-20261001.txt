@@ -1,0 +1,25 @@
+EXECUTE NOW — GROWTH R15B CONCRETE GEMINI NATIVE-VIDEO VISUAL CRITIC. Continue in SAME existing Growth chat and SAME branch.
+
+Repo: foto6/video3
+Branch: agent/growth-r15-visual-critic-20261001
+Exact current green HEAD: c881932dd90f14d4fd0a090d1809192873e95177
+CI: 36807144269 SUCCESS
+
+Base visual critic is green. Now add one concrete optional native-video VLM provider while keeping structural critic fallback.
+
+Requirements:
+1. Google Gemini provider enabled only via explicit GEMINI_API_KEY and configurable GEMINI_MODEL; disabled by default.
+2. Feed the actual finished MP4 natively plus compact source-semantic/edit-timeline/QA context. Do not reduce primary judging to text-only or contact-sheet-only.
+3. Strict structured time-coded observations for all critic dimensions: hook, pacing, semantic cuts, crop/framing, B-roll relevance, captions, continuity, motion, audio, payoff/CTA/loop, awkward/dead moments.
+4. Pairwise A/B mode must blind/randomize candidate presentation order deterministically from comparison digest, then map result back only after scoring.
+5. Keep model observations clearly labeled as VLM opinion with provider/model/mode/request digest/confidence; never human ground truth.
+6. Validate timestamps against ffprobe duration; malformed output fails closed.
+7. Bound upload/retries/timeouts/cleanup; no credentials or auth headers in logs/artifacts.
+8. CI fake transport only; optional live smoke command requires explicit credentials.
+9. Add regression proving structural-only mode remains valid when provider absent.
+10. Add pairwise fixture where Gemini fake observation flips or resolves a structural tie for an evidence-backed reason, and preserve insufficient_evidence when output is weak.
+11. HUMAN_LEVEL_UNPROVEN remains until real blinded human labels.
+12. NONEMPTY code/tests/docs commit and exact-head CI SUCCESS.
+
+Current official Gemini docs support native video input, timestamped video understanding, configurable static FPS/clipping and agentic processing on supported current models. Keep model configurable.
+No publishing, no credentials committed, no merge/release, no Creator/Media mutation, no Desktop Commander, no E:\manhwa.
