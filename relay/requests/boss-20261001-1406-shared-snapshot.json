@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1406-shared-snapshot",
+  "action": "uia.snapshot",
+  "params": {
+    "window_title": "ChatGPT - Shared Content - Google Chrome"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only snapshot of second ChatGPT window to inventory existing agent chats and avoid duplicates"
+}
