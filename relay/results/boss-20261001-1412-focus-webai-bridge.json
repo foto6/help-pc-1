@@ -1,0 +1,11 @@
+{
+  "action": null,
+  "error": "ValueError: action is not enabled by relay: 'uia.focus'",
+  "executor_result": null,
+  "id": "boss-20261001-1412-focus-webai-bridge",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "relay_error",
+  "version": "pc_relay.result.v1"
+}
