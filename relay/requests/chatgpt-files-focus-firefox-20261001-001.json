@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-files-focus-firefox-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ws=New-Object -ComObject WScript.Shell; if(-not $ws.AppActivate('public-b · Folder · [BUGBOUNTY] foto6 test — Mozilla Firefox')){exit 2}; Start-Sleep -Milliseconds 300"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Focus authorized Files.com Firefox window"
+}
