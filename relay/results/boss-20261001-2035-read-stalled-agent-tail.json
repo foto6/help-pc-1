@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst items=[\n{name:\"creator\",id:\"B0559FFE7843B036079007016E7351FF\"},\n{name:\"human\",id:\"74BDC2B5E97107BBA7ACDB858F2D03BB\"},\n{name:\"bridge\",id:\"A88E3157A8078B7DA32FC62848071CC3\"}\n];\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nasync function inspect(it){\n const tab=tabs.find(x=>x.id===it.id);if(!tab)return{name:it.name,found:false};\n const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,p=new Map();\n ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\n const expr=\"JSON.stringify((()=>{const els=[...document.querySelectorAll('[data-message-author-role=\\\\\\\"assistant\\\\\\\"]')];let texts=els.slice(-3).map(e=>(e.innerText||e.textContent||'').trim().slice(0,1800));if(!texts.length){const arts=[...document.querySelectorAll('article')];texts=arts.slice(-6).map(e=>(e.innerText||e.textContent||'').trim()).filter(Boolean).slice(-3).map(x=>x.slice(0,1800))}return {title:document.title,url:location.href,assistantCount:els.length,last:texts}})())\";\n const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});ws.close();return{name:it.name,...JSON.parse(rr.result.value)};\n}\nconst out=[];for(const it of items){try{out.push(await inspect(it))}catch(e){out.push({name:it.name,error:String(e.message||e)})}}process.stdout.write(JSON.stringify(out));\n\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"name\":\"creator\",\"title\":\"Implement Publish Provider Layer\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"assistantCount\":0,\"last\":[]},{\"name\":\"human\",\"title\":\"Разработка гуманного бенчмарка\",\"url\":\"https://chatgpt.com/c/6abdcea3-b724-83ed-b43b-982f00854e3c\",\"assistantCount\":0,\"last\":[]},{\"name\":\"bridge\",\"title\":\"Bridge R19 Implementation Report\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\",\"assistantCount\":0,\"last\":[]}]",
+      "stdout_bytes": 582,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T14:06:44.190Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T14:06:44.125Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-2035-read-stalled-agent-tail"
+    },
+    "request_id": "boss-20261001-2035-read-stalled-agent-tail",
+    "started_at": "2026-10-01T14:06:43.459Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-2035-read-stalled-agent-tail",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
