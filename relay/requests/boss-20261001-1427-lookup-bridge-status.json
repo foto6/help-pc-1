@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261001-1427-lookup-bridge-status",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "boss-20261001-1425-bridge-status",
+    "action": "shell.run"
+  },
+  "timeout_ms": 10000,
+  "note": "Reconcile timed-out live Bridge /api/status probe before any further shell diagnostics"
+}
