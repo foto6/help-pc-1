@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-pccontrol-docs-shallow-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "\n$ErrorActionPreference='Stop'\n$roots=@('E:\\pc-github-relay','E:\\help-pc-1')\nforeach($r in $roots){\n  if(Test-Path $r){\n    Write-Output \"=== $r ===\"\n    Get-ChildItem $r -Force | Select-Object Name,FullName,PSIsContainer | Format-Table -AutoSize\n  }\n}\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Inspect shallow local pc-control repository structure to locate UIA action documentation"
+}
