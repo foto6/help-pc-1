@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-bounty-open-publicb-20261001-001",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Start-Process 'https://bugbountyfoto6.files.com/files/public-b'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Open only the user's authorized Files.com trial public-b URL in existing browser"
+}
