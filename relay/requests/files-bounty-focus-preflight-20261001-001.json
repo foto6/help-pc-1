@@ -1,0 +1,22 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "files-bounty-focus-preflight-20261001-001",
+  "action": "action.preflight",
+  "params": {
+    "contract_version": "pc_executor.action_preflight.v1",
+    "request": {
+      "request_id": "files-bounty-focus-firefox-20261001-action",
+      "action": "uia.focus",
+      "params": {
+        "query": {
+          "window_title": "Подать заявление о выплате — Mozilla Firefox",
+          "control_type": "Window"
+        }
+      },
+      "dry_run": null,
+      "timeout_ms": 10000
+    }
+  },
+  "timeout_ms": 10000,
+  "note": "Side-effect-free preflight for focusing exact Firefox window before authorized Files.com test navigation"
+}
