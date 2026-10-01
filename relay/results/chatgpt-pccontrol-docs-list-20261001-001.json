@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "\n$ErrorActionPreference='Stop'\nGet-ChildItem 'E:\\pc-github-relay\\docs' -File -Recurse -Depth 2 |\n  Select-Object FullName,Length | Format-Table -AutoSize\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "\r\nFullName                                                 Length\r\n--------                                                 ------\r\nE:\\pc-github-relay\\docs\\ACTION_OUTCOME_V1.md               4482\r\nE:\\pc-github-relay\\docs\\AGENT_LAUNCH_PROBE.md               194\r\nE:\\pc-github-relay\\docs\\ARCHITECTURE.md                    6387\r\nE:\\pc-github-relay\\docs\\GITHUB_RELAY.md                    2765\r\nE:\\pc-github-relay\\docs\\INTEGRATION_CONTRACT.md            5095\r\nE:\\pc-github-relay\\docs\\OUTCOME_JOURNAL_V1.md              5182\r\nE:\\pc-github-relay\\docs\\PC_CONTROL_AGENT_RUNBOOK_R1.md     4309\r\nE:\\pc-github-relay\\docs\\PC_CONTROL_PLUS_QUICKSTART_R1.md   1371\r\nE:\\pc-github-relay\\docs\\PREFLIGHT_V1.md                    4602\r\nE:\\pc-github-relay\\docs\\TOOL_SCHEMA.md                     5070\r\n\r\n\r\n",
+      "stdout_bytes": 786,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T02:06:47.771Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T02:06:47.724Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-pccontrol-docs-list-20261001-001"
+    },
+    "request_id": "chatgpt-pccontrol-docs-list-20261001-001",
+    "started_at": "2026-10-01T02:06:47.257Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-pccontrol-docs-list-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
