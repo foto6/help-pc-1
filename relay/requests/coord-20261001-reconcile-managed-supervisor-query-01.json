@@ -1,0 +1,12 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-reconcile-managed-supervisor-query-01",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "coord-20261001-query-managed-supervisor-chat-01",
+    "action": "shell.run",
+    "execution_attempt": 1
+  },
+  "timeout_ms": 10000,
+  "note": "Reconcile timed-out read-only managed chat registry query; do not replay"
+}
