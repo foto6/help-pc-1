@@ -256,8 +256,17 @@ def test_two_uia_timeouts_open_circuit_without_degrading_unrelated_lanes(tmp_pat
     fast_fail = executor.execute(
         _request("uia.snapshot", rid="uia-circuit", timeout_ms=400)
     )
+    fast_fail_elapsed = time.monotonic() - started
     assert fast_fail.status == "timeout"
-    assert time.monotonic() - started < 0.12
+    assert fast_fail_elapsed < 0.12
+    print(
+        "R24_UIA_BOUND_METRICS",
+        {
+            "requested_timeout_ms": 40,
+            "observed_timeout_ms": [round(value * 1000, 3) for value in measured],
+            "circuit_fast_fail_ms": round(fast_fail_elapsed * 1000, 3),
+        },
+    )
 
     windows = executor.execute(
         _request("windows.list", rid="windows-after-uia", timeout_ms=200)
