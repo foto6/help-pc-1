@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst prompt=\"EXECUTE NOW — CREATOR R23 EDITOR-TO-PUBLISH HANDOFF.\\n\\nRepo: foto6/video1\\nWritable branch ONLY: agent/creator-r23-editor-publish-handoff-20261001\\nExact start: 351df0d455557fb20b47f0fd2ab806c4281ed5ee\\n\\nR22 autonomous editor loop and R21 publish execution are both exact-head green. Build the durable handoff that takes a terminal R22 final editor bundle and prepares/submits it into the existing R21 publish-provider contract, without performing a real social post.\\n\\nRequired:\\n1. Define creator.editor_publish_handoff.v1 binding exact source, final render SHA, editor-loop decision, release authorization and target provider/account refs.\\n2. Only terminal eligible editor outcomes may proceed. tie / insufficient_evidence / human_review_required / objective_render_failure must fail closed.\\n3. Enforce exact final.mp4 hash lineage and reject stale/wrong candidate artifacts.\\n4. Persist publish intent before any provider side effect and preserve R21 recover-before-resubmit semantics.\\n5. Support restart/lost-ACK/duplicate handoff/provider timeout/auth-required/account mismatch tests.\\n6. No credentials in durable state/logs. No CAPTCHA/2FA bypass. No live provider mutation in this milestone.\\n7. Add one-command synthetic E2E: final editor bundle -> release authorization -> publish intent -> synthetic provider receipt -> Growth handoff.\\n8. Produce conformance manifest/schema, readiness report and exact-head CI.\\n\\nDo not modify Media/Growth repos. Do not claim live publishing was executed.\",id=\"B0559FFE7843B036079007016E7351FF\",url=\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\";const sleep=ms=>new Promise(r=>setTimeout(r,ms));const tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===id);if(!tab||tab.url!==url){process.stdout.write(JSON.stringify({ok:false,reason:\"target_mismatch\"}));process.exit(2)}const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;pending.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});const state=async()=>{const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});const generating=bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'));return {found:!!c,text,generating}})())\",returnByValue:true});return JSON.parse(rr.result.value)};const pre=await state();if(!pre.found||pre.generating||pre.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:pre.generating?\"generating\":\"draft_or_no_composer\"}));process.exit(3)}await call(\"Runtime.evaluate\",{expression:\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});c.focus();return true})()\",returnByValue:true});await call(\"Input.insertText\",{text:prompt});await sleep(600);const typed=await state();const norm=s=>String(s||\"\").replace(/\\s+/g,\" \").trim();if(norm(typed.text)!==norm(prompt)){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"readback_mismatch\"}));process.exit(4)}await call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await sleep(1000);const post=await state();ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true,started:post.generating,composerCleared:!post.text.trim()}));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"submitted\":true,\"started\":false,\"composerCleared\":true}",
+      "stdout_bytes": 67,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T12:12:46.746Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T12:12:46.687Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-1910-creator-r23"
+    },
+    "request_id": "boss-20261001-1910-creator-r23",
+    "started_at": "2026-10-01T12:12:42.773Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-1910-creator-r23",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
