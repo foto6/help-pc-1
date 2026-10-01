@@ -1,0 +1,53 @@
+EXECUTE NOW — CREATOR R18 SEMANTIC VIDEO DIRECTOR / AUTO-STYLE SELECTION. Continue in this SAME existing Creator chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video1
+Branch ONLY: agent/creator-r18-semantic-director-20261001
+Exact starting HEAD: d8b7c0f72381912f6c477ebc6eaa9ac43d81166e
+
+R17 one-command MVP is green. Preserve that operator flow and Media R13 pin. This milestone upgrades the system from preset-driven editing toward content-aware directing.
+
+PRIMARY GOAL:
+Before rendering, build a semantic timeline of the source video and use it to choose/edit style automatically, while remaining fail-closed and honest when perception evidence is missing.
+
+Required:
+1. Add a versioned semantic analysis contract, e.g. creator.semantic_video_analysis.r18.v1.
+2. Represent time-bounded evidence for:
+   - transcript segments / sentence boundaries;
+   - scene/shot boundaries;
+   - faces/people / salient subject boxes;
+   - important objects/products/screens where evidence exists;
+   - motion/visual energy;
+   - speech energy / silence / music;
+   - semantic events: hook, setup, proof/demo, explanation, punchline/payoff, CTA candidate, low-information spans;
+   - confidence and source/provenance for every inference.
+3. Add provider adapter boundaries for:
+   - ASR;
+   - scene/shot detector;
+   - CV saliency/person/object tracking;
+   - optional VLM semantic analyzer.
+   No credentials in repo. Missing provider must degrade explicitly to deterministic/local evidence, never fabricate semantics.
+4. Add automatic editorial-mode selection:
+   clean_podcast / aggressive_shortform / cinematic_minimal / hybrid.
+   Decision must be evidence-based and emit rationale + confidence, not a hidden heuristic.
+5. Add semantic edit-directive generation:
+   - preserve important object reveals;
+   - do not cut mid-sentence unless explicitly justified;
+   - compress low-information spans;
+   - strengthen first 1-3s hook;
+   - align punchline/payoff with visual emphasis;
+   - choose B-roll only when semantically relevant;
+   - select caption emphasis from semantic importance;
+   - preserve continuity around demos/screens/product interactions;
+   - propose loop/CTA only if content supports it.
+6. Add explicit style override. User-specified style wins, but report disagreement with auto-director if material.
+7. Feed R18 output into the existing R17 pipeline as structured hints/directives without bypassing Media QA.
+8. Add deterministic conformance fixtures for at least:
+   talking-head explainer, product demo, story/punchline, cinematic montage, static low-energy clip.
+9. Add an adapter-backed integration test proving semantic evidence changes actual edit decisions compared with no-semantic fallback.
+10. Add human-reviewable director report:
+   semantic timeline, chosen style, key moments, cuts to preserve/remove, B-roll rationale, caption emphasis, confidence, unavailable evidence.
+11. Never claim human-level quality from synthetic fixtures. Add readiness state:
+   SEMANTIC_PIPELINE_READY but HUMAN_LEVEL_UNPROVEN until human benchmark exists.
+12. NONEMPTY source/tests/docs commit, focused/full CI, exact SHA/run IDs.
+
+No publishing. No credentials. No merge/release. Do not modify Media/Growth repos. No Desktop Commander. Do not access E:\manhwa.
