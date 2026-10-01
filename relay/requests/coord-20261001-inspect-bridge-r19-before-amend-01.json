@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261001-inspect-bridge-r19-before-amend-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Get-Content -LiteralPath 'E:\\WebAIBridge\\app\\data\\direct_send_existing_agent.js' -Raw"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only inspect direct sender behavior before same-chat Bridge amendment"
+}
