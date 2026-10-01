@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; $j=Get-Content -LiteralPath $p -Raw|ConvertFrom-Json; @($j.managedChats)|Where-Object{$_.id -match 'pc|native|parity'}|Select-Object id,name,url,profileId,repository,branch,projectId,enabled|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"agent-pc-executor\",\"name\":\"PC Executor\",\"url\":\"https://chatgpt.com/c/6ab8bed2-8d0c-83eb-b793-8e504335a57d\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"repository\":\"\",\"branch\":\"agent/pc-executor\",\"projectId\":\"\",\"enabled\":true},{\"id\":\"agent-pc-control\",\"name\":\"Native PC Control existing agent\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"repository\":\"foto6/help-pc-2\",\"branch\":\"\",\"projectId\":\"\",\"enabled\":true},{\"id\":\"agent-pc-parity\",\"name\":\"PC parity existing agent\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab94f1d-a604-83eb-ae1b-258ac27e6544\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"repository\":\"foto6/help-pc-1\",\"branch\":\"\",\"projectId\":\"\",\"enabled\":true},{\"id\":\"agent-pc-tool-parity-implementation\",\"name\":\"Implement Native Tool Parity (existing)\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab9467b-02e0-83eb-83b6-6f9b93835f46\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"repository\":\"foto6/help-pc-1\",\"branch\":\"\",\"projectId\":\"\",\"enabled\":true}]\r\n",
+      "stdout_bytes": 1164,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T00:32:46.710Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T00:32:46.669Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261001-pc-agent-roster-01"
+    },
+    "request_id": "coord-20261001-pc-agent-roster-01",
+    "started_at": "2026-10-01T00:32:46.136Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-pc-agent-roster-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
