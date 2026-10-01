@@ -1,0 +1,21 @@
+{
+  "action": "uia.snapshot",
+  "executor_result": {
+    "action": "uia.snapshot",
+    "data": {},
+    "dry_run": false,
+    "error": "window not found: ChatGPT - Google Chrome",
+    "error_kind": "stale_target",
+    "finished_at": "2026-10-01T07:01:11.858Z",
+    "ok": false,
+    "request_id": "boss-20261001-1403-chatgpt-snapshot",
+    "started_at": "2026-10-01T07:01:11.276Z",
+    "status": "stale_target"
+  },
+  "id": "boss-20261001-1403-chatgpt-snapshot",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
