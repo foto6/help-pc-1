@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst prompt=\"EXECUTE NOW — NATIVE MCP R28 CONSUME EXACT BRIDGE R24 + PC RELAY R27 EVIDENCE.\\n\\nRepo: foto6/help-pc-2\\nWritable branch ONLY: agent/native-mcp-r28-r24-r27-evidence-consumer-20261001\\nExact start: 75b2794821160b240c7eef1410a81fddbe795948\\nNative R27 exact-head CI: 36864305617 SUCCESS.\\n\\nNew exact-green producer authorities:\\n1. Bridge R24 read-only live preflight\\n   repo: foto6/WebAIBridge\\n   branch: agent/bridge-r24-live-preflight-20261001\\n   exact SHA: 4ff6315241df16bcfa4750b15f3a3a315296dc50\\n   CI: 36865003806 SUCCESS\\n   contract: bridge.r24_live_preflight.v1\\n2. PC Relay R27 exact progress evidence delivery\\n   repo: foto6/help-pc-1\\n   branch: agent/pc-relay-r27-evidence-delivery-20261001\\n   exact SHA: 91600c19763ca8a0871d078a3f15ac97fb4f039a\\n   CI: 36866129515 SUCCESS\\n   contract: pc_relay.progress_evidence.v1\\n\\nIndependently verify both producers; do not trust this prompt as authority.\\n\\nPRIMARY GOAL:\\nUpgrade the R27 cutover authority gate to consume the exact new source-bound evidence envelopes instead of relying on the older R23 rehearsal + direct R26 progress view alone.\\n\\nRequired:\\n1. Vendor/pin exact producer schemas/manifests/blob identities for Bridge R24 and Relay R27.\\n2. Consume bridge.r24_live_preflight.v1 with explicit PASS/DEGRADED/BLOCKED/UNKNOWN evidence; never infer missing live facts.\\n3. Consume pc_relay.progress_evidence.v1 exactly, including delivery source digests, atomic binding, freshness, process identity/generation and liveness. Do not translate arbitrary data into this contract.\\n4. Cutover-readiness can become READY_FOR_EXPLICIT_CUTOVER only when:\\n   - exact R24 producer authority is valid and live snapshot is fresh/all required gates PASS;\\n   - exact R27 relay evidence is fresh/status=ok and embedded producer/liveness is healthy_progressing;\\n   - existing R25 runtime/journal authority remains acceptable;\\n   - no UNKNOWN side effect exists.\\n5. Preserve decision classes READY_FOR_EXPLICIT_CUTOVER / BLOCKED / RECONCILIATION_REQUIRED and keep live_cutover_authorized=false, mutation_execution_authorized=false.\\n6. Reject moving producer SHA, schema/manifest drift, stale snapshots, ambiguous process identity, unknown evidence, delivery digest mismatch, replay authorization, non-quiescent queue, code reload required and unhealthy adapters.\\n7. Read-only diagnostics remain available under BLOCKED/RECONCILIATION_REQUIRED.\\n8. Add deterministic producer-consumer fixtures for all critical rejection paths plus exact-green happy path.\\n9. Exact-head CI on Windows + Ubuntu; source-bound compatibility/readiness report.\\n10. NO live cutover, restart, kill, service change or Bridge deployment. No Desktop Commander, no E:\\\\manhwa access.\\n\\nCompletion = substantive commit(s), exact final SHA, exact-head CI ID/conclusion and NO_LIVE_CUTOVER report.\",id=\"9BAA48607EDE0A4DFA73EAD8396BA451\",url=\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\";const sleep=ms=>new Promise(r=>setTimeout(r,ms));const tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===id);if(!tab||tab.url!==url){process.stdout.write(JSON.stringify({ok:false,reason:\"target_mismatch\"}));process.exit(2)}const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;pending.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});const state=async()=>{const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});const generating=bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'));return {found:!!c,text,generating}})())\",returnByValue:true});return JSON.parse(rr.result.value)};const pre=await state();if(!pre.found||pre.generating||pre.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:pre.generating?\"generating\":\"draft_or_no_composer\"}));process.exit(3)}await call(\"Runtime.evaluate\",{expression:\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});c.focus();return true})()\",returnByValue:true});await call(\"Input.insertText\",{text:prompt});await sleep(500);const typed=await state();const norm=s=>String(s||\"\").replace(/\\s+/g,\" \").trim();if(norm(typed.text)!==norm(prompt)){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"readback_mismatch\"}));process.exit(4)}await call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await sleep(800);const post=await state();ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true,started:post.generating,composerCleared:!post.text.trim()}));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"submitted\":true,\"started\":false,\"composerCleared\":true}",
+      "stdout_bytes": 67,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T14:06:40.352Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T14:06:40.289Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261001-2035-native-r28-evidence-consumer"
+    },
+    "request_id": "boss-20261001-2035-native-r28-evidence-consumer",
+    "started_at": "2026-10-01T14:06:35.451Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-2035-native-r28-evidence-consumer",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
