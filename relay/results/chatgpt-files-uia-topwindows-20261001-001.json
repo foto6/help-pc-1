@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$code=@'\nimport uiautomation as auto\nroot=auto.GetRootControl()\nfor i,c in enumerate(root.GetChildren()):\n    try:\n        print(i, getattr(c,'ProcessId',0), getattr(c,'ControlTypeName',''), repr((getattr(c,'Name','') or '')[:220]), repr((getattr(c,'ClassName','') or '')[:120]))\n    except Exception as e:\n        print(i,'ERR',type(e).__name__)\n'@; py -c $code"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "0 12744 PaneControl '������ �����' 'Shell_TrayWnd'\r\n1 4244 WindowControl '����� � ��������� - Google Chrome' 'Chrome_WidgetWin_1'\r\n2 18064 WindowControl '��������� ������' 'CASCADIA_HOSTING_WINDOW_CLASS'\r\n3 12212 WindowControl '���������� SpectraTrack ���������� � Mozilla Firefox' 'MozillaWindowClass'\r\n4 12744 WindowControl 'pc-github-relay � ���������' 'CabinetWClass'\r\n5 10932 WindowControl 'Discord Updater' 'Chrome_WidgetWin_1'\r\n6 12744 PaneControl 'Program Manager' 'Progman'\r\n",
+      "stdout_bytes": 484,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T00:46:28.531Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-01T00:46:28.479Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-files-uia-topwindows-20261001-001"
+    },
+    "request_id": "chatgpt-files-uia-topwindows-20261001-001",
+    "started_at": "2026-10-01T00:46:27.484Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-files-uia-topwindows-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
