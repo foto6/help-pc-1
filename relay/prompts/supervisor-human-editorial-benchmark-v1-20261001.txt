@@ -1,0 +1,28 @@
+EXECUTE NOW — INDEPENDENT HUMAN-LEVEL EDITING GATE / BENCHMARK DESIGN. Use this SAME existing supervisor conversation; do not create new chats and do not duplicate implementation work.
+
+Coordinator context:
+- Creator R17 green: foto6/video1 @ d8b7c0f72381912f6c477ebc6eaa9ac43d81166e, CI 36805132912 SUCCESS.
+- Creator R18 active: agent/creator-r18-semantic-director-20261001.
+- Media R14 active: agent/media-r14-realworld-acceptance-20261001.
+- Growth R15 active: agent/growth-r15-visual-critic-20261001.
+- Creator R16 / Media R13 production pin is green.
+- Bridge/MCP are outside this benchmark.
+
+GOAL:
+Define and independently enforce a benchmark that prevents claims of human-level editing from synthetic tests, rules or self-scoring alone.
+
+Required:
+1. Define versioned human editorial benchmark protocol for short-form video.
+2. Corpus must cover: talking-head explainer, product/demo, story/punchline, gaming/action, cinematic montage, screen/tutorial, low-light/noisy, landscape-to-vertical, subtitle-heavy, mixed speech+music.
+3. Pairwise blind evaluation: system vs competent human, plus A/B system variants, randomized labels/order.
+4. Human rubric dimensions: hook, pacing, semantic cut correctness, framing/crop, B-roll relevance, captions, continuity, motion appropriateness, audio balance, payoff/CTA/loop, overall preference.
+5. Hard technical disqualifiers separate from subjective preference.
+6. Time-coded evaluator notes required for major defects.
+7. Minimum sample size/rater count and agreement reporting; no fabricated labels/statistical certainty.
+8. Measurable statuses: MVP_READY, CONTENT_AWARE_READY, HUMAN_LEVEL_UNPROVEN, HUMAN_PARITY_CANDIDATE. HUMAN_LEVEL unavailable unless actual blinded human data supports it.
+9. Specify exact artifacts Creator R18, Media R14 and Growth R15 must emit for repo-agnostic benchmark ingestion.
+10. Independently inspect current remote evidence and list current gaps.
+11. Do not modify Creator/Media/Growth repos or deploy.
+12. If committing, only write a concise benchmark/gate artifact into foto6/boss on a dedicated non-conflicting branch with exact source SHAs.
+
+No new chats, no publishing, no credentials, no Desktop Commander, and respect all existing protected-path restrictions.
