@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-create-security-audit-outcome-20261001-001",
+  "action": "outcome.lookup",
+  "params": {
+    "action": "shell.run",
+    "request_id": "chatgpt-create-security-audit-folder-20261001-001"
+  },
+  "timeout_ms": 10000,
+  "note": "Reconcile audit-folder creation without replaying side effects"
+}
