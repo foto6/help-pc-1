@@ -68,12 +68,12 @@ def _bounded_text(value: object, limit: int = MAX_ERROR_CHARS) -> str:
     # Git diagnostics may echo credential-bearing remotes. Keep health safe for
     # read-only inspection without publishing URL userinfo or secret-like values.
     text = re.sub(
-        r"([A-Za-z][A-Za-z0-9+.-]*://)[^/@\\s]+@",
+        r"([A-Za-z][A-Za-z0-9+.-]*://)[^/@\s]+@",
         r"\\1<redacted>@",
         text,
     )
     text = re.sub(
-        r"(?i)\\b(token|password|authorization|credential)\\s*[:=]\\s*[^\\s]+",
+        r"(?i)\b(token|password|authorization|credential)\s*[:=]\s*[^\s]+",
         r"\\1=<redacted>",
         text,
     )
