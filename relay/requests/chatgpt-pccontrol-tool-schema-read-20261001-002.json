@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-pccontrol-tool-schema-read-20261001-002",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "\n$ErrorActionPreference='Stop'\n$p='E:\\pc-github-relay\\docs\\TOOL_SCHEMA.md'\nSelect-String -Path $p -Pattern 'uia\\.focus|uia\\.invoke|uia\\.inspect|uia\\.snapshot|keyboard|window' -Context 4,10 |\n  ForEach-Object { $_.Context.PreContext; $_.Line; $_.Context.PostContext; '---' }\n"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Read exact pc-control UIA and keyboard action schemas from local docs"
+}
