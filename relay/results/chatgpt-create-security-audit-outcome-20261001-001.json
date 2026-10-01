@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T00:54:57.104Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "chatgpt-create-security-audit-folder-20261001-001"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:8bfe6aef7e066ec556275bc124d3424bfd1ce079cc7a2177f70b866de8132a51",
+            "journal_sequence": 592,
+            "previous_record_sha256": "a87c4284a5f1d45b5ee61381b015dbae6836e8a2c445612598a905538d215553",
+            "record_sha256": "194de2a15aff9892ef27b46d539bb6cae8e3d0f743edd4cbcae8f018b5deadbc",
+            "recorded_at": "2026-10-01T00:54:57.137Z",
+            "request_id": "chatgpt-create-security-audit-folder-20261001-001",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": true,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "completed",
+              "observed_at": "2026-10-01T00:54:57.626Z",
+              "reason": "completed",
+              "reconciliation_required": false,
+              "reexecution_safe": false,
+              "request_id": "chatgpt-create-security-audit-folder-20261001-001"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:8bfe6aef7e066ec556275bc124d3424bfd1ce079cc7a2177f70b866de8132a51",
+            "journal_sequence": 593,
+            "previous_record_sha256": "194de2a15aff9892ef27b46d539bb6cae8e3d0f743edd4cbcae8f018b5deadbc",
+            "record_sha256": "414d8622f9034ac32a1041d2b98d9bd56eb85420e023c2c3bbdc644ccbe22083",
+            "recorded_at": "2026-10-01T00:54:57.668Z",
+            "request_id": "chatgpt-create-security-audit-folder-20261001-001",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": true,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "completed",
+          "observed_at": "2026-10-01T00:54:57.626Z",
+          "reason": "completed",
+          "reconciliation_required": false,
+          "reexecution_safe": false,
+          "request_id": "chatgpt-create-security-audit-folder-20261001-001"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": true,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "completed",
+            "observed_at": "2026-10-01T00:54:57.626Z",
+            "reason": "completed",
+            "reconciliation_required": false,
+            "reexecution_safe": false,
+            "request_id": "chatgpt-create-security-audit-folder-20261001-001"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:8bfe6aef7e066ec556275bc124d3424bfd1ce079cc7a2177f70b866de8132a51",
+          "journal_sequence": 593,
+          "previous_record_sha256": "194de2a15aff9892ef27b46d539bb6cae8e3d0f743edd4cbcae8f018b5deadbc",
+          "record_sha256": "414d8622f9034ac32a1041d2b98d9bd56eb85420e023c2c3bbdc644ccbe22083",
+          "recorded_at": "2026-10-01T00:54:57.668Z",
+          "request_id": "chatgpt-create-security-audit-folder-20261001-001",
+          "transition": "terminal"
+        },
+        "outcome": "succeeded",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "1c0ae2997be5fa67b65d0b59454f6313baa65753be993a578260f1b9736457fd",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 593
+        },
+        "reason": "completed",
+        "replay_authorized": false,
+        "requestId": "chatgpt-create-security-audit-folder-20261001-001",
+        "request_id": "chatgpt-create-security-audit-folder-20261001-001",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T00:55:00.509Z",
+    "ok": true,
+    "request_id": "chatgpt-create-security-audit-outcome-20261001-001",
+    "started_at": "2026-10-01T00:55:00.469Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-create-security-audit-outcome-20261001-001",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
