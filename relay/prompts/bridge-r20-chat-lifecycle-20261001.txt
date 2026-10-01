@@ -1,0 +1,36 @@
+EXECUTE NOW — BRIDGE R20 CHAT LIFECYCLE / IMPORT-REBIND MANAGEMENT. Continue in this SAME existing Bridge chat; do not create a new chat.
+
+Writable repo ONLY: foto6/WebAIBridge
+Branch ONLY: agent/bridge-chat-lifecycle-r20-20261001
+Exact starting HEAD: 1a297ee53845fe960584d77dca3343c1c96d6a1d
+
+R19 inventory/delete is green. Preserve:
+- all-chat inventory and dedup;
+- managed/unmanaged distinction;
+- local->canonical reconciliation;
+- explicit delete preview/confirm safety;
+- no discovery-driven tab opening;
+- assignment reliability fixes.
+
+PRIMARY GOAL:
+Make discovered chats manageable without recreating them: import/attach existing chat, rebind stale managed chat to an existing discovered conversation, detach from management, and preserve identity across restart.
+
+Required:
+1. Add explicit lifecycle actions for discovered chats:
+   - import existing chat as managed;
+   - attach repo/branch/agent metadata;
+   - rebind stale managed record to an existing canonical conversation;
+   - detach/unmanage without deleting conversation;
+   - archive local Bridge metadata where applicable.
+2. NEVER create a new ChatGPT conversation as part of import/rebind/detach.
+3. Require exact canonical conversation identity and preview before rebind/detach.
+4. Add conflict detection if one canonical conversation is already bound to another managed agent or multiple records disagree.
+5. Preserve local-chatgpt -> canonical transitions across lifecycle changes.
+6. Persist lifecycle audit trail without message contents.
+7. Add restart convergence: imported/rebound chat remains stable after PC/browser restart and discovery re-scan.
+8. Add UI/API controls for import, rebind, detach, with explicit confirmation for destructive metadata changes.
+9. Add tests for unmanaged->managed import, stale->canonical rebind, duplicate conflict, detach, restart, project chat, plain /c chat, local->canonical transition, deleted conversation, ambiguous identity.
+10. Add deterministic replay/soak showing no duplicate managed records and zero /json/new side effects from lifecycle operations.
+11. NONEMPTY source/tests/docs commit, targeted/full tests, exact SHA, CI and migration notes.
+
+HARD RULE: current live Bridge remains untouched. No deploy/restart/repoint/config mutation. No real chat deletion in tests.
