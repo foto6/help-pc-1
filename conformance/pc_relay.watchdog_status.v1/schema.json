@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pc_relay.watchdog_status.v1",
+  "title": "PC Relay stale-sync watchdog status",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "status_version",
+    "state",
+    "observed_at_unix",
+    "process",
+    "observations",
+    "stale_reasons",
+    "health",
+    "error",
+    "recovery"
+  ],
+  "properties": {
+    "status_version": {
+      "const": "pc_relay.watchdog_status.v1"
+    },
+    "state": {
+      "enum": [
+        "PROCESS_MISSING",
+        "PROCESS_EXISTS",
+        "HEALTHY",
+        "STALE",
+        "RECONCILIATION_REQUIRED",
+        "DUPLICATE_AMBIGUOUS"
+      ]
+    },
+    "observed_at_unix": {
+      "type": "number",
+      "minimum": 0
+    },
+    "process": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "matching_pids",
+            "logical_roots",
+            "logical_process_count",
+            "health_pid",
+            "health_pid_observed"
+          ],
+          "properties": {
+            "matching_pids": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "uniqueItems": true
+            },
+            "logical_roots": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "uniqueItems": true
+            },
+            "logical_process_count": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "health_pid": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 1
+            },
+            "health_pid_observed": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "observations": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "local_head",
+            "remote_tracking_head",
+            "head_relation",
+            "remote_tracking_queue",
+            "remote_observation_source"
+          ],
+          "properties": {
+            "local_head": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "remote_tracking_head": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[0-9a-f]{40}$"
+            },
+            "head_relation": {
+              "enum": [
+                "equal",
+                "local_behind_remote",
+                "local_ahead_remote",
+                "diverged",
+                "unknown"
+              ]
+            },
+            "remote_tracking_queue": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "request_count",
+                    "result_count",
+                    "backlog_count"
+                  ],
+                  "properties": {
+                    "request_count": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "result_count": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "backlog_count": {
+                      "type": "integer",
+                      "minimum": 0
+                    }
+                  }
+                }
+              ]
+            },
+            "remote_observation_source": {
+              "const": "local_remote_tracking_ref_no_network"
+            }
+          }
+        }
+      ]
+    },
+    "stale_reasons": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "health_record_age_exceeded",
+          "local_head_behind_remote_tracking_head",
+          "remote_tracking_head_advanced_since_last_relay_sync",
+          "remote_backlog_advanced_without_completed_cycle",
+          "status_probe_error"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "health": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "../pc_relay.health.v1/schema.json"
+        }
+      ]
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "classification",
+            "message"
+          ],
+          "properties": {
+            "classification": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "message": {
+              "type": "string",
+              "maxLength": 512
+            }
+          }
+        }
+      ]
+    },
+    "recovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "automatic_restart",
+        "automatic_kill",
+        "automatic_side_effect_replay",
+        "preserve_state_dir",
+        "preserve_outcome_journal",
+        "unknown_side_effect_requires_outcome_lookup"
+      ],
+      "properties": {
+        "automatic_restart": {
+          "const": false
+        },
+        "automatic_kill": {
+          "const": false
+        },
+        "automatic_side_effect_replay": {
+          "const": false
+        },
+        "preserve_state_dir": {
+          "const": ".pc-relay/state"
+        },
+        "preserve_outcome_journal": {
+          "const": ".pc-relay/outcomes.jsonl"
+        },
+        "unknown_side_effect_requires_outcome_lookup": {
+          "const": true
+        }
+      }
+    }
+  }
+}
