@@ -14,7 +14,7 @@
   "source_blobs": [
     {
       "path": "src/pc_executor/runtime_health.py",
-      "git_blob_sha": "ea305cdf1aa1eff503a80594a7c7c9b53c90e002"
+      "git_blob_sha": "34c98ae8ad294afbb6ded4d73e49648b364cc52a"
     },
     {
       "path": "schemas/pc_executor.runtime_health.v1.schema.json",
