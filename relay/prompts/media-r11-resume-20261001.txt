@@ -1,0 +1,21 @@
+EXECUTE NOW — MEDIA R11 AUTONOMOUS SHORT-FORM EDITOR, RESUME AFTER REBOOT. Do not stop at a plan.
+
+Writable repo ONLY: foto6/video2
+Branch ONLY: agent/media-r11-autonomous-reels-20261001
+Exact starting HEAD: 2366b3820c2cbf429aa734f2e623689699e73003
+
+Coordinator evidence: previous dispatch began generation but the PC rebooted before any commit. The branch is still IDENTICAL to the starting HEAD. Do not claim prior uncommitted work survived.
+
+PRIMARY GOAL: deliver the actual deterministic 9:16 editing/render/QA engine Creator R11 is already waiting for.
+
+Required:
+1. Implement deterministic timeline compilation for 1080x1920 short-form video.
+2. Real ffmpeg-first operations: trim/cut/concat, crop/scale/reframe, speed, fades/transitions when requested, text overlays, subtitles/captions, voiceover sync, music bed, audio mix/ducking, loudness normalization, intro/outro/CTA.
+3. Produce final MP4 + content-addressed artifact manifest + exact timeline/spec + preview/thumbnail + source hashes.
+4. Machine QA: duration, dimensions/aspect ratio, missing/corrupt assets, black/frozen frames, prolonged silence, clipped/over-loud audio, subtitle safe-area/bounds, empty output, render/probe corruption, provenance mismatch.
+5. Preserve existing media.job.v1 idempotency, crash recovery, unknown-outcome reconciliation, artifact pin/lease/retention semantics.
+6. Add a reproducible synthetic/demo vertical render that exercises cuts + subtitle + voice/music mix + overlay + QA.
+7. Expose a versioned R11 conformance contract that Creator can pin by exact producer SHA and blob hashes.
+8. NONEMPTY source/tests/docs commit; focused + full tests; exact SHA; CI; reproducible render/QA evidence.
+
+No publishing, no credentials, no merge/release. Do not modify Creator/Growth. No Desktop Commander. Do not access E:\manhwa.
