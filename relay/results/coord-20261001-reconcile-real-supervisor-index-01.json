@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T03:03:11.334Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "coord-20261001-find-real-supervisor-from-index-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:03c1d249b6c964de0ea316013fb584f067142e0c1bf0bd4a4d0d755456627cf7",
+            "journal_sequence": 736,
+            "previous_record_sha256": "59a0152162953f8de438cb8c614ab7070fe02e7ca34c284855b7b61fcc386444",
+            "record_sha256": "0cc50e673c6783d865bb4746a1eb03abf5ee7ad59f24abe1451d837e04f3b350",
+            "recorded_at": "2026-10-01T03:03:11.377Z",
+            "request_id": "coord-20261001-find-real-supervisor-from-index-01",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T03:03:21.419Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "coord-20261001-find-real-supervisor-from-index-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:03c1d249b6c964de0ea316013fb584f067142e0c1bf0bd4a4d0d755456627cf7",
+            "journal_sequence": 737,
+            "previous_record_sha256": "0cc50e673c6783d865bb4746a1eb03abf5ee7ad59f24abe1451d837e04f3b350",
+            "record_sha256": "476e8b974f9b78c9afa5f303fb5e9bd1debb46cea77288b7ae24f8b143a42159",
+            "recorded_at": "2026-10-01T03:03:21.515Z",
+            "request_id": "coord-20261001-find-real-supervisor-from-index-01",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-01T03:03:21.419Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "coord-20261001-find-real-supervisor-from-index-01"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-01T03:03:21.419Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "coord-20261001-find-real-supervisor-from-index-01"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:03c1d249b6c964de0ea316013fb584f067142e0c1bf0bd4a4d0d755456627cf7",
+          "journal_sequence": 737,
+          "previous_record_sha256": "0cc50e673c6783d865bb4746a1eb03abf5ee7ad59f24abe1451d837e04f3b350",
+          "record_sha256": "476e8b974f9b78c9afa5f303fb5e9bd1debb46cea77288b7ae24f8b143a42159",
+          "recorded_at": "2026-10-01T03:03:21.515Z",
+          "request_id": "coord-20261001-find-real-supervisor-from-index-01",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "818491289cfa50d34578419bca57c2841164005fceb06f2b2be5582e3fb0adc2",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 739
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "coord-20261001-find-real-supervisor-from-index-01",
+        "request_id": "coord-20261001-find-real-supervisor-from-index-01",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T03:04:37.788Z",
+    "ok": true,
+    "request_id": "coord-20261001-reconcile-real-supervisor-index-01",
+    "started_at": "2026-10-01T03:04:37.738Z",
+    "status": "completed"
+  },
+  "id": "coord-20261001-reconcile-real-supervisor-index-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
