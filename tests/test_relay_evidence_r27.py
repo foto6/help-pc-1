@@ -411,9 +411,9 @@ def test_pending_unknown_effect_state_is_not_read_acknowledged_retried_or_replay
 
 def test_concurrent_atomic_writer_reader_never_mixes_generation_or_epoch(
     tmp_path: Path,
-    monkeypatch,
 ) -> None:
-    monkeypatch.setattr(progress_module, "_atomic_json", _fast_atomic)
+    # Use the real frozen R26 fsync+replace writer here; this specifically proves
+    # that the R27 reader can coexist with the production atomic-write semantics.
     path = tmp_path / ".pc-relay" / "progress.v1.json"
     writer = _progress(
         path,
