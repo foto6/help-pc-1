@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T11:55:33.831Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "boss-20261001-1900-wave2-response-tail"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:063f87ad1ee7b9e7f2ac016e69256c52d883cc174bac2723d439eafd1e9e7bb2",
+            "journal_sequence": 834,
+            "previous_record_sha256": "cf599d7d1bded60e8b4ad3ec54f4124cbe106436d5dd496f5b90371921fc9358",
+            "record_sha256": "59ebde917cd3e00c504b9cd920311b729cb2797eb07c3212023c314a2d184787",
+            "recorded_at": "2026-10-01T11:55:33.879Z",
+            "request_id": "boss-20261001-1900-wave2-response-tail",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-01T11:55:53.924Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "boss-20261001-1900-wave2-response-tail"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:063f87ad1ee7b9e7f2ac016e69256c52d883cc174bac2723d439eafd1e9e7bb2",
+            "journal_sequence": 835,
+            "previous_record_sha256": "59ebde917cd3e00c504b9cd920311b729cb2797eb07c3212023c314a2d184787",
+            "record_sha256": "3368f4a50c567705248f80e68a299a59e27d8d4075ab1668465b08870510c200",
+            "recorded_at": "2026-10-01T11:55:53.986Z",
+            "request_id": "boss-20261001-1900-wave2-response-tail",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-01T11:55:53.924Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "boss-20261001-1900-wave2-response-tail"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-01T11:55:53.924Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "boss-20261001-1900-wave2-response-tail"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:063f87ad1ee7b9e7f2ac016e69256c52d883cc174bac2723d439eafd1e9e7bb2",
+          "journal_sequence": 835,
+          "previous_record_sha256": "59ebde917cd3e00c504b9cd920311b729cb2797eb07c3212023c314a2d184787",
+          "record_sha256": "3368f4a50c567705248f80e68a299a59e27d8d4075ab1668465b08870510c200",
+          "recorded_at": "2026-10-01T11:55:53.986Z",
+          "request_id": "boss-20261001-1900-wave2-response-tail",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "e58b83a9177a1018178e788b95be0fb6d3d1e231c0d3469f4b3a937c9c81bf26",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 835
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "boss-20261001-1900-wave2-response-tail",
+        "request_id": "boss-20261001-1900-wave2-response-tail",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-01T11:57:05.687Z",
+    "ok": true,
+    "request_id": "boss-20261001-1903-reconcile-tail-probe",
+    "started_at": "2026-10-01T11:57:05.630Z",
+    "status": "completed"
+  },
+  "id": "boss-20261001-1903-reconcile-tail-probe",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
