@@ -1,0 +1,30 @@
+EXECUTE NOW — CREATOR R18B CONCRETE GEMINI NATIVE-VIDEO SEMANTIC PROVIDER. Continue in SAME existing Creator chat and SAME branch.
+
+Repo: foto6/video1
+Branch: agent/creator-r18-semantic-director-20261001
+Exact current green HEAD: 7934b4938dc56936166a1e232afc491f690e7497
+CI: 36807179310 SUCCESS
+
+Base R18 semantic director is green. Now replace "VLM optional boundary only" with one concrete optional provider implementation while preserving the boundary.
+
+Requirements:
+1. Implement Google Gemini native-video provider behind explicit config only:
+   - GEMINI_API_KEY required to enable;
+   - GEMINI_MODEL configurable;
+   - provider disabled by default.
+2. Accept a real local MP4 via Gemini video input, not just contact-sheet text.
+3. Short-form default: bounded static video processing with configurable FPS/time clipping.
+4. Optional agentic mode for longer/complex video when configured model supports it.
+5. Request strict structured JSON matching creator.semantic_video_analysis.r18.v1: timestamped semantic events, objects/screens/product reveals, hook/setup/proof/payoff/CTA candidates, confidence.
+6. Validate every returned timestamp/range against ffprobe duration; reject malformed/out-of-range data.
+7. Provenance: provider/model/mode/request digest/upload identity; keep deterministic evidence and model observations separate.
+8. Bound upload/poll/retry/timeouts and remote-file cleanup. Explicit provider_unavailable/provider_timeout/provider_invalid_output states.
+9. Never log API keys/auth headers. No secret-bearing artifacts.
+10. CI uses fake HTTP/SDK transport only; no network or paid calls.
+11. Add opt-in live smoke command that is a no-op/BLOCKED without explicit credentials.
+12. Prove with fake transport that native-video provider evidence changes R18 semantic timeline, selected editorial mode/directives, and actual Media creative-plan digest relative to local fallback.
+13. Preserve HUMAN_LEVEL_UNPROVEN. Provider presence alone is not parity evidence.
+14. NONEMPTY code/tests/docs commit and exact-head CI SUCCESS.
+
+Current official Gemini docs support native video input, timestamped video understanding, configurable static FPS/clipping and agentic video processing on supported current models. Keep the model name configurable, not hard-coded as permanent best.
+No publishing, no credentials committed, no merge/release, no Media/Growth repo mutation, no Desktop Commander, no E:\manhwa.
