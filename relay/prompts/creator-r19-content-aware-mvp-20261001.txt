@@ -1,0 +1,45 @@
+EXECUTE NOW — CREATOR R19 CONTENT-AWARE ONE-COMMAND MVP. Continue in this SAME existing Creator chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video1
+Branch ONLY: agent/creator-r19-content-aware-mvp-20261001
+Exact starting HEAD: 9565d64666d6a8d665a9bcfeae2aa218845c3e28
+
+R17 one-command MVP is green. R18/R18B semantic director + Gemini native-video provider work is green at the starting HEAD. Now integrate them into the operator MVP instead of leaving semantic understanding as a sidecar.
+
+PRIMARY GOAL:
+Default operator flow becomes content-aware:
+local video + short brief -> semantic analysis -> auto style/directives -> exact Media render -> QA -> final artifacts.
+An explicit manual --style override must still work.
+
+Required:
+1. Extend creator-mvp so default style is AUTO, not a hard-coded preset.
+2. Run the R18 semantic director on the source and emit a versioned semantic timeline + editorial-directives artifact before Media render.
+3. When Gemini native-video is configured and valid, use it truthfully; when unavailable, fail closed to the deterministic local semantic baseline and clearly label the fallback. Never present fallback as model understanding.
+4. Auto-style decision must be source-bound and explainable:
+   selected style, confidence/evidence, rejected alternatives, source semantic features, override provenance.
+5. Translate semantic directives into the existing Media-compatible request/hints without bypassing Media technical/creative QA.
+6. Add operator outputs:
+   semantic-timeline.json
+   editorial-directives.json
+   style-decision.json
+   in addition to R17 final.mp4, preview.mp4, qa.json, run-summary.json.
+7. Define a stable benchmark-consumable envelope, e.g. creator.content_aware_run.r19.v1, containing:
+   source SHA/duration,
+   semantic provider/model identity,
+   fallback flag,
+   semantic timeline digest,
+   style-decision digest,
+   directives digest,
+   exact Media producer SHA/contract digests,
+   final artifact digests,
+   QA digests.
+8. Real E2E tests with actual generated videos covering at least:
+   talking head,
+   fast-motion/action,
+   landscape/screen-like source,
+   and prove at least two different auto-style/directive outcomes from different content evidence.
+9. Add regression that manual --style override is honored and recorded.
+10. Do not claim HUMAN_LEVEL or aesthetic superiority. This is CONTENT_AWARE evidence only.
+11. NONEMPTY source/tests/docs commit, focused/full CI, exact final SHA and workflow IDs.
+
+No publishing, no credentials committed, no merge/release, no Media/Growth repo mutation, no Desktop Commander, no E:\manhwa.
