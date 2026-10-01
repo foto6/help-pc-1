@@ -1,0 +1,51 @@
+EXECUTE NOW — GROWTH R15 POST-RENDER VISUAL CRITIC / PAIRWISE QUALITY EVALUATION. Continue in this SAME existing Growth chat; do not create a new chat.
+
+Writable repo ONLY: foto6/video3
+Branch ONLY: agent/growth-r15-visual-critic-20261001
+Exact starting HEAD: eae1dba5258ebc661332955c2561f35354245eb1
+
+Growth R14 is green. This milestone is advisory only and must NOT publish or mutate Media/Creator.
+
+PRIMARY GOAL:
+Build a source-bound critic that can inspect a finished short plus source/semantic evidence and judge editorial quality beyond technical QA, especially for choosing between multiple candidate edits.
+
+Required:
+1. Add versioned critic contract, e.g. growth.visual_critic.r15.v1.
+2. Critic inputs must support:
+   - rendered video identity/digest;
+   - sampled frames/contact sheet and timecodes;
+   - audio/probe summary;
+   - captions/overlay timeline;
+   - source semantic timeline when supplied;
+   - Media technical/creative QA;
+   - optional VLM provider observations with provenance/confidence.
+3. Score/report separate dimensions WITHOUT collapsing uncertainty:
+   - hook clarity in first 1-3s;
+   - pacing coherence;
+   - semantic cut correctness;
+   - subject framing/crop quality;
+   - B-roll relevance;
+   - caption readability/emphasis relevance;
+   - visual continuity;
+   - motion/zoom appropriateness;
+   - audio/voice/music balance;
+   - payoff/CTA/loop coherence;
+   - obvious awkward/dead moments.
+4. Add pairwise A-vs-B comparison as the preferred selection mode. State tie/insufficient-evidence when evidence is weak.
+5. Separate:
+   - objective hard failures;
+   - heuristic editorial judgments;
+   - model/VLM opinion;
+   - human labels.
+   Never present a model score as ground-truth human preference.
+6. Add provider adapter boundary for VLM critic. No credentials. Missing provider => deterministic structural critic only and explicit limitation.
+7. Add critic output with time-coded actionable notes, e.g. crop wrong at 7.2s, irrelevant B-roll at 11s, caption collision/semantic mismatch, weak first 2s.
+8. Add calibration/evaluation harness capable of ingesting human pairwise labels and computing agreement metrics. Do NOT fabricate labels.
+9. Add a human-benchmark readiness gate:
+   HUMAN_LEVEL_UNPROVEN until a minimum real labeled evaluation corpus is supplied.
+   Report agreement metrics only from actual labels.
+10. Add deterministic fixture pack with deliberately good/bad variants to test failure localization, plus pairwise tie/insufficient-evidence cases.
+11. Add machine-readable output that Creator can later consume for tournament selection, but do not modify Creator.
+12. NONEMPTY source/tests/docs commit, focused/full CI, exact SHA/run IDs.
+
+No publishing. No credentials. No merge/release. Do not modify Creator/Media repos. No Desktop Commander. Do not access E:\manhwa.
