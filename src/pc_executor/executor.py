@@ -1071,16 +1071,25 @@ class Executor:
                 )
             }
 
+        if action == "health.get":
+            if p:
+                raise PolicyBlockedError("health.get does not accept parameters")
+            return self._health_get(request, token)
+
         if action == "screenshot.capture":
             if dry_run:
                 return {"would_execute": action}
-            png = self._bounded(request, token, action, self.screenshot.capture_png)
+            png = self._adapter_bounded(
+                "screenshot", request, token, action, self.screenshot.capture_png
+            )
             return screenshot_payload(png)
 
         if action == "windows.list":
             if dry_run:
                 return {"would_execute": action}
-            windows = self._bounded(request, token, action, self.windows.list_windows)
+            windows = self._adapter_bounded(
+                "windows", request, token, action, self.windows.list_windows
+            )
             return {"windows": [window.to_dict() for window in windows]}
 
         if action == "uia.snapshot":
@@ -1089,11 +1098,11 @@ class Executor:
                 raise PolicyBlockedError("uia.snapshot window_title must be a string or null")
             if dry_run:
                 return {"would_execute": action, "window_title": window_title}
-            snapshot = self._bounded(
+            snapshot = self._uia_call(
+                "snapshot",
                 request,
                 token,
-                action,
-                lambda: self.accessibility.snapshot(window_title=window_title),
+                window_title=window_title,
             )
             return {"snapshot": snapshot.to_dict(), "canonical_json": snapshot.to_json()}
 
@@ -1110,13 +1119,12 @@ class Executor:
             query = ElementQuery(automation_id=automation_id)
             if dry_run:
                 return {"would_execute": action, "query": {"automation_id": automation_id}}
-            element = self._bounded_effectful(
+            element = self._effectful(
                 request,
                 dry_run,
-                token,
                 tracker,
-                action,
-                lambda: self.accessibility.invoke(query),
+                lambda: self._uia_call("invoke", request, token, query),
+                token=token,
             )
             return {"element": element.to_dict()}
 
@@ -1125,30 +1133,28 @@ class Executor:
             if action == "uia.inspect":
                 if dry_run:
                     return {"would_execute": action, "query": p.get("query", {})}
-                element = self._bounded(request, token, action, lambda: self.accessibility.inspect(query))
+                element = self._uia_call("inspect", request, token, query)
                 return {"element": element.to_dict()}
             if action == "uia.invoke":
                 if dry_run:
                     return {"would_execute": action, "query": p.get("query", {})}
-                element = self._bounded_effectful(
+                element = self._effectful(
                     request,
                     dry_run,
-                    token,
                     tracker,
-                    action,
-                    lambda: self.accessibility.invoke(query),
+                    lambda: self._uia_call("invoke", request, token, query),
+                    token=token,
                 )
                 return {"element": element.to_dict()}
             if action == "uia.focus":
                 if dry_run:
                     return {"would_execute": action, "query": p.get("query", {})}
-                element = self._bounded_effectful(
+                element = self._effectful(
                     request,
                     dry_run,
-                    token,
                     tracker,
-                    action,
-                    lambda: self.accessibility.focus(query),
+                    lambda: self._uia_call("focus", request, token, query),
+                    token=token,
                 )
                 return {"element": element.to_dict()}
             if action == "uia.set_value":
@@ -1158,17 +1164,19 @@ class Executor:
                     raise PolicyBlockedError("credential/sensitive text entry is not supported")
                 if dry_run:
                     return {"would_execute": action, "query": p.get("query", {}), "value_length": len(value)}
-                element = self._bounded_effectful(
+                element = self._effectful(
                     request,
                     dry_run,
-                    token,
                     tracker,
-                    action,
-                    lambda: self.accessibility.set_value(
+                    lambda: self._uia_call(
+                        "set_value",
+                        request,
+                        token,
                         query,
                         value,
                         sensitive=sensitive,
                     ),
+                    token=token,
                 )
                 return {"element": element.to_dict(), "value_length": len(value)}
             raise PolicyBlockedError(f"unsupported UIA action: {action}")
