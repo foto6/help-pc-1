@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1344-diffcheck",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "git.exe",
+      "diff",
+      "--check"
+    ],
+    "cwd": "E:\\growth-r23-work"
+  },
+  "timeout_ms": 60000,
+  "note": "Validate Growth R23 patch whitespace before commit"
+}
