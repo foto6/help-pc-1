@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$tabs=Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list'; $tabs | Where-Object {$_.type -eq 'page' -and $_.url -like 'https://chatgpt.com*'} | Select-Object id,title,url | ConvertTo-Json -Depth 3 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"8C7F1B9BF333279DCDF41B9DD2B865F2\",\"title\":\"Project Agent Supervision\",\"url\":\"https://chatgpt.com/c/6abe03fa-9728-83eb-90d2-5ee81bbac12c\"},{\"id\":\"098BDD859BDFEAD0E87D0F24353ADFCF\",\"title\":\"Разработка гуманного бенчмарка\",\"url\":\"https://chatgpt.com/c/6abdcea3-b724-83ed-b43b-982f00854e3c\"},{\"id\":\"7C0253E6014FE99A1D0DAB24C0C4B972\",\"title\":\"ChatGPT\",\"url\":\"https://chatgpt.com/\"},{\"id\":\"80E95BB35EC5CB8487BD2F307E0C1A22\",\"title\":\"ChatGPT\",\"url\":\"https://chatgpt.com/\"},{\"id\":\"368702CAADBD87090E36D29A451547F6\",\"title\":\"Relay Cutover QA Results\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3d81-417c-83ed-b8a8-b66e90698434\"},{\"id\":\"011D68D54D141EDE3F61EA1CEB05A6FB\",\"title\":\"Implement Reedit Adapter\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\"},{\"id\":\"315132DA8C5EFE8E90C315E83C642A2A\",\"title\":\"ChatGPT\",\"url\":\"https://chatgpt.com/\"},{\"id\":\"5C3029C7E26648254DF8A073D2AEB96A\",\"title\":\"ChatGPT\",\"url\":\"https://chatgpt.com/\"},{\"id\":\"05D3E339CBADE7D79F2C3F9DA31E0DF7\",\"title\":\"ChatGPT\",\"url\":\"https://chatgpt.com/\"},{\"id\":\"630BADE8569FD3BD247F6D162E1488E8\",\"title\":\"Native Connector Implementation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\"},{\"id\":\"A0BA7ED4BB56CD7F7210F37873723B5D\",\"title\":\"A 2\",\"url\":\"https://chatgpt.com/c/6ab67022-ae5c-83ed-a654-5dcc82c3b351\"},{\"id\":\"A2DE37696916C7CB360CA996510E52AC\",\"title\":\"ChatGPT\",\"url\":\"https://chatgpt.com/\"},{\"id\":\"A11DA53840D85DCB6DFAEA06CABDADB4\",\"title\":\"Parity Gate Validation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab94f1d-a604-83eb-ae1b-258ac27e6544\"},{\"id\":\"018719BE1AECAF8ADED28535B17CA895\",\"title\":\"Bridge R19 Implementation Report\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\"},{\"id\":\"00C52409306E685605E097E429FC8C3B\",\"title\":\"ChatGPT\",\"url\":\"https://chatgpt.com/\"},{\"id\":\"0FCF754993E255005F038065DA6DF681\",\"title\":\"Deliver R11 Editor\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\"},{\"id\":\"4286394BE03EE2BB4763A151CC7EAF29\",\"title\":\"Implement Publish Provider Layer\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\"},{\"id\":\"29F623A1EB0B5C0092EA46BC2A8EC2C2\",\"title\":\"Fix Assignment Replacement Runtime\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c\"}]\r\n",
+      "stdout_bytes": 2585,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T05:58:01.160Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T05:58:01.079Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261002-1110-list-current-tabs"
+    },
+    "request_id": "boss-20261002-1110-list-current-tabs",
+    "started_at": "2026-10-02T05:58:00.074Z",
+    "status": "completed"
+  },
+  "id": "boss-20261002-1110-list-current-tabs",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
