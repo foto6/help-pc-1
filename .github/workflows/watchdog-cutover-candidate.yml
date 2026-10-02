@@ -1,0 +1,139 @@
+name: PC relay watchdog cutover candidate
+
+on:
+  push:
+    branches:
+      - agent/pc-relay-watchdog-cutover-candidate-20261002
+    paths:
+      - "tools/start_pc_control_relay.ps1"
+      - "tools/install_pc_relay_autostart.ps1"
+      - "tools/uninstall_pc_relay_autostart.ps1"
+      - "tools/rollback_pc_relay_cutover.ps1"
+      - "tests/test_relay_watchdog_cutover_candidate.py"
+      - "tests/fixtures/pc_relay_cutover_candidate/**"
+      - "conformance/pc_relay.cutover_candidate.v1/**"
+      - "docs/PC_RELAY_WATCHDOG_CUTOVER_CANDIDATE.md"
+      - ".github/workflows/watchdog-cutover-candidate.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cutover-candidate:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e ".[test]"
+
+      - name: Exact base and isolated cutover-candidate delta
+        shell: bash
+        run: |
+          python - <<'PY'
+          import subprocess
+
+          base = "33d063dffa507833a23c642d3e3e06bfa5d02b76"
+          expected_branch = "agent/pc-relay-watchdog-cutover-candidate-20261002"
+          head = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+          branch = subprocess.check_output(["git", "branch", "--show-current"], text=True).strip()
+          assert head != base
+          assert branch == expected_branch, branch
+          assert subprocess.run(["git", "merge-base", "--is-ancestor", base, head]).returncode == 0
+
+          changed = set(
+              subprocess.check_output(
+                  ["git", "diff", "--name-only", base, head],
+                  text=True,
+              ).splitlines()
+          )
+          allowed = {
+              ".github/workflows/watchdog-cutover-candidate.yml",
+              "conformance/pc_relay.cutover_candidate.v1/manifest.json",
+              "conformance/pc_relay.cutover_candidate.v1/schema.json",
+              "docs/PC_RELAY_WATCHDOG_CUTOVER_CANDIDATE.md",
+              "tests/fixtures/pc_relay_cutover_candidate/incident_2026-10-01.json",
+              "tests/test_relay_watchdog_cutover_candidate.py",
+              "tools/install_pc_relay_autostart.ps1",
+              "tools/rollback_pc_relay_cutover.ps1",
+              "tools/start_pc_control_relay.ps1",
+              "tools/uninstall_pc_relay_autostart.ps1",
+          }
+          assert changed <= allowed, f"unexpected files: {sorted(changed - allowed)}"
+          assert changed, "candidate delta must be substantive"
+          assert subprocess.run(["git", "diff", "--check", base, head]).returncode == 0
+          print("CUTOVER_CANDIDATE_EXACT_BASE_PASS", head, len(changed))
+          PY
+
+      - name: Watchdog producer remains unchanged from green base
+        shell: bash
+        run: |
+          git diff --exit-code 33d063dffa507833a23c642d3e3e06bfa5d02b76 HEAD -- \
+            tools/github_relay.py \
+            conformance/pc_relay.health.v1/schema.json \
+            conformance/pc_relay.watchdog_status.v1/schema.json
+
+      - name: Focused cutover/watchdog regressions
+        run: >
+          python -m pytest
+          tests/test_github_relay.py
+          tests/test_relay_stale_sync_watchdog.py
+          tests/test_relay_watchdog_cutover_candidate.py
+          -v -s
+
+      - name: Windows PowerShell syntax and non-mutating plans
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $scripts = @(
+            'tools/start_pc_control_relay.ps1',
+            'tools/install_pc_relay_autostart.ps1',
+            'tools/uninstall_pc_relay_autostart.ps1',
+            'tools/rollback_pc_relay_cutover.ps1'
+          )
+          foreach ($script in $scripts) {
+            $text = Get-Content -LiteralPath $script -Raw
+            [scriptblock]::Create($text) | Out-Null
+          }
+
+          $repo = (Get-Location).Path
+          $head = (git rev-parse HEAD).Trim()
+          $previous = (git rev-parse refs/remotes/origin/agent/pc-github-relay).Trim()
+          $taskName = 'OpenAI-PC-Relay-Watchdog-CI-PlanOnly'
+
+          $install = (& .\tools\install_pc_relay_autostart.ps1 -Repo $repo -ExpectedHead $head -TaskName $taskName | ConvertFrom-Json)
+          if ($install.apply -ne $false) { throw 'installer unexpectedly applied' }
+          if ($install.starts_task_immediately -ne $false) { throw 'installer plan would start task' }
+          if ($install.automatic_process_kill -ne $false) { throw 'installer plan would kill process' }
+          if ($install.automatic_replay -ne $false) { throw 'installer plan would replay' }
+
+          $uninstall = (& .\tools\uninstall_pc_relay_autostart.ps1 -Repo $repo -TaskName $taskName | ConvertFrom-Json)
+          if ($uninstall.apply -ne $false) { throw 'uninstaller unexpectedly applied' }
+          if ($uninstall.deletes_runtime_state -ne $false) { throw 'uninstaller would delete state' }
+          if ($uninstall.deletes_outcome_journal -ne $false) { throw 'uninstaller would delete journal' }
+
+          $rollback = (& .\tools\rollback_pc_relay_cutover.ps1 -Repo $repo -PreviousHead $previous -TaskName $taskName | ConvertFrom-Json)
+          if ($rollback.apply -ne $false) { throw 'rollback unexpectedly applied' }
+          if ($rollback.starts_relay -ne $false) { throw 'rollback would start relay' }
+          if ($rollback.automatic_process_kill -ne $false) { throw 'rollback would kill process' }
+          if ($rollback.automatic_replay -ne $false) { throw 'rollback would replay' }
+
+          Write-Host "CUTOVER_CANDIDATE_POWERSHELL_PLAN_ONLY_PASS"
+
+      - name: Full repository suite
+        run: python -m pytest
