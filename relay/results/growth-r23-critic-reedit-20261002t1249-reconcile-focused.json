@@ -1,0 +1,21 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {},
+    "dry_run": false,
+    "error": "outcome.lookup action must be a non-empty string",
+    "error_kind": "policy_blocked",
+    "finished_at": "2026-10-02T05:48:32.243Z",
+    "ok": false,
+    "request_id": "growth-r23-critic-reedit-20261002t1249-reconcile-focused",
+    "started_at": "2026-10-02T05:48:32.243Z",
+    "status": "blocked"
+  },
+  "id": "growth-r23-critic-reedit-20261002t1249-reconcile-focused",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
