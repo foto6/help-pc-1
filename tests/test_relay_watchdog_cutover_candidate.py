@@ -78,6 +78,8 @@ def test_launcher_bounds_logs_without_changing_reconciliation_semantics() -> Non
     assert "Rotate-BoundedLog -Path $Stderr" in text
     assert "outcome.lookup" in text
     assert "liveness recovery never authorizes replay" in folded
+    assert text.count("$RelayScript,") >= 2
+    assert "'tools\\github_relay.py'," not in text
     assert "Stop-Process" not in text
     assert "taskkill" not in folded
 

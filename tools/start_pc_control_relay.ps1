@@ -37,7 +37,7 @@ function Get-RelayProcesses {
 
 function Invoke-RelayStatus([object[]]$Processes) {
     $args = @(
-        'tools\github_relay.py',
+        $RelayScript,
         '--repo', $Repo,
         '--status',
         '--stale-after-seconds', ([string]$StaleAfterSeconds)
@@ -138,7 +138,7 @@ New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
 Rotate-BoundedLog -Path $Stdout
 Rotate-BoundedLog -Path $Stderr
 
-$args = @('tools\github_relay.py', '--repo', $Repo, '--live')
+$args = @($RelayScript, '--repo', $Repo, '--live')
 $p = Start-Process -FilePath $py.Source -ArgumentList $args -WorkingDirectory $Repo -WindowStyle Hidden -RedirectStandardOutput $Stdout -RedirectStandardError $Stderr -PassThru
 
 Start-Sleep -Seconds 2
