@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-send-creator-r27-760f2a",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=4286394BE03EE2BB4763A151CC7EAF29 --prompt=E:\\pc-github-relay\\relay\\prompts\\creator-r27-r19-r25-live-cycle-20261002.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Wave 3 Creator exact existing-chat dispatch; fail closed if prior R26 generation is still active or composer is non-empty"
+}
