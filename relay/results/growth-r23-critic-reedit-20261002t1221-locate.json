@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$c=@('E:\\\\video3','E:\\\\repos\\\\video3','C:\\\\Users\\\\foto6\\\\video3','C:\\\\Users\\\\foto6\\\\source\\\\repos\\\\video3'); foreach($p in $c){ if(Test-Path -LiteralPath $p){ $i=Get-Item -LiteralPath $p; Write-Output ('FOUND ' + $i.FullName) } }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T05:23:47.411Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T05:23:47.336Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "growth-r23-critic-reedit-20261002t1221-locate"
+    },
+    "request_id": "growth-r23-critic-reedit-20261002t1221-locate",
+    "started_at": "2026-10-02T05:23:46.970Z",
+    "status": "completed"
+  },
+  "id": "growth-r23-critic-reedit-20261002t1221-locate",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
