@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst id=\"A11DA53840D85DCB6DFAEA06CABDADB4\";\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst tab=tabs.find(t=>t.id===id);\nif(!tab){process.stdout.write(JSON.stringify({ok:false,reason:\"missing\"}));process.exit(2)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\nlet seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\nconst call=(m,a={})=>new Promise((r,j)=>{const k=seq++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\nconst r=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const vis=e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(vis);const b=[...document.querySelectorAll('button')].filter(vis).map(x=>({text:(x.innerText||'').trim().replace(/\\\\s+/g,' ').slice(0,80),aria:x.getAttribute('aria-label')||'',testid:x.getAttribute('data-testid')||'',disabled:!!x.disabled})).filter(x=>/send|отправ|stop|останов|submit/i.test(x.text+' '+x.aria+' '+x.testid));return {href:location.href,title:document.title,composerText:c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'',buttons:b}})())\",returnByValue:true});\nws.close();process.stdout.write(r.result.value);\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab94f1d-a604-83eb-ae1b-258ac27e6544\",\"title\":\"Parity Gate Validation\",\"composerText\":\"EXECUTE NOW — PC RELAY WATCHDOG CUTOVER-CANDIDATE + REBOOT AUTOSTART PREP.\\n\\n\\n\\n\\nRepo: foto6/help-pc-1\\n\\nWritable branch ONLY: agent/pc-relay-watchdog-cutover-candidate-20261002\\n\\nExact starting HEAD: 33d063dffa507833a23c642d3e3e06bfa5d02b76\\n\\nLive agent/pc-github-relay must remain untouched.\\n\\n\\n\\n\\nWe confirmed the old relay stale-sync bug and also confirmed after PC reboot the relay needs manual start.\\n\\n\\n\\n\\nPrepare a production cutover candidate, not a live cutover:\\n\\n- preserve pc_relay.health.v1, state/outcome reconciliation and no-blind-replay semantics;\\n\\n- validate HEALTHY/STALE/RECONCILIATION_REQUIRED against real incident fixture;\\n\\n- deterministic Windows startup/autostart installation + uninstall/rollback scripts, but DO NOT register/start them on user's live PC;\\n\\n- one-instance parent/child py->python handling;\\n\\n- safe reboot recovery preserving journal;\\n\\n- health/status command and bounded logs;\\n\\n- migration plan from current live branch plus exact rollback;\\n\\n- full tests and exact-head CI.\\n\\nNo service mutation, process kill, scheduled task creation or live branch cutover.\",\"buttons\":[{\"text\":\"\",\"aria\":\"Отправить\",\"testid\":\"\",\"disabled\":false}]}",
+      "stdout_bytes": 1374,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T04:48:23.740Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T04:48:23.662Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261002-1110-inspect-pc"
+    },
+    "request_id": "boss-20261002-1110-inspect-pc",
+    "started_at": "2026-10-02T04:48:23.213Z",
+    "status": "completed"
+  },
+  "id": "boss-20261002-1110-inspect-pc",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
