@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-boss-chat-tabs-lookup-20261002-1325",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "chatgpt-boss-chat-tabs-20261002-1322",
+    "action": "shell.run"
+  },
+  "timeout_ms": 10000,
+  "note": "Reconcile timed-out read-only Chrome debug-port inventory; do not replay"
+}
