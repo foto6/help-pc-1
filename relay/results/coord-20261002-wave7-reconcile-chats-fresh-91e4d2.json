@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.result.v1",
+  "id": "coord-20261002-wave7-reconcile-chats-fresh-91e4d2",
+  "action": "shell.run",
+  "relay_status": "coordinator_cancelled_read_only_observation",
+  "live": true,
+  "executor_result": null,
+  "reconciliation": {
+    "source": "coordinator",
+    "effect_state": "unknown",
+    "replay_authorized": false,
+    "note": "Obsolete read-only CDP observation hung after dispatch. No browser mutation was intended. This record prevents automatic replay after relay restart; a fresh independent observation will be used instead."
+  },
+  "reexecuted": false
+}
