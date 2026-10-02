@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261002-1094-scan-growth-native-title-anchors",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst tabs=(await(await fetch(\"http://127.0.0.1:17410/json/list\")).json()).filter(t=>t.type===\"page\"&&t.url.startsWith(\"https://chatgpt.com\"));\nconst out=[];\nfor(const tab of tabs){\n try{\n  const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let s=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(m,a={})=>new Promise((r,j)=>{const k=s++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\n  const r=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify([...document.querySelectorAll('a[href]')].map(a=>({text:(a.innerText||a.textContent||'').trim().replace(/\\\\s+/g,' ').slice(0,160),href:a.href})).filter(x=>/Implement Provider Ingestion Layer|Native Connector Implementation/i.test(x.text)))\",returnByValue:true});\n  const matches=JSON.parse(r.result.value||\"[]\");if(matches.length)out.push({tabId:tab.id,url:tab.url,matches});ws.close();\n }catch(e){}\n}\nprocess.stdout.write(JSON.stringify({ok:true,out}));\n\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only scan all ChatGPT tabs for exact Growth/Native conversation title anchors"
+}
