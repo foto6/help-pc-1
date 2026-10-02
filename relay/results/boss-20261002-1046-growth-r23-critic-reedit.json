@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst prompt=\"EXECUTE NOW — GROWTH R23 WEB-VIDEO CRITIC -> CREATOR RE-EDIT ADAPTER.\\n\\nRepo: foto6/video3\\nWritable branch ONLY: agent/growth-r23-critic-reedit-adapter-20261002\\nExact starting HEAD: 0f6824d7c3962ccee572b21a4e1a343e6470c1a9\\n\\nR22 direct-video critic contract and Bridge R25 binding are green.\\n\\nImplement deterministic conversion of growth.web_video_critic.v1 output into bounded Creator-targeted re-edit directives:\\n- exact source/render/attachment identity binding;\\n- timestamped defects -> allowed edit operations with evidence references;\\n- prioritize a small actionable set; no unbounded rewrite;\\n- max 2 re-edit rounds;\\n- pairwise A/B result may select winner, request targeted re-edit, tie, insufficient_evidence, or human_review;\\n- confidence/coverage uncertainty must survive conversion;\\n- human_ground_truth=false; model review cannot become human labels/live metrics;\\n- reject stale/wrong video hash, contradictory timestamps, unsupported edit, duplicate replay and provenance drift.\\nProvide fixtures/tests and exact-head green CI. No provider mutation and no live upload.\",url=\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda63c-98d8-83ed-b365-d423b7563c4b\";\nconst sleep=ms=>new Promise(r=>setTimeout(r,ms));\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst tab=tabs.find(t=>t.type===\"page\"&&t.url===url);\nif(!tab){process.stdout.write(JSON.stringify({ok:false,reason:\"target_missing\",url}));process.exit(2)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\nlet seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\nconst call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\nconst st=async()=>JSON.parse((await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});return {found:!!c,text,generating:bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'))}})())\",returnByValue:true})).result.value);\nconst pre=await st();if(!pre.found||pre.generating||pre.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:pre.generating?\"generating\":\"draft_or_no_composer\",tabId:tab.id}));process.exit(3)}\nawait call(\"Runtime.evaluate\",{expression:\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});c.focus();return true})()\",returnByValue:true});\nawait call(\"Input.insertText\",{text:prompt});await sleep(450);\nconst typed=await st(),norm=s=>String(s||\"\").replace(/\\s+/g,\" \").trim();\nif(norm(typed.text)!==norm(prompt)){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"readback_mismatch\",tabId:tab.id}));process.exit(4)}\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});\nawait sleep(900);const post=await st();ws.close();\nprocess.stdout.write(JSON.stringify({ok:true,submitted:true,started:post.generating,composerCleared:!post.text.trim(),tabId:tab.id,url}));\n\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":false,\"reason\":\"target_missing\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda63c-98d8-83ed-b365-d423b7563c4b\"}",
+      "stdout_bytes": 147,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T03:54:28.995Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T03:54:28.926Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261002-1046-growth-r23-critic-reedit"
+    },
+    "request_id": "boss-20261002-1046-growth-r23-critic-reedit",
+    "started_at": "2026-10-02T03:54:28.471Z",
+    "status": "completed"
+  },
+  "id": "boss-20261002-1046-growth-r23-critic-reedit",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
