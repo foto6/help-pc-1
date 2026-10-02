@@ -131,12 +131,12 @@ def test_rollback_is_exact_detached_head_and_never_moves_live_branch() -> None:
     assert "PreviousBranch = 'agent/pc-github-relay'" in text
     assert "refs/remotes/origin/$PreviousBranch" in text
     assert "checkout_mode = 'detached_exact_head'" in text
-    assert "Invoke-Git @('checkout', '--detach', $PreviousHead)" in text
+    assert "Invoke-Git -Arguments @('checkout', '--detach', $PreviousHead)" in text
     assert "starts_relay = $false" in text
     assert "automatic_process_kill = $false" in text
     assert "automatic_replay = $false" in text
-    assert ".pc-relay\state" in text
-    assert ".pc-relay\outcomes.jsonl" in text
+    assert r".pc-relay\state" in text
+    assert r".pc-relay\outcomes.jsonl" in text
     assert "git reset --hard" not in folded
     assert "Stop-Process" not in text
     assert "taskkill" not in folded
