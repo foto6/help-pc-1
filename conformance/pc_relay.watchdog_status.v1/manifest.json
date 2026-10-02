@@ -13,7 +13,7 @@
     },
     "launcher": {
       "path": "tools/start_pc_control_relay.ps1",
-      "git_blob_sha1": "8a7b23c69c2083876d4212d8957df72ff19b59a4"
+      "git_blob_sha1": "0f8fee7f029e8d49b2ce6dd33c14a43df024a599"
     },
     "health_schema": {
       "path": "conformance/pc_relay.health.v1/schema.json",
