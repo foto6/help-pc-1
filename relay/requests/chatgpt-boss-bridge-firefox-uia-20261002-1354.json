@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-boss-bridge-firefox-uia-20261002-1354",
+  "action": "uia.snapshot",
+  "params": {
+    "window_title": "Bridge R19 Implementation Report — Mozilla Firefox"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only inspect exact existing Bridge ChatGPT conversation before dispatch"
+}
