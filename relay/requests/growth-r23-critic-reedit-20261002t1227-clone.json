@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1227-clone",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; git clone --branch 'agent/growth-r23-critic-reedit-adapter-20261002' --single-branch 'https://github.com/foto6/video3.git' 'E:\\\\growth-r23-work'; git -C 'E:\\\\growth-r23-work' rev-parse HEAD; git -C 'E:\\\\growth-r23-work' status --short --branch"
+    ],
+    "cwd": "E:\\",
+    "timeout_ms": 120000
+  },
+  "timeout_ms": 125000,
+  "note": "Create isolated Growth R23 checkout on requested branch and verify exact head"
+}
