@@ -34,9 +34,9 @@ function Invoke-Git([string[]]$Arguments) {
     return (($output | Out-String).Trim())
 }
 
-$head = Invoke-Git @('rev-parse', 'HEAD')
-$branch = Invoke-Git @('branch', '--show-current')
-$dirty = Invoke-Git @('status', '--porcelain', '--untracked-files=no')
+$head = Invoke-Git -Arguments @('rev-parse', 'HEAD')
+$branch = Invoke-Git -Arguments @('branch', '--show-current')
+$dirty = Invoke-Git -Arguments @('status', '--porcelain', '--untracked-files=no')
 
 if ($head -ne $ExpectedHead) {
     throw "HEAD mismatch. expected=$ExpectedHead actual=$head"
