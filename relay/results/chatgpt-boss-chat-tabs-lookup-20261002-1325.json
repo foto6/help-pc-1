@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-02T06:17:25.161Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "chatgpt-boss-chat-tabs-20261002-1322"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:a3986b6f8eaf6e03a6b4456832225bc49df99a88ab938c79738d8bd16205f250",
+            "journal_sequence": 1136,
+            "previous_record_sha256": "cc1a76beb623d816c24e3165f924f099709a75222d4bd005ea73d931473b1f6e",
+            "record_sha256": "a4f990164cea059b2db87a6e3abafd4409c082778539b010db37cb78218b5498",
+            "recorded_at": "2026-10-02T06:17:25.228Z",
+            "request_id": "chatgpt-boss-chat-tabs-20261002-1322",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-02T06:17:40.278Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "chatgpt-boss-chat-tabs-20261002-1322"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:a3986b6f8eaf6e03a6b4456832225bc49df99a88ab938c79738d8bd16205f250",
+            "journal_sequence": 1137,
+            "previous_record_sha256": "a4f990164cea059b2db87a6e3abafd4409c082778539b010db37cb78218b5498",
+            "record_sha256": "28d90d158b16477418c0afcd074c0580fbd751f9e4c85de7d00e2f590ba79ce8",
+            "recorded_at": "2026-10-02T06:17:40.351Z",
+            "request_id": "chatgpt-boss-chat-tabs-20261002-1322",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-02T06:17:40.278Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "chatgpt-boss-chat-tabs-20261002-1322"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-02T06:17:40.278Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "chatgpt-boss-chat-tabs-20261002-1322"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:a3986b6f8eaf6e03a6b4456832225bc49df99a88ab938c79738d8bd16205f250",
+          "journal_sequence": 1137,
+          "previous_record_sha256": "a4f990164cea059b2db87a6e3abafd4409c082778539b010db37cb78218b5498",
+          "record_sha256": "28d90d158b16477418c0afcd074c0580fbd751f9e4c85de7d00e2f590ba79ce8",
+          "recorded_at": "2026-10-02T06:17:40.351Z",
+          "request_id": "chatgpt-boss-chat-tabs-20261002-1322",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "9bf93eedd6bbfd2346e85fb279e94a59d4e1f50aff240b1911379aa45778565b",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 1137
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "chatgpt-boss-chat-tabs-20261002-1322",
+        "request_id": "chatgpt-boss-chat-tabs-20261002-1322",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T06:19:19.494Z",
+    "ok": true,
+    "request_id": "chatgpt-boss-chat-tabs-lookup-20261002-1325",
+    "started_at": "2026-10-02T06:19:19.416Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-boss-chat-tabs-lookup-20261002-1325",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
