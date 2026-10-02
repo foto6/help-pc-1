@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-bridge-narrow-7b41f2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $base='http://127.0.0.1:17448'; $paths=@('/api/status','/api/supervisor-watchdog/managed-chats'); $out=@(); foreach($path in $paths){ try{ $req=[System.Net.HttpWebRequest]::Create($base+$path); $req.Method='GET'; $req.Timeout=2000; $resp=$req.GetResponse(); $sr=New-Object System.IO.StreamReader($resp.GetResponseStream()); $body=$sr.ReadToEnd(); if($body.Length -gt 16000){$body=$body.Substring(0,16000)}; $out += [pscustomobject]@{Path=$path;Status=[int]$resp.StatusCode;Body=$body}; $resp.Close() } catch { $code=$null; if($_.Exception.Response){try{$code=[int]$_.Exception.Response.StatusCode}catch{}}; $out += [pscustomobject]@{Path=$path;Status=$code;Body=$_.Exception.Message} } }; $out | ConvertTo-Json -Depth 8 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Narrow read-only live Bridge status and managed-chat inventory on observed API port"
+}
