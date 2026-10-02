@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst prompt=\"EXECUTE NOW — NATIVE R29 INDEPENDENT RELAY CUTOVER/AUTOSTART QA.\\n\\nRepo: foto6/help-pc-2\\nWritable branch ONLY: agent/native-mcp-r29-relay-cutover-qa-20261002\\nExact starting HEAD: d777a8d8f5e42904e7b88f9223a3c426bc808090\\n\\nIndependently validate the forthcoming help-pc-1 watchdog cutover candidate: exact producer SHA/blobs, stale-sync health semantics, process-exists != healthy, no blind replay, parent/child one-instance handling, reversible reboot/autostart scripts, journal preservation and rollback. Until exact producer SHA + green exact-head CI exists, report WAITING_FOR_PRODUCER, not PASS. Never perform live cutover.\",conv=\"6ab946b7-46f0-83eb-bc98-dc74acc6e810\",title=\"Native Connector Implementation\",sleep=ms=>new Promise(r=>setTimeout(r,ms));\nconst tabs=(await(await fetch(\"http://127.0.0.1:17410/json/list\")).json()).filter(t=>t.type===\"page\"&&t.url===\"https://chatgpt.com/\");\nlet chosen=null,ws=null,call=null;\nfor(const tab of tabs){\n try{\n  const w=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{w.onopen=r;w.onerror=j});let s=1,p=new Map();w.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const c=(m,a={})=>new Promise((r,j)=>{const k=s++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));w.send(JSON.stringify({id:k,method:m,params:a}))});\n  const ok=await c(\"Runtime.evaluate\",{expression:\"!![...document.querySelectorAll('button')].find(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0&&/поиск|search/i.test((b.innerText||'')+' '+(b.getAttribute('aria-label')||''))})\",returnByValue:true});\n  if(ok.result.value){chosen=tab;ws=w;call=c;break}w.close();\n }catch(e){}\n}\nif(!chosen){process.stdout.write(JSON.stringify({ok:false,reason:\"no_root_with_search\"}));process.exit(2)}\nawait call(\"Runtime.evaluate\",{expression:\"(()=>{const b=[...document.querySelectorAll('button')].find(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0&&/поиск|search/i.test((b.innerText||'')+' '+(b.getAttribute('aria-label')||''))});b.click();return true})()\",returnByValue:true});\nawait sleep(700);\nconst focus=await call(\"Runtime.evaluate\",{expression:\"(()=>{const i=[...document.querySelectorAll('input')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});if(!i)return false;i.focus();return true})()\",returnByValue:true});\nif(!focus.result.value){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"no_search_input\"}));process.exit(3)}\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"a\",code:\"KeyA\",windowsVirtualKeyCode:65,modifiers:2});\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"a\",code:\"KeyA\",windowsVirtualKeyCode:65,modifiers:2});\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Backspace\",code:\"Backspace\",windowsVirtualKeyCode:8});\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Backspace\",code:\"Backspace\",windowsVirtualKeyCode:8});\nawait call(\"Input.insertText\",{text:title});\nlet hit=null;\nfor(let i=0;i<24;i++){await sleep(250);const r=await call(\"Runtime.evaluate\",{expression:`(()=>{const a=[...document.querySelectorAll('a[href]')].find(a=>(a.innerText||a.textContent||'').trim().includes(\"Native Connector Implementation\"));return a?{href:a.href,text:(a.innerText||a.textContent||'').trim()}:null})()`,returnByValue:true});if(r.result.value){hit=r.result.value;break}}\nif(!hit){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"title_result_missing\"}));process.exit(4)}\nawait call(\"Runtime.evaluate\",{expression:`(()=>{const a=[...document.querySelectorAll('a[href]')].find(a=>(a.innerText||a.textContent||'').trim().includes(\"Native Connector Implementation\"));a.click();return true})()`,returnByValue:true});\nlet url=\"\";for(let i=0;i<24;i++){await sleep(250);const r=await call(\"Runtime.evaluate\",{expression:\"location.href\",returnByValue:true});url=String(r.result.value);if(url.includes(conv))break}\nif(!url.includes(conv)){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"wrong_chat_after_click\",url,hit}));process.exit(5)}\nconst state=async()=>JSON.parse((await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')];return {found:!!c,text,generating:bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop'))}})())\",returnByValue:true})).result.value);\nlet s=null;for(let i=0;i<12;i++){await sleep(200);s=await state();if(s.found)break}\nif(!s?.found||s.generating||s.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"composer_busy\"}));process.exit(6)}\nawait call(\"Runtime.evaluate\",{expression:\"document.querySelector('#prompt-textarea').focus();true\",returnByValue:true});await call(\"Input.insertText\",{text:prompt});await sleep(350);\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13});await sleep(700);ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true,url,title:hit.text}));\n\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":false,\"reason\":\"wrong_chat_after_click\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"hit\":{\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"text\":\"Native Connector Implementation\"}}",
+      "stdout_bytes": 311,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T04:20:51.128Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T04:20:51.054Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261002-1098-native-title-search-final"
+    },
+    "request_id": "boss-20261002-1098-native-title-search-final",
+    "started_at": "2026-10-02T04:20:43.449Z",
+    "status": "completed"
+  },
+  "id": "boss-20261002-1098-native-title-search-final",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
