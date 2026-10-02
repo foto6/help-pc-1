@@ -1,0 +1,26 @@
+EXECUTE NOW — CREATOR R29 LIVE E2E CONSUMER. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r29-live-e2e-consumer-20261002
+Exact starting HEAD: 0d670abd4b5f04391fd1e6e1af4836a9fc92c8f3
+
+Exact-green dynamic authorities:
+- Media R21: foto6/video2@d753e9e4c1f4448386608a1425232dbc1dba87ea, CI 36994000619 SUCCESS
+- Growth R26: foto6/video3@e844ed2daaaca9e9694fe1e0fb6b8b7bfac69cbc, CI 36994388154 SUCCESS
+- Bridge R30: foto6/WebAIBridge@ceaee873231a8552c5b7324083baa800eec566a8, CI 36993885456 SUCCESS
+
+Objective: make Creator ready to consume ONE genuine coordinator-run dynamic capture/ingest and execute one bounded real re-edit cycle without stale Wave-3 pins.
+
+Required:
+1. Pin exact Media R21 / Growth R26 / Bridge R30 producer authorities by SHA + contract/schema/blob identities. No moving branch authority.
+2. Accept only growth.dynamic_creator_external_review_envelope.r26.v1 with exact package/capture/sealed-mapping/assistant-response provenance.
+3. Validate reviewed candidate identity, round, render SHA/size, attachment SHA/size, package digest, handoff digest and selected candidate identity.
+4. For targeted_reedit, execute exact real Media re-edit using the reviewed candidate bytes and exact Growth allowlisted directives; require real media.editorial_reedit_application.v1 + render export + new MP4 hash.
+5. Immediately produce the next Media R21-compatible review-round input/bundle boundary for that new candidate. No static R18/R20 fallback.
+6. Durable replay journal: same live review event is idempotent; conflicts fail closed; no duplicate Media effect.
+7. Maximum two re-edit rounds. winner only => canonical final.mp4 + publish handoff. tie/insufficient_evidence/human_review remain non-publishable.
+8. Provide one-command operator consumer taking coordinator-produced Growth R27 output and materialized Media checkout/artifacts.
+9. If no genuine live Growth output exists in this agent context, state SOURCE_READY/BLOCKED_WAITING_LIVE_GROWTH_OUTPUT. Never fabricate LIVE_REVIEW_INGESTED or REAL_REEDIT_EXECUTED.
+10. No social provider mutation, credentials, CAPTCHA/2FA bypass, human-quality claim or merge.
+
+Evidence: substantive code/tests/docs/readiness, exact-head CI SUCCESS, negative tests for stale SHA/blob, round drift, wrong sealed mapping, duplicate/conflict, winner-only publish.
