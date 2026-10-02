@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();\n$code=@'\nconst convs={\n creator:\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\n media:\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\n bridge:\"6abda61c-a440-83ed-9482-1d0fc7923e03\",\n native_mcp:\"6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\n pc_executor:\"6ab94f1d-a604-83eb-ae1b-258ac27e6544\",\n human_gate:\"6abdcea3-b724-83ed-b43b-982f00854e3c\"\n};\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst out={};\nfor(const [k,c] of Object.entries(convs)){\n const hits=tabs.filter(t=>t.type===\"page\"&&String(t.url||\"\").includes(c)).map(t=>({id:t.id,title:t.title,url:t.url}));\n out[k]=hits;\n}\nprocess.stdout.write(JSON.stringify(out));\n'@;\n$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"creator\":[{\"id\":\"4286394BE03EE2BB4763A151CC7EAF29\",\"title\":\"Implement Publish Provider Layer\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\"}],\"media\":[{\"id\":\"0FCF754993E255005F038065DA6DF681\",\"title\":\"Deliver R11 Editor\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\"}],\"bridge\":[{\"id\":\"018719BE1AECAF8ADED28535B17CA895\",\"title\":\"Bridge R19 Implementation Report\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\"}],\"native_mcp\":[{\"id\":\"B5D613DD803D63FF48226816CD71ABC3\",\"title\":\"Native Connector Implementation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\"},{\"id\":\"630BADE8569FD3BD247F6D162E1488E8\",\"title\":\"Native Connector Implementation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\"}],\"pc_executor\":[{\"id\":\"A11DA53840D85DCB6DFAEA06CABDADB4\",\"title\":\"Parity Gate Validation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab94f1d-a604-83eb-ae1b-258ac27e6544\"}],\"human_gate\":[{\"id\":\"098BDD859BDFEAD0E87D0F24353ADFCF\",\"title\":\"Разработка гуманного бенчмарка\",\"url\":\"https://chatgpt.com/c/6abdcea3-b724-83ed-b43b-982f00854e3c\"}]}",
+      "stdout_bytes": 1396,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T08:06:32.494Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T08:06:32.412Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261002-map-agent-targets-6f61c8"
+    },
+    "request_id": "coord-20261002-map-agent-targets-6f61c8",
+    "started_at": "2026-10-02T08:06:31.677Z",
+    "status": "completed"
+  },
+  "id": "coord-20261002-map-agent-targets-6f61c8",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
