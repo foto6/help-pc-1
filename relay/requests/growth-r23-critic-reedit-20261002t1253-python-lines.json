@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1253-python-lines",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p=Get-CimInstance Win32_Process -Filter \"ProcessId=8800 OR ProcessId=13836\"; $p | Select-Object ProcessId,ParentProcessId,Name,CommandLine | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\growth-r23-work"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only bounded process identity check for the two observed Python PIDs"
+}
