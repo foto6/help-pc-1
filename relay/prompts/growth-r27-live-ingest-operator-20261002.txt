@@ -1,0 +1,27 @@
+EXECUTE NOW — GROWTH R27 LIVE INGEST OPERATOR. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r27-live-ingest-operator-20261002
+Exact starting HEAD: e844ed2daaaca9e9694fe1e0fb6b8b7bfac69cbc
+
+Exact-green dependencies:
+- Media R21 d753e9e4c1f4448386608a1425232dbc1dba87ea
+- Bridge R30 ceaee873231a8552c5b7324083baa800eec566a8
+
+Objective: make one coordinator-generated genuine Bridge dynamic capture directly ingestible into Creator R29 without manual editing.
+
+Required:
+1. One-command operator that accepts:
+   - exact Media R21/R22 package directory + authority profile;
+   - exact Bridge R30/R31 live capture + authority profile;
+   - durable ledger/output directory.
+2. Verify exact producer SHA + CI + schema/blob identities, package digest, prompt digest, A/B bytes, sealed mapping, source/round lineage, request/operation/conversation IDs, assistant-response digest and LIVE_REVIEW_PASS.
+3. Unblind only after all capture validation passes.
+4. Emit canonical growth.dynamic_creator_external_review_envelope.r26.v1 for each candidate and a single coordinator index that identifies the selected candidate/result without losing pairwise context.
+5. Exact replay is no-op. Changed response/package/mapping under same identity is conflict.
+6. Reject fixture/fake-CDP/MALFORMED_MODEL_RESPONSE/BLOCKED as live ingest.
+7. Model evidence stays human_ground_truth=false and may not touch human-rating artifacts.
+8. Provide readiness state SOURCE_READY until a real coordinator capture is supplied; with genuine input may emit LIVE_REVIEW_INGESTED.
+9. No provider/browser/Creator/Media mutation, no merge.
+
+Evidence: code/tests/docs, exact-head CI SUCCESS, operator command, machine-readable output index, comprehensive negative tests.
