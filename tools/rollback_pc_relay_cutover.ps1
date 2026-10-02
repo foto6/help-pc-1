@@ -34,7 +34,7 @@ $matching = @(
         }
 )
 
-$dirty = Invoke-Git @('status', '--porcelain', '--untracked-files=no')
+$dirty = Invoke-Git -Arguments @('status', '--porcelain', '--untracked-files=no')
 if ($dirty) {
     throw 'Tracked relay checkout is dirty; exact rollback is refused.'
 }
@@ -87,9 +87,9 @@ if ($task) {
 
 # Detach to the exact recorded pre-cutover SHA. This does not move or rewrite
 # agent/pc-github-relay. Ignored .pc-relay state/outcomes remain in place.
-Invoke-Git @('checkout', '--detach', $PreviousHead) | Out-Null
+Invoke-Git -Arguments @('checkout', '--detach', $PreviousHead) | Out-Null
 
-$actual = Invoke-Git @('rev-parse', 'HEAD')
+$actual = Invoke-Git -Arguments @('rev-parse', 'HEAD')
 if ($actual -ne $PreviousHead) {
     throw "Rollback HEAD verification failed. expected=$PreviousHead actual=$actual"
 }
