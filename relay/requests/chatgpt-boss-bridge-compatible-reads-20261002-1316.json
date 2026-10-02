@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-boss-bridge-compatible-reads-20261002-1316",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$b='http://127.0.0.1:17448'; $paths=@('/api/status','/api/supervisor-watchdog','/api/supervisor-watchdog/managed-chats','/api/supervisor-watchdog/agent-assignments','/api/chats'); $out=@(); foreach($p in $paths){ try{$v=Invoke-RestMethod -Method Get -Uri ($b+$p) -TimeoutSec 8; $out += [pscustomobject]@{path=$p;ok=$true;value=$v}} catch {$out += [pscustomobject]@{path=$p;ok=$false;error=$_.Exception.Message}}}; $out | ConvertTo-Json -Depth 10 -Compress"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 45000,
+  "note": "Read-only compatibility probe for live Bridge chat/assignment endpoints"
+}
