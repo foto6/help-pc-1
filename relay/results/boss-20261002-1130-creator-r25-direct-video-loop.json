@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst prompt=\"EXECUTE NOW — CREATOR R25 DIRECT-VIDEO CRITIC CLOSED LOOP.\\n\\nRepo: foto6/video1\\nWritable branch ONLY: agent/creator-r25-direct-video-critic-loop-20261002\\nExact starting HEAD: 215dc6ef924da45072c9f2c648edd3b3d80e645c\\n\\nUpstream confirmed:\\n- Media R18 exact SHA 2c41f084e000eca5efd9a51d2d3752bec1bd1311, CI 36967381891 SUCCESS, artifact media-r18-direct-model-review id 11210373001.\\n- Bridge R26 exact SHA 73c13f9eed2a2cbcea881dd8c5452d054bfef940, CI 36966868342 SUCCESS, highest disposition READY_FOR_EXPLICIT_LIVE_REHEARSAL.\\n- Growth R23 branch agent/growth-r23-critic-reedit-adapter-20261002 is still producer-pending. Do not invent its pin.\\n\\nPRIMARY GOAL:\\nPrepare the bounded Creator orchestration for actual MP4 -> web-chat critic -> targeted re-edit, source-bound end to end.\\n\\nRequired:\\n1. Consume Media R18 blinded A/B review manifest and exact render hashes.\\n2. Consume Bridge R26 preflight/evidence contracts but DO NOT perform live attachment or prompt send.\\n3. Consume exact Growth R23 critic->reedit adapter only after exact SHA + green CI exists.\\n4. State must remain WAITING_FOR_GROWTH_R23 until independently bound producer pin appears.\\n5. Define durable stages: REVIEW_PACKAGE_READY -> ATTACHMENT_PREFLIGHT_READY -> MODEL_REVIEW_PENDING -> CRITIC_RESULT_VALIDATED -> REEDIT_REQUESTED/WINNER/TIE/INSUFFICIENT_EVIDENCE/HUMAN_REVIEW.\\n6. Max 2 targeted re-edit rounds; no unbounded loop.\\n7. Exact source/render/attachment/result lineage; reject stale hashes and duplicate/replayed critic result.\\n8. Model review is human_ground_truth=false and never advances human-parity ratings.\\n9. No live upload/prompt/provider mutation. CI uses fixtures/fake transport only.\\n10. Exact-head CI green with report showing current blocked/ready state.\\n\\nCompletion = substantive code/tests/report + exact SHA + green exact-head CI.\",id=\"4286394BE03EE2BB4763A151CC7EAF29\";const tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===id);if(!tab){process.stdout.write(JSON.stringify({ok:false,reason:\"target_missing\"}));process.exit(2)}const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let s=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(m,a={})=>new Promise((r,j)=>{const k=s++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});const st=async()=>JSON.parse((await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea');const text=c?(c.innerText||c.textContent||''):'';const bs=[...document.querySelectorAll('button')];return {found:!!c,text,generating:bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop'))}})())\",returnByValue:true})).result.value);const pre=await st();if(!pre.found||pre.generating||pre.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:pre.generating?\"generating\":\"busy_or_draft\"}));process.exit(3)}await call(\"Runtime.evaluate\",{expression:\"document.querySelector('#prompt-textarea').focus();true\",returnByValue:true});await call(\"Input.insertText\",{text:prompt});await call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13});ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true}));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":false,\"reason\":\"busy_or_draft\"}",
+      "stdout_bytes": 37,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T06:01:35.647Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T06:01:35.567Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261002-1130-creator-r25-direct-video-loop"
+    },
+    "request_id": "boss-20261002-1130-creator-r25-direct-video-loop",
+    "started_at": "2026-10-02T06:01:35.096Z",
+    "status": "completed"
+  },
+  "id": "boss-20261002-1130-creator-r25-direct-video-loop",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
