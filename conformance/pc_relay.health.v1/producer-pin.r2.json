@@ -6,7 +6,7 @@
   "source_blobs": {
     "conformance/pc_relay.health.v1/schema.json": "acd46bf45dd4b647bdebd0cc46cc5b89997a1fb5",
     "tools/github_relay.py": "b87ef62c6e55eb071e6180780f56343deacd4cb0",
-    "tools/start_pc_control_relay.ps1": "bb58b8999f8178fa584016a67f1c83b658a2c500"
+    "tools/start_pc_control_relay.ps1": "8a7b23c69c2083876d4212d8957df72ff19b59a4"
   },
   "freshness": {
     "default_seconds": 30,
