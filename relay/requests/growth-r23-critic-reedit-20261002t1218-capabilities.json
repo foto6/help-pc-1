@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1218-capabilities",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Growth R23 bounded capability probe before local repo work"
+}
