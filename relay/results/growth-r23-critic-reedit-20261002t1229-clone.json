@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; git clone --branch 'agent/growth-r23-critic-reedit-adapter-20261002' --single-branch 'https://github.com/foto6/video3.git' 'E:\\\\growth-r23-work'; git -C 'E:\\\\growth-r23-work' rev-parse HEAD; git -C 'E:\\\\growth-r23-work' status --short --branch"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Cloning into 'E:\\\\growth-r23-work'...\n",
+      "stderr_bytes": 38,
+      "stderr_truncated": false,
+      "stdout": "0f6824d7c3962ccee572b21a4e1a343e6470c1a9\n## agent/growth-r23-critic-reedit-adapter-20261002...origin/agent/growth-r23-critic-reedit-adapter-20261002\n",
+      "stdout_bytes": 149,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T05:28:24.072Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T05:28:23.994Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "growth-r23-critic-reedit-20261002t1229-clone"
+    },
+    "request_id": "growth-r23-critic-reedit-20261002t1229-clone",
+    "started_at": "2026-10-02T05:28:21.392Z",
+    "status": "completed"
+  },
+  "id": "growth-r23-critic-reedit-20261002t1229-clone",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
