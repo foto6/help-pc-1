@@ -1,0 +1,32 @@
+EXECUTE NOW — MEDIA R24 CANONICAL LIVE REVIEW ARTIFACT EXPORT. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r24-canonical-live-artifact-20261002
+Exact starting HEAD: 78c6982a91d7e3e8c037cd9ce740ee077babdccc
+Exact starting CI: 37007419237 SUCCESS
+
+R23 is exact-green and produces media.review_session_package.r23.v1 locally. The coordinator now needs one exact downloadable artifact shape for Bridge live preflight/execution.
+
+Milestone:
+1. Add a canonical export command for an exact R23 session package into one self-contained directory + deterministic archive.
+2. Include:
+   - review-A.mp4 / review-B.mp4 exact bytes;
+   - model prompt exact bytes;
+   - R23 session index;
+   - nested R21/R22 manifests/evidence;
+   - sealed mapping machine-side only;
+   - exact producer SHA/CI/contracts/blob IDs;
+   - source/brief/review-round lineage;
+   - package/directory/archive SHA-256.
+3. Add independent verifier that can validate the export after download on another checkout before browser mutation.
+4. Produce a Bridge-consumable sanitized handoff file that contains all required hashes/sizes/MIME/round/source fields but no sealed candidate-role mapping in model-facing content.
+5. Wire exact-head CI to upload the canonical export as an Actions artifact for at least one real-MP4 round-0 package and one targeted re-edit package. The artifact itself may contain demo/rehearsal footage, but must use actual encoded MP4 bytes and be marked non-human-ground-truth.
+6. Record exact artifact ID/name/digest in a readiness report when available from the workflow.
+7. Exact rerun with same inputs must be byte-stable; changed input under same package/session identity fails.
+8. No model/browser/provider call, no social publish, no human quality claim, no merge.
+
+Evidence required:
+- substantive commits/tests/docs/report;
+- actual deterministic archive(s);
+- exact-head CI SUCCESS;
+- canonical artifact contract and verification command.
