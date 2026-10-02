@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1332-method-smoke2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; Remove-Item -Recurse -Force growth_analytics\\__pycache__,tests\\__pycache__ -ErrorAction SilentlyContinue; python.exe -B -c \"import importlib.util,pathlib; p=pathlib.Path('tests/test_critic_reedit_adapter_r23.py'); s=importlib.util.spec_from_file_location('r23tests',p); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); c=m.GrowthR23CriticReeditAdapterTests; c.setUpClass(); names=sorted(n for n in dir(c) if n.startswith('test_')); exec('for n in names:\\n print(\\\"START\\\",n,flush=True)\\n o=c(n)\\n o.setUp() if hasattr(o,\\\"setUp\\\") else None\\n getattr(o,n)()\\n o.tearDown() if hasattr(o,\\\"tearDown\\\") else None\\n print(\\\"PASS\\\",n,flush=True)'); print('TOTAL',len(names),flush=True)\"; git diff --check; git status --short"
+    ],
+    "cwd": "E:\\growth-r23-work"
+  },
+  "timeout_ms": 60000,
+  "note": "Clean only generated pycache and run isolated Growth R23 test methods after assertion fix"
+}
