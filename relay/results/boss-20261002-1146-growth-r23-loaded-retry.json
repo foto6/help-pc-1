@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst prompt=\"EXECUTE NOW — GROWTH R23 WEB-VIDEO CRITIC -> CREATOR RE-EDIT ADAPTER.\\n\\nRepo: foto6/video3\\nWritable branch ONLY: agent/growth-r23-critic-reedit-adapter-20261002\\nExact starting HEAD: 0f6824d7c3962ccee572b21a4e1a343e6470c1a9\\n\\nR22 direct-video critic is exact-green at 0f6824d7c3962ccee572b21a4e1a343e6470c1a9.\\nBridge R26 is exact-green at 73c13f9eed2a2cbcea881dd8c5452d054bfef940.\\nMedia R18 is exact-green at 2c41f084e000eca5efd9a51d2d3752bec1bd1311, CI 36967381891.\\n\\nImplement deterministic conversion of growth.web_video_critic.v1 into bounded Creator re-edit directives:\\n- exact source/render/attachment binding;\\n- timestamped defects -> supported edit operations with evidence;\\n- preserve uncertainty and coverage;\\n- max 2 re-edit rounds;\\n- winner / targeted_reedit / tie / insufficient_evidence / human_review states;\\n- human_ground_truth=false always for model review;\\n- reject stale hashes, contradictory timestamps, unsupported edits, duplicate replay, provenance drift;\\n- compatible with direct MP4 attachment transport, but do not fabricate live video review.\\nSubstantive code/tests/report + exact-head CI SUCCESS. No live provider mutation/upload.\", tid=\"011D68D54D141EDE3F61EA1CEB05A6FB\", sleep=ms=>new Promise(r=>setTimeout(r,ms));\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===tid);\nif(!tab){process.stdout.write(JSON.stringify({ok:false,reason:\"tab_missing\"}));process.exit(2)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\nlet seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\nconst call=(m,a={})=>new Promise((r,j)=>{const k=seq++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\nconst state=async()=>JSON.parse((await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const vis=e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const editors=[...document.querySelectorAll('textarea,[contenteditable=\\\\\\\"true\\\\\\\"]')].filter(vis);const c=document.querySelector('#prompt-textarea')||editors[0]||null;const send=[...document.querySelectorAll('button')].find(b=>vis(b)&&/отправ|send/i.test((b.getAttribute('aria-label')||'')+' '+(b.innerText||'')));const stop=[...document.querySelectorAll('button')].find(b=>vis(b)&&/останов|stop/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')));return {href:location.href,found:!!c,text:c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'',send:!!send,stop:!!stop,editorCount:editors.length}})())\",returnByValue:true})).result.value);\nlet s=null;for(let i=0;i<30;i++){await sleep(250);s=await state();if(s.found)break}\nif(!s?.found){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"composer_missing\",state:s}));process.exit(3)}\nif(s.stop){ws.close();process.stdout.write(JSON.stringify({ok:true,already_started:true,state:s}));process.exit(0)}\nif(s.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"foreign_or_existing_draft_preserved\",state:s}));process.exit(4)}\nconst focused=await call(\"Runtime.evaluate\",{expression:\"(()=>{const vis=e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\\\\\"true\\\\\\\"]')].find(vis);if(!c)return false;c.focus();return true})()\",returnByValue:true});\nif(!focused.result.value){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"focus_failed\"}));process.exit(5)}\nawait call(\"Input.insertText\",{text:prompt});await sleep(500);s=await state();\nif(!s.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"insert_failed\",state:s}));process.exit(6)}\nif(!s.send){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"send_missing_after_insert\",state:s}));process.exit(7)}\nawait call(\"Runtime.evaluate\",{expression:\"(()=>{const vis=e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const b=[...document.querySelectorAll('button')].find(b=>vis(b)&&/отправ|send/i.test((b.getAttribute('aria-label')||'')+' '+(b.innerText||'')));if(!b)return false;b.click();return true})()\",returnByValue:true});\nawait sleep(900);s=await state();ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true,state:s,tabId:tid}));\n\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"submitted\":true,\"state\":{\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/local-chatgpt%3A54542824-46ca-477e-896d-1828d153df33\",\"found\":true,\"text\":\"\\n\",\"send\":false,\"stop\":true,\"editorCount\":1},\"tabId\":\"011D68D54D141EDE3F61EA1CEB05A6FB\"}",
+      "stdout_bytes": 273,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T05:18:47.913Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T05:18:47.822Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261002-1146-growth-r23-loaded-retry"
+    },
+    "request_id": "boss-20261002-1146-growth-r23-loaded-retry",
+    "started_at": "2026-10-02T05:18:44.464Z",
+    "status": "completed"
+  },
+  "id": "boss-20261002-1146-growth-r23-loaded-retry",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
