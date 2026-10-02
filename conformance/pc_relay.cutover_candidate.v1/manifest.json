@@ -1,0 +1,88 @@
+{
+  "contract": "pc_relay.cutover_candidate.v1",
+  "repository": "foto6/help-pc-1",
+  "branch": "agent/pc-relay-watchdog-cutover-candidate-20261002",
+  "exact_start_sha": "33d063dffa507833a23c642d3e3e06bfa5d02b76",
+  "source_blobs": {
+    "relay": {
+      "path": "tools/github_relay.py",
+      "git_blob_sha1": "b87ef62c6e55eb071e6180780f56343deacd4cb0"
+    },
+    "launcher": {
+      "path": "tools/start_pc_control_relay.ps1",
+      "git_blob_sha1": "8a7b23c69c2083876d4212d8957df72ff19b59a4"
+    },
+    "autostart_installer": {
+      "path": "tools/install_pc_relay_autostart.ps1",
+      "git_blob_sha1": "02c090465fc56e6291583c1d4d003d2af18a31d2"
+    },
+    "autostart_uninstaller": {
+      "path": "tools/uninstall_pc_relay_autostart.ps1",
+      "git_blob_sha1": "e98664a8eb2bce22bc1c5a3c187223db5d79e1bc"
+    },
+    "rollback": {
+      "path": "tools/rollback_pc_relay_cutover.ps1",
+      "git_blob_sha1": "cf17f053cc99a8ef6121937b929f225d77f7ee1e"
+    },
+    "health_schema": {
+      "path": "conformance/pc_relay.health.v1/schema.json",
+      "git_blob_sha1": "acd46bf45dd4b647bdebd0cc46cc5b89997a1fb5"
+    },
+    "watchdog_schema": {
+      "path": "conformance/pc_relay.watchdog_status.v1/schema.json",
+      "git_blob_sha1": "a6e7b2bdd6e73e22e2d090932c03ce42cb1c6dac"
+    },
+    "cutover_schema": {
+      "path": "conformance/pc_relay.cutover_candidate.v1/schema.json",
+      "git_blob_sha1": "0c4ac8ece4b9cac3c21944641db4357deebffe3c"
+    },
+    "incident_fixture": {
+      "path": "tests/fixtures/pc_relay_cutover_candidate/incident_2026-10-01.json",
+      "git_blob_sha1": "a8d501e21d3c53f85cd16ffd0ff3cca52315347b"
+    }
+  },
+  "live_branch": {
+    "name": "agent/pc-github-relay",
+    "observed_head": "d487452dcb4556cf9a41ed69783f4231d0799873",
+    "observed_date": "2026-10-02",
+    "modified_by_milestone": false,
+    "must_reverify_before_cutover": true
+  },
+  "health_contract": "pc_relay.health.v1",
+  "watchdog_contract": "pc_relay.watchdog_status.v1",
+  "incident_fixture": "tests/fixtures/pc_relay_cutover_candidate/incident_2026-10-01.json",
+  "autostart": {
+    "mechanism": "Windows Scheduled Task",
+    "trigger": "AtLogOn",
+    "delay_seconds": 30,
+    "multiple_instances": "IgnoreNew",
+    "run_level": "Limited",
+    "registration_requires_explicit_apply": true,
+    "registration_performed_by_ci": false,
+    "starts_task_on_install": false,
+    "requires_exact_head": true,
+    "requires_clean_tracked_checkout": true
+  },
+  "reboot_recovery": {
+    "state_preserved": true,
+    "outcome_journal_preserved": true,
+    "request_ids_preserved": true,
+    "unknown_effect_replay_authorized": false,
+    "reconciliation_required_before_retry": true
+  },
+  "rollback": {
+    "exact_previous_head_required": true,
+    "live_branch_not_moved": true,
+    "checkout_mode": "detached_exact_head",
+    "requires_relay_absent": true,
+    "unregisters_autostart": true,
+    "starts_relay": false
+  },
+  "logs": {
+    "max_bytes": 5242880,
+    "backup_count": 3,
+    "stdout": ".pc-relay/live.stdout.log",
+    "stderr": ".pc-relay/live.stderr.log"
+  },
+  "release_gate": "NO_LIVE_CUTOVER"
+}

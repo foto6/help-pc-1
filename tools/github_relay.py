@@ -8,7 +8,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
 from pc_executor.audit import JsonlAuditSink
 from pc_executor.executor import Executor
@@ -19,7 +19,11 @@ from pc_executor.shell import SafeShellAdapter
 
 REQUEST_VERSION = "pc_relay.request.v1"
 RESULT_VERSION = "pc_relay.result.v1"
+HEALTH_VERSION = "pc_relay.health.v1"
 REQUEST_ID_RE = re.compile(r"^[A-Za-z0-9._-]{1,80}$")
+GIT_TIMEOUT_SECONDS = 30.0
+DEFAULT_STALE_AFTER_SECONDS = 30.0
+LONG_RUNNING_PHASE_STALE_AFTER_SECONDS = 150.0
 
 READ_ONLY_ACTIONS = {
     "capabilities.get",
@@ -52,6 +56,7 @@ def _run_git(repo: Path, *args: str, check: bool = True) -> subprocess.Completed
         text=True,
         capture_output=True,
         check=check,
+        timeout=GIT_TIMEOUT_SECONDS,
     )
 
 
@@ -105,6 +110,331 @@ def _load_json(path: Path) -> dict[str, Any]:
     return raw
 
 
+def _git_head(repo: Path, ref: str = "HEAD") -> str | None:
+    probe = _run_git(repo, "rev-parse", ref, check=False)
+    if probe.returncode != 0:
+        return None
+    value = probe.stdout.strip()
+    return value or None
+
+
+def _bounded_error(value: object, limit: int = 512) -> str:
+    text = str(value).replace("\r", " ").replace("\n", " ")
+    text = re.sub(
+        r"([A-Za-z][A-Za-z0-9+.-]*://)[^/@\s]+@",
+        r"\1<redacted>@",
+        text,
+    )
+    text = re.sub(
+        r"(?i)\b(token|password|authorization|credential)\s*[:=]\s*[^\s]+",
+        r"\1=<redacted>",
+        text,
+    )
+    return text[:limit]
+
+
+def _git_head_relation(repo: Path, local_head: str | None, remote_head: str | None) -> str:
+    if not local_head or not remote_head:
+        return "unknown"
+    if local_head == remote_head:
+        return "equal"
+    local_ancestor = _run_git(
+        repo,
+        "merge-base",
+        "--is-ancestor",
+        local_head,
+        remote_head,
+        check=False,
+    )
+    if local_ancestor.returncode == 0:
+        return "local_behind_remote"
+    remote_ancestor = _run_git(
+        repo,
+        "merge-base",
+        "--is-ancestor",
+        remote_head,
+        local_head,
+        check=False,
+    )
+    if remote_ancestor.returncode == 0:
+        return "local_ahead_remote"
+    return "diverged"
+
+
+def _tree_queue_counts(repo: Path, ref: str) -> dict[str, int] | None:
+    probe = _run_git(
+        repo,
+        "ls-tree",
+        "-r",
+        "--name-only",
+        ref,
+        "--",
+        "relay/requests",
+        "relay/results",
+        check=False,
+    )
+    if probe.returncode != 0:
+        return None
+    request_names: set[str] = set()
+    result_names: set[str] = set()
+    for raw in probe.stdout.splitlines():
+        path = raw.strip().replace("\\", "/")
+        if path.startswith("relay/requests/") and path.endswith(".json"):
+            request_names.add(Path(path).name)
+        elif path.startswith("relay/results/") and path.endswith(".json"):
+            result_names.add(Path(path).name)
+    return {
+        "request_count": len(request_names),
+        "result_count": len(result_names),
+        "backlog_count": len(request_names - result_names),
+    }
+
+
+def _parse_observed_processes(values: Iterable[str]) -> dict[str, Any]:
+    rows: list[dict[str, int]] = []
+    seen: set[int] = set()
+    for raw in values:
+        text = str(raw)
+        if ":" not in text:
+            raise ValueError("observed process must be PID:PARENTPID")
+        pid_text, parent_text = text.split(":", 1)
+        pid = int(pid_text)
+        parent_pid = int(parent_text)
+        if pid <= 0 or parent_pid < 0 or pid in seen:
+            raise ValueError("observed process identities must be unique positive PIDs")
+        seen.add(pid)
+        rows.append({"pid": pid, "parent_pid": parent_pid})
+    roots = sorted(
+        row["pid"]
+        for row in rows
+        if row["parent_pid"] not in seen
+    )
+    return {
+        "matching_pids": sorted(seen),
+        "logical_roots": roots,
+        "logical_process_count": len(roots),
+    }
+
+
+def classify_health_snapshot(
+    snapshot: dict[str, Any] | None,
+    *,
+    now_unix: float,
+    process_exists: bool,
+    stale_after_seconds: float = DEFAULT_STALE_AFTER_SECONDS,
+    logical_process_count: int = 1,
+    health_pid_observed: bool = True,
+    head_relation: str = "unknown",
+    observed_remote_head: str | None = None,
+    observed_remote_backlog_count: int | None = None,
+) -> str:
+    if logical_process_count > 1:
+        return "DUPLICATE_AMBIGUOUS"
+    if not process_exists:
+        return "PROCESS_MISSING"
+    if not snapshot:
+        return "PROCESS_EXISTS"
+    if snapshot.get("health_version") != HEALTH_VERSION:
+        return "PROCESS_EXISTS"
+    if snapshot.get("reconciliation_required") is True:
+        return "RECONCILIATION_REQUIRED"
+    if not health_pid_observed:
+        return "PROCESS_EXISTS"
+    try:
+        updated_at = float(snapshot.get("updated_at_unix"))
+    except (TypeError, ValueError):
+        return "PROCESS_EXISTS"
+    effective_stale_after = max(1.0, float(stale_after_seconds))
+    if snapshot.get("phase") in {"execute_request", "reconcile_interrupted_side_effect"}:
+        effective_stale_after = max(
+            effective_stale_after,
+            LONG_RUNNING_PHASE_STALE_AFTER_SECONDS,
+        )
+    updated_age = max(0.0, now_unix - updated_at)
+    if updated_age > effective_stale_after:
+        return "STALE"
+
+    cycle_at = snapshot.get("last_cycle_completed_at_unix")
+    try:
+        cycle_age = (
+            max(0.0, now_unix - float(cycle_at))
+            if cycle_at is not None
+            else max(0.0, now_unix - float(snapshot.get("started_at_unix", now_unix)))
+        )
+    except (TypeError, ValueError):
+        cycle_age = effective_stale_after + 1.0
+
+    sync_at = snapshot.get("last_sync_at_unix")
+    try:
+        sync_age = (
+            max(0.0, now_unix - float(sync_at))
+            if sync_at is not None
+            else max(0.0, now_unix - float(snapshot.get("started_at_unix", now_unix)))
+        )
+    except (TypeError, ValueError):
+        sync_age = effective_stale_after + 1.0
+
+    if (
+        head_relation in {"local_behind_remote", "diverged"}
+        and sync_age > effective_stale_after
+    ):
+        return "STALE"
+    if (
+        observed_remote_head
+        and snapshot.get("remote_head")
+        and observed_remote_head != snapshot.get("remote_head")
+        and cycle_age > effective_stale_after
+    ):
+        return "STALE"
+    if observed_remote_backlog_count is not None:
+        try:
+            recorded_backlog = int(snapshot.get("backlog_count", 0))
+        except (TypeError, ValueError):
+            recorded_backlog = 0
+        if (
+            observed_remote_backlog_count > recorded_backlog
+            and cycle_age > effective_stale_after
+        ):
+            return "STALE"
+    if snapshot.get("status") == "healthy":
+        return "HEALTHY"
+    return "PROCESS_EXISTS"
+
+
+def build_watchdog_status(
+    repo: Path,
+    *,
+    snapshot: dict[str, Any] | None,
+    observed_processes: Iterable[str],
+    now_unix: float,
+    stale_after_seconds: float = DEFAULT_STALE_AFTER_SECONDS,
+) -> dict[str, Any]:
+    process = _parse_observed_processes(observed_processes)
+    local_head = _git_head(repo)
+    branch = (
+        snapshot.get("branch")
+        if isinstance(snapshot, dict) and isinstance(snapshot.get("branch"), str)
+        else "agent/pc-github-relay"
+    )
+    remote_ref = f"origin/{branch}"
+    remote_head = _git_head(repo, remote_ref)
+    relation = _git_head_relation(repo, local_head, remote_head)
+    remote_counts = _tree_queue_counts(repo, remote_ref)
+    health_pid = (
+        int(snapshot["pid"])
+        if isinstance(snapshot, dict)
+        and isinstance(snapshot.get("pid"), int)
+        and not isinstance(snapshot.get("pid"), bool)
+        else None
+    )
+    matching_pids = process["matching_pids"]
+    process_exists = bool(matching_pids)
+    health_pid_observed = health_pid is not None and health_pid in matching_pids
+
+    safe_snapshot = None
+    if isinstance(snapshot, dict):
+        safe_snapshot = dict(snapshot)
+        if safe_snapshot.get("last_error") is not None:
+            safe_snapshot["last_error"] = _bounded_error(safe_snapshot["last_error"])
+
+    state = classify_health_snapshot(
+        snapshot,
+        now_unix=now_unix,
+        process_exists=process_exists,
+        stale_after_seconds=stale_after_seconds,
+        logical_process_count=process["logical_process_count"],
+        health_pid_observed=health_pid_observed,
+        head_relation=relation,
+        observed_remote_head=remote_head,
+        observed_remote_backlog_count=(
+            None if remote_counts is None else remote_counts["backlog_count"]
+        ),
+    )
+    stale_reasons: list[str] = []
+    if state == "STALE":
+        try:
+            updated_age = max(0.0, now_unix - float(snapshot["updated_at_unix"]))
+        except Exception:
+            updated_age = None
+        if updated_age is None or updated_age > stale_after_seconds:
+            stale_reasons.append("health_record_age_exceeded")
+        if relation == "local_behind_remote":
+            stale_reasons.append("local_head_behind_remote_tracking_head")
+        if (
+            isinstance(snapshot, dict)
+            and remote_head
+            and snapshot.get("remote_head")
+            and remote_head != snapshot.get("remote_head")
+        ):
+            stale_reasons.append("remote_tracking_head_advanced_since_last_relay_sync")
+        if (
+            remote_counts is not None
+            and isinstance(snapshot, dict)
+            and remote_counts["backlog_count"] > int(snapshot.get("backlog_count", 0))
+        ):
+            stale_reasons.append("remote_backlog_advanced_without_completed_cycle")
+
+    return {
+        "status_version": "pc_relay.watchdog_status.v1",
+        "state": state,
+        "observed_at_unix": now_unix,
+        "process": {
+            **process,
+            "health_pid": health_pid,
+            "health_pid_observed": health_pid_observed,
+        },
+        "observations": {
+            "local_head": local_head,
+            "remote_tracking_head": remote_head,
+            "head_relation": relation,
+            "remote_tracking_queue": remote_counts,
+            "remote_observation_source": "local_remote_tracking_ref_no_network",
+        },
+        "stale_reasons": stale_reasons,
+        "health": safe_snapshot,
+        "error": None,
+        "recovery": {
+            "automatic_restart": False,
+            "automatic_kill": False,
+            "automatic_side_effect_replay": False,
+            "preserve_state_dir": ".pc-relay/state",
+            "preserve_outcome_journal": ".pc-relay/outcomes.jsonl",
+            "unknown_side_effect_requires_outcome_lookup": True,
+        },
+    }
+
+
+def _pending_result_paths(repo: Path, results_dir: Path) -> list[Path]:
+    rel_dir = results_dir.relative_to(repo).as_posix()
+    status = _run_git(
+        repo,
+        "status",
+        "--porcelain",
+        "--untracked-files=all",
+        "--",
+        rel_dir,
+        check=False,
+    )
+    if status.returncode != 0:
+        raise RuntimeError(status.stderr.strip() or "git status failed for relay results")
+    root = results_dir.resolve()
+    pending: list[Path] = []
+    for line in status.stdout.splitlines():
+        if len(line) < 4:
+            continue
+        rel = line[3:].strip()
+        if " -> " in rel:
+            rel = rel.split(" -> ", 1)[1]
+        candidate = (repo / rel).resolve()
+        try:
+            candidate.relative_to(root)
+        except ValueError:
+            continue
+        if candidate.suffix == ".json" and candidate.exists():
+            pending.append(candidate)
+    return sorted(set(pending))
+
+
 def _validate_request(raw: dict[str, Any], allowed_actions: set[str]) -> dict[str, Any]:
     allowed_keys = {"version", "id", "action", "params", "timeout_ms", "note"}
     unknown = set(raw) - allowed_keys
@@ -154,6 +484,7 @@ class Relay:
         self.state_dir = self.runtime_dir / "state"
         self.audit_path = self.runtime_dir / "audit.jsonl"
         self.journal_path = self.runtime_dir / "outcomes.jsonl"
+        self.health_path = self.runtime_dir / "health.json"
         self.requests_dir = repo / "relay" / "requests"
         self.results_dir = repo / "relay" / "results"
 
@@ -171,11 +502,101 @@ class Relay:
             allow_coordinate_fallback=False,
             operation_timeout_seconds=120.0,
         )
+        now = time.time()
+        self._health: dict[str, Any] = {
+            "health_version": HEALTH_VERSION,
+            "pid": os.getpid(),
+            "branch": self.branch,
+            "live": self.live,
+            "status": "starting",
+            "phase": "startup",
+            "updated_at_unix": now,
+            "started_at_unix": now,
+            "last_fetch_success_at_unix": None,
+            "last_sync_at_unix": None,
+            "last_cycle_completed_at_unix": None,
+            "last_request_processed_at_unix": None,
+            "last_request_processed_id": None,
+            "last_result_published_at_unix": None,
+            "last_result_published_id": None,
+            "local_head": _git_head(self.repo),
+            "remote_head": _git_head(self.repo, f"origin/{self.branch}"),
+            "remote_head_observed_at_unix": None,
+            "request_count": 0,
+            "result_count": 0,
+            "backlog_count": 0,
+            "last_backlog_change_at_unix": None,
+            "backlog_high_watermark": 0,
+            "current_request_id": None,
+            "last_error": None,
+            "last_reconciliation_request_id": None,
+            "reconciliation_required": False,
+        }
+        self._refresh_queue_counts()
+        self._write_health("startup", status="starting")
+
+    def _refresh_queue_counts(self) -> None:
+        request_names = {path.name for path in self.requests_dir.glob("*.json")}
+        result_names = {path.name for path in self.results_dir.glob("*.json")}
+        backlog = len(request_names - result_names)
+        previous_backlog = int(self._health.get("backlog_count", 0))
+        self._health["request_count"] = len(request_names)
+        self._health["result_count"] = len(result_names)
+        self._health["backlog_count"] = backlog
+        self._health["backlog_high_watermark"] = max(
+            int(self._health.get("backlog_high_watermark", 0)),
+            backlog,
+        )
+        if backlog != previous_backlog:
+            self._health["last_backlog_change_at_unix"] = time.time()
+
+    def _write_health(
+        self,
+        phase: str,
+        *,
+        status: str | None = None,
+        current_request_id: str | None = None,
+        mark_fetch: bool = False,
+        mark_sync: bool = False,
+        mark_cycle: bool = False,
+        mark_request: bool = False,
+        mark_result: bool = False,
+        event_request_id: str | None = None,
+        local_head: str | None = None,
+        remote_head: str | None = None,
+        error: str | None = None,
+    ) -> None:
+        now = time.time()
+        self._health["phase"] = phase
+        self._health["updated_at_unix"] = now
+        if status is not None:
+            self._health["status"] = status
+        self._health["current_request_id"] = current_request_id
+        if mark_fetch:
+            self._health["last_fetch_success_at_unix"] = now
+        if mark_sync:
+            self._health["last_sync_at_unix"] = now
+        if mark_cycle:
+            self._health["last_cycle_completed_at_unix"] = now
+        if mark_request:
+            self._health["last_request_processed_at_unix"] = now
+            self._health["last_request_processed_id"] = event_request_id
+        if mark_result:
+            self._health["last_result_published_at_unix"] = now
+            self._health["last_result_published_id"] = event_request_id
+        if local_head is not None:
+            self._health["local_head"] = local_head
+        if remote_head is not None:
+            self._health["remote_head"] = remote_head
+            self._health["remote_head_observed_at_unix"] = now
+        self._health["last_error"] = None if error is None else _bounded_error(error)
+        _atomic_json(self.health_path, self._health)
 
     def sync(self) -> None:
         # The remote queue may advance while this checkout creates local result commits.
         # Rebase preserves those local result commits over newly queued remote requests
         # and clears any stale relay-owned rebase state before trying again.
+        self._write_health("sync_fetch", status="process_exists")
         _rebase_onto_remote(self.repo, self.branch)
         status = _run_git(self.repo, "status", "--porcelain").stdout.strip()
         tracked_dirty = [
@@ -184,6 +605,16 @@ class Relay:
         ]
         if tracked_dirty:
             raise RuntimeError(f"relay checkout has uncommitted tracked changes: {tracked_dirty[:5]}")
+        local_head = _git_head(self.repo)
+        remote_head = _git_head(self.repo, f"origin/{self.branch}")
+        self._write_health(
+            "sync_complete",
+            status="healthy",
+            mark_fetch=True,
+            mark_sync=True,
+            local_head=local_head,
+            remote_head=remote_head,
+        )
 
     def _state_path(self, request_id: str) -> Path:
         return self.state_dir / f"{request_id}.json"
@@ -213,6 +644,7 @@ class Relay:
             "executor_result": None,
             "reconciliation": result,
             "reexecuted": False,
+            "replay_authorized": False,
         }
 
     def execute_one(self, request_path: Path) -> dict[str, Any]:
@@ -234,6 +666,13 @@ class Relay:
                 if req["action"] in READ_ONLY_ACTIONS:
                     pass
                 else:
+                    self._health["last_reconciliation_request_id"] = request_id
+                    self._health["reconciliation_required"] = True
+                    self._write_health(
+                        "reconcile_interrupted_side_effect",
+                        status="healthy",
+                        current_request_id=request_id,
+                    )
                     result = self._reconcile_after_interrupted_side_effect(req)
                     _atomic_json(state_path, {"status": "finished", "result": result})
                     self.publish_result(result)
@@ -245,6 +684,11 @@ class Relay:
             "live": self.live,
             "started_at_unix": time.time(),
         })
+        self._write_health(
+            "execute_request",
+            status="healthy",
+            current_request_id=request_id,
+        )
 
         action_payload = {
             "request_id": request_id,
@@ -300,6 +744,12 @@ class Relay:
                 check=False,
             )
             if pushed.returncode == 0:
+                self._write_health(
+                    "result_published",
+                    status="healthy",
+                    mark_result=True,
+                    event_request_id=request_id,
+                )
                 return
             # Remote queue advanced between our commit and push. Rebase the local
             # result commit over it, and always clean up failed rebase state.
@@ -307,16 +757,19 @@ class Relay:
         raise RuntimeError(f"failed to push relay result {request_id}")
 
     def _publish_pending_results(self) -> None:
-        # Recover results that were produced before a crash or Git commit failure.
-        # This is deliberately done before sync so a locally staged/untracked result
-        # can be committed and pushed instead of being mistaken for checkout dirt.
-        for result_path in sorted(self.results_dir.glob("*.json")):
+        # Recover only result files that Git says are uncommitted/untracked.
+        # Scanning every historical result and running git add/diff for each one
+        # made cycle cost grow linearly with the lifetime result corpus and could
+        # make an alive relay appear hung before it ever reached sync().
+        for result_path in _pending_result_paths(self.repo, self.results_dir):
             result = _load_json(result_path)
             request_id = result.get("id")
             if isinstance(request_id, str) and REQUEST_ID_RE.fullmatch(request_id):
                 self.publish_result(result)
 
     def cycle(self) -> int:
+        self._refresh_queue_counts()
+        self._write_health("publish_pending", status="process_exists")
         self._publish_pending_results()
         self.sync()
         processed = 0
@@ -327,6 +780,12 @@ class Relay:
                 if isinstance(request_id, str) and self._result_path(request_id).exists():
                     continue
                 self.execute_one(request_path)
+                self._write_health(
+                    "request_processed",
+                    status="healthy",
+                    mark_request=True,
+                    event_request_id=request_id,
+                )
                 processed += 1
             except Exception as exc:
                 request_id = request_path.stem
@@ -349,6 +808,13 @@ class Relay:
                     self.publish_result(error_result)
                 else:
                     print(f"[relay] invalid request file {request_path.name}: {exc}", file=sys.stderr)
+        self._refresh_queue_counts()
+        self._write_health(
+            "idle",
+            status="healthy",
+            current_request_id=None,
+            mark_cycle=True,
+        )
         return processed
 
     def run_forever(self) -> None:
@@ -362,7 +828,9 @@ class Relay:
             except KeyboardInterrupt:
                 raise
             except Exception as exc:
-                print(f"[relay] cycle error: {type(exc).__name__}: {exc}", file=sys.stderr, flush=True)
+                message = f"{type(exc).__name__}: {exc}"
+                self._write_health("cycle_error", status="degraded", error=message)
+                print(f"[relay] cycle error: {message}", file=sys.stderr, flush=True)
             time.sleep(self.poll_seconds)
 
 
@@ -379,6 +847,20 @@ def build_parser() -> argparse.ArgumentParser:
         help="additional Executor action to expose through relay",
     )
     parser.add_argument("--once", action="store_true", help="process one sync cycle and exit")
+    parser.add_argument("--status", action="store_true", help="print the read-only relay watchdog status and exit")
+    parser.add_argument(
+        "--observed-process",
+        action="append",
+        default=[],
+        metavar="PID:PARENTPID",
+        help="matching relay process identity already observed by the caller; repeatable",
+    )
+    parser.add_argument(
+        "--stale-after-seconds",
+        type=float,
+        default=DEFAULT_STALE_AFTER_SECONDS,
+        help="freshness threshold used by --status",
+    )
     return parser
 
 
@@ -387,6 +869,44 @@ def main() -> int:
     repo = Path(args.repo).resolve()
     if not (repo / ".git").exists():
         raise SystemExit(f"not a git checkout: {repo}")
+    if args.status:
+        health_path = repo / ".pc-relay" / "health.json"
+        snapshot = _load_json(health_path) if health_path.exists() else None
+        try:
+            status = build_watchdog_status(
+                repo,
+                snapshot=snapshot,
+                observed_processes=args.observed_process,
+                now_unix=time.time(),
+                stale_after_seconds=max(1.0, args.stale_after_seconds),
+            )
+        except (OSError, RuntimeError, ValueError) as exc:
+            status = {
+                "status_version": "pc_relay.watchdog_status.v1",
+                "state": "PROCESS_EXISTS" if args.observed_process else "PROCESS_MISSING",
+                "observed_at_unix": time.time(),
+                "process": None,
+                "observations": None,
+                "stale_reasons": ["status_probe_error"],
+                "health": snapshot,
+                "error": {
+                    "classification": type(exc).__name__,
+                    "message": _bounded_error(exc),
+                },
+                "recovery": {
+                    "automatic_restart": False,
+                    "automatic_kill": False,
+                    "automatic_side_effect_replay": False,
+                    "preserve_state_dir": ".pc-relay/state",
+                    "preserve_outcome_journal": ".pc-relay/outcomes.jsonl",
+                    "unknown_side_effect_requires_outcome_lookup": True,
+                },
+            }
+        else:
+            status["error"] = None
+        print(json.dumps(status, ensure_ascii=False, sort_keys=True))
+        return 0 if status["state"] == "HEALTHY" else 2
+
     allowed = set(DEFAULT_ALLOWED_ACTIONS) | set(args.allow_action)
     relay = Relay(
         repo,

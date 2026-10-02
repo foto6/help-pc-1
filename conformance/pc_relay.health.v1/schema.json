@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pc_relay.health.v1",
+  "title": "PC Relay durable freshness health",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "health_version",
+    "pid",
+    "branch",
+    "live",
+    "status",
+    "phase",
+    "updated_at_unix",
+    "started_at_unix",
+    "last_sync_at_unix",
+    "last_cycle_completed_at_unix",
+    "last_result_published_at_unix",
+    "local_head",
+    "remote_head",
+    "request_count",
+    "result_count",
+    "backlog_count",
+    "current_request_id",
+    "last_error",
+    "last_reconciliation_request_id",
+    "reconciliation_required",
+    "last_fetch_success_at_unix",
+    "last_request_processed_at_unix",
+    "last_request_processed_id",
+    "last_result_published_id",
+    "remote_head_observed_at_unix",
+    "last_backlog_change_at_unix",
+    "backlog_high_watermark"
+  ],
+  "properties": {
+    "health_version": {
+      "const": "pc_relay.health.v1"
+    },
+    "pid": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "branch": {
+      "type": "string",
+      "minLength": 1
+    },
+    "live": {
+      "type": "boolean"
+    },
+    "status": {
+      "enum": [
+        "starting",
+        "process_exists",
+        "healthy",
+        "degraded"
+      ]
+    },
+    "phase": {
+      "enum": [
+        "startup",
+        "publish_pending",
+        "sync_fetch",
+        "sync_complete",
+        "execute_request",
+        "reconcile_interrupted_side_effect",
+        "result_published",
+        "idle",
+        "cycle_error",
+        "request_processed"
+      ]
+    },
+    "updated_at_unix": {
+      "type": "number",
+      "minimum": 0
+    },
+    "started_at_unix": {
+      "type": "number",
+      "minimum": 0
+    },
+    "last_sync_at_unix": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "last_cycle_completed_at_unix": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "last_result_published_at_unix": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "local_head": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "remote_head": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "request_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "result_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "backlog_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "current_request_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Za-z0-9._-]{1,80}$"
+    },
+    "last_error": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 512
+    },
+    "last_reconciliation_request_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Za-z0-9._-]{1,80}$"
+    },
+    "reconciliation_required": {
+      "type": "boolean"
+    },
+    "last_fetch_success_at_unix": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "last_request_processed_at_unix": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "last_request_processed_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Za-z0-9._-]{1,80}$"
+    },
+    "last_result_published_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Za-z0-9._-]{1,80}$"
+    },
+    "remote_head_observed_at_unix": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "last_backlog_change_at_unix": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "backlog_high_watermark": {
+      "type": "integer",
+      "minimum": 0
+    }
+  }
+}

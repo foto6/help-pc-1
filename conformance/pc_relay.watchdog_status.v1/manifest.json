@@ -1,0 +1,72 @@
+{
+  "manifest_version": "pc_relay.watchdog_status_conformance.r1.v1",
+  "contract": "pc_relay.watchdog_status.v1",
+  "health_contract": "pc_relay.health.v1",
+  "repository": "foto6/help-pc-1",
+  "branch": "agent/pc-relay-stale-sync-watchdog-20261001",
+  "exact_start_sha": "85877d46e2d51f5d0b1c1b35abc23f032bfedbee",
+  "incident": "docs/PC_RELAY_STALE_SYNC_INCIDENT_2026-10-01.md",
+  "producer_blobs": {
+    "relay": {
+      "path": "tools/github_relay.py",
+      "git_blob_sha1": "b87ef62c6e55eb071e6180780f56343deacd4cb0"
+    },
+    "launcher": {
+      "path": "tools/start_pc_control_relay.ps1",
+      "git_blob_sha1": "8a7b23c69c2083876d4212d8957df72ff19b59a4"
+    },
+    "health_schema": {
+      "path": "conformance/pc_relay.health.v1/schema.json",
+      "git_blob_sha1": "acd46bf45dd4b647bdebd0cc46cc5b89997a1fb5"
+    },
+    "watchdog_schema": {
+      "path": "conformance/pc_relay.watchdog_status.v1/schema.json",
+      "git_blob_sha1": "a6e7b2bdd6e73e22e2d090932c03ce42cb1c6dac"
+    }
+  },
+  "states": [
+    "PROCESS_MISSING",
+    "PROCESS_EXISTS",
+    "HEALTHY",
+    "STALE",
+    "RECONCILIATION_REQUIRED",
+    "DUPLICATE_AMBIGUOUS"
+  ],
+  "evidence": {
+    "process_tree": "caller-supplied matching PID:PARENTPID identities",
+    "local_head": "git rev-parse HEAD",
+    "remote_tracking_head": "git rev-parse origin/<relay-branch>",
+    "head_relation": "git merge-base --is-ancestor",
+    "remote_tracking_backlog": "git ls-tree of relay/requests and relay/results",
+    "network_fetch_performed_by_status": false
+  },
+  "safety_invariants": {
+    "pid_presence_is_health": false,
+    "py_launcher_child_chain_counts_as_one_logical_relay": true,
+    "automatic_restart": false,
+    "automatic_kill": false,
+    "automatic_side_effect_replay": false,
+    "state_directory_preserved": ".pc-relay/state",
+    "outcome_journal_preserved": ".pc-relay/outcomes.jsonl",
+    "unknown_effect_requires_outcome_lookup": true,
+    "recovered_liveness_authorizes_replay": false,
+    "status_reads_environment": false,
+    "status_dumps_credentials": false
+  },
+  "stale_detection": {
+    "default_seconds": 30,
+    "long_running_phase_seconds": 150,
+    "requires_forward_progress_evidence": true,
+    "detects_local_head_behind_remote_tracking_head": true,
+    "detects_remote_tracking_head_advance": true,
+    "detects_remote_backlog_growth_without_cycle_progress": true
+  },
+  "future_attachment_handoff": {
+    "bounded_and_journaled_required": true,
+    "unknown_upload_requires_reconciliation": true,
+    "blind_large_upload_retry_allowed": false,
+    "direct_chat_single_file_max_bytes": 500000000,
+    "note": "Future browser/bridge attachment handoff only; not implemented by this stale-sync milestone."
+  },
+  "release_gate": "NO_LIVE_CUTOVER"
+}

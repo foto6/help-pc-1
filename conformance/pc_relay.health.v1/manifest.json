@@ -1,0 +1,47 @@
+{
+  "manifest_version": "pc_relay.health_conformance.r1.v1",
+  "contract": "pc_relay.health.v1",
+  "repository": "foto6/help-pc-1",
+  "branch": "agent/pc-relay-stale-sync-watchdog-20261001",
+  "incident": "docs/PC_RELAY_STALE_SYNC_INCIDENT_2026-10-01.md",
+  "producer_blobs": {
+    "health_schema": {
+      "path": "conformance/pc_relay.health.v1/schema.json",
+      "git_blob_sha1": "acd46bf45dd4b647bdebd0cc46cc5b89997a1fb5"
+    },
+    "relay": {
+      "path": "tools/github_relay.py",
+      "git_blob_sha1": "b87ef62c6e55eb071e6180780f56343deacd4cb0"
+    },
+    "launcher": {
+      "path": "tools/start_pc_control_relay.ps1",
+      "git_blob_sha1": "8a7b23c69c2083876d4212d8957df72ff19b59a4"
+    }
+  },
+  "safety_invariants": {
+    "pid_presence_is_health": false,
+    "automatic_restart": false,
+    "automatic_kill": false,
+    "automatic_side_effect_replay": false,
+    "unknown_effect_requires_reconciliation": true,
+    "health_is_durable_local_evidence": true,
+    "recovered_liveness_authorizes_replay": false,
+    "state_and_outcome_journal_preserved": true
+  },
+  "stale_sync_regression": {
+    "historical_results_rechecked_per_cycle": false,
+    "pending_results_discovered_by_single_git_status": true,
+    "git_operation_timeout_seconds": 30,
+    "health_freshness_default_seconds": 30,
+    "durable_forward_progress_fields": [
+      "last_fetch_success_at_unix",
+      "last_sync_at_unix",
+      "last_cycle_completed_at_unix",
+      "last_request_processed_at_unix",
+      "last_result_published_at_unix",
+      "remote_head_observed_at_unix",
+      "last_backlog_change_at_unix"
+    ],
+    "remote_tracking_status_is_read_only_no_network": true
+  }
+}
