@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-boss-chat-tabs-20261002-1322",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $x=Invoke-RestMethod -Method Get -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 8; $x | Where-Object { $_.type -eq 'page' -and $_.url -like 'https://chatgpt.com/*' } | Select-Object id,title,url | ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only enumerate existing ChatGPT tabs on Bridge browser debug port"
+}
