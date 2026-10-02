@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "shell execution timed out",
+    "error_kind": "timeout",
+    "finished_at": "2026-10-02T04:17:50.730Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "unknown",
+      "observed_at": "2026-10-02T04:17:50.658Z",
+      "reason": "timeout",
+      "reconciliation_required": true,
+      "reexecution_safe": false,
+      "request_id": "boss-20261002-1094-scan-growth-native-title-anchors"
+    },
+    "request_id": "boss-20261002-1094-scan-growth-native-title-anchors",
+    "started_at": "2026-10-02T04:17:30.495Z",
+    "status": "timeout"
+  },
+  "id": "boss-20261002-1094-scan-growth-native-title-anchors",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
