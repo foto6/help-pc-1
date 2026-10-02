@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261002-1056-reopen-growth-native-chats",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst desired=[{\"name\":\"Growth\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda63c-98d8-83ed-b365-d423b7563c4b\"},{\"name\":\"Native MCP\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83eb-bc98-dc74acc6e810\"}],sleep=ms=>new Promise(r=>setTimeout(r,ms));const tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const ver=await(await fetch(\"http://127.0.0.1:17410/json/version\")).json();const ws=new WebSocket(ver.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(m,a={})=>new Promise((r,j)=>{const k=seq++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});const out=[];for(const d of desired){let t=tabs.find(x=>x.type===\"page\"&&x.url===d.url);if(t){out.push({name:d.name,status:\"existing\",id:t.id});continue}const rr=await call(\"Target.createTarget\",{url:d.url});out.push({name:d.name,status:\"opened\",id:rr.targetId});await sleep(350)}ws.close();process.stdout.write(JSON.stringify({ok:true,tabs:out}));\n\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Reopen exact existing Growth and Native MCP conversation URLs after target_missing"
+}
