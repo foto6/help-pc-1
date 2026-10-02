@@ -1,0 +1,19 @@
+EXECUTE NOW — NATIVE MCP R33 LIVE READ-ONLY CANARY PREFLIGHT. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/help-pc-2
+Writable branch ONLY: agent/native-mcp-r33-live-readonly-canary-preflight-20261002
+Exact starting HEAD: b235e319a2afe049a708d48329cc6d80d988256f
+
+R32 is exact-green and SOURCE_READY. Prepare the exact coordinator preflight for an ACTUAL read-only canary while preserving GitHub relay as current authority.
+
+Required:
+1. Auto-discover only non-secret runtime inputs that can be safely determined on the authorized Windows machine: dedicated relay checkout, current relay PID/parent PID, local native relay origin/health, device identity where exposed by safe capability/status surfaces.
+2. Credential bytes must never be printed or stored in evidence. If token-file path cannot be safely discovered, emit exact BLOCKED_MISSING_CREDENTIAL_PATH rather than guessing.
+3. Produce a preflight command that performs no side effect beyond read-only probes and isolated candidate startup/cleanup.
+4. Verify current authority HEALTHY, no reconciliation required, repo/head relation sane, no stale queue condition, expected protected-root policy and exact registry/schema digests before permitting RunCanary.
+5. Add fail-closed preflight report states READY_FOR_COORDINATOR_CANARY / BLOCKED with exact reasons.
+6. Generate the exact PowerShell invocation for R32 RunCanary using discovered non-secret inputs, but DO NOT execute the actual canary in this agent milestone unless the chat itself has authorized pc-control access and can prove zero side effects. Never claim READ_ONLY_CANARY_PASS from fixtures.
+7. No plugin install/update/cutover, no relay/Bridge/MCP restart/repoint, no firewall/task/service/tunnel mutation.
+8. Exact-head CI SUCCESS and machine-readable runbook/report.
+
+No merge.
