@@ -1,0 +1,29 @@
+EXECUTE NOW — CREATOR R27 REAL LIVE-REVIEW -> R19 RE-EDIT CYCLE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r27-live-review-execution-20261002
+Exact starting HEAD: ee73a4492c0e96b54f050be2a6d24a1af06c16bf
+
+Context:
+- R26 is exact-green but REAL_REVIEW_EXECUTED remains BLOCKED because it is pinned to old Growth R23 and Media R15 authorities.
+- Media R19 is exact-green at 31409de4bef473417a33a8c698507f7cfb1905e1 and implements real provenance-bound editorial re-edits.
+- Growth R24 is exact-green at dc0741d5b11c1f7464ac9a6c5db80c0a4535df08; Growth R25 is being prepared to consume genuine Bridge R29 captures.
+- Bridge R29 is being prepared for one isolated real existing-chat video-review rehearsal.
+
+Milestone:
+1. Upgrade the real-review closed-loop runner to consume a Growth R25 Creator-ready external review envelope and execute edits through exact Media R19, not the old synthetic/structural Growth path or old Media R15-only edit mapping.
+2. Pin exact producer SHAs/contracts/blobs for Media R19 and Growth R25; fail closed if R25 is not yet available, and never substitute fixture/model QA as real capture evidence.
+3. For targeted_reedit: feed the exact reviewed candidate + R25 directives into Media R19, verify media.editorial_reedit_application.v1 + render-export + output MP4 SHA/size, then generate the next review request/package boundary for round N+1.
+4. Max two re-edit rounds; replay/restart/lost-ack must not duplicate Media effects. Same review event is idempotent; conflicting review event fails closed.
+5. winner only -> canonical final.mp4 + existing publish handoff. tie / insufficient_evidence / human_review remain non-publishable.
+6. Integrate Media R20 dynamic blinded review package when exact-green and available; otherwise expose the exact missing dependency and remain BLOCKED at the next-review packaging step rather than falling back silently.
+7. If genuine Bridge R29 -> Growth R25 evidence becomes available during execution, run at least one REAL review/re-edit cycle on actual MP4 bytes and record before/after hashes. If not, finish SOURCE_READY/BLOCKED_WAITING_REAL_CAPTURE with no fabricated model judgment.
+8. No social provider mutation in this milestone.
+
+Evidence required:
+- substantive code/tests/report;
+- exact-head CI SUCCESS;
+- exact producer pins;
+- real artifact hashes if genuine capture arrives;
+- readiness separates SOURCE_READY, REAL_REVIEW_INGESTED, REAL_REEDIT_EXECUTED and PUBLISH_HANDOFF_READY.
+Do not merge.
