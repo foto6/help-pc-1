@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; git status --short; Get-ChildItem -LiteralPath 'growth_analytics\\critic_reedit_adapter.py','tests\\test_critic_reedit_adapter_r23.py','conformance\\growth.creator_reedit_handoff.v1\\schema.json','conformance\\growth.creator_reedit_handoff.v1\\contract.json','fixtures\\critic_reedit_r23\\fixture_spec.json','docs\\CRITIC_REEDIT_ADAPTER_R23.md' -ErrorAction SilentlyContinue | ForEach-Object { Write-Output ($_.FullName + ' ' + $_.Length) }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T05:37:37.456Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T05:37:37.380Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "growth-r23-critic-reedit-20261002t1238-partial"
+    },
+    "request_id": "growth-r23-critic-reedit-20261002t1238-partial",
+    "started_at": "2026-10-02T05:37:36.706Z",
+    "status": "completed"
+  },
+  "id": "growth-r23-critic-reedit-20261002t1238-partial",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
