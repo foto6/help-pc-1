@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-02T05:45:02.761Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "growth-r23-critic-reedit-20261002t1245-focused"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:d2fa850761bb1cf09ba59c49255dd6bc53214e070efbb1e80714400b846371e8",
+            "journal_sequence": 1106,
+            "previous_record_sha256": "92b6f1a32bafbef9f8168ce98ddc602a583e5cf4d619ee86149f2e323ebe9265",
+            "record_sha256": "63503ee0e61baf0d007b7c0040753226deb602466d1de95d592189e05bf0d3da",
+            "recorded_at": "2026-10-02T05:45:02.824Z",
+            "request_id": "growth-r23-critic-reedit-20261002t1245-focused",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-02T05:47:02.884Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "growth-r23-critic-reedit-20261002t1245-focused"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:d2fa850761bb1cf09ba59c49255dd6bc53214e070efbb1e80714400b846371e8",
+            "journal_sequence": 1107,
+            "previous_record_sha256": "63503ee0e61baf0d007b7c0040753226deb602466d1de95d592189e05bf0d3da",
+            "record_sha256": "f3d6fc8f5aca435ed4fe2dcf7caf77f555bddbfb54d5179d199fcc96240a4328",
+            "recorded_at": "2026-10-02T05:47:02.965Z",
+            "request_id": "growth-r23-critic-reedit-20261002t1245-focused",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-02T05:47:02.884Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "growth-r23-critic-reedit-20261002t1245-focused"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-02T05:47:02.884Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "growth-r23-critic-reedit-20261002t1245-focused"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:d2fa850761bb1cf09ba59c49255dd6bc53214e070efbb1e80714400b846371e8",
+          "journal_sequence": 1107,
+          "previous_record_sha256": "63503ee0e61baf0d007b7c0040753226deb602466d1de95d592189e05bf0d3da",
+          "record_sha256": "f3d6fc8f5aca435ed4fe2dcf7caf77f555bddbfb54d5179d199fcc96240a4328",
+          "recorded_at": "2026-10-02T05:47:02.965Z",
+          "request_id": "growth-r23-critic-reedit-20261002t1245-focused",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "52ca3ad9f3dbc13d0d106ac23a3a3d7c331f1199314e52f576b0709f7f4fd36a",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 1107
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "growth-r23-critic-reedit-20261002t1245-focused",
+        "request_id": "growth-r23-critic-reedit-20261002t1245-focused",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T05:50:04.140Z",
+    "ok": true,
+    "request_id": "growth-r23-critic-reedit-20261002t1250-reconcile-focused2",
+    "started_at": "2026-10-02T05:50:04.069Z",
+    "status": "completed"
+  },
+  "id": "growth-r23-critic-reedit-20261002t1250-reconcile-focused2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
