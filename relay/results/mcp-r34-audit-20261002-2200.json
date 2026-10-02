@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='SilentlyContinue'; $OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();\n$relay='E:\\pc-github-relay';\n$proc=Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like '*github_relay.py*' -and $_.CommandLine -like '*E:\\pc-github-relay*' } | Select-Object ProcessId,ParentProcessId,CommandLine;\n$git=$null; if(Test-Path \"$relay\\.git\"){\n  $git=[ordered]@{\n    branch=(git -C $relay branch --show-current 2>$null);\n    head=(git -C $relay rev-parse HEAD 2>$null);\n    remote=(git -C $relay rev-parse origin/agent/pc-github-relay 2>$null);\n    status=(git -C $relay status --porcelain 2>$null);\n  }\n}\n$dirs=Get-ChildItem E:\\ -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'pc|mcp|boss|control|rehearsal' } | Select-Object -ExpandProperty FullName;\n[ordered]@{relay=$git; processes=$proc; dirs=$dirs} | ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"relay\":{\"branch\":\"agent/pc-github-relay\",\"head\":\"d88f7ebc49e11b8a277f00e55c42e2b282c6a5d9\",\"remote\":\"d88f7ebc49e11b8a277f00e55c42e2b282c6a5d9\",\"status\":{}},\"processes\":[{\"ProcessId\":15696,\"ParentProcessId\":13060,\"CommandLine\":\"\\\"C:\\\\Users\\\\foto6\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Launcher\\\\py.exe\\\" tools\\\\github_relay.py --repo E:\\\\pc-github-relay --live \"},{\"ProcessId\":12844,\"ParentProcessId\":15696,\"CommandLine\":\"C:\\\\Users\\\\foto6\\\\AppData\\\\Local\\\\Microsoft\\\\WindowsApps\\\\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\\\\python.exe tools\\\\github_relay.py --repo E:\\\\pc-github-relay --live \"},{\"ProcessId\":14028,\"ParentProcessId\":12844,\"CommandLine\":\"powershell.exe -NoProfile -Command \\\"$ErrorActionPreference=\\u0027SilentlyContinue\\u0027; $OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();\\n$relay=\\u0027E:\\\\pc-github-relay\\u0027;\\n$proc=Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like \\u0027*github_relay.py*\\u0027 -and $_.CommandLine -like \\u0027*E:\\\\pc-github-relay*\\u0027 } | Select-Object ProcessId,ParentProcessId,CommandLine;\\n$git=$null; if(Test-Path \\\\\\\"$relay\\\\.git\\\\\\\"){\\n  $git=[ordered]@{\\n    branch=(git -C $relay branch --show-current 2\\u003e$null);\\n    head=(git -C $relay rev-parse HEAD 2\\u003e$null);\\n    remote=(git -C $relay rev-parse origin/agent/pc-github-relay 2\\u003e$null);\\n    status=(git -C $relay status --porcelain 2\\u003e$null);\\n  }\\n}\\n$dirs=Get-ChildItem E:\\\\ -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -match \\u0027pc|mcp|boss|control|rehearsal\\u0027 } | Select-Object -ExpandProperty FullName;\\n[ordered]@{relay=$git; processes=$proc; dirs=$dirs} | ConvertTo-Json -Depth 5 -Compress\\\"\"}],\"dirs\":[\"E:\\\\boss-a2\",\"E:\\\\boss-conformance-check\",\"E:\\\\boss-supervision-current\",\"E:\\\\help-pc-1-a2\",\"E:\\\\help-pc-2-r2\",\"E:\\\\help-pc-2-wave4\",\"E:\\\\pc-github-relay\",\"E:\\\\SpectraTrack-PC\"]}\r\n",
+      "stdout_bytes": 1895,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T15:07:30.817Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T15:07:30.725Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "mcp-r34-audit-20261002-2200"
+    },
+    "request_id": "mcp-r34-audit-20261002-2200",
+    "started_at": "2026-10-02T15:07:28.822Z",
+    "status": "completed"
+  },
+  "id": "mcp-r34-audit-20261002-2200",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
