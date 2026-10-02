@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from pathlib import Path
 
 from tools.github_relay import (
@@ -163,3 +164,73 @@ def test_cutover_candidate_manifest_keeps_no_live_cutover_and_reboot_safety() ->
     assert manifest["autostart"]["registration_requires_explicit_apply"] is True
     assert manifest["autostart"]["registration_performed_by_ci"] is False
     assert manifest["release_gate"] == "NO_LIVE_CUTOVER"
+
+
+def _git_blob_sha(relative: str) -> str:
+    return subprocess.check_output(
+        ["git", "rev-parse", f"HEAD:{relative}"],
+        cwd=_root(),
+        text=True,
+    ).strip()
+
+
+def test_cutover_manifest_source_blobs_and_schema_are_exact() -> None:
+    root = _root()
+    manifest = json.loads(
+        (
+            root
+            / "conformance"
+            / "pc_relay.cutover_candidate.v1"
+            / "manifest.json"
+        ).read_text(encoding="utf-8")
+    )
+    schema = json.loads(
+        (
+            root
+            / "conformance"
+            / "pc_relay.cutover_candidate.v1"
+            / "schema.json"
+        ).read_text(encoding="utf-8")
+    )
+
+    assert schema["$id"] == "pc_relay.cutover_candidate.v1"
+    assert set(schema["required"]) == {
+        "contract",
+        "repository",
+        "branch",
+        "exact_start_sha",
+        "source_blobs",
+        "live_branch",
+        "health_contract",
+        "watchdog_contract",
+        "incident_fixture",
+        "autostart",
+        "reboot_recovery",
+        "rollback",
+        "logs",
+        "release_gate",
+    }
+    for item in manifest["source_blobs"].values():
+        assert _git_blob_sha(item["path"]) == item["git_blob_sha1"], item["path"]
+
+
+def test_incident_fixture_is_bound_to_recorded_incident_document() -> None:
+    fixture = json.loads(
+        (
+            _root()
+            / "tests"
+            / "fixtures"
+            / "pc_relay_cutover_candidate"
+            / "incident_2026-10-01.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert fixture["source_document"] == (
+        "docs/PC_RELAY_STALE_SYNC_INCIDENT_2026-10-01.md"
+    )
+    incident_doc = (
+        _root() / "docs" / "PC_RELAY_STALE_SYNC_INCIDENT_2026-10-01.md"
+    ).read_text(encoding="utf-8")
+    assert "py.exe PID 4612" in incident_doc
+    assert "python3.13.exe PID 15056" in incident_doc
+    assert "22 request files lacked result files" in incident_doc
+    assert "be374169e51309bbc943f68e7965f23f53c85380" in incident_doc
