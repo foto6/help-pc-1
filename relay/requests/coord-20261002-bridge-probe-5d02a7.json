@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-bridge-probe-5d02a7",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $ports=@(17448,17449); $paths=@('/api/status','/api/chat-inventory','/api/assignments','/api/managed-agents','/api/supervisor/status'); $out=@(); foreach($p in $ports){ foreach($path in $paths){ try{ $r=Invoke-WebRequest -UseBasicParsing -Uri ('http://127.0.0.1:'+ $p + $path) -TimeoutSec 3; $body=$r.Content; if($body.Length -gt 4000){$body=$body.Substring(0,4000)}; $out += [pscustomobject]@{Port=$p;Path=$path;Status=[int]$r.StatusCode;Body=$body} } catch { $code=$null; if($_.Exception.Response){ try{$code=[int]$_.Exception.Response.StatusCode}catch{} }; $out += [pscustomobject]@{Port=$p;Path=$path;Status=$code;Body=$_.Exception.Message} } } }; $out | ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only probe of live WebAIBridge endpoints on observed node listeners"
+}
