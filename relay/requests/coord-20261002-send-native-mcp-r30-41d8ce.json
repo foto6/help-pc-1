@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-send-native-mcp-r30-41d8ce",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=B5D613DD803D63FF48226816CD71ABC3 --prompt=E:\\pc-github-relay\\relay\\prompts\\native-mcp-r30-direct-remote-lane-20261002.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Dispatch Native MCP R30 once to one idle tab of the exact existing Native MCP conversation; duplicate tab intentionally untouched"
+}
