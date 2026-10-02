@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261002-1112-send-creator",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst tid=\"4286394BE03EE2BB4763A151CC7EAF29\";\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===tid);\nif(!tab){process.stdout.write(JSON.stringify({ok:false,reason:\"missing\"}));process.exit(2)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let s=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(m,a={})=>new Promise((r,j)=>{const k=s++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\nconst r=await call(\"Runtime.evaluate\",{expression:\"(()=>{const b=[...document.querySelectorAll('button')].find(x=>{const r=x.getBoundingClientRect();return r.width>0&&r.height>0&&(x.getAttribute('aria-label')||'').toLowerCase().includes('отправ')});if(!b)return {ok:false};b.click();return {ok:true}})()\",returnByValue:true});await new Promise(r=>setTimeout(r,800));const st=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea');const bs=[...document.querySelectorAll('button')];return {text:c?(c.innerText||c.textContent||''):'',generating:bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('останов'))}})())\",returnByValue:true});ws.close();process.stdout.write(JSON.stringify({clicked:r.result.value,state:JSON.parse(st.result.value)}));\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Click active Send button in Creator chat after verified exact task draft"
+}
