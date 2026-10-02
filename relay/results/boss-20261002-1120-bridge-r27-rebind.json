@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst prompt=\"EXECUTE NOW — BRIDGE R27 EXISTING-CHAT REBIND AFTER REBOOT.\\n\\nRepo: foto6/WebAIBridge\\nWritable branch ONLY: agent/bridge-r27-existing-chat-rebind-20261002\\nExact starting HEAD: 73c13f9eed2a2cbcea881dd8c5452d054bfef940\\n\\nEncode the real reboot incident where stale project URLs with \\\"-sv\\\" redirected to ChatGPT root, tab IDs changed, and existing Growth/Native chats were only discoverable from current sidebar/search DOM. Implement fail-closed existing-chat rebinding:\\n- conversation_id is primary identity; persisted tab ID/project slug are hints only;\\n- discover current canonical href from sidebar/search DOM;\\n- verify resulting conversation ID before any prompt/file mutation;\\n- persist refreshed canonical href/tab binding;\\n- reject ambiguous duplicate titles, root redirect, missing chat, account mismatch, multiple candidates;\\n- never create a replacement chat automatically;\\n- regress stale -sv slug, stale tab, async redirect, sidebar-only/search-only chat, duplicate title, no result;\\n- read-only current-UI compatibility probe; no live prompt/file send.\\nExact-head CI + machine-readable readiness report.\",id=\"018719BE1AECAF8ADED28535B17CA895\",conv=\"6abda61c-a440-83ed-9482-1d0fc7923e03\",sleep=ms=>new Promise(r=>setTimeout(r,ms));const tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===id);if(!tab||!tab.url.includes(conv)){process.stdout.write(JSON.stringify({ok:false,reason:\"target_mismatch\",actual:tab?.url||\"\"}));process.exit(2)}const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let s=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(m,a={})=>new Promise((r,j)=>{const k=s++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});const st=async()=>JSON.parse((await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')];return {found:!!c,text,generating:bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'))}})())\",returnByValue:true})).result.value);const pre=await st();if(!pre.found||pre.generating||pre.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:pre.generating?\"generating\":\"draft_or_no_composer\"}));process.exit(3)}await call(\"Runtime.evaluate\",{expression:\"document.querySelector('#prompt-textarea').focus();true\",returnByValue:true});await call(\"Input.insertText\",{text:prompt});await sleep(350);await call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13});await sleep(700);const post=await st();ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true,started:post.generating,composerCleared:!post.text.trim(),url:tab.url}));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"submitted\":true,\"started\":false,\"composerCleared\":false,\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\"}",
+      "stdout_bytes": 177,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T05:59:43.265Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T05:59:43.186Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261002-1120-bridge-r27-rebind"
+    },
+    "request_id": "boss-20261002-1120-bridge-r27-rebind",
+    "started_at": "2026-10-02T05:59:41.497Z",
+    "status": "completed"
+  },
+  "id": "boss-20261002-1120-bridge-r27-rebind",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
