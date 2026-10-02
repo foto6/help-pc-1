@@ -1,0 +1,38 @@
+EXECUTE NOW — BRIDGE R29 ISOLATED LIVE EXISTING-CHAT VIDEO REVIEW. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r29-isolated-live-video-review-20261002
+Exact starting HEAD: 8b314bd020b05d90f6c45fa861727df5e78e5a39
+
+R28 is exact-green and READY_FOR_EXPLICIT_LIVE_REHEARSAL but does not prove a real attached-video review. User priority is now closing that real evidence gap without touching the currently working live Bridge instance.
+
+Milestone:
+1. Run R28 from an ISOLATED sidecar checkout/process on a separate loopback port/state directory. Do NOT restart, repoint, overwrite, deploy over, or mutate the current live Bridge process/listeners.
+2. Reuse an EXISTING suitable ChatGPT review/critic conversation. Do not create a new chat. Resolve exact canonical conversation id/url and fail closed on ambiguity/account/root mismatch.
+3. Fetch/materialize the exact Media R18 blinded review package:
+   - Media R18 SHA 2c41f084e000eca5efd9a51d2d3752bec1bd1311
+   - review-A.mp4 SHA-256 3bd12d999264cb932cb3ef15dfbd96e002ede517f2273795b593553b9642d864
+   - review-B.mp4 SHA-256 cdae63d5ccce67332e607af7fd87b18c31da8dc77c2f0ce5182550321767286c
+   - exact model-review prompt SHA-256 98e377f73f26d9960acc34703797f962ef75472597acdbefc6dfdc82636b06b6
+   Verify bytes before any browser mutation.
+4. Perform one explicit live rehearsal through the isolated R28 lane: attach the exact blinded MP4s, verify attachment identity/size, set exact prompt, verify composer readback, persist SEND_INTENT before Send, Send exactly once, capture the assistant response and response identity.
+5. Require/validate strict JSON response compatible with Growth R24 expectations. If the assistant returns malformed/free-form output, capture it truthfully as MALFORMED_MODEL_RESPONSE; do not fabricate or repair the model judgment into a pass.
+6. Produce bridge.existing_chat_video_review_capture.v1 with exact conversation, prompt, attachment, request, user-turn/assistant-turn, response digest, timestamps, model_evidence=true and human_ground_truth=false.
+7. Reconcile lost-ack/restart/timeout without duplicate upload or Send. Any ambiguity becomes RECONCILIATION_REQUIRED, not replay authorization.
+8. Publish only sanitized evidence (no credentials/tokens/cookies). Prefer committed provenance manifest + Actions artifact for the capture envelope and review response. The actual MP4s may remain Actions artifacts; do not commit large binaries if repository policy forbids it.
+9. Also reproduce the currently observed live-Bridge HTTP hang against the isolated R28/R29 candidate if possible and prove /api/status / assignment ingress remain bounded; do not modify the live process to test this.
+
+State rules:
+- LIVE_REVIEW_PASS only with genuine existing-chat attachment + Send + captured assistant response bound to exact R18 bytes/prompt.
+- MALFORMED_MODEL_RESPONSE if real send/capture occurred but response contract is invalid.
+- BLOCKED if exact artifacts/conversation/profile cannot be safely resolved.
+- Never call fixture/fake-CDP evidence live.
+
+Evidence required:
+- substantive commit(s);
+- exact-head CI SUCCESS;
+- isolated sidecar command/config;
+- exact review conversation id/url (no secrets);
+- exact capture envelope digest / artifact id if live rehearsal succeeds;
+- explicit confirmation current live Bridge was not restarted/repointed.
+Do not merge.
