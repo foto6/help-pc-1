@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst prompt=\"EXECUTE NOW — CREATOR R24 EXACT-PIN CLOSEOUT. Do not stop at a plan.\\n\\nRepo: foto6/video1\\nWritable branch ONLY: agent/creator-r24-exact-pin-closed-loop-20261001\\nCurrent exact HEAD: 8163a1245d94284d5ee5c1b51923829785a6f7ea\\n\\nKnown evidence:\\n- run 36887970241 has repeatedly failed at focused-r24-exact-pin with GitHub runner shutdown / exit 143 during fixture/ffmpeg phase, not an application exception.\\n- Do NOT change product/runtime semantics merely to mask runner shutdown.\\n- First inspect the current latest attempt of run 36887970241 and exact logs.\\n- If a current rerun is still active, do not race it with a new commit.\\n- If exact HEAD finally passes, produce/pin the producer-generated REAL artifact Creator final bundle/re-edit ledger and Actions artifact needed by Human Gate V4.\\n- If shutdown 143 repeats, make the MINIMUM CI-only reliability change justified by evidence: avoid unnecessary apt install if ffmpeg is already present, reduce duplicate setup/work where safe, preserve exact Media/Growth pins and all exact-pin tests. No skipped integration and no synthetic fallback.\\n\\nCompletion requires: exact HEAD, exact-head green CI, nonzero real-artifact Creator bundle/ledger artifact with ID/name/digest, source/candidate lineage, <=2 re-edit rounds, no live publish.\",url=\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\";\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst tab=tabs.find(t=>t.type===\"page\"&&t.url===url);if(!tab){process.stdout.write(JSON.stringify({ok:false,reason:\"target_missing\"}));process.exit(2)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(m,a={})=>new Promise((r,j)=>{const k=seq++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\nconst get=async()=>JSON.parse((await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});return {found:!!c,text,generating:bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'))}})())\",returnByValue:true})).result.value);\nlet s=await get();if(!s.found||s.generating){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:s.generating?\"generating\":\"no_composer\"}));process.exit(3)}\nif(s.text.trim()){\n  if(!s.text.trim().startsWith(\"COORDINATOR RULE UPDATE — DIRECT VIDEO INPUT IS AVAILABLE.\")){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"foreign_draft_preserved\",length:s.text.length}));process.exit(4)}\n  await call(\"Runtime.evaluate\",{expression:\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});c.focus();if('value'in c){c.value='';c.dispatchEvent(new Event('input',{bubbles:true}))}else{c.innerHTML='';c.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'deleteContentBackward',data:null}))}return true})()\",returnByValue:true});\n  s=await get();if(s.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"stale_draft_clear_failed\"}));process.exit(5)}\n}\nawait call(\"Runtime.evaluate\",{expression:\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});c.focus();return true})()\",returnByValue:true});\nawait call(\"Input.insertText\",{text:prompt});await new Promise(r=>setTimeout(r,400));const typed=await get();const norm=x=>String(x||\"\").replace(/\\s+/g,\" \").trim();if(norm(typed.text)!==norm(prompt)){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:\"readback_mismatch\"}));process.exit(6)}\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await new Promise(r=>setTimeout(r,900));const post=await get();ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true,started:post.generating,composerCleared:!post.text.trim(),tabId:tab.id}));\n\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"submitted\":true,\"started\":false,\"composerCleared\":false,\"tabId\":\"4286394BE03EE2BB4763A151CC7EAF29\"}",
+      "stdout_bytes": 111,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T03:56:09.349Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T03:56:09.276Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261002-1054-creator-r24-reconcile-draft-and-dispatch"
+    },
+    "request_id": "boss-20261002-1054-creator-r24-reconcile-draft-and-dispatch",
+    "started_at": "2026-10-02T03:56:07.354Z",
+    "status": "completed"
+  },
+  "id": "boss-20261002-1054-creator-r24-reconcile-draft-and-dispatch",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
