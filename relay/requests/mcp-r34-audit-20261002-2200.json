@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "mcp-r34-audit-20261002-2200",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='SilentlyContinue'; $OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();\n$relay='E:\\pc-github-relay';\n$proc=Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -like '*github_relay.py*' -and $_.CommandLine -like '*E:\\pc-github-relay*' } | Select-Object ProcessId,ParentProcessId,CommandLine;\n$git=$null; if(Test-Path \"$relay\\.git\"){\n  $git=[ordered]@{\n    branch=(git -C $relay branch --show-current 2>$null);\n    head=(git -C $relay rev-parse HEAD 2>$null);\n    remote=(git -C $relay rev-parse origin/agent/pc-github-relay 2>$null);\n    status=(git -C $relay status --porcelain 2>$null);\n  }\n}\n$dirs=Get-ChildItem E:\\ -Directory -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'pc|mcp|boss|control|rehearsal' } | Select-Object -ExpandProperty FullName;\n[ordered]@{relay=$git; processes=$proc; dirs=$dirs} | ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "R34 assembly read-only audit: live relay checkout/process and relevant local project directories"
+}
