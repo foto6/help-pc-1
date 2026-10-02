@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-find-existing-review-chats-6e9d20",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();\n$code=@'\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst out=tabs.filter(t=>t.type===\"page\"&&String(t.url||\"\").includes(\"chatgpt.com\"))\n  .map(t=>({id:t.id,title:t.title,url:t.url}))\n  .filter(t=>/critic|review|video|редакт|монтаж|growth|media|creator/i.test((t.title||\"\")+\" \"+(t.url||\"\")));\nprocess.stdout.write(JSON.stringify(out));\n'@;\n$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only discover existing ChatGPT video/critic/review chats for R29 live review without creating new chat"
+}
