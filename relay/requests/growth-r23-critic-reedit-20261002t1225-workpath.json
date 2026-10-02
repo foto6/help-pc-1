@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1225-workpath",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "if(Test-Path -LiteralPath 'E:\\\\growth-r23-work'){ Write-Output 'EXISTS'; git -C 'E:\\\\growth-r23-work' status --short --branch; git -C 'E:\\\\growth-r23-work' remote -v } else { Write-Output 'MISSING' }"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only preflight for isolated Growth R23 worktree path"
+}
