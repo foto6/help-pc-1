@@ -1,0 +1,28 @@
+EXECUTE NOW — GROWTH R25 R29 REAL-CAPTURE CONSUMER / HANDOFF. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r25-real-capture-ingest-20261002
+Exact starting HEAD: dc0741d5b11c1f7464ac9a6c5db80c0a4535df08
+
+Context:
+- R24 is exact-green and strictly validates a captured video-review response, but its exact Bridge authority is still R26 and its real-capture gate remains BLOCKED.
+- Bridge R29 is being tasked to produce a genuine isolated existing-chat capture from exact Media R18 blinded MP4s.
+- User priority is the actual autonomous review -> re-edit loop.
+
+Milestone:
+1. Add a source-bound authority profile for Bridge R29 capture envelopes without weakening R24's existing R26/fixture behavior. Require exact Bridge producer SHA/contract/blob identity supplied by the capture provenance; moving branch refs are not authority.
+2. Accept only genuine capture_kind=bridge_existing_chat_capture with exact conversation/request/prompt/attachment/assistant-response bindings and model_evidence=true/human_ground_truth=false.
+3. Preserve strict JSON validation, coverage uncertainty, timestamps, attachment labels and pairwise A/B/tie/insufficient_evidence semantics.
+4. Convert the verified capture deterministically into per-candidate growth.web_video_critic.v1 + pairwise + existing growth.creator_reedit_handoff.v1.
+5. Emit a Creator-ready external review envelope compatible with Creator R26/R27, binding exact Growth R25 producer SHA, handoff digest, source/render/attachment provenance and re-edit round.
+6. Exact replay is idempotent. Same conversation/request/capture ID with changed response/bytes must be a conflict. Stale Bridge/Media/prompt/attachment authority fails closed.
+7. Add an ingest command that can consume the actual R29 capture artifact/path when it becomes available. If R29 live evidence is not available during execution, finish SOURCE_READY/BLOCKED_WAITING_R29_CAPTURE with exact expected provenance; do not fabricate a capture.
+8. If a genuine R29 capture is already available, ingest it and produce REAL_ATTACHED_VIDEO_REVIEW_INGESTED evidence plus exact Creator envelope digest.
+
+Evidence required:
+- substantive commit(s);
+- parser/authority/replay negative tests;
+- exact-head CI SUCCESS;
+- machine-readable readiness report;
+- if real capture consumed: exact R29 SHA, capture digest, assistant response digest and Creator handoff digest.
+No provider mutation. Do not merge.
