@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "pc_relay.cutover_candidate.v1",
+  "title": "PC Relay watchdog cutover candidate manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "repository",
+    "branch",
+    "exact_start_sha",
+    "source_blobs",
+    "live_branch",
+    "health_contract",
+    "watchdog_contract",
+    "incident_fixture",
+    "autostart",
+    "reboot_recovery",
+    "rollback",
+    "logs",
+    "release_gate"
+  ],
+  "properties": {
+    "contract": {
+      "const": "pc_relay.cutover_candidate.v1"
+    },
+    "repository": {
+      "const": "foto6/help-pc-1"
+    },
+    "branch": {
+      "const": "agent/pc-relay-watchdog-cutover-candidate-20261002"
+    },
+    "exact_start_sha": {
+      "const": "33d063dffa507833a23c642d3e3e06bfa5d02b76"
+    },
+    "source_blobs": {
+      "type": "object",
+      "minProperties": 7
+    },
+    "live_branch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "observed_head",
+        "observed_date",
+        "modified_by_milestone",
+        "must_reverify_before_cutover"
+      ],
+      "properties": {
+        "name": {
+          "const": "agent/pc-github-relay"
+        },
+        "observed_head": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "observed_date": {
+          "const": "2026-10-02"
+        },
+        "modified_by_milestone": {
+          "const": false
+        },
+        "must_reverify_before_cutover": {
+          "const": true
+        }
+      }
+    },
+    "health_contract": {
+      "const": "pc_relay.health.v1"
+    },
+    "watchdog_contract": {
+      "const": "pc_relay.watchdog_status.v1"
+    },
+    "incident_fixture": {
+      "type": "string"
+    },
+    "autostart": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mechanism",
+        "trigger",
+        "delay_seconds",
+        "multiple_instances",
+        "run_level",
+        "registration_requires_explicit_apply",
+        "registration_performed_by_ci",
+        "starts_task_on_install",
+        "requires_exact_head",
+        "requires_clean_tracked_checkout"
+      ],
+      "properties": {
+        "mechanism": {
+          "const": "Windows Scheduled Task"
+        },
+        "trigger": {
+          "const": "AtLogOn"
+        },
+        "delay_seconds": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 600
+        },
+        "multiple_instances": {
+          "const": "IgnoreNew"
+        },
+        "run_level": {
+          "const": "Limited"
+        },
+        "registration_requires_explicit_apply": {
+          "const": true
+        },
+        "registration_performed_by_ci": {
+          "const": false
+        },
+        "starts_task_on_install": {
+          "const": false
+        },
+        "requires_exact_head": {
+          "const": true
+        },
+        "requires_clean_tracked_checkout": {
+          "const": true
+        }
+      }
+    },
+    "reboot_recovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state_preserved",
+        "outcome_journal_preserved",
+        "request_ids_preserved",
+        "unknown_effect_replay_authorized",
+        "reconciliation_required_before_retry"
+      ],
+      "properties": {
+        "state_preserved": {
+          "const": true
+        },
+        "outcome_journal_preserved": {
+          "const": true
+        },
+        "request_ids_preserved": {
+          "const": true
+        },
+        "unknown_effect_replay_authorized": {
+          "const": false
+        },
+        "reconciliation_required_before_retry": {
+          "const": true
+        }
+      }
+    },
+    "rollback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exact_previous_head_required",
+        "live_branch_not_moved",
+        "checkout_mode",
+        "requires_relay_absent",
+        "unregisters_autostart",
+        "starts_relay"
+      ],
+      "properties": {
+        "exact_previous_head_required": {
+          "const": true
+        },
+        "live_branch_not_moved": {
+          "const": true
+        },
+        "checkout_mode": {
+          "const": "detached_exact_head"
+        },
+        "requires_relay_absent": {
+          "const": true
+        },
+        "unregisters_autostart": {
+          "const": true
+        },
+        "starts_relay": {
+          "const": false
+        }
+      }
+    },
+    "logs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "max_bytes",
+        "backup_count",
+        "stdout",
+        "stderr"
+      ],
+      "properties": {
+        "max_bytes": {
+          "const": 5242880
+        },
+        "backup_count": {
+          "const": 3
+        },
+        "stdout": {
+          "const": ".pc-relay/live.stdout.log"
+        },
+        "stderr": {
+          "const": ".pc-relay/live.stderr.log"
+        }
+      }
+    },
+    "release_gate": {
+      "const": "NO_LIVE_CUTOVER"
+    }
+  }
+}
