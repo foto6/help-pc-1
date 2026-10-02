@@ -1,0 +1,103 @@
+{
+  "action": "shell.run",
+  "executor_result": null,
+  "id": "coord-20261002-wave7-postsend-state-7c4d18",
+  "live": true,
+  "reconciliation": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-02T13:25:42.143Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "coord-20261002-wave7-postsend-state-7c4d18"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:2acc80ccb6704c6cde0a2489d962969fff044f2aaf973bed1a09d4ace093ae20",
+            "journal_sequence": 1287,
+            "previous_record_sha256": "0d2c9dd31476d8d4b45dd0a986610999b487849fd57f5a122a8eb06973c237ba",
+            "record_sha256": "0b98fa54fc85888d7146952d670faa5438fd09274987a7fdb1f83d781e9528dd",
+            "recorded_at": "2026-10-02T13:25:42.217Z",
+            "request_id": "coord-20261002-wave7-postsend-state-7c4d18",
+            "transition": "dispatch_started"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-02T13:25:42.143Z",
+          "reason": "dispatch_started",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "coord-20261002-wave7-postsend-state-7c4d18"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-02T13:25:42.143Z",
+            "reason": "dispatch_started",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "coord-20261002-wave7-postsend-state-7c4d18"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:2acc80ccb6704c6cde0a2489d962969fff044f2aaf973bed1a09d4ace093ae20",
+          "journal_sequence": 1287,
+          "previous_record_sha256": "0d2c9dd31476d8d4b45dd0a986610999b487849fd57f5a122a8eb06973c237ba",
+          "record_sha256": "0b98fa54fc85888d7146952d670faa5438fd09274987a7fdb1f83d781e9528dd",
+          "recorded_at": "2026-10-02T13:25:42.217Z",
+          "request_id": "coord-20261002-wave7-postsend-state-7c4d18",
+          "transition": "dispatch_started"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "5e65363decb42437b5630186a75f134111fee80d4a8508416851572df5a5efba",
+          "matched_records": 1,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 1287
+        },
+        "reason": "dispatch_started",
+        "replay_authorized": false,
+        "requestId": "coord-20261002-wave7-postsend-state-7c4d18",
+        "request_id": "coord-20261002-wave7-postsend-state-7c4d18",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": true,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T13:33:33.573Z",
+    "ok": true,
+    "request_id": "coord-20261002-wave7-postsend-state-7c4d18.relay-reconcile",
+    "started_at": "2026-10-02T13:33:33.489Z",
+    "status": "dry_run"
+  },
+  "reexecuted": false,
+  "relay_status": "interrupted_requires_reconciliation",
+  "version": "pc_relay.result.v1"
+}
