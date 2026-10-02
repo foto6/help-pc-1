@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-listeners-3ac91d",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; Get-NetTCPConnection -State Listen | Where-Object { $_.LocalAddress -in @('127.0.0.1','::1','0.0.0.0') } | Select-Object -First 80 LocalAddress,LocalPort,OwningProcess | ForEach-Object { $p=Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue; [pscustomobject]@{Address=$_.LocalAddress;Port=$_.LocalPort;Pid=$_.OwningProcess;Process=if($p){$p.ProcessName}else{'?'}} } | ConvertTo-Json -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only bounded listener inventory to locate live bridge without reading secrets"
+}
