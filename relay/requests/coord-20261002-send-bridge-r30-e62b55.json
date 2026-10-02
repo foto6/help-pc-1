@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-send-bridge-r30-e62b55",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=018719BE1AECAF8ADED28535B17CA895 --prompt=E:\\pc-github-relay\\relay\\prompts\\bridge-r30-dynamic-review-transport-20261002.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Wave4 bridge exact existing-chat dispatch; fail closed on active generation/non-empty composer"
+}
