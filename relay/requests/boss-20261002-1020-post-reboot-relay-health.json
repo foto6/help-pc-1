@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261002-1020-post-reboot-relay-health",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Post-reboot read-only relay health probe"
+}
