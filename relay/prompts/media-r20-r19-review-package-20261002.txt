@@ -1,0 +1,28 @@
+EXECUTE NOW — MEDIA R20 DYNAMIC R19 -> BLINDED REVIEW PACKAGE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r20-r19-creator-integration-20261002
+Exact starting HEAD: 31409de4bef473417a33a8c698507f7cfb1905e1
+
+Context:
+- R19 is exact-green and produces real provenance-bound re-edited MP4s plus media.editorial_reedit_application.v1.
+- R18 can build a blinded review package, but it is pinned to an older static R17 demo artifact.
+- The autonomous loop needs every current candidate/re-edit round to become a reviewable blinded package without losing lineage.
+
+Milestone:
+1. Generalize the review-package builder so it can consume real current R19/R15 render exports rather than only the frozen R17 demo bundle.
+2. Input must bind source SHA/size, candidate IDs, render SHA/size, render-export digest, R19 editorial application digest when present, producer SHA, round number and exact artifact paths.
+3. Produce deterministic blind A/B names and model prompt/package with NO hidden candidate IDs/producer hashes in model-facing text, while preserving complete sealed mapping/provenance machine-side.
+4. Support initial candidate review and targeted re-edit review rounds. Never silently compare byte-identical candidates; reject duplicates or collapse explicitly.
+5. Preserve byte identity when no derivative is required. Any derivative must record exact transform + original/derivative hashes and derivative_for_model_review=true.
+6. Emit a Creator/Bridge handoff consumable by the R29 live review transport, including exact attachment SHA/size/MIME and prompt digest.
+7. Add real ffmpeg rehearsal using R19-produced candidate bytes, not only generated metadata. Include at least one round-1 re-edit candidate and verify the blinded package still maps to the correct source/re-edit lineage.
+8. No model call, browser upload, provider publish, credentials or human-quality claim in Media.
+
+Evidence required:
+- substantive code/tests/docs/report;
+- real review-A/review-B artifacts generated in rehearsal;
+- exact hashes and sealed mapping digest;
+- exact-head CI SUCCESS;
+- state distinguishes DYNAMIC_REVIEW_PACKAGE_READY from LIVE_MODEL_REVIEWED.
+Do not merge.
