@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1221-locate",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$c=@('E:\\\\video3','E:\\\\repos\\\\video3','C:\\\\Users\\\\foto6\\\\video3','C:\\\\Users\\\\foto6\\\\source\\\\repos\\\\video3'); foreach($p in $c){ if(Test-Path -LiteralPath $p){ $i=Get-Item -LiteralPath $p; Write-Output ('FOUND ' + $i.FullName) } }"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Locate bounded video3 checkout candidates only"
+}
