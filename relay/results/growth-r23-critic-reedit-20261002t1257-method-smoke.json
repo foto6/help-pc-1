@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-B",
+        "-c",
+        "import importlib.util,pathlib\np=pathlib.Path(\"tests/test_critic_reedit_adapter_r23.py\")\ns=importlib.util.spec_from_file_location(\"r23tests\",p)\nm=importlib.util.module_from_spec(s); s.loader.exec_module(m)\nc=m.GrowthR23CriticReeditAdapterTests\nc.setUpClass()\nnames=sorted(n for n in dir(c) if n.startswith(\"test_\"))\nfor n in names:\n    print(\"START\",n,flush=True)\n    o=c(n)\n    if hasattr(o,\"setUp\"): o.setUp()\n    getattr(o,n)()\n    if hasattr(o,\"tearDown\"): o.tearDown()\n    print(\"PASS\",n,flush=True)\nprint(\"TOTAL\",len(names),flush=True)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\r\n  File \"<string>\", line 12, in <module>\r\n    getattr(o,n)()\r\n    ~~~~~~~~~~~~^^\r\n  File \"E:\\growth-r23-work\\tests\\test_critic_reedit_adapter_r23.py\", line 313, in test_conformance_fixture_docs_and_workflow_are_wired\r\n    self.assertIn(\"no real MP4 review\", docs.lower())\r\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\unittest\\case.py\", line 1174, in assertIn\r\n    self.fail(self._formatMessage(msg, standardMsg))\r\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\unittest\\case.py\", line 732, in fail\r\n    raise self.failureException(msg)\r\nAssertionError: 'no real MP4 review' not found in \"# growth r23 ␔ web-video critic → creator re-edit adapter\\n\\nr23 converts `growth.web_video_critic.v1` output into the bounded\\n`growth.creator_reedit_handoff.v1` contract. it does not upload a video, mutate a\\nprovider, edit creator/media state, or claim that a real mp4 was reviewed.\\n\\n## exact authorities\\n\\n- growth r22: `foto6/video3@0f6824d7c3962ccee572b21a4e1a343e6470c1a9`.\\n- bridge r26: `foto6/webaibridge@73c13f9eed2a2cbcea881dd8c5452d054bfef940`.\\n  r26 remains `ready_for_explicit_live_rehearsal` with `livepass=false`. its ci\\n  proves bounded file-attachment/reconciliation semantics with a fake browser;\\n  it is not evidence of a real chatgpt mp4 upload or review.\\n- media r18: `foto6/video2@2c41f084e000eca5efd9a51d2d3752bec1bd1311`,\\n  exact-green ci `36967381891`, contract `media.direct_model_review_package.v1`.\\n  its package explicitly records `liveuploadperformed=false` and\\n  `modeljudgmentperformed=false`.\\n\\n## deterministic re-edit projection\\n\\nevery emitted directive is bound to the exact source sha, media producer sha,\\ncandidate render sha/size/export sha, mp4 attachment sha/size/identity, review\\nbundle digest, r22 critic input digest, and critic output digest. local defects\\nretain their timestamp, evidence, confidence, and uncertainty. in direct\\nattached-video mode a defect interval must be contained in reported inspected\\ncoverage.\\n\\ndefect categories map through a fixed allowlist to supported edit operations:\\ntrim, cut, crop/scale/reframe, speed change, fade/transition, text overlay,\\nsubtitles/captions, audio duck/mix, and intro/outro/cta. the model's free-form\\n`proposed_edit` is preserved for audit but is always marked non-executable.\\nunknown mappings fail closed.\\n\\n## state and round policy\\n\\nthe handoff state is one of `winner`, `targeted_reedit`, `tie`,\\n`insufficient_evidence`, or `human_review`. at most two re-edit rounds are\\nallowed. a still-actionable result at the round-2 boundary becomes\\n`human_review`; it cannot request a third re-edit.\\n\\nany r22 fixture/non-attached execution becomes `insufficient_evidence` with no\\nexecutable directives. this is deliberate: current r22 exact lineage is\\nrehearsal-ready but does not prove a real mp4 review.\\n\\n## evidence and replay boundary\\n\\nmodel review always carries `human_ground_truth=false`. coverage uncertainty is\\npreserved (`uninspected_possible=true`, `every_frame_inspected=false`).\\nstale hashes, source/render/attachment mismatch, provenance drift, contradictory\\ntimestamps, unsupported edits, and duplicate handoff replay are rejected.\\n\\nthe adapter is advisory only. it sets creator mutation, media mutation, provider\\nmutation, upload, publish authorization, and release authorization to false.\\nthus the r23 fixture and ci perform no real mp4 review, no live upload, and no\\nprovider mutation.\\n\"\r\n",
+      "stderr_bytes": 3708,
+      "stderr_truncated": false,
+      "stdout": "START test_conformance_fixture_docs_and_workflow_are_wired\r\n",
+      "stdout_bytes": 60,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T05:56:18.595Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T05:56:18.507Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "growth-r23-critic-reedit-20261002t1257-method-smoke"
+    },
+    "request_id": "growth-r23-critic-reedit-20261002t1257-method-smoke",
+    "started_at": "2026-10-02T05:56:17.728Z",
+    "status": "completed"
+  },
+  "id": "growth-r23-critic-reedit-20261002t1257-method-smoke",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
