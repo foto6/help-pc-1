@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "if(Test-Path -LiteralPath 'E:\\\\growth-r23-work'){ Write-Output 'EXISTS'; git -C 'E:\\\\growth-r23-work' status --short --branch; git -C 'E:\\\\growth-r23-work' remote -v } else { Write-Output 'MISSING' }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "MISSING\r\n",
+      "stdout_bytes": 9,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T05:25:18.606Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T05:25:18.531Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "growth-r23-critic-reedit-20261002t1225-workpath"
+    },
+    "request_id": "growth-r23-critic-reedit-20261002t1225-workpath",
+    "started_at": "2026-10-02T05:25:18.152Z",
+    "status": "completed"
+  },
+  "id": "growth-r23-critic-reedit-20261002t1225-workpath",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
