@@ -14,7 +14,7 @@
     },
     "autostart_installer": {
       "path": "tools/install_pc_relay_autostart.ps1",
-      "git_blob_sha1": "30033a40d575367c49a9f43928fb7c3f343bda7d"
+      "git_blob_sha1": "02c090465fc56e6291583c1d4d003d2af18a31d2"
     },
     "autostart_uninstaller": {
       "path": "tools/uninstall_pc_relay_autostart.ps1",
@@ -22,7 +22,7 @@
     },
     "rollback": {
       "path": "tools/rollback_pc_relay_cutover.ps1",
-      "git_blob_sha1": "41380c877a5cb9765addb2ba44d2b6149d7bd641"
+      "git_blob_sha1": "cf17f053cc99a8ef6121937b929f225d77f7ee1e"
     },
     "health_schema": {
       "path": "conformance/pc_relay.health.v1/schema.json",
