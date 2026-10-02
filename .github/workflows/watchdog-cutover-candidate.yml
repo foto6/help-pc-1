@@ -12,6 +12,9 @@ on:
       - "tests/test_relay_watchdog_cutover_candidate.py"
       - "tests/fixtures/pc_relay_cutover_candidate/**"
       - "conformance/pc_relay.cutover_candidate.v1/**"
+      - "conformance/pc_relay.health.v1/manifest.json"
+      - "conformance/pc_relay.health.v1/producer-pin.r2.json"
+      - "conformance/pc_relay.watchdog_status.v1/manifest.json"
       - "docs/PC_RELAY_WATCHDOG_CUTOVER_CANDIDATE.md"
       - ".github/workflows/watchdog-cutover-candidate.yml"
   workflow_dispatch:
@@ -66,6 +69,9 @@ jobs:
               ".github/workflows/watchdog-cutover-candidate.yml",
               "conformance/pc_relay.cutover_candidate.v1/manifest.json",
               "conformance/pc_relay.cutover_candidate.v1/schema.json",
+              "conformance/pc_relay.health.v1/manifest.json",
+              "conformance/pc_relay.health.v1/producer-pin.r2.json",
+              "conformance/pc_relay.watchdog_status.v1/manifest.json",
               "docs/PC_RELAY_WATCHDOG_CUTOVER_CANDIDATE.md",
               "tests/fixtures/pc_relay_cutover_candidate/incident_2026-10-01.json",
               "tests/test_relay_watchdog_cutover_candidate.py",
