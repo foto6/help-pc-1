@@ -1,0 +1,28 @@
+EXECUTE NOW — CREATOR R26 REAL-REVIEW CLOSED LOOP. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r26-real-review-closed-loop-20261002
+Exact starting HEAD: 215dc6ef924da45072c9f2c648edd3b3d80e645c
+
+Context:
+- R24 exact-pin runner already executes real Media renders, but its Growth critic input is explicitly structural/synthetic conformance evidence.
+- Growth R23 now defines growth.creator_reedit_handoff.v1 from growth.web_video_critic.v1.
+- User priority is actual autonomous short-form editing, not another synthetic readiness layer.
+
+Milestone:
+1. Add a strict external real-review ingestion boundary to the Creator closed loop. It must consume a provenance-bound Growth R23 re-edit handoff/result; do NOT synthesize or fabricate a model judgment inside Creator.
+2. Bind every review/re-edit decision to source SHA, candidate render SHA/size, attachment/review identity, critic output digest, round number, exact producer heads/contracts.
+3. Execute bounded re-edit rounds (max 2) through the real Media runtime and verify new final MP4 bytes/hash after each actionable round.
+4. Reject stale critic results, wrong render/source/attachment lineage, duplicate/conflicting review events, unsupported directives, round regressions, and replay that could cause an extra render.
+5. Only a terminal winner may create the existing publish-handoff. tie / insufficient_evidence / human_review remain non-publishable.
+6. Restart/lost-ack recovery must not duplicate render or publish-handoff effects.
+7. Add a one-command real-artifact runner that can consume an externally captured review payload. If no genuine live review artifact is available in this agent chat, implement/verify the runner and mark the live-review execution gate BLOCKED with the exact missing artifact/provenance; never fake it.
+8. Preserve no-provider/no-credential/no-CAPTCHA behavior in this milestone.
+
+Evidence required:
+- substantive non-empty commit(s);
+- tests including stale hash, duplicate review, max-round, winner/nonwinner, restart cases;
+- exact-head CI SUCCESS;
+- report distinguishing IMPLEMENTED vs REAL_REVIEW_EXECUTED;
+- exact SHA / CI run / changed files / reproducible command.
+Do not merge. Do not modify sibling repos.
