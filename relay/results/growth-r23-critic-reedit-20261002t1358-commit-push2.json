@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$branch=(git branch --show-current).Trim();\n$head=(git rev-parse HEAD).Trim();\nif($branch -ne 'agent/growth-r23-critic-reedit-adapter-20261002'){ throw \"wrong branch $branch\" }\nif($head -ne '0f6824d7c3962ccee572b21a4e1a343e6470c1a9'){ throw \"wrong baseline $head\" }\ngit config --local user.name 'foto6';\ngit config --local user.email 'foto63357@gmail.com';\ngit diff --cached --check;\ngit commit -m \"R23 add critic re-edit adapter\";\nif($LASTEXITCODE -ne 0){ throw \"commit failed $LASTEXITCODE\" }\n$new=(git rev-parse HEAD).Trim();\ngit push origin HEAD:refs/heads/agent/growth-r23-critic-reedit-adapter-20261002;\nif($LASTEXITCODE -ne 0){ throw \"push failed $LASTEXITCODE\" }\nWrite-Output (\"NEW_HEAD=\"+$new);\ngit status --short;"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "To https://github.com/foto6/video3.git\n   0f6824d..26f769a  HEAD -> agent/growth-r23-critic-reedit-adapter-20261002\n",
+      "stderr_bytes": 116,
+      "stderr_truncated": false,
+      "stdout": "[agent/growth-r23-critic-reedit-adapter-20261002 26f769a] R23 add critic re-edit adapter\n 7 files changed, 1261 insertions(+)\n create mode 100644 conformance/growth.creator_reedit_handoff.v1/contract.json\n create mode 100644 conformance/growth.creator_reedit_handoff.v1/schema.json\n create mode 100644 docs/CRITIC_REEDIT_ADAPTER_R23.md\n create mode 100644 fixtures/critic_reedit_r23/fixture_spec.json\n create mode 100644 growth_analytics/critic_reedit_adapter.py\n create mode 100644 tests/test_critic_reedit_adapter_r23.py\nNEW_HEAD=26f769abceb43a63677ea8f7ba028369db371696\r\n",
+      "stdout_bytes": 574,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T06:32:48.305Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T06:32:48.227Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "growth-r23-critic-reedit-20261002t1358-commit-push2"
+    },
+    "request_id": "growth-r23-critic-reedit-20261002t1358-commit-push2",
+    "started_at": "2026-10-02T06:32:44.959Z",
+    "status": "completed"
+  },
+  "id": "growth-r23-critic-reedit-20261002t1358-commit-push2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
