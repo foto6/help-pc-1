@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261002-1110-inspect-pc",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst id=\"A11DA53840D85DCB6DFAEA06CABDADB4\";\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst tab=tabs.find(t=>t.id===id);\nif(!tab){process.stdout.write(JSON.stringify({ok:false,reason:\"missing\"}));process.exit(2)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\nlet seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\nconst call=(m,a={})=>new Promise((r,j)=>{const k=seq++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\nconst r=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const vis=e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(vis);const b=[...document.querySelectorAll('button')].filter(vis).map(x=>({text:(x.innerText||'').trim().replace(/\\\\s+/g,' ').slice(0,80),aria:x.getAttribute('aria-label')||'',testid:x.getAttribute('data-testid')||'',disabled:!!x.disabled})).filter(x=>/send|отправ|stop|останов|submit/i.test(x.text+' '+x.aria+' '+x.testid));return {href:location.href,title:document.title,composerText:c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'',buttons:b}})())\",returnByValue:true});\nws.close();process.stdout.write(r.result.value);\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Short read-only inspect pc agent composer/send controls"
+}
