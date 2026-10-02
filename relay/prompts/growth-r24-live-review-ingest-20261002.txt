@@ -1,0 +1,25 @@
+EXECUTE NOW — GROWTH R24 LIVE REVIEW INGEST + RE-EDIT HANDOFF. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r24-live-review-ingest-20261002
+Exact starting HEAD: 26f769abceb43a63677ea8f7ba028369db371696
+
+Context:
+- R23 correctly maps growth.web_video_critic.v1 into growth.creator_reedit_handoff.v1 but explicitly does not prove a real MP4 was reviewed.
+- Media R18 defines blinded A/B attachment identity and the exact model-review prompt shape.
+- Next gate is consuming an ACTUAL captured assistant review response without turning model evidence into human ground truth.
+
+Milestone:
+1. Define/implement a strict ingest contract for a captured existing-chat video-review response bound to conversation/review request identity, blind attachment labels, attachment SHA/size, Media source/render lineage and exact prompt digest.
+2. Parse/validate actionable observations into growth.web_video_critic.v1 and then feed the existing R23 adapter to emit growth.creator_reedit_handoff.v1.
+3. Require timestamp interval + defect category + severity/evidence + proposed edit + confidence/uncertainty for actionable defects; preserve inspected-range coverage and uninspected_possible=true.
+4. Pairwise verdict must be A/B/tie/insufficient_evidence; never infer human preference or human parity.
+5. Reject malformed/free-form-only output, unknown candidate/label, stale/wrong hashes, contradictory timestamps, duplicate/conflicting captured responses, missing provenance and prompt drift.
+6. Idempotent re-ingest of the exact same captured review must produce identical digest and no duplicate handoff effect.
+7. Fixtures are allowed for parser/negative tests, but the readiness report must clearly separate FIXTURE_VALIDATED from REAL_ATTACHED_VIDEO_REVIEW_INGESTED. If no genuine Bridge capture is available, remain BLOCKED on that final live evidence rather than fabricating it.
+
+Evidence required:
+- substantive commit(s), tests, exact-head CI SUCCESS;
+- schema/contract + report;
+- exact SHA/CI and reproducible ingest command.
+No provider mutation. Do not merge.
