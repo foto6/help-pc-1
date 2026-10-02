@@ -1,6 +1,8 @@
 param(
     [switch]$StatusOnly,
-    [double]$StaleAfterSeconds = 30
+    [double]$StaleAfterSeconds = 30,
+    [long]$LogMaxBytes = 5242880,
+    [int]$LogBackupCount = 3
 )
 
 $ErrorActionPreference = 'Stop'
@@ -59,6 +61,30 @@ function Invoke-RelayStatus([object[]]$Processes) {
     }
 }
 
+function Rotate-BoundedLog([string]$Path) {
+    if ($LogMaxBytes -lt 1024 -or $LogBackupCount -lt 1 -or $LogBackupCount -gt 20) {
+        throw 'Log bounds must be LogMaxBytes>=1024 and LogBackupCount in [1,20].'
+    }
+    if (-not (Test-Path -LiteralPath $Path)) {
+        return
+    }
+    $item = Get-Item -LiteralPath $Path
+    if ($item.Length -lt $LogMaxBytes) {
+        return
+    }
+    for ($i = $LogBackupCount; $i -ge 1; $i--) {
+        $older = if ($i -eq 1) { $Path } else { "$Path.$($i - 1)" }
+        $newer = "$Path.$i"
+        if (Test-Path -LiteralPath $newer) {
+            Remove-Item -LiteralPath $newer -Force
+        }
+        if (Test-Path -LiteralPath $older) {
+            Move-Item -LiteralPath $older -Destination $newer -Force
+        }
+    }
+}
+
+
 function Show-UnhealthyRecovery([object]$Status) {
     Write-Host ("Relay state: {0}" -f $Status.state)
     if ($Status.stale_reasons) {
@@ -109,6 +135,8 @@ if ($existing.Count -gt 0) {
 }
 
 New-Item -ItemType Directory -Force -Path $LogDir | Out-Null
+Rotate-BoundedLog -Path $Stdout
+Rotate-BoundedLog -Path $Stderr
 
 $args = @('tools\github_relay.py', '--repo', $Repo, '--live')
 $p = Start-Process -FilePath $py.Source -ArgumentList $args -WorkingDirectory $Repo -WindowStyle Hidden -RedirectStandardOutput $Stdout -RedirectStandardError $Stderr -PassThru
