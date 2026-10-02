@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $b='http://127.0.0.1:17448'; $s=Invoke-RestMethod -Method Get -Uri ($b+'/api/status') -TimeoutSec 8; $i=Invoke-RestMethod -Method Get -Uri ($b+'/api/chat-inventory') -TimeoutSec 12; $a=Invoke-RestMethod -Method Get -Uri ($b+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 8; [pscustomobject]@{status=$s;inventory=$i;assignments=$a} | ConvertTo-Json -Depth 12 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Invoke-RestMethod : {\"error\":\"not found\"}\r\nAt line:1 char:136\r\n+ ... utSec 8; $i=Invoke-RestMethod -Method Get -Uri ($b+'/api/chat-invento ...\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestMethod], WebExc \r\n   eption\r\n    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand\r\n",
+      "stderr_bytes": 468,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T06:11:55.175Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T06:11:55.087Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-boss-bridge-inventory-20261002-1312"
+    },
+    "request_id": "chatgpt-boss-bridge-inventory-20261002-1312",
+    "started_at": "2026-10-02T06:11:54.270Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-boss-bridge-inventory-20261002-1312",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
