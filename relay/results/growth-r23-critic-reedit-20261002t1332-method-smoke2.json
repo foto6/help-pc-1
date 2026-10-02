@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; Remove-Item -Recurse -Force growth_analytics\\__pycache__,tests\\__pycache__ -ErrorAction SilentlyContinue; python.exe -B -c \"import importlib.util,pathlib; p=pathlib.Path('tests/test_critic_reedit_adapter_r23.py'); s=importlib.util.spec_from_file_location('r23tests',p); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); c=m.GrowthR23CriticReeditAdapterTests; c.setUpClass(); names=sorted(n for n in dir(c) if n.startswith('test_')); exec('for n in names:\\n print(\\\"START\\\",n,flush=True)\\n o=c(n)\\n o.setUp() if hasattr(o,\\\"setUp\\\") else None\\n getattr(o,n)()\\n o.tearDown() if hasattr(o,\\\"tearDown\\\") else None\\n print(\\\"PASS\\\",n,flush=True)'); print('TOTAL',len(names),flush=True)\"; git diff --check; git status --short"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "  File \"<string>\", line 1\r\n    import importlib.util,pathlib; p=pathlib.Path('tests/test_critic_reedit_adapter_r23.py'); s=importlib.util.spec_from_file_location('r23tests',p); m=importlib.util.module_from_spec(s); s.loader.exec_module(m); c=m.GrowthR23CriticReeditAdapterTests; c.setUpClass(); names=sorted(n for n in dir(c) if n.startswith('test_')); exec('for n in names:\\n print(\" START\\,n,flush=True)\\n\r\n                                                                                                                                                                                                                                                                                                                                           ^\r\nSyntaxError: unterminated string literal (detected at line 1)\r\n",
+      "stderr_bytes": 806,
+      "stderr_truncated": false,
+      "stdout": " M .github/workflows/tests.yml\n?? conformance/growth.creator_reedit_handoff.v1/\n?? docs/CRITIC_REEDIT_ADAPTER_R23.md\n?? fixtures/critic_reedit_r23/\n?? growth_analytics/critic_reedit_adapter.py\n?? tests/test_critic_reedit_adapter_r23.py\n",
+      "stdout_bytes": 236,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T06:24:03.806Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T06:24:03.723Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "growth-r23-critic-reedit-20261002t1332-method-smoke2"
+    },
+    "request_id": "growth-r23-critic-reedit-20261002t1332-method-smoke2",
+    "started_at": "2026-10-02T06:24:03.138Z",
+    "status": "completed"
+  },
+  "id": "growth-r23-critic-reedit-20261002t1332-method-smoke2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
