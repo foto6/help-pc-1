@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1348-commit-push",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$branch=(git branch --show-current).Trim();\n$head=(git rev-parse HEAD).Trim();\nif($branch -ne 'agent/growth-r23-critic-reedit-adapter-20261002'){ throw \"wrong branch $branch\" }\nif($head -ne '0f6824d7c3962ccee572b21a4e1a343e6470c1a9'){ throw \"wrong baseline $head\" }\ngit add -- .github/workflows/tests.yml conformance/growth.creator_reedit_handoff.v1 docs/CRITIC_REEDIT_ADAPTER_R23.md fixtures/critic_reedit_r23 growth_analytics/critic_reedit_adapter.py tests/test_critic_reedit_adapter_r23.py;\ngit diff --cached --check;\ngit commit -m \"R23 add critic re-edit adapter\";\n$new=(git rev-parse HEAD).Trim();\ngit push origin HEAD:refs/heads/agent/growth-r23-critic-reedit-adapter-20261002;\nWrite-Output (\"NEW_HEAD=\"+$new);\ngit status --short;"
+    ],
+    "cwd": "E:\\growth-r23-work"
+  },
+  "timeout_ms": 60000,
+  "note": "Commit and push validated Growth R23 adapter from exact baseline to its existing branch"
+}
