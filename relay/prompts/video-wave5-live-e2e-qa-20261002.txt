@@ -1,0 +1,24 @@
+EXECUTE NOW — INDEPENDENT VIDEO WAVE-5 LIVE E2E PREFLIGHT QA. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/video-wave5-live-e2e-qa-20261002
+Exact starting HEAD: e7e60294d99ff43a74de95ef46f64eec3efab434
+
+Independent QA only. Do not modify product branches and do not perform live Send.
+
+Exact-green Wave-4 heads:
+- Creator R28 0d670abd4b5f04391fd1e6e1af4836a9fc92c8f3, CI 36994868273 SUCCESS
+- Media R21 d753e9e4c1f4448386608a1425232dbc1dba87ea, CI 36994000619 SUCCESS
+- Growth R26 e844ed2daaaca9e9694fe1e0fb6b8b7bfac69cbc, CI 36994388154 SUCCESS
+- Bridge R30 ceaee873231a8552c5b7324083baa800eec566a8, CI 36993885456 SUCCESS
+
+Milestone:
+1. Update the cross-repo authority matrix to these exact heads and exact contracts/schema/blob pins.
+2. Define a strict one-run E2E preflight gate:
+   Media R22 artifact -> Bridge R31 operator -> genuine capture -> Growth R27 operator -> Creator R29 consumer -> next Media package.
+3. Validator must require actual file digests at every handoff and reject moving branch refs, stale producer SHAs, static R18 fallback, fixture/fake-CDP promoted live, malformed response promoted pass, missing sealed mapping binding, wrong round, duplicate effect and human-evidence escalation.
+4. Define coordinator stopping rules before any live Send. Specifically, no live run if dedicated review-chat identity is ambiguous, live Bridge isolation cannot be proved, current pc-control/relay is degraded, package bytes mismatch, or reconciliation is already pending.
+5. Keep HUMAN_RATINGS_PENDING unless real human ratings are separately imported. Model review never counts.
+6. Produce PREPARED_FOR_SINGLE_LIVE_E2E only when source-side exact pins and operator artifacts satisfy all static checks. Do not claim live success.
+7. CI/tests exact-head SUCCESS, machine-readable gate/report.
+Do not merge product branches.
