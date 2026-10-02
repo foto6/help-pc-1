@@ -1,0 +1,20 @@
+EXECUTE NOW — MEDIA R21 ROUND-PAIR REVIEW BUNDLE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r21-round-pair-review-bundle-20261002
+Exact starting HEAD: b22174db3c772a49a21fb9f8b1d40828bf258005
+
+R20 is exact-green and can package arbitrary current R19 candidates, but the autonomous loop still needs deterministic comparison semantics across rounds.
+
+Milestone:
+1. Build media.review_round_bundle.r21.v1 on top of R20.
+2. For initial review, accept exactly two eligible current candidates from the same source/brief lineage. Reject unrelated sources, identical bytes, stale render-export/application evidence.
+3. For targeted re-edit round N+1, compare the prior reviewed/winning baseline candidate against the newly re-edited challenger. Preserve exact parent/child lineage, round, Growth handoff digest and Media application digest.
+4. Blind assignment A/B deterministically without leaking baseline/challenger identity into model-facing prompt; keep sealed mapping machine-side.
+5. Emit transport-neutral handoff consumable by Bridge R30: exact attachment path/hash/size/MIME, prompt bytes/digest, package digest, sealed mapping digest, source/round lineage.
+6. On replay, byte-identical inputs produce identical package/handoff. Any partial/mismatched artifacts fail closed.
+7. Add real ffmpeg rehearsal: initial two-candidate package + round-1 baseline-vs-reedit package using actual R19-produced MP4s; verify sealed mapping and exact hashes.
+8. Preserve modelReviewPerformed=false/liveModelReviewed=false/providerPublish=false/humanQuality=false.
+9. No browser/model call, credentials, publish, merge.
+
+Evidence: substantive code/tests/docs/report, actual review-A/review-B files in rehearsal, exact hashes, exact-head CI SUCCESS, state ROUND_PAIR_PACKAGE_READY.
