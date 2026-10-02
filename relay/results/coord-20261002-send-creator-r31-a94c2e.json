@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=4286394BE03EE2BB4763A151CC7EAF29 --prompt=E:\\pc-github-relay\\relay\\prompts\\creator-r31-live-session-authority-20261002.txt"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Error: timeout\n    at Timeout._onTimeout (E:\\WebAIBridge\\app\\data\\direct_send_existing_agent.js:10:235)\n    at listOnTimeout (node:internal/timers:605:17)\n    at process.processTimers (node:internal/timers:541:7)\n",
+      "stderr_bytes": 213,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T13:20:27.498Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T13:20:27.415Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261002-send-creator-r31-a94c2e"
+    },
+    "request_id": "coord-20261002-send-creator-r31-a94c2e",
+    "started_at": "2026-10-02T13:20:16.936Z",
+    "status": "completed"
+  },
+  "id": "coord-20261002-send-creator-r31-a94c2e",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
