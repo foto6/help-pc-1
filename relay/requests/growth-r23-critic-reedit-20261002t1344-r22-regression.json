@@ -1,0 +1,22 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1344-r22-regression",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_web_video_critic_r22.py",
+      "-v"
+    ],
+    "cwd": "E:\\growth-r23-work"
+  },
+  "timeout_ms": 60000,
+  "note": "Run exact adjacent Growth R22 regression tests before R23 commit"
+}
