@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst urls=[\n {name:\"Growth R23\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc\"},\n {name:\"Native R29\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc\"}\n];\nconst sleep=ms=>new Promise(r=>setTimeout(r,ms));\nconst ver=await(await fetch(\"http://127.0.0.1:17410/json/version\")).json();\nconst ws=new WebSocket(ver.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\nlet seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\nconst call=(m,a={})=>new Promise((r,j)=>{const k=seq++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\nconst out=[];\nfor(const x of urls){\n const r=await call(\"Target.createTarget\",{url:x.url});\n await sleep(1500);\n const tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\n const t=tabs.find(z=>z.id===r.targetId);\n out.push({name:x.name,id:r.targetId,actual:t?.url||null});\n}\nws.close();process.stdout.write(JSON.stringify({ok:true,out}));\n\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"out\":[{\"name\":\"Growth R23\",\"id\":\"011D68D54D141EDE3F61EA1CEB05A6FB\",\"actual\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc\"},{\"name\":\"Native R29\",\"id\":\"368702CAADBD87090E36D29A451547F6\",\"actual\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc\"}]}",
+      "stdout_bytes": 283,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T05:06:24.124Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T05:06:23.978Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261002-1130-open-two-new-project-chats"
+    },
+    "request_id": "boss-20261002-1130-open-two-new-project-chats",
+    "started_at": "2026-10-02T05:06:20.414Z",
+    "status": "completed"
+  },
+  "id": "boss-20261002-1130-open-two-new-project-chats",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
