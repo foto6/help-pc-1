@@ -1,0 +1,30 @@
+EXECUTE NOW — GROWTH R29 FREEZE EXACT MEDIA R23 + BRIDGE R32 LIVE SESSION AUTHORITIES. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r29-freeze-r23-r32-20261002
+Exact starting HEAD: 629a2b9ddf59b84eee4e87b257c161dad42831dc
+Exact starting CI: 37006476121 SUCCESS
+
+Exact green authorities:
+- Media R23: foto6/video2@78c6982a91d7e3e8c037cd9ce740ee077babdccc, CI 37007419237 SUCCESS
+- Bridge R32: foto6/WebAIBridge@805bf628d3d2844549b54db1112736fae0200fc7, CI 37006524677 SUCCESS
+- Creator R30: foto6/video1@50c17852a910c57f0894dcdb356d4d4923edb62b, CI 37006988818 SUCCESS
+
+Problem: R28 intentionally rejects a distinct Media R23 producer because R23 did not yet have an exact frozen authority when R28 was implemented. Close that exact authority gap without weakening R28.
+
+Milestone:
+1. Add exact R29 authority profile for Media R23 session packages and Bridge R32 live-session round results: producer SHA, CI, contracts, schemas, implementation blobs and artifact digests where available.
+2. Accept R23 operator/session packages only if they retain exact nested R21/R22 lineage and pass all R28 package/prompt/attachment/sealed mapping checks.
+3. Accept Bridge R32 genuine session-round results only when exact conversation/session/round/package/request/operation/response/capture digests match.
+4. Preserve strict round sequence 0 -> 1 -> 2, exact replay idempotency and conflict-on-changed-bytes.
+5. Emit Creator-ready selected result + both candidate envelopes + pairwise context, with exact outer R29 authority metadata while preserving canonical inner envelope contracts where required.
+6. Add one-command genuine session ingest accepting Media R23/R24 operator dir + Bridge R32/R33 live round result.
+7. Fixture/fake-CDP/source-ready evidence remains non-live and can never emit LIVE_REVIEW_INGESTED.
+8. MALFORMED_MODEL_RESPONSE or RECONCILIATION_REQUIRED emits no executable Creator handoff.
+9. Model evidence stays human_ground_truth=false, human_rating_evidence=false, human_parity_inferred=false.
+10. No browser/provider mutation, no merge.
+
+Evidence required:
+- substantive commits/tests/docs/report;
+- exact-head CI SUCCESS;
+- negative tests for stale R23/R32 authority, blob drift, swapped mapping, wrong round/session/conversation, changed response and replay conflict.
