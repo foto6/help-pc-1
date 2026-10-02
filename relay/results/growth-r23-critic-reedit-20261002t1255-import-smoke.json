@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-B",
+        "-c",
+        "import growth_analytics.critic_reedit_adapter as a; print(a.CRITIC_REEDIT_ADAPTER_VERSION); print(a.bridge_r26_authority()['source_sha']); print(a.media_r18_authority()['source_sha'])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "growth.web_video_critic_reedit_adapter.v1\r\n73c13f9eed2a2cbcea881dd8c5452d054bfef940\r\n2c41f084e000eca5efd9a51d2d3752bec1bd1311\r\n",
+      "stdout_bytes": 127,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T05:54:40.555Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T05:54:40.476Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "growth-r23-critic-reedit-20261002t1255-import-smoke"
+    },
+    "request_id": "growth-r23-critic-reedit-20261002t1255-import-smoke",
+    "started_at": "2026-10-02T05:54:39.780Z",
+    "status": "completed"
+  },
+  "id": "growth-r23-critic-reedit-20261002t1255-import-smoke",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
