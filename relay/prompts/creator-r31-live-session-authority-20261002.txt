@@ -1,0 +1,30 @@
+EXECUTE NOW — CREATOR R31 LIVE SESSION AUTHORITY / CONTINUATION BINDING. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r31-live-session-authority-20261002
+Exact starting HEAD: 50c17852a910c57f0894dcdb356d4d4923edb62b
+Exact starting CI: 37006988818 SUCCESS
+
+Exact green authorities to freeze:
+- Media R23: foto6/video2@78c6982a91d7e3e8c037cd9ce740ee077babdccc, CI 37007419237 SUCCESS
+- Growth R28: foto6/video3@629a2b9ddf59b84eee4e87b257c161dad42831dc, CI 37006476121 SUCCESS
+- Bridge R32: foto6/WebAIBridge@805bf628d3d2844549b54db1112736fae0200fc7, CI 37006524677 SUCCESS
+
+Milestone:
+1. Upgrade R30 so the coordinator continuation command accepts a genuine Growth R28 multi-round session result/index and exact selected Creator envelope.
+2. Freeze exact authority profiles for current Growth R28, Bridge R32 and Media R23 by SHA + CI + contract/schema/implementation blob identity. Never trust branch names.
+3. Validate full continuity:
+   Bridge R32 round result -> Growth R28 session ledger/index -> selected Creator envelope -> reviewed candidate/render -> Media R23 session package request/result.
+4. For targeted_reedit, execute the existing real edit path and invoke exact Media R23 next-round export. Verify real output MP4 bytes and returned media.review_session_package.r23.v1 identity.
+5. For winner, emit canonical final.mp4 + existing publish handoff only. tie/insufficient_evidence/human_review remain non-publishable.
+6. Persist exact session identity, review round, re-edit round, response digest, selected candidate/render, Media R23 package digest and output artifact digests.
+7. Replay/restart is idempotent. Same session/round with changed capture/response/selected envelope/package is conflict.
+8. Enforce review rounds 0..2 and max two re-edits.
+9. Add one command that takes a Growth R28 session directory plus exact Media R23 authority profile and advances to NEXT_REVIEW_PACKAGE_READY or WINNER_HANDOFF_READY.
+10. No browser/provider mutation, no human parity claim, no merge.
+
+Evidence required:
+- substantive commits/tests/docs/report;
+- exact-head CI SUCCESS;
+- deterministic real-MP4 rehearsal through next external review boundary;
+- readiness remains WAITING_GENUINE_CAPTURE if no genuine live capture is supplied.
