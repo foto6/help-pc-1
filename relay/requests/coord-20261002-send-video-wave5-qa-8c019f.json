@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-send-video-wave5-qa-8c019f",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=098BDD859BDFEAD0E87D0F24353ADFCF --prompt=E:\\pc-github-relay\\relay\\prompts\\video-wave5-live-e2e-qa-20261002.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Wave5 independent QA exact existing-chat dispatch; user explicitly requested task distribution; fail closed on active generation/non-empty composer"
+}
