@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-capabilities-7f3b1c",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Coordinator read-only probe before agent orchestration"
+}
