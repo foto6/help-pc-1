@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-lookup-bridge-narrow-2aa6e4",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "coord-20261002-bridge-narrow-7b41f2",
+    "action": "shell.run"
+  },
+  "timeout_ms": 10000,
+  "note": "Reconcile narrow Bridge read-only probe before any further bridge action"
+}
