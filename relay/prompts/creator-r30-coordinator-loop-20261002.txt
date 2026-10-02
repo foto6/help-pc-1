@@ -1,0 +1,31 @@
+EXECUTE NOW — CREATOR R30 COORDINATOR E2E CONTINUATION LOOP. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r30-coordinator-loop-20261002
+Exact starting HEAD: 4a58561b07d615c141fa609d212070c894bfd0cb
+Exact starting CI: 37002020115 SUCCESS
+
+Exact green dependencies:
+- Media R22: foto6/video2@e82a7ac04f3758d0e3e21ea3d05265dbc2822132, CI 37001071721 SUCCESS
+- Growth R27: foto6/video3@d80592ad660b7b73ad13298880918a5944411c38, CI 37002456031 SUCCESS
+- Bridge R31: foto6/WebAIBridge@104281e49122233f251c692abba726ae31cee0d5, CI 36999908386 SUCCESS
+
+Milestone:
+1. Build one coordinator-facing continuation command that consumes an exact Growth R27 live-ingest index + selected Creator envelope and advances the durable Creator state machine.
+2. For targeted_reedit: execute the exact Media edit path, verify real output MP4/hash/size/application evidence, then invoke the exact Media R22 materializer/export boundary to produce the next operator-ready blinded package.
+3. For winner: create canonical final.mp4 + existing publish handoff only. For tie / insufficient_evidence / human_review: no publish handoff.
+4. Bind exact Growth R27 runtime SHA/CI/authority digest, Bridge R31 capture/result identity, Media R22 producer SHA/CI/materialized package identity and selected candidate/render lineage.
+5. Persist a durable coordinator session journal covering capture ingest -> selected envelope -> edit effect -> next package or winner. Exact replay = no duplicate edit/materialization; conflicting replay = fail closed.
+6. Enforce max two re-edit rounds and at most three review rounds total (initial + up to two re-edits). No silent reset of round counters across restart.
+7. Emit one machine-readable continuation result with states:
+   - WAITING_GENUINE_CAPTURE
+   - REVIEW_ACCEPTED
+   - REAL_REEDIT_EXECUTED
+   - NEXT_REVIEW_PACKAGE_READY
+   - WINNER_HANDOFF_READY
+   - NON_PUBLISHABLE_REVIEW_RESULT
+   - BLOCKED
+8. Add negative tests for stale Growth R27 producer, stale Bridge R31 capture, Media R22 artifact drift, duplicate replay, changed response digest, round overflow and non-winner publish.
+9. No browser/provider mutation, no human parity claim, no merge.
+
+Evidence required: substantive commits, exact-head CI SUCCESS, docs/report, one-command runner and deterministic real-MP4 rehearsal up to the external review boundary.
