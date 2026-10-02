@@ -1,0 +1,26 @@
+EXECUTE NOW — INDEPENDENT VIDEO WAVE-5 E2E ACCEPTANCE GATE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/video-wave5-e2e-independent-gate-20261002
+Exact starting HEAD: e7e60294d99ff43a74de95ef46f64eec3efab434
+
+Independent QA only. Do not modify product branches.
+
+Exact green Wave-4 heads:
+- Creator R28: 0d670abd4b5f04391fd1e6e1af4836a9fc92c8f3 / CI 36994868273 SUCCESS
+- Media R21: d753e9e4c1f4448386608a1425232dbc1dba87ea / CI 36994000619 SUCCESS
+- Growth R26: e844ed2daaaca9e9694fe1e0fb6b8b7bfac69cbc / CI 36996617627 SUCCESS
+- Bridge R30: ceaee873231a8552c5b7324083baa800eec566a8 / CI 36993885456 SUCCESS
+
+Milestone:
+1. Update the exact cross-repo compatibility matrix to these heads and verify actual contract/schema/blob compatibility.
+2. Build a deterministic E2E evidence validator for the only acceptable live chain:
+   Media exact package -> Bridge genuine LIVE_REVIEW_PASS capture -> Growth live ingest -> Creator accepted review -> real Media re-edit -> next review package or winner handoff.
+3. Require cryptographic continuity across package/prompt/attachments/capture/response/sealed mapping/candidate/render/handoff/round.
+4. Reject SOURCE_READY/fixture/fake-CDP as live evidence.
+5. Reject model evidence as human_ground_truth/human parity/human rating.
+6. Reject publish handoff unless Growth/Creator decision is winner and round bounds/replay invariants hold.
+7. Produce a coordinator-facing acceptance checklist and one validator command for a future real run directory.
+8. CI exact-head SUCCESS. No product merge.
+
+Outputs: validator code/tests/schema, updated matrix, report with exact blockers and PASS criteria.
