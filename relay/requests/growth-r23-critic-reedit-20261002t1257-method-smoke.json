@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1257-method-smoke",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-B",
+      "-c",
+      "import importlib.util,pathlib\np=pathlib.Path(\"tests/test_critic_reedit_adapter_r23.py\")\ns=importlib.util.spec_from_file_location(\"r23tests\",p)\nm=importlib.util.module_from_spec(s); s.loader.exec_module(m)\nc=m.GrowthR23CriticReeditAdapterTests\nc.setUpClass()\nnames=sorted(n for n in dir(c) if n.startswith(\"test_\"))\nfor n in names:\n    print(\"START\",n,flush=True)\n    o=c(n)\n    if hasattr(o,\"setUp\"): o.setUp()\n    getattr(o,n)()\n    if hasattr(o,\"tearDown\"): o.tearDown()\n    print(\"PASS\",n,flush=True)\nprint(\"TOTAL\",len(names),flush=True)"
+    ],
+    "cwd": "E:\\growth-r23-work"
+  },
+  "timeout_ms": 30000,
+  "note": "No-bytecode isolated method-by-method R23 test smoke after original broad command timed out"
+}
