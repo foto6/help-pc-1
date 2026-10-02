@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p=Get-CimInstance Win32_Process -Filter \"ProcessId=8800 OR ProcessId=13836\"; $p | Select-Object ProcessId,ParentProcessId,Name,CommandLine | ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"ProcessId\":8800,\"ParentProcessId\":20044,\"Name\":\"python.exe\",\"CommandLine\":\"\\\"E:\\\\manhwa\\\\.venv\\\\Scripts\\\\python.exe\\\" -m uvicorn app.main:app --app-dir E:\\\\manhwa --host 127.0.0.1 --port 8000\"},{\"ProcessId\":13836,\"ParentProcessId\":8800,\"Name\":\"python.exe\",\"CommandLine\":\"\\\"E:\\\\ai\\\\python311\\\\python.exe\\\" -m uvicorn app.main:app --app-dir E:\\\\manhwa --host 127.0.0.1 --port 8000\"}]\r\n",
+      "stdout_bytes": 386,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T05:53:07.588Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T05:53:07.512Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "growth-r23-critic-reedit-20261002t1253-python-lines"
+    },
+    "request_id": "growth-r23-critic-reedit-20261002t1253-python-lines",
+    "started_at": "2026-10-02T05:53:06.876Z",
+    "status": "completed"
+  },
+  "id": "growth-r23-critic-reedit-20261002t1253-python-lines",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
