@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-windows-84b2e1",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read-only inventory of existing windows for agent chat reuse"
+}
