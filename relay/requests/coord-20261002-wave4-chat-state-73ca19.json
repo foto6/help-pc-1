@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-wave4-chat-state-73ca19",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();\n$code=@'\nconst targets={\n creator:\"4286394BE03EE2BB4763A151CC7EAF29\",\n media:\"0FCF754993E255005F038065DA6DF681\",\n growth:\"011D68D54D141EDE3F61EA1CEB05A6FB\",\n bridge:\"018719BE1AECAF8ADED28535B17CA895\",\n native_mcp:\"B5D613DD803D63FF48226816CD71ABC3\",\n qa:\"098BDD859BDFEAD0E87D0F24353ADFCF\"\n};\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst expr=\"JSON.stringify((()=>{const vis=e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const buttons=[...document.querySelectorAll('button')].filter(vis);const generating=buttons.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||'')));const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\\\\\"true\\\\\\\"]')].find(vis)||null;const draft=c?(('value' in c?c.value:(c.innerText||c.textContent||''))||''):'';return {href:location.href,title:document.title,generating,draftLength:draft.trim().length}})())\";\nconst out={};\nfor(const [name,tid] of Object.entries(targets)){\n const tab=tabs.find(t=>t.id===tid);\n if(!tab){out[name]={ok:false,reason:\"target_missing\",tid};continue}\n try{\n  const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\n  let s=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n  const call=(m,a={})=>new Promise((r,j)=>{const k=s++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\n  const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});ws.close();\n  out[name]={ok:true,tid,...JSON.parse(rr.result.value)};\n }catch(e){out[name]={ok:false,tid,error:String(e)}}\n}\nprocess.stdout.write(JSON.stringify(out));\n'@;\n$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only wave4 pre-dispatch chat state"
+}
