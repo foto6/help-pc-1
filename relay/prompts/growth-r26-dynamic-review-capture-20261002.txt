@@ -1,0 +1,24 @@
+EXECUTE NOW — GROWTH R26 DYNAMIC REVIEW CAPTURE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r26-dynamic-review-capture-20261002
+Exact starting HEAD: 2c441ebaa017c7da72461316401aeaf445e3d6e5
+
+Current green inputs:
+- Media R20 @ b22174db3c772a49a21fb9f8b1d40828bf258005
+- Bridge R29 @ ed9a35290f94607d7577f1ee9301de1bb44334f2
+R25 still validates frozen R18 prompt/attachments. Generalize it to dynamic packages without weakening the frozen path.
+
+Milestone:
+1. Add growth.dynamic_live_review_capture.r26.v1 consumer for arbitrary Media R20/R21 dynamic review packages.
+2. Require exact Media package authority/profile: producer SHA, contract/schema/blob identities, package digest, prompt digest, attachment A/B hash+size+MIME, sealed mapping digest, source/round lineage.
+3. Require exact Bridge R30/R29 capture authority/profile: producer SHA, capture contract/schema/blob identities, exact conversation/request/prompt/attachment/assistant-response binding, model_evidence=true, human_ground_truth=false.
+4. Never trust branch names or model-facing A/B labels as candidate identity. Unblind only with the exact sealed mapping after capture validation.
+5. Convert validated dynamic capture into per-candidate growth.web_video_critic.v1, pairwise result and Creator-ready external review envelope bound to the real candidate IDs/render hashes/re-edit round.
+6. Preserve uncertainty/coverage semantics and supported operations. Model free-form proposed edit remains audit-only; executable operations remain allowlisted.
+7. Replay exact capture is idempotent. Same request/capture/package with changed bytes/response/mapping is a conflict.
+8. Keep R24/R25 frozen R18 path backward-compatible and still clearly fixture/static vs dynamic real.
+9. If no genuine dynamic Bridge capture exists, report SOURCE_READY/BLOCKED_WAITING_DYNAMIC_CAPTURE; never fabricate LIVE_REVIEW_INGESTED.
+10. No provider mutation, no human-rating evidence, no merge.
+
+Evidence: code/tests/docs/report, exact-head CI SUCCESS, negative tests for swapped sealed mapping, stale prompt, stale attachment, wrong round, wrong producer, capture replay conflict.
