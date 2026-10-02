@@ -1,25 +1,21 @@
-EXECUTE NOW — BRIDGE R31 LIVE DYNAMIC OPERATOR BUNDLE. Do not stop at a plan or acknowledgement.
+EXECUTE NOW — BRIDGE R31 COORDINATOR-READY LIVE DYNAMIC REVIEW OPERATOR. Do not stop at a plan or acknowledgement.
 
 Repo: foto6/WebAIBridge
 Writable branch ONLY: agent/bridge-r31-live-dynamic-operator-20261002
 Exact starting HEAD: ceaee873231a8552c5b7324083baa800eec566a8
 
-Exact Media authority to support:
-- Media R21: d753e9e4c1f4448386608a1425232dbc1dba87ea, CI 36994000619 SUCCESS
-- contract: media.review_round_bundle.r21.v1 / media.review_round_transport_handoff.r21.v1
+R30 is exact-green but SOURCE_READY because the coding agent cannot control the authorized browser. Build the exact operator package the coordinator can execute through pc-control without touching the live Bridge.
 
-Objective: produce the exact operator bundle the coordinator can run through pc-control for ONE genuine dynamic attached-video review, without touching current live Bridge.
+Milestone:
+1. Consume a self-contained Media R21/R22 materialized operator bundle and verify exact producer SHA/CI/contract/blob/package/prompt/attachment provenance.
+2. Build a single Windows-friendly command/script for isolated sidecar startup + review-chat resolution + exact A/B attachment + prompt readback + durable Send + capture + cleanup/reconciliation.
+3. Reuse the existing dedicated review-only chat if valid. No automatic new chat. Replacement requires explicit evidence + explicit coordinator authorization.
+4. The script must discover/validate the authorized Chrome CDP target/profile safely and fail closed on ambiguity.
+5. Persist only sanitized evidence: conversation id/url, request/operation IDs, package/prompt/attachment hashes, response digest/text, turn identity, timestamps, live state. No tokens/cookies/debugger URL.
+6. Lost ack/restart/timeout => reconciliation-only, no blind resend/reupload.
+7. Return exact exit states: LIVE_REVIEW_PASS, MALFORMED_MODEL_RESPONSE, RECONCILIATION_REQUIRED, BLOCKED.
+8. Add preflight/dry-run mode that performs zero browser mutation and proves all file/account/chat prerequisites.
+9. CI uses fake CDP and can only prove SOURCE_READY. Do not claim live pass without coordinator artifact.
+10. No live Bridge cutover/restart, no provider publish, no merge.
 
-Required:
-1. Consume Media R21/R22 operator manifest/artifact directory; verify exact producer SHA/CI, contracts/schema/blobs, archive/package/prompt/attachment/sealed-mapping digests before browser mutation.
-2. Keep R30/R29 isolated sidecar semantics: separate loopback port/state, current live Bridge untouched.
-3. Resolve/reuse the existing dedicated review-only conversation if valid. Never create a second chat automatically. Replacement only with explicit coordinator authorization + terminal unusable evidence.
-4. One-command coordinator operator:
-   verify package -> start sidecar -> bounded health/status -> exact chat rebind -> attach A/B -> exact prompt readback -> durable SEND_INTENT -> Send once -> capture assistant response -> strict JSON validate -> write capture/evidence -> sidecar cleanup.
-5. Lost ack/timeout/restart => reconciliation_required, never blind resend/reupload.
-6. Output exact bridge.dynamic_existing_chat_video_review_capture.v1 + response bytes + authority profile + non-secret operation log.
-7. Live state names remain SOURCE_READY until a coordinator actually runs it. Only genuine browser upload+Send+capture can become LIVE_REVIEW_PASS/MALFORMED_MODEL_RESPONSE.
-8. Provide Windows PowerShell wrapper suitable for invocation through pc-control shell.run.
-9. No live Bridge deployment/restart/repoint, no secrets in logs, no merge.
-
-Evidence: substantive code/tests/docs, fake-CDP regression suite, exact-head CI SUCCESS, exact coordinator command/stopping rules.
+Evidence: substantive commits/tests/docs, exact-head CI SUCCESS, operator script + evidence schema + stopping rules.
