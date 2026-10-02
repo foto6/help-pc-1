@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1353-git-identity",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "git.exe",
+      "log",
+      "-1",
+      "--format=%an%n%ae"
+    ],
+    "cwd": "E:\\growth-r23-work"
+  },
+  "timeout_ms": 10000,
+  "note": "Read repository-local last commit author identity for scoped R23 commit configuration"
+}
