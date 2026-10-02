@@ -1,0 +1,21 @@
+EXECUTE NOW — NATIVE MCP R32 LOCAL READ-ONLY CANARY OPERATOR. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/help-pc-2
+Writable branch ONLY: agent/native-mcp-r32-local-canary-operator-20261002
+Exact starting HEAD: 6bf59b63b4681966f02c14248caccd6b1783f616
+
+R31 is exact-green and source-ready, but no live read-only canary has been executed. Build the operator package that the coordinator can run through the existing pc-control/GitHub authority without changing that authority.
+
+Milestone:
+1. One-command isolated local R30/R31 direct-MCP candidate startup on loopback using separate state/credentials and no service/task/firewall/tunnel mutation.
+2. One-command authority snapshot of the CURRENT GitHub-relay pc-control surface: health, capability registry digest, protected-root policy identity, read-only/side-effect classification and schema digests. No secrets/raw results.
+3. One-command explicit read-only canary comparing current authority vs direct candidate for health, initialize, tools/list and only safe tools such as device.ping/device.info.
+4. Do not mirror side effects. Refuse any side-effect tool in canary.
+5. Persist exact canary evidence and readiness comparison. Any mismatch -> BLOCKED. Unknown/reconciliation semantics must match and never authorize fallback/replay.
+6. Add cleanup that stops only the isolated candidate process it started; never current relay/Bridge/MCP services.
+7. Cross-platform/Windows PowerShell operator script suitable for coordinator execution through pc-control.
+8. CI must test operator logic with fixtures but never label synthetic evidence READ_ONLY_CANARY_PASS.
+9. Produce exact coordinator runbook: inputs, commands, expected evidence files and stopping rules.
+10. No plugin update/install/cutover, no current relay stop/repoint, no merge.
+
+Evidence: substantive commits/tests/docs, exact-head CI SUCCESS, state SOURCE_READY until an actual coordinator-run canary artifact exists.
