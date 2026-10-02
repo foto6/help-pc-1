@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-boss-bridge-inventory-20261002-1312",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $b='http://127.0.0.1:17448'; $s=Invoke-RestMethod -Method Get -Uri ($b+'/api/status') -TimeoutSec 8; $i=Invoke-RestMethod -Method Get -Uri ($b+'/api/chat-inventory') -TimeoutSec 12; $a=Invoke-RestMethod -Method Get -Uri ($b+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 8; [pscustomobject]@{status=$s;inventory=$i;assignments=$a} | ConvertTo-Json -Depth 12 -Compress"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only Bridge status, existing chat inventory, and managed agent assignments"
+}
