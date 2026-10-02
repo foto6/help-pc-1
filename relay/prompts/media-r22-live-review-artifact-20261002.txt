@@ -1,0 +1,26 @@
+EXECUTE NOW — MEDIA R22 LIVE REVIEW ARTIFACT BUNDLE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r22-live-review-artifact-20261002
+Exact starting HEAD: d753e9e4c1f4448386608a1425232dbc1dba87ea
+
+R21 is exact-green and can build deterministic initial and baseline-vs-reedit blinded round pairs. Turn that into a coordinator-consumable artifact for ONE genuine Bridge R31 run.
+
+Required:
+1. Add a deterministic export command that materializes a complete Media R21 live-review artifact directory from real MP4 candidate bytes.
+2. Bundle exactly:
+   - review-A.mp4 / review-B.mp4
+   - exact model-facing prompt bytes
+   - media.review_round_bundle.r21.v1
+   - media.review_round_transport_handoff.r21.v1
+   - sealed mapping
+   - authority profile with exact producer SHA, CI, contract/schema/implementation blob identities
+   - package manifest with SHA-256/size/MIME for every file
+3. No hidden candidate IDs/roles in model-facing files. Sealed mapping must be machine-side only.
+4. Add one initial-round real artifact and one round-1 baseline-vs-reedit artifact in Actions/rehearsal. Reject byte-identical pair, unrelated lineage, stale R15/R19 evidence or mapping/package drift.
+5. Produce an operator manifest specifically consumable by Bridge R31 without needing hand-edited paths.
+6. Artifact archive digest must be recorded and reproducible; extraction must verify every file before use.
+7. Do not call model/browser/provider. liveModelReviewed=false, humanQuality=false.
+8. No merge.
+
+Evidence: actual real MP4 bundle(s), exact hashes/archive digest, code/tests/docs/report, exact-head CI SUCCESS.
