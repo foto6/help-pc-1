@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst tid=\"0FCF754993E255005F038065DA6DF681\";\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===tid);\nif(!tab){process.stdout.write(JSON.stringify({ok:false,reason:\"missing\"}));process.exit(2)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let s=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(m,a={})=>new Promise((r,j)=>{const k=s++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\nconst click=await call(\"Runtime.evaluate\",{expression:\"(()=>{const b=[...document.querySelectorAll('button')].find(x=>{const r=x.getBoundingClientRect();return r.width>0&&r.height>0&&(x.getAttribute('aria-label')||'').toLowerCase().includes('отправ')});if(!b)return {ok:false};b.click();return {ok:true}})()\",returnByValue:true});\nawait new Promise(r=>setTimeout(r,700));\nconst st=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea');const bs=[...document.querySelectorAll('button')];return {text:c?(c.innerText||c.textContent||''):'',generating:bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('останов'))}})())\",returnByValue:true});\nws.close();process.stdout.write(JSON.stringify({clicked:click.result.value,state:JSON.parse(st.result.value)}));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"clicked\":{\"ok\":true},\"state\":{\"text\":\"\",\"generating\":true}}",
+      "stdout_bytes": 61,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T04:50:03.597Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T04:50:03.522Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261002-1114-send-media"
+    },
+    "request_id": "boss-20261002-1114-send-media",
+    "started_at": "2026-10-02T04:50:01.954Z",
+    "status": "completed"
+  },
+  "id": "boss-20261002-1114-send-media",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
