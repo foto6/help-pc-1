@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1328-status",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; Write-Output ('BRANCH=' + (git branch --show-current)); Write-Output ('HEAD=' + (git rev-parse HEAD)); git status --short; git diff --stat; git diff --check"
+    ],
+    "cwd": "E:\\growth-r23-work"
+  },
+  "timeout_ms": 15000,
+  "note": "Read current Growth R23 local worktree after prior interrupted focused test"
+}
