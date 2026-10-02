@@ -1,0 +1,25 @@
+EXECUTE NOW — CREATOR R28 DYNAMIC LIVE-REVIEW LOOP. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r28-dynamic-live-review-loop-20261002
+Exact starting HEAD: 6efc98006f9b0d79b0dd5d5ac070fbc9d9f423f9
+
+Current exact-green dependencies observed by coordinator:
+- Media R20: foto6/video2@b22174db3c772a49a21fb9f8b1d40828bf258005, CI 36988788032 SUCCESS
+- Growth R25: foto6/video3@2c441ebaa017c7da72461316401aeaf445e3d6e5, CI 36988158233 SUCCESS
+- Bridge R29: foto6/WebAIBridge@ed9a35290f94607d7577f1ee9301de1bb44334f2, CI 36989658042 SUCCESS
+
+Problem: R27 is source-ready but blocked on stale observed dependency state and a frozen/static-review path. Build the Creator side of the dynamic round-by-round review loop.
+
+Required milestone:
+1. Replace hard-coded assumptions about old Growth/Media review producers with source-bound authority profiles that require exact producer SHA + contract/schema/blob identities at runtime. Never trust a moving branch.
+2. Accept Growth dynamic external-review envelopes from R25/R26 family only when exact producer authority is supplied and validated.
+3. After every accepted targeted_reedit, execute exact Media R19/R20-compatible real re-edit and then call the Media R20/R21 dynamic blinded-review package boundary for the NEW candidate round.
+4. Journal round state durably: source candidate, reviewed candidate, review envelope digest, applied Media result digest, next package digest, round number, winner lineage. Max two re-edit rounds.
+5. Idempotent replay/restart: same review event -> no duplicate edit/package; conflicting event for same round -> fail closed.
+6. terminal winner only -> canonical final.mp4 + existing publish handoff. tie / insufficient_evidence / human_review remain non-publishable.
+7. Do not fabricate Bridge/Growth live evidence. If dynamic Growth R26 or Bridge R30 authority is not yet exact-green, finish SOURCE_READY/BLOCKED_WAITING_DYNAMIC_REVIEW_CAPTURE with exact missing authority.
+8. Tests must cover stale producer SHA, schema/blob drift, round regression, duplicate/conflicting review, missing Media application evidence, package digest drift and winner-only publish.
+9. No live provider publish, credentials, CAPTCHA/2FA bypass, human-quality claim or merge.
+
+Evidence: substantive commits, focused/full tests, exact-head CI SUCCESS, machine-readable readiness report with SOURCE_READY / REAL_REVIEW_INGESTED / REAL_REEDIT_EXECUTED / NEXT_REVIEW_PACKAGE_READY / PUBLISH_HANDOFF_READY.
