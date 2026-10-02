@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst prompt=\"FOLLOW-UP — Growth R23 has substantive local work and successful import smoke, but branch agent/growth-r23-critic-reedit-adapter-20261002 is still at 0f6824d7c3962ccee572b21a4e1a343e6470c1a9. Finish the focused tests after the docs assertion fix, commit/push all substantive R23 files to the assigned branch, run exact-head CI, and report exact SHA/run. Do not leave the milestone only in E:\\\\growth-r23-work. If any test still fails, fix the exact failure; no scope expansion, no live upload/provider mutation.\",id=\"011D68D54D141EDE3F61EA1CEB05A6FB\",conv=\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\";const tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===id);if(!tab||!tab.url.includes(conv)){process.stdout.write(JSON.stringify({ok:false,reason:\"target_mismatch\",actual:tab?.url||\"\"}));process.exit(2)}const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let s=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(m,a={})=>new Promise((r,j)=>{const k=s++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});const st=async()=>JSON.parse((await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea');const text=c?(c.innerText||c.textContent||''):'';const bs=[...document.querySelectorAll('button')];return {found:!!c,text,generating:bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'))}})())\",returnByValue:true})).result.value);const pre=await st();if(!pre.found||pre.generating||pre.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:pre.generating?\"generating\":\"busy_or_draft\"}));process.exit(3)}await call(\"Runtime.evaluate\",{expression:\"document.querySelector('#prompt-textarea').focus();true\",returnByValue:true});await call(\"Input.insertText\",{text:prompt});await call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13});ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true}));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":false,\"reason\":\"busy_or_draft\"}",
+      "stdout_bytes": 37,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T06:04:57.775Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T06:04:57.697Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261002-1140-growth-r23-push-ci"
+    },
+    "request_id": "boss-20261002-1140-growth-r23-push-ci",
+    "started_at": "2026-10-02T06:04:57.222Z",
+    "status": "completed"
+  },
+  "id": "boss-20261002-1140-growth-r23-push-ci",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
