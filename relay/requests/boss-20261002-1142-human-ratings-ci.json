@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261002-1142-human-ratings-ci",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst prompt=\"FOLLOW-UP — Ratings intake code is substantive on agent/human-editing-gate-ratings-intake-20261002 (human-only intake, source-cluster evaluator, CLI), but GitHub Actions currently shows no workflow run for this branch. Add/trigger an exact-head deterministic CI gate for the ratings harness without fabricating ratings. CI must test zero-rating => HUMAN_RATINGS_PENDING, validated partial intake remains pending, completeness gates, bootstrap >=10k, Krippendorff alpha path, and rejection of MODEL_QA as human labels. Push exact SHA and require SUCCESS before completion.\",id=\"098BDD859BDFEAD0E87D0F24353ADFCF\",conv=\"6abdcea3-b724-83ed-b43b-982f00854e3c\";const tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===id);if(!tab||!tab.url.includes(conv)){process.stdout.write(JSON.stringify({ok:false,reason:\"target_mismatch\",actual:tab?.url||\"\"}));process.exit(2)}const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let s=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(m,a={})=>new Promise((r,j)=>{const k=s++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});const st=async()=>JSON.parse((await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea');const text=c?(c.innerText||c.textContent||''):'';const bs=[...document.querySelectorAll('button')];return {found:!!c,text,generating:bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'))}})())\",returnByValue:true})).result.value);const pre=await st();if(!pre.found||pre.generating||pre.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:pre.generating?\"generating\":\"busy_or_draft\"}));process.exit(3)}await call(\"Runtime.evaluate\",{expression:\"document.querySelector('#prompt-textarea').focus();true\",returnByValue:true});await call(\"Input.insertText\",{text:prompt});await call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13});ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true}));\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Human ratings exact-head CI closure"
+}
