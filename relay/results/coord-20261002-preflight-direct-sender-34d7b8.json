@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$sender='E:\\WebAIBridge\\app\\data\\direct_send_existing_agent.js';\n$prompts=@(\n'E:\\pc-github-relay\\relay\\prompts\\creator-r26-real-review-closed-loop-20261002.txt',\n'E:\\pc-github-relay\\relay\\prompts\\media-r19-editorial-runtime-production-20261002.txt',\n'E:\\pc-github-relay\\relay\\prompts\\growth-r24-live-review-ingest-20261002.txt',\n'E:\\pc-github-relay\\relay\\prompts\\bridge-r28-live-existing-chat-review-20261002.txt'\n);\n[pscustomobject]@{\n senderExists=(Test-Path -LiteralPath $sender -PathType Leaf);\n senderSha=if(Test-Path -LiteralPath $sender -PathType Leaf){(Get-FileHash -Algorithm SHA256 -LiteralPath $sender).Hash}else{$null};\n promptFiles=@($prompts|ForEach-Object{[pscustomobject]@{path=$_;exists=(Test-Path -LiteralPath $_ -PathType Leaf);sha=if(Test-Path -LiteralPath $_ -PathType Leaf){(Get-FileHash -Algorithm SHA256 -LiteralPath $_).Hash}else{$null};bytes=if(Test-Path -LiteralPath $_ -PathType Leaf){(Get-Item -LiteralPath $_).Length}else{$null}}})\n}|ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"senderExists\":true,\"senderSha\":\"6B7F8374EA70E7478E0C7E8E051DD82D5690B339797021762B11ECA2AD4D14D6\",\"promptFiles\":[{\"path\":\"E:\\\\pc-github-relay\\\\relay\\\\prompts\\\\creator-r26-real-review-closed-loop-20261002.txt\",\"exists\":true,\"sha\":\"2C41AB69841572B011EF582D0E7446D093EE007ABFDD3839AEB353E13CA07451\",\"bytes\":2291},{\"path\":\"E:\\\\pc-github-relay\\\\relay\\\\prompts\\\\media-r19-editorial-runtime-production-20261002.txt\",\"exists\":true,\"sha\":\"16767A0AD5AD7588D9E8201A4AB5B9A92B76CD91CDEEF1741E4AE6AF780FC3BC\",\"bytes\":2324},{\"path\":\"E:\\\\pc-github-relay\\\\relay\\\\prompts\\\\growth-r24-live-review-ingest-20261002.txt\",\"exists\":true,\"sha\":\"B574526816006F337B62E82766CB12C540A8131290D0ED7A147C4E25143F207C\",\"bytes\":2134},{\"path\":\"E:\\\\pc-github-relay\\\\relay\\\\prompts\\\\bridge-r28-live-existing-chat-review-20261002.txt\",\"exists\":true,\"sha\":\"B56286D47F229E49BF560B7D0844911F93E7B7E00AAA40A6A2AAC205E0D9154C\",\"bytes\":2468}]}\r\n",
+      "stdout_bytes": 904,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T08:10:11.712Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T08:10:11.629Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261002-preflight-direct-sender-34d7b8"
+    },
+    "request_id": "coord-20261002-preflight-direct-sender-34d7b8",
+    "started_at": "2026-10-02T08:10:11.016Z",
+    "status": "completed"
+  },
+  "id": "coord-20261002-preflight-direct-sender-34d7b8",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
