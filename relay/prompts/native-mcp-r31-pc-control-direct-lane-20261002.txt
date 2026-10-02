@@ -1,0 +1,46 @@
+EXECUTE NOW — NATIVE MCP R31 PC-CONTROL DIRECT-LANE CANDIDATE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/help-pc-2
+Writable branch ONLY: agent/native-mcp-r31-pc-control-direct-lane-20261002
+Exact starting HEAD: 29cefa62efcf3f3295dca32b0a202b21c5831969
+
+Context:
+- R30 direct authenticated remote MCP lane is exact-green, CI 36985223664 SUCCESS.
+- The currently used private pc-control plugin still relies on the GitHub request/result relay in this ChatGPT session.
+- User wants MCP to keep advancing but explicitly does NOT want the current working transport/bridge replaced under active work.
+
+Milestone:
+1. Build a production-shaped adapter/gateway boundary that lets the existing private pc-control plugin consume the R30 direct remote MCP lane without changing the current live plugin/relay configuration.
+2. Provide a stable plugin-facing capability/health/tool-discovery contract that maps to MCP initialize/tools/list/tools/call while preserving R30 request_id/idempotency/reconciliation semantics.
+3. Add a dual-lane migration/canary mode:
+   - current GitHub relay remains active authority;
+   - direct MCP candidate can be probed/read-only in parallel;
+   - no side-effect call may be mirrored to both lanes;
+   - any capability/schema/health mismatch blocks cutover.
+4. Build deterministic cutover-readiness logic comparing:
+   - capability registry digest;
+   - action/tool availability;
+   - protected-path policy;
+   - side-effect classification;
+   - request/reconciliation behavior;
+   - health/latency bounds.
+5. Add a one-command read-only canary that exercises health/capabilities/tools/list and selected safe read-only tools through the direct lane, records exact evidence, and never claims cutover from source-only fixtures.
+6. Define plugin candidate metadata for a future pc-control release (e.g. v0.3 candidate) including endpoint/auth/config contract, but DO NOT mutate/update/install the actual private plugin in this milestone.
+7. No live service/task/firewall/tunnel changes; no current GitHub relay stop; no current Bridge/MCP restart; no credential logging.
+8. Add failure tests for direct-lane unavailable, auth mismatch, stale capability digest, schema mismatch, unknown side-effect outcome, reconnect and fallback refusal.
+9. Produce machine-readable readiness report with states:
+   - SOURCE_READY
+   - READ_ONLY_CANARY_PASS
+   - READY_FOR_EXPLICIT_PLUGIN_CANDIDATE
+   - BLOCKED
+   Never report ACTUAL_PC_CONTROL_CUTOVER unless a later separately authorized live plugin update and direct canary occur.
+
+Evidence required:
+- substantive non-empty commits;
+- focused + full tests;
+- exact-head CI SUCCESS;
+- exact SHA/CI;
+- adapter/gateway docs;
+- canary command + evidence schema;
+- explicit statement current working pc-control path was not changed.
+Do not merge.
