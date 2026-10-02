@@ -1,0 +1,22 @@
+EXECUTE NOW — BRIDGE R30 DYNAMIC REVIEW TRANSPORT. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r30-dynamic-review-transport-20261002
+Exact starting HEAD: ed9a35290f94607d7577f1ee9301de1bb44334f2
+
+R29 is exact-green but pinned to frozen Media R18 bytes/prompt. Build transport for arbitrary current Media R20/R21 review bundles while preserving R29 at-most-once and sidecar isolation.
+
+Milestone:
+1. Accept a source-bound Media dynamic review handoff (R20/R21 family), never a moving branch: exact producer SHA + contract/schema/blob + package/prompt/attachment digests.
+2. Verify exact attachment bytes/path confinement/hash/size/MIME and exact prompt bytes/digest before browser mutation.
+3. Use the same isolated sidecar model: do not restart/repoint/overwrite current live Bridge.
+4. Reuse the one dedicated review-only conversation if it exists and is valid; do not create another unless lifecycle evidence proves the prior review chat unusable and coordinator explicitly authorizes replacement. No automatic second chat.
+5. Attach blinded A/B files, verify visible attachment identity, exact prompt readback, persist durable SEND_INTENT, Send once, capture assistant response.
+6. Capture envelope must bind dynamic package digest, sealed mapping digest reference (not leak mapping into model-facing prompt), exact round/source lineage, request/operation IDs, response digest, model_evidence=true/human_ground_truth=false.
+7. Lost ack/timeout/restart -> reconciliation_required; no blind reupload/resend.
+8. Strict JSON validation can yield LIVE_REVIEW_PASS or MALFORMED_MODEL_RESPONSE only after genuine send/capture. CI/fake CDP remains SOURCE_READY only.
+9. Add deterministic fake-CDP + filesystem tests for dynamic package swaps, stale prompt, attachment substitution, path escape, round/package drift and duplicate send.
+10. If agent lacks authorized PC/browser control, finish SOURCE_READY with exact one-command operator bundle for coordinator. Do not claim live execution.
+11. No live Bridge cutover, no secrets, no merge.
+
+Evidence: code/tests/docs/readiness, exact-head CI SUCCESS, operator command and machine-readable capture/evidence schemas.
