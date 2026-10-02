@@ -1,0 +1,19 @@
+EXECUTE NOW — NATIVE MCP R33 COORDINATOR CANARY EVIDENCE INGEST / PLUGIN-CANDIDATE GATE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/help-pc-2
+Writable branch ONLY: agent/native-mcp-r33-coordinator-canary-evidence-20261002
+Exact starting HEAD: b235e319a2afe049a708d48329cc6d80d988256f
+
+R32 is exact-green SOURCE_READY. The next meaningful step is to validate a real coordinator-run read-only canary artifact and gate a future private-plugin candidate.
+
+Milestone:
+1. Add strict ingest/validation for R32 coordinator live canary evidence: candidate descriptor, authority snapshot, canary evidence, exact source SHA/CI and process/isolation identity.
+2. Reject synthetic_ci, missing actual_coordinator_run=true, side_effect_calls>0, replay/fallback authorization, unhealthy/degraded authority, schema/policy/tool-digest mismatch or cleanup ambiguity.
+3. Produce readiness states exactly: READ_ONLY_CANARY_PASS, READY_FOR_EXPLICIT_PLUGIN_CANDIDATE, BLOCKED.
+4. Add a one-command coordinator verifier for an actual R32 run directory; no current plugin mutation.
+5. Generate a sanitized pc-control v0.3 candidate manifest/config only after a valid canary; do not install/update the real plugin.
+6. Preserve current GitHub relay as authority and actual_pc_control_cutover=false.
+7. Tests include tampered evidence, stale source SHA, mismatched tool registry, candidate PID identity mismatch, side-effect contamination.
+8. No service/task/firewall/tunnel/current relay mutation, no merge.
+
+Evidence: substantive commits/tests/docs/report, exact-head CI SUCCESS. If no real canary artifact exists, SOURCE_READY/BLOCKED_WAITING_COORDINATOR_CANARY, never fake pass.
