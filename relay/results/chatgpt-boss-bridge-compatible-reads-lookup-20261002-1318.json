@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-02T06:13:30.509Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "chatgpt-boss-bridge-compatible-reads-20261002-1316"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:393a23b63b6e739bd3acc5fd10db158a7fcf6f56cbb0314adae05ed36c1752c5",
+            "journal_sequence": 1134,
+            "previous_record_sha256": "c29ccaf45c93b5419daa35cff32934f0acd952cb80e824266c4582bf3e9d8b6a",
+            "record_sha256": "25ce2f8ef26c4ae38bf9480b0af60798940f4b138d310f7cc6d864759f6ad0a2",
+            "recorded_at": "2026-10-02T06:13:30.574Z",
+            "request_id": "chatgpt-boss-bridge-compatible-reads-20261002-1316",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-02T06:14:15.624Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "chatgpt-boss-bridge-compatible-reads-20261002-1316"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:393a23b63b6e739bd3acc5fd10db158a7fcf6f56cbb0314adae05ed36c1752c5",
+            "journal_sequence": 1135,
+            "previous_record_sha256": "25ce2f8ef26c4ae38bf9480b0af60798940f4b138d310f7cc6d864759f6ad0a2",
+            "record_sha256": "cc1a76beb623d816c24e3165f924f099709a75222d4bd005ea73d931473b1f6e",
+            "recorded_at": "2026-10-02T06:14:15.700Z",
+            "request_id": "chatgpt-boss-bridge-compatible-reads-20261002-1316",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-02T06:14:15.624Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "chatgpt-boss-bridge-compatible-reads-20261002-1316"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-02T06:14:15.624Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "chatgpt-boss-bridge-compatible-reads-20261002-1316"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:393a23b63b6e739bd3acc5fd10db158a7fcf6f56cbb0314adae05ed36c1752c5",
+          "journal_sequence": 1135,
+          "previous_record_sha256": "25ce2f8ef26c4ae38bf9480b0af60798940f4b138d310f7cc6d864759f6ad0a2",
+          "record_sha256": "cc1a76beb623d816c24e3165f924f099709a75222d4bd005ea73d931473b1f6e",
+          "recorded_at": "2026-10-02T06:14:15.700Z",
+          "request_id": "chatgpt-boss-bridge-compatible-reads-20261002-1316",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "c9702e4d48db48b1bad4feab11a3e7b326c5b6d95a27d62011a4efad281aa8d7",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 1135
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "chatgpt-boss-bridge-compatible-reads-20261002-1316",
+        "request_id": "chatgpt-boss-bridge-compatible-reads-20261002-1316",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T06:15:48.770Z",
+    "ok": true,
+    "request_id": "chatgpt-boss-bridge-compatible-reads-lookup-20261002-1318",
+    "started_at": "2026-10-02T06:15:48.664Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-boss-bridge-compatible-reads-lookup-20261002-1318",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
