@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; Get-NetTCPConnection -State Listen | Where-Object { $_.LocalAddress -in @('127.0.0.1','::1','0.0.0.0') } | Select-Object -First 80 LocalAddress,LocalPort,OwningProcess | ForEach-Object { $p=Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue; [pscustomobject]@{Address=$_.LocalAddress;Port=$_.LocalPort;Pid=$_.OwningProcess;Process=if($p){$p.ProcessName}else{'?'}} } | ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"Address\":\"::1\",\"Port\":49669,\"Pid\":3932,\"Process\":\"jhi_service\"},{\"Address\":\"127.0.0.1\",\"Port\":58683,\"Pid\":20600,\"Process\":\"steam\"},{\"Address\":\"127.0.0.1\",\"Port\":58681,\"Pid\":20600,\"Process\":\"steam\"},{\"Address\":\"0.0.0.0\",\"Port\":49673,\"Pid\":1104,\"Process\":\"services\"},{\"Address\":\"0.0.0.0\",\"Port\":49668,\"Pid\":3660,\"Process\":\"spoolsv\"},{\"Address\":\"0.0.0.0\",\"Port\":49667,\"Pid\":2380,\"Process\":\"svchost\"},{\"Address\":\"0.0.0.0\",\"Port\":49666,\"Pid\":576,\"Process\":\"svchost\"},{\"Address\":\"0.0.0.0\",\"Port\":49665,\"Pid\":852,\"Process\":\"wininit\"},{\"Address\":\"0.0.0.0\",\"Port\":49664,\"Pid\":1128,\"Process\":\"lsass\"},{\"Address\":\"0.0.0.0\",\"Port\":27036,\"Pid\":20600,\"Process\":\"steam\"},{\"Address\":\"127.0.0.1\",\"Port\":17449,\"Pid\":7180,\"Process\":\"node\"},{\"Address\":\"127.0.0.1\",\"Port\":17448,\"Pid\":7180,\"Process\":\"node\"},{\"Address\":\"127.0.0.1\",\"Port\":17410,\"Pid\":15712,\"Process\":\"chrome\"},{\"Address\":\"127.0.0.1\",\"Port\":8000,\"Pid\":13836,\"Process\":\"python\"},{\"Address\":\"0.0.0.0\",\"Port\":5040,\"Pid\":6992,\"Process\":\"svchost\"},{\"Address\":\"127.0.0.1\",\"Port\":1443,\"Pid\":16240,\"Process\":\"TgWsProxy_windows\"},{\"Address\":\"0.0.0.0\",\"Port\":135,\"Pid\":1400,\"Process\":\"svchost\"}]\r\n",
+      "stdout_bytes": 1133,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T07:58:34.757Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T07:58:34.677Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261002-listeners-3ac91d"
+    },
+    "request_id": "coord-20261002-listeners-3ac91d",
+    "started_at": "2026-10-02T07:58:32.298Z",
+    "status": "completed"
+  },
+  "id": "coord-20261002-listeners-3ac91d",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
