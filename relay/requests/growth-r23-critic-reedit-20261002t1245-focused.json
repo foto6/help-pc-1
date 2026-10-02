@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1245-focused",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; python.exe -m unittest discover -s tests -p 'test_critic_reedit_adapter_r23.py' -v; python.exe -m py_compile growth_analytics\\critic_reedit_adapter.py tests\\test_critic_reedit_adapter_r23.py; git diff --check"
+    ],
+    "cwd": "E:\\growth-r23-work"
+  },
+  "timeout_ms": 120000,
+  "note": "Run focused Growth R23 adapter tests, compile checks, and whitespace validation"
+}
