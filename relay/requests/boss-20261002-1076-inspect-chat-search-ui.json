@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261002-1076-inspect-chat-search-ui",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst tab=tabs.find(t=>t.type===\"page\"&&t.url===\"https://chatgpt.com/\")||tabs.find(t=>t.type===\"page\"&&t.url.startsWith(\"https://chatgpt.com\"));\nif(!tab){process.stdout.write(JSON.stringify({ok:false,reason:\"no_chatgpt_tab\"}));process.exit(2)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(m,a={})=>new Promise((r,j)=>{const k=seq++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\nconst expr=`JSON.stringify((()=>{const els=[...document.querySelectorAll('button,a,[role=\"button\"],input')].map((e,i)=>({i,tag:e.tagName,txt:(e.innerText||e.textContent||e.getAttribute('placeholder')||'').trim().replace(/\\\\s+/g,' ').slice(0,120),aria:e.getAttribute('aria-label')||'',href:e.href||'',testid:e.getAttribute('data-testid')||''}));return {url:location.href,search:els.filter(x=>/search|поиск/i.test(x.txt+' '+x.aria+' '+x.testid)).slice(0,30),native:els.filter(x=>/Native Connector Implementation/i.test(x.txt+' '+x.aria)).slice(0,10)}})())`;\nconst r=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});ws.close();process.stdout.write(r.result.value);\n\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only inspect ChatGPT sidebar search and Native conversation link controls"
+}
