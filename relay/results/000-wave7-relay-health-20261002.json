@@ -1,0 +1,129 @@
+{
+  "action": "windows.list",
+  "executor_result": {
+    "action": "windows.list",
+    "data": {
+      "windows": [
+        {
+          "app_name": null,
+          "hwnd": 96537668,
+          "pid": 16288,
+          "title": "C:\\WINDOWS\\system32\\cmd.exe",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 132166,
+          "pid": 21916,
+          "title": "ChatGPT",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 2820662,
+          "pid": 2440,
+          "title": "downloads — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 263842,
+          "pid": 2440,
+          "title": "manhwa — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 65850,
+          "pid": 2440,
+          "title": "Program Manager",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 395810,
+          "pid": 9996,
+          "title": "Proxifier",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 2163388,
+          "pid": 16288,
+          "title": "Windows PowerShell",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 263988,
+          "pid": 6224,
+          "title": "Диспетчер задач",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 3018748,
+          "pid": 2440,
+          "title": "Загрузки — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 263060,
+          "pid": 25524,
+          "title": "Задание_11__Теория__a330x.pdf — Mozilla Firefox",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 656086,
+          "pid": 24248,
+          "title": "Интерфейс ввода Windows",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 24249894,
+          "pid": 16288,
+          "title": "Командная строка - agy  --dangerously-skip-permissions",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 197516,
+          "pid": 25360,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 67584,
+          "pid": 15712,
+          "title": "Перевод приветствия - Google Chrome",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 920762,
+          "pid": 2440,
+          "title": "спец — проводник",
+          "visible": true
+        }
+      ]
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T13:33:29.470Z",
+    "ok": true,
+    "request_id": "000-wave7-relay-health-20261002",
+    "started_at": "2026-10-02T13:33:29.466Z",
+    "status": "completed"
+  },
+  "id": "000-wave7-relay-health-20261002",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
