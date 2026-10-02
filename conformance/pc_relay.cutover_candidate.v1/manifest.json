@@ -14,7 +14,7 @@
     },
     "autostart_installer": {
       "path": "tools/install_pc_relay_autostart.ps1",
-      "git_blob_sha1": "02c090465fc56e6291583c1d4d003d2af18a31d2"
+      "git_blob_sha1": "9665c0447e82498ac6daaae605b479077be28829"
     },
     "autostart_uninstaller": {
       "path": "tools/uninstall_pc_relay_autostart.ps1",

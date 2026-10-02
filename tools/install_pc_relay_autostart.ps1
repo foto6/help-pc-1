@@ -92,7 +92,7 @@ if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) {
 
 $action = New-ScheduledTaskAction -Execute $powerShell -Argument $arguments -WorkingDirectory $Repo
 $trigger = New-ScheduledTaskTrigger -AtLogOn -User $userId
-$trigger.Delay = "PT\${DelaySeconds}S"
+$trigger.Delay = "PT${DelaySeconds}S"
 $principal = New-ScheduledTaskPrincipal -UserId $userId -LogonType Interactive -RunLevel Limited
 $settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -MultipleInstances IgnoreNew -ExecutionTimeLimit (New-TimeSpan -Minutes 5)
 $task = New-ScheduledTask -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Description "PC relay watchdog autostart pinned to $ExpectedHead"

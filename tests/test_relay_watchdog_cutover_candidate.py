@@ -97,6 +97,8 @@ def test_autostart_installer_is_exact_head_guarded_plan_only_by_default() -> Non
     assert "Register-ScheduledTask" in text
     assert "New-ScheduledTaskTrigger -AtLogOn" in text
     assert "$trigger.Delay" in text
+    assert '"PT${DelaySeconds}S"' in text
+    assert '"PT\\${DelaySeconds}S"' not in text
     assert "MultipleInstances IgnoreNew" in text
     assert "LogonType Interactive" in text
     assert "RunLevel Limited" in text
