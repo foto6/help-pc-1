@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261002-1035-ensure-agent-chats-open",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst desired=[{\"name\":\"Creator\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\"},{\"name\":\"Media\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\"},{\"name\":\"Growth\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda63c-98d8-83ed-b365-d423b7563c4b\"},{\"name\":\"Bridge\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\"},{\"name\":\"PC Executor\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab94f1d-a604-83eb-ae1b-258ac27e6544\"},{\"name\":\"Native MCP\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83eb-bc98-dc74acc6e810\"},{\"name\":\"Human Gate\",\"url\":\"https://chatgpt.com/c/6abdcea3-b724-83ed-b43b-982f00854e3c\"}];\nconst sleep=ms=>new Promise(r=>setTimeout(r,ms));\nconst tabs=await (await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst version=await (await fetch(\"http://127.0.0.1:17410/json/version\")).json();\nconst ws=new WebSocket(version.webSocketDebuggerUrl);\nawait new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\nlet seq=1,p=new Map();\nws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\nconst call=(method,params={})=>new Promise((r,j)=>{const id=seq++;p.set(id,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id,method,params}))});\nconst out=[];\nfor(const d of desired){\n  let t=tabs.find(x=>x.type===\"page\" && x.url===d.url);\n  if(t){out.push({name:d.name,status:\"existing\",id:t.id,url:t.url});continue;}\n  const r=await call(\"Target.createTarget\",{url:d.url});\n  out.push({name:d.name,status:\"opened\",id:r.targetId,url:d.url});\n  await sleep(250);\n}\nws.close();\nprocess.stdout.write(JSON.stringify({ok:true,tabs:out}));\n\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Open missing existing agent conversation URLs after reboot; do not navigate existing tabs or create new conversations"
+}
