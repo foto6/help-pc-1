@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=B5D613DD803D63FF48226816CD71ABC3 --prompt=E:\\pc-github-relay\\relay\\prompts\\native-mcp-r30-direct-remote-lane-20261002.txt"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "PRE {\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"title\":\"Native Connector Implementation\",\"high\":true,\"stop\":false,\"composer\":true,\"draft\":\"\\n\"}\nCLICK {\"ok\":true,\"aria\":\"Отправить\",\"testid\":\"\"}\nSTART {\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"title\":\"Native Connector Implementation\",\"high\":true,\"stop\":true,\"composer\":true,\"draft\":\"\\n\"}\n",
+      "stdout_bytes": 481,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T08:18:25.591Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T08:18:25.507Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261002-send-native-mcp-r30-41d8ce"
+    },
+    "request_id": "coord-20261002-send-native-mcp-r30-41d8ce",
+    "started_at": "2026-10-02T08:18:13.022Z",
+    "status": "completed"
+  },
+  "id": "coord-20261002-send-native-mcp-r30-41d8ce",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
