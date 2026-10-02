@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-B",
+        "-c",
+        "from pathlib import Path\np=Path(\"tests/test_critic_reedit_adapter_r23.py\")\ns=p.read_text(encoding=\"utf-8\")\nold='self.assertIn(\"no real MP4 review\", docs.lower())'\nnew='self.assertIn(\"no real mp4 review\", docs.lower())'\nassert old in s\np.write_text(s.replace(old,new,1),encoding=\"utf-8\")\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T05:58:04.256Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T05:58:04.175Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "growth-r23-critic-reedit-20261002t1258-fix-case"
+    },
+    "request_id": "growth-r23-critic-reedit-20261002t1258-fix-case",
+    "started_at": "2026-10-02T05:58:03.907Z",
+    "status": "completed"
+  },
+  "id": "growth-r23-critic-reedit-20261002t1258-fix-case",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
