@@ -15,7 +15,7 @@
     },
     "launcher": {
       "path": "tools/start_pc_control_relay.ps1",
-      "git_blob_sha1": "bb58b8999f8178fa584016a67f1c83b658a2c500"
+      "git_blob_sha1": "8a7b23c69c2083876d4212d8957df72ff19b59a4"
     }
   },
   "safety_invariants": {
