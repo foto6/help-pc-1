@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261002-1110-list-current-tabs",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$tabs=Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list'; $tabs | Where-Object {$_.type -eq 'page' -and $_.url -like 'https://chatgpt.com*'} | Select-Object id,title,url | ConvertTo-Json -Depth 3 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only current ChatGPT tab inventory"
+}
