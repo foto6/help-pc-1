@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='SilentlyContinue';$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();\n$paths=@('E:\\help-pc-2-r2','E:\\help-pc-2-wave4','E:\\boss-supervision-current','E:\\boss-a2');\n$out=@();\nforeach($p in $paths){\n if(Test-Path \"$p\\.git\"){\n  $out += [ordered]@{path=$p;branch=(git -C $p branch --show-current 2>$null);head=(git -C $p rev-parse HEAD 2>$null);status=(git -C $p status --porcelain 2>$null);r33=(Test-Path \"$p\\tools\\r33-live-readonly-canary-preflight.ps1\")}\n }\n}\n$out|ConvertTo-Json -Depth 4 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"path\":\"E:\\\\help-pc-2-r2\",\"branch\":\"agent/pc-control-plane\",\"head\":\"6896d626644b05979088a5244b99c931d62541c1\",\"status\":{},\"r33\":false},{\"path\":\"E:\\\\help-pc-2-wave4\",\"branch\":\"agent/pc-control-plane\",\"head\":\"ead172d3a54eeb861599ec5b0bbf4fd4a51bdfdc\",\"status\":{},\"r33\":false},{\"path\":\"E:\\\\boss-supervision-current\",\"branch\":\"agent/supervision\",\"head\":\"7fcfb069e79ef78f57a583574607f77a2338c488\",\"status\":{},\"r33\":false},{\"path\":\"E:\\\\boss-a2\",\"branch\":\"agent/release-conformance\",\"head\":\"b65559cac9577ef51035c1f9f9956e2afb7ec648\",\"status\":[\"?? release-conformance/\",\"?? tests/\",\"?? tools/\"],\"r33\":false}]\r\n",
+      "stdout_bytes": 604,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T15:09:40.069Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T15:09:39.976Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "mcp-r34-local-checkouts-20261002-2210"
+    },
+    "request_id": "mcp-r34-local-checkouts-20261002-2210",
+    "started_at": "2026-10-02T15:09:38.913Z",
+    "status": "completed"
+  },
+  "id": "mcp-r34-local-checkouts-20261002-2210",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
