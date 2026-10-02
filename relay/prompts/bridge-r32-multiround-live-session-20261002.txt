@@ -1,0 +1,25 @@
+EXECUTE NOW — BRIDGE R32 MULTIROUND LIVE REVIEW SESSION DRIVER. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r32-multiround-live-session-20261002
+Exact starting HEAD: 104281e49122233f251c692abba726ae31cee0d5
+Exact starting CI: 36999908386 SUCCESS
+
+Exact green Media authority:
+- Media R22: foto6/video2@e82a7ac04f3758d0e3e21ea3d05265dbc2822132, CI 37001071721 SUCCESS
+
+R31 already performs one coordinator-authorized genuine package review through an isolated sidecar. Build the durable multi-round session driver around it.
+
+Milestone:
+1. Add a coordinator-facing Windows session command that accepts successive Media R22/R23 operator packages for review rounds 0..2 in the SAME dedicated review-only conversation.
+2. Durable session journal binds review conversation ID, source/brief lineage, round, package digest, prompt digest, attachments, operation/request IDs and terminal state.
+3. Each round invokes R31 at-most-once semantics. Never re-upload/re-Send a round already committed. Lost acknowledgement -> RECONCILIATION_REQUIRED and session stops.
+4. Require exact round progression 0 -> 1 -> 2; reject skips, duplicate different packages for same round, source/brief changes, conversation changes and stale producer authority.
+5. A valid LIVE_REVIEW_PASS produces a sanitized session-round result consumable by Growth R28. MALFORMED_MODEL_RESPONSE and RECONCILIATION_REQUIRED terminate that round without automatic retry.
+6. Do not create a new review chat automatically. Reuse the exact dedicated review conversation. Replacement still requires separate explicit coordinator authorization/evidence.
+7. Add -DryRun for whole-session preflight with zero browser mutation.
+8. Cleanup may stop only the isolated sidecar process/state created by this session, never live Bridge/current relay/browser.
+9. CI/fake CDP remains SOURCE_READY only. Do not claim live session evidence.
+10. No provider publish, no live Bridge cutover/restart, no merge.
+
+Evidence required: substantive commits/tests/docs/report, exact-head CI SUCCESS, Windows operator script, session schema/journal, deterministic fake-CDP multiround rehearsal.
