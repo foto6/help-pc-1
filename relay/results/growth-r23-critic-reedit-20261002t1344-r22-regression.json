@@ -1,0 +1,54 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_web_video_critic_r22.py",
+        "-v"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "test_accidental_live_pass_is_rejected (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_accidental_live_pass_is_rejected) ... ok\r\ntest_bridge_r25_file_cap_fails_closed (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_bridge_r25_file_cap_fails_closed) ... ok\r\ntest_every_frame_claim_is_rejected (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_every_frame_claim_is_rejected) ... ok\r\ntest_exact_green_bridge_r25_transport_binding (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_exact_green_bridge_r25_transport_binding) ... ok\r\ntest_fabricated_human_label_or_model_as_live_is_rejected (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_fabricated_human_label_or_model_as_live_is_rejected) ... ok\r\ntest_fixture_mode_cannot_claim_attached_video_execution (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_fixture_mode_cannot_claim_attached_video_execution) ... ok\r\ntest_fixture_spec_explicitly_disclaims_live_execution (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_fixture_spec_explicitly_disclaims_live_execution) ... ok\r\ntest_input_binds_exact_r21_lineage_and_brief (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_input_binds_exact_r21_lineage_and_brief) ... ok\r\ntest_local_defect_requires_bounded_timestamps (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_local_defect_requires_bounded_timestamps) ... ok\r\ntest_mismatched_attachment_identity_rejected (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_mismatched_attachment_identity_rejected) ... ok\r\ntest_output_has_actionable_creator_directives_and_explicit_uncertainty (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_output_has_actionable_creator_directives_and_explicit_uncertainty) ... ok\r\ntest_pairwise_blinding_tamper_is_rejected (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_pairwise_blinding_tamper_is_rejected) ... ok\r\ntest_pairwise_input_is_deterministic_and_blinds_producer_identity (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_pairwise_input_is_deterministic_and_blinds_producer_identity) ... ok\r\ntest_pairwise_mapping_tamper_is_rejected (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_pairwise_mapping_tamper_is_rejected) ... ok\r\ntest_pairwise_requires_two_distinct_render_bytes (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_pairwise_requires_two_distinct_render_bytes) ... ok\r\ntest_pairwise_tie_and_insufficient_evidence_map_to_no_candidate (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_pairwise_tie_and_insufficient_evidence_map_to_no_candidate) ... ok\r\ntest_readiness_and_conformance_pin_waiting_transport_boundary (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_readiness_and_conformance_pin_waiting_transport_boundary) ... ok\r\ntest_stale_source_producer_and_review_bundle_rejected (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_stale_source_producer_and_review_bundle_rejected) ... ok\r\ntest_wrong_bridge_sha_ci_or_artifact_digest_fails_closed (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_wrong_bridge_sha_ci_or_artifact_digest_fails_closed) ... ok\r\ntest_wrong_render_sha_or_attachment_size_fails_closed (test_web_video_critic_r22.GrowthR22WebVideoCriticTests.test_wrong_render_sha_or_attachment_size_fails_closed) ... ok\r\n\r\n----------------------------------------------------------------------\r\nRan 20 tests in 0.041s\r\n\r\nOK\r\n",
+      "stderr_bytes": 3444,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T06:27:27.093Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T06:27:27.009Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "growth-r23-critic-reedit-20261002t1344-r22-regression"
+    },
+    "request_id": "growth-r23-critic-reedit-20261002t1344-r22-regression",
+    "started_at": "2026-10-02T06:27:26.362Z",
+    "status": "completed"
+  },
+  "id": "growth-r23-critic-reedit-20261002t1344-r22-regression",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
