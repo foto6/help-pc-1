@@ -8,7 +8,7 @@ R28 is exact-green and READY_FOR_EXPLICIT_LIVE_REHEARSAL but does not prove a re
 
 Milestone:
 1. Run R28 from an ISOLATED sidecar checkout/process on a separate loopback port/state directory. Do NOT restart, repoint, overwrite, deploy over, or mutate the current live Bridge process/listeners.
-2. Reuse an EXISTING suitable ChatGPT review/critic conversation. Do not create a new chat. Resolve exact canonical conversation id/url and fail closed on ambiguity/account/root mismatch.
+2. First search/reconcile all EXISTING suitable ChatGPT review/critic conversations and reuse one if available. Current coordinator inventory found no dedicated suitable review chat other than the active Growth coding chat. If and only if no suitable independent review conversation exists, creating exactly ONE dedicated review-only chat is authorized for this milestone. Record why reuse was impossible, its exact conversation id/url, and never create a second replacement unless the lifecycle contract proves the first one unusable. Fail closed on ambiguity/account/root mismatch.
 3. Fetch/materialize the exact Media R18 blinded review package:
    - Media R18 SHA 2c41f084e000eca5efd9a51d2d3752bec1bd1311
    - review-A.mp4 SHA-256 3bd12d999264cb932cb3ef15dfbd96e002ede517f2273795b593553b9642d864
