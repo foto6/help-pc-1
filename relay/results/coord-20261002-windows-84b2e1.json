@@ -1,0 +1,122 @@
+{
+  "action": "windows.list",
+  "executor_result": {
+    "action": "windows.list",
+    "data": {
+      "windows": [
+        {
+          "app_name": null,
+          "hwnd": 132166,
+          "pid": 21916,
+          "title": "ChatGPT",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 67584,
+          "pid": 15712,
+          "title": "ChatGPT - Google Chrome",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 263060,
+          "pid": 25524,
+          "title": "History for relay/results - foto6/help-pc-1 — Mozilla Firefox",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 263842,
+          "pid": 2440,
+          "title": "manhwa — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 65850,
+          "pid": 2440,
+          "title": "Program Manager",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 395810,
+          "pid": 9996,
+          "title": "Proxifier",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 2820662,
+          "pid": 2440,
+          "title": "Telegram Desktop — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 722804,
+          "pid": 1816,
+          "title": "Администратор: Windows PowerShell",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 263988,
+          "pid": 6224,
+          "title": "Диспетчер задач",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 656086,
+          "pid": 24248,
+          "title": "Интерфейс ввода Windows",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 67102,
+          "pid": 12784,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 197516,
+          "pid": 25360,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 920762,
+          "pid": 2440,
+          "title": "спец — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 132624,
+          "pid": 24076,
+          "title": "‎Элита @ ‎Носок С мылом (1218606)",
+          "visible": true
+        }
+      ]
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T07:58:39.066Z",
+    "ok": true,
+    "request_id": "coord-20261002-windows-84b2e1",
+    "started_at": "2026-10-02T07:58:39.050Z",
+    "status": "completed"
+  },
+  "id": "coord-20261002-windows-84b2e1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
