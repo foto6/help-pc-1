@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-boss-bridge-compatible-reads-lookup-20261002-1318",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "chatgpt-boss-bridge-compatible-reads-20261002-1316",
+    "action": "shell.run"
+  },
+  "timeout_ms": 10000,
+  "note": "Reconcile timed-out read-only Bridge compatibility probe before any further Bridge shell diagnostics"
+}
