@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1255-import-smoke",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-B",
+      "-c",
+      "import growth_analytics.critic_reedit_adapter as a; print(a.CRITIC_REEDIT_ADAPTER_VERSION); print(a.bridge_r26_authority()['source_sha']); print(a.media_r18_authority()['source_sha'])"
+    ],
+    "cwd": "E:\\growth-r23-work"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only no-bytecode import smoke for Growth R23 adapter after reconciled timed-out test command"
+}
