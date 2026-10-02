@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261002-1068-sidebar-find-growth-native",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst targets=[\"6abda63c-98d8-83ed-b365-d423b7563c4b\",\"6ab946b7-46f0-83eb-bc98-dc74acc6e810\"];\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst tab=tabs.find(t=>t.type===\"page\"&&t.url===\"https://chatgpt.com/\")||tabs.find(t=>t.type===\"page\"&&t.url.startsWith(\"https://chatgpt.com\"));\nif(!tab){process.stdout.write(JSON.stringify({ok:false,reason:\"no_chatgpt_tab\"}));process.exit(2)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(m,a={})=>new Promise((r,j)=>{const k=seq++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\nconst expr=`JSON.stringify((()=>{const targets=[\"6abda63c-98d8-83ed-b365-d423b7563c4b\",\"6ab946b7-46f0-83eb-bc98-dc74acc6e810\"];const links=[...document.querySelectorAll('a[href]')].map(a=>({href:a.href,text:(a.innerText||a.textContent||'').trim().replace(/\\\\s+/g,' ').slice(0,120),aria:a.getAttribute('aria-label')||''}));return {url:location.href,targetMatches:links.filter(x=>targets.some(t=>x.href.includes(t))),namedMatches:links.filter(x=>/growth|native|mcp/i.test(x.text+' '+x.aria+' '+x.href)).slice(0,40),conversationLinkCount:links.filter(x=>x.href.includes('/c/')).length}})())`;\nconst r=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});ws.close();process.stdout.write(r.result.value);\n\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only sidebar DOM lookup for existing Growth and Native MCP conversations after direct URLs redirected"
+}
