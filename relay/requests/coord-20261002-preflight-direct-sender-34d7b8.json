@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-preflight-direct-sender-34d7b8",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$sender='E:\\WebAIBridge\\app\\data\\direct_send_existing_agent.js';\n$prompts=@(\n'E:\\pc-github-relay\\relay\\prompts\\creator-r26-real-review-closed-loop-20261002.txt',\n'E:\\pc-github-relay\\relay\\prompts\\media-r19-editorial-runtime-production-20261002.txt',\n'E:\\pc-github-relay\\relay\\prompts\\growth-r24-live-review-ingest-20261002.txt',\n'E:\\pc-github-relay\\relay\\prompts\\bridge-r28-live-existing-chat-review-20261002.txt'\n);\n[pscustomobject]@{\n senderExists=(Test-Path -LiteralPath $sender -PathType Leaf);\n senderSha=if(Test-Path -LiteralPath $sender -PathType Leaf){(Get-FileHash -Algorithm SHA256 -LiteralPath $sender).Hash}else{$null};\n promptFiles=@($prompts|ForEach-Object{[pscustomobject]@{path=$_;exists=(Test-Path -LiteralPath $_ -PathType Leaf);sha=if(Test-Path -LiteralPath $_ -PathType Leaf){(Get-FileHash -Algorithm SHA256 -LiteralPath $_).Hash}else{$null};bytes=if(Test-Path -LiteralPath $_ -PathType Leaf){(Get-Item -LiteralPath $_).Length}else{$null}}})\n}|ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only verify Bridge direct sender and prepared prompt files before exact existing-chat dispatch"
+}
