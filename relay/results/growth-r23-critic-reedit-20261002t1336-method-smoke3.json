@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-B",
+        "-c",
+        "import importlib.util, pathlib\np=pathlib.Path(\"tests/test_critic_reedit_adapter_r23.py\")\ns=importlib.util.spec_from_file_location(\"r23tests\", p)\nm=importlib.util.module_from_spec(s)\ns.loader.exec_module(m)\nc=m.GrowthR23CriticReeditAdapterTests\nc.setUpClass()\nnames=sorted(n for n in dir(c) if n.startswith(\"test_\"))\nfor n in names:\n    print(\"START\", n, flush=True)\n    o=c(n)\n    if hasattr(o, \"setUp\"): o.setUp()\n    getattr(o, n)()\n    if hasattr(o, \"tearDown\"): o.tearDown()\n    print(\"PASS\", n, flush=True)\nprint(\"TOTAL\", len(names), flush=True)\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "START test_conformance_fixture_docs_and_workflow_are_wired\r\nPASS test_conformance_fixture_docs_and_workflow_are_wired\r\nSTART test_contradictory_timestamp_outside_coverage_is_rejected\r\nPASS test_contradictory_timestamp_outside_coverage_is_rejected\r\nSTART test_coverage_and_uncertainty_are_preserved\r\nPASS test_coverage_and_uncertainty_are_preserved\r\nSTART test_decision_states_winner_tie_and_insufficient_are_deterministic\r\nPASS test_decision_states_winner_tie_and_insufficient_are_deterministic\r\nSTART test_duplicate_replay_is_rejected\r\nPASS test_duplicate_replay_is_rejected\r\nSTART test_exact_source_render_attachment_binding_is_preserved\r\nPASS test_exact_source_render_attachment_binding_is_preserved\r\nSTART test_exact_upstream_authorities_are_pinned_without_live_claim\r\nPASS test_exact_upstream_authorities_are_pinned_without_live_claim\r\nSTART test_fixture_review_is_insufficient_and_never_emits_executable_reedit\r\nPASS test_fixture_review_is_insufficient_and_never_emits_executable_reedit\r\nSTART test_freeform_model_edit_is_advisory_only_and_evidence_is_preserved\r\nPASS test_freeform_model_edit_is_advisory_only_and_evidence_is_preserved\r\nSTART test_max_two_reedit_rounds_and_terminal_human_review\r\nPASS test_max_two_reedit_rounds_and_terminal_human_review\r\nSTART test_provenance_drift_rejected_even_if_digest_is_recomputed\r\nPASS test_provenance_drift_rejected_even_if_digest_is_recomputed\r\nSTART test_readiness_report_has_no_live_mutation_or_review_claim\r\nPASS test_readiness_report_has_no_live_mutation_or_review_claim\r\nSTART test_stale_expected_hash_is_rejected\r\nPASS test_stale_expected_hash_is_rejected\r\nSTART test_unsupported_edit_mapping_fails_closed\r\nPASS test_unsupported_edit_mapping_fails_closed\r\nTOTAL 14\r\n",
+      "stdout_bytes": 1722,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T06:25:41.584Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T06:25:41.506Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "growth-r23-critic-reedit-20261002t1336-method-smoke3"
+    },
+    "request_id": "growth-r23-critic-reedit-20261002t1336-method-smoke3",
+    "started_at": "2026-10-02T06:25:40.682Z",
+    "status": "completed"
+  },
+  "id": "growth-r23-critic-reedit-20261002t1336-method-smoke3",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
