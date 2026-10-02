@@ -1,0 +1,29 @@
+EXECUTE NOW — BRIDGE R28 EXISTING-CHAT REAL VIDEO REVIEW TRANSPORT. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r28-live-existing-chat-review-20261002
+Exact starting HEAD: fcbd952ba79a17702332bc24fa47a1d8e2d250ac
+
+Context:
+- R26 proves bounded attachment semantics only with rehearsal/fake-browser evidence.
+- R27 adds existing-chat rebind/recovery.
+- Media R18 already emits blinded real MP4 review-A/review-B packages.
+- User requires reuse of existing chats, few/no new chats, reliable autonomous editing orchestration.
+
+Milestone:
+1. Compose R26 attachment transport + R27 existing-chat rebind into one evidence-gated review operation for an EXISTING ChatGPT conversation: resolve/rebind exact conversation, verify target identity, attach blinded MP4(s), verify attachment byte identity/name/size, set exact prompt, verify composer readback, submit once, capture the assistant response and bind it to request/attachment/prompt identity.
+2. Never create a new chat when the requested canonical conversation exists. Reject duplicate-title ambiguity. Replacement chat remains fail-closed unless the existing lifecycle contract proves the original is deleted/unusable and authorizes exactly one replacement.
+3. Durable intent before Send. Lost ack / timeout / restart must reconcile from conversation/DOM/state evidence before any resubmit; at-most-once send effect.
+4. Produce a machine-readable captured-review envelope for Growth R24 with conversation id/url, request id, prompt digest, attachment identities/hashes/sizes, response text/digest, timestamps, and explicit model_evidence=true/human_ground_truth=false.
+5. Add bounded timeout/health diagnostics so a hung CDP/tab cannot hang /api/status or assignment ingress.
+6. Preserve current live Bridge. NO_LIVE_DEPLOY / NO restart / NO repoint in this implementation task.
+7. Provide an explicit live-rehearsal command that can be run later against the currently authorized profile, but CI must use deterministic fixtures and must not fake a live pass.
+8. R28 state can be READY_FOR_EXPLICIT_LIVE_REHEARSAL; it may become LIVE_REVIEW_PASS only with actual captured existing-chat evidence.
+
+Evidence required:
+- substantive commit(s);
+- restart/lost-ack/duplicate-title/stale-tab/wrong-attachment/prompt-drift tests;
+- exact-head CI SUCCESS;
+- readiness report;
+- exact SHA/CI plus explicit live evidence state.
+Do not merge.
