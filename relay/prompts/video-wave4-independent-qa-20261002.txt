@@ -1,0 +1,32 @@
+EXECUTE NOW — INDEPENDENT VIDEO WAVE-4 CROSS-REPO QA GATE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/video-wave4-independent-qa-20261002
+Exact starting HEAD: 18ea130045a9b0a97cdcd7dcbd3f5a8c2e9805b7
+
+Independent validation only. Do not modify video1/video2/video3/WebAIBridge product branches and do not fabricate model/human evidence.
+
+Exact green heads to audit:
+- Creator R27: foto6/video1@6efc98006f9b0d79b0dd5d5ac070fbc9d9f423f9, CI 36990129095 SUCCESS
+- Media R20: foto6/video2@b22174db3c772a49a21fb9f8b1d40828bf258005, CI 36988788032 SUCCESS
+- Growth R25: foto6/video3@2c441ebaa017c7da72461316401aeaf445e3d6e5, CI 36988158233 SUCCESS
+- Bridge R29: foto6/WebAIBridge@ed9a35290f94607d7577f1ee9301de1bb44334f2, CI 36989658042 SUCCESS
+
+Milestone:
+1. Build a machine-readable cross-repo authority/contract matrix: exact SHA, CI, contracts, schemas/blobs, producer/consumer compatibility, static-vs-dynamic review scope.
+2. Explicitly identify stale pins observed in R27/R20/R25/R29 reports/docs and whether they are harmless historical evidence or active blockers.
+3. Define Wave-4 integration acceptance gate for dynamic round review:
+   Media R21 package -> Bridge R30 genuine capture -> Growth R26 ingest/unblind -> Creator R28 re-edit -> next Media package.
+4. Add fail-closed validator that rejects any integration evidence where:
+   - moving branch is used as authority;
+   - exact producer SHA/contract/blob mismatch;
+   - model review is promoted to human_ground_truth/human parity;
+   - fixture/fake-CDP is promoted to LIVE_REVIEW_PASS;
+   - LIVE_REVIEW_INGESTED exists without exact capture/response/attachment/prompt digests;
+   - Creator publishes on tie/insufficient/human_review;
+   - round count exceeds 2 or replay duplicates an effect.
+5. Preserve human-rating gate: MODEL_QA/model review can NEVER enter real human ratings or satisfy HUMAN_PARITY_EVALUATED. Zero real ratings remains HUMAN_RATINGS_PENDING.
+6. Produce a concise coordinator report listing exact blockers and the evidence required to advance each state. No evaluative quality claims.
+7. CI/tests exact-head SUCCESS. Do not merge product branches.
+
+Required outputs in boss: validator code/tests, JSON schema/matrix, QA report, exact-head CI evidence.
