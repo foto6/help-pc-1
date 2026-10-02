@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst prompt=\"EXECUTE NOW — HUMAN EDITING GATE REAL HUMAN RATINGS INTAKE PREP.\\n\\nRepo: foto6/boss\\nWritable branch ONLY: agent/human-editing-gate-ratings-intake-20261002\\nExact starting HEAD: f9e92e97d37f0d98a0a1fa4c79df556b256fdd30\\n\\nV4 is REAL_ARTIFACT_REHEARSAL_PASS and HUMAN_RATINGS_PENDING. Build deterministic real-human ratings intake/evaluation without fabricating any rating:\\n- blinded pack + sealed mapping;\\n- >=3 raters/pair, >=90 judgments, >=3 human editors, no editor rates own work;\\n- rubric: hook, pacing, semantic cuts, crop/framing, B-roll, captions, continuity, motion, audio, payoff/CTA/loop + pairwise preference;\\n- reject duplicates, self-rating, unblinded metadata, malformed scores, provenance mismatch;\\n- source-clustered bootstrap 95% CI >=10k resamples + Krippendorff alpha;\\n- MODEL_QA can never enter human ratings;\\n- zero ratings => remain HUMAN_RATINGS_PENDING;\\n- HUMAN_PARITY_EVALUATED only when real imported ratings satisfy completeness gates.\\nExact-head CI and blank intake template, no synthetic example ratings.\",id=\"098BDD859BDFEAD0E87D0F24353ADFCF\",conv=\"6abdcea3-b724-83ed-b43b-982f00854e3c\",sleep=ms=>new Promise(r=>setTimeout(r,ms));const tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const tab=tabs.find(t=>t.id===id);if(!tab||!tab.url.includes(conv)){process.stdout.write(JSON.stringify({ok:false,reason:\"target_mismatch\",actual:tab?.url||\"\"}));process.exit(2)}const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let s=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(m,a={})=>new Promise((r,j)=>{const k=s++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});const st=async()=>JSON.parse((await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\\\\\"true\\\\\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')];return {found:!!c,text,generating:bs.some(b=>(b.getAttribute('data-testid')||'').includes('stop')||(b.getAttribute('aria-label')||'').toLowerCase().includes('stop'))}})())\",returnByValue:true})).result.value);const pre=await st();if(!pre.found||pre.generating||pre.text.trim()){ws.close();process.stdout.write(JSON.stringify({ok:false,reason:pre.generating?\"generating\":\"draft_or_no_composer\"}));process.exit(3)}await call(\"Runtime.evaluate\",{expression:\"document.querySelector('#prompt-textarea').focus();true\",returnByValue:true});await call(\"Input.insertText\",{text:prompt});await sleep(350);await call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13});await sleep(700);const post=await st();ws.close();process.stdout.write(JSON.stringify({ok:true,submitted:true,started:post.generating,composerCleared:!post.text.trim(),url:tab.url}));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"submitted\":true,\"started\":false,\"composerCleared\":true,\"url\":\"https://chatgpt.com/c/6abdcea3-b724-83ed-b43b-982f00854e3c\"}",
+      "stdout_bytes": 134,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T05:59:49.423Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-02T05:59:49.331Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261002-1122-human-ratings-intake"
+    },
+    "request_id": "boss-20261002-1122-human-ratings-intake",
+    "started_at": "2026-10-02T05:59:46.871Z",
+    "status": "completed"
+  },
+  "id": "boss-20261002-1122-human-ratings-intake",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
