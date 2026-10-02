@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-send-growth-r25-448c7e",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=011D68D54D141EDE3F61EA1CEB05A6FB --prompt=E:\\pc-github-relay\\relay\\prompts\\growth-r25-r29-capture-consumer-20261002.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Wave 3 exact existing-chat dispatch growth; local sender must fail closed if composer non-empty or generation active"
+}
