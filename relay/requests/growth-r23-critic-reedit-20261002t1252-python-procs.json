@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1252-python-procs",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "tasklist.exe",
+      "/FI",
+      "IMAGENAME eq python.exe"
+    ],
+    "cwd": "E:\\growth-r23-work"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only check for residual Python process after timed-out R23 focused test"
+}
