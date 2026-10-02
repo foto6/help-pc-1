@@ -1,0 +1,25 @@
+EXECUTE NOW — GROWTH R28 MULTIROUND SESSION INGEST. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r28-session-ingest-20261002
+Exact starting HEAD: d80592ad660b7b73ad13298880918a5944411c38
+Exact starting CI: 37002456031 SUCCESS
+
+Exact green authorities:
+- Media R22: e82a7ac04f3758d0e3e21ea3d05265dbc2822132 / CI 37001071721
+- Bridge R31: 104281e49122233f251c692abba726ae31cee0d5 / CI 36999908386
+- Creator R29: 4a58561b07d615c141fa609d212070c894bfd0cb / CI 37002020115
+
+Milestone:
+1. Wrap the R27 live-ingest operator in a durable multi-round session command consuming successive genuine Bridge R31 results + exact Media R22/R23 operator packages.
+2. Session identity must bind source/brief, dedicated review conversation ID, exact producer authorities and current review/re-edit round.
+3. For each genuine capture: validate R31/R30 live evidence, exact Media package/attachments/prompt/sealed mapping, strict model JSON and pairwise verdict; unblind only after all checks pass.
+4. Emit Creator R30-ready selected result + both candidate envelopes + durable pairwise context.
+5. Persist session ledger: capture request/operation/response digest, package digest, mapping digest, selected candidate, round. Exact replay no-op; changed bytes under same identity conflict.
+6. Enforce review-round sequence 0 -> 1 -> 2 only, with no skips and no fourth review.
+7. Terminal winner can end session. tie/insufficient_evidence/human_review remain explicit non-terminal/non-publishable outcomes according to Creator policy; do not invent a winner.
+8. If capture is MALFORMED_MODEL_RESPONSE or RECONCILIATION_REQUIRED, emit no Creator executable handoff.
+9. Model evidence remains human_ground_truth=false, human_rating_evidence=false, human_parity_inferred=false.
+10. No browser/provider mutation, no merge.
+
+Evidence required: code/tests/docs/report, exact-head CI SUCCESS, source-ready multi-round rehearsal with fixture captures clearly marked non-live, one-command genuine session ingest entrypoint.
