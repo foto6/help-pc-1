@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1258-fix-case",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-B",
+      "-c",
+      "from pathlib import Path\np=Path(\"tests/test_critic_reedit_adapter_r23.py\")\ns=p.read_text(encoding=\"utf-8\")\nold='self.assertIn(\"no real MP4 review\", docs.lower())'\nnew='self.assertIn(\"no real mp4 review\", docs.lower())'\nassert old in s\np.write_text(s.replace(old,new,1),encoding=\"utf-8\")\n"
+    ],
+    "cwd": "E:\\growth-r23-work"
+  },
+  "timeout_ms": 10000,
+  "note": "Fix case-sensitive R23 documentation assertion only"
+}
