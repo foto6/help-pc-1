@@ -1,0 +1,35 @@
+EXECUTE NOW — NATIVE MCP R30 DIRECT AUTHENTICATED REMOTE LANE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/help-pc-2
+Writable branch ONLY: agent/native-mcp-r30-direct-remote-lane-20261002
+Exact starting HEAD: 3ed5d78ce748e76cddde76e63beee4f833f4a360
+
+Context:
+- Current R29 independently validates safe relay cutover/autostart and preserves reconciliation/no-blind-replay semantics.
+- The repo already contains pc.native.control.v1, MCP_HOST_V1 and the authenticated native remote relay.
+- In current real coordinator use, pc-control still has to fall back to the GitHub request/result relay because no direct native MCP tool namespace is exposed in this chat.
+- User wants the native MCP to keep advancing, but live working stacks must not be cut over or replaced in this milestone.
+
+Milestone:
+1. Implement a production-shaped DIRECT REMOTE MCP transport lane that composes the existing MCP host/facade with the existing authenticated remote relay semantics, without importing help-pc-1 implementation code and without bypassing Executor/Control policy.
+2. The lane must support standards-compliant MCP initialize/tools/list/tools/call over a bounded authenticated network transport suitable for a remote ChatGPT/plugin gateway. Do not expose a raw unauthenticated Executor or arbitrary shell endpoint.
+3. Preserve stable logical request_id / idempotency identity across transport reconnect, MCP reconnect and relay reconnect. Lost response after side-effect dispatch must surface reconciliation_required; never create a replacement side effect automatically.
+4. Discovery/health/tools/list remain read-only and must not claim the desktop or acquire side-effect ownership.
+5. Add explicit bounded connect/request/response timeouts and truthful HEALTHY/DEGRADED/BLOCKED diagnostics so a hung device/relay cannot hang the MCP host or discovery surface.
+6. Authentication/secrets:
+   - no token bytes in discovery/logs/tool metadata;
+   - fail closed on missing/short/wrong tokens, Host/origin confusion and non-authorized remote bind;
+   - keep device credential authority separate from MCP client credential authority;
+   - support rotation/restart without replaying side effects.
+7. Preserve registry/capability digest negotiation and capability drift failure before dispatch.
+8. Add deterministic integration/chaos tests for reconnect, duplicate request, lost ack, device offline, stale epoch, token rotation, host restart, relay restart and oversized/bounded result.
+9. Produce a machine-readable readiness report and a minimal gateway/runbook showing the exact env/config needed for later explicit live rehearsal.
+10. NO live deploy, NO task/service registration, NO firewall/tunnel mutation, NO current relay/MCP restart, NO production cutover in this milestone. If actual remote-plugin registration requires an external platform action unavailable in CI, mark that final gate READY_FOR_EXPLICIT_LIVE_REHEARSAL or BLOCKED with the exact missing authority; never fake direct tool exposure.
+
+Completion evidence:
+- substantive non-empty commit(s);
+- focused + full tests;
+- exact-head CI SUCCESS;
+- changed files + exact SHA + CI run;
+- readiness state distinguishes SOURCE_READY from ACTUAL_REMOTE_CHATGPT_TOOL_EXPOSED.
+Do not merge.
