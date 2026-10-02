@@ -1,0 +1,27 @@
+EXECUTE NOW — MEDIA R19 PRODUCTION EDITORIAL RE-EDIT RUNTIME. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r19-editorial-runtime-production-20261002
+Exact starting HEAD: 2c41f084e000eca5efd9a51d2d3752bec1bd1311
+
+Context:
+- R18 packages real blinded MP4s for model review but does not perform a review.
+- Growth R23 emits bounded executable re-edit directives from critic evidence.
+- User priority is visible real montage quality and autonomous re-editing, not schema-only work.
+
+Milestone:
+1. Add a strict Media runtime boundary that applies provenance-bound editorial re-edit directives to a real source/candidate timeline and produces a new real MP4.
+2. Cover existing supported operations where applicable: trim/cut/pacing, crop/scale/reframe, speed, transition/fade, text overlay, captions/subtitles, audio duck/mix, intro/outro/CTA. Do not invent B-roll assets; if a directive requires absent external media, fail/mark unsupported explicitly.
+3. Preserve timestamps and source/render lineage through each applied directive; reject contradictory/out-of-range intervals, stale source/render SHA, unsupported free-form edits, traversal/path escapes, duplicate conflicting operations and non-deterministic plan drift.
+4. Produce objective technical QA for each real output (ffprobe/decode, duration, resolution/aspect, audio presence/levels where measurable, black/frozen-frame regressions where existing harness supports it). Aesthetic/human-quality claims remain unproven.
+5. Add deterministic real fixtures representing at least talking-head vertical, landscape-to-vertical reframe and motion-heavy short-form. Do not weaken existing R14/R15 QA thresholds to make them pass.
+6. Export a machine-readable edit-application sidecar binding input artifact, directive digest, exact operations, ffmpeg plan digest and output SHA/size so Creator can prove what changed between rounds.
+7. No provider upload/publish in Media.
+
+Evidence required:
+- substantive code commit(s);
+- real ffmpeg artifacts generated in tests/rehearsal where runtime is available;
+- regression tests for invalid/stale directives and idempotent replay;
+- exact-head CI SUCCESS;
+- readiness report with measured artifact hashes and explicit human-quality=false.
+Do not merge.
