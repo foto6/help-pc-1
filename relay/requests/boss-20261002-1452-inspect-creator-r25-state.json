@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261002-1452-inspect-creator-r25-state",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\nconst conv=\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\";\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst tab=tabs.find(t=>t.type===\"page\" && t.url.includes(conv));\nif(!tab){process.stdout.write(JSON.stringify({ok:false,reason:\"conversation_tab_missing\",conv}));process.exit(2)}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\nlet seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\nconst call=(m,a={})=>new Promise((r,j)=>{const k=seq++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\nconst r=await call(\"Runtime.evaluate\",{expression:`JSON.stringify((()=>{const vis=e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const editors=[...document.querySelectorAll('textarea,[contenteditable=\"true\"]')].filter(vis);const c=document.querySelector('#prompt-textarea')||editors[0]||null;const text=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const buttons=[...document.querySelectorAll('button')].filter(vis);const generating=buttons.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')));const send=buttons.some(b=>/send|отправ/i.test((b.getAttribute('aria-label')||'')+' '+(b.innerText||'')));return {href:location.href,title:document.title,composerFound:!!c,composerLength:text.length,composerPrefix:text.slice(0,240),generating,sendVisible:send}})())`,returnByValue:true});\nws.close();process.stdout.write(r.result.value);\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "E:\\",
+    "output_limit_bytes": 65536
+  },
+  "timeout_ms": 15000
+}
