@@ -1,0 +1,19 @@
+EXECUTE NOW — MEDIA R22 LIVE PACKAGE MATERIALIZER / OPERATOR BUNDLE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r22-live-package-materializer-20261002
+Exact starting HEAD: d753e9e4c1f4448386608a1425232dbc1dba87ea
+
+R21 is exact-green and produces deterministic initial + baseline-vs-reedit blinded round bundles.
+
+Milestone:
+1. Add a one-command materializer/exporter for an exact R21 review round bundle into a self-contained operator directory consumable by Bridge R30/R31.
+2. Include exact review-A.mp4/review-B.mp4 bytes, exact prompt file, transport handoff JSON, sealed mapping stored separately machine-side, package manifest, producer SHA/CI/contract/blob provenance.
+3. Verify every hash/size/MIME and path confinement after materialization. Re-run must be byte-stable.
+4. Support initial review and targeted re-edit round packages.
+5. Add a sanitized "operator manifest" that is safe to pass to Bridge without leaking sealed mapping contents into model-facing prompt.
+6. Provide a command to verify an already-materialized bundle independently before browser mutation.
+7. Real ffmpeg rehearsal must produce an actual directory for round 0 and round 1 using real R19/R21 MP4 outputs.
+8. No model/browser/provider call, no publish, no human-quality claim, no merge.
+
+Evidence: substantive commits, tests/docs, actual materialized rehearsal directories/artifact, exact hashes, exact-head CI SUCCESS.
