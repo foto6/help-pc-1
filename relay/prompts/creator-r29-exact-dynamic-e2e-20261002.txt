@@ -1,0 +1,23 @@
+EXECUTE NOW — CREATOR R29 EXACT DYNAMIC E2E CONSUMER. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r29-exact-dynamic-e2e-20261002
+Exact starting HEAD: 0d670abd4b5f04391fd1e6e1af4836a9fc92c8f3
+
+Exact green dependencies:
+- Media R21: foto6/video2@d753e9e4c1f4448386608a1425232dbc1dba87ea, CI 36994000619 SUCCESS
+- Growth R26: foto6/video3@e844ed2daaaca9e9694fe1e0fb6b8b7bfac69cbc, CI 36996617627 SUCCESS
+- Bridge R30: foto6/WebAIBridge@ceaee873231a8552c5b7324083baa800eec566a8, CI 36993885456 SUCCESS
+
+Milestone:
+1. Replace R28's missingDynamicAuthority placeholders with exact source-bound R21/R26/R30 authority profiles (producer SHA + contract/schema/implementation blob identities + exact CI).
+2. Consume growth.dynamic_creator_external_review_envelope.r26.v1 and verify exact Media R21 package/round lineage, Bridge R30 capture provenance, Growth producer, candidate render bytes and handoff digest.
+3. For targeted_reedit, execute the exact real Media re-edit path and then generate/validate the next R21 baseline-vs-reedit round package.
+4. Durable state machine across restart: review capture -> ingest -> re-edit -> next package. Exact replay = no duplicate side effect; conflict = fail closed.
+5. Max two re-edit rounds. winner only -> final.mp4 + publish handoff. tie/insufficient_evidence/human_review remain non-publishable.
+6. Provide a one-command E2E continuation runner that can take a genuine Growth R26 envelope and carry the cycle until the next external review boundary.
+7. If genuine capture is absent, state must remain SOURCE_READY/BLOCKED_WAITING_GENUINE_DYNAMIC_CAPTURE. Never synthesize model evidence.
+8. Tests: wrong producer SHA, blob drift, sealed mapping/package digest mismatch, stale round, changed capture response, duplicate replay, third re-edit attempt, non-winner publish.
+9. No social provider mutation, no human parity claim, no merge.
+
+Evidence: substantive commits, exact-head CI SUCCESS, exact dependency pins, machine-readable readiness report.
