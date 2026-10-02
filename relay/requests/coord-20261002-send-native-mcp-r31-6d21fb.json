@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-send-native-mcp-r31-6d21fb",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=B5D613DD803D63FF48226816CD71ABC3 --prompt=E:\\pc-github-relay\\relay\\prompts\\native-mcp-r31-pc-control-direct-lane-20261002.txt"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Dispatch Native MCP R31 once to exact existing Native MCP conversation; fail closed if still generating or composer non-empty"
+}
