@@ -1,0 +1,30 @@
+EXECUTE NOW — MEDIA R23 NEXT-ROUND EXPORT / SESSION PACKAGE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r23-next-round-export-20261002
+Exact starting HEAD: e82a7ac04f3758d0e3e21ea3d05265dbc2822132
+Exact starting CI: 37001071721 SUCCESS
+
+R22 is exact-green and materializes operator-ready R21 review packages.
+
+Milestone:
+1. Add a canonical next-round export entrypoint for Creator R30. Input: prior reviewed baseline identity, new real re-edit candidate, exact Media application/render evidence, Growth selected-envelope digest, current review/re-edit round and source/brief lineage.
+2. Deterministically build the R21 baseline-vs-reedit bundle and immediately materialize the R22 self-contained operator directory/archive in one command.
+3. Output a machine-readable media.review_session_package.r23.v1 index binding:
+   - source/brief lineage;
+   - review round;
+   - baseline candidate/render;
+   - challenger candidate/render;
+   - R21 bundle/package digest;
+   - R22 materialized directory/archive digest;
+   - blinded A/B attachment hashes/sizes;
+   - prompt digest;
+   - sealed mapping digest;
+   - exact producer SHA/CI.
+4. Exact replay must be byte-stable. Same session/round with changed candidate/evidence is a conflict.
+5. Reject identical baseline/challenger bytes, stale parent lineage, missing R19 application evidence, wrong Growth handoff digest, round skips and path escapes.
+6. Provide round-0 and round-1/round-2 rehearsal fixtures using actual real MP4 bytes. No model/browser/provider call.
+7. Preserve sealed mapping machine-side only; model prompt must not leak baseline/challenger identity.
+8. No human quality claim, no merge.
+
+Evidence required: substantive commits/tests/docs/report, actual operator directories/archives in rehearsal, exact hashes, exact-head CI SUCCESS.
