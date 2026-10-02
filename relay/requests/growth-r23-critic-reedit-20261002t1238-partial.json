@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "growth-r23-critic-reedit-20261002t1238-partial",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; git status --short; Get-ChildItem -LiteralPath 'growth_analytics\\critic_reedit_adapter.py','tests\\test_critic_reedit_adapter_r23.py','conformance\\growth.creator_reedit_handoff.v1\\schema.json','conformance\\growth.creator_reedit_handoff.v1\\contract.json','fixtures\\critic_reedit_r23\\fixture_spec.json','docs\\CRITIC_REEDIT_ADAPTER_R23.md' -ErrorAction SilentlyContinue | ForEach-Object { Write-Output ($_.FullName + ' ' + $_.Length) }"
+    ],
+    "cwd": "E:\\growth-r23-work"
+  },
+  "timeout_ms": 10000,
+  "note": "Inspect partial extraction after malformed local patch bundle"
+}
