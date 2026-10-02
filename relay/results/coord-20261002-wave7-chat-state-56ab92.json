@@ -1,0 +1,103 @@
+{
+  "action": "shell.run",
+  "executor_result": null,
+  "id": "coord-20261002-wave7-chat-state-56ab92",
+  "live": true,
+  "reconciliation": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-02T13:00:13.710Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "coord-20261002-wave7-chat-state-56ab92"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:590de7d0f47c3e288772eaf335091739dee6d8fda6490c86e4fd20a870f4a66a",
+            "journal_sequence": 1278,
+            "previous_record_sha256": "482402363b178b1092f3450066b1a4708b4b4022f7edd77d75ab91e0c209e9d1",
+            "record_sha256": "62f46f902de83ac80f424f29a6ce4514457231ec7615e31faca8bf676dc3ffdc",
+            "recorded_at": "2026-10-02T13:00:13.799Z",
+            "request_id": "coord-20261002-wave7-chat-state-56ab92",
+            "transition": "dispatch_started"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-02T13:00:13.710Z",
+          "reason": "dispatch_started",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "coord-20261002-wave7-chat-state-56ab92"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-02T13:00:13.710Z",
+            "reason": "dispatch_started",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "coord-20261002-wave7-chat-state-56ab92"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:590de7d0f47c3e288772eaf335091739dee6d8fda6490c86e4fd20a870f4a66a",
+          "journal_sequence": 1278,
+          "previous_record_sha256": "482402363b178b1092f3450066b1a4708b4b4022f7edd77d75ab91e0c209e9d1",
+          "record_sha256": "62f46f902de83ac80f424f29a6ce4514457231ec7615e31faca8bf676dc3ffdc",
+          "recorded_at": "2026-10-02T13:00:13.799Z",
+          "request_id": "coord-20261002-wave7-chat-state-56ab92",
+          "transition": "dispatch_started"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "b8b208f5e8e734b83bde856deead0a73529cc5933a4f584b58717489b2dabf16",
+          "matched_records": 1,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 1286
+        },
+        "reason": "dispatch_started",
+        "replay_authorized": false,
+        "requestId": "coord-20261002-wave7-chat-state-56ab92",
+        "request_id": "coord-20261002-wave7-chat-state-56ab92",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": true,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-02T13:21:25.535Z",
+    "ok": true,
+    "request_id": "coord-20261002-wave7-chat-state-56ab92.relay-reconcile",
+    "started_at": "2026-10-02T13:21:25.453Z",
+    "status": "dry_run"
+  },
+  "reexecuted": false,
+  "relay_status": "interrupted_requires_reconciliation",
+  "version": "pc_relay.result.v1"
+}
