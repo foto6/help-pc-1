@@ -1,0 +1,33 @@
+EXECUTE NOW — BRIDGE R33 EXACT LIVE SESSION PREFLIGHT / COORDINATOR OPERATOR. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r33-live-session-preflight-20261002
+Exact starting HEAD: 805bf628d3d2844549b54db1112736fae0200fc7
+Exact starting CI: 37006524677 SUCCESS
+
+Exact green Media authority:
+- Media R23: foto6/video2@78c6982a91d7e3e8c037cd9ce740ee077babdccc, CI 37007419237 SUCCESS
+
+Milestone:
+1. Freeze exact Media R23 producer authority for R32 session requests by SHA + CI + contracts/schema/blob identities. Do not accept a moving branch.
+2. Add a session-spec generator that takes a verified Media R23/R24 canonical export directory and emits exact bridge.r32_multiround_live_review_session_request.v1 input for one round at a time.
+3. Add one coordinator-friendly Windows preflight command that:
+   - validates exact package/archive/source authority;
+   - discovers the configured ChatGPT profile/CDP read-only;
+   - resolves exactly one dedicated review-only conversation;
+   - verifies account marker, empty composer, no active generation/upload/error;
+   - verifies no same conversation is the active coding chat;
+   - performs zero browser mutation in preflight mode.
+4. Output a sanitized preflight record with exact conversation ID/canonical URL, profile identity, package/prompt/attachment hashes, session ID/round, and readiness state.
+5. If no suitable dedicated review chat exists, return BLOCKED_NO_REVIEW_CONVERSATION. Do NOT create one automatically.
+6. Add an explicit separate Execute mode that invokes R32 only after a passing preflight; source/CI tests must never run Execute against a real browser.
+7. Execute mode must preserve R32 at-most-once semantics; lost ack => RECONCILIATION_REQUIRED, no blind retry.
+8. Same dedicated review conversation must be reused across rounds 0..2.
+9. No live Bridge restart/cutover, no provider publish, no secrets in evidence, no merge.
+
+Evidence required:
+- substantive commits/tests/docs/report;
+- exact-head CI SUCCESS;
+- deterministic fake-CDP preflight tests;
+- one exact coordinator command for dry-run and one for explicit live Execute;
+- current milestone remains SOURCE_READY until a coordinator-run preflight/live artifact exists.
