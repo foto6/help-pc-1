@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261002-1130-open-two-new-project-chats",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst urls=[\n {name:\"Growth R23\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc\"},\n {name:\"Native R29\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc\"}\n];\nconst sleep=ms=>new Promise(r=>setTimeout(r,ms));\nconst ver=await(await fetch(\"http://127.0.0.1:17410/json/version\")).json();\nconst ws=new WebSocket(ver.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\nlet seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\nconst call=(m,a={})=>new Promise((r,j)=>{const k=seq++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\nconst out=[];\nfor(const x of urls){\n const r=await call(\"Target.createTarget\",{url:x.url});\n await sleep(1500);\n const tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\n const t=tabs.find(z=>z.id===r.targetId);\n out.push({name:x.name,id:r.targetId,actual:t?.url||null});\n}\nws.close();process.stdout.write(JSON.stringify({ok:true,out}));\n\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Open two new blank chats in canonical project for Growth R23 and Native R29 after old conversation routing became unusable"
+}
