@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261002-bridge-process-cdp-4f9c2b",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $p=Get-Process -Id 7180 -ErrorAction SilentlyContinue; $proc=if($p){[pscustomobject]@{Id=$p.Id;Name=$p.ProcessName;StartTime=$p.StartTime;CPU=$p.CPU;Responding=$p.Responding;Threads=$p.Threads.Count}}else{$null}; $cdp=$null; try{$req=[System.Net.HttpWebRequest]::Create('http://127.0.0.1:17410/json');$req.Timeout=2500;$resp=$req.GetResponse();$sr=New-Object IO.StreamReader($resp.GetResponseStream());$body=$sr.ReadToEnd();if($body.Length -gt 20000){$body=$body.Substring(0,20000)};$cdp=[pscustomobject]@{ok=$true;body=$body};$resp.Close()}catch{$cdp=[pscustomobject]@{ok=$false;error=$_.Exception.Message}}; [pscustomobject]@{process=$proc;cdp=$cdp}|ConvertTo-Json -Depth 6 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only diagnose live Bridge node process and Chrome CDP independently"
+}
