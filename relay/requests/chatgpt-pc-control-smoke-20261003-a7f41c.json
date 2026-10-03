@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-pc-control-smoke-20261003-a7f41c",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "PC Control 0.3.1 smoke: read-only capability probe"
+}
