@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$p='E:\\PC-Control-Smoke'; New-Item -ItemType Directory -Force -Path $p | Out-Null; $f=Join-Path $p 'plugin-smoke.txt'; Set-Content -LiteralPath $f -Value 'PC_CONTROL_031_OK' -Encoding UTF8; Get-FileHash -Algorithm SHA256 -LiteralPath $f | Select-Object Path,Hash | ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"Path\":\"E:\\\\PC-Control-Smoke\\\\plugin-smoke.txt\",\"Hash\":\"33866ADE42F097FEE8665667BBB7CB63FA830D71B87271010384B92A3A4D706B\"}\r\n",
+      "stdout_bytes": 125,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-03T07:47:51.935Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-03T07:47:51.841Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "chatgpt-pc-control-write-smoke-20261003-b91e2d"
+    },
+    "request_id": "chatgpt-pc-control-write-smoke-20261003-b91e2d",
+    "started_at": "2026-10-03T07:47:51.218Z",
+    "status": "completed"
+  },
+  "id": "chatgpt-pc-control-write-smoke-20261003-b91e2d",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
