@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "manhwa-capabilities-20261003-7c9d1a",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read-only capability probe before resuming the C drive manhwa worktree."
+}
