@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "chatgpt-pc-control-write-smoke-20261003-b91e2d",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p='E:\\PC-Control-Smoke'; New-Item -ItemType Directory -Force -Path $p | Out-Null; $f=Join-Path $p 'plugin-smoke.txt'; Set-Content -LiteralPath $f -Value 'PC_CONTROL_031_OK' -Encoding UTF8; Get-FileHash -Algorithm SHA256 -LiteralPath $f | Select-Object Path,Hash | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "PC Control 0.3.1 smoke: create isolated temp marker and return hash"
+}
