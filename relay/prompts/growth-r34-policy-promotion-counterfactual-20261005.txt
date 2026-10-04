@@ -1,0 +1,63 @@
+EXECUTE NOW — GROWTH R34 COUNTERFACTUAL POLICY PROMOTION / SAFE OFFLINE REPLAY GATE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r34-policy-promotion-counterfactual-20261005
+Exact starting HEAD: 8bedb5ad79023006b87b17933863ff915ab5e046
+
+Accepted parent authority:
+- contract growth.adaptive_portfolio_governor.r33.v1
+- CI 37210963972 SUCCESS
+- artifact 11306727215
+- digest sha256:132845c0aaa6d4fec5aaf60e1ade60d779183f2a637a9513e4176bd2ee569660
+- independently accepted by Hard Wave QA R5 at boss@1583c853108b0fb88507448eb8b4c61f0f07b0bc.
+
+Goal: determine whether a new Growth policy is safe enough to move from SHADOW recommendation to a future canary candidate using counterfactual/offline replay. This milestone itself remains ADVISORY/SHADOW ONLY.
+
+Required:
+1. Define growth.counterfactual_policy_promotion.r34.v1 and immutable parent R33 authority.
+2. Compare BASELINE_POLICY vs CANDIDATE_POLICY over the same frozen event corpus with exact corpus digest and same campaign/strata identities.
+3. Add off-policy / counterfactual safety:
+   - reject unsupported action regions;
+   - overlap/positivity threshold;
+   - effective sample size floor;
+   - propensity validity checks;
+   - clipped-weight sensitivity;
+   - doubly-robust or equivalent deterministic estimator with clearly documented assumptions;
+   - observational evidence never becomes causal automatically.
+4. Promotion requires BOTH:
+   - offline expected primary improvement above predeclared margin;
+   - every critical guardrail and stratum inside safety bounds.
+   Any critical reversed stratum => HUMAN_REVIEW_REQUIRED.
+5. Add uncertainty:
+   - deterministic bootstrap or analytic interval;
+   - promotion only if lower bound clears promotion margin;
+   - rollback if upper bound crosses harmful threshold;
+   - otherwise TEST_MORE.
+6. Add policy-distribution drift:
+   - compare training/reference distribution vs replay corpus;
+   - stale/shifted corpus => candidate cannot promote.
+7. Add policy-complexity budget:
+   - reject candidate that improves metric only by excessive concentration, reduced exploration, or policy rule explosion beyond frozen limits.
+8. Add leakage guards:
+   - post-outcome features;
+   - future data leakage;
+   - duplicate exposure;
+   - cross-account contamination;
+   - same event included multiple times;
+   - candidate policy trained/tuned on evaluation corpus without declared split.
+9. Add robustness suite >=30 adversarial simulations:
+   weak overlap, extreme weights, Simpson reversal, delayed outcomes, censored outcomes, novelty spike, platform drift, account drift, topic drift, hidden confounder proxy, leaked outcome feature, policy trained on eval data, tiny ESS, one critical guardrail collapse, overall positive but every key stratum negative, multiple-testing budget overspend.
+10. Emit recommendations only:
+    KEEP_BASELINE / TEST_MORE / SHADOW_CANARY_CANDIDATE / SHADOW_ROLLBACK / HUMAN_REVIEW_REQUIRED.
+    SHADOW_CANARY_CANDIDATE must NOT mutate Creator or provider state.
+11. Emit exact policy promotion envelope consumable by Creator R35 only as advisory input, bound to R33/R34 authority tuple and replay corpus digest.
+12. CI focused + full; deterministic artifact/report.
+13. No live traffic, no provider/browser mutation, no human-ground-truth claim, no merge.
+
+Completion:
+- substantive code/tests/docs/conformance/report;
+- exact final SHA + exact-head CI SUCCESS;
+- artifact id/name/digest;
+- >=30 adversarial cases;
+- exact counterfactual assumptions/limitations;
+- explicit ADVISORY_ONLY disposition.
