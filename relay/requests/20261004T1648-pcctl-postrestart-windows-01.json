@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261004T1648-pcctl-postrestart-windows-01",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Post-restart read-only window inventory"
+}
