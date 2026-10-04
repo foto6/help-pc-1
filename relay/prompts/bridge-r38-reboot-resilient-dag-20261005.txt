@@ -1,0 +1,81 @@
+EXECUTE NOW — BRIDGE R38 REBOOT-RESILIENT AGENT DAG / EXACT-ID TASK JOURNAL. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r38-reboot-resilient-dag-20261005
+Exact starting HEAD: f09d5173a47c9ed9c96ff1bdfa4561047d7f19ad
+
+Accepted parent authority:
+- contract bridge.multiround_review_orchestrator.r37.v1
+- CI 37210221945 SUCCESS
+- Ubuntu artifact 11306531222 / sha256:5dacc0a9b10d3d9a9c7b6d79f5aa7712ed772d17e55612a5ecc9292a1e8a477f
+- Windows artifact 11306161201 / sha256:bf73ba4b3d57aac4d1b9b8d39ccf596b985e4d93677061e7fd694951fe0a592a
+- independently accepted by Hard Wave QA R5.
+
+Observed real coordinator reboot incident to model:
+- Windows reboot occurred while project coordination was active.
+- PC Control recovered with equal local/remote relay heads, no reconciliation requirement, no last error.
+- CDP profile restarted with unrelated/stale tabs and duplicate unrelated conversation tabs.
+- none of the exact Creator/Media/Growth/Bridge/QA conversation IDs were initially open.
+- coordinator reopened exact IDs explicitly; no last-open/title routing was allowed.
+This is evidence for the failure mode, not permission for live mutation in CI.
+
+Goal: create a durable dependency-DAG task orchestrator for existing ChatGPT agent conversations that survives browser/PC restart without duplicate Send or wrong-chat mutation.
+
+Required:
+1. Define bridge.agent_dag_orchestrator.r38.v1.
+2. A DAG node must bind:
+   - node/task id;
+   - role;
+   - exact providerConversationId;
+   - repo/branch;
+   - exact starting authority SHA;
+   - prompt hash/task marker;
+   - dependency node ids;
+   - expected output evidence schema;
+   - stable dispatch operation id.
+3. Node states:
+   BLOCKED_DEPENDENCY / READY / DISPATCHING / RECONCILIATION_REQUIRED / ACTIVE / EVIDENCE_PENDING / ACCEPTED / NEEDS_FIX / TERMINALLY_BLOCKED.
+4. Dependency gate:
+   - never dispatch node before all required parent evidence exact-green;
+   - branch name or prose is not evidence;
+   - accept exact SHA + CI + artifact tuple only.
+5. Reboot recovery:
+   - all tab IDs lost;
+   - foreground is wrong chat;
+   - stale project slug;
+   - duplicate unrelated tabs;
+   - exact chat absent;
+   - exact chat opens via direct URL then canonical project redirect;
+   - composer not yet rendered.
+   Recovery must rediscover by exact conversation ID and recheck Runtime location before mutation.
+6. Side-effect journal:
+   - durable before Send;
+   - after click but before ack crash => RECONCILIATION_REQUIRED;
+   - on restart inspect last user message/task marker and durable outcome before any retry;
+   - identical confirmed task => no duplicate Send;
+   - changed prompt under same operation id => conflict.
+7. DAG restart semantics:
+   - restart after 0/N, 1/N, midway, all dispatched but evidence incomplete;
+   - accepted nodes remain accepted;
+   - active unknown nodes require reconciliation;
+   - blocked child nodes remain blocked until exact evidence.
+8. Evidence ingestion:
+   - exact repo SHA;
+   - exact-head CI run + conclusion;
+   - artifact IDs/names/digests;
+   - contract IDs;
+   - immutable parent authority tuple.
+   Same SHA with alternate artifact tuple must be distinguishable.
+9. Add bounded coordinator status snapshot with NO secrets and no protected-path data.
+10. Add deterministic fake-CDP/reboot chaos suite >=30 cases, including the observed reboot pattern and duplicate unrelated sticky tabs.
+11. Windows + Ubuntu CI where appropriate. R38 artifact must include journal, DAG snapshot and all chaos results.
+12. Preserve all R34-R37 exact-ID/authority invariants.
+13. No live Bridge cutover, no auto-create/delete chats, no provider publish, no credential access, no merge.
+
+Completion:
+- substantive code/tests/docs/report;
+- exact final SHA;
+- exact-head Windows + Ubuntu SUCCESS;
+- artifact IDs/digests;
+- >=30 reboot/DAG chaos scenarios;
+- explicit proof no blind replay and no wrong-chat mutation.
