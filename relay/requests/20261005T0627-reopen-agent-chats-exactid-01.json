@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261005T0627-reopen-agent-chats-exactid-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$targets=@(\n  '6abda62d-8198-83ed-aaa2-40b16f96a8a0',\n  '6abda64b-aac4-83eb-adee-dc7143ca5d2b',\n  '6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0',\n  '6abda61c-a440-83ed-9482-1d0fc7923e03',\n  '6abe03fa-9728-83eb-90d2-5ee81bbac12c'\n);\nfunction Get-ConvId([string]$url){\n  try {\n    $u=[uri]$url; $p=$u.AbsolutePath.Trim('/').Split('/');\n    if($p.Length -eq 2 -and $p[0] -eq 'c'){ return $p[1] }\n    if($p.Length -eq 4 -and $p[0] -eq 'g' -and $p[2] -eq 'c'){ return $p[3] }\n  } catch {}\n  return ''\n}\n$list=@(Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3);\n$out=@();\nforeach($cid in $targets){\n  $m=@($list | Where-Object { $_.type -eq 'page' -and (Get-ConvId $_.url) -eq $cid });\n  if($m.Count -gt 1){ throw \"duplicate exact conversation tabs: $cid\" }\n  if($m.Count -eq 1){ $out += [pscustomobject]@{conversationId=$cid;state='already_open';id=$m[0].id;url=$m[0].url}; continue }\n  $url='https://chatgpt.com/c/'+$cid;\n  $created=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17410/json/new?'+[uri]::EscapeDataString($url)) -TimeoutSec 3;\n  $out += [pscustomobject]@{conversationId=$cid;state='opened';id=$created.id;url=$created.url};\n}\n$out | ConvertTo-Json -Depth 3 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 12000,
+  "note": "Post-reboot reopen only exact known agent conversation IDs"
+}
