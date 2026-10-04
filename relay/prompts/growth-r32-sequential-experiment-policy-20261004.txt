@@ -1,0 +1,64 @@
+EXECUTE NOW — GROWTH R32 SEQUENTIAL EXPERIMENT / DRIFT-AWARE DECISION POLICY. Do not stop at a plan.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r32-sequential-experiment-policy-20261004
+Exact starting HEAD: 311606b677d6f0d97669c905265f1eb64b7ff9a4
+Parent candidate: Growth R31 exact run 37204153689 SUCCESS, artifact 11304006807 digest sha256:fab2ab2df9a4c8106352c5e6c17da3b3281f15a2b0e2015ec285304b2070334d.
+Parent R31 is pending QA-R3 acceptance. Develop source-ready only.
+
+Goal: turn post-publish learning into a statistically disciplined experiment/decision layer that can recommend future edit-policy changes without auto-mutating Creator or claiming causality from weak evidence.
+
+Required:
+1. Contract growth.sequential_experiment_policy.r32.v1.
+2. Inputs bind exact publish transaction/session/candidate/policy/version and metric schema hashes.
+3. Support two evidence modes explicitly:
+   - randomized/controlled experiment;
+   - observational monitoring.
+   Never merge them into one causal estimate.
+4. Sequential testing policy must predeclare:
+   - primary metric;
+   - guardrail metrics;
+   - minimum sample/exposure;
+   - max horizon;
+   - alpha/error budget or equivalent confidence policy;
+   - stopping boundaries;
+   - multiple-comparison correction when >1 candidate/metric.
+5. Detect and fail closed on:
+   - sample-ratio mismatch;
+   - missing/late metrics;
+   - schema drift;
+   - metric-definition change;
+   - exposure leakage;
+   - duplicate event/campaign identity;
+   - nonstationarity/drift;
+   - tiny sample;
+   - severe imbalance;
+   - repeated peeking not covered by sequential boundary.
+6. Observational mode may emit association/hypothesis only; no causal winner.
+7. Randomized mode may emit experiment-supported preference only when all gates pass.
+8. Add drift detector and policy versioning. A policy trained/evaluated under materially shifted distribution becomes STALE_POLICY_REVIEW_REQUIRED.
+9. Recommendation output:
+   - KEEP, TEST_MORE, ROLLBACK_RECOMMENDED, PROMOTE_CANDIDATE, HUMAN_REVIEW_REQUIRED;
+   - confidence/evidence summary;
+   - exact reason codes;
+   - never directly edit/publish.
+10. Add deterministic simulations:
+    - true positive uplift;
+    - null effect;
+    - early noisy uplift that reverses;
+    - SRM;
+    - missing metrics;
+    - drift after half horizon;
+    - observational confounding;
+    - multiple candidates causing false-positive risk.
+11. Anti-p-hacking tests: same data reordered = same decision; additional looks outside policy rejected; metric switching mid-test conflicts.
+12. Preserve model-review != human-ground-truth and observational != causal.
+13. CI focused + full + deterministic evidence artifact.
+14. No browser/provider mutation, no publish, no merge.
+
+Completion:
+- code/tests/docs/conformance/report;
+- exact SHA + exact-head CI SUCCESS;
+- artifact id/name/digest;
+- deterministic simulation report with accepted/rejected cases;
+- SOURCE_READY_WAITING_PARENT_QA until QA-R3 accepts Growth R31.
