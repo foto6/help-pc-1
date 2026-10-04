@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\nconst specs=[\n[\"creator\",\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\"],\n[\"media\",\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\"],\n[\"growth\",\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\"],\n[\"bridge\",\"6abda61c-a440-83ed-9482-1d0fc7923e03\"],\n[\"qa\",\"6abe03fa-9728-83eb-90d2-5ee81bbac12c\"]\n];\nconst conv=v=>{try{const u=new URL(String(v||\"\"));const p=u.pathname.split(\"/\").filter(Boolean);if(p.length===2&&p[0]===\"c\")return p[1];if(p.length===4&&p[0]===\"g\"&&p[2]===\"c\")return p[3]}catch{}return \"\"};\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const out=[];\nfor(const [name,cid] of specs){\n const ms=tabs.filter(t=>t.type===\"page\"&&conv(t.url)===cid);if(ms.length!==1){out.push({name,state:ms.length?\"duplicate\":\"missing\",count:ms.length});continue}\n const tab=ms[0],ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\n let seq=1;const p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\n try{\n  const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const bs=[...document.querySelectorAll('button')].filter(vis);const gen=bs.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||'')));const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\"true\\\"]')].find(vis)||null;const draft=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';return {generating:gen,draftLength:draft.trim().length,title:document.title,href:location.href}})())\",returnByValue:true});\n  out.push({name,...JSON.parse(rr.result.value)});\n }catch(e){out.push({name,state:\"probe_error\",error:String(e)})}\n ws.close();await new Promise(r=>setTimeout(r,40));\n}\nprocess.stdout.write(JSON.stringify(out));\n'@; $code | node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"name\":\"creator\",\"generating\":true,\"draftLength\":0,\"title\":\"Implement Publish Provider Layer\",\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\"},{\"name\":\"media\",\"generating\":true,\"draftLength\":0,\"title\":\"Deliver R11 Editor\",\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\"},{\"name\":\"growth\",\"generating\":true,\"draftLength\":0,\"title\":\"Implement Live Review Ingest\",\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\"},{\"name\":\"bridge\",\"generating\":true,\"draftLength\":0,\"title\":\"Bridge R19 Implementation Report\",\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\"},{\"name\":\"qa\",\"generating\":true,\"draftLength\":0,\"title\":\"Project Agent Supervision\",\"href\":\"https://chatgpt.com/c/6abe03fa-9728-83eb-90d2-5ee81bbac12c\"}]",
+      "stdout_bytes": 955,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-04T23:30:06.407Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-04T23:30:06.309Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261005T0632-agent-idle-check-01"
+    },
+    "request_id": "20261005T0632-agent-idle-check-01",
+    "started_at": "2026-10-04T23:30:05.551Z",
+    "status": "completed"
+  },
+  "id": "20261005T0632-agent-idle-check-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
