@@ -1,0 +1,50 @@
+EXECUTE NOW — MEDIA R25 MULTI-CANDIDATE ROUND ENGINE / DETERMINISTIC EDIT TOURNAMENT PACKAGER. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r25-multicandidate-round-engine-20261004
+Exact starting HEAD: 244acdf154741e669991b17df3ef2a47e2dfdfa9
+Exact starting authority: Media R24 accepted at CI 37195239582 SUCCESS.
+Accepted R24 canonical artifact: id 11301055747, digest sha256:fc5c9b9635d49b643e66efafe602d21ce1ef695a553f81a797bdf16d7b8cf228.
+
+Goal: turn R24 from a two-file canonical review export into a harder deterministic 2–4 candidate tournament round engine suitable for autonomous short-form editing.
+
+Milestone:
+1. Accept one source video + edit brief + prior round lineage and materialize 2–4 genuinely distinct candidate MP4s through existing real edit paths.
+2. Candidate diversity must be structural, not filename-only:
+   - cut/pacing differences;
+   - caption timing/layout strategy differences where available;
+   - crop/framing/B-roll/audio/CTA/loop differences only when supported by source + edit plan;
+   - every candidate must retain exact source and operation lineage.
+3. Add a deterministic candidate-manifest contract with exact operation graph, input/output hashes, ffprobe facts, duration, fps, dimensions, audio stream facts, caption sidecars and candidate-role blind labels.
+4. Produce pairwise/blinded review packages for a bracket:
+   - 2 candidates => one A/B review;
+   - 3–4 candidates => deterministic semifinal/final bracket;
+   - sealed candidate mapping machine-side only.
+5. Support targeted_reedit:
+   - consume exact timestamped defect directives from a prior verified review;
+   - change only declared edit regions/operations when feasible;
+   - prove unaffected regions preserve content via deterministic evidence where possible;
+   - max two re-edit rounds.
+6. Add hard technical gates before any candidate becomes reviewable:
+   - nonzero video/audio where expected;
+   - duration bounds;
+   - black/frozen frame checks;
+   - AV sync bounds;
+   - no missing source segments unless declared;
+   - valid vertical short-form output profile;
+   - deterministic archive/export verification.
+7. Add crash/restart/idempotency:
+   - interrupted candidate 3 of 4 resumes without regenerating completed candidates whose input graph hashes match;
+   - changed source/brief under same tournament identity => conflict;
+   - exact replay => byte-stable manifests/archive and no duplicate work authorization.
+8. Add adversarial fixtures: corrupt candidate, missing audio, swapped sealed mapping, duplicate candidate bytes, candidate with undeclared edit operation, stale prior-round directive, round >2.
+9. Emit exact Bridge-consumable package(s) compatible with R24 verification and future multi-review consensus.
+10. CI: focused/full tests, real encoded MP4 rehearsal for 4-candidate round plus targeted re-edit round, deterministic artifact upload.
+11. No model/browser/provider calls, no social publish, no human-quality claim, no merge.
+
+Completion evidence REQUIRED:
+- substantive code/tests/docs/conformance/report;
+- exact final SHA + exact-head CI SUCCESS;
+- artifact id/name/digest;
+- actual encoded MP4 bytes for 4 candidates and one re-edit round;
+- deterministic bracket/package identities and replay evidence.
