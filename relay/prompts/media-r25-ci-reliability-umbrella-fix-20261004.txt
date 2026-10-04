@@ -1,0 +1,47 @@
+EXECUTE NOW — MEDIA R25 CI RELIABILITY + EXTERNAL UMBRELLA CONTRACT FIX. Do not broaden product semantics.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r25-multicandidate-round-engine-20261004
+Current exact HEAD: def2f99b56c94d353b899b256689361a08822fdf
+
+Known exact evidence:
+- Run 37200019323 attempt 1: focused R25 tests passed, then demo:r25 was interrupted by runner shutdown / exit 143.
+- Coordinator reran FAILED jobs only.
+- Run 37200019323 latest attempt: all 14 R25 tests passed again; demo:r25 again received runner shutdown/cancel after ~40s.
+- This is now reproducible CI/rehearsal fragility. Do NOT change edit/product semantics merely to mask runner shutdown.
+- There is also a harmless intentional R23 replay-conflict exercise in logs; do not misdiagnose it as the R25 failure.
+
+Independent QA contract requirement:
+- external umbrella authority MUST be media.multicandidate_round.r25.v1
+- current internal/request contract(s) such as media.edit_tournament_request.r25.v1 may remain nested if exact-mapped.
+
+Required fix:
+1. Make the real-MP4 R25 rehearsal resilient to runner interruption and bounded enough for CI.
+2. Preserve the exact evidence requirement:
+   - 4 genuinely distinct encoded MP4 candidates;
+   - deterministic candidate manifests;
+   - semifinal/final blinded package identities;
+   - one targeted re-edit round;
+   - technical gates;
+   - restart/idempotency evidence.
+3. Avoid running the same expensive full render demo redundantly in one job.
+   Preferred pattern:
+   - one materialization step produces deterministic rehearsal directory/checkpoint;
+   - independent verify step consumes it without re-rendering;
+   - if useful, split materialization into restartable candidate phases so completed graph-hash-matching candidates are reused.
+4. Do NOT simply skip the real encoded rehearsal or replace it with fixture-only bytes.
+5. Add a deterministic external umbrella contract media.multicandidate_round.r25.v1 which pins/maps internal:
+   - request contract;
+   - candidate manifest;
+   - bracket/package contracts;
+   - re-edit contract;
+   - accepted Media R24 authority;
+   - exact schema/implementation hashes.
+6. Add tamper tests for umbrella -> internal mapping and ensure internal-only contract cannot masquerade as Hard Wave authority.
+7. CI should make a single expensive materialization and then verify/replay/checkpoint from the resulting directory.
+8. Add explicit resume test: simulate interruption after candidate 2/4 or 3/4 and prove completed candidate hashes are reused while unfinished work resumes.
+9. Preserve existing R24/R23 tests and deterministic fail-closed behavior.
+10. Require exact final HEAD, exact-head CI SUCCESS, artifact id/name/digest for R25 tournament evidence.
+11. No model/browser/provider calls, no social publish, no merge.
+
+Completion = exact green HEAD + real 4-candidate/re-edit artifact + restartable rehearsal + external media.multicandidate_round.r25.v1 contract + deterministic verification without a second full rerender.
