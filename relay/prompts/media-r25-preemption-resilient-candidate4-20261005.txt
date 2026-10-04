@@ -1,0 +1,46 @@
+EXECUTE NOW — MEDIA R25 PREEMPTION-RESILIENT CANDIDATE-4 / DURABLE SUBPHASE CHECKPOINTING. Do not stop at diagnosis.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r25-multicandidate-round-engine-20261004
+Current frozen observed head: dd3c9487362f6d076ddd61a4786f06ff7b1df556
+
+Evidence:
+- Permission/digest issue is FIXED. In run 37212319175 candidate-3 succeeds and candidate-4 verifies runtime.manifest, restores execute bits, validates ffmpeg/ffprobe, and starts the real candidate-4 materializer.
+- candidate-4 then receives GitHub-hosted runner shutdown/SIGTERM, exit 143.
+- This happened twice on the same exact head/run attempts, after ~30–40s of active candidate-4 work, with heartbeats present.
+- No newer branch run is cancelling it through concurrency; branch is stable at this observation.
+Therefore do NOT add another blind rerun and do NOT revert the verified runtime fix.
+
+Goal: make candidate-4 materialization durable across hostile runner preemption while preserving deterministic candidate semantics and exact lineage.
+
+Required:
+1. Measure/decompose candidate-4 work using existing deterministic plan. Predeclare ONE minimal checkpointing strategy before changing thresholds.
+2. Split candidate-4 into deterministic durable subphases such that completed expensive work can be uploaded and resumed after runner death. Options may include bounded preprocessing/filter stages, deterministic intermediate media, segment/checkpoint strategy, or another justified decomposition — but do not fake completion or use a different candidate.
+3. Every subphase must bind:
+   - exact source/candidate graph digest;
+   - exact R25 authority/round/candidate identity;
+   - exact input artifact hashes;
+   - exact ffmpeg runtime manifest hash;
+   - exact output/intermediate hashes;
+   - stable phase operation id.
+4. Exact replay of a completed phase must verify and reuse evidence, not rerender.
+5. Changed source/graph/runtime under same phase identity => conflict.
+6. Simulate/predeclare preemption after each expensive subphase and prove resume produces the same final candidate semantic output and canonical manifest as uninterrupted execution. If byte identity across decomposition is technically impossible, make the output contract explicit and prove deterministic semantic identity with exact encoded artifact hash under the new frozen method; do not claim byte identity without evidence.
+7. Preserve verify-runtime-digest BEFORE chmod/execute.
+8. No apt replacement in continuation jobs. Continue using exact checkpoint runtime.
+9. Keep candidate-3 green and do not rerender completed earlier candidates unless evidence is invalid.
+10. Final pipeline must reach:
+    candidate-4 -> initial-finalize -> targeted-evidence -> postdownload-verify
+    all SUCCESS on one exact head.
+11. Add tests for:
+    - SIGTERM/preemption after each subphase;
+    - missing/corrupt checkpoint;
+    - checkpoint from wrong graph/source/runtime;
+    - duplicate checkpoint;
+    - resumed final hash mismatch;
+    - exact replay.
+12. Freeze branch once exact-head full CI is green. No pin churn after acceptance evidence.
+13. Return exact final SHA + CI run + final R25 artifact IDs/names/digests + measured phase durations and restart evidence.
+14. No browser/model/provider call, no publish, no merge.
+
+Do not solve this by merely increasing timeout or issuing repeated reruns.
