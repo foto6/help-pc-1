@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261004-r34-directsend-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=FE12696C7D472CD989EC75492BE7D43B --prompt=E:\\pc-github-relay\\relay\\prompts\\creator-r34-multiplatform-publish-saga-20261004.txt"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Preverified exact chat successor dispatch: Creator R34"
+}
