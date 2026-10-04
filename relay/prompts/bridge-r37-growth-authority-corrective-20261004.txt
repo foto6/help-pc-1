@@ -1,0 +1,38 @@
+EXECUTE NOW — BRIDGE R37 FROZEN GROWTH R30 AUTHORITY CORRECTIVE. Do not stop at a plan.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r37-multiround-review-orchestrator-20261004
+Current exact HEAD: 0aa1715767d740fc59ed711efe55a5ca90c6210d
+
+Independent coordinator finding:
+R37 runtime currently pins Growth R30:
+- source SHA 9313c984932d9b1bbf18f7c382533f830337971e
+- CI 37203148651
+- artifact 11303821387
+- digest sha256:1f70878edcc45abe0db8371a7c8db6325c38ad18e774a148efbac30393a37c03
+
+But the independently QA-frozen accepted Growth R30 authority is:
+- source SHA 9313c984932d9b1bbf18f7c382533f830337971e
+- CI 37202813275
+- artifact 11303044114
+- digest sha256:0d8a0ff48c5ade7ec4d2440227f4409d63f1b67153de1308cd53d1a4b3f57646
+- contract growth.consensus_review.r30.v1
+
+Same source SHA does NOT make alternate CI/artifact evidence interchangeable.
+
+Required:
+1. Replace every authoritative R37 runtime/docs/tests/readiness pin with the exact QA-frozen Growth R30 authority above.
+2. Do not weaken authorityMatches or allow "same SHA" equivalence.
+3. Add deterministic regression:
+   - accepted exact QA authority passes;
+   - same source SHA + alternate CI fails;
+   - same source SHA + alternate artifact ID fails;
+   - same source SHA + alternate digest fails;
+   - mixed accepted/alternate tuple fails atomically with stable error code.
+4. Ensure serialized R37 evidence records all four authority dimensions: SHA + CI + artifact ID + artifact digest + contract.
+5. Preserve sealed mapping protections and all R34-R36/R37 multiround invariants.
+6. Require new exact HEAD and Windows + Ubuntu exact-head CI SUCCESS.
+7. Publish readiness/evidence artifacts with exact final SHA and corrected Growth authority.
+8. No live Bridge restart/deploy/repoint/cutover. No browser/provider mutation. No merge.
+
+Completion requires exact final SHA + exact run ID(s) + artifact IDs/digests + regression proof.
