@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261004-1722-exact-chat-third-poll",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst convs={\"creator\":\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"media\":\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"bridge\":\"6abda61c-a440-83ed-9482-1d0fc7923e03\"};\nconst tabs=await (await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst out={};\nfor(const [name,conv] of Object.entries(convs)){\n const tab=tabs.find(t=>t.type===\"page\"&&(t.url||\"\").includes(conv));\n if(!tab){out[name]={found:false};continue}\n const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\n let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n const call=(m,a={})=>new Promise((r,j)=>{const k=seq++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\n const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\\\"true\\\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});const txt=c?((('value'in c)?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});const generating=bs.some(b=>{const s=((b.getAttribute('data-testid')||'')+' '+(b.getAttribute('aria-label')||'')+' '+(b.innerText||'')).toLowerCase();return s.includes('stop')||s.includes('останов')});return {href:location.href,composer_text:txt,composer_length:txt.length,generating}})())\",returnByValue:true});\n out[name]={found:true,tab_id:tab.id,state:JSON.parse(rr.result.value)};\n ws.close();\n}\nprocess.stdout.write(JSON.stringify(out));\n\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Third read-only exact-chat poll Creator Media Bridge"
+}
