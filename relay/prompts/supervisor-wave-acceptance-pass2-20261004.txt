@@ -1,0 +1,23 @@
+EXECUTE NOW — SUPERVISOR WAVE ACCEPTANCE PASS 2. Do not acknowledge only.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/supervision
+
+Fresh coordinator evidence:
+- Growth R29 already accepted at 3e4a8ad6d73b058c953abeadba7a60abe567adbc, CI 37195373334 SUCCESS, artifact 11301225456 / sha256:40fb5e5c7ab7ccf7a02514f9b5a40eb8fc3207373c63391a17606fb12a6d0e55.
+- Creator R31 current HEAD: 34973398c3cec35364d950f4e9296bde744a07c1, two commits ahead of 50c17852..., substantive R31 implementation/tests/docs exists; Creator chat is still generating.
+- Media R24 current HEAD: 244acdf154741e669991b17df3ef2a47e2dfdfa9, 18 commits ahead of 78c6982..., substantive exporter/verifier/tests/docs/conformance exists; Media chat is now idle.
+- Bridge R34 current HEAD: 4e2a37545cc0cdd940cf6e86d40e0d620d6c94ae, two commits ahead of 805bf628..., substantive exact-ID routing implementation/tests/workflow/docs exists; Bridge chat is now idle.
+- IMPORTANT CORRECTION: the real Bridge R34 conversation ID used by the successful follow-up is 6abda61c-a440-83ed-9482-1d0fc7923e03. Your previous checkpoint accidentally recorded 6abda61c-a440-83ed-b365-d423b7563c4b. Correct the durable record.
+
+Milestone:
+1. Independently verify exact-head CI for Media R24 and Bridge R34. Do not accept queued/in-progress/failing runs.
+2. For Media R24 require exact-head SUCCESS plus artifact identity/digest where workflow produces it; verify its canonical export is deterministic and post-download verifier is wired.
+3. For Bridge R34 require exact-head SUCCESS for the R34 workflow and preserved validation. Verify regression covers wrong/sticky conversation and zero mutation before exact-ID proof.
+4. Check Creator R31 exact-head CI status, but do not interrupt its still-running chat. Accept only if exact head is green and milestone evidence complete.
+5. Correct the wrong Bridge conversation ID in boss checkpoint(s) with a new correcting commit; do not rewrite history.
+6. If Media or Bridge fails CI, send one focused corrective follow-up to the exact existing chat only after exact conversation-ID verification and idle/empty composer. Do not create replacement chats.
+7. Do not integrate/cut over live Bridge yet. No merge. SpectraTrack remains paused.
+8. Produce a new checkpoint listing ACCEPTED / NEEDS_FIX / ACTIVE for Creator, Media, Growth, Bridge with exact SHA, CI run ID, artifact IDs/digests, and blockers.
+
+Acknowledgement prose is zero progress. Return durable commit/SHA/CI/artifact evidence.
