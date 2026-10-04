@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261004-1713-exact-chat-readonly-state",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst convs={\"creator\":\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"media\":\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"growth\":\"6abda63c-98d8-83ed-b365-d423b7563c4b\",\"bridge\":\"6abda61c-a440-83ed-9482-1d0fc7923e03\"};\nconst tabs=await (await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst out={};\nfor(const [name,conv] of Object.entries(convs)){\n  const matches=tabs.filter(t=>t.type===\"page\" && (t.url||\"\").includes(conv));\n  out[name]={conversation_id:conv,matches:[]};\n  for(const tab of matches){\n    try{\n      const ws=new WebSocket(tab.webSocketDebuggerUrl);\n      await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\n      let seq=1,p=new Map();\n      ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n      const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\n      const expr=`JSON.stringify((()=> {\n        const composer=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\"true\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});\n        const composerText=composer ? ((('value' in composer)?composer.value:(composer.innerText||composer.textContent||''))||'') : '';\n        const buttons=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});\n        const generating=buttons.some(b=>{\n          const x=((b.getAttribute('data-testid')||'')+' '+(b.getAttribute('aria-label')||'')+' '+(b.innerText||'')).toLowerCase();\n          return x.includes('stop')||x.includes('останов');\n        });\n        const msgs=[...document.querySelectorAll('[data-message-author-role]')].slice(-8).map(m=>({\n          role:m.getAttribute('data-message-author-role'),\n          text:(m.innerText||m.textContent||'').trim().replace(/\\\\s+/g,' ').slice(0,900)\n        }));\n        return {\n          href:location.href,\n          title:document.title,\n          composer_found:!!composer,\n          composer_text:composerText,\n          composer_length:composerText.length,\n          generating,\n          last_messages:msgs\n        };\n      })())`;\n      const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});\n      out[name].matches.push({tab_id:tab.id,tab_url:tab.url,state:JSON.parse(rr.result.value)});\n      ws.close();\n    }catch(e){\n      out[name].matches.push({tab_id:tab.id,tab_url:tab.url,error:String(e)});\n    }\n  }\n}\nprocess.stdout.write(JSON.stringify(out));\n\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only exact conversation-ID state for Creator Media Growth Bridge"
+}
