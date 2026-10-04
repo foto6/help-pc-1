@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261004-growth-r32-directsend-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=47D4D77A89DEA38F0D78177935651327 --prompt=E:\\pc-github-relay\\relay\\prompts\\growth-r32-sequential-experiment-policy-20261004.txt"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Preverified exact chat successor dispatch: Growth R32"
+}
