@@ -1,0 +1,122 @@
+{
+  "action": "windows.list",
+  "executor_result": {
+    "action": "windows.list",
+    "data": {
+      "windows": [
+        {
+          "app_name": null,
+          "hwnd": 7212424,
+          "pid": 4412,
+          "title": "C:\\WINDOWS\\system32\\cmd.exe ",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 853786,
+          "pid": 4412,
+          "title": "E:\\manhwa короче надро переделывать | foto6",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 3934802,
+          "pid": 4412,
+          "title": "PC Control - Start and Check",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 1573864,
+          "pid": 9672,
+          "title": "PC-Control — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 65784,
+          "pid": 9672,
+          "title": "Program Manager",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 526946,
+          "pid": 19996,
+          "title": "Project Agent Supervision - Google Chrome",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 66824,
+          "pid": 11068,
+          "title": "Proxifier",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 198134,
+          "pid": 14964,
+          "title": "Steam",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 1706618,
+          "pid": 14692,
+          "title": "Диспетчер задач",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 12715646,
+          "pid": 13268,
+          "title": "Друзья - Discord",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 131902,
+          "pid": 9888,
+          "title": "Интерфейс ввода Windows",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 198350,
+          "pid": 12116,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 327724,
+          "pid": 10764,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 396082,
+          "pid": 16932,
+          "title": "Отчёт о проверке — Mozilla Firefox",
+          "visible": true
+        }
+      ]
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-04T09:51:36.649Z",
+    "ok": true,
+    "request_id": "20261004T1648-pcctl-postrestart-windows-01",
+    "started_at": "2026-10-04T09:51:36.646Z",
+    "status": "completed"
+  },
+  "id": "20261004T1648-pcctl-postrestart-windows-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
