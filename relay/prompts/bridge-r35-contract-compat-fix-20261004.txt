@@ -1,0 +1,44 @@
+EXECUTE NOW — BRIDGE R35 EXTERNAL CONTRACT COMPATIBILITY FIX. Do not broaden scope.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r35-multiagent-exactid-chaos-20261004
+Current exact HEAD: f19c5f7877fb80c8a0678c24a056b5bb52d87b91
+Current exact-head CI: 37199414378 SUCCESS on Ubuntu + Windows.
+Current artifacts:
+- Ubuntu 11302406483 digest sha256:5f1ccfca1f3fda5e46824781c13dadfd30f669d774ed3720292a4a070bd2c146
+- Windows 11301643055 digest sha256:1912aacb7d2a7b658938d6584455fe13d2e68c0725500f2a5daf02bc70e4e740
+
+Independent QA rejects this head with E_CONTRACT_ID_MISMATCH:
+- observed wire/internal batch contract: bridge.r35_multiagent_exactid_dispatch_batch.v1
+- predeclared external Hard Wave contract: bridge.multiagent_dispatch.r35.v1
+
+Do NOT paper over this by blind renaming. Preserve existing internal batch/journal/result/snapshot schema identities and replay compatibility.
+
+Required fix:
+1. Add a canonical external umbrella contract bridge.multiagent_dispatch.r35.v1.
+2. It must deterministically pin/map the internal:
+   - bridge.r35_multiagent_exactid_dispatch_batch.v1
+   - journal
+   - result
+   - supervisor snapshot
+   schema IDs and their exact hashes.
+3. External contract must explicitly encode:
+   - providerConversationId sole mutation authority;
+   - exact-ID pre-mutation verification;
+   - duplicate exact-ID tabs fail closed;
+   - per-agent at-most-once operation identity;
+   - RECONCILIATION_REQUIRED on unknown Send;
+   - blind replay forbidden;
+   - batch has no global success unless every required dispatch has durable evidence.
+4. Add compatibility tests:
+   - valid umbrella/internal mapping accepted;
+   - changed internal schema hash rejected;
+   - changed internal contract ID rejected;
+   - legacy/internal-only batch cannot masquerade as external Hard Wave authority;
+   - exact replay remains stable.
+5. Keep current chaos scenarios and R34 invariants unchanged.
+6. Update readiness artifact/report to expose external umbrella ID plus nested internal IDs.
+7. Require new exact-head CI SUCCESS Windows + Ubuntu and new artifact ids/digests.
+8. No live Bridge restart/deploy/repoint/cutover, no conversation creation/deletion, no merge.
+
+Completion = new exact HEAD + exact-head dual-platform SUCCESS + external bridge.multiagent_dispatch.r35.v1 authority + compatibility evidence + no weakening of R35/R34 safety.
