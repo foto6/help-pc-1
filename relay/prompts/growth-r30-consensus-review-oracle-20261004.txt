@@ -1,0 +1,68 @@
+EXECUTE NOW — GROWTH R30 MULTI-REVIEW CONSENSUS ORACLE / DISAGREEMENT GATE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r30-consensus-review-oracle-20261004
+Exact starting HEAD: 3e4a8ad6d73b058c953abeadba7a60abe567adbc
+Exact starting authority: Growth R29 accepted at CI 37195373334 SUCCESS, artifact 11301225456 digest sha256:40fb5e5c7ab7ccf7a02514f9b5a40eb8fc3207373c63391a17606fb12a6d0e55.
+
+Accepted upstream authorities:
+- Media R24: 244acdf154741e669991b17df3ef2a47e2dfdfa9, CI 37195239582 SUCCESS, canonical artifact 11301055747 digest sha256:fc5c9b9635d49b643e66efafe602d21ce1ef695a553f81a797bdf16d7b8cf228.
+- Bridge R34: 4e2a37545cc0cdd940cf6e86d40e0d620d6c94ae, CI 37196102639 SUCCESS, exact-ID routing only, no live cutover.
+
+Goal: make model-based selection substantially more robust before Creator re-edit/publish handoff. This is NOT human ground truth and must never claim human parity.
+
+Milestone:
+1. Add a deterministic consensus layer that can ingest 3 independent model-review results for the SAME exact Media R24 blinded package/round.
+2. Each review must be bound to:
+   - exact session/package/round identity;
+   - exact review conversation ID;
+   - exact Bridge R34 producer SHA/CI/contracts;
+   - exact prompt bytes/hash;
+   - exact A/B attachment hashes/sizes;
+   - exact response bytes/hash;
+   - explicit model/provider metadata when available.
+3. Require reviewer independence:
+   - three distinct review conversation IDs;
+   - no duplicated capture/response digest;
+   - same package/round and sealed mapping lineage;
+   - no reviewer can see sealed A/B role mapping.
+4. Normalize each response into a strict structured vote:
+   - winner A/B/tie/insufficient_evidence;
+   - confidence 0..1;
+   - timestamped defect set;
+   - requested targeted edits;
+   - policy/format validity.
+5. Predeclare a deterministic aggregation rule BEFORE fixtures:
+   - unanimous high-confidence winner => executable selected handoff;
+   - 2-of-3 majority with bounded confidence/disagreement => executable only if explicit gates pass;
+   - tie, malformed, excessive disagreement, conflicting defect direction, or low confidence => human_review / non-publishable;
+   - never silently drop a dissenting review.
+6. Add a disagreement score and audit trail explaining exactly why a winner was or was not accepted.
+7. Enforce idempotency:
+   - same 3 captures => byte-stable consensus result;
+   - reordered inputs => same semantic result and canonical ordering;
+   - changed capture under same reviewer/session identity => conflict;
+   - duplicate reviewer/capture => reject.
+8. Emit a Creator-consumable envelope only when consensus gate passes. Preserve inner canonical contracts and outer exact R30 authority metadata.
+9. Add negative/adversarial tests:
+   - 3 identical copied reviews;
+   - 2 reviewers secretly same conversation;
+   - one malformed response;
+   - one stale package hash;
+   - swapped A/B mapping;
+   - 2-1 split with high disagreement;
+   - unanimous low confidence;
+   - contradictory timestamped edit directives;
+   - response replay with changed bytes;
+   - wrong round/order.
+10. Add one command that consumes a directory of exactly three verified R29/R34 review results and emits CONSENSUS_ACCEPTED or HUMAN_REVIEW_REQUIRED plus full evidence.
+11. CI must run focused + full tests and publish a deterministic R30 evidence artifact.
+12. No browser mutation, no model call, no provider publish, no human-rating claim, no merge.
+
+Completion evidence REQUIRED:
+- substantive implementation/tests/docs/conformance/report;
+- exact final HEAD;
+- exact-head CI SUCCESS;
+- artifact id/name/digest;
+- deterministic rehearsal with one accepted-consensus case and multiple rejected/adversarial cases;
+- explicit statement that model consensus != human ground truth.
