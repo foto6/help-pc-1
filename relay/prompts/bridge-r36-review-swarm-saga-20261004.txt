@@ -1,0 +1,68 @@
+EXECUTE NOW — BRIDGE R36 DURABLE 3-REVIEW ATTACHMENT SAGA / FAN-OUT FAN-IN. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r36-review-swarm-saga-20261004
+Exact starting HEAD: bfb9f45899991dd3d3fefc3daa716ddcf871fd0e
+Parent R35 exact CI: 37202788532 SUCCESS
+Parent artifacts:
+- Ubuntu 11303323354 / sha256:7ecaeca5527d2d399e3ea6a0e47b154f5bf85c1c4af75e4d64c12b7d95e955c7
+- Windows 11303193653 / sha256:6aec8f0d932d8f1ddb9d3b064a6c2c526843c315f9a309b3d437a8131e7f62cf
+Parent external contract: bridge.multiagent_dispatch.r35.v1
+
+IMPORTANT: parent is exact-green but still WAITING_PARENT_QA until independent Hard Wave QA-R2 accepts it. Do not claim live cutover authority.
+
+Goal: compose exact-ID dispatch + file attachment + response capture into one crash-safe saga for three independent model-review conversations.
+
+Milestone:
+1. Define bridge.review_swarm_saga.r36.v1.
+2. Input one verified blinded review package and exactly 3 reviewer targets.
+3. Each reviewer target must have:
+   - exact providerConversationId;
+   - profile/account identity;
+   - stable operation IDs for attachment and Send;
+   - exact prompt hash;
+   - exact attachment hash/size set;
+   - independence identity.
+4. Durable saga states per reviewer:
+   DISCOVERED -> ATTACHMENT_PREPARED -> ATTACHMENT_APPLIED -> PROMPT_PREPARED -> SEND_COMMITTING -> RECONCILIATION_REQUIRED or SENT_CONFIRMED -> RESPONSE_CAPTURED -> VERIFIED.
+5. Global saga may advance to fan-in only when all 3 required reviewers reach VERIFIED with distinct conversation IDs and distinct response/capture digests.
+6. At-most-once semantics cover BOTH file attachment and Send:
+   - unknown after file selection must reconcile DOM/provider-visible attachment state before retry;
+   - unknown after Send click => RECONCILIATION_REQUIRED, blind resend forbidden;
+   - same operation ID + changed file/prompt => hard conflict.
+7. Restart recovery:
+   - all CDP tab IDs change;
+   - one target only discoverable through sidebar/search;
+   - one reviewer is still generating;
+   - one target has duplicate exact-ID tabs;
+   - browser crashes after attachment but before prompt;
+   - connection drops after Send;
+   - response appears after coordinator restart.
+8. Enforce mutation identity before every attachment/composer/Send action using R34/R35 exact-ID rules.
+9. Capture response bytes deterministically and bind:
+   - conversation ID;
+   - request/prompt/package identity;
+   - response text/hash;
+   - observed message identity if available;
+   - capture time metadata;
+   - exact saga operation lineage.
+10. Reject cross-review contamination:
+   - response from wrong conversation;
+   - copied response digest;
+   - swapped package;
+   - stale round;
+   - same reviewer target reused twice;
+   - same response message consumed by two reviewer slots.
+11. Add fan-in envelope compatible with Growth R30 three-review consensus, but do not depend on branch names. Parent/consumer authority is exact contract+SHA/CI/artifact evidence.
+12. Add deterministic fake-CDP chaos harness with at least 25 scenarios, including unknown attachment outcome and unknown Send outcome.
+13. Add read-only saga status command showing each reviewer state, blocker and next safe action; no secrets.
+14. CI Windows + Ubuntu focused + full; deterministic saga evidence artifacts.
+15. No live Bridge deploy/restart/repoint/cutover. No new ChatGPT conversation creation. No live provider publish. No merge.
+
+Completion:
+- substantive code/tests/docs/schema/report;
+- exact final SHA;
+- exact-head Windows+Ubuntu SUCCESS;
+- artifacts ids/names/digests;
+- proof that unknown attachment/Send never causes blind replay;
+- status SOURCE_READY_WAITING_PARENT_QA until independent R35 parent acceptance exists.
