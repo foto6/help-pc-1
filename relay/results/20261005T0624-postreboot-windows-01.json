@@ -1,0 +1,129 @@
+{
+  "action": "windows.list",
+  "executor_result": {
+    "action": "windows.list",
+    "data": {
+      "windows": [
+        {
+          "app_name": null,
+          "hwnd": 11406190,
+          "pid": 10536,
+          "title": "C:\\WINDOWS\\system32\\cmd.exe ",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 1313716,
+          "pid": 10536,
+          "title": "E:\\manhwa короче надро переделывать | foto6",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 6883794,
+          "pid": 2836,
+          "title": "manhwa — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 9964130,
+          "pid": 10536,
+          "title": "PC Control - Start and Check",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 65824,
+          "pid": 2836,
+          "title": "Program Manager",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 66694,
+          "pid": 9224,
+          "title": "Proxifier",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 66908,
+          "pid": 21348,
+          "title": "Steam",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 197588,
+          "pid": 1700,
+          "title": "Диспетчер задач",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 131794,
+          "pid": 20280,
+          "title": "Друзья - Discord",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 131568,
+          "pid": 6756,
+          "title": "Интерфейс ввода Windows",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 1772664,
+          "pid": 15488,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 2559300,
+          "pid": 22088,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 1051774,
+          "pid": 13792,
+          "title": "Отчёт о проверке - Google Chrome",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 2032508,
+          "pid": 5940,
+          "title": "Собрать и доработать MCP — Mozilla Firefox",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 851984,
+          "pid": 14996,
+          "title": "‎На стояНке (Александр Стояк) @ ‎Носок С мылом (1266690)",
+          "visible": true
+        }
+      ]
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-04T23:21:59.665Z",
+    "ok": true,
+    "request_id": "20261005T0624-postreboot-windows-01",
+    "started_at": "2026-10-04T23:21:59.658Z",
+    "status": "completed"
+  },
+  "id": "20261005T0624-postreboot-windows-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
