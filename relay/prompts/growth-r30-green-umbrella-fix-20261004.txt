@@ -1,0 +1,34 @@
+EXECUTE NOW — GROWTH R30 EXACT-GREEN + EXTERNAL CONTRACT COMPATIBILITY FIX. Do not broaden scope.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r30-consensus-review-oracle-20261004
+Current exact HEAD: 9e5f798adf4c5a94ca05f06f495965d4121f1674
+
+Known failure evidence:
+- Run 37200038820 failed on prior SHA because test_contract_docs_workflow_are_wired asserted that .github/workflows/tests.yml explicitly contains test_consensus_review_oracle_r30.py.
+- Exact assertion: self.assertIn("test_consensus_review_oracle_r30.py", workflow).
+- Current latest commit only adds lineage flags to the R30 contract; it does NOT by itself prove this workflow wiring fixed.
+
+Independent QA compatibility requirement:
+- external umbrella contract MUST be growth.consensus_review.r30.v1
+- internal implementation/oracle schema IDs may remain growth.consensus_review_oracle.r30.v1 if clearly nested and deterministically mapped.
+- Do not simply rename internal persisted schema IDs in a way that breaks existing fixtures/replay.
+
+Required fix:
+1. Add explicit focused R30 test execution to the workflow before full suite.
+2. Add/verify deterministic R30 evidence artifact upload on exact-head CI.
+3. Introduce an external authority/umbrella contract growth.consensus_review.r30.v1 that pins:
+   - internal oracle contract version(s);
+   - aggregation policy hash;
+   - review/consensus schema hashes;
+   - accepted Media R24 / Growth R29 / Bridge R34 authority pins;
+   - 3-review independence rules;
+   - disagreement/human-review gates;
+   - model-consensus-is-not-human-ground-truth invariant.
+4. Add tests proving external umbrella -> internal oracle mapping is exact and tamper-detecting.
+5. Preserve all current R30 semantics and R29 lineage. No threshold tuning and no relaxed gates.
+6. Run focused + full tests.
+7. Require exact final HEAD CI SUCCESS and artifact id/name/digest.
+8. No browser/model/provider mutation, no merge.
+
+Completion = changed exact HEAD + exact-head SUCCESS + deterministic R30 artifact + external contract ID growth.consensus_review.r30.v1 + no regression.
