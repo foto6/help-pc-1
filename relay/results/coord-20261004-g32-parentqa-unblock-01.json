@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=47D4D77A89DEA38F0D78177935651327 --prompt=E:\\pc-github-relay\\relay\\prompts\\growth-r32-parent-qa-unblock-20261004.txt"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "PRE {\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"title\":\"Implement Live Review Ingest\",\"high\":true,\"stop\":false,\"composer\":true,\"draft\":\"\\n\"}\nCLICK {\"ok\":true,\"aria\":\"Отправить\",\"testid\":\"\"}\nSTART {\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"title\":\"Implement Live Review Ingest\",\"high\":true,\"stop\":true,\"composer\":true,\"draft\":\"\\n\"}\n",
+      "stdout_bytes": 475,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-04T14:17:08.265Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-04T14:17:08.169Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261004-g32-parentqa-unblock-01"
+    },
+    "request_id": "coord-20261004-g32-parentqa-unblock-01",
+    "started_at": "2026-10-04T14:16:54.875Z",
+    "status": "completed"
+  },
+  "id": "coord-20261004-g32-parentqa-unblock-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
