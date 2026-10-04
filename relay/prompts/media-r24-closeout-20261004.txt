@@ -1,0 +1,17 @@
+EXECUTE NOW — MEDIA R24 EXACT-HEAD CLOSEOUT. Do not stop at status prose.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r24-canonical-live-artifact-20261002
+Current observed HEAD: 244acdf154741e669991b17df3ef2a47e2dfdfa9
+
+R24 implementation is already substantive (exporter/verifier/tests/docs/conformance/workflow). Close it out, do not redesign it.
+
+Required:
+1. Check exact-head GitHub Actions for current HEAD.
+2. If green: report exact run ID, artifact ID/name/digest for media-r24-canonical-live-review-export, and post-download verification evidence.
+3. If failing: inspect exact failing job/log and make the minimum justified fix on this branch only, then require a new exact-head SUCCESS.
+4. Preserve deterministic archive, sealed mapping machine-side only, sanitized bridge handoff, actual encoded MP4 rehearsal, non-human-ground-truth flags.
+5. No browser/model/provider call, no social publish, no merge.
+6. Do not claim READY from queued/in-progress CI.
+
+Completion = exact final HEAD + exact-head SUCCESS run + artifact identity/digest + verifier evidence.
