@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "boss-20261004-1718-readonly-task-presence",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst items=[{\"name\":\"creator\",\"conv\":\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"needle\":\"CREATOR R31\"},{\"name\":\"media\",\"conv\":\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"needle\":\"MEDIA R24 CANONICAL LIVE REVIEW ARTIFACT EXPORT\"},{\"name\":\"bridge\",\"conv\":\"6abda61c-a440-83ed-9482-1d0fc7923e03\",\"needle\":\"BRIDGE R34\"}];\nconst tabs=await (await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst out={};\nfor(const it of items){\n const tab=tabs.find(t=>t.type===\"page\"&&(t.url||\"\").includes(it.conv));\n if(!tab){out[it.name]={found:false};continue}\n const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\n let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n const call=(m,a={})=>new Promise((r,j)=>{const k=seq++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\n const expr=`JSON.stringify((()=>{const needle=\"\";return {body:(document.body.innerText||'')}})())`;\n const rr=await call(\"Runtime.evaluate\",{expression:\"document.body.innerText||''\",returnByValue:true});\n const body=String(rr.result.value||\"\");\n const idx=body.indexOf(it.needle);\n out[it.name]={found:true,needle:it.needle,present:idx>=0,excerpt:idx>=0?body.slice(Math.max(0,idx-250),idx+Math.min(1800,it.needle.length+1600)).replace(/\\s+/g,' '):null};\n ws.close();\n}\nprocess.stdout.write(JSON.stringify(out));\n\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only search exact chats for R31 R24 R34 task text presence"
+}
