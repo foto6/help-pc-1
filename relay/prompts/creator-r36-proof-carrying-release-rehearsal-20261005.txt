@@ -1,0 +1,144 @@
+EXECUTE NOW — CREATOR R36 PROOF-CARRYING RELEASE REHEARSAL / CROSS-REPO AUTHORITY BUNDLE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r36-proof-carrying-release-rehearsal-20261005
+Exact starting HEAD: 4793b7cb1735d21db6d211244018591b80c329a4
+
+Accepted parent Creator authority:
+- contract creator.release_escrow_canary.r35.v1
+- CI 37244869884 SUCCESS
+- artifact 11318269083
+- digest sha256:06753496d0d9cbe94d8b8a5218b10f5b38fa7455d98c89684374c6ba92965e0e
+
+Accepted advisory Growth authority:
+- Growth R34 repo foto6/video3
+- exact SHA 9ff243bc5ec6977bc5f0eb8f16cd5e51aa0dcdfc
+- contract growth.counterfactual_policy_promotion.r34.v1
+- CI 37244660304 SUCCESS
+- artifact 11318054384
+- digest sha256:6fc329964c14ce7c11f27fd2dd47235912470a377c6a1f5a6f3e66f4481f5ac9
+
+Accepted orchestration Bridge authority:
+- Bridge R38 repo foto6/WebAIBridge
+- exact SHA f4f6070a975ac2c5bd8323777db1514c4733e427
+- contract bridge.agent_dag_orchestrator.r38.v1
+- CI 37244988343 SUCCESS
+- Ubuntu artifact 11318149497 / sha256:aaca65ba7f3beaa9f7cb393325a7f44872b5874fe6881c586dab7c56e79bdbe4
+- Windows artifact 11318049994 / sha256:384c0cdcc6759541953d415dab0ad96dffdef48bd467017b9ea5a6047615da85
+
+Independent QA authority:
+- boss@1ac2b7b643fc6310c12fe7896e8df248733319e0
+- CI 37245504251 SUCCESS
+- artifact 11318449571
+- digest sha256:35fddf5c1dd67b81664b8131d6016e3824cbf84e00b7864d95dc97d6f4dcab22
+- R6 fixture contains Creator R35/Growth R34/Bridge R38 exact green tuples.
+Media R25 remains UNACCEPTED and MUST NOT be consumed as live authority.
+
+Goal: create a proof-carrying end-to-end RELEASE REHEARSAL bundle that composes accepted Creator R35 + Growth R34 advisory + Bridge R38 orchestration into a deterministic, auditable, offline/fake-provider release rehearsal. It must prove what would be allowed and blocked without causing any real external effect.
+
+Required:
+1. Define creator.proof_carrying_release_rehearsal.r36.v1.
+2. Build immutable authority envelope containing exact tuples for:
+   - Creator R35;
+   - Growth R34;
+   - Bridge R38;
+   - QA R6;
+   - explicit Media authority state = UNACCEPTED / NOT_CONSUMED.
+3. Input release intent:
+   - winner render/source lineage;
+   - exact render hash;
+   - target platforms/accounts;
+   - release schedule policy;
+   - Growth R34 advisory envelope digest;
+   - R35 escrow/release operation id;
+   - Bridge R38 DAG task identity;
+   - policy revision;
+   - rehearsal id.
+4. Proof graph:
+   every stage emits a content-addressed proof node:
+   INTENT_FROZEN -> AUTHORITY_VERIFIED -> ESCROW_REHEARSED -> CANARY_REHEARSED -> CANARY_RECONCILED -> EXPANSION_REHEARSED -> FINAL_REHEARSAL_VERDICT.
+   Each node binds parent digests and exact authority tuples.
+5. No hidden trust:
+   - branch name is not authority;
+   - SUCCESS from wrong SHA rejected;
+   - same SHA alternate artifact tuple rejected;
+   - stale Growth advisory rejected;
+   - stale/alternate Bridge artifact tuple rejected;
+   - Media R25 cannot be substituted because unaccepted.
+6. Fake-provider canary:
+   simulate provider responses only.
+   Rehearse:
+   - success;
+   - timeout/unknown after request accepted;
+   - delayed ack;
+   - duplicate ack;
+   - wrong account/platform;
+   - partial multi-platform expansion;
+   - provider operation-id mismatch.
+   Unknown => reconciliation proof, never retry authorization.
+7. Bridge DAG integration boundary:
+   - represent release rehearsal as DAG nodes;
+   - parent exact evidence required before child can run;
+   - reboot/restart between every stage;
+   - accepted prior node remains immutable;
+   - no title/foreground/tabId authority.
+8. Growth advisory boundary:
+   - SHADOW_CANARY_CANDIDATE may affect rehearsal recommendation only;
+   - Growth evidence can NEVER set live_authorization=true;
+   - rollback/human-review recommendation must veto rehearsal progression where declared.
+9. Schedule/time:
+   - frozen release window;
+   - simulated clock crossing window;
+   - stale policy revision;
+   - schedule drift;
+   - timezone offset mismatch;
+   - delayed ack after window close.
+   All must have deterministic fail-closed results.
+10. Proof completeness:
+   FINAL_REHEARSAL_VERDICT may be:
+   - REHEARSAL_PASS_SOURCE_READY
+   - REHEARSAL_BLOCKED_AUTHORITY
+   - REHEARSAL_BLOCKED_POLICY
+   - REHEARSAL_RECONCILIATION_REQUIRED
+   - HUMAN_REVIEW_REQUIRED
+   Never LIVE_READY.
+11. Add proof verifier:
+   independent verifier consumes only bundle bytes and frozen public authority metadata; detects:
+   - missing node;
+   - reordered node;
+   - parent digest tamper;
+   - authority tuple swap;
+   - artifact digest swap;
+   - changed render bytes;
+   - changed account/platform set;
+   - changed schedule;
+   - changed Growth advisory.
+12. Add deterministic adversarial matrix >=35 cases including:
+   wrong R35 parent, wrong R34 artifact, wrong R38 Windows artifact, same SHA alternate run, stale policy, Media authority smuggling, fake provider duplicate/late ack, unknown effect, child-before-parent, reboot midway, changed render after escrow, changed account after canary, proof-node truncation, proof graph cycle, conflicting rehearsal ID replay.
+13. Idempotency:
+   identical rehearsal input -> identical canonical proof bundle;
+   same rehearsal id with changed bytes/authority/policy -> conflict.
+14. Emit machine-readable:
+   - authority-envelope.json
+   - release-intent.json
+   - proof-graph.json
+   - fake-provider-journal.json
+   - final-rehearsal-verdict.json
+   - adversarial-results.json
+   - conformance manifest.
+15. CI focused + full; deterministic artifact.
+16. No real provider/network/browser mutation.
+17. No credential access.
+18. No live publish.
+19. No Media R25 authority consumption.
+20. No merge.
+
+Completion evidence REQUIRED:
+- substantive implementation/tests/docs/report;
+- exact final SHA;
+- exact-head CI SUCCESS;
+- artifact id/name/digest;
+- >=35 deterministic adversarial cases;
+- proof verifier evidence;
+- explicit REHEARSAL_PASS_SOURCE_READY only, never LIVE_READY;
+- explicit provider_effects=0 and live_authorization=false.
