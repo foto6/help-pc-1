@@ -1,0 +1,104 @@
+{
+  "action": "shell.run",
+  "executor_result": null,
+  "id": "20261004T1606-pcctl-healthcheck-01",
+  "live": true,
+  "reconciliation": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-04T09:06:19.970Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261004T1606-pcctl-healthcheck-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:b1bab2436a54b1a850bb157d60b298ea9c340933513911f757b90b0b9b24f3f3",
+            "journal_sequence": 1304,
+            "previous_record_sha256": "808f270694273b8cc533640a60c65cf1aa2f6db51eea1ee6f529a598f60538fe",
+            "record_sha256": "e95d8fbe7c7047250c9a0e82a104655a531dfaaf23c0129f7a4b20784475d60a",
+            "recorded_at": "2026-10-04T09:06:20.047Z",
+            "request_id": "20261004T1606-pcctl-healthcheck-01",
+            "transition": "dispatch_started"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-04T09:06:19.970Z",
+          "reason": "dispatch_started",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "20261004T1606-pcctl-healthcheck-01"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-04T09:06:19.970Z",
+            "reason": "dispatch_started",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "20261004T1606-pcctl-healthcheck-01"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:b1bab2436a54b1a850bb157d60b298ea9c340933513911f757b90b0b9b24f3f3",
+          "journal_sequence": 1304,
+          "previous_record_sha256": "808f270694273b8cc533640a60c65cf1aa2f6db51eea1ee6f529a598f60538fe",
+          "record_sha256": "e95d8fbe7c7047250c9a0e82a104655a531dfaaf23c0129f7a4b20784475d60a",
+          "recorded_at": "2026-10-04T09:06:20.047Z",
+          "request_id": "20261004T1606-pcctl-healthcheck-01",
+          "transition": "dispatch_started"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "5cc25a0894d9c7e9f05e0e562f5a41a4d378ea8306f94bd91d9cc94cd67e522d",
+          "matched_records": 1,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 1304
+        },
+        "reason": "dispatch_started",
+        "replay_authorized": false,
+        "requestId": "20261004T1606-pcctl-healthcheck-01",
+        "request_id": "20261004T1606-pcctl-healthcheck-01",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": true,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-04T09:42:22.816Z",
+    "ok": true,
+    "request_id": "20261004T1606-pcctl-healthcheck-01.relay-reconcile",
+    "started_at": "2026-10-04T09:42:22.725Z",
+    "status": "dry_run"
+  },
+  "reexecuted": false,
+  "relay_status": "interrupted_requires_reconciliation",
+  "replay_authorized": false,
+  "version": "pc_relay.result.v1"
+}
