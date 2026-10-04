@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261004T2116-coordinator-live-state-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst specs=[\n[\"media\",\"3C5D3BBC1630D07059CF439F33D2BB52\"],\n[\"creator\",\"FE12696C7D472CD989EC75492BE7D43B\"],\n[\"growth\",\"47D4D77A89DEA38F0D78177935651327\"],\n[\"bridge\",\"31C151217B506B65D8728A5E869409D6\"],\n[\"qa\",\"D9EEF94FD4C947A958C36E0224A44AA6\"]\n];\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json(),out=[];\nfor(const [name,id] of specs){\n const tab=tabs.find(t=>t.id===id); if(!tab){out.push({name,state:\"missing\"});continue}\n const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let n=1,p=new Map();\n ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n const call=(method,params={})=>new Promise((r,j)=>{const k=n++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\n const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const v=e=>{if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const bs=[...document.querySelectorAll('button')].filter(v);const generating=bs.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||'')));const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\"true\\\"]')].find(v)||null;const draft=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';return {title:document.title,href:location.href,generating,draftLength:draft.trim().length}})())\",returnByValue:true});\n out.push({name,...JSON.parse(rr.result.value)});ws.close();await new Promise(r=>setTimeout(r,40));\n}\nprocess.stdout.write(JSON.stringify(out));\n'@;$code|node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only coordinator live state"
+}
