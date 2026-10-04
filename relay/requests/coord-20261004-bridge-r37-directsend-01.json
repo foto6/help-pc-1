@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261004-bridge-r37-directsend-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=31C151217B506B65D8728A5E869409D6 --prompt=E:\\pc-github-relay\\relay\\prompts\\bridge-r37-multiround-review-orchestrator-20261004.txt"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Preverified exact chat successor dispatch: Bridge R37"
+}
