@@ -1,0 +1,83 @@
+EXECUTE NOW — CREATOR R32 AUTONOMOUS TOURNAMENT COORDINATOR / CRASH-RECOVERABLE CLOSED LOOP. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r32-autonomous-tournament-coordinator-20261004
+Exact starting HEAD: ed6959472ac958b4f5a8dcae5cee38e7430372d1
+Exact starting CI: 37196521535 SUCCESS
+R31 source-ready artifact: id 11300752904, digest sha256:8e3b0fdfd2149b3810d3de9bc8b015c82ebb97fa699fd80f38e9056264d4f296
+
+Accepted current authorities:
+- Media R24: 244acdf154741e669991b17df3ef2a47e2dfdfa9, CI 37195239582 SUCCESS.
+- Growth R29: 3e4a8ad6d73b058c953abeadba7a60abe567adbc, CI 37195373334 SUCCESS.
+- Bridge R34: 4e2a37545cc0cdd940cf6e86d40e0d620d6c94ae, CI 37196102639 SUCCESS.
+
+Parallel next-wave contracts expected, but NOT yet authoritative until exact green SHA/CI/artifact evidence exists:
+- Media R25: media.multicandidate_round.r25.v1
+- Growth R30: growth.consensus_review.r30.v1
+- Bridge R35: bridge.multiagent_dispatch.r35.v1
+Never trust a branch name. If exact green next-wave authorities are unavailable, implement/validate the coordinator against frozen contract fixtures and finish as WAITING_UPSTREAM_GREEN, never fake integration evidence.
+
+Goal: one durable autonomous state machine for:
+SOURCE -> 2–4 EDIT CANDIDATES -> BLINDED REVIEW DISPATCH -> 3-REVIEW CONSENSUS -> TARGETED RE-EDIT (max 2) -> NEXT REVIEW ROUND -> WINNER -> PUBLISH HANDOFF.
+
+Milestone:
+1. Define creator.autonomous_tournament.r32.v1 with durable session identity and immutable source/brief hashes.
+2. Persist a crash-safe append-only/session ledger. Every transition must record:
+   - session/tournament/round/re-edit-round;
+   - exact producer authority SHA/CI/contracts/blob identities;
+   - exact input/output artifact hashes;
+   - operation/idempotency key;
+   - previous-state digest and new-state digest;
+   - timestamp only as metadata, never identity.
+3. Enforce state machine transitions. No illegal jump directly from source to publish handoff, no round >2, max two targeted re-edits.
+4. Media boundary:
+   - request deterministic 2–4 candidate package;
+   - consume only verified media.multicandidate_round.r25.v1 when R25 becomes green, otherwise strict R24/R31 fixture compatibility for development;
+   - reject duplicate candidate bytes, stale source, undeclared edit graph, tampered sealed mapping.
+5. Bridge boundary:
+   - build a dispatch batch for three independent review conversations;
+   - each dispatch has stable operation ID and exact conversation ID;
+   - RECONCILIATION_REQUIRED from any lost/unknown Send must halt consensus advancement; never blind retry.
+6. Growth boundary:
+   - consume exactly one consensus result bound to all three review captures;
+   - only CONSENSUS_ACCEPTED may produce executable winner/re-edit handoff;
+   - HUMAN_REVIEW_REQUIRED / malformed / disagreement / stale authority are non-publishable.
+7. Targeted re-edit:
+   - translate verified timestamped defect directives into a bounded edit request;
+   - preserve unaffected operation graph lineage;
+   - increment re-edit-round exactly once;
+   - max 2; a third request fails closed.
+8. Winner path:
+   - emit canonical final.mp4 identity + existing publish handoff contract;
+   - DO NOT live publish in this milestone.
+   - tie / insufficient evidence / human_review / reconciliation-required never emit publish-ready handoff.
+9. Crash/restart/idempotency:
+   - crash after candidate package persisted but before review dispatch;
+   - crash after 1/3 dispatches;
+   - lost ack after Send;
+   - crash after all reviews but before consensus ingest;
+   - crash after targeted edit but before next package;
+   - crash after winner handoff persisted.
+   Recovery must resume from durable evidence and never duplicate side effects.
+10. Conflict rules:
+   - same operation ID + changed prompt/package/capture => conflict;
+   - same session/round + changed candidate set => conflict;
+   - changed upstream authority under frozen session => conflict;
+   - exact replay => byte-stable state/result.
+11. Add a deterministic chaos rehearsal that simulates the entire two-round path with at least:
+   - 4 initial candidates;
+   - 3 independent reviewers;
+   - first consensus requests targeted re-edit;
+   - second round produces winner;
+   - injected crash + lost-ack reconciliation in between.
+12. Add a machine-readable coordinator status command returning exact state, blockers, next permitted action, and required authority evidence.
+13. Tests must include adversarial state corruption, stale authority, duplicate review, swapped mapping, changed bytes, illegal transition, third re-edit, publish attempt under unresolved reconciliation.
+14. CI focused + full; publish deterministic R32 evidence artifact.
+15. No browser/provider mutation from CI, no live publish, no human-ground-truth claim, no merge.
+
+Completion evidence REQUIRED:
+- substantive implementation/tests/docs/conformance/report;
+- exact final HEAD + exact-head CI SUCCESS;
+- artifact id/name/digest;
+- deterministic chaos rehearsal proving resume/no duplicate effect;
+- exact status: AUTONOMOUS_LOOP_SOURCE_READY if next-wave authorities are still pending, or FULL_NEXT_WAVE_PINNED only if exact green R25/R30/R35 authorities are independently proven.
