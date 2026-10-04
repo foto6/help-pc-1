@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261005T0625-cdp-tabs-postreboot-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; try { $a=Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3; @($a | Where-Object {$_.type -eq 'page'} | Select-Object id,title,url) | ConvertTo-Json -Depth 3 -Compress } catch { [pscustomobject]@{error=$_.Exception.Message} | ConvertTo-Json -Compress }"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Post-reboot read-only CDP tab inventory"
+}
