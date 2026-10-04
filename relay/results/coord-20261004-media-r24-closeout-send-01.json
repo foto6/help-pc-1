@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\nimport fs from \"node:fs\";\nconst cid=\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\",prompt=fs.readFileSync(\"E:\\\\pc-github-relay\\\\relay\\\\prompts\\\\media-r24-closeout-20261004.txt\",\"utf8\"),marker=\"MEDIA R24 EXACT-HEAD CLOSEOUT\";\nconst sleep=ms=>new Promise(r=>setTimeout(r,ms)),norm=s=>String(s||\"\").replace(/\\s+/g,\" \").trim();\nconst conv=v=>{try{const u=new URL(String(v||\"\"));const p=u.pathname.split(\"/\").filter(Boolean);if(p.length===2&&p[0]===\"c\")return p[1];if(p.length===4&&p[0]===\"g\"&&p[2]===\"c\")return p[3]}catch{}return \"\"};\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const ms=tabs.filter(t=>t.type===\"page\"&&conv(t.url)===cid);\nif(ms.length!==1){process.stdout.write(JSON.stringify({state:ms.length?\"BLOCKED_DUPLICATE\":\"BLOCKED_MISSING\",count:ms.length}));process.exit(7)}\nconst tab=ms[0],ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1;const p=new Map();\nws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\nconst call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\nconst state=async()=>{const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\"true\\\"]')].find(vis)||null;const draft=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const bs=[...document.querySelectorAll('button')].filter(vis);const gen=bs.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||'')));const msgs=[...document.querySelectorAll('[data-message-author-role]')];const users=msgs.filter(m=>m.getAttribute('data-message-author-role')==='user');const lastUser=users.length?((users[users.length-1].innerText||users[users.length-1].textContent||'').trim()):'';return {href:location.href,title:document.title,draft,generating:gen,composer:!!c,lastUser}})())\",returnByValue:true});return JSON.parse(rr.result.value)};\nlet s=await state();\nif(s.lastUser.includes(marker)){ws.close();await sleep(50);process.stdout.write(JSON.stringify({state:\"ALREADY_PRESENT\"}));process.exit(0)}\nif(s.generating){ws.close();await sleep(50);process.stdout.write(JSON.stringify({state:\"BUSY_NO_SEND\"}));process.exit(4)}\nif(!s.composer||norm(s.draft)){ws.close();await sleep(50);process.stdout.write(JSON.stringify({state:\"BLOCKED_DRAFT_OR_NO_COMPOSER\",draftLength:norm(s.draft).length}));process.exit(5)}\nawait call(\"Runtime.evaluate\",{expression:\"(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\"true\\\"]')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});if(!c)return false;c.focus();return true})()\",returnByValue:true});\nawait call(\"Input.insertText\",{text:prompt});await sleep(350);s=await state();\nif(norm(s.draft)!==norm(prompt)){ws.close();await sleep(50);process.stdout.write(JSON.stringify({state:\"BLOCKED_READBACK\"}));process.exit(6)}\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});await call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});\nlet post=null;for(let i=0;i<18;i++){await sleep(350);post=await state();if(post.generating||post.lastUser.includes(marker))break}\nws.close();await sleep(50);process.stdout.write(JSON.stringify({state:post.lastUser.includes(marker)?\"SENT_CONFIRMED\":post.generating?\"SEND_STARTED\":\"SEND_NOT_CONFIRMED\",generating:post.generating,draftLength:norm(post.draft).length}));\n'@; $code | node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"state\":\"SEND_STARTED\",\"generating\":true,\"draftLength\":0}",
+      "stdout_bytes": 58,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-04T10:49:40.299Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-04T10:49:40.210Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261004-media-r24-closeout-send-01"
+    },
+    "request_id": "coord-20261004-media-r24-closeout-send-01",
+    "started_at": "2026-10-04T10:49:38.041Z",
+    "status": "completed"
+  },
+  "id": "coord-20261004-media-r24-closeout-send-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
