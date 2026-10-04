@@ -1,0 +1,75 @@
+EXECUTE NOW — CREATOR R35 RELEASE ESCROW / CANARY TRANSACTION CONTROLLER. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r35-release-escrow-canary-20261005
+Exact starting HEAD: 77dfe83d582eac98e60728974efc77345612b364
+
+Accepted parent authority:
+- contract creator.multiplatform_publish_saga.r34.v1
+- CI 37209289425 SUCCESS
+- artifact 11305609870
+- digest sha256:366dc6b7f43982c23489f7119a04805b4be9b8eed2717f61a9db3a0e6ece1032
+- independently accepted by Hard Wave QA R5 at boss@1583c853108b0fb88507448eb8b4c61f0f07b0bc / CI 37211964139 / artifact 11306289580.
+
+Also accepted for read-only policy input:
+- Growth R33 exact authority video3@8bedb5ad79023006b87b17933863ff915ab5e046 / CI 37210963972 / artifact 11306727215 / digest sha256:132845c0aaa6d4fec5aaf60e1ade60d779183f2a637a9513e4176bd2ee569660.
+Do not trust later moving branch heads without new QA evidence.
+
+Goal: add a durable release-escrow and canary transaction controller above R34 so a future live publisher can safely stage, validate, authorize, execute and reconcile multi-platform releases without duplicate publish or unsafe compensation.
+
+This milestone remains FAKE_PROVIDER / SOURCE_READY ONLY. No real provider network mutation, credentials, live publish, or user-account changes.
+
+Required:
+1. Define creator.release_escrow_canary.r35.v1 with immutable release intent:
+   - source/tournament/winner render hash;
+   - exact R34 authority tuple;
+   - exact Growth R33 advisory tuple + decision digest;
+   - platform set and release policy;
+   - schedule window;
+   - revision id;
+   - release operation id;
+   - policy digest.
+2. Separate durable phases:
+   PREPARED -> ESCROWED -> PREFLIGHT_GREEN -> CANARY_ELIGIBLE -> CANARY_COMMITTING -> CANARY_CONFIRMED -> EXPANSION_ELIGIBLE -> EXPANSION_COMMITTING -> FULLY_CONFIRMED
+   plus HUMAN_REVIEW_REQUIRED / RECONCILIATION_REQUIRED / TERMINALLY_BLOCKED.
+   Illegal skips must fail closed.
+3. Escrow gate:
+   - no provider effect from PREPARED/ESCROWED;
+   - exact render bytes/hash and metadata frozen;
+   - later metadata/render drift under same release identity => conflict;
+   - Growth advisory cannot authorize live mutation by itself.
+4. Canary semantics:
+   - deterministic one-platform canary chosen only from declared release policy;
+   - canary confirmation required before expansion;
+   - partial/unknown canary outcome => RECONCILIATION_REQUIRED;
+   - NEVER blind retry unknown commit.
+5. Expansion semantics:
+   - remaining required platforms may proceed only after durable canary confirmation;
+   - each provider operation has stable idempotency key and exact expected account/platform identity;
+   - one platform failure cannot silently re-target another.
+6. Compensation:
+   - metadata-only reversible compensation may be represented if provider contract proves it;
+   - destructive delete/repost is NOT automatic compensation;
+   - unknown/partial commit cannot trigger blind destructive cleanup.
+7. PC/browser restart recovery:
+   - persist ledger before/after every external-effect boundary;
+   - simulate restart after escrow, after canary send before ack, after canary confirmation, and midway through expansion;
+   - resume from durable evidence with no duplicate commit.
+8. Schedule-window chaos:
+   - stale window after restart;
+   - clock crosses deadline while preflight is running;
+   - policy revision changed after escrow;
+   - account identity changed before commit;
+   all must fail closed or require human review.
+9. Add fake-provider chaos harness with >=25 scenarios, including duplicate provider confirmation, delayed confirmation, unknown response, conflicting provider ID, wrong account, changed render hash, changed platform set, stale Growth decision, downgraded R34 authority, replayed release ID with changed bytes.
+10. Emit machine-readable release status: exact state, durable evidence, unresolved operations, next permitted action, and whether any real provider effect is authorized. In this milestone it must always be false.
+11. CI focused + full; deterministic R35 artifact with full ledger/chaos evidence.
+12. No live publish, no credential access, no browser/provider mutation, no merge.
+
+Completion evidence:
+- substantive implementation/tests/docs/conformance/report;
+- exact final SHA + exact-head CI SUCCESS;
+- artifact id/name/digest;
+- >=25 deterministic chaos cases;
+- proof unknown effect => reconciliation, not retry;
+- explicit SOURCE_READY_NO_LIVE_PROVIDER disposition.
