@@ -1,0 +1,53 @@
+EXECUTE NOW — BRIDGE R37 MULTI-ROUND REVIEW ORCHESTRATOR / DURABLE FAN-OUT FAN-IN SAGA. Do not stop at a plan.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r37-multiround-review-orchestrator-20261004
+Exact starting HEAD: 32bb20c00d3570540ee4d37c1df875d6feaa8dd1
+Parent candidate: Bridge R36 exact run 37204031701 SUCCESS; artifacts Ubuntu 11304515492 / sha256:53c6eca1e658fc3670b09f58a0782f1f9a181dc650d42cc5c8335312d431686b and Windows 11304161407 / sha256:40d367ed55c0e3832a553b556835866c555b9a55306934449980d29f05192230.
+Parent R36 is pending QA-R3 acceptance. Develop source-ready only.
+
+Goal: compose R36 three-review saga into a durable bounded multi-round orchestration that can drive round0 -> consensus -> targeted re-edit -> round1/round2 while preserving exact-ID and at-most-once semantics.
+
+Dependencies:
+- accepted parent chain R35 exact-ID authority is frozen;
+- Growth R30 accepted consensus contract is frozen;
+- Media R25 is NOT accepted yet. Use frozen deterministic fixtures/adapter boundary only; do not claim live/full R25 integration until exact green authority exists.
+- Creator R32 accepted durable tournament semantics are frozen.
+
+Required:
+1. Contract bridge.multiround_review_orchestrator.r37.v1.
+2. Durable session state binds source/tournament/round, package digest, reviewer set, operation IDs, parent authority SHAs/CI/artifacts.
+3. Each round contains one R36 three-review saga and one exact Growth R30 consensus result.
+4. Allowed path:
+   ROUND_PACKAGE_READY -> REVIEW_SWARM_ACTIVE -> REVIEW_SWARM_VERIFIED -> CONSENSUS_READY -> CONSENSUS_ACCEPTED
+   then either WINNER_READY or TARGETED_REEDIT_REQUIRED -> NEXT_ROUND_WAITING.
+5. max review rounds 0..2 and max targeted re-edits 2.
+6. HUMAN_REVIEW_REQUIRED/tie/insufficient_evidence/disagreement are non-advancing and non-publishable.
+7. R36 unknown attachment/Send outcome propagates to orchestration RECONCILIATION_REQUIRED; no new round and no new review dispatch until reconciled.
+8. Restart/chaos:
+   - crash after reviewer 1/3;
+   - crash after all sends before captures;
+   - crash after fan-in;
+   - consensus result persisted but ack lost;
+   - re-edit package arrives twice;
+   - stale next-round package;
+   - changed reviewer set under same round;
+   - browser restart/tab churn between rounds.
+9. Exact reviewer independence persists across a round; optionally enforce no same conversation reused across adjacent rounds unless explicitly allowed by policy and recorded.
+10. Never expose sealed A/B mapping to model-facing chats.
+11. Add read-only session status with current round, each reviewer state, reconciliation blocker, consensus state, next safe action.
+12. Fake-CDP deterministic E2E:
+   - round 0: three reviews -> targeted re-edit;
+   - round 1: three reviews -> winner;
+   - inject one lost attachment ACK and one lost Send ACK, both reconciled without replay.
+13. Media R25 adapter must remain WAITING_EXACT_GREEN until exact authority exists; fixtures cannot be relabeled real integration.
+14. Windows + Ubuntu CI; focused/full tests and evidence artifacts.
+15. No live Bridge restart/deploy/repoint/cutover; no provider chat creation/deletion; no publish; no merge.
+
+Completion:
+- substantive code/tests/docs/contracts/report;
+- exact final SHA;
+- exact-head Windows + Ubuntu SUCCESS;
+- artifact IDs/digests;
+- deterministic two-round saga proof;
+- SOURCE_READY_WAITING_PARENT_QA unless QA-R3 accepts R36; Media R25 integration status must remain explicit.
