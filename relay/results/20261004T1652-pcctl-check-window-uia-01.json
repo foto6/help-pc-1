@@ -1,0 +1,790 @@
+{
+  "action": "uia.snapshot",
+  "executor_result": {
+    "action": "uia.snapshot",
+    "data": {
+      "canonical_json": "{\"app\":{\"process_id\":4412},\"captured_at\":\"2026-10-04T09:52:10.664Z\",\"coordinate_space\":\"physical_screen_px\",\"displays\":[{\"bounds\":{\"height\":1080,\"width\":1920,\"x\":0,\"y\":0},\"display_id\":\"monitor:65537\",\"is_primary\":true}],\"nodes\":[{\"automation_id\":\"ScrollBar\",\"bounds\":{\"height\":586,\"width\":16,\"x\":1279,\"y\":223},\"class_name\":\"ScrollBar\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"По вертикали\",\"node_id\":\"uia-node:002bebb6710f8760d7e0420320edc071c7cbc62300dfe5f26a97db0b095efb0a\",\"process_id\":4412,\"role\":\"ScrollBarControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":12,\"width\":12,\"x\":403,\"y\":201},\"class_name\":\"TextBlock\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:0b67fce3d133317794177dddede9827cbbc48f44d447da9a55a97473221c38aa\",\"process_id\":4412,\"role\":\"TextControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":32,\"width\":248,\"x\":186,\"y\":191},\"class_name\":\"ListViewItem\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"PC Control - Start and Check\",\"node_id\":\"uia-node:10c547ace0395c608b8e13195daa708da3d4c7f96f7574595c602f4dd40e76c1\",\"process_id\":4412,\"role\":\"TabItemControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"CloseButton\",\"bounds\":{\"height\":24,\"width\":32,\"x\":393,\"y\":195},\"class_name\":\"Button\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"Закрыть вкладку\",\"node_id\":\"uia-node:10ec0a7e5dc5b7e1426dad9ff5a3fd424a975be5c14d2644dd3620c4ba214fe8\",\"process_id\":4412,\"role\":\"ButtonControl\",\"supports_invoke\":true,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":586,\"width\":1113,\"x\":182,\"y\":223},\"class_name\":\"\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:1282367b5c2ff426af18ac927b2f9402d9cdd436be7e12dd62caa235655630ac\",\"process_id\":4412,\"role\":\"CustomControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":30,\"width\":46,\"x\":1203,\"y\":183},\"class_name\":\"\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"Развернуть\",\"node_id\":\"uia-node:1d1200c4eb0f2f8ebd5c0ab13accb3f4acffa465f1725a333eec43904cf34c24\",\"process_id\":4412,\"role\":\"ButtonControl\",\"supports_invoke\":true,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"MinimizeButton\",\"bounds\":{\"height\":40,\"width\":46,\"x\":1157,\"y\":183},\"class_name\":\"Button\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:2058592a790784997247cde8a2ac9ddf433536c7f485fe75f0a546cbcbb6841f\",\"process_id\":4412,\"role\":\"ButtonControl\",\"supports_invoke\":true,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":8,\"width\":16,\"x\":1279,\"y\":795},\"class_name\":\"TextBlock\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:2420da654e39e5bf9290adf732e992276da7fb828cc08cf4e5240e40a69af796\",\"process_id\":4412,\"role\":\"TextControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"BackgroundImage\",\"bounds\":{\"height\":0,\"width\":0,\"x\":0,\"y\":0},\"class_name\":\"Image\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":true,\"name\":\"\",\"node_id\":\"uia-node:244270ee5151e7cc5310ab0329db7086d0b77a1641e590bee74c156268ed254c\",\"process_id\":4412,\"role\":\"ImageControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"VerticalLargeIncrease\",\"bounds\":{\"height\":554,\"width\":16,\"x\":1279,\"y\":239},\"class_name\":\"RepeatButton\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"Перемещение бегунка вертикальной прокрутки вперед на большое расстояние\",\"node_id\":\"uia-node:25f659657ca57acde61c7a6ca518a3a0ea1a1d50594748566e91cc82160d9ff6\",\"process_id\":4412,\"role\":\"ButtonControl\",\"supports_invoke\":true,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"HeaderTextBlock\",\"bounds\":{\"height\":16,\"width\":155,\"x\":225,\"y\":199},\"class_name\":\"TextBlock\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"PC Control - Start and Check\",\"node_id\":\"uia-node:395b88e251dfd25281ee548f95525ca0b4bc08091157478a6e6242d40c589613\",\"process_id\":4412,\"role\":\"TextControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"SecondaryButton\",\"bounds\":{\"height\":24,\"width\":31,\"x\":468,\"y\":195},\"class_name\":\"Button\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"Дополнительные параметры\",\"node_id\":\"uia-node:3d36667b821073bd980a8d6a5e09defd1e50b54aa1ba33f06d70819f6a16b67c\",\"process_id\":4412,\"role\":\"ButtonControl\",\"supports_invoke\":true,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"CloseButton\",\"bounds\":{\"height\":40,\"width\":46,\"x\":1249,\"y\":183},\"class_name\":\"Button\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:484e57652e4d1bf04505bb800b6413a2b5c2156d242019350e134a3271b1d7f5\",\"process_id\":4412,\"role\":\"ButtonControl\",\"supports_invoke\":true,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"VerticalSmallDecrease\",\"bounds\":{\"height\":16,\"width\":16,\"x\":1279,\"y\":223},\"class_name\":\"RepeatButton\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"Перемещение бегунка вертикальной прокрутки назад на малое расстояние\",\"node_id\":\"uia-node:4bf5cfa549814aebd08c678ec2aef663562ee7aa1937b97947638c9367ddbf8f\",\"process_id\":4412,\"role\":\"ButtonControl\",\"supports_invoke\":true,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":12,\"width\":12,\"x\":446,\"y\":201},\"class_name\":\"TextBlock\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:6a35962383ef57c2b09f887f8e073252c4fda67ef12aa33980cc20e17d92653f\",\"process_id\":4412,\"role\":\"TextControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"MenuBar\",\"bounds\":{\"height\":22,\"width\":22,\"x\":182,\"y\":190},\"class_name\":\"\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"Система\",\"node_id\":\"uia-node:6adcad4896f3837ef3b75dd8e36dd1fce1d1a4b2ca46df89f3ff5af7f51aaa1f\",\"process_id\":4412,\"role\":\"MenuBarControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":10,\"width\":10,\"x\":1175,\"y\":198},\"class_name\":\"TextBlock\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:73cd18d805bee0e3c7ae0ee1bbb6ddea850b726f7bbacd93f8705ab5f91b97f9\",\"process_id\":4412,\"role\":\"TextControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":586,\"width\":1113,\"x\":182,\"y\":223},\"class_name\":\"TermControl\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"C:\\\\WINDOWS\\\\system32\\\\cmd.exe\",\"node_id\":\"uia-node:86e42a4afffb4f9a22b9c696a17d613b9b97b204a8efdbc96f2d70b6330815a2\",\"process_id\":4412,\"role\":\"TextControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"PrimaryButton\",\"bounds\":{\"height\":24,\"width\":31,\"x\":436,\"y\":195},\"class_name\":\"Button\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:892ff75b9cdfc1bdec21613f504861149e6b2f32d2cecb6d3d09b21f202aceda\",\"process_id\":4412,\"role\":\"ButtonControl\",\"supports_invoke\":true,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"VerticalSmallIncrease\",\"bounds\":{\"height\":16,\"width\":16,\"x\":1279,\"y\":793},\"class_name\":\"RepeatButton\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"Перемещение бегунка вертикальной прокрутки вперед на малое расстояние\",\"node_id\":\"uia-node:976720cfd5e5cbf5e3883fab5bfedf045eb0d806c9802e5482bd76811b1764af\",\"process_id\":4412,\"role\":\"ButtonControl\",\"supports_invoke\":true,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"VerticalLargeDecrease\",\"bounds\":{\"height\":0,\"width\":0,\"x\":0,\"y\":0},\"class_name\":\"RepeatButton\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":true,\"name\":\"Перемещение бегунка вертикальной прокрутки назад на большое расстояние\",\"node_id\":\"uia-node:976a2981835696a8f74655c655e521eb46f4544355340ce63f97862d4afae085\",\"process_id\":4412,\"role\":\"ButtonControl\",\"supports_invoke\":true,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":30,\"width\":47,\"x\":1156,\"y\":183},\"class_name\":\"\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"Свернуть\",\"node_id\":\"uia-node:a0c212f77bd93b2a7422b1b860e1c63e4f697e22519321657633472a6ed8fd3a\",\"process_id\":4412,\"role\":\"ButtonControl\",\"supports_invoke\":true,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":22,\"width\":22,\"x\":182,\"y\":190},\"class_name\":\"\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"Система\",\"node_id\":\"uia-node:a3012106a0a309dedc0d72afa1c4788d38f55fdd9a62da5befbaaaec46c67311\",\"process_id\":4412,\"role\":\"MenuItemControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":30,\"width\":47,\"x\":1249,\"y\":183},\"class_name\":\"\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"Закрыть\",\"node_id\":\"uia-node:b2a3fb21a5b11cf902f8b9193793a3d81ae395809abb4acf72f2d66cd93edf99\",\"process_id\":4412,\"role\":\"ButtonControl\",\"supports_invoke\":true,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":40,\"width\":796,\"x\":499,\"y\":183},\"class_name\":\"DRAG_BAR_WINDOW_CLASS\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:b3a668ecdaff28afd80bf0d8177cc405299fd9a297161cb79ba3c0c874ed9200\",\"process_id\":4412,\"role\":\"PaneControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":1314152},{\"automation_id\":\"\",\"bounds\":{\"height\":10,\"width\":10,\"x\":1267,\"y\":198},\"class_name\":\"TextBlock\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:ba20c25345eb6add9f3ea58c62c2f1341ea197f0ddfcc60457715a16c0150d25\",\"process_id\":4412,\"role\":\"TextControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":626,\"width\":1113,\"x\":182,\"y\":183},\"class_name\":\"Windows.UI.Composition.DesktopWindowContentBridge\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"DesktopWindowXamlSource\",\"node_id\":\"uia-node:bb93b6ea6baf21e6c0f0cbf931233486725c8731681dfcb9cd5b011b8be4819c\",\"process_id\":4412,\"role\":\"PaneControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":4263178},{\"automation_id\":\"MaximizeButton\",\"bounds\":{\"height\":40,\"width\":46,\"x\":1203,\"y\":183},\"class_name\":\"Button\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:beb8174a4c040205463d2825f99441fe600791c738bdb39488775758bec1403b\",\"process_id\":4412,\"role\":\"ButtonControl\",\"supports_invoke\":true,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":0,\"width\":0,\"x\":0,\"y\":0},\"class_name\":\"\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":true,\"name\":\"\",\"node_id\":\"uia-node:cb521c91c862979aad6b025ac57b3d5ce37982f6cf85ff6156bb4825d74b20a7\",\"process_id\":4412,\"role\":\"TitleBarControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":8,\"width\":16,\"x\":1279,\"y\":229},\"class_name\":\"TextBlock\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:cc4fcc055738ee80e0f0b814deeaaddd91a3dffae7bb90cecc42c41d7acc0b7d\",\"process_id\":4412,\"role\":\"TextControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"NewTabButton\",\"bounds\":{\"height\":24,\"width\":63,\"x\":436,\"y\":195},\"class_name\":\"Microsoft.UI.Xaml.Controls.SplitButton\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"Новая вкладка\",\"node_id\":\"uia-node:ccfdf9b48ef60b43b41baf3fd44f2ae76b17b21166c2336d546d8c65d9c0424d\",\"process_id\":4412,\"role\":\"SplitButtonControl\",\"supports_invoke\":true,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"TabView\",\"bounds\":{\"height\":32,\"width\":317,\"x\":182,\"y\":191},\"class_name\":\"Microsoft.UI.Xaml.Controls.TabView\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:d1df478caaccdf9fa284a0ee370da4047dcdb122af71a3042147bf42b16f6ba9\",\"process_id\":4412,\"role\":\"TabControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":626,\"width\":1113,\"x\":182,\"y\":183},\"class_name\":\"Windows.UI.Input.InputSite.WindowClass\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:e09ba89ae00484a725edc2e5efcead7ee72c308c35933bb824c6a9fdba0b479e\",\"process_id\":4412,\"role\":\"PaneControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":593380},{\"automation_id\":\"\",\"bounds\":{\"height\":10,\"width\":10,\"x\":1221,\"y\":198},\"class_name\":\"TextBlock\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:e3aba548d79db38f27b92f8c368ce21adce0dbd08db5566bc900160169d7912b\",\"process_id\":4412,\"role\":\"TextControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":16,\"width\":16,\"x\":199,\"y\":199},\"class_name\":\"Image\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:f67cf934f955c8abf5d7cf027d998d45f77d4888c28ae5e237b35f3bf4255053\",\"process_id\":4412,\"role\":\"ImageControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null},{\"automation_id\":\"\",\"bounds\":{\"height\":635,\"width\":1129,\"x\":174,\"y\":182},\"class_name\":\"CASCADIA_HOSTING_WINDOW_CLASS\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"PC Control - Start and Check\",\"node_id\":\"uia-node:f80bf8a80ce1e184a7c2cece9bc49837659b7daef54fe6e0beed117e4c1dea94\",\"process_id\":4412,\"role\":\"WindowControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":3934802},{\"automation_id\":\"TabListView\",\"bounds\":{\"height\":32,\"width\":252,\"x\":184,\"y\":191},\"class_name\":\"ListView\",\"display_id\":\"monitor:65537\",\"is_enabled\":true,\"is_offscreen\":false,\"name\":\"\",\"node_id\":\"uia-node:f8db7747465516d18bd1388e437dc23887ca5a367e70726cba84a50e2cda2b73\",\"process_id\":4412,\"role\":\"ListControl\",\"supports_invoke\":false,\"supports_value\":false,\"window_handle\":null}],\"snapshot_id\":\"uia:aa585db44ece955bc144ef2786f45913ee78b223040d12c371457774b8cc9f98\",\"window\":{\"handle\":3934802,\"process_id\":4412,\"title\":\"PC Control - Start and Check\"}}",
+      "snapshot": {
+        "app": {
+          "process_id": 4412
+        },
+        "captured_at": "2026-10-04T09:52:10.664Z",
+        "coordinate_space": "physical_screen_px",
+        "displays": [
+          {
+            "bounds": {
+              "height": 1080,
+              "width": 1920,
+              "x": 0,
+              "y": 0
+            },
+            "display_id": "monitor:65537",
+            "is_primary": true
+          }
+        ],
+        "nodes": [
+          {
+            "automation_id": "ScrollBar",
+            "bounds": {
+              "height": 586,
+              "width": 16,
+              "x": 1279,
+              "y": 223
+            },
+            "class_name": "ScrollBar",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "По вертикали",
+            "node_id": "uia-node:002bebb6710f8760d7e0420320edc071c7cbc62300dfe5f26a97db0b095efb0a",
+            "process_id": 4412,
+            "role": "ScrollBarControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 12,
+              "width": 12,
+              "x": 403,
+              "y": 201
+            },
+            "class_name": "TextBlock",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:0b67fce3d133317794177dddede9827cbbc48f44d447da9a55a97473221c38aa",
+            "process_id": 4412,
+            "role": "TextControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 32,
+              "width": 248,
+              "x": 186,
+              "y": 191
+            },
+            "class_name": "ListViewItem",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "PC Control - Start and Check",
+            "node_id": "uia-node:10c547ace0395c608b8e13195daa708da3d4c7f96f7574595c602f4dd40e76c1",
+            "process_id": 4412,
+            "role": "TabItemControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "CloseButton",
+            "bounds": {
+              "height": 24,
+              "width": 32,
+              "x": 393,
+              "y": 195
+            },
+            "class_name": "Button",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "Закрыть вкладку",
+            "node_id": "uia-node:10ec0a7e5dc5b7e1426dad9ff5a3fd424a975be5c14d2644dd3620c4ba214fe8",
+            "process_id": 4412,
+            "role": "ButtonControl",
+            "supports_invoke": true,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 586,
+              "width": 1113,
+              "x": 182,
+              "y": 223
+            },
+            "class_name": "",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:1282367b5c2ff426af18ac927b2f9402d9cdd436be7e12dd62caa235655630ac",
+            "process_id": 4412,
+            "role": "CustomControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 30,
+              "width": 46,
+              "x": 1203,
+              "y": 183
+            },
+            "class_name": "",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "Развернуть",
+            "node_id": "uia-node:1d1200c4eb0f2f8ebd5c0ab13accb3f4acffa465f1725a333eec43904cf34c24",
+            "process_id": 4412,
+            "role": "ButtonControl",
+            "supports_invoke": true,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "MinimizeButton",
+            "bounds": {
+              "height": 40,
+              "width": 46,
+              "x": 1157,
+              "y": 183
+            },
+            "class_name": "Button",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:2058592a790784997247cde8a2ac9ddf433536c7f485fe75f0a546cbcbb6841f",
+            "process_id": 4412,
+            "role": "ButtonControl",
+            "supports_invoke": true,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 8,
+              "width": 16,
+              "x": 1279,
+              "y": 795
+            },
+            "class_name": "TextBlock",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:2420da654e39e5bf9290adf732e992276da7fb828cc08cf4e5240e40a69af796",
+            "process_id": 4412,
+            "role": "TextControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "BackgroundImage",
+            "bounds": {
+              "height": 0,
+              "width": 0,
+              "x": 0,
+              "y": 0
+            },
+            "class_name": "Image",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": true,
+            "name": "",
+            "node_id": "uia-node:244270ee5151e7cc5310ab0329db7086d0b77a1641e590bee74c156268ed254c",
+            "process_id": 4412,
+            "role": "ImageControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "VerticalLargeIncrease",
+            "bounds": {
+              "height": 554,
+              "width": 16,
+              "x": 1279,
+              "y": 239
+            },
+            "class_name": "RepeatButton",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "Перемещение бегунка вертикальной прокрутки вперед на большое расстояние",
+            "node_id": "uia-node:25f659657ca57acde61c7a6ca518a3a0ea1a1d50594748566e91cc82160d9ff6",
+            "process_id": 4412,
+            "role": "ButtonControl",
+            "supports_invoke": true,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "HeaderTextBlock",
+            "bounds": {
+              "height": 16,
+              "width": 155,
+              "x": 225,
+              "y": 199
+            },
+            "class_name": "TextBlock",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "PC Control - Start and Check",
+            "node_id": "uia-node:395b88e251dfd25281ee548f95525ca0b4bc08091157478a6e6242d40c589613",
+            "process_id": 4412,
+            "role": "TextControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "SecondaryButton",
+            "bounds": {
+              "height": 24,
+              "width": 31,
+              "x": 468,
+              "y": 195
+            },
+            "class_name": "Button",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "Дополнительные параметры",
+            "node_id": "uia-node:3d36667b821073bd980a8d6a5e09defd1e50b54aa1ba33f06d70819f6a16b67c",
+            "process_id": 4412,
+            "role": "ButtonControl",
+            "supports_invoke": true,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "CloseButton",
+            "bounds": {
+              "height": 40,
+              "width": 46,
+              "x": 1249,
+              "y": 183
+            },
+            "class_name": "Button",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:484e57652e4d1bf04505bb800b6413a2b5c2156d242019350e134a3271b1d7f5",
+            "process_id": 4412,
+            "role": "ButtonControl",
+            "supports_invoke": true,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "VerticalSmallDecrease",
+            "bounds": {
+              "height": 16,
+              "width": 16,
+              "x": 1279,
+              "y": 223
+            },
+            "class_name": "RepeatButton",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "Перемещение бегунка вертикальной прокрутки назад на малое расстояние",
+            "node_id": "uia-node:4bf5cfa549814aebd08c678ec2aef663562ee7aa1937b97947638c9367ddbf8f",
+            "process_id": 4412,
+            "role": "ButtonControl",
+            "supports_invoke": true,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 12,
+              "width": 12,
+              "x": 446,
+              "y": 201
+            },
+            "class_name": "TextBlock",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:6a35962383ef57c2b09f887f8e073252c4fda67ef12aa33980cc20e17d92653f",
+            "process_id": 4412,
+            "role": "TextControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "MenuBar",
+            "bounds": {
+              "height": 22,
+              "width": 22,
+              "x": 182,
+              "y": 190
+            },
+            "class_name": "",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "Система",
+            "node_id": "uia-node:6adcad4896f3837ef3b75dd8e36dd1fce1d1a4b2ca46df89f3ff5af7f51aaa1f",
+            "process_id": 4412,
+            "role": "MenuBarControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 10,
+              "width": 10,
+              "x": 1175,
+              "y": 198
+            },
+            "class_name": "TextBlock",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:73cd18d805bee0e3c7ae0ee1bbb6ddea850b726f7bbacd93f8705ab5f91b97f9",
+            "process_id": 4412,
+            "role": "TextControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 586,
+              "width": 1113,
+              "x": 182,
+              "y": 223
+            },
+            "class_name": "TermControl",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "C:\\WINDOWS\\system32\\cmd.exe",
+            "node_id": "uia-node:86e42a4afffb4f9a22b9c696a17d613b9b97b204a8efdbc96f2d70b6330815a2",
+            "process_id": 4412,
+            "role": "TextControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "PrimaryButton",
+            "bounds": {
+              "height": 24,
+              "width": 31,
+              "x": 436,
+              "y": 195
+            },
+            "class_name": "Button",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:892ff75b9cdfc1bdec21613f504861149e6b2f32d2cecb6d3d09b21f202aceda",
+            "process_id": 4412,
+            "role": "ButtonControl",
+            "supports_invoke": true,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "VerticalSmallIncrease",
+            "bounds": {
+              "height": 16,
+              "width": 16,
+              "x": 1279,
+              "y": 793
+            },
+            "class_name": "RepeatButton",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "Перемещение бегунка вертикальной прокрутки вперед на малое расстояние",
+            "node_id": "uia-node:976720cfd5e5cbf5e3883fab5bfedf045eb0d806c9802e5482bd76811b1764af",
+            "process_id": 4412,
+            "role": "ButtonControl",
+            "supports_invoke": true,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "VerticalLargeDecrease",
+            "bounds": {
+              "height": 0,
+              "width": 0,
+              "x": 0,
+              "y": 0
+            },
+            "class_name": "RepeatButton",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": true,
+            "name": "Перемещение бегунка вертикальной прокрутки назад на большое расстояние",
+            "node_id": "uia-node:976a2981835696a8f74655c655e521eb46f4544355340ce63f97862d4afae085",
+            "process_id": 4412,
+            "role": "ButtonControl",
+            "supports_invoke": true,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 30,
+              "width": 47,
+              "x": 1156,
+              "y": 183
+            },
+            "class_name": "",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "Свернуть",
+            "node_id": "uia-node:a0c212f77bd93b2a7422b1b860e1c63e4f697e22519321657633472a6ed8fd3a",
+            "process_id": 4412,
+            "role": "ButtonControl",
+            "supports_invoke": true,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 22,
+              "width": 22,
+              "x": 182,
+              "y": 190
+            },
+            "class_name": "",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "Система",
+            "node_id": "uia-node:a3012106a0a309dedc0d72afa1c4788d38f55fdd9a62da5befbaaaec46c67311",
+            "process_id": 4412,
+            "role": "MenuItemControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 30,
+              "width": 47,
+              "x": 1249,
+              "y": 183
+            },
+            "class_name": "",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "Закрыть",
+            "node_id": "uia-node:b2a3fb21a5b11cf902f8b9193793a3d81ae395809abb4acf72f2d66cd93edf99",
+            "process_id": 4412,
+            "role": "ButtonControl",
+            "supports_invoke": true,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 40,
+              "width": 796,
+              "x": 499,
+              "y": 183
+            },
+            "class_name": "DRAG_BAR_WINDOW_CLASS",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:b3a668ecdaff28afd80bf0d8177cc405299fd9a297161cb79ba3c0c874ed9200",
+            "process_id": 4412,
+            "role": "PaneControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": 1314152
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 10,
+              "width": 10,
+              "x": 1267,
+              "y": 198
+            },
+            "class_name": "TextBlock",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:ba20c25345eb6add9f3ea58c62c2f1341ea197f0ddfcc60457715a16c0150d25",
+            "process_id": 4412,
+            "role": "TextControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 626,
+              "width": 1113,
+              "x": 182,
+              "y": 183
+            },
+            "class_name": "Windows.UI.Composition.DesktopWindowContentBridge",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "DesktopWindowXamlSource",
+            "node_id": "uia-node:bb93b6ea6baf21e6c0f0cbf931233486725c8731681dfcb9cd5b011b8be4819c",
+            "process_id": 4412,
+            "role": "PaneControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": 4263178
+          },
+          {
+            "automation_id": "MaximizeButton",
+            "bounds": {
+              "height": 40,
+              "width": 46,
+              "x": 1203,
+              "y": 183
+            },
+            "class_name": "Button",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:beb8174a4c040205463d2825f99441fe600791c738bdb39488775758bec1403b",
+            "process_id": 4412,
+            "role": "ButtonControl",
+            "supports_invoke": true,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 0,
+              "width": 0,
+              "x": 0,
+              "y": 0
+            },
+            "class_name": "",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": true,
+            "name": "",
+            "node_id": "uia-node:cb521c91c862979aad6b025ac57b3d5ce37982f6cf85ff6156bb4825d74b20a7",
+            "process_id": 4412,
+            "role": "TitleBarControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 8,
+              "width": 16,
+              "x": 1279,
+              "y": 229
+            },
+            "class_name": "TextBlock",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:cc4fcc055738ee80e0f0b814deeaaddd91a3dffae7bb90cecc42c41d7acc0b7d",
+            "process_id": 4412,
+            "role": "TextControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "NewTabButton",
+            "bounds": {
+              "height": 24,
+              "width": 63,
+              "x": 436,
+              "y": 195
+            },
+            "class_name": "Microsoft.UI.Xaml.Controls.SplitButton",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "Новая вкладка",
+            "node_id": "uia-node:ccfdf9b48ef60b43b41baf3fd44f2ae76b17b21166c2336d546d8c65d9c0424d",
+            "process_id": 4412,
+            "role": "SplitButtonControl",
+            "supports_invoke": true,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "TabView",
+            "bounds": {
+              "height": 32,
+              "width": 317,
+              "x": 182,
+              "y": 191
+            },
+            "class_name": "Microsoft.UI.Xaml.Controls.TabView",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:d1df478caaccdf9fa284a0ee370da4047dcdb122af71a3042147bf42b16f6ba9",
+            "process_id": 4412,
+            "role": "TabControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 626,
+              "width": 1113,
+              "x": 182,
+              "y": 183
+            },
+            "class_name": "Windows.UI.Input.InputSite.WindowClass",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:e09ba89ae00484a725edc2e5efcead7ee72c308c35933bb824c6a9fdba0b479e",
+            "process_id": 4412,
+            "role": "PaneControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": 593380
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 10,
+              "width": 10,
+              "x": 1221,
+              "y": 198
+            },
+            "class_name": "TextBlock",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:e3aba548d79db38f27b92f8c368ce21adce0dbd08db5566bc900160169d7912b",
+            "process_id": 4412,
+            "role": "TextControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 16,
+              "width": 16,
+              "x": 199,
+              "y": 199
+            },
+            "class_name": "Image",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:f67cf934f955c8abf5d7cf027d998d45f77d4888c28ae5e237b35f3bf4255053",
+            "process_id": 4412,
+            "role": "ImageControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          },
+          {
+            "automation_id": "",
+            "bounds": {
+              "height": 635,
+              "width": 1129,
+              "x": 174,
+              "y": 182
+            },
+            "class_name": "CASCADIA_HOSTING_WINDOW_CLASS",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "PC Control - Start and Check",
+            "node_id": "uia-node:f80bf8a80ce1e184a7c2cece9bc49837659b7daef54fe6e0beed117e4c1dea94",
+            "process_id": 4412,
+            "role": "WindowControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": 3934802
+          },
+          {
+            "automation_id": "TabListView",
+            "bounds": {
+              "height": 32,
+              "width": 252,
+              "x": 184,
+              "y": 191
+            },
+            "class_name": "ListView",
+            "display_id": "monitor:65537",
+            "is_enabled": true,
+            "is_offscreen": false,
+            "name": "",
+            "node_id": "uia-node:f8db7747465516d18bd1388e437dc23887ca5a367e70726cba84a50e2cda2b73",
+            "process_id": 4412,
+            "role": "ListControl",
+            "supports_invoke": false,
+            "supports_value": false,
+            "window_handle": null
+          }
+        ],
+        "snapshot_id": "uia:aa585db44ece955bc144ef2786f45913ee78b223040d12c371457774b8cc9f98",
+        "window": {
+          "handle": 3934802,
+          "process_id": 4412,
+          "title": "PC Control - Start and Check"
+        }
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-04T09:52:10.666Z",
+    "ok": true,
+    "request_id": "20261004T1652-pcctl-check-window-uia-01",
+    "started_at": "2026-10-04T09:52:09.545Z",
+    "status": "completed"
+  },
+  "id": "20261004T1652-pcctl-check-window-uia-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
