@@ -1,0 +1,82 @@
+EXECUTE NOW — GROWTH R31 POST-PUBLISH LEARNING POLICY / DRIFT-AWARE EXPERIMENT ENGINE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r31-postpublish-learning-policy-20261004
+Exact starting HEAD: 9313c984932d9b1bbf18f7c382533f830337971e
+Parent R30 exact CI: 37202813275 SUCCESS
+Parent R30 artifact: 11303044114
+Parent R30 artifact digest: sha256:0d8a0ff48c5ade7ec4d2440227f4409d63f1b67153de1308cd53d1a4b3f57646
+Parent external contract: growth.consensus_review.r30.v1
+
+IMPORTANT: parent is exact-green but still WAITING_PARENT_QA until independent Hard Wave QA-R2 accepts it. R31 may be SOURCE_READY on this branch, but must not claim authoritative integration until that gate is green.
+
+Goal: build a conservative learning layer that can use real post-publish platform metrics to improve future edit-policy choices without pretending observational metrics prove causality.
+
+Milestone:
+1. Define growth.postpublish_learning.r31.v1.
+2. Ingest normalized publish receipts + metrics snapshots for Instagram Reels, TikTok, YouTube Shorts, bound to:
+   - exact publish transaction / external post ID;
+   - Creator winner/session/tournament lineage;
+   - edit strategy/candidate operation graph;
+   - platform/account pseudonymous identity;
+   - metric capture timestamps/window;
+   - source/provider schema version;
+   - exact artifact hashes.
+3. Normalize only comparable metrics with explicit availability/missingness:
+   - impressions/views/reach where provided;
+   - watch time / average watch / completion;
+   - likes/comments/shares/saves;
+   - follows/subscribes attributable only as platform-reported;
+   - click/CTA metrics only where present.
+   Never silently substitute one platform metric for another.
+4. Build deterministic outcome vectors by predeclared windows (e.g. early / mature) and flag censored/incomplete observations.
+5. Attribution discipline:
+   - observational performance != causal effect;
+   - historical best != guaranteed future best;
+   - no causal language unless assignment came from a valid randomized experiment contract.
+6. Add an experiment-aware learner:
+   - consume exact randomized assignment/exposure records when available;
+   - verify no treatment leakage, duplicate exposure, changed creative after assignment, or post-hoc metric-window selection;
+   - estimate bounded lift with uncertainty;
+   - minimum sample/evidence gates before preference update.
+7. Add drift detection:
+   - platform distribution shift;
+   - content-topic/source shift;
+   - metric-definition/schema drift;
+   - season/time-window shift;
+   - confidence decay for stale evidence.
+8. Output a future-edit policy suggestion, not an automatic irreversible mutation:
+   - ranked strategy priors;
+   - confidence/uncertainty;
+   - evidence IDs;
+   - forbidden conclusions;
+   - recommended next experiment.
+9. Do not let one viral/outlier post dominate. Add robust aggregation/outlier handling and minimum independent sample gate.
+10. Add exploration guard:
+   - no collapse to a single editing style solely from noisy observations;
+   - bounded exploration recommendations;
+   - deterministic seed/assignment for reproducible experiment fixtures.
+11. Negative/adversarial tests:
+   - duplicate provider post;
+   - same metrics snapshot replayed under new ID;
+   - changed winner hash after publish receipt;
+   - metric counter decreases unexpectedly;
+   - unavailable metric treated as zero;
+   - mixed 1h and 7d windows;
+   - non-random historical comparison mislabeled experiment;
+   - treatment leakage;
+   - post-hoc winner selection;
+   - one huge outlier;
+   - schema drift;
+   - stale platform definition;
+   - cross-account contamination.
+12. Emit machine-readable status: LEARNING_SOURCE_READY / WAITING_PARENT_QA / INSUFFICIENT_EVIDENCE / EXPERIMENT_EVIDENCE_READY, never “causally proven” unless randomized evidence contract passes.
+13. CI focused + full; deterministic evidence artifact with synthetic randomized and observational fixtures.
+14. No platform API/network call in CI, no live publish, no human-ground-truth claim, no merge.
+
+Completion:
+- substantive implementation/tests/docs/conformance/report;
+- exact final SHA + exact-head CI SUCCESS;
+- artifact id/name/digest;
+- explicit separation of observational vs randomized evidence;
+- deterministic drift/outlier/leakage rejection evidence.
