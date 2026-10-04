@@ -1,0 +1,112 @@
+EXECUTE NOW — BRIDGE R39 FENCED MULTI-COORDINATOR / SPLIT-BRAIN ARBITRATION. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r39-fenced-coordinator-20261005
+Exact starting HEAD: f4f6070a975ac2c5bd8323777db1514c4733e427
+
+Accepted parent authority:
+- contract bridge.agent_dag_orchestrator.r38.v1
+- CI 37244988343 SUCCESS
+- Ubuntu artifact 11318149497
+- Ubuntu digest sha256:aaca65ba7f3beaa9f7cb393325a7f44872b5874fe6881c586dab7c56e79bdbe4
+- Windows artifact 11318049994
+- Windows digest sha256:384c0cdcc6759541953d415dab0ad96dffdef48bd467017b9ea5a6047615da85
+Independent QA acceptance authority:
+- boss@b978ca713a6a0b415675573c66d3f76cd4bc4d87
+- CI 37245324472 SUCCESS
+- artifact 11319220474
+- digest sha256:0e2f68c705e3e1a03d14800dd95a97f16008c4496fd6fc5dca6eec954d309d14
+- exact-head QA workflow asserts R38 status == ACCEPTED.
+
+Goal: extend the reboot-resilient DAG with distributed ownership/fencing so two coordinators, stale processes, duplicate browser sessions, or delayed old workers can never both mutate the same agent task.
+
+This milestone is SOURCE_READY / FAKE_ADAPTER ONLY. No live Bridge cutover, no real browser mutation from CI, no provider publish.
+
+Required:
+1. Define bridge.fenced_coordinator.r39.v1.
+2. Add durable coordinator epoch/lease/fencing-token model:
+   - coordinator_instance_id;
+   - coordinator_epoch;
+   - lease_id;
+   - fencing_token monotonic within the authority domain;
+   - issued_at / expires_at;
+   - exact R38 parent tuple;
+   - task journal snapshot digest.
+3. Mutation authority:
+   - every dispatch/reconcile/accept transition requires current valid fencing token;
+   - stale token may read but cannot mutate;
+   - expired lease cannot be renewed by simply extending timestamps;
+   - reacquisition creates a new epoch/token.
+4. Split-brain:
+   simulate coordinator A and B believing they are owner.
+   Exactly one may acquire mutation authority.
+   Loser must enter READ_ONLY_STALE_OWNER or RECONCILIATION_REQUIRED.
+5. Delayed worker:
+   - old coordinator sends request before losing lease;
+   - effect/ack arrives after new owner acquired.
+   New owner must reconcile the stable operation id and durable effect evidence;
+   it must not duplicate the send or reject a genuinely completed effect merely because owner changed.
+6. Clock safety:
+   - do not trust local wall-clock alone for ownership;
+   - model monotonic/logical sequence or durable server-issued ordering;
+   - backward/forward clock jump must not resurrect stale ownership.
+7. Restart:
+   - reboot with lease expired;
+   - reboot with lease valid but no active process;
+   - crash after acquiring lease before first mutation;
+   - crash after mutation before ack;
+   - old process returns after reboot.
+   All must preserve at-most-once external effect.
+8. Duplicate coordinator/browser sessions:
+   - same providerConversationId open in different coordinator browser profiles;
+   - same exact task operation id visible in both;
+   - one coordinator sees stale tab, another canonical tab.
+   Fencing must dominate UI state. No title/foreground/tabId authority.
+9. DAG dependency authority:
+   - stale coordinator cannot mark parent ACCEPTED and unblock children;
+   - child dispatch must bind exact accepted parent evidence plus current fencing token.
+10. Ownership handoff:
+   - intentional handoff requires durable release record;
+   - unresolved operations transfer as RECONCILIATION_REQUIRED;
+   - accepted nodes remain immutable;
+   - no hidden in-memory-only transfer.
+11. Journal:
+   emit append-only bridge.coordinator_fence_journal.r39.v1 entries for ACQUIRE / RENEW / RELEASE / EXPIRE / REJECT_STALE / HANDOFF / RECONCILE_EFFECT.
+   Tampered/reordered journal must fail verification.
+12. Add stable error codes at minimum:
+   - R39_STALE_FENCING_TOKEN
+   - R39_LEASE_EXPIRED
+   - R39_SPLIT_BRAIN_REJECTED
+   - R39_EPOCH_REGRESSION
+   - R39_JOURNAL_TAMPER
+   - R39_TASK_AUTHORITY_DRIFT
+   - R39_UNKNOWN_EFFECT_RECONCILIATION_REQUIRED
+13. Deterministic chaos suite >=35 cases including:
+   simultaneous acquisition, ABA ownership, stale renewal, old process resurrection, delayed ack after handoff, duplicate exact-id tabs across profiles, clock rollback, clock jump, task prompt drift, same operation id changed payload, child unblocked by stale owner, journal truncation/reordering, lease record corruption.
+14. Add property-style deterministic state-machine tests:
+   for every generated sequence, prove:
+   - <=1 mutable owner per authority epoch;
+   - <=1 Send side effect per stable operation id;
+   - accepted evidence never regresses;
+   - stale owner cannot unblock DAG child;
+   - unknown side effect always reconciles before any retry.
+15. Windows + Ubuntu exact-head CI.
+16. Artifact must contain:
+   - fencing contract/schema;
+   - deterministic journal;
+   - chaos matrix;
+   - ownership timeline examples;
+   - exact parent R38 + QA authority.
+17. No live Bridge deploy/restart/repoint/cutover.
+18. No real ChatGPT/provider mutation from tests.
+19. No credential access.
+20. No merge.
+
+Completion evidence REQUIRED:
+- substantive code/tests/docs/report;
+- exact final SHA;
+- exact-head Ubuntu + Windows SUCCESS;
+- artifact ids/names/digests;
+- >=35 deterministic chaos cases;
+- explicit split-brain proof and delayed-ack handoff proof;
+- explicit SOURCE_READY_NO_LIVE_MUTATION disposition.
