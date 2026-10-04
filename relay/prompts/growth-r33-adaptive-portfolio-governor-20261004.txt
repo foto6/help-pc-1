@@ -1,0 +1,77 @@
+EXECUTE NOW — GROWTH R33 ADAPTIVE PORTFOLIO GOVERNOR / SAFE SHADOW PROMOTION. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r33-adaptive-portfolio-governor-20261004
+Exact starting HEAD: aacaefca808a0d71adb56fbb5b5ecf6213e874c8
+Accepted starting authority:
+- contract growth.sequential_experiment_policy.r32.v1
+- CI 37207893319 SUCCESS
+- artifact 11304917444
+- digest sha256:a697270b382b935271fc088e856720e29f9b2e6ff2c313adc93b2789234032be
+
+Goal: graduate from one sequential experiment into a portfolio-level advisory governor that can safely evaluate many simultaneous short-form experiments across accounts/platforms/topics WITHOUT creating a self-reinforcing optimization loop.
+
+This remains SHADOW/ADVISORY ONLY. No Creator mutation, provider mutation, budget allocation or live publish.
+
+Milestone:
+1. Define growth.adaptive_portfolio_governor.r33.v1.
+2. Consume only exact verified R32 decisions/campaign evidence and exact R31 post-publish lineage.
+3. Manage multiple concurrent campaigns with explicit portfolio identity, frozen policy version, campaign priority, traffic/exposure budget declarations, platform/account/topic strata and holdback groups.
+4. Add delayed/censored outcome handling:
+   - fixed metric maturity windows;
+   - incomplete cohorts cannot be compared as mature;
+   - late-arriving metrics update only declared looks;
+   - no retroactive cherry-picking.
+5. Add cross-campaign multiplicity control. Predeclare deterministic family/error accounting across campaigns/metrics; a new campaign changes the correction budget prospectively, never rewrites previous evidence.
+6. Add exploration/exploitation safety in SHADOW mode:
+   - recommendations may be KEEP / TEST_MORE / SHADOW_PROMOTE / SHADOW_ROLLBACK / HUMAN_REVIEW_REQUIRED;
+   - never live-route traffic;
+   - minimum exploration floor and maximum concentration recommendation;
+   - no winner-take-all recommendation from tiny samples.
+7. Add interference/confounding gates:
+   - same video/source participating in overlapping campaigns;
+   - cross-posting the same candidate across platforms;
+   - creator/account/topic drift;
+   - overlapping exposure identities;
+   - external campaign change during measurement.
+   Material interference => HUMAN_REVIEW_REQUIRED.
+8. Add Simpson's-paradox / aggregation guard:
+   - overall uplift cannot override materially reversed critical strata;
+   - require per-platform/account/topic evidence summaries and stable aggregation policy.
+9. Add novelty/decay gate:
+   - distinguish short-lived novelty spike from persistent effect using predeclared windows;
+   - stale policy/distribution => human review, not automatic promotion.
+10. Add rollback memory without permanent poisoning:
+   - exact failure evidence remains durable;
+   - a future genuinely new candidate/policy may be tested under a new identity;
+   - same bytes/identity replay cannot erase prior rollback.
+11. Add sequential portfolio replay/idempotency:
+   - input ordering does not alter canonical decision;
+   - same portfolio/look identity with changed campaign set/metric bytes => conflict;
+   - duplicate events/campaigns rejected.
+12. Adversarial simulation suite >=25 cases including:
+   - delayed winner illusion;
+   - censored loser;
+   - Simpson reversal;
+   - duplicated exposures between campaigns;
+   - cross-account mixing;
+   - platform shift;
+   - novelty spike then decay;
+   - metric schema/definition switch;
+   - campaign added after seeing results;
+   - alpha/error-budget overspend;
+   - observational-only evidence pretending causal;
+   - source/candidate identity reuse;
+   - conflicting R32 parent authority;
+   - stale policy;
+   - traffic concentration above safety cap.
+13. Emit one deterministic portfolio status command with campaign states, blockers, shadow recommendation, evidence maturity and exact authority tuple.
+14. CI focused + full; deterministic R33 artifact with accepted/rejected simulations.
+15. No human-ground-truth claim, no live action, no merge.
+
+Completion evidence REQUIRED:
+- substantive implementation/tests/docs/conformance/report;
+- exact final SHA + exact-head CI SUCCESS;
+- artifact id/name/digest;
+- >=25 deterministic adversarial cases;
+- explicit proof SHADOW_PROMOTE is advisory and cannot mutate Creator/provider state.
