@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261004T1655-pcctl-health-snapshot-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$repo='E:\\pc-github-relay'\n$healthPath=Join-Path $repo '.pc-relay\\health.json'\n$h=$null\nif(Test-Path $healthPath){$h=Get-Content $healthPath -Raw | ConvertFrom-Json}\n$local=(git -C $repo rev-parse HEAD).Trim()\n$remote=(git -C $repo rev-parse origin/agent/pc-github-relay).Trim()\n$req=@(git -C $repo ls-tree -r --name-only origin/agent/pc-github-relay -- relay/requests | Where-Object {$_ -like 'relay/requests/*.json'}).Count\n$res=@(git -C $repo ls-tree -r --name-only origin/agent/pc-github-relay -- relay/results | Where-Object {$_ -like 'relay/results/*.json'}).Count\n$procs=@(Get-CimInstance Win32_Process | Where-Object {$_.CommandLine -like '*github_relay.py*' -and $_.CommandLine -like '*E:\\pc-github-relay*'} | Select-Object ProcessId,ParentProcessId)\n[pscustomobject]@{\n  health_version=$h.version\n  health_pid=$h.pid\n  phase=$h.phase\n  last_sync_at=$h.last_sync_at\n  last_completed_cycle_at=$h.last_completed_cycle_at\n  last_request_id=$h.last_request_id\n  last_result_id=$h.last_result_id\n  health_request_count=$h.request_count\n  health_result_count=$h.result_count\n  health_backlog=$h.backlog\n  reconciliation_required=$h.reconciliation_required\n  last_error=$h.last_error\n  local_head=$local\n  remote_head=$remote\n  remote_requests=$req\n  remote_results=$res\n  remote_backlog=($req-$res)\n  matching_processes=$procs\n} | ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only post-restart PC Control health snapshot; distinct from interrupted checker invocation"
+}
