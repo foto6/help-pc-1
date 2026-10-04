@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261004-r25-exactfix-directsend-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Set-Location E:\\WebAIBridge\\app; node .\\data\\direct_send_existing_agent.js --target=3C5D3BBC1630D07059CF439F33D2BB52 --prompt=E:\\pc-github-relay\\relay\\prompts\\media-r25-exact-failure-fix-20261004.txt"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Exact preverified tab dispatch: Media R25 exact failure fix"
+}
