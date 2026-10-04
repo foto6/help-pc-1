@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst convs={\"creator\":\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"media\":\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"bridge\":\"6abda61c-a440-83ed-9482-1d0fc7923e03\"};\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst out={};\nfor(const [name,conv] of Object.entries(convs)){\n  const tab=tabs.find(t=>t.type===\"page\"&&(t.url||\"\").includes(conv));\n  if(!tab){out[name]={found:false};continue}\n  const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\n  let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n  const call=(m,a={})=>new Promise((r,j)=>{const k=seq++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\n  const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\"true\\\"]')].find(vis)||null;const draft=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const buttons=[...document.querySelectorAll('button')].filter(vis);const generating=buttons.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||'')));const body=document.body.innerText||'';return {href:location.href,title:document.title,generating,draft,draftLength:draft.length,creatorR31:body.includes('CREATOR R31 LIVE SESSION AUTHORITY / CONTINUATION BINDING'),mediaR24:body.includes('MEDIA R24 CANONICAL LIVE REVIEW ARTIFACT EXPORT'),bridgeR34:body.includes('BRIDGE R34 STICKY-CHAT EXACT-ID ROUTING FIX')}})())\",returnByValue:true});\n  out[name]={found:true,tab_id:tab.id,state:JSON.parse(rr.result.value)};\n  ws.close();\n}\nprocess.stdout.write(JSON.stringify(out));\n\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"creator\":{\"found\":true,\"tab_id\":\"FE12696C7D472CD989EC75492BE7D43B\",\"state\":{\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"title\":\"Implement Publish Provider Layer\",\"generating\":true,\"draft\":\"\\n\",\"draftLength\":1,\"creatorR31\":true,\"mediaR24\":false,\"bridgeR34\":false}},\"media\":{\"found\":true,\"tab_id\":\"3C5D3BBC1630D07059CF439F33D2BB52\",\"state\":{\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"title\":\"Deliver R11 Editor\",\"generating\":true,\"draft\":\"\\n\",\"draftLength\":1,\"creatorR31\":false,\"mediaR24\":true,\"bridgeR34\":false}},\"bridge\":{\"found\":true,\"tab_id\":\"31C151217B506B65D8728A5E869409D6\",\"state\":{\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\",\"title\":\"Bridge R19 Implementation Report\",\"generating\":true,\"draft\":\"\\n\",\"draftLength\":1,\"creatorR31\":false,\"mediaR24\":false,\"bridgeR34\":false}}}",
+      "stdout_bytes": 981,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-04T10:26:11.965Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-04T10:26:11.876Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261004-1740-chat-state-poll"
+    },
+    "request_id": "boss-20261004-1740-chat-state-poll",
+    "started_at": "2026-10-04T10:26:11.347Z",
+    "status": "completed"
+  },
+  "id": "boss-20261004-1740-chat-state-poll",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
