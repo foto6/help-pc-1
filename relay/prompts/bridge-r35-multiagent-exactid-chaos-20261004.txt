@@ -1,0 +1,54 @@
+EXECUTE NOW — BRIDGE R35 MULTI-AGENT EXACT-ID DISPATCH / RESTART CHAOS GATE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r35-multiagent-exactid-chaos-20261004
+Exact starting HEAD: 4e2a37545cc0cdd940cf6e86d40e0d620d6c94ae
+Exact starting authority: Bridge R34 accepted at CI 37196102639 SUCCESS.
+R34 exact-ID invariant is frozen and must not be weakened.
+
+Goal: prove the Bridge can coordinate multiple existing ChatGPT agent conversations safely under tab churn, duplicate tabs, stale project URLs, browser restart and unknown send outcomes.
+
+Milestone:
+1. Build a deterministic multi-agent dispatcher contract for N existing managed chats, each identified by providerConversationId as sole mutation authority.
+2. Support a coordinator batch containing at least Creator/Media/Growth/Bridge-like roles with:
+   - exact conversation ID;
+   - expected repository/branch;
+   - task marker/idempotency key;
+   - prompt hash;
+   - optional attachment package identity;
+   - required preflight gates.
+3. Before mutation for EACH chat:
+   - exact-ID discovery/rebind;
+   - current Runtime location recheck;
+   - empty/safe composer or exact matching pre-existing draft;
+   - no active generation;
+   - no account/profile mismatch;
+   - duplicate exact-ID tabs => fail closed, never pick one arbitrarily.
+4. At-most-once task dispatch:
+   - stable operation/request ID;
+   - if Send acknowledgement is lost after click, state becomes RECONCILIATION_REQUIRED;
+   - never resend until read-only reconciliation proves last user message/task marker or durable outcome;
+   - changed prompt under same operation ID => conflict.
+5. Restart chaos:
+   - browser restart/tab IDs all change;
+   - stale -sv project slug;
+   - correct conversation only discoverable via sidebar/search;
+   - wrong sticky chat is foreground;
+   - duplicate tabs for an unrelated conversation;
+   - exact target disappears between discovery and composer focus;
+   - connection drops immediately after Send click.
+6. Batch semantics:
+   - failure of one agent does not authorize unsafe fallback for another;
+   - report per-agent SENT_CONFIRMED / BUSY / BLOCKED / RECONCILIATION_REQUIRED;
+   - no global success unless every required dispatch has durable evidence.
+7. Add a read-only supervisor snapshot returning managed role -> expected conversation ID -> observed exact target -> generation/draft state -> branch/task marker status, with no secrets.
+8. Add deterministic fake-CDP/fixture chaos harness plus Windows and Ubuntu CI. Where Windows-specific browser semantics matter, keep a Windows lane.
+9. Preserve R27-R34 review/file-attachment/session contracts and exact-ID pre-mutation checks.
+10. No live Bridge restart/deploy/repoint/cutover. No automatic conversation creation/deletion. No provider publish. No merge.
+
+Completion evidence REQUIRED:
+- substantive code/tests/docs/report;
+- exact final HEAD;
+- exact-head CI SUCCESS on Windows + Ubuntu;
+- deterministic chaos artifact showing all scenarios and zero wrong-chat mutations;
+- explicit proof that unknown Send never causes blind replay.
