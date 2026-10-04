@@ -1,0 +1,46 @@
+EXECUTE NOW — MEDIA R25 EXACT FAILURE FIX FROM RUN 37204860475. Do not redesign the milestone and do not weaken R16.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r25-multicandidate-round-engine-20261004
+Exact failing HEAD: 1c1cb0981256b2636bd96f9879ae83fbfe68a174
+Exact failing run: 37204860475
+
+Observed failures — use these exact facts, do not guess:
+1. node-test / npm run test:r25:
+   - 15/17 pass, 2 fail.
+   - "R25 conformance manifest pins exact implementation and accepted R24 authority":
+     stale implementation blob pin mismatch:
+       actual c21aabe64f7b65973281ba5a6c2154bdfcb97ac8
+       expected 670f1cddc34a3f94e1d3a41d8c1df856f4f934ba
+   - "R25 external umbrella conformance manifest pins exact mappings and implementation blobs":
+     stale verifier blob pin mismatch:
+       actual 361cb294171afaf3269e66ed6b43f6389dac1f7f
+       expected 5767ad2866eb22a967db0d55555f99c1d8632072
+   These pins must be regenerated from the intended exact current implementation files, not patched to arbitrary values.
+2. r25-candidate-3 job:
+   - checkpoint pair-1 artifact downloaded successfully.
+   - npm run r25:candidate3 fails immediately with:
+     RenderRuntimeError candidate_batch_invalid: candidate batch must contain 2-4 candidates
+   - R25 phase generated a one-candidate R16 request for candidate-3.
+   - R16's 2–4 candidate invariant is frozen and MUST NOT be weakened.
+
+Required fix:
+A. Refresh conformance/blob identities deterministically from the exact intended files and add/keep regression proving stale pins fail.
+B. Fix phased CI architecture so candidate-3 / candidate-4 continuation does not submit an invalid one-candidate request to the R16 batch API.
+   - Prefer a legitimate underlying single-candidate render primitive/cache-resume path if already available, while preserving exactly the same R16 operation graph/cache/output identity.
+   - Otherwise choose the smallest deterministic phase design that satisfies the existing R16 2–4 contract without duplicate side-effect authorization or re-rendering completed candidates.
+   - Do NOT change R16 validator from 2–4 to 1–4 merely to make CI pass.
+C. Preserve the restart proof: after exact 2/4 checkpoint, completed candidates are reused by exact hash and only unfinished candidate work is authorized.
+D. Candidate 3 and 4 outputs must still join a deterministic 4-candidate final tournament manifest/bracket.
+E. Run focused R25 tests plus exact phased real-MP4 workflow.
+F. Require exact current HEAD SUCCESS; cancelled/older-green runs do not count.
+G. Require final artifact media-r25-multicandidate-tournament with ID/name/digest and verify:r25:dir post-download verification.
+H. No model/browser/provider call, no publish, no merge.
+
+Completion evidence:
+- new exact HEAD;
+- exact run ID SUCCESS;
+- all R25 tests green;
+- all phase jobs green;
+- final artifact ID/name/digest;
+- concise proof R16 2–4 invariant remains unchanged and no completed candidate was rerendered on resume.
