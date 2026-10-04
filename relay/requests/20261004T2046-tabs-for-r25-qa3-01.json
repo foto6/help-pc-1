@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261004T2046-tabs-for-r25-qa3-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$a=Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3; @($a | Where-Object {$_.type -eq 'page' -and ($_.url -like '*6abda64b-aac4-83eb-adee-dc7143ca5d2b*' -or $_.url -like '*6abe03fa-9728-83eb-90d2-5ee81bbac12c*')} | Select-Object id,title,url) | ConvertTo-Json -Depth 3 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only exact chat tab lookup for Media R25 and QA R3"
+}
