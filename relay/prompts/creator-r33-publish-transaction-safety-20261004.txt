@@ -1,0 +1,93 @@
+EXECUTE NOW — CREATOR R33 EXACTLY-ONCE PUBLISH TRANSACTION / TWO-PHASE COMMIT SAFETY LAYER. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r33-publish-transaction-safety-20261004
+Exact starting HEAD: f0dc1d27da6452f1de32cd887651805b47a1735d
+Exact starting authority:
+- Creator R32 CI 37199512624 SUCCESS
+- R32 artifact 11302367811
+- digest sha256:6803db334974b8dbea1c30c107ec5af00fe2cb892ed67e68540c2b2d74b18599
+- R32 contract creator.autonomous_tournament.r32.v1
+
+Goal: add a provider-neutral, crash-safe, exactly-once publish transaction coordinator for the final winner handoff. This milestone MUST NOT perform a real publish.
+
+Milestone:
+1. Define creator.publish_transaction.r33.v1 with explicit transaction states:
+   - PREPARED
+   - VALIDATED
+   - COMMIT_ELIGIBLE
+   - COMMITTING
+   - RECONCILIATION_REQUIRED
+   - COMMITTED
+   - ABORTED
+   No transition may skip required validation.
+2. Bind each transaction to immutable:
+   - final winner MP4 sha256/size;
+   - source/session/tournament/round lineage;
+   - Creator R32 authority SHA/CI/artifact;
+   - platform/provider target identity metadata without secrets;
+   - caption/title/thumbnail hashes;
+   - publish policy/config hash;
+   - stable transaction/idempotency key.
+3. PREPARE phase:
+   - verify winner is actually publish-handoff eligible;
+   - reject tie/human_review/insufficient_evidence/reconciliation-required upstream state;
+   - validate platform media constraints from provider adapter metadata;
+   - validate account/provider configuration presence without exposing credentials;
+   - produce deterministic publish intent and dry-run request.
+4. COMMIT phase abstraction:
+   - provider adapter invocation is disabled by default in CI/tests;
+   - no network/provider call in this milestone;
+   - model exact side-effect lifecycle needed for Instagram Reels, TikTok Direct Post, YouTube Shorts adapters already present in Creator.
+5. Exactly-once rules:
+   - same transaction key + same request bytes => idempotent replay;
+   - same key + changed winner/caption/provider/config => hard conflict;
+   - crash before provider invocation => safe resume;
+   - crash after invocation begins but before acknowledgement => RECONCILIATION_REQUIRED, blind retry forbidden;
+   - COMMITTED transaction can never invoke again.
+6. Reconciliation contract:
+   - record provider-side external operation/post ID only when confirmed;
+   - support read-only outcome lookup/reconcile abstraction when provider supports it;
+   - when provider cannot prove outcome, remain RECONCILIATION_REQUIRED and block new publish authorization.
+7. Multi-platform isolation:
+   - Instagram/TikTok/YouTube transactions are independent children of one publish batch;
+   - one platform failure/unknown must not authorize duplicate send on another;
+   - batch status clearly separates committed, blocked, aborted, reconciliation-required.
+8. Scheduling:
+   - deterministic planned publish time allowed as metadata;
+   - changing schedule after PREPARED must produce a new intent hash / explicit revision, not silently mutate committed identity.
+9. Kill switch / abort:
+   - PREPARED or VALIDATED may be ABORTED without side effects;
+   - COMMITTING/RECONCILIATION_REQUIRED cannot be labeled ABORTED unless durable provider outcome proves no side effect.
+10. Adversarial tests:
+   - duplicate commit call;
+   - changed caption under same idempotency key;
+   - changed MP4 under same transaction;
+   - provider timeout after dispatch;
+   - provider says duplicate/already exists;
+   - partial multi-platform success;
+   - restart at each state boundary;
+   - stale R32 authority;
+   - upstream winner handoff tamper;
+   - schedule mutation after prepare;
+   - fake provider post ID;
+   - attempt to commit human_review/tie/insufficient_evidence.
+11. Add deterministic fake-provider harness producing:
+   - clean success;
+   - timeout-before-dispatch;
+   - timeout-after-dispatch;
+   - duplicate-confirmed;
+   - unknown-no-lookup.
+12. Add machine-readable status/reconciliation command reporting allowed next action, exact blockers and whether any real side effect is permitted.
+13. CI focused + full; deterministic R33 evidence artifact.
+14. Secrets/credentials never enter artifacts/logs/repo.
+15. NO LIVE PUBLISH, NO PROVIDER NETWORK CALL, NO MERGE.
+
+Completion evidence REQUIRED:
+- substantive implementation/tests/docs/conformance/report;
+- exact final SHA;
+- exact-head CI SUCCESS;
+- artifact id/name/digest;
+- deterministic crash/replay/reconciliation rehearsal;
+- explicit proof that unknown outcome never triggers blind retry;
+- readiness state SOURCE_READY_NO_LIVE_PUBLISH.
