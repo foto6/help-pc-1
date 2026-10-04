@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst items=[{\"name\":\"creator\",\"conv\":\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"needle\":\"CREATOR R31\"},{\"name\":\"media\",\"conv\":\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"needle\":\"MEDIA R24 CANONICAL LIVE REVIEW ARTIFACT EXPORT\"},{\"name\":\"bridge\",\"conv\":\"6abda61c-a440-83ed-9482-1d0fc7923e03\",\"needle\":\"BRIDGE R34\"}];\nconst tabs=await (await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst out={};\nfor(const it of items){\n const tab=tabs.find(t=>t.type===\"page\"&&(t.url||\"\").includes(it.conv));\n if(!tab){out[it.name]={found:false};continue}\n const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\n let seq=1,p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n const call=(m,a={})=>new Promise((r,j)=>{const k=seq++;p.set(k,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id:k,method:m,params:a}))});\n const expr=`JSON.stringify((()=>{const needle=\"\";return {body:(document.body.innerText||'')}})())`;\n const rr=await call(\"Runtime.evaluate\",{expression:\"document.body.innerText||''\",returnByValue:true});\n const body=String(rr.result.value||\"\");\n const idx=body.indexOf(it.needle);\n out[it.name]={found:true,needle:it.needle,present:idx>=0,excerpt:idx>=0?body.slice(Math.max(0,idx-250),idx+Math.min(1800,it.needle.length+1600)).replace(/\\s+/g,' '):null};\n ws.close();\n}\nprocess.stdout.write(JSON.stringify(out));\n\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"creator\":{\"found\":true,\"needle\":\"CREATOR R31\",\"present\":false,\"excerpt\":null},\"media\":{\"found\":true,\"needle\":\"MEDIA R24 CANONICAL LIVE REVIEW ARTIFACT EXPORT\",\"present\":true,\"excerpt\":\"ine/challenger identity. 8. No human quality claim, no merge. Evidence required: substantive commits/tests/docs/report, actual operator directories/archives in rehearsal, exact hashes, exact-head CI SUCCESS. … Показать ещё Вы сказали: EXECUTE NOW — MEDIA R24 CANONICAL LIVE REVIEW ARTIFACT EXPORT. Do not stop at a plan or acknowledgement. Repo: foto6/video2 Writable branch ONLY: agent/media-r24-canonical-live-artifact-20261002 Exact starting HEAD: 78c6982a91d7e3e8c037cd9ce740ee077babdccc Exact starting CI: 37007419237 SUCCESS R23 is exact-green and produces media.review_session_package.r23.v1 locally. The coordinator now needs one exact downloadable artifact shape for Bridge live preflight/execution. Milestone: 1. Add a canonical export command for an exact R23 session package into one self-contained directory + deterministic archive. 2. Include: - review-A.mp4 / review-B.mp4 exact bytes; - model prompt exact bytes; - R23 session index; - nested R21/R22 manifests/evidence; - sealed mapping machine-side only; - exact producer SHA/CI/contracts/blob IDs; - source/brief/review-round lineage; - package/directory/archive SHA-256. 3. Add independent verifier that can validate the export after download on another checkout before browser mutation. 4. Produce a Bridge-consumable sanitized handoff file that contains all required hashes/sizes/MIME/round/source fields but no sealed candidate-role mapping in model-facing content. 5. Wire exact-head CI to upload the canonical export as an Actions artifact for at least one real-MP4 round-0 package and one targeted re-edit package. The artifact itself may contain demo/rehearsal footage, but must use actual encoded MP4 bytes and be marked non-human-ground-truth. 6. Record exact artifact ID/name/digest in a readiness report when available from the workflow. 7. Exact rerun with same inputs must be byte-stable; \"},\"bridge\":{\"found\":true,\"needle\":\"BRIDGE R34\",\"present\":true,\"excerpt\":\"driver will treat the dedicated review conversation as immutable session identity, enforce strict round progression 0→1→2, and stop immediately on malformed or reconciliation-required outcomes without retrying upload/send. Вы сказали: EXECUTE NOW — BRIDGE R34 STICKY-CHAT EXACT-ID ROUTING FIX. Do not stop at a plan or acknowledgement. Repo: foto6/WebAIBridge Writable branch ONLY: agent/bridge-r34-sticky-chat-exact-id-20261004 Exact starting HEAD: 805bf628d3d2844549b54db1112736fae0200fc7 User priority: the current Bridge sometimes keeps opening/routing to the same wrong ChatGPT conversation (observed wrong conversation ID: 6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6). Fix the routing logic in isolation. DO NOT restart, deploy, repoint, or modify the currently working live Bridge/runtime. Known code/evidence: - R27 existing-chat rebind already treats providerConversationId as primary identity and verifies the final URL before persisting. - Ordinary managed assignment recovery still uses persisted managed.url in managedAssignmentTargetObservations/openChromeDebugUrl and can therefore follow stale project slugs/URLs before the strict R27 identity gate. - Historical reboot incident proved stale \\\"-sv\\\" project slugs, changed tab IDs, root redirects, and sidebar/search-only rediscovery. - R33 branch is identical to R32; no R33 implementation exists yet. Milestone: 1. Reproduce a deterministic sticky/wrong-chat routing regression for ordinary managed-agent assignment recovery, not only the explicit rebind API. 2. Make providerConversationId the authority for every managed-agent route before composer mutation/upload/send. Persisted URL, project slug, tab ID and title are hints only. 3. Reuse/refactor the R27 exact-conversation discovery/rebind logic where practical; do not create a second weaker identity implementation. 4. Before any prompt muta\"}}",
+      "stdout_bytes": 4036,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-04T10:15:17.949Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-04T10:15:17.862Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261004-1718-readonly-task-presence"
+    },
+    "request_id": "boss-20261004-1718-readonly-task-presence",
+    "started_at": "2026-10-04T10:15:17.335Z",
+    "status": "completed"
+  },
+  "id": "boss-20261004-1718-readonly-task-presence",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
