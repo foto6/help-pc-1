@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261004T1705-supervision-chrome-uia-01",
+  "action": "uia.snapshot",
+  "params": {
+    "window_title": "Project Agent Supervision - Google Chrome"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only UIA snapshot of Project Agent Supervision Chrome for existing agent chat inventory"
+}
