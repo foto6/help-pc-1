@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; try { $a=Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3; @($a | Where-Object {$_.type -eq 'page'} | Select-Object id,title,url) | ConvertTo-Json -Depth 3 -Compress } catch { [pscustomobject]@{error=$_.Exception.Message} | ConvertTo-Json -Compress }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"46A8F4C712D2FDE9BFC3AD48216293EE\",\"title\":\"����� � �஢�થ\",\"url\":\"https://chatgpt.com/c/6ac21684-8b5c-83ed-aad9-5fd7254e5492\"},{\"id\":\"9A6A5BE5F250D9D1851D588E469766A7\",\"title\":\"Fix Assignment Replacement Runtime\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c\"},{\"id\":\"8B5CAE688BEF156984B894993BD32352\",\"title\":\"Fix Assignment Replacement Runtime\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c\"},{\"id\":\"D35C06560A90033209EDF3491B08F2C3\",\"title\":\"A 2\",\"url\":\"https://chatgpt.com/c/6ab67022-ae5c-83ed-a654-5dcc82c3b351\"},{\"id\":\"014C137B63AF8D876F42D3F77C546FCA\",\"title\":\"Web AI Bridge\",\"url\":\"http://127.0.0.1:17448/\"},{\"id\":\"B50922533EAF62F9FD41F8D149C15928\",\"title\":\"ChatGPT\",\"url\":\"https://chatgpt.com/\"}]\r\n",
+      "stdout_bytes": 841,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-04T23:22:18.927Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-04T23:22:18.827Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261005T0625-cdp-tabs-postreboot-01"
+    },
+    "request_id": "20261005T0625-cdp-tabs-postreboot-01",
+    "started_at": "2026-10-04T23:22:18.296Z",
+    "status": "completed"
+  },
+  "id": "20261005T0625-cdp-tabs-postreboot-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
