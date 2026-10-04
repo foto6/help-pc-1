@@ -1,0 +1,32 @@
+EXECUTE NOW — GROWTH R32 PARENT-QA UNBLOCK / AUTHORITY CLOSEOUT. Do not add new statistical features.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r32-sequential-experiment-policy-20261004
+Current observed exact-green candidate:
+- SHA aacaefca808a0d71adb56fbb5b5ecf6213e874c8
+- CI 37207893319 SUCCESS
+- artifact 11304917444
+- name growth-r32-sequential-experiment-policy
+- digest sha256:a697270b382b935271fc088e856720e29f9b2e6ff2c313adc93b2789234032be
+
+Your docs/readiness still say Growth R31 parent QA-R3 PENDING.
+Independent QA-R3 is now exact-green:
+- QA HEAD 2a48c909bfb5785409b591253f6085642b962d0d
+- QA CI 37207701514 SUCCESS
+- QA artifact 11305557095
+- digest sha256:4c5cb2c476643a03865ec37c084650db4c98c84c3aed04aafeb35b81b4e9fba0
+- exact Growth R31 311606b677d6f0d97669c905265f1eb64b7ff9a4 disposition: ACCEPTED
+- R31 CI 37204153689 SUCCESS
+- R31 artifact 11304006807 / sha256:fab2ab2df9a4c8106352c5e6c17da3b3281f15a2b0e2015ec285304b2070334d
+
+Required:
+1. Bind exact QA-R3 acceptance evidence into R32 authority/readiness/docs.
+2. Parent R31 may become ACCEPTED only for the exact frozen pin above.
+3. Preserve randomized vs observational separation, SRM/drift/missing-metric/peeking/multiplicity gates, no auto edit/publish, human_ground_truth=false.
+4. Regression: wrong QA SHA/run/artifact/digest or wrong R31 pin must fail closed.
+5. Do NOT claim Growth R32 itself accepted; QA-R4 is currently independently validating it. Self state = SOURCE_READY_PENDING_R32_QA (or equivalent).
+6. Regenerate exact conformance/blob pins as needed.
+7. New exact HEAD + exact-head CI SUCCESS + new R32 artifact required because evidence bytes changed.
+8. No browser/provider mutation, publish, causal overclaim, merge.
+
+Completion: exact new SHA/run/artifact + parent QA accepted evidence + self remains pending QA-R4.
