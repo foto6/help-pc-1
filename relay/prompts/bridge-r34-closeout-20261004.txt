@@ -1,0 +1,19 @@
+EXECUTE NOW — BRIDGE R34 EXACT-HEAD CI / REGRESSION CLOSEOUT. Do not stop at status prose.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r34-sticky-chat-exact-id-20261004
+Current observed HEAD: 4e2a37545cc0cdd940cf6e86d40e0d620d6c94ae
+
+R34 implementation is already substantive. Close it out, do not broaden scope.
+
+Required:
+1. Check exact-head GitHub Actions for current HEAD, especially .github/workflows/r34-sticky-chat-exact-id.yml and preserved validation.
+2. If failing: inspect exact failing job/log and make the minimum justified fix only.
+3. Require final exact-head SUCCESS.
+4. Re-prove with deterministic tests that wrong/sticky conversation fails closed before DOM.setFileInputFiles, composer mutation, and Send.
+5. Ensure providerConversationId is mandatory authority; title/last-open/only-open/tabId/projectSlug are never mutation authority.
+6. Preserve R27-R32 contracts and at-most-once semantics.
+7. No live Bridge restart/deploy/repoint/cutover, no provider chat creation/deletion, no merge.
+8. Report exact final SHA + exact run ID + focused/preserved test results + readiness state SOURCE_READY/NO_LIVE_DEPLOY.
+
+If a live-only proof is unavailable, say BLOCKED_LIVE_VALIDATION; do not invent evidence.
