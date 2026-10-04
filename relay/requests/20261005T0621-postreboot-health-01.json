@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261005T0621-postreboot-health-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\pc-github-relay'; Set-Location $root; $h=Get-Content '.pc-relay\\health.json' -Raw | ConvertFrom-Json; $local=(git rev-parse HEAD).Trim(); $remote=(git rev-parse refs/remotes/origin/agent/pc-github-relay).Trim(); $req=(Get-ChildItem 'relay\\requests' -Filter '*.json' -File).Count; $res=(Get-ChildItem 'relay\\results' -Filter '*.json' -File).Count; [pscustomobject]@{phase=$h.phase;pid=$h.pid;reconciliation_required=$h.reconciliation_required;last_error=$h.last_error;stale_reasons=$h.stale_reasons;local_head=$local;remote_head=$remote;request_count=$req;result_count=$res;backlog=($req-$res)} | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 10000,
+  "note": "Post-reboot read-only relay watchdog health snapshot"
+}
