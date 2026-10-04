@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst convs={\"creator\":\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"media\":\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"growth\":\"6abda63c-98d8-83ed-b365-d423b7563c4b\",\"bridge\":\"6abda61c-a440-83ed-9482-1d0fc7923e03\"};\nconst tabs=await (await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst out={};\nfor(const [name,conv] of Object.entries(convs)){\n  const matches=tabs.filter(t=>t.type===\"page\" && (t.url||\"\").includes(conv));\n  out[name]={conversation_id:conv,matches:[]};\n  for(const tab of matches){\n    try{\n      const ws=new WebSocket(tab.webSocketDebuggerUrl);\n      await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\n      let seq=1,p=new Map();\n      ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n      const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\n      const expr=`JSON.stringify((()=> {\n        const composer=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('[contenteditable=\"true\"],textarea')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});\n        const composerText=composer ? ((('value' in composer)?composer.value:(composer.innerText||composer.textContent||''))||'') : '';\n        const buttons=[...document.querySelectorAll('button')].filter(b=>{const r=b.getBoundingClientRect();return r.width>0&&r.height>0});\n        const generating=buttons.some(b=>{\n          const x=((b.getAttribute('data-testid')||'')+' '+(b.getAttribute('aria-label')||'')+' '+(b.innerText||'')).toLowerCase();\n          return x.includes('stop')||x.includes('останов');\n        });\n        const msgs=[...document.querySelectorAll('[data-message-author-role]')].slice(-8).map(m=>({\n          role:m.getAttribute('data-message-author-role'),\n          text:(m.innerText||m.textContent||'').trim().replace(/\\\\s+/g,' ').slice(0,900)\n        }));\n        return {\n          href:location.href,\n          title:document.title,\n          composer_found:!!composer,\n          composer_text:composerText,\n          composer_length:composerText.length,\n          generating,\n          last_messages:msgs\n        };\n      })())`;\n      const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});\n      out[name].matches.push({tab_id:tab.id,tab_url:tab.url,state:JSON.parse(rr.result.value)});\n      ws.close();\n    }catch(e){\n      out[name].matches.push({tab_id:tab.id,tab_url:tab.url,error:String(e)});\n    }\n  }\n}\nprocess.stdout.write(JSON.stringify(out));\n\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"creator\":{\"conversation_id\":\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"matches\":[{\"tab_id\":\"FE12696C7D472CD989EC75492BE7D43B\",\"tab_url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"state\":{\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"title\":\"Implement Publish Provider Layer\",\"composer_found\":true,\"composer_text\":\"\\n\",\"composer_length\":1,\"generating\":true,\"last_messages\":[]}}]},\"media\":{\"conversation_id\":\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"matches\":[{\"tab_id\":\"3C5D3BBC1630D07059CF439F33D2BB52\",\"tab_url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"state\":{\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"title\":\"Deliver R11 Editor\",\"composer_found\":true,\"composer_text\":\"EXECUTE NOW — MEDIA R24 CANONICAL LIVE REVIEW ARTIFACT EXPORT. Do not stop at a plan or acknowledgement.\\nRepo: foto6/video2\\nWritable branch ONLY: agent/media-r24-canonical-live-artifact-20261002\\nExact starting HEAD: 78c6982a91d7e3e8c037cd9ce740ee077babdccc\\nExact starting CI: 37007419237 SUCCESS\\nR23 is exact-green and produces media.review_session_package.r23.v1 locally. The coordinator now needs one exact downloadable artifact shape for Bridge live preflight/execution.\\nMilestone:\\n1. Add a canonical export command for an exact R23 session package into one self-contained directory + deterministic archive.\\n2. Include:\\n   - review-A.mp4 / review-B.mp4 exact bytes;\\n   - model prompt exact bytes;\\n   - R23 session index;\\n   - nested R21/R22 manifests/evidence;\\n   - sealed mapping machine-side only;\\n   - exact producer SHA/CI/contracts/blob IDs;\\n   - source/brief/review-round lineage;\\n   - package/directory/archive SHA-256.\\n3. Add independent verifier that can validate the export after download on another checkout before browser mutation.\\n4. Produce a Bridge-consumable sanitized handoff file that contains all required hashes/sizes/MIME/round/source fields but no sealed candidate-role mapping in model-facing content.\\n5. Wire exact-head CI to upload the canonical export as an Actions artifact for at least one real-MP4 round-0 package and one targeted re-edit package. The artifact itself may contain demo/rehearsal footage, but must use actual encoded MP4 bytes and be marked non-human-ground-truth.\\n6. Record exact artifact ID/name/digest in a readiness report when available from the workflow.\\n7. Exact rerun with same inputs must be byte-stable; changed input under same package/session identity fails.\\n8. No model/browser/provider call, no social publish, no human quality claim, no merge.\\nEvidence required:\\n- substantive commits/tests/docs/report;\\n- actual deterministic archive(s);\\n- exact-head CI SUCCESS;\\n- canonical artifact contract and verification command.\",\"composer_length\":1981,\"generating\":true,\"last_messages\":[]}}]},\"growth\":{\"conversation_id\":\"6abda63c-98d8-83ed-b365-d423b7563c4b\",\"matches\":[]},\"bridge\":{\"conversation_id\":\"6abda61c-a440-83ed-9482-1d0fc7923e03\",\"matches\":[{\"tab_id\":\"31C151217B506B65D8728A5E869409D6\",\"tab_url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\",\"state\":{\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\",\"title\":\"Bridge R19 Implementation Report\",\"composer_found\":true,\"composer_text\":\"\\n\",\"composer_length\":1,\"generating\":true,\"last_messages\":[]}}]}}",
+      "stdout_bytes": 3585,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-04T10:12:04.325Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-04T10:12:04.227Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261004-1713-exact-chat-readonly-state"
+    },
+    "request_id": "boss-20261004-1713-exact-chat-readonly-state",
+    "started_at": "2026-10-04T10:12:03.695Z",
+    "status": "completed"
+  },
+  "id": "boss-20261004-1713-exact-chat-readonly-state",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
