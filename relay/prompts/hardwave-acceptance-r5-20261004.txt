@@ -1,0 +1,38 @@
+EXECUTE NOW — HARD WAVE QA R5 / AUTHORITY UNIQUENESS + SUCCESSOR FREEZE GATE. Independent QA only.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/video-hardwave-acceptance-r5-20261004
+Exact starting HEAD: 3c3a2296d2dd23f0a7b60023951003c0a66bc77a
+
+Preserve all R1-R4 fault corpora and acceptance evidence. Do not mutate product repos.
+
+Known current candidates:
+- Media R25 branch agent/media-r25-multicandidate-round-engine-20261004 current observed SHA 1484a6a33d8fff890fa1de815effcc79ee2f4dc2. Run 37208977091 has exact failure in r25-candidate-3: downloaded verified ffmpeg runtime has Permission denied/exit126; corrective work is being sent. Do not accept until a NEW exact head/run is completely green.
+- Creator R34 branch agent/creator-r34-multiplatform-publish-saga-20261004 current observed SHA 77dfe83d582eac98e60728974efc77345612b364. Prior R4 observed older 2d05... green evidence; current head must be independently re-verified.
+- Growth R32 ACCEPTED frozen authority remains aacaefca808a0d71adb56fbb5b5ecf6213e874c8 / CI 37207893319 / artifact 11304917444 / digest sha256:a697270b382b935271fc088e856720e29f9b2e6ff2c313adc93b2789234032be / contract growth.sequential_experiment_policy.r32.v1. Later branch movement is NOT automatically accepted.
+- Bridge R37 current 0aa1715767d740fc59ed711efe55a5ca90c6210d has a frozen Growth R30 authority mismatch. Corrective work is being sent.
+- QA-frozen Growth R30 authority is SHA 9313c984932d9b1bbf18f7c382533f830337971e / CI 37202813275 / artifact 11303044114 / digest sha256:0d8a0ff48c5ade7ec4d2440227f4409d63f1b67153de1308cd53d1a4b3f57646 / contract growth.consensus_review.r30.v1.
+
+R5 mission:
+1. Add an authority-uniqueness rule: a consumer must pin one exact accepted evidence tuple, not "any successful run for this SHA".
+2. Add adversarial fixtures where SAME source SHA has multiple SUCCESS runs with different artifact IDs/digests. Require:
+   - exact frozen tuple accepted;
+   - all alternate/mixed tuples rejected;
+   - stable reason code E_AUTHORITY_TUPLE_MISMATCH.
+3. Re-verify Media R25 only after its corrective branch stops moving and a complete exact-head run is SUCCESS. Require final 4-candidate/re-edit artifact.
+4. Independently re-verify current Creator R34 (not older green SHA) with exact-head CI/artifact and contract compatibility before acceptance.
+5. Re-verify corrected Bridge R37 only after it pins the exact QA-frozen Growth R30 tuple and new Windows+Ubuntu exact-head CI is green.
+6. Preserve accepted Growth R32 authority as immutable even if its development branch moved later.
+7. Observe new Growth R33 branch read-only if it progresses, but do not accept it unless exact-head green + artifact + compatibility evidence exists.
+8. Re-run all legacy adversarial corpora plus >=20 R5 authority/successor faults.
+9. Build a successor matrix: ACCEPTED / WAITING_EXACT_GREEN / INCOMPATIBLE / REJECTED with exact SHA, CI, artifact ID/name/digest, contract, parent authority tuple.
+10. Overall HARD_WAVE_PROTOCOL_GREEN only if every REQUIRED current integration authority is exact-green and compatible. Otherwise HARD_WAVE_BLOCKED with concrete minimum fixes.
+11. No merge, no live Bridge cutover, no provider publish, no SpectraTrack work.
+
+Completion:
+- substantive QA code/tests/docs/checkpoint;
+- exact QA HEAD + exact-head CI SUCCESS;
+- artifact id/name/digest;
+- authority uniqueness tests;
+- exact successor compatibility matrix;
+- zero product repo mutations.
