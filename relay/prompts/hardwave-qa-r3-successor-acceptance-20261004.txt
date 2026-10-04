@@ -1,0 +1,68 @@
+EXECUTE NOW — HARD WAVE QA R3 / SUCCESSOR ACCEPTANCE + CURRENT-HEAD REFRESH. Independent QA only.
+
+Repo: foto6/boss
+Create/use writable branch ONLY: agent/video-hardwave-acceptance-r3-20261004
+Start from exact QA-R2 HEAD: 5170ac7537cafee0553c4c092755456b574602e4
+
+Frozen already accepted by QA-R2:
+- Creator R32 f0dc1d27da6452f1de32cd887651805b47a1735d / CI 37199512624 / artifact 11302367811.
+- Growth R30 9313c984932d9b1bbf18f7c382533f830337971e / CI 37202813275 / artifact 11303044114.
+- Bridge R35 bfb9f45899991dd3d3fefc3daa716ddcf871fd0e / CI 37202788532 / Ubuntu 11303323354 + Windows 11303193653.
+
+Fresh coordinator evidence to independently verify, never trust prose:
+1. Creator R33 current exact head 9556108f423a15a40614a8bc9d590e6dc2e49746
+   - exact run 37203622591 currently observed SUCCESS
+   - artifact candidate:
+     id 11304071297
+     name creator-r33-publish-transaction-9556108f423a15a40614a8bc9d590e6dc2e49746
+     digest sha256:adbfb6d257332220e2be2f9d8f134a87f8bcc6b6e064dfac7f469fd95d690d6d
+   - expected contract creator.publish_transaction.r33.v1
+   - must preserve no-live/no-network, RECONCILIATION_REQUIRED and blind-retry=false.
+2. Growth R31 current exact head 311606b677d6f0d97669c905265f1eb64b7ff9a4
+   - exact run 37204153689 observed SUCCESS
+   - artifact candidate:
+     id 11304006807
+     name growth-r31-postpublish-learning-policy
+     digest sha256:fab2ab2df9a4c8106352c5e6c17da3b3281f15a2b0e2015ec285304b2070334d
+   - parent R30 must remain exact accepted authority.
+3. Bridge R36 current exact head 32bb20c00d3570540ee4d37c1df875d6feaa8dd1
+   - exact run 37204031701 observed SUCCESS
+   - artifacts:
+     Ubuntu 11304515492 digest sha256:53c6eca1e658fc3670b09f58a0782f1f9a181dc650d42cc5c8335312d431686b
+     Windows 11304161407 digest sha256:40d367ed55c0e3832a553b556835866c555b9a55306934449980d29f05192230
+   - parent R35 must remain exact accepted authority.
+4. Media R25 remains NOT accepted. Latest observed exact head 1c1cb0981256b2636bd96f9879ae83fbfe68a174 / run 37204860475 FAILURE. Do not accept until a later exact head is green and has the required artifact.
+
+Mission:
+A. Independently verify SHA<->run<->artifact identity for R33/R31/R36 using GitHub evidence, not branch name.
+B. Extend QA with product-read-only contract/adversarial checks:
+   R33:
+   - unknown-after-dispatch -> RECONCILIATION_REQUIRED;
+   - unknown -> retry rejected;
+   - unknown -> abort rejected unless side effect proven not started;
+   - COMMITTED exact replay invokes zero provider effect;
+   - changed provider/caption/winner/config under same idempotency key conflicts;
+   - partial multi-platform transactions remain isolated;
+   - zero live/network/credential evidence.
+   Growth R31:
+   - learning policy is post-publish observational/randomized analysis only;
+   - no causal claim from confounded observational samples;
+   - drift/missing-metric/low-sample gates fail closed;
+   - no automatic editing/publish mutation from learning output;
+   - model metrics are not human ground truth.
+   Bridge R36:
+   - exactly 3 distinct review conversations;
+   - attachment and Send each have separate at-most-once boundaries;
+   - lost attachment ACK never blindly reuploads;
+   - lost Send ACK never blindly resends;
+   - duplicate exact-ID tabs/wrong account/wrong conversation fail before mutation;
+   - fan-in requires 3 VERIFIED captures with distinct response/capture/message identities;
+   - no sealed mapping exposure.
+C. Preserve/extend previous 27 adversarial faults and R33 fault corpus.
+D. Refresh Media R25 status only after its fix produces a new head; if no exact green current head exists, leave WAITING_EXACT_GREEN.
+E. Emit exact statuses per R33/R31/R36/R25 and overall stack state:
+   - ACCEPTED / WAITING_EXACT_GREEN / INCOMPATIBLE / REJECTED.
+F. Do not authorize live Bridge cutover or social publish. No product repo mutation. No SpectraTrack. No merge.
+G. CI exact QA-R3 head must be green and publish a deterministic acceptance artifact.
+
+Completion requires exact QA-R3 HEAD, CI run/artifact digest, compatibility matrix, rejected-fault report, and exact authority pins.
