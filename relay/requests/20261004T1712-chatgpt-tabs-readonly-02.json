@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261004T1712-chatgpt-tabs-readonly-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$a=Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3; @($a | Where-Object {$_.type -eq 'page' -and $_.url -like '*chatgpt.com*'} | Select-Object id,title,url) | ConvertTo-Json -Depth 3 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only current ChatGPT CDP tab inventory via PowerShell"
+}
