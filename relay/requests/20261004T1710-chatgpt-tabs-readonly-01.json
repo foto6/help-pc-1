@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261004T1710-chatgpt-tabs-readonly-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "node",
+      "--input-type=module",
+      "-e",
+      "const r=await fetch(\"http://127.0.0.1:17410/json/list\");const a=await r.json();const out=a.filter(x=>x.type===\"page\"&&/chatgpt\\.com/.test(String(x.url||\"\"))).map(x=>({id:x.id,title:x.title,url:x.url}));process.stdout.write(JSON.stringify(out));"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only current ChatGPT CDP tab inventory for exact-id agent dispatch"
+}
