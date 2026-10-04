@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nimport fs from \"node:fs\";\nconst conversationId=\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\";\nconst promptPath=\"E:\\\\pc-github-relay\\\\relay\\\\prompts\\\\creator-r31-live-session-authority-20261002.txt\";\nconst marker=\"CREATOR R31 LIVE SESSION AUTHORITY / CONTINUATION BINDING\";\nconst prompt=fs.readFileSync(promptPath,\"utf8\");\nconst sleep=ms=>new Promise(r=>setTimeout(r,ms));\nconst norm=s=>String(s||\"\").replace(/\\s+/g,\" \").trim();\nconst convFromUrl=value=>{try{const u=new URL(String(value||\"\"));const p=u.pathname.split(\"/\").filter(Boolean);if(p.length===2&&p[0]===\"c\")return p[1];if(p.length===4&&p[0]===\"g\"&&p[2]===\"c\")return p[3];return \"\"}catch{return \"\"}};\nconst tabs=await (await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst matches=tabs.filter(t=>t.type===\"page\"&&convFromUrl(t.url)===conversationId);\nif(matches.length!==1){process.stdout.write(JSON.stringify({state:matches.length?\"BLOCKED_DUPLICATE_EXACT_TABS\":\"BLOCKED_EXACT_TAB_MISSING\",count:matches.length}));process.exit(7)}\nconst tab=matches[0];\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=()=>j(new Error(\"ws_open_error\"))});\nlet seq=1;const pending=new Map();\nws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};\nconst call=(method,params={})=>new Promise((r,j)=>{const id=seq++;pending.set(id,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id,method,params}))});\nconst state=async()=>{\n  const expr=`JSON.stringify((()=>{const parseId=value=>{try{const u=new URL(String(value||\"\"));const p=u.pathname.split(\"/\").filter(Boolean);if(p.length===2&&p[0]===\"c\")return p[1];if(p.length===4&&p[0]===\"g\"&&p[2]===\"c\")return p[3];return \"\"}catch{return \"\"}};const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\"true\"]')].find(vis)||null;const draft=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const buttons=[...document.querySelectorAll('button')].filter(vis);const generating=buttons.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||'')));const msgs=[...document.querySelectorAll('[data-message-author-role]')];const users=msgs.filter(m=>m.getAttribute('data-message-author-role')==='user');const lastUser=users.length?((users[users.length-1].innerText||users[users.length-1].textContent||'').trim()):'';return {href:location.href,title:document.title,conversationId:parseId(location.href),composer:!!c,draft,generating,lastUser:lastUser.slice(0,16000)}})())`;\n  const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});return JSON.parse(rr.result.value);\n};\nconst pre=await state();\nif(pre.conversationId!==conversationId){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_ID_DRIFT\",pre}));process.exit(8)}\nif(pre.lastUser.includes(marker)){ws.close();process.stdout.write(JSON.stringify({state:\"ALREADY_PRESENT\",tabId:tab.id}));process.exit(0)}\nif(pre.generating){ws.close();process.stdout.write(JSON.stringify({state:\"BUSY_NO_SEND\",tabId:tab.id}));process.exit(4)}\nif(!pre.composer){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_NO_COMPOSER\",tabId:tab.id}));process.exit(5)}\nif(norm(pre.draft)){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_UNRELATED_DRAFT\",draftLength:pre.draft.length,draftPrefix:pre.draft.slice(0,180)}));process.exit(6)}\nconst focus=await call(\"Runtime.evaluate\",{expression:\"(()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\"true\\\"]')].find(vis)||null;if(!c)return false;c.focus();return document.activeElement===c||c.contains(document.activeElement)})()\",returnByValue:true});\nif(!focus.result.value){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_FOCUS_FAILED_GENERIC\"}));process.exit(9)}\nawait call(\"Input.insertText\",{text:prompt});await sleep(450);\nconst typed=await state();\nif(typed.conversationId!==conversationId||norm(typed.draft)!==norm(prompt)){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_READBACK_OR_ID_MISMATCH\",typed:{href:typed.href,conversationId:typed.conversationId,draftLength:typed.draft.length}}));process.exit(10)}\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyDown\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});\nawait call(\"Input.dispatchKeyEvent\",{type:\"keyUp\",key:\"Enter\",code:\"Enter\",windowsVirtualKeyCode:13,nativeVirtualKeyCode:13});\nlet post=null;\nfor(let i=0;i<20;i++){await sleep(400);post=await state();if(post.conversationId!==conversationId)break;if(post.lastUser.includes(marker)||post.generating)break}\nws.close();\nif(!post||post.conversationId!==conversationId){process.stdout.write(JSON.stringify({state:\"POST_SEND_ID_DRIFT\",post}));process.exit(11)}\nif(post.lastUser.includes(marker)||post.generating){process.stdout.write(JSON.stringify({state:\"SENT_CONFIRMED\",tabId:tab.id,url:post.href,generating:post.generating,markerPresent:post.lastUser.includes(marker)}));process.exit(0)}\nprocess.stdout.write(JSON.stringify({state:\"SEND_NOT_CONFIRMED\",tabId:tab.id,url:post.href,draftLength:post.draft.length}));process.exit(12);\n\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"state\":\"SENT_CONFIRMED\",\"tabId\":\"FE12696C7D472CD989EC75492BE7D43B\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"generating\":true,\"markerPresent\":false}",
+      "stdout_bytes": 218,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-04T10:24:21.509Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-04T10:24:21.418Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "boss-20261004-1736-dispatch-creator-r31-generic-composer"
+    },
+    "request_id": "boss-20261004-1736-dispatch-creator-r31-generic-composer",
+    "started_at": "2026-10-04T10:24:19.499Z",
+    "status": "completed"
+  },
+  "id": "boss-20261004-1736-dispatch-creator-r31-generic-composer",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
