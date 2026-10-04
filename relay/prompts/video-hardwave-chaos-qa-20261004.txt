@@ -1,0 +1,99 @@
+EXECUTE NOW — INDEPENDENT HARD-WAVE CROSS-REPO CHAOS QA / CONTRACT COMPATIBILITY GATE. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/video-hardwave-chaos-qa-20261004
+Exact starting HEAD: 80c2b0b25772920ba9af7d51a4a84fac25c2d4d0
+
+Role: independent QA only. Do NOT implement product features in video1/video2/video3/WebAIBridge. Do NOT merge.
+
+Accepted frozen authorities:
+- Creator R31: foto6/video1@ed6959472ac958b4f5a8dcae5cee38e7430372d1
+  - CI 37196521535 SUCCESS
+  - artifact 11300752904
+  - digest sha256:8e3b0fdfd2149b3810d3de9bc8b015c82ebb97fa699fd80f38e9056264d4f296
+- Media R24: foto6/video2@244acdf154741e669991b17df3ef2a47e2dfdfa9
+  - CI 37195239582 SUCCESS
+  - artifact 11301055747
+  - digest sha256:fc5c9b9635d49b643e66efafe602d21ce1ef695a553f81a797bdf16d7b8cf228
+- Growth R29: foto6/video3@3e4a8ad6d73b058c953abeadba7a60abe567adbc
+  - CI 37195373334 SUCCESS
+  - artifact 11301225456
+  - digest sha256:40fb5e5c7ab7ccf7a02514f9b5a40eb8fc3207373c63391a17606fb12a6d0e55
+- Bridge R34: foto6/WebAIBridge@4e2a37545cc0cdd940cf6e86d40e0d620d6c94ae
+  - CI 37196102639 SUCCESS
+
+In-progress Hard Wave branches, NOT authoritative until independently proven exact-green:
+- Creator R32: agent/creator-r32-autonomous-tournament-coordinator-20261004
+- Media R25: agent/media-r25-multicandidate-round-engine-20261004
+- Growth R30: agent/growth-r30-consensus-review-oracle-20261004
+- Bridge R35: agent/bridge-r35-multiagent-exactid-chaos-20261004
+
+Predeclared expected contracts:
+- creator.autonomous_tournament.r32.v1
+- media.multicandidate_round.r25.v1
+- growth.consensus_review.r30.v1
+- bridge.multiagent_dispatch.r35.v1
+
+Mission: build an independent deterministic compatibility/chaos gate that attempts to break the entire autonomous editing protocol before any live cutover.
+
+Milestone:
+1. Add a machine-readable hard-wave authority manifest schema:
+   - repo, exact SHA, CI run ID, artifact ID/name/digest;
+   - contract/schema/implementation blob hashes;
+   - source/round/session lineage;
+   - status accepted/candidate/rejected.
+   Branch names must never satisfy authority.
+2. Add a cross-repo contract compatibility validator for R32/R25/R30/R35:
+   - schema/field compatibility;
+   - exact hash/identity propagation;
+   - round/re-edit bounds;
+   - sealed mapping confidentiality;
+   - review conversation independence;
+   - at-most-once dispatch/reconciliation semantics;
+   - publish-handoff gating.
+3. Predeclare at least 20 adversarial fault cases BEFORE scoring current implementations, including:
+   - stale producer SHA;
+   - green CI for a different SHA;
+   - artifact digest mismatch;
+   - same branch moved after evidence;
+   - duplicate candidate bytes;
+   - swapped blind mapping;
+   - same reviewer conversation used twice;
+   - copied response digest;
+   - malformed one-of-three review;
+   - 2–1 high-disagreement vote;
+   - lost Send ack;
+   - unknown side effect followed by replay attempt;
+   - stale tab ID to wrong conversation;
+   - duplicate exact-ID tabs;
+   - crash after 1/3 dispatches;
+   - changed prompt under same operation ID;
+   - changed candidate set under same session/round;
+   - third targeted re-edit;
+   - winner handoff with unresolved reconciliation;
+   - publish handoff from tie/human_review/insufficient_evidence.
+4. Add a deterministic synthetic E2E fixture:
+   source -> 4 candidates -> blinded review package -> 3 reviewer captures -> consensus -> targeted re-edit -> second review -> winner -> publish handoff.
+5. Inject failures at every durable boundary and prove:
+   - no duplicate side effect;
+   - no wrong-chat mutation;
+   - no authority drift;
+   - no publish handoff under unresolved/invalid state.
+6. Add contract mutation testing: randomly/explicitly mutate one required field/hash at a time and require deterministic rejection with stable error code. Keep test corpus deterministic/reproducible.
+7. Add a compatibility matrix report for accepted baseline vs in-progress Hard Wave:
+   - COMPATIBLE
+   - INCOMPATIBLE
+   - WAITING_EXACT_GREEN
+   with exact reason and minimum required fix.
+8. As R32/R25/R30/R35 produce new commits during this task, you may observe them read-only. Accept a candidate only with exact SHA + exact-head CI SUCCESS + required artifact/digest. Do not trust agent prose.
+9. If all four become exact-green and compatible, emit HARD_WAVE_PROTOCOL_GREEN. Otherwise emit HARD_WAVE_BLOCKED with exact blockers.
+10. No live Bridge deploy/restart/repoint/cutover. No social publish. No SpectraTrack work. No human-ground-truth/parity claim.
+
+Completion evidence REQUIRED:
+- substantive QA code/tests/docs/report on this branch;
+- exact final QA HEAD;
+- exact-head CI SUCCESS;
+- deterministic adversarial fixture artifact;
+- compatibility matrix with exact pins/evidence;
+- explicit list of every rejected fault and why;
+- zero product-repo mutations.
