@@ -1,0 +1,58 @@
+EXECUTE NOW — HARD WAVE QA R6 / REBOOT RESILIENCE + SUCCESSOR AUTHORITY GATE. Independent QA only.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/video-hardwave-acceptance-r6-20261005
+Exact starting HEAD: 1583c853108b0fb88507448eb8b4c61f0f07b0bc
+Starting QA authority:
+- CI 37211964139 SUCCESS
+- artifact 11306289580
+- digest sha256:846c97206fb332d0ffa1011f44b884b3148736ba9ca96a756b4ae585eab50bfa
+
+Preserve every prior R1-R5 adversarial corpus and frozen accepted tuple.
+
+R5 accepted:
+- Creator R34: 77dfe83d582eac98e60728974efc77345612b364 / CI 37209289425 / artifact 11305609870 / digest sha256:366dc6b7f43982c23489f7119a04805b4be9b8eed2717f61a9db3a0e6ece1032.
+- Growth R33: 8bedb5ad79023006b87b17933863ff915ab5e046 / CI 37210963972 / artifact 11306727215 / digest sha256:132845c0aaa6d4fec5aaf60e1ade60d779183f2a637a9513e4176bd2ee569660.
+- Bridge R37: f09d5173a47c9ed9c96ff1bdfa4561047d7f19ad / CI 37210221945 / Ubuntu artifact 11306531222 / Windows artifact 11306161201.
+Media R25 remains unaccepted until exact green.
+
+Observed coordinator reboot evidence:
+- relay recovered safely with no reconciliation requirement;
+- CDP returned stale/unrelated tabs including duplicate unrelated conversation;
+- none of the five exact managed conversations were initially open;
+- exact chats were reopened explicitly by conversation ID.
+Treat this as a real failure-mode fixture, not as proof of R38 behavior.
+
+New candidates:
+- Creator R35 branch agent/creator-r35-release-escrow-canary-20261005
+- Growth R34 branch agent/growth-r34-policy-promotion-counterfactual-20261005
+- Bridge R38 branch agent/bridge-r38-reboot-resilient-dag-20261005
+- Media R25 current branch agent/media-r25-multicandidate-round-engine-20261004 (moving until green)
+
+Mission:
+1. Encode independent reboot-resilience authority tests:
+   - stale tab IDs after restart;
+   - wrong foreground;
+   - duplicate unrelated sticky tabs;
+   - exact chat absent then reopened;
+   - Send outcome unknown at reboot;
+   - exact confirmed task already present after restart.
+2. Require exact tuple continuity before/after reboot. Same SHA with changed CI/artifact digest is NOT interchangeable.
+3. Independently accept/reject R35/R34/R38 only from exact SHA + exact-head green CI + artifacts + contract compatibility.
+4. Re-evaluate Media R25 after the coordinator-triggered rerun of failed/cancelled candidate-4. Infrastructure cancellation alone is not product failure, but final acceptance still requires the entire chain green and final artifacts.
+5. Add >=30 new adversarial cases for reboot, authority drift, dependency DAG, canary transaction and counterfactual advisory misuse.
+6. Verify Creator R35 cannot turn Growth advisory into live authorization.
+7. Verify Growth R34 cannot mutate Creator/provider state.
+8. Verify Bridge R38 never routes by title/foreground/only-open/tabId and never blind-replays unknown Send.
+9. Verify no successor consumes unaccepted Media R25 as live authority.
+10. Produce exact acceptance matrix with ACCEPTED / WAITING_EXACT_GREEN / INCOMPATIBLE / REJECTED and minimum fix.
+11. HARD_WAVE_PROTOCOL_GREEN only if every required authority exact-green and compatible; otherwise block.
+12. Zero product-repo mutations, no merge, no live Bridge cutover, no social publish, no SpectraTrack work.
+
+Completion:
+- substantive QA code/tests/docs/checkpoint;
+- exact QA HEAD + exact-head CI SUCCESS;
+- artifact id/name/digest;
+- preserved legacy corpora + >=30 R6 cases;
+- exact successor matrix;
+- explicit reboot recovery verdict.
