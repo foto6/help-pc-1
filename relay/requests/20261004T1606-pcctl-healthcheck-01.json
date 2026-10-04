@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261004T1606-pcctl-healthcheck-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "& 'E:\\PC-Control\\CHECK_PC_CONTROL.cmd'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only owner-visible PC Control health check"
+}
