@@ -1,0 +1,48 @@
+EXECUTE NOW — CREATOR R34 MULTI-PLATFORM PUBLISH SAGA / PARTIAL-COMMIT RECONCILIATION. Do not stop at a plan.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r34-multiplatform-publish-saga-20261004
+Exact starting HEAD: 9556108f423a15a40614a8bc9d590e6dc2e49746
+Parent candidate: Creator R33 exact run 37203622591 SUCCESS, artifact 11304071297 digest sha256:adbfb6d257332220e2be2f9d8f134a87f8bcc6b6e064dfac7f469fd95d690d6d.
+IMPORTANT: parent R33 is still pending independent QA-R3 acceptance. Develop source-ready only; never relabel parent as accepted until QA-R3 proves it.
+
+Goal: orchestrate a single approved short-form winner across Instagram Reels, TikTok and YouTube Shorts with exactly-once per-platform transaction safety and durable partial-success reconciliation. No live network/provider calls in this milestone.
+
+Required:
+1. Contract creator.multiplatform_publish_saga.r34.v1.
+2. Consume exact R32 winner/publish-handoff + R33 per-platform transaction contract.
+3. Per-platform independent durable state:
+   PREPARED -> VALIDATED -> COMMIT_ELIGIBLE -> COMMITTING -> RECONCILIATION_REQUIRED|COMMITTED|ABORTED.
+4. Saga-level states must distinguish:
+   ALL_PENDING, PARTIALLY_COMMITTED, RECONCILIATION_REQUIRED, ALL_COMMITTED, TERMINAL_BLOCKED.
+5. One platform's success must never authorize replay on another platform with unknown outcome.
+6. Stable idempotency keys must bind exact winner hash, caption/copy, schedule/release window, provider/account identity, config revision and platform.
+7. Same key + changed payload/config => conflict.
+8. Lost ACK after provider dispatch => RECONCILIATION_REQUIRED; no blind retry.
+9. Read-only outcome lookup may promote unknown to COMMITTED only with exact provider evidence.
+10. Abort/compensation rules:
+    - never pretend an externally committed post can be rolled back by local state;
+    - compensation is metadata/workflow state only unless a provider-specific verified delete contract exists, which is OUT OF SCOPE here.
+11. Scheduling:
+    - deterministic publish window/deadline identity;
+    - stale schedule revision conflicts;
+    - crash before window, during commit, after one of three commits, after all commits.
+12. Multi-platform partial-failure chaos:
+    - IG committed / TikTok unknown / YT pending;
+    - TikTok duplicate-confirmed;
+    - one platform rejects validation;
+    - outcome lookup unavailable;
+    - process restart at every boundary.
+13. No platform is marked global-success until every required platform is COMMITTED or an explicit partial-release policy says otherwise. Default policy = all required.
+14. Emit machine-readable status: per-platform state, exact blocker, next safe action, replayAuthorized=false where unknown.
+15. Fake provider harness only. Prove provider network effects = zero in CI.
+16. Tests for idempotency, conflicting payload, partial commits, unknown outcomes, schedule drift, exact replay, crash recovery.
+17. CI focused + full + deterministic artifact.
+18. No real credentials, network, live publish, merge.
+
+Completion:
+- substantive code/tests/docs/conformance/report;
+- exact final SHA + exact-head CI SUCCESS;
+- artifact id/name/digest;
+- chaos rehearsal with at least three platforms and partial commit;
+- readiness state SOURCE_READY_WAITING_PARENT_QA unless QA-R3 independently accepts R33.
