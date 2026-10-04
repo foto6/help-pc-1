@@ -85,6 +85,34 @@ function Rotate-BoundedLog([string]$Path) {
 }
 
 
+function Test-SafeTransientStatus([object]$Status) {
+    if (-not $Status -or $Status.state -ne 'PROCESS_EXISTS') { return $false }
+    if (-not $Status.health -or $Status.health.status -ne 'process_exists') { return $false }
+    if ($Status.health.phase -notin @('sync_fetch', 'publish_pending')) { return $false }
+    if ([int]$Status.health.backlog_count -ne 0) { return $false }
+    if ([bool]$Status.health.reconciliation_required) { return $false }
+    if (-not $Status.process -or [int]$Status.process.logical_process_count -ne 1) { return $false }
+    if (-not $Status.observations -or $Status.observations.head_relation -ne 'equal') { return $false }
+    if (@($Status.stale_reasons).Count -ne 0) { return $false }
+    return $true
+}
+
+function Wait-ForRelayReady([int]$Attempts = 8) {
+    for ($i = 0; $i -lt $Attempts; $i++) {
+        $processes = Get-RelayProcesses
+        $result = Invoke-RelayStatus -Processes $processes
+        if ($result.Status.state -eq 'HEALTHY') {
+            return $result
+        }
+        if (-not (Test-SafeTransientStatus -Status $result.Status)) {
+            return $result
+        }
+        Start-Sleep -Seconds 1
+    }
+    $processes = Get-RelayProcesses
+    return (Invoke-RelayStatus -Processes $processes)
+}
+
 function Show-UnhealthyRecovery([object]$Status) {
     Write-Host ("Relay state: {0}" -f $Status.state)
     if ($Status.stale_reasons) {
@@ -128,6 +156,23 @@ if ($existing.Count -gt 0) {
         exit 0
     }
 
+    if (Test-SafeTransientStatus -Status $status) {
+        $statusResult = Wait-ForRelayReady -Attempts 8
+        $status = $statusResult.Status
+        if ($status.state -eq 'HEALTHY') {
+            Write-Host "PC Control relay is already running and healthy."
+            Write-Host ("Logical roots: {0}" -f (($status.process.logical_roots | ForEach-Object { [string]$_ }) -join ', '))
+            exit 0
+        }
+        if (Test-SafeTransientStatus -Status $status) {
+            Write-Host "PC Control relay is running and safely syncing."
+            Write-Host ("Phase: {0}" -f $status.health.phase)
+            Write-Host ("Logical roots: {0}" -f (($status.process.logical_roots | ForEach-Object { [string]$_ }) -join ', '))
+            Write-Host "Backlog: 0; reconciliation: false; local/remote HEAD equal."
+            exit 0
+        }
+    }
+
     Write-Host 'PC Control relay process exists but is not proven healthy.'
     Show-UnhealthyRecovery -Status $status
     Write-Host "Logs: $LogDir"
@@ -157,6 +202,25 @@ if ($startedStatus.state -eq 'HEALTHY') {
     Write-Host ("Logical roots: {0}" -f (($startedStatus.process.logical_roots | ForEach-Object { [string]$_ }) -join ', '))
     Write-Host "Logs: $LogDir"
     exit 0
+}
+
+if (Test-SafeTransientStatus -Status $startedStatus) {
+    $startedStatusResult = Wait-ForRelayReady -Attempts 8
+    $startedStatus = $startedStatusResult.Status
+    if ($startedStatus.state -eq 'HEALTHY') {
+        Write-Host "PC Control relay started and is producing healthy forward-progress evidence."
+        Write-Host ("Logical roots: {0}" -f (($startedStatus.process.logical_roots | ForEach-Object { [string]$_ }) -join ', '))
+        Write-Host "Logs: $LogDir"
+        exit 0
+    }
+    if (Test-SafeTransientStatus -Status $startedStatus) {
+        Write-Host "PC Control relay started and is safely syncing."
+        Write-Host ("Phase: {0}" -f $startedStatus.health.phase)
+        Write-Host ("Logical roots: {0}" -f (($startedStatus.process.logical_roots | ForEach-Object { [string]$_ }) -join ', '))
+        Write-Host "Backlog: 0; reconciliation: false; local/remote HEAD equal."
+        Write-Host "Logs: $LogDir"
+        exit 0
+    }
 }
 
 Write-Host "PC Control relay started, but health is not yet proven."
