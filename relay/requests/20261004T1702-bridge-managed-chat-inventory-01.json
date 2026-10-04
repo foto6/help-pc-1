@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261004T1702-bridge-managed-chat-inventory-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$cfg='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'\nif(!(Test-Path $cfg)){ throw \"missing supervisor config\" }\n$j=Get-Content $cfg -Raw | ConvertFrom-Json\n[pscustomobject]@{\n  mode=$j.mode\n  enabled=$j.enabled\n  profileId=$j.profileId\n  supervisorChatUrl=$j.supervisorChatUrl\n  managedProjects=@($j.managedProjects | ForEach-Object {\n    [pscustomobject]@{id=$_.id;name=$_.name;enabled=$_.enabled;profileId=$_.profileId}\n  })\n  managedChats=@($j.managedChats | ForEach-Object {\n    [pscustomobject]@{\n      id=$_.id;name=$_.name;url=$_.url;providerConversationId=$_.providerConversationId;\n      projectId=$_.projectId;role=$_.role;repository=$_.repository;branch=$_.branch;\n      gitHead=$_.gitHead;enabled=$_.enabled;profileId=$_.profileId;\n      runtimeTargetTabId=$_.runtimeTargetTabId;runtimeBindingSource=$_.runtimeBindingSource\n    }\n  })\n} | ConvertTo-Json -Depth 6 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only sanitized Bridge managed project/chat inventory for task dispatch"
+}
