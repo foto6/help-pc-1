@@ -1,0 +1,35 @@
+EXECUTE NOW — MEDIA R25 EXACT FAILURE CORRECTIVE / FREEZE CANDIDATE. Do not stop at diagnosis.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r25-multicandidate-round-engine-20261004
+Current exact HEAD: 1484a6a33d8fff890fa1de815effcc79ee2f4dc2
+
+Exact failing run: 37208977091
+Exact failing job: 111457051930 / r25-candidate-3
+Observed failure:
+- media-r25-checkpoint-pair-1 downloaded successfully.
+- artifact digest verified: sha256:64c2c66430ac08538716a97506978d388e6d39ba92c8df556fc1d1cb5f25f39f
+- runtime.manifest.sha256 verification passed for ffmpeg, ffprobe and libraries.
+- execution then failed with:
+  .artifacts/r25-demo/ci-ffmpeg-runtime/bin/ffmpeg: Permission denied
+  exit 126.
+The downloaded Actions artifact preserved bytes/digests but not the executable mode required by the bundled runtime.
+
+Required fix:
+1. Make the MINIMUM CI/runtime-checkpoint correction. After cryptographic manifest verification of downloaded runtime bytes, explicitly restore executable permission on the exact bundled binaries required for continuation (ffmpeg/ffprobe and only any other executable files justified by the runtime layout).
+2. Do not weaken/remove runtime.manifest verification. chmod must not substitute for digest verification.
+3. Do not apt-install a replacement ffmpeg or switch to a different binary/source; continuation must exercise the exact verified checkpoint runtime.
+4. Keep crash/resume semantics: candidate-3 continuation must consume pair-1 checkpoint and render only unfinished work.
+5. Re-run exact candidate-3 -> candidate-4 -> initial-finalize -> postdownload-verify -> targeted-evidence chain.
+6. Do not regenerate already completed candidate work unless cache/input graph evidence proves it invalid.
+7. Freeze the branch once exact-head CI is green. No cosmetic pin churn after a successful exact-head unless evidence requires it.
+8. Required final evidence:
+   - exact final SHA;
+   - exact-head CI SUCCESS;
+   - r25-candidate-3/4, finalize, postdownload and targeted-evidence all SUCCESS;
+   - final media-r25 deterministic artifact ID/name/digest;
+   - actual encoded 4-candidate MP4 evidence + targeted re-edit;
+   - proof that downloaded checkpoint digest was verified BEFORE permission restoration/execution;
+   - no model/browser/provider call, no publish, no merge.
+
+Do not claim completion from a partially green matrix.
