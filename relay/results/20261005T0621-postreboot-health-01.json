@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $root='E:\\pc-github-relay'; Set-Location $root; $h=Get-Content '.pc-relay\\health.json' -Raw | ConvertFrom-Json; $local=(git rev-parse HEAD).Trim(); $remote=(git rev-parse refs/remotes/origin/agent/pc-github-relay).Trim(); $req=(Get-ChildItem 'relay\\requests' -Filter '*.json' -File).Count; $res=(Get-ChildItem 'relay\\results' -Filter '*.json' -File).Count; [pscustomobject]@{phase=$h.phase;pid=$h.pid;reconciliation_required=$h.reconciliation_required;last_error=$h.last_error;stale_reasons=$h.stale_reasons;local_head=$local;remote_head=$remote;request_count=$req;result_count=$res;backlog=($req-$res)} | ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"phase\":\"execute_request\",\"pid\":3936,\"reconciliation_required\":false,\"last_error\":null,\"stale_reasons\":null,\"local_head\":\"4d1fca64b65f752d485615db34fc115392118f9e\",\"remote_head\":\"4d1fca64b65f752d485615db34fc115392118f9e\",\"request_count\":857,\"result_count\":856,\"backlog\":1}\r\n",
+      "stdout_bytes": 275,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-04T23:20:33.673Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-04T23:20:33.570Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261005T0621-postreboot-health-01"
+    },
+    "request_id": "20261005T0621-postreboot-health-01",
+    "started_at": "2026-10-04T23:20:32.915Z",
+    "status": "completed"
+  },
+  "id": "20261005T0621-postreboot-health-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
