@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();$code=@'\n\nconst specs=[\n[\"r34\",\"FE12696C7D472CD989EC75492BE7D43B\"],\n[\"g32\",\"47D4D77A89DEA38F0D78177935651327\"],\n[\"b37\",\"31C151217B506B65D8728A5E869409D6\"],\n[\"r25\",\"3C5D3BBC1630D07059CF439F33D2BB52\"]\n];\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const out=[];\nfor(const [name,id] of specs){\n const tab=tabs.find(t=>t.id===id);if(!tab){out.push({name,state:\"missing\"});continue}\n const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let n=1,p=new Map();\n ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n const call=(method,params={})=>new Promise((r,j)=>{const k=n++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\n const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const v=e=>{if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const b=[...document.querySelectorAll('button')].filter(v);const g=b.some(x=>/stop|останов/i.test((x.getAttribute('aria-label')||'')+' '+(x.getAttribute('data-testid')||'')+' '+(x.innerText||'')));const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\"true\\\"]')].find(v)||null;const d=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';return {generating:g,draftLength:d.trim().length,title:document.title,href:location.href}})())\",returnByValue:true});\n out.push({name,...JSON.parse(rr.result.value)});ws.close();await new Promise(r=>setTimeout(r,40));\n}\nprocess.stdout.write(JSON.stringify(out));\n'@;$code|node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"name\":\"r34\",\"generating\":true,\"draftLength\":0,\"title\":\"Implement Publish Provider Layer\",\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\"},{\"name\":\"g32\",\"generating\":true,\"draftLength\":0,\"title\":\"Implement Live Review Ingest\",\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\"},{\"name\":\"b37\",\"generating\":true,\"draftLength\":0,\"title\":\"Bridge R19 Implementation Report\",\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\"},{\"name\":\"r25\",\"generating\":true,\"draftLength\":0,\"title\":\"Deliver R11 Editor\",\"href\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\"}]",
+      "stdout_bytes": 791,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-04T14:02:57.628Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-04T14:02:57.525Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261004T2106-successor-unblock-state-01"
+    },
+    "request_id": "20261004T2106-successor-unblock-state-01",
+    "started_at": "2026-10-04T14:02:56.638Z",
+    "status": "completed"
+  },
+  "id": "20261004T2106-successor-unblock-state-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
