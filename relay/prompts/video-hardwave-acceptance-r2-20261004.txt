@@ -1,0 +1,92 @@
+EXECUTE NOW — HARD WAVE ACCEPTANCE R2 + PUBLISH-TRANSACTION ADVERSARIAL QA. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/video-hardwave-acceptance-r2-20261004
+Exact starting HEAD: 4fe99cd3c80ed1fe882302fa33dfdb4117edd7d8
+
+Role: independent QA only. Zero product-repo mutations. No merge.
+
+Current accepted authority:
+- Creator R32 foto6/video1@f0dc1d27da6452f1de32cd887651805b47a1735d
+  - CI 37199512624 SUCCESS
+  - artifact 11302367811
+  - digest sha256:6803db334974b8dbea1c30c107ec5af00fe2cb892ed67e68540c2b2d74b18599
+  - contract creator.autonomous_tournament.r32.v1
+
+Known Hard Wave blockers from QA R1:
+- Media R25 latest candidate def2f99b56c94d353b899b256689361a08822fdf:
+  - run 37200019323 failed twice in node-test because real demo:r25 received runner shutdown/cancel;
+  - focused R25 tests passed;
+  - external umbrella media.multicandidate_round.r25.v1 still must be proven.
+- Growth R30 latest observed 9e5f798adf4c5a94ca05f06f495965d4121f1674:
+  - prior run 37200038820 failed because workflow omitted explicit focused test_consensus_review_oracle_r30.py;
+  - external umbrella growth.consensus_review.r30.v1 still must be proven.
+- Bridge R35 f19c5f7877fb80c8a0678c24a056b5bb52d87b91:
+  - CI 37199414378 SUCCESS;
+  - rejected by R1 as E_CONTRACT_ID_MISMATCH because external expected bridge.multiagent_dispatch.r35.v1 was missing while internal wire contract was bridge.r35_multiagent_exactid_dispatch_batch.v1.
+
+New product lane:
+- Creator R33 branch agent/creator-r33-publish-transaction-safety-20261004
+- starts at accepted R32 f0dc1d27da6452f1de32cd887651805b47a1735d
+- expected external contract creator.publish_transaction.r33.v1
+- must remain SOURCE_READY_NO_LIVE_PUBLISH; no provider network call.
+
+Mission:
+1. Reuse and extend the existing hardwave_qa validator; do not duplicate weaker validation.
+2. Observe R25/R30/R35 read-only as they produce fixes.
+3. Accept a candidate only with:
+   - exact current branch HEAD;
+   - exact-head CI SUCCESS;
+   - required artifact id/name/digest;
+   - external umbrella contract exactly matching predeclared ID;
+   - internal schema hashes pinned by the umbrella;
+   - compatibility against accepted Creator R32 authority.
+4. For Media R25 additionally prove:
+   - real 4-candidate encoded MP4 evidence exists;
+   - targeted re-edit evidence exists;
+   - restart/resume evidence exists;
+   - CI no longer performs a redundant second full render;
+   - previous runner-shutdown attempts are not mislabeled product failures.
+5. For Growth R30 additionally prove:
+   - focused R30 test is explicitly wired in workflow;
+   - 3 distinct review conversation IDs required;
+   - duplicate/copy/stale review and high-disagreement cases fail closed;
+   - model consensus never becomes human ground truth.
+6. For Bridge R35 additionally prove:
+   - external bridge.multiagent_dispatch.r35.v1 exists;
+   - it pins all internal batch/journal/result/snapshot schemas;
+   - unknown Send -> RECONCILIATION_REQUIRED;
+   - blind replay remains impossible;
+   - Windows + Ubuntu exact-head CI green.
+7. Add R33 adversarial QA contract now even if implementation is still in progress:
+   - validate creator.publish_transaction.r33.v1;
+   - PREPARED -> VALIDATED -> COMMIT_ELIGIBLE -> COMMITTING -> COMMITTED lifecycle;
+   - changed winner/caption/provider under same idempotency key => conflict;
+   - timeout after dispatch => RECONCILIATION_REQUIRED;
+   - unknown outcome cannot transition to ABORTED or retry;
+   - partial multi-platform success isolated per platform;
+   - no real provider/network call in CI;
+   - no secrets in artifact/report.
+8. Predeclare at least 12 R33-specific faults and add them to deterministic fault corpus.
+9. Add a combined compatibility report with rows:
+   - R32
+   - R25
+   - R30
+   - R35
+   - R33
+   Status values: ACCEPTED / WAITING_EXACT_GREEN / INCOMPATIBLE / REJECTED.
+10. Overall status:
+   - HARD_WAVE_PROTOCOL_GREEN only when R25/R30/R35 exact green and compatible.
+   - PUBLISH_TRANSACTION_SOURCE_READY only when R33 exact green and passes no-live-publish adversarial gate.
+   - Never imply LIVE_READY or authorize provider publish.
+11. CI for this QA branch must run validator/tests and publish an acceptance artifact.
+12. No live Bridge cutover, no social publish, no SpectraTrack work.
+
+Completion evidence REQUIRED:
+- substantive QA code/tests/report updates;
+- exact final QA HEAD;
+- exact-head QA CI SUCCESS;
+- QA artifact id/name/digest;
+- refreshed compatibility matrix with exact evidence;
+- explicit fault rejection results;
+- zero product mutations.
