@@ -1,0 +1,31 @@
+EXECUTE NOW — SUPERVISOR VIDEO/BRIDGE WAVE CONTROL. Do not stop at acknowledgement.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/supervision
+
+Current coordinator evidence from 2026-10-04:
+- PC Control production relay is operational again after manual restart; use PC Control, NEVER Desktop Commander.
+- SpectraTrack detector/fine-tune direction remains PAUSED.
+- Main priority: autonomous short-form video editing/review/re-edit/publish-ready loop and Bridge reliability.
+- Creator R31 branch agent/creator-r31-live-session-authority-20261002 is still at 50c17852a910c57f0894dcdb356d4d4923edb62b.
+- Media R24 branch agent/media-r24-canonical-live-artifact-20261002 is still at 78c6982a91d7e3e8c037cd9ce740ee077babdccc.
+- Growth R29 branch agent/growth-r29-freeze-r23-r32-20261002 is still at 629a2b9ddf59b84eee4e87b257c161dad42831dc.
+- Bridge R34 branch agent/bridge-r34-sticky-chat-exact-id-20261004 starts at 805bf628d3d2844549b54db1112736fae0200fc7.
+- Growth R29 task was just submitted and generation is active.
+- Bridge R34 sticky-chat exact-ID routing task was just submitted and generation is active.
+- Creator exact chat is currently generating unrelated/current work; R31 was NOT submitted. Do not interrupt.
+- Media exact chat is currently generating and retains a nonempty draft; R24 was NOT submitted. Do not overwrite or interrupt.
+
+Your milestone:
+1. Act as independent supervision/verification, not product implementer.
+2. Poll only through safe read-only evidence where possible. Acknowledgement prose is zero progress.
+3. For Growth R29 and Bridge R34: require changed exact branch HEAD, substantive diff, tests/docs/report, and exact-head green CI. Record exact SHA/run/artifact evidence in boss.
+4. For Creator/Media: do not send anything while generation is active or draft is ambiguous. First reconcile their current generation and branch state.
+5. If Creator becomes idle and branch remains exactly 50c17852... with no R31 task already present, dispatch the existing R31 prompt only after exact conversation-ID verification and empty/safe composer.
+6. If Media becomes idle and branch remains exactly 78c6982a... with no R24 task already present, reconcile the existing draft. Send only if the draft is exactly the canonical R24 prompt; otherwise fail closed and report the blocker.
+7. Never route by title/last-open tab/only-open-chat. Exact conversation ID is mandatory before mutation.
+8. Do not restart/deploy/repoint the live Bridge. R34 is isolated only.
+9. No SpectraTrack work.
+10. Record a durable checkpoint with current status and any exact evidence. No merge.
+
+Return only concrete progress: branch HEADs, commits, CI, artifacts, or explicit blockers.
