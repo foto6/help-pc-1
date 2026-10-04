@@ -1,0 +1,67 @@
+EXECUTE NOW — HARD WAVE QA R4 / SEQUENTIAL EXPERIMENT ACCEPTANCE + MOVING-CANDIDATE REFRESH. Independent QA only.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/video-hardwave-acceptance-r4-20261004
+Exact starting HEAD: 2a48c909bfb5785409b591253f6085642b962d0d
+This is the exact-green QA-R3 head:
+- CI 37207701514 SUCCESS
+- artifact 11305557095
+- digest sha256:4c5cb2c476643a03865ec37c084650db4c98c84c3aed04aafeb35b81b4e9fba0
+
+Frozen independently accepted authorities:
+- Creator R33: 9556108f423a15a40614a8bc9d590e6dc2e49746 / CI 37203622591 / artifact 11304071297
+- Growth R31: 311606b677d6f0d97669c905265f1eb64b7ff9a4 / CI 37204153689 / artifact 11304006807
+- Bridge R36: 32bb20c00d3570540ee4d37c1df875d6feaa8dd1 / CI 37204031701 / Ubuntu 11304515492 + Windows 11304161407
+- Creator R32, Growth R30, Bridge R35 remain frozen accepted parents from prior QA.
+
+Fresh candidate requiring independent acceptance now:
+Growth R32
+- repo foto6/video3
+- branch agent/growth-r32-sequential-experiment-policy-20261004
+- exact candidate SHA aacaefca808a0d71adb56fbb5b5ecf6213e874c8
+- exact run 37207893319 SUCCESS
+- artifact:
+  id 11304917444
+  name growth-r32-sequential-experiment-policy
+  digest sha256:a697270b382b935271fc088e856720e29f9b2e6ff2c313adc93b2789234032be
+- expected contract growth.sequential_experiment_policy.r32.v1
+- exact accepted parent Growth R31 must remain pinned.
+
+Other moving candidates — DO NOT accept from stale evidence:
+- Media R25 branch currently moving; latest coordinator-observed exact run 37207417367 on 868a1434c93c26741f97a3d10d8979c51620030d is/was in progress and had candidate-3 SUCCESS, candidate-4 runner shutdown. Refresh only if later exact current head is green with final artifact.
+- Creator R34 branch agent/creator-r34-multiplatform-publish-saga-20261004 has substantive candidate work but current CI is not yet independently green.
+- Bridge R37 branch agent/bridge-r37-multiround-review-orchestrator-20261004 may still be moving and has no accepted exact-green authority yet.
+
+Mission:
+1. Independently verify Growth R32 SHA/run/artifact/contract/blob identities using GitHub evidence.
+2. Add deterministic adversarial QA for sequential experiment policy:
+   - randomized vs observational evidence mode cannot be conflated;
+   - observational mode never emits causal winner;
+   - randomized mode requires exact assignment/exposure identity;
+   - sample-ratio mismatch hard-block;
+   - minimum sample/exposure hard-block;
+   - missing/late metric hard-block;
+   - metric-definition/schema drift hard-block;
+   - exposure leakage/duplicate campaign/event hard-block;
+   - repeated peeking outside predeclared sequential boundaries hard-block;
+   - primary metric switching under same experiment identity conflicts;
+   - multiple candidates/metrics require predeclared multiplicity control;
+   - early noisy uplift that later reverses must not produce irreversible early promotion outside the policy boundary;
+   - nonstationarity/drift can produce STALE_POLICY_REVIEW_REQUIRED;
+   - reordered identical data yields same semantic decision;
+   - no automatic edit/publish/browser/provider mutation;
+   - human_ground_truth=false.
+3. Verify predeclared policy fields exist and are actually enforced: primary metric, guardrails, minimum sample, max horizon, stopping boundaries, error/confidence policy, multiple-comparison handling.
+4. Accept Growth R32 only if exact current head still equals aacaefca... and exact-head SUCCESS/artifact digest match. If the branch moved, refresh to the new exact head and require new exact-green evidence.
+5. Refresh R25/R34/R37 read-only only when they produce newer exact heads. Never accept queued/in-progress/failed/stale runs.
+6. Preserve all R1/R2/R3 fault corpora and accepted authority invariants.
+7. Produce compatibility/status matrix with ACCEPTED / WAITING_EXACT_GREEN / INCOMPATIBLE / REJECTED.
+8. Exact QA-R4 head must have its own CI SUCCESS and deterministic acceptance artifact.
+9. No product repo mutation, no merge, no live Bridge cutover, no social publish, no SpectraTrack work.
+
+Completion requires:
+- exact QA-R4 HEAD + exact-head CI SUCCESS;
+- QA artifact ID/name/digest;
+- Growth R32 exact disposition with evidence;
+- moving-candidate statuses for R25/R34/R37;
+- rejected-fault report with stable reason codes.
