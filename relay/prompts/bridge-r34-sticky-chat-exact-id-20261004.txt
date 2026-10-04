@@ -1,0 +1,43 @@
+EXECUTE NOW — BRIDGE R34 STICKY-CHAT EXACT-ID ROUTING FIX. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r34-sticky-chat-exact-id-20261004
+Exact starting HEAD: 805bf628d3d2844549b54db1112736fae0200fc7
+
+User priority: the current Bridge sometimes keeps opening/routing to the same wrong ChatGPT conversation (observed wrong conversation ID: 6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6). Fix the routing logic in isolation. DO NOT restart, deploy, repoint, or modify the currently working live Bridge/runtime.
+
+Known code/evidence:
+- R27 existing-chat rebind already treats providerConversationId as primary identity and verifies the final URL before persisting.
+- Ordinary managed assignment recovery still uses persisted managed.url in managedAssignmentTargetObservations/openChromeDebugUrl and can therefore follow stale project slugs/URLs before the strict R27 identity gate.
+- Historical reboot incident proved stale "-sv" project slugs, changed tab IDs, root redirects, and sidebar/search-only rediscovery.
+- R33 branch is identical to R32; no R33 implementation exists yet.
+
+Milestone:
+1. Reproduce a deterministic sticky/wrong-chat routing regression for ordinary managed-agent assignment recovery, not only the explicit rebind API.
+2. Make providerConversationId the authority for every managed-agent route before composer mutation/upload/send. Persisted URL, project slug, tab ID and title are hints only.
+3. Reuse/refactor the R27 exact-conversation discovery/rebind logic where practical; do not create a second weaker identity implementation.
+4. Before any prompt mutation, verify the resolved page's actual conversation ID equals the managed providerConversationId. If root redirect, different conversation, stale canonical URL, ambiguity, missing target, or account mismatch occurs: fail closed and perform zero prompt/file/provider mutation.
+5. After browser restart/tab-ID churn, rediscover the same existing conversation by exact ID using current DOM/sidebar/search evidence. Never create a replacement conversation automatically.
+6. Remove/guard any fallback equivalent to "only open conversation" for managed-agent dispatch when an exact managed conversation ID exists.
+7. Add deterministic tests covering:
+   - stale -sv project URL -> current canonical project URL;
+   - saved URL redirecting to root;
+   - wrong sticky conversation open while correct target also exists;
+   - wrong sticky conversation as the only open conversation;
+   - multiple tabs with same/different conversation IDs;
+   - changed tab IDs after restart;
+   - title collision;
+   - target disappearing between discovery and mutation;
+   - exact post-navigation/post-focus identity verification;
+   - the observed wrong ID 6ab8b243-ee3c-83eb-a1e8-d6b9ba8b5fc6 used only as a negative regression fixture, never hardcoded as a target.
+8. Preserve R28-R32 live-review/session contracts and at-most-once semantics. No weakening of file-attachment or review identity gates.
+9. Add a read-only diagnostic command/report that shows managedChatId -> expected conversationId -> observed target/canonical URL -> routing decision without secrets.
+10. No live deployment/cutover, no provider chat creation/deletion, no merge.
+
+Completion evidence REQUIRED:
+- substantive code + regression tests + docs/report;
+- new commit(s) on the exact branch;
+- exact final HEAD;
+- exact-head tests/CI SUCCESS;
+- concise proof that wrong-chat routing fails closed before any composer mutation;
+- if live-only behavior cannot be proven safely, report BLOCKED_LIVE_VALIDATION rather than claiming a live fix.
