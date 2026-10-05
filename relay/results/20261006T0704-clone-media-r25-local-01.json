@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$root='E:\\work'\n$dest='E:\\work\\video2-r25-local'\nif(Test-Path -LiteralPath $dest){ throw \"destination already exists: $dest\" }\nNew-Item -ItemType Directory -Force -Path $root | Out-Null\ngit clone --branch agent/media-r25-multicandidate-round-engine-20261004 --single-branch https://github.com/foto6/video2.git $dest\ngit -C $dest checkout --detach b11a93664f9b64bf6da626119758c841a0a75c1e\n$head=(git -C $dest rev-parse HEAD).Trim()\n$status=(git -C $dest status --porcelain)\n[pscustomobject]@{dest=$dest;head=$head;clean=([string]::IsNullOrWhiteSpace(($status -join '')))} | ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Cloning into 'E:\\work\\video2-r25-local'...\nHEAD is now at b11a936 R25 benchmark frozen candidate-4 render paths\n",
+      "stderr_bytes": 112,
+      "stderr_truncated": false,
+      "stdout": "{\"dest\":\"E:\\\\work\\\\video2-r25-local\",\"head\":\"b11a93664f9b64bf6da626119758c841a0a75c1e\",\"clean\":true}\r\n",
+      "stdout_bytes": 102,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-05T23:55:02.456Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-05T23:55:02.357Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0704-clone-media-r25-local-01"
+    },
+    "request_id": "20261006T0704-clone-media-r25-local-01",
+    "started_at": "2026-10-05T23:54:56.822Z",
+    "status": "completed"
+  },
+  "id": "20261006T0704-clone-media-r25-local-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
