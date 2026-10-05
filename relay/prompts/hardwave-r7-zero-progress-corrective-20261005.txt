@@ -1,0 +1,31 @@
+EXECUTE NOW — HARD WAVE QA R7-FINAL ZERO-PROGRESS CORRECTIVE. No plan-only response.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/video-hardwave-acceptance-r7-final-20261005
+Exact starting HEAD: aa415759795beb24f1333d190ff842451020be5f
+
+Coordinator evidence:
+- The full R7-final task was already dispatched with request coord-20261005-hardwave-r7-final-qa-01 and Send started.
+- QA chat is now idle.
+- R7-final branch still exactly equals starting R6 SHA aa415759795beb24f1333d190ff842451020be5f.
+- Therefore current R7 product progress = ZERO.
+- Old branch agent/video-hardwave-acceptance-r7-20261005 is superseded and never-dispatched; do not use it.
+
+Execute the already supplied HARD WAVE QA R7-FINAL milestone now.
+
+Required immediately:
+1. Predeclare and COMMIT R7 acceptance code/fixtures/tests BEFORE scoring final R36/R39/Media outputs.
+2. Preserve all R1-R6 corpora and exact R6 accepted tuples.
+3. Add >=45 R7 deterministic adversarial cases covering R36 proof-bundle tamper, R39 fencing/split-brain, and Media R25 checkpoint/final-artifact faults.
+4. Current state handling:
+   - Creator R36 branch exists but is not accepted unless substantive commit + exact-head CI/artifact appears.
+   - Bridge R39 has substantive commit(s) but current observed exact-head CI can be red; do not accept until exact-green Ubuntu+Windows evidence.
+   - Media R25 remains unaccepted and branch is being frozen for one exact-head CI.
+   - Growth R35 is now STARTED and may be observed, but do not fabricate acceptance.
+5. Build machine-readable statuses ACCEPTED / WAITING_EXACT_GREEN / INCOMPATIBLE / REJECTED / NOT_STARTED.
+6. Overall stays HARD_WAVE_BLOCKED while required Media authority is unaccepted.
+7. Commit substantive QA implementation/tests/docs on R7-final and push.
+8. Exact-head QA CI must be SUCCESS before claiming QA milestone complete.
+9. Zero product-repo mutations; no merge/live Bridge/provider publish/SpectraTrack.
+
+Do not answer with another plan. Return exact QA SHA/CI/artifact evidence only after substantive execution.
