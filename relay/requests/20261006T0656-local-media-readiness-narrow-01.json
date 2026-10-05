@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0656-local-media-readiness-narrow-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='SilentlyContinue'\n$dirs=Get-ChildItem 'E:\\' -Directory -Force | Where-Object {$_.Name -ne 'manhwa'} | Select-Object -ExpandProperty FullName\n$repos=@()\nforeach($p in $dirs){\n  if(Test-Path (Join-Path $p '.git')){\n    $remote=(git -C $p remote get-url origin 2>$null)\n    $branch=(git -C $p branch --show-current 2>$null)\n    $head=(git -C $p rev-parse HEAD 2>$null)\n    $repos += [pscustomobject]@{path=$p;remote=($remote -join '');branch=($branch -join '');head=($head -join '')}\n  }\n}\n$ffmpeg=(where.exe ffmpeg 2>$null)\n$ffprobe=(where.exe ffprobe 2>$null)\n$runnerDirs=@($dirs | Where-Object {$_ -match 'actions-runner|github-runner|runner'})\n[pscustomobject]@{\n repos=$repos\n ffmpeg=@($ffmpeg)\n ffprobe=@($ffprobe)\n runnerDirs=$runnerDirs\n} | ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Narrow read-only local media readiness; protected path excluded"
+}
