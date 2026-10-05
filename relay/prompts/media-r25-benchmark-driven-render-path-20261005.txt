@@ -1,0 +1,79 @@
+EXECUTE ONLY AFTER THE CURRENT FREEZE-HEAD TASK HAS REPORTED TERMINAL RUN 37246071924. MEDIA R25 BENCHMARK-DRIVEN RENDER-PATH OPTIMIZATION.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r25-multicandidate-round-engine-20261004
+Frozen evidence head: 00319d5795daa5a38260e309102866eec476cb0b
+Frozen run: 37246071924
+
+Observed exact evidence:
+- node-test SUCCESS.
+- r25-pair-1 SUCCESS.
+- r25-candidate-3 SUCCESS.
+- r25-candidate-4-segment-1 failed only because the GitHub runner received external shutdown/SIGTERM, exit 143, at ~31s after FFmpeg started.
+- Runtime artifact digest verification passed before chmod/execute.
+- Segment-1 uses the exact checkpoint runtime.
+- Current decomposition uses maxMotionChunkMs=400, yet a 400ms timeline segment still exceeds the observed ~30s interruption window.
+- Code review shows the checkpoint segment still uses the full final render graph: 1080x1920, zoompan/motion, captions/overlays, audio path including loudnorm, x264, and compileFfmpegCommand forces -threads 1.
+
+Goal: stop guessing chunk sizes. Measure multiple deterministic render paths in ONE benchmark commit, freeze that commit until benchmark CI is terminal, then make at most ONE evidence-selected implementation commit.
+
+PHASE A — ONE BENCHMARK COMMIT:
+1. Predeclare benchmark policy BEFORE measurements:
+   - frozen input = candidate-4 segment-1 from exact 00319d authority;
+   - exact source/runtime/timeline/operation-graph digests;
+   - same final required geometry 1080x1920@30;
+   - two identical repetitions per eligible strategy;
+   - a single process invocation must have a bounded internal timeout so a slow strategy is recorded as TIMEOUT rather than hanging the workflow;
+   - target: segment render comfortably below the observed runner-kill boundary; use <=15s as PASS target and <=20s as WARN ceiling.
+2. Evaluate in the same benchmark workflow/commit at least these strategies:
+   A. BASELINE_FULL_SINGLE_THREAD: current exact full graph / current thread behavior.
+   B. FULL_BOUNDED_THREADS: same semantic graph with a predeclared deterministic bounded encoder/filter threading configuration.
+   C. VIDEO_ONLY_SEGMENT: candidate-4 segment renders only the video/caption/motion path; audio/loudness is generated once as separate reusable exact evidence and muxed at final assembly.
+   D. OPTIMIZED_MOTION_PATH: an explicitly documented motion-specific path that removes redundant scale/crop/encode work without changing the frozen candidate-4 visual semantics.
+   You may include another strategy only if declared before results.
+3. Benchmark harness must record for every strategy/repetition:
+   - command/config digest;
+   - wall time;
+   - exit/timeout classification;
+   - output SHA/size;
+   - ffprobe geometry/fps/duration;
+   - frame/video semantic comparison against a declared reference where applicable;
+   - audio handling class;
+   - CPU/thread settings.
+4. Determinism eligibility:
+   - byte-identical repeated output is preferred;
+   - if a strategy intentionally changes the intermediate codec/container, it must still produce a byte-stable final assembled candidate across two full deterministic rehearsals and pass an explicitly frozen frame/technical equivalence contract.
+5. Baseline timeout must NOT fail the benchmark workflow; it is valid benchmark evidence.
+6. Do not push another commit while benchmark CI is queued/in_progress. No commit churn.
+
+SELECTION RULE, FROZEN BEFORE RESULTS:
+- Reject any strategy that violates exact authority/lineage, technical geometry, candidate visual semantics, or deterministic replay.
+- Among eligible strategies, choose the fastest whose two repetitions meet the <=15s per-subphase target.
+- If none meet <=15s, choose no winner and report BLOCKED_PERFORMANCE; do not keep shrinking chunks blindly.
+- Do not choose based on one lucky repetition.
+
+PHASE B — AT MOST ONE IMPLEMENTATION COMMIT AFTER BENCHMARK TERMINAL:
+7. Only after benchmark artifact is terminal and proves a winner, implement exactly that selected strategy.
+8. Preserve runtime-manifest SHA verification BEFORE chmod/execute.
+9. Preserve stable operation IDs, source/graph/runtime/timeline binding, checkpoint conflict detection, and no blind replay.
+10. If VIDEO_ONLY_SEGMENT wins:
+    - audio evidence must be generated once, source-bound, hash-bound and reusable;
+    - assembly must mux exact verified audio;
+    - final candidate must pass AV sync/technical gate;
+    - audio cannot be silently regenerated per segment.
+11. If bounded threading wins:
+    - prove repeated deterministic output/final artifact on the runner; do not assume threading is deterministic.
+12. Final production R25 exact-head run must complete:
+    pair-1 -> candidate-3 -> all candidate-4 durable subphases -> candidate-4 assembly -> initial-finalize -> targeted-evidence -> postdownload-verify.
+13. Final artifact must contain 4 distinct real encoded candidates plus targeted re-edit lineage and exact hashes.
+14. Freeze final implementation head; no pin/report churn after terminal exact-green evidence.
+15. No model/browser/provider calls, no publish, no merge.
+
+Completion evidence:
+- benchmark commit SHA + benchmark CI/artifact with all strategy measurements;
+- frozen predeclared selection policy;
+- selected strategy and why it passed;
+- at most one post-benchmark implementation commit;
+- final exact SHA + complete exact-head CI SUCCESS;
+- final R25 artifact IDs/names/digests;
+- measured subphase wall times demonstrating margin below the observed runner shutdown boundary.
