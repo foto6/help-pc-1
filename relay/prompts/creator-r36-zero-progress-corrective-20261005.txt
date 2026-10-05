@@ -1,0 +1,33 @@
+EXECUTE NOW — CREATOR R36 ZERO-PROGRESS CORRECTIVE. No plan-only response.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r36-proof-carrying-release-rehearsal-20261005
+Required starting authority remains accepted Creator R35:
+4793b7cb1735d21db6d211244018591b80c329a4
+
+Coordinator evidence:
+- The full R36 task was already dispatched with request coord-20261005-creator-r36-rehearsal-01 and Send started.
+- The chat is now idle.
+- The R36 branch still equals the R35 starting SHA 4793b7cb1735d21db6d211244018591b80c329a4.
+- Therefore current R36 product progress = ZERO. Acknowledgement/planning text is not completion.
+
+Execute the previously supplied CREATOR R36 PROOF-CARRYING RELEASE REHEARSAL milestone now.
+
+Non-negotiable deliverables:
+1. Substantive implementation for creator.proof_carrying_release_rehearsal.r36.v1, not only docs.
+2. Exact immutable authority envelope for accepted Creator R35 + Growth R34 + Bridge R38 + QA R6.
+3. Media R25 explicitly UNACCEPTED / NOT_CONSUMED.
+4. Content-addressed proof graph:
+   INTENT_FROZEN -> AUTHORITY_VERIFIED -> ESCROW_REHEARSED -> CANARY_REHEARSED -> CANARY_RECONCILED -> EXPANSION_REHEARSED -> FINAL_REHEARSAL_VERDICT.
+5. Independent bundle verifier with tamper tests.
+6. Fake-provider journal only; provider_effects=0 and live_authorization=false.
+7. >=35 deterministic adversarial cases from the original R36 task.
+8. Focused + full tests.
+9. Commit substantive work to this branch and push it.
+10. Exact-head CI SUCCESS and deterministic R36 artifact id/name/digest before claiming done.
+
+Do not create a new branch.
+Do not merge.
+Do not consume Media R25 as authority.
+Do not perform any live provider/browser/social mutation.
+Do not answer with another plan. Execute and return exact SHA/CI/artifact evidence.
