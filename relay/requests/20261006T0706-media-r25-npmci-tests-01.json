@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0706-media-r25-npmci-tests-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$repo='E:\\work\\video2-r25-local'\nif((git -C $repo rev-parse HEAD).Trim() -ne 'b11a93664f9b64bf6da626119758c841a0a75c1e'){ throw 'HEAD drift' }\nif(Test-Path (Join-Path $repo 'package-lock.json')){ npm --prefix $repo ci } else { npm --prefix $repo install --ignore-scripts }\nnpm --prefix $repo run test:r25\n[pscustomobject]@{head=(git -C $repo rev-parse HEAD).Trim();status='tests_passed'} | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 120000,
+  "note": "Install Media R25 dependencies and run focused R25 tests on local PC"
+}
