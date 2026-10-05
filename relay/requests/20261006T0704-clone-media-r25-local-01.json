@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0704-clone-media-r25-local-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$root='E:\\work'\n$dest='E:\\work\\video2-r25-local'\nif(Test-Path -LiteralPath $dest){ throw \"destination already exists: $dest\" }\nNew-Item -ItemType Directory -Force -Path $root | Out-Null\ngit clone --branch agent/media-r25-multicandidate-round-engine-20261004 --single-branch https://github.com/foto6/video2.git $dest\ngit -C $dest checkout --detach b11a93664f9b64bf6da626119758c841a0a75c1e\n$head=(git -C $dest rev-parse HEAD).Trim()\n$status=(git -C $dest status --porcelain)\n[pscustomobject]@{dest=$dest;head=$head;clean=([string]::IsNullOrWhiteSpace(($status -join '')))} | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 60000,
+  "note": "Create isolated local Media R25 clone at exact frozen head"
+}
