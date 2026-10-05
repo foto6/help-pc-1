@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261005T0723-creator-last-response-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\nconst cid=\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\";\nconst conv=v=>{try{const u=new URL(String(v||\"\"));const a=u.pathname.split(\"/\").filter(Boolean);return a.length===2&&a[0]===\"c\"?a[1]:a.length===4&&a[0]===\"g\"&&a[2]===\"c\"?a[3]:\"\"}catch{return \"\"}};\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json(), m=tabs.filter(t=>t.type===\"page\"&&conv(t.url)===cid);\nif(m.length!==1){process.stdout.write(JSON.stringify({state:\"bad_tab_count\",count:m.length}));process.exit()}\nconst ws=new WebSocket(m[0].webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let n=1;const q=new Map();\nws.onmessage=e=>{const x=JSON.parse(e.data);if(x.id&&q.has(x.id)){q.get(x.id)(x);q.delete(x.id)}};\nconst call=(method,params={})=>new Promise((r,j)=>{const id=n++;q.set(id,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id,method,params}))});\nconst rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const a=[...document.querySelectorAll('[data-message-author-role=\\\"assistant\\\"]')];const u=[...document.querySelectorAll('[data-message-author-role=\\\"user\\\"]')];const lastA=a.length?((a.at(-1).innerText||a.at(-1).textContent||'').trim()):'';const lastU=u.length?((u.at(-1).innerText||u.at(-1).textContent||'').trim()):'';const V=e=>{if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const bs=[...document.querySelectorAll('button')].filter(V);const generating=bs.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||'')));return {title:document.title,href:location.href,generating,lastUser:lastU.slice(-4000),lastAssistant:lastA.slice(-8000)}})())\",returnByValue:true});\nws.close();process.stdout.write(rr.result.value);\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only Creator last response inspection"
+}
