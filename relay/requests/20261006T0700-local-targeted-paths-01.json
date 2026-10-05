@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0700-local-targeted-paths-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='SilentlyContinue'\n$paths=@('E:\\video1','E:\\video2','E:\\video3','E:\\WebAIBridge','E:\\boss','E:\\SpectraTrack','E:\\PC-Control','E:\\pc-github-relay')\n$out=@()\nforeach($p in $paths){\n  $exists=Test-Path -LiteralPath $p\n  $git=$false;$remote='';$branch='';$head=''\n  if($exists -and (Test-Path -LiteralPath (Join-Path $p '.git'))){\n    $git=$true\n    $remote=(git -C $p remote get-url origin 2>$null | Select-Object -First 1)\n    $branch=(git -C $p branch --show-current 2>$null | Select-Object -First 1)\n    $head=(git -C $p rev-parse HEAD 2>$null | Select-Object -First 1)\n  }\n  $out += [pscustomobject]@{path=$p;exists=$exists;git=$git;remote=$remote;branch=$branch;head=$head}\n}\n$ffmpeg=(where.exe ffmpeg 2>$null | Select-Object -First 3)\n$ffprobe=(where.exe ffprobe 2>$null | Select-Object -First 3)\n[pscustomobject]@{paths=$out;ffmpeg=@($ffmpeg);ffprobe=@($ffprobe)} | ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 7000,
+  "note": "Targeted read-only local repo/path and ffmpeg check; no protected-path access"
+}
