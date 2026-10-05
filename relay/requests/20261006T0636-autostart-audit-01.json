@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0636-autostart-audit-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='SilentlyContinue'\n$startupUser=[Environment]::GetFolderPath('Startup')\n$startupAll=\"$env:ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\"\n$runUser=Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run'\n$runAll=Get-ItemProperty 'HKLM:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run'\n$tasks=Get-ScheduledTask | Where-Object {\n  ($_.TaskName -match 'pc|control|bridge|chrome|webai|relay|mcp') -or\n  (($_.Actions | Out-String) -match 'chrome|WebAIBridge|pc-github-relay|PC-Control|mcp')\n} | ForEach-Object {\n  [pscustomobject]@{\n    TaskName=$_.TaskName;TaskPath=$_.TaskPath;State=$_.State;\n    Actions=(($_.Actions | ForEach-Object { \"$($_.Execute) $($_.Arguments)\" }) -join ' | ');\n    Triggers=(($_.Triggers | ForEach-Object { $_.CimClass.CimClassName+':'+$_.Enabled }) -join ' | ')\n  }\n}\n$services=Get-CimInstance Win32_Service | Where-Object {\n  $_.Name -match 'pc|control|bridge|relay|mcp|webai' -or $_.DisplayName -match 'pc|control|bridge|relay|mcp|webai' -or $_.PathName -match 'pc-github-relay|PC-Control|WebAIBridge'\n} | Select-Object Name,DisplayName,StartMode,State,PathName\n$procs=Get-CimInstance Win32_Process | Where-Object {\n  $_.Name -match 'chrome|node|python|powershell|cmd' -and\n  $_.CommandLine -notmatch 'E:\\\\manhwa'\n} | Select-Object ProcessId,ParentProcessId,Name,CommandLine\n[pscustomobject]@{\n  StartupUser=$startupUser\n  StartupUserFiles=@(Get-ChildItem $startupUser -Force | Select-Object Name,FullName)\n  StartupAll=$startupAll\n  StartupAllFiles=@(Get-ChildItem $startupAll -Force | Select-Object Name,FullName)\n  RunUser=@($runUser.PSObject.Properties | Where-Object {$_.Name -notmatch '^PS'} | Select-Object Name,Value)\n  RunAll=@($runAll.PSObject.Properties | Where-Object {$_.Name -notmatch '^PS'} | Select-Object Name,Value)\n  Tasks=@($tasks)\n  Services=@($services)\n  Processes=@($procs)\n} | ConvertTo-Json -Depth 7 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only audit of Windows autostart sources for Chrome, Bridge and PC Control; protected path excluded"
+}
