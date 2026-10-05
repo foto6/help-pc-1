@@ -1,0 +1,21 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {},
+    "dry_run": false,
+    "error": "outcome.lookup action must be a non-empty string",
+    "error_kind": "policy_blocked",
+    "finished_at": "2026-10-05T23:52:34.632Z",
+    "ok": false,
+    "request_id": "20261006T0653-reconcile-local-readiness-01",
+    "started_at": "2026-10-05T23:52:34.632Z",
+    "status": "blocked"
+  },
+  "id": "20261006T0653-reconcile-local-readiness-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
