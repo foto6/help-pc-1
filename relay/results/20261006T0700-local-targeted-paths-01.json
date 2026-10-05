@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='SilentlyContinue'\n$paths=@('E:\\video1','E:\\video2','E:\\video3','E:\\WebAIBridge','E:\\boss','E:\\SpectraTrack','E:\\PC-Control','E:\\pc-github-relay')\n$out=@()\nforeach($p in $paths){\n  $exists=Test-Path -LiteralPath $p\n  $git=$false;$remote='';$branch='';$head=''\n  if($exists -and (Test-Path -LiteralPath (Join-Path $p '.git'))){\n    $git=$true\n    $remote=(git -C $p remote get-url origin 2>$null | Select-Object -First 1)\n    $branch=(git -C $p branch --show-current 2>$null | Select-Object -First 1)\n    $head=(git -C $p rev-parse HEAD 2>$null | Select-Object -First 1)\n  }\n  $out += [pscustomobject]@{path=$p;exists=$exists;git=$git;remote=$remote;branch=$branch;head=$head}\n}\n$ffmpeg=(where.exe ffmpeg 2>$null | Select-Object -First 3)\n$ffprobe=(where.exe ffprobe 2>$null | Select-Object -First 3)\n[pscustomobject]@{paths=$out;ffmpeg=@($ffmpeg);ffprobe=@($ffprobe)} | ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"paths\":[{\"path\":\"E:\\\\video1\",\"exists\":false,\"git\":false,\"remote\":\"\",\"branch\":\"\",\"head\":\"\"},{\"path\":\"E:\\\\video2\",\"exists\":false,\"git\":false,\"remote\":\"\",\"branch\":\"\",\"head\":\"\"},{\"path\":\"E:\\\\video3\",\"exists\":false,\"git\":false,\"remote\":\"\",\"branch\":\"\",\"head\":\"\"},{\"path\":\"E:\\\\WebAIBridge\",\"exists\":true,\"git\":true,\"remote\":\"https://github.com/foto6/WebAIBridge.git\",\"branch\":{},\"head\":\"cb852e013634287669f957253d13d8ef2b45cada\"},{\"path\":\"E:\\\\boss\",\"exists\":false,\"git\":false,\"remote\":\"\",\"branch\":\"\",\"head\":\"\"},{\"path\":\"E:\\\\SpectraTrack\",\"exists\":true,\"git\":false,\"remote\":\"\",\"branch\":\"\",\"head\":\"\"},{\"path\":\"E:\\\\PC-Control\",\"exists\":true,\"git\":false,\"remote\":\"\",\"branch\":\"\",\"head\":\"\"},{\"path\":\"E:\\\\pc-github-relay\",\"exists\":true,\"git\":true,\"remote\":\"https://github.com/foto6/help-pc-1.git\",\"branch\":\"agent/pc-github-relay\",\"head\":\"612bc7f1abe0d310bcc2cbb66ba4120fd99fbf7f\"}],\"ffmpeg\":[\"C:\\\\Users\\\\foto6\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\ffmpeg-9.0-full_build\\\\bin\\\\ffmpeg.exe\"],\"ffprobe\":[\"C:\\\\Users\\\\foto6\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\ffmpeg-9.0-full_build\\\\bin\\\\ffprobe.exe\"]}\r\n",
+      "stdout_bytes": 1206,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-05T23:54:08.948Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-05T23:54:08.843Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0700-local-targeted-paths-01"
+    },
+    "request_id": "20261006T0700-local-targeted-paths-01",
+    "started_at": "2026-10-05T23:54:08.026Z",
+    "status": "completed"
+  },
+  "id": "20261006T0700-local-targeted-paths-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
