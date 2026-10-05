@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n[pscustomobject]@{\n  node=(node --version)\n  npm=(npm --version)\n  git=(git --version)\n  freeGB=[math]::Round((Get-PSDrive -Name E).Free/1GB,2)\n  ffmpeg=((where.exe ffmpeg | Select-Object -First 1))\n  ffprobe=((where.exe ffprobe | Select-Object -First 1))\n} | ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"node\":\"v24.18.0\",\"npm\":\"12.0.1\",\"git\":\"git version 2.55.0.windows.5\",\"freeGB\":80.41,\"ffmpeg\":\"C:\\\\Users\\\\foto6\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\ffmpeg-9.0-full_build\\\\bin\\\\ffmpeg.exe\",\"ffprobe\":\"C:\\\\Users\\\\foto6\\\\AppData\\\\Local\\\\Microsoft\\\\WinGet\\\\Packages\\\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\\\ffmpeg-9.0-full_build\\\\bin\\\\ffprobe.exe\"}\r\n",
+      "stdout_bytes": 418,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-05T23:54:33.494Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-05T23:54:33.395Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0702-local-runtime-preflight-01"
+    },
+    "request_id": "20261006T0702-local-runtime-preflight-01",
+    "started_at": "2026-10-05T23:54:32.127Z",
+    "status": "completed"
+  },
+  "id": "20261006T0702-local-runtime-preflight-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
