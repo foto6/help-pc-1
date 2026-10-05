@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0702-local-runtime-preflight-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n[pscustomobject]@{\n  node=(node --version)\n  npm=(npm --version)\n  git=(git --version)\n  freeGB=[math]::Round((Get-PSDrive -Name E).Free/1GB,2)\n  ffmpeg=((where.exe ffmpeg | Select-Object -First 1))\n  ffprobe=((where.exe ffprobe | Select-Object -First 1))\n} | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only preflight for local Media R25 execution"
+}
