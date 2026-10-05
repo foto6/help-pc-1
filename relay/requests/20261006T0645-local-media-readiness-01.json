@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0645-local-media-readiness-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='SilentlyContinue'\n$roots=@()\nGet-ChildItem 'E:\\' -Directory -Force | Where-Object {$_.Name -ne 'manhwa'} | ForEach-Object {\n  $p=$_.FullName\n  if(Test-Path (Join-Path $p '.git')){\n    $roots += [pscustomobject]@{path=$p;git=$true;remote=((git -C $p remote get-url origin 2>$null) -join '')}\n  }\n}\n$runnerServices=Get-CimInstance Win32_Service | Where-Object {\n  $_.Name -match 'actions.runner|github.*runner|runner' -or $_.DisplayName -match 'GitHub Actions|runner'\n} | Select-Object Name,DisplayName,StartMode,State,PathName\n$runnerProcs=Get-CimInstance Win32_Process | Where-Object {\n  $_.CommandLine -match 'Runner.Listener|run.cmd|actions-runner'\n} | Select-Object ProcessId,Name,CommandLine\n$ffmpeg=(Get-Command ffmpeg -ErrorAction SilentlyContinue)\n$ffprobe=(Get-Command ffprobe -ErrorAction SilentlyContinue)\n$cpu=Get-CimInstance Win32_Processor | Select-Object -First 1 Name,NumberOfCores,NumberOfLogicalProcessors\n$gpu=Get-CimInstance Win32_VideoController | Select-Object Name,AdapterRAM,DriverVersion\n[pscustomobject]@{\n  repos=$roots\n  runnerServices=@($runnerServices)\n  runnerProcesses=@($runnerProcs)\n  ffmpeg=if($ffmpeg){$ffmpeg.Source}else{$null}\n  ffprobe=if($ffprobe){$ffprobe.Source}else{$null}\n  cpu=$cpu\n  gpu=@($gpu)\n} | ConvertTo-Json -Depth 6 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only local media readiness; excludes protected E:\\manhwa"
+}
