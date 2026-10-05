@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261005T0720-active-agent-state-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\nconst specs=[\n[\"creator\",\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\"],\n[\"media\",\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\"],\n[\"bridge\",\"6abda61c-a440-83ed-9482-1d0fc7923e03\"],\n[\"qa\",\"6abe03fa-9728-83eb-90d2-5ee81bbac12c\"]\n];\nconst conv=v=>{try{const u=new URL(String(v||\"\"));const a=u.pathname.split(\"/\").filter(Boolean);return a.length===2&&a[0]===\"c\"?a[1]:a.length===4&&a[0]===\"g\"&&a[2]===\"c\"?a[3]:\"\"}catch{return \"\"}};\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const out=[];\nfor(const [name,cid] of specs){\n const m=tabs.filter(t=>t.type===\"page\"&&conv(t.url)===cid);if(m.length!==1){out.push({name,count:m.length});continue}\n const ws=new WebSocket(m[0].webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let n=1;const q=new Map();\n ws.onmessage=e=>{const x=JSON.parse(e.data);if(x.id&&q.has(x.id)){q.get(x.id)(x);q.delete(x.id)}};\n const call=(method,params={})=>new Promise((r,j)=>{const id=n++;q.set(id,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id,method,params}))});\n const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const V=e=>{if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const bs=[...document.querySelectorAll('button')].filter(V);const generating=bs.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||'')));const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\"true\\\"]')].find(V)||null;const draft=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';return {title:document.title,href:location.href,generating,draftLength:draft.trim().length}})())\",returnByValue:true});\n out.push({name,...JSON.parse(rr.result.value)});ws.close();await new Promise(r=>setTimeout(r,40));\n}\nprocess.stdout.write(JSON.stringify(out));\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only active agent state"
+}
