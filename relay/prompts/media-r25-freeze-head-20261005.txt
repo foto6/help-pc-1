@@ -1,0 +1,33 @@
+EXECUTE NOW — MEDIA R25 FREEZE-HEAD / CI QUIESCENCE GATE. This is a coordination corrective, not a new feature milestone.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r25-multicandidate-round-engine-20261004
+CURRENT EXACT HEAD TO FREEZE: 00319d5795daa5a38260e309102866eec476cb0b
+Existing exact-head run: 37246071924
+
+Coordinator evidence:
+- 00319d5795daa5a38260e309102866eec476cb0b is 7 commits ahead of 5bded6828e08201ad75dfb9b19260029026b6d64, so this is not a rollback.
+- Recent rapid push churn caused many prior Actions runs to be cancelled by workflow concurrency cancel-in-progress.
+- The current head already records the measured six-chunk candidate-4 preemption strategy.
+- Further speculative pushes now prevent the only evidence that matters: one complete exact-head run.
+
+Required NOW:
+1. DO NOT make another commit or push while run 37246071924 is queued/in_progress.
+2. Freeze exact branch HEAD at 00319d5795daa5a38260e309102866eec476cb0b.
+3. Observe run 37246071924 to terminal state.
+4. If SUCCESS:
+   - do not touch branch;
+   - report exact run, all R25 job conclusions, final artifact IDs/names/digests;
+   - verify candidate-1..4, checkpoint chunks, candidate-4 assembly, initial-finalize, targeted-evidence, postdownload-verify all required jobs succeeded.
+5. If FAILURE:
+   - inspect exact failing job/log;
+   - classify PRODUCT_DEFECT vs INFRASTRUCTURE_PREEMPTION.
+   - make at most ONE corrective commit only if the log proves a product defect requiring code change.
+   - if infrastructure-only, do not mutate code just to create a new run; preserve exact head and report exact evidence for coordinator action.
+6. If CANCELLED:
+   - identify exact cancellation cause;
+   - do NOT create a replacement push just to restart CI.
+7. Do not change acceptance pins/reports merely to chase CI state.
+8. No merge, no provider/model/browser calls, no publish.
+
+Completion is NOT a new commit. Completion is a frozen exact head plus terminal exact-head CI evidence.
