@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='SilentlyContinue'\n$repo='E:\\work\\video2-r25-local'\n$procs=@()\nGet-CimInstance Win32_Process -Filter \"Name='node.exe'\" | Where-Object {\n  $_.CommandLine -like '*video2-r25-local*' -or $_.CommandLine -like '*test:r25*' -or $_.CommandLine -like '*node --test*'\n} | ForEach-Object {\n  $procs += [pscustomobject]@{pid=$_.ProcessId;cmd=$_.CommandLine}\n}\n[pscustomobject]@{\n  head=if(Test-Path $repo){(git -C $repo rev-parse HEAD 2>$null | Select-Object -First 1)}else{$null}\n  clean=if(Test-Path $repo){[string]::IsNullOrWhiteSpace(((git -C $repo status --porcelain 2>$null) -join ''))}else{$false}\n  nodeModules=(Test-Path (Join-Path $repo 'node_modules'))\n  packageLock=(Test-Path (Join-Path $repo 'package-lock.json'))\n  processes=$procs\n} | ConvertTo-Json -Depth 4 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"head\":\"b11a93664f9b64bf6da626119758c841a0a75c1e\",\"clean\":false,\"nodeModules\":false,\"packageLock\":true,\"processes\":[]}\r\n",
+      "stdout_bytes": 121,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-05T23:58:23.960Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-05T23:58:23.861Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0710-reconcile-media-local-tests-01"
+    },
+    "request_id": "20261006T0710-reconcile-media-local-tests-01",
+    "started_at": "2026-10-05T23:58:23.200Z",
+    "status": "completed"
+  },
+  "id": "20261006T0710-reconcile-media-local-tests-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
