@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0710-reconcile-media-local-tests-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='SilentlyContinue'\n$repo='E:\\work\\video2-r25-local'\n$procs=@()\nGet-CimInstance Win32_Process -Filter \"Name='node.exe'\" | Where-Object {\n  $_.CommandLine -like '*video2-r25-local*' -or $_.CommandLine -like '*test:r25*' -or $_.CommandLine -like '*node --test*'\n} | ForEach-Object {\n  $procs += [pscustomobject]@{pid=$_.ProcessId;cmd=$_.CommandLine}\n}\n[pscustomobject]@{\n  head=if(Test-Path $repo){(git -C $repo rev-parse HEAD 2>$null | Select-Object -First 1)}else{$null}\n  clean=if(Test-Path $repo){[string]::IsNullOrWhiteSpace(((git -C $repo status --porcelain 2>$null) -join ''))}else{$false}\n  nodeModules=(Test-Path (Join-Path $repo 'node_modules'))\n  packageLock=(Test-Path (Join-Path $repo 'package-lock.json'))\n  processes=$procs\n} | ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only reconciliation of timed-out local Media R25 install/tests"
+}
