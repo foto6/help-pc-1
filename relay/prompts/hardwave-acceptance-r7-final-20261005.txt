@@ -1,0 +1,140 @@
+EXECUTE NOW — HARD WAVE QA R7 / PROOF-BUNDLE + FENCED-COORDINATOR + MEDIA FINAL ACCEPTANCE. Independent QA only. Do not stop at a plan or acknowledgement.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/video-hardwave-acceptance-r7-final-20261005
+Exact starting HEAD: aa415759795beb24f1333d190ff842451020be5f
+
+Accepted QA R6 authority:
+- exact SHA aa415759795beb24f1333d190ff842451020be5f
+- CI 37245738748 SUCCESS
+- artifact 11318958558
+- digest sha256:5f2132293ecede7aa44bcf869fba42cd441454e778c361c3f49789cd7814fb8a
+
+R6 accepted successors:
+- Creator R35:
+  SHA 4793b7cb1735d21db6d211244018591b80c329a4
+  CI 37244869884 SUCCESS
+  artifact 11318269083
+  digest sha256:06753496d0d9cbe94d8b8a5218b10f5b38fa7455d98c89684374c6ba92965e0e
+  contract creator.release_escrow_canary.r35.v1
+- Growth R34:
+  SHA 9ff243bc5ec6977bc5f0eb8f16cd5e51aa0dcdfc
+  CI 37244660304 SUCCESS
+  artifact 11318054384
+  digest sha256:6fc329964c14ce7c11f27fd2dd47235912470a377c6a1f5a6f3e66f4481f5ac9
+  contract growth.counterfactual_policy_promotion.r34.v1
+- Bridge R38:
+  SHA f4f6070a975ac2c5bd8323777db1514c4733e427
+  CI 37244988343 SUCCESS
+  Ubuntu artifact 11318149497 / sha256:aaca65ba7f3beaa9f7cb393325a7f44872b5874fe6881c586dab7c56e79bdbe4
+  Windows artifact 11318049994 / sha256:384c0cdcc6759541953d415dab0ad96dffdef48bd467017b9ea5a6047615da85
+  contract bridge.agent_dag_orchestrator.r38.v1
+
+Media R25 remains UNACCEPTED. R6 overall is HARD_WAVE_BLOCKED solely by Media R25.
+
+New product candidates, NOT accepted until exact-green:
+- Creator R36 branch agent/creator-r36-proof-carrying-release-rehearsal-20261005
+  expected contract creator.proof_carrying_release_rehearsal.r36.v1
+- Bridge R39 branch agent/bridge-r39-fenced-coordinator-20261005
+  expected contract bridge.fenced_coordinator.r39.v1
+- Media R25 branch agent/media-r25-multicandidate-round-engine-20261004
+  expected contract media.multicandidate_round.r25.v1
+- Growth R35 branch agent/growth-r35-canary-evidence-registry-20261005 is prepared but currently NOT DISPATCHED/NOT_STARTED; do not fabricate progress or accept it.
+
+Mission:
+1. Predeclare R7 acceptance rules and fault corpus BEFORE inspecting/scoring final R36/R39 outputs.
+2. Preserve all R1-R6 corpora and accepted exact tuples.
+3. Add >=45 new deterministic R7 adversarial cases covering:
+   A. Creator R36 proof-carrying release rehearsal
+   - missing proof node;
+   - reordered proof graph;
+   - parent digest tamper;
+   - swapped R35/GrowthR34/R38 tuple;
+   - same SHA alternate artifact tuple;
+   - Media authority smuggling;
+   - fake provider unknown effect followed by retry;
+   - changed render after escrow;
+   - changed account/platform after canary;
+   - stale schedule/policy revision;
+   - Growth advisory treated as live authorization;
+   - proof bundle truncation/cycle;
+   - replay same rehearsal id with changed bytes.
+   B. Bridge R39 fencing/split-brain
+   - two mutable owners;
+   - ABA ownership;
+   - stale fencing token;
+   - expired lease renewal;
+   - old process resurrection;
+   - delayed ack after handoff;
+   - clock rollback/jump;
+   - stale owner unblocks DAG child;
+   - same operation id changed payload;
+   - journal truncation/reordering/tamper;
+   - duplicate exact conversation across browser profiles;
+   - title/foreground/tabId routing attempt.
+   C. Media R25 final authority
+   - candidate checkpoint from wrong graph/source/runtime;
+   - missing chunk;
+   - corrupt chunk;
+   - duplicate chunk;
+   - chunk ordering mismatch;
+   - resumed final hash mismatch;
+   - exact replay;
+   - preemption after each durable chunk;
+   - final artifact missing one of 4 candidates;
+   - targeted re-edit lineage mismatch.
+4. Creator R36 acceptance requires:
+   - substantive successor beyond R35;
+   - exact SHA + exact-head CI SUCCESS;
+   - deterministic R36 artifact id/name/digest;
+   - exact R35/GrowthR34/BridgeR38/R6 authority tuples;
+   - Media explicitly UNACCEPTED/NOT_CONSUMED;
+   - provider_effects=0;
+   - live_authorization=false;
+   - proof verifier passes all declared mutations.
+5. Bridge R39 acceptance requires:
+   - substantive successor beyond R38;
+   - exact SHA;
+   - Ubuntu + Windows exact-head SUCCESS;
+   - platform artifacts/digests;
+   - monotonic fencing/epoch semantics;
+   - <=1 mutable owner invariant;
+   - <=1 Send side effect per stable operation id;
+   - stale owner cannot unblock child;
+   - unknown effect reconciles before retry.
+6. Media R25 acceptance requires one FROZEN exact head where:
+   - entire required R25 chain completes SUCCESS;
+   - candidate-1..4 are real encoded distinct outputs;
+   - candidate-4 durable checkpoint/preemption tests pass;
+   - initial-finalize SUCCESS;
+   - targeted-evidence SUCCESS;
+   - postdownload-verify SUCCESS;
+   - final 4-candidate/re-edit artifact exists with exact digest;
+   - no moving-head acceptance.
+7. Treat runner shutdown/cancel as infrastructure evidence, not automatic product failure, but never ACCEPT without complete final green evidence.
+8. Detect churn:
+   once a candidate exact-green tuple is accepted, later branch movement does not replace it automatically.
+9. Same source SHA with alternate CI/artifact tuple remains distinguishable and rejected unless explicitly frozen.
+10. Growth R35:
+   - status NOT_STARTED unless concrete commit/CI/artifact appears;
+   - no acceptance from branch existence/prompt preparation.
+11. Produce machine-readable matrix:
+   ACCEPTED / WAITING_EXACT_GREEN / INCOMPATIBLE / REJECTED / NOT_STARTED
+   with exact SHA, CI, artifacts, parent tuples, minimum fix.
+12. Overall HARD_WAVE_PROTOCOL_GREEN only if required integration authorities are exact-green and compatible. If Media remains non-green, overall stays HARD_WAVE_BLOCKED even if R36/R39 are accepted.
+13. Zero product-repo mutations.
+14. No merge, no live Bridge cutover, no real provider/social publish, no credential access, no SpectraTrack work.
+
+Completion evidence REQUIRED:
+- substantive QA code/tests/docs/checkpoint;
+- exact final QA HEAD;
+- exact-head CI SUCCESS;
+- artifact id/name/digest;
+- preserved R1-R6 corpora + >=45 R7 faults;
+- exact successor matrix;
+- explicit accepted frozen tuples;
+- zero product repo mutations.
+
+Coordinator note:
+- supersedes never-dispatched branch agent/video-hardwave-acceptance-r7-20261005.
+- final R6 checkpoint states Creator R35, Growth R34 and Bridge R38 ACCEPTED; Media R25 is the sole R6 blocker.
