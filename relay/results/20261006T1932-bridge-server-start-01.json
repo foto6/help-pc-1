@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "TimeoutExpired: Command '['powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'E:\\\\WebAIBridge\\\\app\\\\start.ps1']' timed out after 5 seconds",
+    "error_kind": "executor_failure",
+    "finished_at": "2026-10-06T11:06:29.048Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "unknown",
+      "observed_at": "2026-10-06T11:06:28.912Z",
+      "reason": "executor_failure",
+      "reconciliation_required": true,
+      "reexecution_safe": false,
+      "request_id": "20261006T1932-bridge-server-start-01"
+    },
+    "request_id": "20261006T1932-bridge-server-start-01",
+    "started_at": "2026-10-06T11:06:05.083Z",
+    "status": "error"
+  },
+  "id": "20261006T1932-bridge-server-start-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
