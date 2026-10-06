@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0756-media-focused2-fail-lines-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$p='E:\\work\\video2-r25-local-run\\focused2.log'\n$lines=[IO.File]::ReadAllLines($p,[Text.Encoding]::Unicode)\n$out=@()\nfor($i=0;$i -lt $lines.Length;$i++){\n  if($lines[$i] -match '(?i)not ok|# fail|AssertionError|Error:|failed'){\n    $a=[Math]::Max(0,$i-3);$b=[Math]::Min($lines.Length-1,$i+8)\n    for($j=$a;$j -le $b;$j++){ $out += ('{0}:{1}' -f ($j+1),$lines[$j]) }\n    $out += '---'\n  }\n}\n$out | Select-Object -Last 120"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only extract UTF-16 failure context from focused2 log"
+}
