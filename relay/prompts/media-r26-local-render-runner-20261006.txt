@@ -13,6 +13,17 @@ Observed R25 blocker:
 Treat this as a hosted-runtime limitation, not permission to fake the real render.
 
 Goal: make the real montage pipeline runnable deterministically on the user's own PC, then prove it can render the full 4-candidate -> bracket -> targeted re-edit -> final artifact chain with resumable evidence.
+Coordinator code audit: R26 should REUSE the existing R25 implementation instead of inventing a second renderer.
+Existing reusable components at parent b11a93664f9b64bf6da626119758c841a0a75c1e:
+- npm run materialize:r25 — real encoded 4-candidate + targeted re-edit rehearsal;
+- npm run verify:r25:dir — independent no-rerender verifier;
+- tools/materialize-r25-ci-phase.mjs — phased candidate materialization;
+- tools/materialize-r25-candidate4-subphase.mjs — candidate-4 durable segmented renderer;
+- src/r25-candidate4-checkpoint.js — media.r25.candidate4_subphase.v1 / media.r25.candidate4_checkpoint.v1 contracts;
+- tools/verify-r25-rehearsal.mjs — final lineage/archive/checkpoint verifier;
+- tools/run-r25-tournament.mjs / tools/demo-r25-tournament.mjs — existing real tournament orchestration.
+R25 already decomposes candidate-4 into six durable segments (0-400, 400-800, 800-1200, 1200-1600, 1600-3400, 3400-5000 ms) and then an assemble/QA phase. Preserve those operation identities and checkpoint authority unless measured local evidence proves a justified change. R26 should primarily provide a safe local-PC wrapper/orchestrator, explicit input/output paths, authority/runtime checks, restart/resume, machine-readable run evidence, and verification command.
+
 
 Required:
 1. Define media.local_render_runner.r26.v1.
