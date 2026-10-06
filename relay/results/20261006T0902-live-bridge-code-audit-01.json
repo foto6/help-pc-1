@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\nSet-Location $repo;\n$branch=(git branch --show-current).Trim();\n$head=(git rev-parse HEAD).Trim();\n$status=(git status --short);\n$procs=Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match 'WebAIBridge|17448|server\\.js|worker\\.js' -and $_.CommandLine -notmatch 'E:\\\\manhwa' } | Select-Object ProcessId,ParentProcessId,Name,CommandLine;\n$hits=@();\n$patterns=@('reasoning_effort','extended_thinking','thinking effort','reasoning effort','Высок','Средний','high','medium');\nforeach($p in $patterns){\n  $m=Get-ChildItem \"$repo\\app\" -Recurse -File -Include *.js,*.mjs,*.json,*.md,*.html | Select-String -Pattern $p -SimpleMatch -CaseSensitive:$false | Select-Object -First 40 Path,LineNumber,Line;\n  if($m){$hits += [pscustomobject]@{pattern=$p;matches=@($m)}}\n}\n[pscustomobject]@{branch=$branch;head=$head;status=@($status);processes=@($procs);hits=@($hits)} | ConvertTo-Json -Depth 7 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "You cannot call a method on a null-valued expression.\r\nAt line:4 char:1\r\n+ $branch=(git branch --show-current).Trim();\r\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : InvokeMethodOnNull\r\n \r\n",
+      "stderr_bytes": 311,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:01:57.299Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:01:57.190Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0902-live-bridge-code-audit-01"
+    },
+    "request_id": "20261006T0902-live-bridge-code-audit-01",
+    "started_at": "2026-10-06T02:01:56.535Z",
+    "status": "completed"
+  },
+  "id": "20261006T0902-live-bridge-code-audit-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
