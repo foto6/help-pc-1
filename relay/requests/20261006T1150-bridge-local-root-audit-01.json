@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1150-bridge-local-root-audit-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='SilentlyContinue';\n$paths=@('E:\\WebAIBridge','E:\\WebAIBridge\\app','E:\\web-ai-bridge','E:\\web-ai-bridge\\app');\n$roots=@();\nforeach($p in $paths){\n if(Test-Path $p){\n  $roots += [pscustomobject]@{\n   path=$p;\n   git=(Test-Path (Join-Path $p '.git'));\n   files=@(Get-ChildItem -LiteralPath $p -Force | Select-Object -First 30 Name,Mode,FullName)\n  }\n }\n}\n$procs=Get-CimInstance Win32_Process | Where-Object {\n $_.CommandLine -and $_.CommandLine -match 'WebAIBridge|17448|server\\.js|supervisor-watchdog\\.js' -and $_.CommandLine -notmatch 'E:\\\\manhwa'\n} | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine;\n[pscustomobject]@{roots=$roots;processes=@($procs)}|ConvertTo-Json -Depth 6 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only locate live WebAIBridge install/git root and process command lines"
+}
