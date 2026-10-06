@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$body='{\"text\":\"EXECUTE NOW — Media R27. Work ONLY on agent/media-r27-real-input-local-rehearsal-20261006 at exact starting HEAD bd915b7c6587ce5f5647a3457196c7752443e94e. Read TASKS/R27_REAL_INPUT_LOCAL_REHEARSAL.md and GitHub issue foto6/video2#2, then implement the milestone completely. Do not stop at a plan. Return substantive commit SHA, exact-head CI/artifact evidence, local RUN/STATUS/VERIFY commands, and any exact blocker. No live publish/provider mutation.\",\"repository\":\"foto6/video2\",\"branch\":\"agent/media-r27-real-input-local-rehearsal-20261006\",\"expectedHead\":\"bd915b7c6587ce5f5647a3457196c7752443e94e\",\"idempotencyKey\":\"coord-20261006-media-r27-assignment-01\",\"supervisorVerificationRequired\":true,\"evidenceTimeoutMinutes\":60}'; Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-media/assignments' -ContentType 'application/json' -Body $body -TimeoutSec 15 | ConvertTo-Json -Depth 12 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"object\":\"agent_assignment\",\"id\":\"41e3e19f-75a3-478d-a0ef-c498bbe2fa49\",\"idempotencyKey\":\"coord-20261006-media-r27-assignment-01\",\"immutableFingerprint\":\"2bd6316bc8cfc17b41ff90b91c55a591bda2912563ce4353f848cdee2eab3397\",\"state\":\"queued\",\"status\":\"queued\",\"targetChatId\":\"agent-media\",\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\"targetProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"projectId\":\"project-g-p-6ab839fa4f8c81919adad01c4a5497dc\",\"resourceClass\":\"cpu\",\"priority\":300,\"text\":\"Role: media\\\\n\\\\nLocal note: Exact historical Implement Media Engine Pipeline conversation\\\\n\\\\nCurrent task:\\\\nEXECUTE NOW - Media R27. Work ONLY on agent/media-r27-real-input-local-rehearsal-20261006 at exact starting HEAD bd915b7c6587ce5f5647a3457196c7752443e94e. Read TASKS/R27_REAL_INPUT_LOCAL_REHEARSAL.md and GitHub issue foto6/video2#2, then implement the milestone completely. Do not stop at a plan. Return substantive commit SHA, exact-head CI/artifact evidence, local RUN/STATUS/VERIFY commands, and any exact blocker. No live publish/provider mutation.\",\"repository\":\"foto6/video2\",\"branch\":\"agent/media-r27-real-input-local-rehearsal-20261006\",\"expectedHead\":\"bd915b7c6587ce5f5647a3457196c7752443e94e\",\"currentHead\":\"\",\"exactCommitSha\":\"\",\"ciRunId\":\"\",\"ciConclusion\":\"\",\"lastEvidenceCollectorAt\":\"\",\"evidenceCollectorStatus\":\"\",\"evidenceCollectorError\":\"\",\"baselineCheckedAt\":\"\",\"baselineVerified\":false,\"baselineError\":\"\",\"migration\":null,\"supervisorVerificationRequired\":true,\"supervisorVerified\":false,\"createdAt\":\"2026-10-06T10:27:08.389Z\",\"updatedAt\":\"2026-10-06T10:27:08.389Z\",\"queuedAt\":\"2026-10-06T10:27:08.389Z\",\"dispatchStartedAt\":\"\",\"lastDispatchAt\":\"\",\"runningAt\":\"\",\"awaitingEvidenceAt\":\"\",\"lastEvidenceAt\":\"\",\"evidenceDeadlineAt\":\"\",\"completedAt\":\"\",\"blockedAt\":\"\",\"failedAt\":\"\",\"cancelledAt\":\"\",\"lastPreflightAt\":\"\",\"lastPreflightReason\":\"\",\"lastDiagnostic\":\"\",\"dispatchTargetId\":\"\",\"dispatchFingerprint\":\"\",\"dispatchCount\":0,\"dispatchFailureCode\":\"\",\"dispatchSubmitAttempted\":false,\"dispatchRecoveryAttemptedAt\":\"\",\"replacementCount\":0,\"predecessorUrl\":\"\",\"replacementUrl\":\"\",\"replacementAt\":\"\",\"evidence\":{},\"integration\":null}\r\n",
+      "stdout_bytes": 2224,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T10:27:08.664Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T10:27:08.538Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1743-queue-media-r27-01"
+    },
+    "request_id": "20261006T1743-queue-media-r27-01",
+    "started_at": "2026-10-06T10:27:07.893Z",
+    "status": "completed"
+  },
+  "id": "20261006T1743-queue-media-r27-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
