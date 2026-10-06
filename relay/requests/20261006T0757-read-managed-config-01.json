@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0757-read-managed-config-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; $j=Get-Content -LiteralPath $p -Raw | ConvertFrom-Json; $want=@('6abda62d-8198-83ed-aaa2-40b16f96a8a0','6abda64b-aac4-83eb-adee-dc7143ca5d2b','6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0','6abda61c-a440-83ed-9482-1d0fc7923e03'); @($j.managedChats | Where-Object { $want -contains [string]$_.providerConversationId } | Select-Object id,name,providerConversationId,url,profileId,repository,branch,gitHead,enabled,projectId) | ConvertTo-Json -Depth 6 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 7000,
+  "note": "Read-only exact managed chat mapping from persisted Bridge config"
+}
