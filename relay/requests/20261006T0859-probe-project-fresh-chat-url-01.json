@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0859-probe-project-fresh-chat-url-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv'; $n=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17410/json/new?'+[uri]::EscapeDataString($u)); [pscustomobject]@{id=$n.id;url=$n.url}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 10000,
+  "note": "Open fresh project slug tab for successor probe"
+}
