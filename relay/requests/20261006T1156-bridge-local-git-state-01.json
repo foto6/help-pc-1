@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1156-bridge-local-git-state-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; Set-Location 'E:\\WebAIBridge';\n[pscustomobject]@{\n head=(git rev-parse HEAD).Trim();\n branch=(git branch --show-current).Trim();\n status=@(git status --porcelain);\n remote=(git remote get-url origin).Trim()\n}|ConvertTo-Json -Depth 3 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only local Bridge exact git head/branch/dirty status"
+}
