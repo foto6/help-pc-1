@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1141-r42-wrapper-rewriter-audit-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$rows=@();\nPush-Location $repo;\nforeach($p in @('app/scripts/operator-lifecycle-r40.ps1','app/scripts/pause-all-r40.cmd','app/scripts/pause-browser-r40.cmd','app/scripts/resume-attach-r40.cmd','app/scripts/resume-managed-r40.cmd')){\n  $expected=([string](git rev-parse ('HEAD:'+$p))).Trim();\n  $actual=([string](git hash-object $p)).Trim();\n  $fi=Get-Item $p;\n  $rows += [pscustomobject]@{path=$p;expectedBlob=$expected;actualBlob=$actual;length=$fi.Length;lastWriteUtc=$fi.LastWriteTimeUtc.ToString('o')}\n}\nPop-Location;\n$procs=@(Get-CimInstance Win32_Process | Where-Object {\n  ($_.CommandLine -match 'E:\\\\WebAIBridge') -or\n  ($_.CommandLine -match 'operator-lifecycle-r40|pause-all-r40|resume-managed-r40|resume-attach-r40|pause-browser-r40') -or\n  ($_.Name -in @('node.exe','powershell.exe','cmd.exe') -and $_.CommandLine -match '17448|Web AI Bridge')\n} | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine);\n$services=@(Get-CimInstance Win32_Service | Where-Object { $_.PathName -match 'WebAIBridge|17448' -or $_.Name -match 'WebAI|Bridge' } | Select-Object Name,DisplayName,State,StartMode,ProcessId,PathName);\n[pscustomobject]@{files=$rows;processes=$procs;services=$services}|ConvertTo-Json -Depth 6 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only identify process rewriting R42 operator wrappers after hard reset"
+}
