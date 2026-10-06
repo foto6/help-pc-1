@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst r=await fetch('http://127.0.0.1:17448/api/supervisor-watchdog/projects?inspect=1');\nconst j=await r.json();\nconst id='project-g-p-6ab839fa4f8c81919adad01c4a5497dc';\nconst x=(j.projects||[]).find(x=>x.id===id);\nprocess.stdout.write(JSON.stringify({http:r.status,project:x?{\n id:x.id,name:x.name,status:x.status,lastSeenAt:x.lastSeenAt,openTabs:x.openTabs,\n highMode:x.highMode,compatible:x.compatible,compatibilityReasons:x.compatibilityReasons,\n profileName:x.profileName,error:x.error,agentCount:x.agentCount,activeTaskCount:x.activeTaskCount,\n rotationPolicy:x.rotationPolicy\n}:null}));\n\n'@; $code | node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"http\":200,\"project\":{\"id\":\"project-g-p-6ab839fa4f8c81919adad01c4a5497dc\",\"name\":\"sv\",\"status\":\"closed\",\"lastSeenAt\":\"2026-09-27T10:48:53.640Z\",\"openTabs\":0,\"highMode\":false,\"compatible\":false,\"compatibilityReasons\":[\"not_project_url\",\"project_id_missing\",\"project_name_missing\",\"project_composer_missing\",\"chat_tab_missing\",\"sources_tab_missing\"],\"profileName\":\"ChatGPT профиль 2\",\"error\":\"\",\"agentCount\":0,\"activeTaskCount\":0,\"rotationPolicy\":{\"enabled\":false,\"onContextLimit\":true,\"onMissingChat\":true,\"keepPredecessor\":true,\"requireHighMode\":true,\"maxHandoffChars\":18000}}}",
+      "stdout_bytes": 585,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:30:52.743Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:30:52.632Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1015-sv-project-live-inspect-01"
+    },
+    "request_id": "20261006T1015-sv-project-live-inspect-01",
+    "started_at": "2026-10-06T02:30:52.107Z",
+    "status": "completed"
+  },
+  "id": "20261006T1015-sv-project-live-inspect-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
