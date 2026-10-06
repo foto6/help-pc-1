@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/c",
+        "if exist E:\\work\\video2-r25-local-run\\focused.exit (echo EXIT_EXISTS & type E:\\work\\video2-r25-local-run\\focused.exit) else (echo NO_EXIT) & if exist E:\\work\\video2-r25-local-run\\focused.log (for %A in (E:\\work\\video2-r25-local-run\\focused.log) do @echo LOG_BYTES=%~zA)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "EXIT_EXISTS \r\n����� �뢮�� ������ �� ��࠭ (ECHO) �⪫�祭.\r\n",
+      "stdout_bytes": 61,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T00:06:07.133Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T00:06:07.037Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0730-poll-media-focused-exit-01"
+    },
+    "request_id": "20261006T0730-poll-media-focused-exit-01",
+    "started_at": "2026-10-06T00:06:06.820Z",
+    "status": "completed"
+  },
+  "id": "20261006T0730-poll-media-focused-exit-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
