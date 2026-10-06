@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$files=@('app/scripts/operator-lifecycle-r40.ps1','app/scripts/pause-all-r40.cmd','app/scripts/pause-browser-r40.cmd','app/scripts/resume-attach-r40.cmd','app/scripts/resume-managed-r40.cmd');\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path;\n$out=@();\nforeach($f in $files){\n  $headBlob=((@(& $git -C $repo rev-parse ('HEAD:'+$f)))-join '').Trim();\n  $workBlob=((@(& $git -C $repo hash-object --path=$f (Join-Path $repo $f)))-join '').Trim();\n  $rawSha=(Get-FileHash -LiteralPath (Join-Path $repo $f) -Algorithm SHA256).Hash.ToLowerInvariant();\n  $out += [pscustomobject]@{file=$f;headBlob=$headBlob;workBlob=$workBlob;filteredEqual=($headBlob -eq $workBlob);rawSha256=$rawSha}\n}\n$status=@(& $git -C $repo status --short);\n[pscustomobject]@{status=$status;files=$out}|ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"status\":[\" M app/scripts/operator-lifecycle-r40.ps1\",\" M app/scripts/pause-all-r40.cmd\",\" M app/scripts/pause-browser-r40.cmd\",\" M app/scripts/resume-attach-r40.cmd\",\" M app/scripts/resume-managed-r40.cmd\"],\"files\":[{\"file\":\"app/scripts/operator-lifecycle-r40.ps1\",\"headBlob\":\"5e40cb2058af7be3a60fe1228aedcc7c0224a8aa\",\"workBlob\":\"81195aebb65e533ca6602228515d3c398b2c46bd\",\"filteredEqual\":false,\"rawSha256\":\"6f5e03fd21e09e85f016484636087156dfb50d1517f605bd7f9730f1650373de\"},{\"file\":\"app/scripts/pause-all-r40.cmd\",\"headBlob\":\"3940376100c05e177358aee44a36413e912fd4a4\",\"workBlob\":\"c2342a706a00f32af2f727e2c6b3fddb1764d35c\",\"filteredEqual\":false,\"rawSha256\":\"397e377c01ac9975c839cef92e26731faf406f639b50efa3639649bbd613fe50\"},{\"file\":\"app/scripts/pause-browser-r40.cmd\",\"headBlob\":\"66a918dd3e7e0762bab6c1498f41a4e291696ea9\",\"workBlob\":\"d1a41e26b88af17afc3d96f759783eade6613d7f\",\"filteredEqual\":false,\"rawSha256\":\"7d330fb743d696758a419ccb878e83d229753be5925f8b04f58387d6c04948de\"},{\"file\":\"app/scripts/resume-attach-r40.cmd\",\"headBlob\":\"58860eb74ec1a071259a09c8f8e46d67a0485a41\",\"workBlob\":\"59a080f5224a0c5b5598e7018f0e1958c9512c63\",\"filteredEqual\":false,\"rawSha256\":\"423ce52059f00e56046ac9349a7a70b9f36d7618f07624ddab94f7d114d69dba\"},{\"file\":\"app/scripts/resume-managed-r40.cmd\",\"headBlob\":\"8d87df6091bb30aed48f7996dac73cb14684ca6c\",\"workBlob\":\"338693677615b940747c91237f99d00dafdccb29\",\"filteredEqual\":false,\"rawSha256\":\"3228ed73d01a438db7d4dd92270455d192cb96d04d28d9915e2c77ed816316d5\"}]}\r\n",
+      "stdout_bytes": 1493,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:40:04.078Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:40:03.962Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1301-r42-wrapper-blob-compare-01"
+    },
+    "request_id": "20261006T1301-r42-wrapper-blob-compare-01",
+    "started_at": "2026-10-06T04:40:02.949Z",
+    "status": "completed"
+  },
+  "id": "20261006T1301-r42-wrapper-blob-compare-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
