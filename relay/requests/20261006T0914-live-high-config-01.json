@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0914-live-high-config-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$f='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json';\nif(!(Test-Path $f)){ [pscustomobject]@{exists=$false;path=$f} | ConvertTo-Json -Compress; exit 0 }\n$j=Get-Content $f -Raw | ConvertFrom-Json;\n[pscustomobject]@{\n  exists=$true;\n  path=$f;\n  enabled=$j.enabled;\n  mode=$j.mode;\n  enforceHighMode=$j.enforceHighMode;\n  highModeStrategy=$j.highModeStrategy;\n  autoContinueEnabled=$j.autoContinueEnabled;\n  allowAutonomousSend=$j.allowAutonomousSend;\n  migrationEnabled=$j.migrationEnabled\n} | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only current supervisor High-mode config"
+}
