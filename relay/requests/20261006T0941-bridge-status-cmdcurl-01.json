@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0941-bridge-status-cmdcurl-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "curl.exe -sS --max-time 5 http://127.0.0.1:17448/api/status"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only Bridge status via cmd curl"
+}
