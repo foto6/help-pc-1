@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1200-r42-cutover-reconcile-after-failure-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='SilentlyContinue';\nSet-Location 'E:\\WebAIBridge';\n$head=(git rev-parse HEAD 2>$null);\n$dirty=@(git status --porcelain=v1 2>$null);\n$data='E:\\WebAIBridge\\app\\data';\n$cut=Join-Path $data 'projects-live-control-plane-cutover-r42.json';\n$state=Join-Path $data 'state.json';\n$sup=Join-Path $data 'supervisor-watchdog.json';\n$cutj=$null;if(Test-Path $cut){$cutj=Get-Content $cut -Raw|ConvertFrom-Json}\n$statej=$null;if(Test-Path $state){$statej=Get-Content $state -Raw|ConvertFrom-Json}\n$supj=$null;if(Test-Path $sup){$supj=Get-Content $sup -Raw|ConvertFrom-Json}\n$http=$null;try{$http=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 2}catch{$http=[pscustomobject]@{error=$_.Exception.Message}}\n[pscustomobject]@{\n head=$head;\n dirty=@($dirty);\n cutoverFileExists=(Test-Path $cut);\n cutover=[pscustomobject]@{\n  status=$cutj.status;holdActive=$cutj.holdActive;preCutoverHead=$cutj.preCutoverHead;targetSha=$cutj.targetSha;rollbackManifest=$cutj.rollbackManifest;rollbackCommand=$cutj.rollbackCommand\n };\n lifecycle=[pscustomobject]@{mode=$statej.operatorLifecycle.mode;revision=$statej.operatorLifecycle.revision;changedBy=$statej.operatorLifecycle.changedBy};\n queuePaused=$statej.settings.paused;\n supervisor=[pscustomobject]@{\n  enabled=$supj.enabled;mode=$supj.mode;allowAutonomousSend=$supj.allowAutonomousSend;autoContinueEnabled=$supj.autoContinueEnabled;migrationEnabled=$supj.migrationEnabled;sendProtectedDraftEnabled=$supj.sendProtectedDraftEnabled;highModeStrategy=$supj.highModeStrategy\n };\n http=$http\n}|ConvertTo-Json -Depth 8 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only reconciliation after failed R42 cutover; never replay cutover"
+}
