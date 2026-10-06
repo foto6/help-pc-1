@@ -1,0 +1,41 @@
+EXECUTE NOW — R42 LIVE CUTOVER CALL-DEPTH CORRECTIVE. This is a concrete failed live rehearsal; fix the root cause and re-prove exact-head. Do not replay the failed cutover yet.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r42-live-control-plane-cutover-20261006
+Current exact HEAD: 0cefcd33eb5b4f75ef52dbe443c2f7395e4ea966
+Current exact-head CI: 37409574371 SUCCESS (Ubuntu + Windows).
+
+Real local cutover attempt:
+request ID coord-20261006-r42-live-cutover-apply-01
+local repo E:\WebAIBridge
+pre-cutover local HEAD cb852e013634287669f957253d13d8ef2b45cada
+worktree clean, detached, correct origin.
+
+Failure:
+PowerShell: "The script failed due to call depth overflow."
+The cutover exited 1.
+
+Root cause to verify/fix:
+r42-cutover.ps1 defines function Git(...), then inside it executes "& git ...".
+PowerShell command names are case-insensitive, so "git" can resolve to the Git function itself and recursively call it until CallDepthOverflow. Do not paper over this with recursion limits.
+
+Post-failure reconciliation PROVED no partial cutover effects:
+- local HEAD still cb852e013634287669f957253d13d8ef2b45cada
+- worktree clean
+- projects-live-control-plane-cutover-r42.json absent
+- queuePaused=false
+- supervisor Full autonomy preserved: enabled=true, mode=full, allowAutonomousSend=true, autoContinueEnabled=true, migrationEnabled=true, sendProtectedDraftEnabled=true
+- R42 status endpoint still 404
+Therefore no rollback is required and the failed request MUST NOT be replayed.
+
+Required corrective:
+1. Remove PowerShell command shadowing. Rename wrapper to e.g. InvokeGit and call the external executable unambiguously (git.exe / resolved Application path). Audit r42-cutover.ps1 and r42-rollback.ps1 for the same class of shadowing.
+2. Add a REAL Windows PowerShell execution test that runs the cutover logic against a disposable temp git repo / fake Bridge endpoints or equivalent harness far enough to prove the git wrapper executes external git and cannot recurse. Pure source-string assertions are insufficient.
+3. Keep all prior fail-closed gates: exact target checked before hold, clean worktree, exact R41 ancestor, required target files, rollback manifest before switch, autonomous hold, no provider deletion.
+4. Add regression specifically asserting no CallDepthOverflow / command recursion.
+5. New exact HEAD, Windows+Ubuntu SUCCESS.
+6. Do NOT apply live cutover from the agent until new exact-head green evidence exists.
+7. Report exact final SHA/run/artifacts and the corrected one-command live cutover invocation.
+8. Preserve current live Bridge untouched at cb852e... until coordinator launches a NEW cutover operation ID after green.
+
+No merge, no provider chat deletion, no credential entry.
