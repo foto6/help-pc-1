@@ -1,0 +1,20 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1805-shell-preflight-01",
+  "action": "action.preflight",
+  "params": {
+    "action": "shell.run",
+    "params": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "echo",
+        "ok"
+      ],
+      "cwd": "E:\\"
+    }
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only preflight for minimal shell smoke"
+}
