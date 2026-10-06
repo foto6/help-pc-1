@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1048-bridge-process-readonly-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "tasklist /FI \"PID eq 15816\" /V & echo ===NET=== & netstat -ano"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only verify Bridge watchdog PID and listener before operational recovery"
+}
