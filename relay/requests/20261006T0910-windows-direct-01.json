@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0910-windows-direct-01",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 8000,
+  "note": "Read-only direct window list while shell/CDP is unstable"
+}
