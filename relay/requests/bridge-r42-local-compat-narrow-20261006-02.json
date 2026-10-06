@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-r42-local-compat-narrow-20261006-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='SilentlyContinue';$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();\n$o=[ordered]@{};\n$c=Get-NetTCPConnection -LocalPort 17448 -State Listen | Select-Object -First 1;\n$o.listener=if($c){[ordered]@{pid=$c.OwningProcess;local=$c.LocalAddress;port=$c.LocalPort}}else{$null};\nif($c){$p=Get-CimInstance Win32_Process -Filter \"ProcessId=$($c.OwningProcess)\";$o.process=[ordered]@{pid=$p.ProcessId;name=$p.Name;commandLine=$p.CommandLine;executable=$p.ExecutablePath}}\ntry{$x=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/operator-lifecycle' -TimeoutSec 3;$o.lifecycle=$x}catch{$o.lifecycleError=$_.Exception.Message}\ntry{$x=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/projects/control-plane?inspect=0' -TimeoutSec 3;$o.controlPlane=[ordered]@{object=$x.object;contract=$x.contract;checkedAt=$x.checkedAt;source=$x.source;counters=$x.counters}}catch{$o.controlPlaneError=$_.Exception.Message}\n$o|ConvertTo-Json -Depth 8 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "R42 narrow read-only local Bridge runtime compatibility check after prior timed-out broad probe; no replay"
+}
