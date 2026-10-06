@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1950-creator-ax-read-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$targetId='C7A7207052C7F10350379336B9D05473'\n$targets=Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 5\n$t=$targets | Where-Object { $_.id -eq $targetId } | Select-Object -First 1\nif(-not $t){ throw 'target missing' }\n$ws=[System.Net.WebSockets.ClientWebSocket]::new()\n$uri=[System.Uri]$t.webSocketDebuggerUrl\n$cts=[System.Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(8))\n$ws.ConnectAsync($uri,$cts.Token).GetAwaiter().GetResult()\n$msg='{\"id\":1,\"method\":\"Accessibility.getFullAXTree\",\"params\":{}}'\n$bytes=[System.Text.Encoding]::UTF8.GetBytes($msg)\n$seg=[System.ArraySegment[byte]]::new($bytes)\n$ws.SendAsync($seg,[System.Net.WebSockets.WebSocketMessageType]::Text,$true,$cts.Token).GetAwaiter().GetResult()\n$buf=New-Object byte[] 65536\n$ms=[System.IO.MemoryStream]::new()\ndo {\n  $recvSeg=[System.ArraySegment[byte]]::new($buf)\n  $res=$ws.ReceiveAsync($recvSeg,$cts.Token).GetAwaiter().GetResult()\n  if($res.Count -gt 0){ $ms.Write($buf,0,$res.Count) }\n} while(-not $res.EndOfMessage)\n$txt=[System.Text.Encoding]::UTF8.GetString($ms.ToArray())\n$obj=$txt | ConvertFrom-Json -Depth 100\n$names=@($obj.result.nodes | ForEach-Object { [string]$_.name.value } | Where-Object { $_ })\n$interesting=@($names | Where-Object { $_ -match 'EXECUTE|R39|R38|R43|Высок|High|Средн|Medium|Останов|Stop|Отправ|Send|готов|completed|success|CI|artifact|maximum|context|начните новый чат|продолж' } | Select-Object -Unique)\n$tail=@($names | Select-Object -Last 80)\n[pscustomobject]@{title=$t.title;url=$t.url;nameCount=$names.Count;interesting=$interesting;tail=$tail}|ConvertTo-Json -Depth 8 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only CDP Accessibility.getFullAXTree for exact Creator chat target; no JS/provider mutation"
+}
