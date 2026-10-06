@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "Get-CimInstance Win32_Process -Filter \"name='node.exe'\" | Where-Object { $_.CommandLine -match 'server\\.js|supervisor-watchdog\\.js|worker\\.js' } | Select-Object ProcessId,ParentProcessId,CommandLine | ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"ProcessId\":2968,\"ParentProcessId\":7532,\"CommandLine\":\"\\\"C:\\\\Program Files\\\\nodejs\\\\node.exe\\\" E:\\\\WebAIBridge\\\\app\\\\server.js \"},{\"ProcessId\":25488,\"ParentProcessId\":2968,\"CommandLine\":\"\\\"C:\\\\Program Files\\\\nodejs\\\\node.exe\\\" E:\\\\WebAIBridge\\\\app\\\\worker.js --profile=gemini-personal-attach --provider=gemini --debug=http://127.0.0.1:17447 --bridge=http://127.0.0.1:17448 --client=ai-web-worker-gemini-personal-attach\"},{\"ProcessId\":22044,\"ParentProcessId\":2968,\"CommandLine\":\"\\\"C:\\\\Program Files\\\\nodejs\\\\node.exe\\\" E:\\\\WebAIBridge\\\\app\\\\worker.js --profile=ef72920c-cfe7-4824-a79b-7a0e0943ce7e --provider=chatgpt --debug=http://127.0.0.1:17410 --bridge=http://127.0.0.1:17448 --client=ai-web-worker-ef72920c-cfe7-4824-a79b-7a0e0943ce7e\"},{\"ProcessId\":19844,\"ParentProcessId\":7532,\"CommandLine\":\"\\\"C:\\\\Program Files\\\\nodejs\\\\node.exe\\\" E:\\\\WebAIBridge\\\\app\\\\supervisor-watchdog.js \"}]\r\n",
+      "stdout_bytes": 890,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T11:04:26.158Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T11:04:26.026Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1927-bridge-node-process-map-01"
+    },
+    "request_id": "20261006T1927-bridge-node-process-map-01",
+    "started_at": "2026-10-06T11:04:25.316Z",
+    "status": "completed"
+  },
+  "id": "20261006T1927-bridge-node-process-map-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
