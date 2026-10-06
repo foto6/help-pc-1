@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import os
+import signal
 import subprocess
 from dataclasses import dataclass
 from time import monotonic, sleep
@@ -42,6 +44,42 @@ def _truncate(raw: bytes, limit: int) -> tuple[str, int, bool]:
     return clipped.decode("utf-8", errors="replace"), size, size > limit
 
 
+def _terminate_process_tree(process: subprocess.Popen[bytes]) -> None:
+    if process.poll() is not None:
+        return
+
+    if os.name == "nt":
+        try:
+            subprocess.run(
+                ["taskkill.exe", "/PID", str(process.pid), "/T", "/F"],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=5,
+                check=False,
+            )
+        except Exception:
+            process.kill()
+    else:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except Exception:
+            process.kill()
+
+    try:
+        process.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait(timeout=5)
+
+
+def _drain_process_pipes(process: subprocess.Popen[bytes]) -> tuple[bytes, bytes]:
+    try:
+        return process.communicate(timeout=5)
+    except subprocess.TimeoutExpired:
+        _terminate_process_tree(process)
+        return process.communicate(timeout=5)
+
+
 class SafeShellAdapter:
     def __init__(
         self,
@@ -79,24 +117,28 @@ class SafeShellAdapter:
             shell=False,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            start_new_session=(os.name != "nt"),
         )
         deadline = monotonic() + timeout
         try:
             while process.poll() is None:
                 if token.cancelled:
-                    process.kill()
-                    process.communicate()
+                    _terminate_process_tree(process)
+                    _drain_process_pipes(process)
                     raise OperationCancelledError("shell execution cancelled")
                 if monotonic() >= deadline:
-                    process.kill()
-                    process.communicate()
+                    _terminate_process_tree(process)
+                    _drain_process_pipes(process)
                     raise OperationTimeoutError("shell execution timed out")
                 sleep(0.02)
-            stdout_raw, stderr_raw = process.communicate()
+            stdout_raw, stderr_raw = _drain_process_pipes(process)
         except BaseException:
             if process.poll() is None:
-                process.kill()
-                process.communicate()
+                _terminate_process_tree(process)
+            try:
+                _drain_process_pipes(process)
+            except Exception:
+                pass
             raise
 
         stdout, stdout_bytes, stdout_truncated = _truncate(stdout_raw, self.output_limit_bytes)

@@ -126,6 +126,27 @@ def test_shell_timeout_terminates_and_classifies():
         )
 
 
+def test_shell_timeout_terminates_child_tree_without_pipe_deadlock():
+    exe = Path(sys.executable).name
+    shell = SafeShellAdapter(allow_executables={exe})
+    child_code = "import time; time.sleep(30)"
+    parent_code = (
+        "import subprocess,sys,time;"
+        "subprocess.Popen([sys.executable,'-c'," + repr(child_code) + "]);"
+        "time.sleep(30)"
+    )
+
+    started = time.monotonic()
+    with pytest.raises(OperationTimeoutError):
+        shell.run(
+            [sys.executable, "-c", parent_code],
+            timeout_seconds=0.10,
+        )
+    elapsed = time.monotonic() - started
+
+    assert elapsed < 8.0
+
+
 def test_shell_pre_cancel_has_no_process_side_effect():
     exe = Path(sys.executable).name
     shell = SafeShellAdapter(allow_executables={exe})
