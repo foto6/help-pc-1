@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1955-activate-creator-target-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request; print(urllib.request.urlopen('http://127.0.0.1:17410/json/activate/C7A7207052C7F10350379336B9D05473',timeout=5).read().decode('utf-8','replace'))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 10000,
+  "note": "Activate already-open exact Creator ChatGPT target only; no typing/send/provider mutation"
+}
