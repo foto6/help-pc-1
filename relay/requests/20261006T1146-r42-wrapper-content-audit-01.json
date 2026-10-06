@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1146-r42-wrapper-content-audit-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$out=@();\nforeach($rel in @('app/scripts/operator-lifecycle-r40.ps1','app/scripts/pause-all-r40.cmd','app/scripts/pause-browser-r40.cmd','app/scripts/resume-attach-r40.cmd','app/scripts/resume-managed-r40.cmd')){\n  $path=Join-Path $repo $rel;\n  $out += [pscustomobject]@{file=$rel;content=(Get-Content -LiteralPath $path -Raw)}\n}\n$out|ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only capture current text of five R42 dirty generated wrapper files"
+}
