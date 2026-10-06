@@ -1,0 +1,64 @@
+EXECUTE NOW — INTEGRATION R8 LOCAL-PC GATE / POST-R41 CONTROL PLANE / MEDIA-R26 ACCEPTANCE. Independent QA only. Do not stop at a plan.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/integration-r8-local-pc-gate-v2-20261006
+Exact starting HEAD: 3cd57e3d464ba1b4e33ecc390c673ede5f35c867
+Parent QA: Hard Wave R7.
+
+Do not mutate product repositories.
+
+Current exact authorities / candidates:
+- Bridge R41 accepted source candidate: foto6/WebAIBridge e4ee875db5ad62b514a8d1edeff85888ef83fb8c / CI 37405448329 SUCCESS.
+- Bridge R42 branch agent/bridge-r42-live-control-plane-cutover-20261006 is active and must not be accepted until exact-head CI + live cutover evidence exist.
+- Creator R37: foto6/video1 1f7cb9ed8f1985cd4faca79ce55f1c5fda9e3a57 / CI 37398299900 SUCCESS.
+- Growth R36: foto6/video3 a53f9deb180bb256d193f0422c6ffd7a5923d97a / CI 37403145649 SUCCESS.
+- Media R25 exact head b11a93664f9b64bf6da626119758c841a0a75c1e remains hosted-runner blocked. Media R26 branch agent/media-r26-local-render-runner-20261006 will replace hosted heavy render with an explicitly verifiable local-PC runner.
+- Native MCP R37 exact head b13243e687173a5342356361956a2fd5eec81138 / CI 37398892815 FAILURE due R31_SOURCE_BLOB_DRIFT; R38 branch agent/native-mcp-r38-authority-repair-20261006 will address this.
+
+Goal:
+independently decide when the system is safe and complete enough to perform the first real LOCAL-PC montage rehearsal on the user's machine, while preserving exact authority and avoiding premature merge/cutover.
+
+Required:
+1. Preserve all R1-R7 adversarial corpora.
+2. Add bridge.projects_live_control_plane.r41.v1 / R42 acceptance checks:
+   - live/stale/unknown/conflict TTL semantics;
+   - editable AUTO/PINNED/OVERRIDE_ONCE;
+   - exact-id-only routing;
+   - context-exhaustion rollover;
+   - successor Medium->High auto-select + readback;
+   - High race before Enter fail-closed;
+   - PC Control external dispatch ledger;
+   - no provider chat deletion;
+   - rollback evidence.
+3. Independently verify the REAL observed lifecycle incident:
+   - old Media chat exhausted;
+   - old QA/Supervisor chat exhausted;
+   - MCP duplicate exact-ID tabs;
+   - new Bridge chat is High and healthy.
+   Consume R42 evidence only; do not directly mutate provider UI.
+4. Media R26 acceptance:
+   - exact source SHA + exact-head CI;
+   - local runner contract;
+   - no heavy hosted-runner dependency;
+   - output-root confinement;
+   - exact ffmpeg/ffprobe identity;
+   - resumable operation IDs;
+   - verifier that can validate a completed local run without rerender.
+5. Define the local-PC GO/NO-GO gate before any heavy run:
+   GO requires Bridge R42 accepted or explicitly source-ready with exact safe runtime mode, Media R26 exact-green, Creator/Growth parent authorities exact-green, output path safe, and no unknown side-effect reconciliation.
+6. MCP is not a blocker for the first offline media render if all media/control-plane requirements are green, but R38 status must be reported separately. It IS a blocker for claiming full personal-production operator readiness.
+7. Add >=25 adversarial R8 cases:
+   stale authority; wrong exact chat; duplicate current pointer; High flips after typing; exhausted predecessor send attempt; successor URL unconfirmed; corrupt local checkpoint; wrong runtime hash; output path escape; same operation ID changed input; local run interrupted; final manifest tamper; hosted runner evidence pretending local evidence; PC Control dispatch missing High proof.
+8. Produce machine-readable matrix:
+   - Bridge R42;
+   - Media R26;
+   - Creator R37;
+   - Growth R36;
+   - Native MCP R38;
+   statuses ACCEPTED / WAITING_EXACT_GREEN / BLOCKED / REJECTED.
+9. Emit explicit LOCAL_PC_REHEARSAL_GO or LOCAL_PC_REHEARSAL_BLOCKED with exact minimum fixes.
+10. If GO, emit the exact approved local command template and verification command, but do NOT execute the heavy local render yourself in QA.
+11. Exact-head CI + artifact required for QA.
+12. No merge, no provider publish, no SpectraTrack work.
+
+Completion requires exact QA SHA + CI + artifact + matrix + local-PC gate.
