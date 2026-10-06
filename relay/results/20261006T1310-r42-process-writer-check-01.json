@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$procs=@(Get-CimInstance Win32_Process | Where-Object {\n  $_.CommandLine -and $_.CommandLine -match [regex]::Escape($repo) -and\n  $_.Name -in @('node.exe','powershell.exe','pwsh.exe','cmd.exe')\n} | Select-Object ProcessId,ParentProcessId,Name,CommandLine);\n$procs | ConvertTo-Json -Depth 4 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ProcessId\":17068,\"ParentProcessId\":23956,\"Name\":\"powershell.exe\",\"CommandLine\":\"powershell.exe -NoProfile -Command \\\"$ErrorActionPreference=\\u0027Stop\\u0027;\\n$repo=\\u0027E:\\\\WebAIBridge\\u0027;\\n$procs=@(Get-CimInstance Win32_Process | Where-Object {\\n  $_.CommandLine -and $_.CommandLine -match [regex]::Escape($repo) -and\\n  $_.Name -in @(\\u0027node.exe\\u0027,\\u0027powershell.exe\\u0027,\\u0027pwsh.exe\\u0027,\\u0027cmd.exe\\u0027)\\n} | Select-Object ProcessId,ParentProcessId,Name,CommandLine);\\n$procs | ConvertTo-Json -Depth 4 -Compress\\\"\"}\r\n",
+      "stdout_bytes": 546,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:42:07.258Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:42:07.134Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1310-r42-process-writer-check-01"
+    },
+    "request_id": "20261006T1310-r42-process-writer-check-01",
+    "started_at": "2026-10-06T04:42:06.441Z",
+    "status": "completed"
+  },
+  "id": "20261006T1310-r42-process-writer-check-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
