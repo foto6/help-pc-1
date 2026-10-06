@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0944-bridge-draft-sendcontrol-reconcile-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$code=@'\n\nconst cid=\"6ac45836-87a0-83ed-bea4-0ad0f99c8982\",marker=\"BRIDGE R41 PROJECTS LIVE CONTROL PLANE / AUTO-ROLLOVER / UNIFIED HIGH GATE\";\nconst conv=v=>{try{const u=new URL(String(v||\"\"));const p=u.pathname.split(\"/\").filter(Boolean);if(p.length===2&&p[0]===\"c\")return p[1];if(p.length===4&&p[0]===\"g\"&&p[2]===\"c\")return p[3]}catch{}return \"\"};\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const t=tabs.find(x=>x.type===\"page\"&&conv(x.url)===cid);if(!t)throw new Error(\"missing\");\nconst ws=new WebSocket(t.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let n=1;const p=new Map();\nws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\nconst call=(method,params={})=>new Promise((r,j)=>{const id=n++;p.set(id,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id,method,params}))});\nconst exp=`JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect();const s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!==\"none\"&&s.visibility!==\"hidden\"};const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\"true\"],[role=\"textbox\"]')].find(vis)||null;const draft=c?(('value' in c?c.value:(c.innerText||c.textContent||''))||''):'';const buttons=[...document.querySelectorAll('button,[role=\"button\"]')].filter(vis);const rows=buttons.slice(-90).map((b,i)=>({i,text:(b.innerText||b.textContent||'').trim().slice(0,80),aria:(b.getAttribute('aria-label')||'').slice(0,80),testid:(b.getAttribute('data-testid')||'').slice(0,80),title:(b.getAttribute('title')||'').slice(0,80),disabled:!!b.disabled,cls:(b.className||'').toString().slice(0,160)}));const HIGH='\\\\u0412\\\\u044b\\\\u0441\\\\u043e\\\\u043a\\\\u0438\\\\u0439';const high=buttons.some(b=>{const t=(b.innerText||b.textContent||'').trim();return t==='High'||t===HIGH});const generating=buttons.some(b=>((b.getAttribute('data-testid')||'').toLowerCase().includes('stop'))||((b.getAttribute('aria-label')||'').toLowerCase().includes('stop')));return {url:location.href,title:document.title,high,generating,draftLength:draft.length,draftMarker:draft.includes(\"BRIDGE R41 PROJECTS LIVE CONTROL PLANE / AUTO-ROLLOVER / UNIFIED HIGH GATE\"),draftStart:draft.slice(0,180),buttons:rows}})())`;\nconst rr=await call(\"Runtime.evaluate\",{expression:exp,returnByValue:true});ws.close();process.stdout.write(rr.result.value);\n\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only reconcile existing Bridge R41 draft and send control"
+}
