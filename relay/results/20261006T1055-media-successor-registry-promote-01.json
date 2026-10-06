@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst base='http://127.0.0.1:17448';\nconst oldUrl='https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b';\nconst newUrl='https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf';\nconst mc=await fetch(base+'/api/supervisor-watchdog/managed-chats?inspect=0').then(r=>r.json());\nconst chats=mc.chats||[]; const a=chats.find(x=>x.id==='agent-media'); if(!a)throw new Error('agent-media missing');\nif(a.url!==oldUrl)throw new Error('media current URL precondition changed: '+a.url);\nif(chats.some(x=>x.id!==a.id&&x.url===newUrl))throw new Error('successor already owned by another managed record');\nconst h=[...(a.chatHistory||[])]; if(a.url&&!h.includes(a.url))h.push(a.url);\na.predecessorUrl=a.url; a.chatHistory=h.slice(-50); a.url=newUrl;\na.branch='agent/media-r26-local-windows-render-gate-20261006'; a.gitHead='b11a93664f9b64bf6da626119758c841a0a75c1e';\na.projectId='project-g-p-6ab839fa4f8c81919adad01c4a5497dc'; a.role='media'; a.enabled=true; a.rotateWithProject=true;\nconst r=await fetch(base+'/api/supervisor-watchdog/managed-chats',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({managedChats:chats})});\nconst out=await r.json(); if(!r.ok)throw new Error('PUT failed '+r.status+' '+JSON.stringify(out));\nprocess.stdout.write(JSON.stringify({state:'PROMOTED',id:a.id,url:a.url,predecessorUrl:a.predecessorUrl,history:a.chatHistory,branch:a.branch,gitHead:a.gitHead}));\n\n'@; $code | node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"state\":\"PROMOTED\",\"id\":\"agent-media\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\"predecessorUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"history\":[\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b24f-9c40-83eb-9b7b-766af74defe0\",\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\"],\"branch\":\"agent/media-r26-local-windows-render-gate-20261006\",\"gitHead\":\"b11a93664f9b64bf6da626119758c841a0a75c1e\"}",
+      "stdout_bytes": 601,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:38:28.753Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:38:28.640Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1055-media-successor-registry-promote-01"
+    },
+    "request_id": "20261006T1055-media-successor-registry-promote-01",
+    "started_at": "2026-10-06T02:38:27.950Z",
+    "status": "completed"
+  },
+  "id": "20261006T1055-media-successor-registry-promote-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
