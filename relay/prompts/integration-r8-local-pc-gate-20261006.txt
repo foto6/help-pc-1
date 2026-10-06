@@ -8,6 +8,17 @@ Parent QA: Hard Wave R7.
 Do not mutate product repositories.
 
 Current exact authorities / candidates:
+Current Growth local-PC producer candidate to evaluate:
+- repository: foto6/video3
+- branch: agent/growth-r37-local-pc-selection-adapter-20261006
+- exact SHA: 14409d572c494ec8b6f471ea915a27afae1b5521
+- CI: 37409772193 SUCCESS
+- contract: growth.local_pc_selection_adapter.r37.v1
+- artifact id: 11388657274
+- artifact name: growth-r37-local-pc-selection-adapter
+- artifact digest: sha256:d516d5ac448365d6101183f11ef4dedb47309fed44efcb902c452553f7b7f652
+- checked-in Media R26 authority is intentionally UNRESOLVED; positive selection must remain blocked until R8 binds accepted Media R26.
+
 - Bridge R41 accepted source candidate: foto6/WebAIBridge e4ee875db5ad62b514a8d1edeff85888ef83fb8c / CI 37405448329 SUCCESS.
 - Bridge R42 branch agent/bridge-r42-live-control-plane-cutover-20261006 is active and must not be accepted until exact-head CI + live cutover evidence exist.
 - Creator R37: foto6/video1 1f7cb9ed8f1985cd4faca79ce55f1c5fda9e3a57 / CI 37398299900 SUCCESS.
