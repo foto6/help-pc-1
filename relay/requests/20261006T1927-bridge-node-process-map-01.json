@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1927-bridge-node-process-map-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Get-CimInstance Win32_Process -Filter \"name='node.exe'\" | Where-Object { $_.CommandLine -match 'server\\.js|supervisor-watchdog\\.js|worker\\.js' } | Select-Object ProcessId,ParentProcessId,CommandLine | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only bounded Node process map for WebAIBridge server/watchdog/workers"
+}
