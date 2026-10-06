@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$x=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1' -TimeoutSec 12; $x | ConvertTo-Json -Depth 14 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Invoke-RestMethod : �६� �������� �����襭�� ����樨 ��⥪��.\r\n��ப�:1 ����:4\r\n+ $x=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watc ...\r\n+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestMethod], WebExc \r\n   eption\r\n    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand\r\n \r\n",
+      "stderr_bytes": 482,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T10:26:29.352Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T10:26:29.225Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1740-managed-chats-snapshot-01"
+    },
+    "request_id": "20261006T1740-managed-chats-snapshot-01",
+    "started_at": "2026-10-06T10:26:16.427Z",
+    "status": "completed"
+  },
+  "id": "20261006T1740-managed-chats-snapshot-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
