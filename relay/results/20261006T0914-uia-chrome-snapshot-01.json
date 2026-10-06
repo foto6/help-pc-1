@@ -1,0 +1,21 @@
+{
+  "action": "uia.snapshot",
+  "executor_result": {
+    "action": "uia.snapshot",
+    "data": {},
+    "dry_run": false,
+    "error": "COMError: (-2147220991, 'Событие не смогло вызвать ни одного из абонентов', (None, None, None, 0, None))",
+    "error_kind": "executor_failure",
+    "finished_at": "2026-10-06T01:47:57.800Z",
+    "ok": false,
+    "request_id": "20261006T0914-uia-chrome-snapshot-01",
+    "started_at": "2026-10-06T01:47:53.413Z",
+    "status": "error"
+  },
+  "id": "20261006T0914-uia-chrome-snapshot-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
