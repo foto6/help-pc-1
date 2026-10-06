@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0735-read-media-focused-seek-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,json\nexitp=r\"E:\\work\\video2-r25-local-run\\focused.exit\"\nlogp=r\"E:\\work\\video2-r25-local-run\\focused.log\"\ndef tail(path,n=32768):\n    if not os.path.exists(path): return None\n    size=os.path.getsize(path)\n    with open(path,\"rb\") as f:\n        f.seek(max(0,size-n)); b=f.read()\n    return b.decode(\"utf-8\",\"replace\")\nprint(json.dumps({\n \"exit_exists\":os.path.exists(exitp),\n \"exit_size\":os.path.getsize(exitp) if os.path.exists(exitp) else None,\n \"exit_text\":open(exitp,\"rb\").read().decode(\"utf-8\",\"replace\") if os.path.exists(exitp) else None,\n \"log_size\":os.path.getsize(logp) if os.path.exists(logp) else None,\n \"log_tail\":tail(logp)\n},ensure_ascii=True))"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 10000,
+  "note": "ASCII-safe seek read of Media R25 focused test result"
+}
