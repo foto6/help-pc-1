@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "curl.exe -sS --max-time 8 \"http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1\""
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 3,
+      "stderr": "curl: (3) URL rejected: Port number was not a decimal number between 0 and 65535\r\n",
+      "stderr_bytes": 82,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T01:52:49.979Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T01:52:49.865Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0939-managed-chats-cmdcurl-01"
+    },
+    "request_id": "20261006T0939-managed-chats-cmdcurl-01",
+    "started_at": "2026-10-06T01:52:49.568Z",
+    "status": "completed"
+  },
+  "id": "20261006T0939-managed-chats-cmdcurl-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
