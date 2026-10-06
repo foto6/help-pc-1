@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$code=@'\n\nconst specs=[[\"creator\",\"6ac455e9-bea0-83eb-aa94-fd3dde516c0c\"],[\"media\",\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\"],[\"growth\",\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\"],[\"bridge\",\"6ac45836-87a0-83ed-bea4-0ad0f99c8982\"],[\"mcp\",\"6ab946b7-46f0-83ed-bc98-dc74acc6e810\"]];\nconst conv=v=>{try{const u=new URL(String(v||''));const p=u.pathname.split('/').filter(Boolean);if(p.length===2&&p[0]==='c')return p[1];if(p.length===4&&p[0]==='g'&&p[2]==='c')return p[3]}catch{}return ''};\nconst tabs=await(await fetch('http://127.0.0.1:17410/json/list')).json();const out=[];\nfor(const [name,cid] of specs){\n const ms=tabs.filter(t=>t.type==='page'&&conv(t.url)===cid);\n if(ms.length!==1){out.push({name,cid,state:ms.length?'duplicate':'missing',count:ms.length});continue}\n const t=ms[0],ws=new WebSocket(t.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let n=1;const p=new Map();\n ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n const call=(method,params={})=>new Promise((r,j)=>{const k=n++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\n try{\n  const exp=\"JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect(),s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!=='none'&&s.visibility!=='hidden'};const buttons=[...document.querySelectorAll('button,[role=button]')].filter(vis);const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=true],[role=textbox]')].find(vis)||null;const draft=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const generating=buttons.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||'')));const high=buttons.some(b=>/^(Высокий|High)$/iu.test((b.innerText||b.textContent||'').trim()));const body=(document.body?.innerText||'');const contextLimit=/максимальн.{0,30}длин.{0,30}обсуждени|maximum.{0,30}(conversation|discussion).{0,30}(length|limit)|начать новый чат|start a new chat/i.test(body);return {title:document.title,url:location.href,generating,high,draftLength:draft.trim().length,contextLimit,composer:!!c}})())\";\n  const rr=await call('Runtime.evaluate',{expression:exp,returnByValue:true});\n  out.push({name,cid,...JSON.parse(rr.result.value)});\n }catch(e){out.push({name,cid,state:'probe_error',error:String(e)})}\n ws.close();await new Promise(r=>setTimeout(r,40));\n}\nprocess.stdout.write(JSON.stringify(out));\n'@; $code | node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"name\":\"creator\",\"cid\":\"6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"state\":\"probe_error\",\"error\":\"SyntaxError: \\\"undefined\\\" is not valid JSON\"},{\"name\":\"media\",\"cid\":\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"state\":\"probe_error\",\"error\":\"SyntaxError: \\\"undefined\\\" is not valid JSON\"},{\"name\":\"growth\",\"cid\":\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"state\":\"probe_error\",\"error\":\"SyntaxError: \\\"undefined\\\" is not valid JSON\"},{\"name\":\"bridge\",\"cid\":\"6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"state\":\"probe_error\",\"error\":\"SyntaxError: \\\"undefined\\\" is not valid JSON\"},{\"name\":\"mcp\",\"cid\":\"6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"state\":\"probe_error\",\"error\":\"SyntaxError: \\\"undefined\\\" is not valid JSON\"}]",
+      "stdout_bytes": 698,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:13:33.524Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:13:33.416Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0931-five-agent-preflight-01"
+    },
+    "request_id": "20261006T0931-five-agent-preflight-01",
+    "started_at": "2026-10-06T02:13:32.621Z",
+    "status": "completed"
+  },
+  "id": "20261006T0931-five-agent-preflight-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
