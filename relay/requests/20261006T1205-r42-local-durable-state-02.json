@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1205-r42-local-durable-state-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$data='E:\\WebAIBridge\\app\\data';\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path;\n$head=[string](& $git -C $repo rev-parse HEAD);\n$branch=[string](& $git -C $repo branch --show-current);\n$dirty=@(& $git -C $repo status --porcelain);\n$files=@(\n  'projects-live-control-plane-cutover-r42.json',\n  'projects-live-control-plane-cutover-r42-reconcile.json',\n  'projects-live-control-plane-r41.json',\n  'projects-operation-ledger-r41.json',\n  'supervisor-watchdog.json',\n  'state.json'\n);\n$out=@();\nforeach($n in $files){\n  $p=Join-Path $data $n;\n  if(Test-Path -LiteralPath $p){\n    $txt=[string](Get-Content -LiteralPath $p -Raw);\n    $out += [pscustomobject]@{name=$n;exists=$true;length=$txt.Length;sha256=(Get-FileHash -LiteralPath $p -Algorithm SHA256).Hash.ToLowerInvariant();preview=$txt.Substring(0,[Math]::Min(7000,$txt.Length))}\n  }else{$out += [pscustomobject]@{name=$n;exists=$false}}\n}\n$backs=@();\n$br=Join-Path $data 'backups';\nif(Test-Path $br){\n  $backs=@(Get-ChildItem $br -Directory -Filter 'r42-cutover-*' | Sort-Object LastWriteTime -Descending | Select-Object -First 8 Name,FullName,LastWriteTime)\n}\n[pscustomobject]@{head=$head.Trim();branch=$branch.Trim();detached=([string]::IsNullOrWhiteSpace($branch));dirty=@($dirty);files=$out;backups=$backs}|ConvertTo-Json -Depth 7 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only durable R42 local state inspection v2; no HTTP, no mutation"
+}
