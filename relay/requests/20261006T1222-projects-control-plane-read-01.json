@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1222-projects-control-plane-read-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/projects/control-plane?inspect=1' -TimeoutSec 12; $r | ConvertTo-Json -Depth 20 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 16000,
+  "note": "Read-only Projects control-plane snapshot with live inspection"
+}
