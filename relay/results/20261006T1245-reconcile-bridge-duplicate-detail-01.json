@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-06T04:32:57.803Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261006T1242-bridge-duplicate-detail-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:9941de3904d3122d19305ff989420f2eaf0617e4cd82ca7e8a15c39a1cdcd1c3",
+            "journal_sequence": 1888,
+            "previous_record_sha256": "c5d2f33e4265ae2edb2c0273607e1c9b00475b386f81a2d07970e1e094e5a1df",
+            "record_sha256": "1cfd875d00dc2e9ec759d64195b809e254f536edfc975f682fa7af1bbecd896e",
+            "recorded_at": "2026-10-06T04:32:57.910Z",
+            "request_id": "20261006T1242-bridge-duplicate-detail-01",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-06T04:33:18.042Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261006T1242-bridge-duplicate-detail-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:9941de3904d3122d19305ff989420f2eaf0617e4cd82ca7e8a15c39a1cdcd1c3",
+            "journal_sequence": 1889,
+            "previous_record_sha256": "1cfd875d00dc2e9ec759d64195b809e254f536edfc975f682fa7af1bbecd896e",
+            "record_sha256": "ee4583288019b65e97264db001f9171f984cddc62eca49d8252ea5052c7e01c4",
+            "recorded_at": "2026-10-06T04:33:18.171Z",
+            "request_id": "20261006T1242-bridge-duplicate-detail-01",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-06T04:33:18.042Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "20261006T1242-bridge-duplicate-detail-01"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-06T04:33:18.042Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "20261006T1242-bridge-duplicate-detail-01"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:9941de3904d3122d19305ff989420f2eaf0617e4cd82ca7e8a15c39a1cdcd1c3",
+          "journal_sequence": 1889,
+          "previous_record_sha256": "1cfd875d00dc2e9ec759d64195b809e254f536edfc975f682fa7af1bbecd896e",
+          "record_sha256": "ee4583288019b65e97264db001f9171f984cddc62eca49d8252ea5052c7e01c4",
+          "recorded_at": "2026-10-06T04:33:18.171Z",
+          "request_id": "20261006T1242-bridge-duplicate-detail-01",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "2fbb458b6a8bbd79bd595b5eb25866d58853cb749e042e3789ce969a0f076536",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 1891
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "20261006T1242-bridge-duplicate-detail-01",
+        "request_id": "20261006T1242-bridge-duplicate-detail-01",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:33:45.610Z",
+    "ok": true,
+    "request_id": "20261006T1245-reconcile-bridge-duplicate-detail-01",
+    "started_at": "2026-10-06T04:33:45.497Z",
+    "status": "completed"
+  },
+  "id": "20261006T1245-reconcile-bridge-duplicate-detail-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
