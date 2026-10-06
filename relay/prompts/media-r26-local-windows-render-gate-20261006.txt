@@ -1,0 +1,45 @@
+EXECUTE NOW — MEDIA R26 LOCAL WINDOWS REAL-RENDER CLOSURE / HOSTED-CI ESCAPE HATCH. Do not stop at diagnosis.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r26-local-windows-render-gate-20261006
+Exact starting HEAD: b11a93664f9b64bf6da626119758c841a0a75c1e
+
+Known evidence:
+- R25 hosted CI candidate-3 works.
+- exact checkpoint ffmpeg/ffprobe validation works.
+- candidate-4 real render repeatedly receives GitHub-hosted runner shutdown/SIGTERM exit 143 after real work starts.
+- separate benchmark path also receives runner shutdown.
+Do NOT solve this by blind reruns or by pretending hosted CI rendered candidate-4.
+
+Goal: make the montage engine provably complete using a deterministic LOCAL WINDOWS execution path on the user's PC, while CI validates control semantics with bounded fixtures.
+
+Required:
+1. Define media.local_windows_render_gate.r26.v1.
+2. Preserve all R25 4-candidate + bracket + targeted-reedit semantics.
+3. Build one-command Windows local render launcher with:
+   - exact runtime verification;
+   - preflight disk/CPU/RAM/ffmpeg checks;
+   - deterministic source/plan digest;
+   - durable checkpoints;
+   - resumable candidate-4 subphases;
+   - clear progress/status output;
+   - safe cancellation/restart.
+4. Real local path must render actual MP4 bytes for all required candidates and targeted re-edit; no synthetic placeholder-as-live evidence.
+5. CI path must use tiny deterministic fixture(s) to prove checkpoint/restart/hash/lineage logic and MUST NOT require long real encoding on GitHub-hosted runner.
+6. Add local evidence collector producing:
+   - exact source hash;
+   - ffmpeg runtime manifest/hash/version;
+   - candidate MP4 hashes;
+   - bracket/selection evidence;
+   - targeted re-edit hash;
+   - final artifact hash;
+   - timings per phase;
+   - resume/restart evidence.
+7. Preemption tests: kill/restart between durable phases; completed phase must be verified/reused, not rerendered.
+8. Corrupt/wrong checkpoint fails closed.
+9. Exact replay is idempotent; changed render graph under same operation ID conflicts.
+10. Produce RUN_LOCAL_R26.cmd (or equally simple entrypoint) and STATUS/VERIFY commands suitable for coordinator execution on E: without touching protected directories.
+11. Do not require admin rights, provider/browser/model calls, social publish, or credentials.
+12. Exact-head CI SUCCESS is required for the control plane before coordinator runs the heavy local rehearsal.
+
+Completion: final SHA, exact-head CI, artifact id/digest, local command, expected runtime/resource estimate, and explicit READY_FOR_LOCAL_REAL_RENDER.
