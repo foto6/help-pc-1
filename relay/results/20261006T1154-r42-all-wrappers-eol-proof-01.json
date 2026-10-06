@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "git.exe -C E:\\WebAIBridge diff --ignore-space-at-eol --exit-code -- app/scripts/operator-lifecycle-r40.ps1 app/scripts/pause-all-r40.cmd app/scripts/pause-browser-r40.cmd app/scripts/resume-attach-r40.cmd app/scripts/resume-managed-r40.cmd >NUL 2>&1 && echo ONLY_EOL || echo CONTENT_DIFF"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "ONLY_EOL \r\n",
+      "stdout_bytes": 11,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:46:51.730Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:46:51.606Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1154-r42-all-wrappers-eol-proof-01"
+    },
+    "request_id": "20261006T1154-r42-all-wrappers-eol-proof-01",
+    "started_at": "2026-10-06T04:46:51.192Z",
+    "status": "completed"
+  },
+  "id": "20261006T1154-r42-all-wrappers-eol-proof-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
