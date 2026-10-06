@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json\nexitp=r\"E:\\work\\video2-r25-local-run\\focused.exit\"\nlogp=r\"E:\\work\\video2-r25-local-run\\focused.log\"\ndef tail(path,n=32768):\n    if not os.path.exists(path): return None\n    size=os.path.getsize(path)\n    with open(path,\"rb\") as f:\n        f.seek(max(0,size-n))\n        b=f.read()\n    return b.decode(\"utf-8\",\"replace\")\nprint(json.dumps({\n \"exit_exists\":os.path.exists(exitp),\n \"exit_size\":os.path.getsize(exitp) if os.path.exists(exitp) else None,\n \"exit_text\":open(exitp,\"rb\").read().decode(\"utf-8\",\"replace\") if os.path.exists(exitp) else None,\n \"log_size\":os.path.getsize(logp) if os.path.exists(logp) else None,\n \"log_tail\":tail(logp)\n},ensure_ascii=False))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\r\n  File \"<string>\", line 11, in <module>\r\n    print(json.dumps({\r\n    ~~~~~^^^^^^^^^^^^^\r\n     \"exit_exists\":os.path.exists(exitp),\r\n     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n    ...<3 lines>...\r\n     \"log_tail\":tail(logp)\r\n     ^^^^^^^^^^^^^^^^^^^^^\r\n    },ensure_ascii=False))\r\n    ^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\encodings\\cp1251.py\", line 19, in encode\r\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\r\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nUnicodeEncodeError: 'charmap' codec can't encode characters in position 53-57: character maps to <undefined>\r\n",
+      "stderr_bytes": 744,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T00:07:43.047Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T00:07:42.948Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0734-read-media-focused-seek-01"
+    },
+    "request_id": "20261006T0734-read-media-focused-seek-01",
+    "started_at": "2026-10-06T00:07:42.588Z",
+    "status": "completed"
+  },
+  "id": "20261006T0734-read-media-focused-seek-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
