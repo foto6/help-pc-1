@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "\nimport json, pathlib, subprocess, urllib.request\nrepo=pathlib.Path(r\"E:\\WebAIBridge\")\ndef run(args, timeout=8):\n    p=subprocess.run(args,cwd=str(repo),stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=timeout)\n    return {\"code\":p.returncode,\"out\":p.stdout.decode(errors=\"replace\").strip(),\"err\":p.stderr.decode(errors=\"replace\").strip()}\nhead=run([\"git.exe\",\"-C\",str(repo),\"rev-parse\",\"HEAD\"])\nstatus=run([\"git.exe\",\"-C\",str(repo),\"status\",\"--porcelain\"])\ncut=repo/\"app\"/\"data\"/\"projects-live-control-plane-cutover-r42.json\"\ncut_state=None\nif cut.exists():\n    try: cut_state=json.loads(cut.read_text(encoding=\"utf-8-sig\"))\n    except Exception as exc: cut_state={\"parseError\":str(exc)}\nhealth_path=pathlib.Path(r\"E:\\pc-github-relay\\.pc-relay\\health.json\")\nhealth=json.loads(health_path.read_text(encoding=\"utf-8-sig\")) if health_path.exists() else {}\napi_ok=False\ntry:\n    with urllib.request.urlopen(\"http://127.0.0.1:17448/api/status\",timeout=3) as resp:\n        body=json.load(resp)\n    api_ok=True\nexcept Exception:\n    body={}\nprint(json.dumps({\n    \"head\":head[\"out\"],\n    \"gitStatus\":status[\"out\"].splitlines(),\n    \"cutoverExists\":cut.exists(),\n    \"cutoverStatus\":None if cut_state is None else cut_state.get(\"status\"),\n    \"holdActive\":None if cut_state is None else cut_state.get(\"holdActive\"),\n    \"bridgeApiOk\":api_ok,\n    \"relayReconciliationRequired\":bool(health.get(\"reconciliation_required\",False)),\n    \"relayLastError\":health.get(\"last_error\"),\n},ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"head\": \"7351d8478600ceb1db50ea136efccb1c10a943c7\", \"gitStatus\": [\"M app/scripts/operator-lifecycle-r40.ps1\", \" M app/scripts/pause-all-r40.cmd\", \" M app/scripts/pause-browser-r40.cmd\", \" M app/scripts/resume-attach-r40.cmd\", \" M app/scripts/resume-managed-r40.cmd\"], \"cutoverExists\": false, \"cutoverStatus\": null, \"holdActive\": null, \"bridgeApiOk\": true, \"relayReconciliationRequired\": false, \"relayLastError\": null}\r\n",
+      "stdout_bytes": 420,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:59:36.668Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:59:36.456Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1205-r42-apply04-preflight-01"
+    },
+    "request_id": "20261006T1205-r42-apply04-preflight-01",
+    "started_at": "2026-10-06T04:59:35.213Z",
+    "status": "completed"
+  },
+  "id": "20261006T1205-r42-apply04-preflight-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
