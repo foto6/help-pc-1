@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0920-find-project-assignment-api-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; Set-Location 'E:\\WebAIBridge\\app'; Write-Host '--- UI ---'; Select-String -Path '.\\ui.html' -Pattern 'Queue assignment|Queue to selected|replacement_policy|rotation|assignment' -Context 3,8 | Select-Object -First 30 | ForEach-Object { $_.Context.PreContext; $_.Line; $_.Context.PostContext; '---' }; Write-Host '--- SERVER ---'; Select-String -Path '.\\server.js' -Pattern 'managed.*assignment|project.*agent|rotation|replacement_policy' -Context 2,8 | Select-Object -First 60 | ForEach-Object { $_.Context.PreContext; $_.Line; $_.Context.PostContext; '---' }"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only locate live Projects assignment/rotation API in local Bridge source"
+}
