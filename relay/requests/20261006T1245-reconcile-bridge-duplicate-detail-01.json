@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1245-reconcile-bridge-duplicate-detail-01",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "20261006T1242-bridge-duplicate-detail-01",
+    "action": "shell.run"
+  },
+  "timeout_ms": 8000,
+  "note": "Reconcile timed-out read-only Bridge duplicate-detail probe; no replay"
+}
