@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='SilentlyContinue'\n$repo='E:\\work\\video2-r25-local'\n$procs=@()\nGet-CimInstance Win32_Process -Filter \"Name='node.exe'\" | Where-Object {\n  $_.CommandLine -like '*video2-r25-local*' -or $_.CommandLine -like '*tournament-r25.test.js*' -or $_.CommandLine -like '*r25-candidate4-checkpoint.test.js*'\n} | ForEach-Object { $procs += [pscustomobject]@{pid=$_.ProcessId;cmd=$_.CommandLine} }\n$status=@(git -C $repo status --short 2>$null)\n[pscustomobject]@{\n head=(git -C $repo rev-parse HEAD 2>$null | Select-Object -First 1)\n status=$status\n processes=$procs\n artifactsExists=(Test-Path (Join-Path $repo '.artifacts'))\n} | ConvertTo-Json -Depth 4 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"head\":\"b11a93664f9b64bf6da626119758c841a0a75c1e\",\"status\":[],\"processes\":[],\"artifactsExists\":false}\r\n",
+      "stdout_bytes": 104,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T00:04:32.110Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T00:04:32.011Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0724-reconcile-focused-tests-local-01"
+    },
+    "request_id": "20261006T0724-reconcile-focused-tests-local-01",
+    "started_at": "2026-10-06T00:04:31.243Z",
+    "status": "completed"
+  },
+  "id": "20261006T0724-reconcile-focused-tests-local-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
