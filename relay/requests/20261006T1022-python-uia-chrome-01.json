@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1022-python-uia-chrome-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python",
+      "-c",
+      "import uiautomation as auto\nauto.SetGlobalSearchTimeout(2)\nroot=auto.ControlFromHandle(8456336)\nprint(\"ROOT\",repr(root.Name),root.ControlTypeName,repr(root.ClassName))\nkids=root.GetChildren()\nprint(\"CHILDREN\",len(kids))\nfor k in kids[:80]:\n    try:\n        print(k.ControlTypeName,repr(k.Name),repr(k.AutomationId),repr(k.ClassName))\n    except Exception as e:\n        print(\"ERR\",repr(e))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only Python UIAutomation inspect Chrome tree"
+}
