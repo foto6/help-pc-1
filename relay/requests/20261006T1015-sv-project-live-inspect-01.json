@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1015-sv-project-live-inspect-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst r=await fetch('http://127.0.0.1:17448/api/supervisor-watchdog/projects?inspect=1');\nconst j=await r.json();\nconst id='project-g-p-6ab839fa4f8c81919adad01c4a5497dc';\nconst x=(j.projects||[]).find(x=>x.id===id);\nprocess.stdout.write(JSON.stringify({http:r.status,project:x?{\n id:x.id,name:x.name,status:x.status,lastSeenAt:x.lastSeenAt,openTabs:x.openTabs,\n highMode:x.highMode,compatible:x.compatible,compatibilityReasons:x.compatibilityReasons,\n profileName:x.profileName,error:x.error,agentCount:x.agentCount,activeTaskCount:x.activeTaskCount,\n rotationPolicy:x.rotationPolicy\n}:null}));\n\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only live sv Project compatibility and High mode inspection"
+}
