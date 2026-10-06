@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1830-discover-open-managed-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,re;u='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/discover';d=json.loads(urllib.request.urlopen(u,timeout=15).read().decode('utf-8'));p=re.compile(r'(Publish Provider|Deliver R11|Live Review|Bridge R19|Project Agent Supervision|Native Connector|Implement R37 Driver|Агент моста|Local Windows Render Gate|R8 integration acceptance|Fix Assignment Replacement Runtime|R37 Local Integration)',re.I);rows=[{k:x.get(k) for k in ['url','title','registered','suggestedName','suggestedProfileId','openTabs']} for x in d.get('candidates',[]) if p.search(x.get('title',''))];print(json.dumps(rows,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 25000,
+  "note": "Read-only discover open managed ChatGPT role candidates"
+}
