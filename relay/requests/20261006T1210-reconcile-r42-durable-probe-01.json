@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1210-reconcile-r42-durable-probe-01",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "20261006T1207-r42-local-durable-state-03",
+    "action": "shell.run"
+  },
+  "timeout_ms": 8000,
+  "note": "Reconcile timed-out read-only durable R42 state probe; do not replay"
+}
