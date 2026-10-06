@@ -57,5 +57,11 @@ Required:
 9. Exact-head CI must be green for source/tests.
 10. Do NOT execute the heavy user-PC render inside CI. Prepare it for coordinator-controlled local execution after QA.
 11. Produce exact final SHA + CI + artifact/report and the exact local command the coordinator should run on the user's PC.
+Creator R37 compatibility requirement:
+- R26 must emit a machine-readable candidate Media authority template compatible with creator.local_integration_driver.r37.v1 validate_media_authority().
+- Required producer fields after exact-green CI/local evidence: repository=foto6/video2, contract=media.multicandidate_round.r25.v1, status=ACCEPTED, exact producerSha, ciRunId, ciConclusion=success, artifactId/name/digest, exact Git blob identities {contract,schema,manifest,runtime}.
+- The independentQa block cannot be self-issued by Media; emit it as PENDING_INDEPENDENT_QA placeholders or a separate producer tuple for R8 to bind. Do NOT fake QA acceptance.
+- R8 must later fill/bind independentQa with exact matching producer SHA/CI/artifact/digest/contract before Creator local run is allowed.
+
 
 No merge. No live social publish. No browser/provider mutation.
