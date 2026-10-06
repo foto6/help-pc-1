@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$exit='E:\\work\\video2-r25-local-run\\focused.exit'\n$log='E:\\work\\video2-r25-local-run\\focused.log'\n[pscustomobject]@{\n exitBytes=if(Test-Path $exit){[Convert]::ToHexString([IO.File]::ReadAllBytes($exit))}else{$null}\n exitText=if(Test-Path $exit){[IO.File]::ReadAllText($exit)}else{$null}\n logBytes=if(Test-Path $log){(Get-Item $log).Length}else{$null}\n logTail=if(Test-Path $log){@(Get-Content $log -Tail 60)}else{@()}\n} | ConvertTo-Json -Depth 4 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Method invocation failed because [System.Convert] does not contain a method named 'ToHexString'.\r\nAt line:5 char:32\r\n+ ... Path $exit){[Convert]::ToHexString([IO.File]::ReadAllBytes($exit))}el ...\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : MethodNotFound\r\n \r\n",
+      "stderr_bytes": 413,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T00:06:35.794Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T00:06:35.698Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0731-read-media-focused-result-01"
+    },
+    "request_id": "20261006T0731-read-media-focused-result-01",
+    "started_at": "2026-10-06T00:06:35.215Z",
+    "status": "completed"
+  },
+  "id": "20261006T0731-read-media-focused-result-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
