@@ -1,0 +1,28 @@
+EXECUTE NOW — NATIVE MCP R39 LOCAL CANARY / OPERATOR CUTOVER READINESS. Do not stop at a plan.
+
+Repo: foto6/help-pc-2
+Writable branch ONLY: agent/native-mcp-r39-local-canary-20261006
+Exact starting HEAD: a0d8438f0e4fa93e6be50402efb6783f92c3412b
+Parent CI: 37406258361 SUCCESS.
+Parent contract: pc.control.direct_source_authority.v2 / Native MCP R38 source-pin recovery.
+
+Goal: turn exact-green Native MCP R38 into a safely installable/testable local canary without replacing the currently working GitHub relay authority until independent QA permits cutover.
+
+Required:
+1. Define native_mcp.local_canary.r39.v1.
+2. Add one-command READ-ONLY Windows preflight reporting exact source SHA/version, native MCP host, control service, executor, GitHub relay fallback, direct lane, lifecycle state, reconciliation, current/target authority, autostart/service state and rollback availability.
+3. Add staged local canary mode using an isolated non-production root/port/service name that cannot steal current production authority.
+4. Validate RUNNING / PAUSED / DRAINING / RECONCILIATION_REQUIRED against staged canary.
+5. PAUSED blocks side effects while read-only health/status remains available.
+6. DRAINING rejects new dispatch and reaches quiescence deterministically.
+7. Unknown outcome forces reconciliation; resume is explicit/idempotent and never automatically replays side effects.
+8. Add cutover-plan generator only. It emits exact authority transition, commands and rollback steps for later coordinator approval; it must not perform production cutover.
+9. Add staged reboot/autostart rehearsal contract. CI may simulate OS service operations; do not claim live reboot.
+10. Preserve R38 successor source authority and historical R30/R31 evidence. Mixed old/new tuple must fail.
+11. GitHub relay remains explicit fallback; prove fallback selection fail-closed.
+12. No firewall/tunnel changes, no credentials, no killing current relay, no replacing production service.
+13. Exact-head Windows + Ubuntu CI SUCCESS.
+14. Produce deterministic readiness artifacts with exact SHA/run/digests and CANARY_READY/BLOCKED disposition.
+15. Return exact Windows preflight and staged-canary commands.
+
+No merge. No live production cutover in this milestone.
