@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0750-media-focused-failure-lines-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/c",
+      "findstr /N /C:\"not ok\" /C:\"AssertionError\" /C:\"ERR\" /C:\"# fail\" /C:\"error:\" /C:\"Error:\" E:\\work\\video2-r25-local-run\\focused2.log"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only extract failure lines from local Media R25 focused test log"
+}
