@@ -1,0 +1,22 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1929-bridge-runtime-files-clean-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "git.exe",
+      "-C",
+      "E:\\WebAIBridge",
+      "status",
+      "--short",
+      "--",
+      "app/server.js",
+      "app/start.ps1",
+      "app/worker.js",
+      "app/supervisor-watchdog.js"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only check Bridge runtime source files before scoped server restart"
+}
