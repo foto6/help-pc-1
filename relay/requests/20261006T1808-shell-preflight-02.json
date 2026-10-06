@@ -1,0 +1,26 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1808-shell-preflight-02",
+  "action": "action.preflight",
+  "params": {
+    "contract_version": "pc_executor.action_preflight.v1",
+    "request": {
+      "request_id": "20261006T1808-shell-smoke-target",
+      "action": "shell.run",
+      "params": {
+        "argv": [
+          "cmd.exe",
+          "/d",
+          "/c",
+          "echo",
+          "ok"
+        ],
+        "cwd": "E:\\"
+      },
+      "dry_run": false,
+      "timeout_ms": 10000
+    }
+  },
+  "timeout_ms": 8000,
+  "note": "Correct preflight for minimal shell smoke"
+}
