@@ -1,0 +1,88 @@
+EXECUTE NOW — R42 FINAL EXACT-GREEN LIVE CUTOVER / SUCCESSOR ROLLOVER. This is a NEW logical operation. Do not replay the failed cutover operation.
+
+Repo: foto6/WebAIBridge
+Branch: agent/bridge-r42-live-control-plane-cutover-20261006
+Exact GREEN target SHA: e8033f2e42bd335c10a397eb3d2cb62c8bb837a9
+Exact-head CI: 37412502084 SUCCESS
+Windows artifact:
+- id 11390250540
+- digest sha256:90809c0c9e0f5afdd51c8e8c9e292a15af2e77eeab19a6e0e98e76086c61a902
+Ubuntu artifact:
+- id 11389623324
+- digest sha256:530c75ea28d771a0d311b147c1c2fed4490b1e28f8ac8942c66df6e124cdb9de
+
+FAILED prior operation:
+coord-20261006-r42-live-cutover-apply-01
+Terminal disposition: FAILED_BEFORE_CUTOVER_EFFECTS.
+It MUST NOT be replayed or reused.
+
+NEW cutover operation identity:
+coord-20261006-r42-live-cutover-apply-02
+
+Current Bridge agent conversation authority:
+6ac45836-87a0-83ed-bea4-0ad0f99c8982
+
+Required NOW:
+1. Revalidate exact local pre-cutover state and that local Bridge is still the reconciled clean legacy baseline or explicitly report drift. Do not guess.
+2. Execute the controlled cutover with the exact green target SHA above and NEW operation ID.
+3. Persist rollback manifest/command before switch.
+4. Verify post-cutover:
+   - local exact HEAD;
+   - /api/status;
+   - operator lifecycle;
+   - R41 live control-plane endpoint;
+   - R42 cutover endpoint;
+   - hold/reconcile state;
+   - no provider chat deletion;
+   - no credential entry;
+   - no blind replay.
+5. Run real read-only Projects reconcile and persist before/after/diff.
+6. Then handle actual exhausted managed conversations with the live R42 lifecycle:
+   A. Media predecessor:
+      6abda64b-aac4-83eb-adee-dc7143ca5d2b
+   B. QA/Supervisor predecessor:
+      6abe03fa-9728-83eb-90d2-5ee81bbac12c
+   C. Native Connector predecessor:
+      6ab946b7-46f0-83ed-bc98-dc74acc6e810
+   For each:
+   - re-confirm exhaustion at execution time;
+   - block Send to predecessor;
+   - create successor in the bound sv Project;
+   - ensure High (auto-select if Medium);
+   - read High back BEFORE typing;
+   - bounded role/handoff seed;
+   - recheck High before submit;
+   - verify exact successor providerConversationId + canonical URL;
+   - atomically switch current pointer only after verification;
+   - predecessor remains EXHAUSTED/SUPERSEDED history.
+7. MCP old A2 duplicate exact-ID conversation:
+   6ab67022-ae5c-83ed-a654-5dcc82c3b351
+   Reconcile duplicate browser targets fail-closed. Close only a proven redundant idle/empty browser target; do not delete provider conversation.
+8. Reconcile Creator logical current conversation. Old Creator exact ID:
+   6abda62d-8198-83ed-aaa2-40b16f96a8a0
+   If it no longer resolves as a valid current target, do NOT route by title/last-open. Create/verify successor only through the live logical-agent lifecycle and report exact ID.
+9. Restore/enable Full autonomy only after controlled reconcile is green. Confirm:
+   - mode full;
+   - allowAutonomousSend true;
+   - High enforcement active;
+   - migration enabled;
+   - unknown Send replay forbidden.
+10. Register this operation and successor handoffs in the unified ledger.
+11. Produce a durable live cutover report and commit/report exact evidence:
+   - final source SHA;
+   - CI/artifacts;
+   - NEW operation ID and result;
+   - pre/post local HEAD;
+   - rollback manifest;
+   - local runtime endpoints;
+   - reconcile diff;
+   - new Media successor ID;
+   - new QA successor ID;
+   - new Native successor ID;
+   - Creator current/successor ID;
+   - MCP duplicate disposition;
+   - Full autonomy runtime state.
+12. If any cutover effect outcome is UNKNOWN, STOP and reconcile; never issue apply-03 automatically.
+13. No merge. No social publish. No provider chat deletion. No SpectraTrack.
+
+After success leave R42 live and the successor chats idle/ready for coordinator assignments.
