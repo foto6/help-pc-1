@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1805-capabilities-02",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 8000,
+  "note": "Read-only executor capability check after shell timeouts"
+}
