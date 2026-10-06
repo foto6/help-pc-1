@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nd=json.loads(urllib.request.urlopen('http://127.0.0.1:17410/json/list',timeout=8).read().decode('utf-8'))\nids={'6ac45836-87a0-83ed-bea4-0ad0f99c8982','6ac455e9-bea0-83eb-aa94-fd3dde516c0c','6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0','6ab946b7-46f0-83ed-bc98-dc74acc6e810','6ac45fb0-9074-83eb-99eb-397265b228e7','6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf'}\nout=[]\nfor x in d:\n u=str(x.get('url',''))\n hit=next((cid for cid in ids if cid in u),None)\n if hit:\n  out.append({'conversationId':hit,'targetId':x.get('id'),'title':x.get('title'),'url':u,'type':x.get('type')})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"conversationId\":\"6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\"targetId\":\"884B301C522B41E679A92C60328E2B3F\",\"title\":\"Implement Local Windows Render Gate\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\"type\":\"page\"},{\"conversationId\":\"6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"targetId\":\"F51AE4221672F42181BCC4AB8FABA29C\",\"title\":\"\\u0410\\u0433\\u0435\\u043d\\u0442 \\u043c\\u043e\\u0441\\u0442\\u0430\",\"url\":\"https://chatgpt.com/c/6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"type\":\"page\"},{\"conversationId\":\"6ac45fb0-9074-83eb-99eb-397265b228e7\",\"targetId\":\"E5A74C31B39DE271EE342324A2688C22\",\"title\":\"R8 integration acceptance verdict\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45fb0-9074-83eb-99eb-397265b228e7\",\"type\":\"page\"},{\"conversationId\":\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"targetId\":\"BE65410914FEC5633289721AF21CC403\",\"title\":\"Implement Live Review Ingest\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"type\":\"page\"},{\"conversationId\":\"6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"targetId\":\"3F70475C0F610C0F4B27CE75A3B80B8F\",\"title\":\"Native Connector Implementation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"type\":\"page\"},{\"conversationId\":\"6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"targetId\":\"C7A7207052C7F10350379336B9D05473\",\"title\":\"Implement R37 Driver\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"type\":\"page\"},{\"conversationId\":\"6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"targetId\":\"F3A69CBA5D0753C7BF2675BFAAC4E4DD\",\"title\":\"\\u0410\\u0433\\u0435\\u043d\\u0442 \\u043c\\u043e\\u0441\\u0442\\u0430\",\"url\":\"https://chatgpt.com/c/6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"type\":\"page\"},{\"conversationId\":\"6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\"targetId\":\"0D446CF55414A42BF0F2DED930A92503\",\"title\":\"Implement Local Windows Render Gate\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc/c/6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\"type\":\"page\"}]\r\n",
+      "stdout_bytes": 2124,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T11:11:21.846Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T11:11:21.721Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1945-chatgpt-target-map-01"
+    },
+    "request_id": "20261006T1945-chatgpt-target-map-01",
+    "started_at": "2026-10-06T11:11:21.300Z",
+    "status": "completed"
+  },
+  "id": "20261006T1945-chatgpt-target-map-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
