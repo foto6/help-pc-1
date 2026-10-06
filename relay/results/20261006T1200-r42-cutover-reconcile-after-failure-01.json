@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='SilentlyContinue';\nSet-Location 'E:\\WebAIBridge';\n$head=(git rev-parse HEAD 2>$null);\n$dirty=@(git status --porcelain=v1 2>$null);\n$data='E:\\WebAIBridge\\app\\data';\n$cut=Join-Path $data 'projects-live-control-plane-cutover-r42.json';\n$state=Join-Path $data 'state.json';\n$sup=Join-Path $data 'supervisor-watchdog.json';\n$cutj=$null;if(Test-Path $cut){$cutj=Get-Content $cut -Raw|ConvertFrom-Json}\n$statej=$null;if(Test-Path $state){$statej=Get-Content $state -Raw|ConvertFrom-Json}\n$supj=$null;if(Test-Path $sup){$supj=Get-Content $sup -Raw|ConvertFrom-Json}\n$http=$null;try{$http=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 2}catch{$http=[pscustomobject]@{error=$_.Exception.Message}}\n[pscustomobject]@{\n head=$head;\n dirty=@($dirty);\n cutoverFileExists=(Test-Path $cut);\n cutover=[pscustomobject]@{\n  status=$cutj.status;holdActive=$cutj.holdActive;preCutoverHead=$cutj.preCutoverHead;targetSha=$cutj.targetSha;rollbackManifest=$cutj.rollbackManifest;rollbackCommand=$cutj.rollbackCommand\n };\n lifecycle=[pscustomobject]@{mode=$statej.operatorLifecycle.mode;revision=$statej.operatorLifecycle.revision;changedBy=$statej.operatorLifecycle.changedBy};\n queuePaused=$statej.settings.paused;\n supervisor=[pscustomobject]@{\n  enabled=$supj.enabled;mode=$supj.mode;allowAutonomousSend=$supj.allowAutonomousSend;autoContinueEnabled=$supj.autoContinueEnabled;migrationEnabled=$supj.migrationEnabled;sendProtectedDraftEnabled=$supj.sendProtectedDraftEnabled;highModeStrategy=$supj.highModeStrategy\n };\n http=$http\n}|ConvertTo-Json -Depth 8 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"head\":\"cb852e013634287669f957253d13d8ef2b45cada\",\"dirty\":[],\"cutoverFileExists\":false,\"cutover\":{\"status\":null,\"holdActive\":null,\"preCutoverHead\":null,\"targetSha\":null,\"rollbackManifest\":null,\"rollbackCommand\":null},\"lifecycle\":{\"mode\":null,\"revision\":null,\"changedBy\":null},\"queuePaused\":false,\"supervisor\":{\"enabled\":true,\"mode\":\"full\",\"allowAutonomousSend\":true,\"autoContinueEnabled\":true,\"migrationEnabled\":true,\"sendProtectedDraftEnabled\":true,\"highModeStrategy\":\"verify_only\"},\"http\":{\"error\":\"Удаленный сервер возвратил ошибку: (404) Не найден.\"}}\r\n",
+      "stdout_bytes": 596,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T03:44:41.939Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T03:44:41.824Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1200-r42-cutover-reconcile-after-failure-01"
+    },
+    "request_id": "20261006T1200-r42-cutover-reconcile-after-failure-01",
+    "started_at": "2026-10-06T03:44:40.759Z",
+    "status": "completed"
+  },
+  "id": "20261006T1200-r42-cutover-reconcile-after-failure-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
