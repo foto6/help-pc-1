@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T2025-qa-r8-supervisor-verify-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request;u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/992349b1-8367-4822-9b6c-7cf0779e0e93/evidence';p=\"{\\\"branch\\\":\\\"agent/integration-r8-final-local-stack-20261006\\\",\\\"currentHead\\\":\\\"6ab529846e99e572d77006dee48d6c4b01caea12\\\",\\\"exactCommitSha\\\":\\\"6ab529846e99e572d77006dee48d6c4b01caea12\\\",\\\"ciRunId\\\":\\\"37452884976\\\",\\\"ciConclusion\\\":\\\"success\\\",\\\"supervisorVerified\\\":true}\".encode('utf-8');q=urllib.request.Request(u,data=p,headers={'Content-Type':'application/json'},method='POST');d=json.loads(urllib.request.urlopen(q,timeout=10).read().decode('utf-8'));print(json.dumps({'id':d.get('id'),'state':d.get('state'),'lastDiagnostic':d.get('lastDiagnostic'),'currentHead':d.get('currentHead'),'ciRunId':d.get('ciRunId'),'ciConclusion':d.get('ciConclusion'),'supervisorVerified':d.get('supervisorVerified')},separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 15000,
+  "note": "Supervisor verify exact-green Integration R8 evidence after independent GitHub check"
+}
