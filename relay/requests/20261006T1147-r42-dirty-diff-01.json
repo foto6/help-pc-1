@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1147-r42-dirty-diff-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\nPush-Location 'E:\\WebAIBridge';\n$diff=git diff -- app/scripts/operator-lifecycle-r40.ps1 app/scripts/pause-all-r40.cmd app/scripts/pause-browser-r40.cmd app/scripts/resume-attach-r40.cmd app/scripts/resume-managed-r40.cmd;\nPop-Location;\n$diff"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only diff of R42 partial-cutover generated operator wrappers"
+}
