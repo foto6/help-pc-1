@@ -1,0 +1,14 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1730-focus-chat-6abfd888-01",
+  "action": "uia.focus",
+  "params": {
+    "query": {
+      "name": "chatgpt.com/c/6abfd888-7bf0-83ed-a2f7-50766fc2180e",
+      "control_type": "TabItemControl",
+      "window_title": "Собрать и доработать MCP — Mozilla Firefox"
+    }
+  },
+  "timeout_ms": 10000,
+  "note": "Focus exact ChatGPT tab only to identify managed role; no typing or send"
+}
