@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$target='e8033f2e42bd335c10a397eb3d2cb62c8bb837a9';\n$branch='agent/bridge-r42-live-control-plane-cutover-20261006';\n$temp=Join-Path $env:TEMP ('r42-cutover-' + $target + '.ps1');\n& git.exe -C $repo fetch origin $branch;\nif($LASTEXITCODE -ne 0){ throw \"git fetch failed: $LASTEXITCODE\" }\n$psi=[Diagnostics.ProcessStartInfo]::new();\n$psi.FileName='git.exe';\n$psi.ArgumentList.Add('-C');$psi.ArgumentList.Add($repo);\n$psi.ArgumentList.Add('show');$psi.ArgumentList.Add(($target + ':app/r42-cutover.ps1'));\n$psi.UseShellExecute=$false;$psi.RedirectStandardOutput=$true;$psi.RedirectStandardError=$true;\n$p=[Diagnostics.Process]::Start($psi);$src=$p.StandardOutput.ReadToEnd();$err=$p.StandardError.ReadToEnd();$p.WaitForExit();\nif($p.ExitCode -ne 0 -or [string]::IsNullOrWhiteSpace($src)){ throw \"git show cutover script failed: $err\" }\n[IO.File]::WriteAllText($temp,$src,[Text.UTF8Encoding]::new($false));\ntry{\n  & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $temp -TargetSha $target -TargetBranch $branch -RepoPath $repo;\n  if($LASTEXITCODE -ne 0){ throw \"R42 cutover script failed with exit $LASTEXITCODE\" }\n} finally {\n  Remove-Item -LiteralPath $temp -Force -ErrorAction SilentlyContinue\n}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "From https://github.com/foto6/WebAIBridge\n * branch            agent/bridge-r42-live-control-plane-cutover-20261006 -> FETCH_HEAD\n   0cefcd3..e8033f2  agent/bridge-r42-live-control-plane-cutover-20261006 -> origin/agent/bridge-r42-live-control-plane-cutover-20261006\nYou cannot call a method on a null-valued expression.\r\nAt line:10 char:1\r\n+ $psi.ArgumentList.Add('-C');$psi.ArgumentList.Add($repo);\r\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : InvokeMethodOnNull\r\n \r\n",
+      "stderr_bytes": 578,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:33:32.229Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:33:32.109Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261006-r42-live-cutover-apply-02"
+    },
+    "request_id": "coord-20261006-r42-live-cutover-apply-02",
+    "started_at": "2026-10-06T04:33:27.741Z",
+    "status": "completed"
+  },
+  "id": "coord-20261006-r42-live-cutover-apply-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
