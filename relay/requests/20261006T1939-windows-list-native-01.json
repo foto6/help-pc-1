@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1939-windows-list-native-01",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Native read-only window inventory to inspect ChatGPT managed chats"
+}
