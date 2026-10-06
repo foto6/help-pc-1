@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1200-r42-post-rollback-state-probe-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "\nimport json, pathlib, subprocess, urllib.request\nrepo=pathlib.Path(r\"E:\\WebAIBridge\")\ndef run(args):\n    p=subprocess.run(args,cwd=str(repo),stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=8)\n    return {\"code\":p.returncode,\"out\":p.stdout.decode(errors=\"replace\").strip(),\"err\":p.stderr.decode(errors=\"replace\").strip()}\nhead=run([\"git.exe\",\"-C\",str(repo),\"rev-parse\",\"HEAD\"])\nstatus=run([\"git.exe\",\"-C\",str(repo),\"status\",\"--porcelain\"])\ncut=repo/\"app\"/\"data\"/\"projects-live-control-plane-cutover-r42.json\"\ncut_state=None\nif cut.exists():\n    try: cut_state=json.loads(cut.read_text(encoding=\"utf-8-sig\"))\n    except Exception as e: cut_state={\"parseError\":str(e)}\napi={\"ok\":False}\ntry:\n    with urllib.request.urlopen(\"http://127.0.0.1:17448/api/status\",timeout=3) as resp:\n        api={\"ok\":True,\"body\":json.load(resp)}\nexcept Exception as e:\n    api={\"ok\":False,\"error\":str(e)}\nprint(json.dumps({\n    \"head\":head[\"out\"],\n    \"gitStatus\":status[\"out\"].splitlines(),\n    \"cutoverExists\":cut.exists(),\n    \"cutoverStatus\":None if cut_state is None else cut_state.get(\"status\"),\n    \"holdActive\":None if cut_state is None else cut_state.get(\"holdActive\"),\n    \"rollbackManifest\":None if cut_state is None else cut_state.get(\"rollbackManifest\"),\n    \"apiStatus\":api\n},ensure_ascii=False))\n"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only determine actual local R42 state after timed-out manual rollback; not a replay"
+}
