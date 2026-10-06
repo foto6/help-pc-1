@@ -1,0 +1,29 @@
+EXECUTE NOW — CREATOR R38 LOCAL FULL-STACK REHEARSAL DRIVER. Do not stop at a plan.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r38-local-fullstack-rehearsal-20261006
+Exact starting HEAD: 1f7cb9ed8f1985cd4faca79ce55f1c5fda9e3a57
+Parent Creator R37 exact-head CI: 37398299900 SUCCESS.
+
+Goal: turn the accepted Creator control plane into a one-command LOCAL rehearsal package for the user's Windows PC, while remaining fail-closed until Media local-render evidence is accepted.
+
+Required:
+1. Define creator.local_fullstack_rehearsal.r38.v1.
+2. Consume exact authorities:
+   - Creator R37 starting SHA above;
+   - Growth R36 a53f9deb180bb256d193f0422c6ffd7a5923d97a / CI 37398558145 SUCCESS;
+   - Bridge R40 9fca5e7e4cdc820a1a3aee6ada9102fc97649d16 / CI 37399009019 SUCCESS;
+   - Media R26 is NOT accepted yet; integration must explicitly wait for exact Media authority tuple.
+3. Provide Windows-first local runner/driver (PowerShell + cmd launcher if useful) that can orchestrate:
+   source package -> Media candidates -> review package -> Growth decision -> targeted re-edit -> final.mp4 -> final evidence bundle.
+4. No hidden network/provider dependency. Local rehearsal must work with offline/fake review fixtures until exact live-review input is supplied.
+5. Media authority is a hard gate. Missing/unaccepted Media evidence => WAITING_MEDIA_AUTHORITY, never silently use old R25 output.
+6. Persist stage ledger before/after each expensive step; exact rerun reuses verified completed artifacts; changed inputs under same rehearsal identity => conflict.
+7. Include dry-run/status commands and deterministic local workspace layout.
+8. Explicit resource declarations for CPU/GPU/disk/temp outputs; do not assume CUDA.
+9. Add cleanup that never deletes user source material or accepted evidence.
+10. Produce a sealed final rehearsal manifest with exact hashes for source, all candidates, selected winner, targeted re-edit, final.mp4 and parent authority tuples.
+11. CI validates orchestration with tiny fixtures only; no heavy real render in hosted CI.
+12. No social publish, no credentials, no live Bridge cutover, no merge.
+
+Completion: substantive code/tests/docs; exact final SHA + exact-head CI SUCCESS + artifact; local runner ready; explicit WAITING_MEDIA_AUTHORITY or READY_FOR_LOCAL_REHEARSAL based on exact evidence.
