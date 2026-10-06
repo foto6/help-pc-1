@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$keep='831BB6DD8686782FB7C934F7B6DF7D7D';\n$close='BDA8B7EBDCC88BDC33081229B15F8978';\n$before=@(Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3 | Where-Object {$_.id -in @($keep,$close)});\nif($before.Count -ne 2){ throw \"expected exact two inspected MCP targets before close\" }\nInvoke-RestMethod -Uri ('http://127.0.0.1:17410/json/close/'+$close) -TimeoutSec 3 | Out-Null;\nStart-Sleep -Milliseconds 300;\n$after=@(Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3 | Where-Object {$_.id -in @($keep,$close)});\n[pscustomobject]@{kept=$keep;closed=$close;remaining=@($after|Select-Object id,title,url);count=$after.Count}|ConvertTo-Json -Depth 4 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "expected exact two inspected MCP targets before close\r\nAt line:5 char:26\r\n+ ... unt -ne 2){ throw \"expected exact two inspected MCP targets before cl ...\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (expected exact ...ts before close:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : expected exact two inspected MCP targets before close\r\n \r\n",
+      "stderr_bytes": 433,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T03:02:42.815Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T03:02:42.684Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1117-mcp-close-redundant-tab-01"
+    },
+    "request_id": "20261006T1117-mcp-close-redundant-tab-01",
+    "started_at": "2026-10-06T03:02:41.870Z",
+    "status": "completed"
+  },
+  "id": "20261006T1117-mcp-close-redundant-tab-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
