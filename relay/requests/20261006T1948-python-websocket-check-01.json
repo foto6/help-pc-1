@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1948-python-websocket-check-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import websocket; print(getattr(websocket,'__version__','ok'))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only dependency check for fixed-method CDP accessibility inspection"
+}
