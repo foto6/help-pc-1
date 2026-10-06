@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-r42-safe-registry-pwsh-short-20261006-06",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$j=Get-Content -LiteralPath 'E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json' -Raw|ConvertFrom-Json;$o=[ordered]@{mode=$j.mode;enabled=$j.enabled;allowAutonomousSend=$j.allowAutonomousSend;enforceHighMode=$j.enforceHighMode;highModeStrategy=$j.highModeStrategy;migrationEnabled=$j.migrationEnabled;autoContinueEnabled=$j.autoContinueEnabled;chats=@($j.managedChats|ForEach-Object{[ordered]@{id=$_.id;url=$_.url;projectId=$_.projectId;profileId=$_.profileId;runtimeTargetTabId=$_.runtimeTargetTabId;name=$_.name}});projects=@($j.managedProjects|ForEach-Object{[ordered]@{id=$_.id;url=$_.url;profileId=$_.profileId;name=$_.name}})};$o|ConvertTo-Json -Depth 6 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "R42 read-only minimal safe watchdog registry metadata after earlier read-only timeout; no replay and no secrets"
+}
