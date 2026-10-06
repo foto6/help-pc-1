@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/multiagent-exactid-snapshot'\nd=json.loads(urllib.request.urlopen(u,timeout=15).read().decode('utf-8'))\nwant={'chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982','chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c','chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0','agent-pc-control','chat-6ac45fb0-9074-83eb-99eb-397265b228e7','agent-media'}\nrows=[x for x in d.get('rows',[]) if x.get('managedChatId') in want]\nprint(json.dumps({'contract':d.get('contract'),'checkedAt':d.get('checkedAt'),'rows':rows},ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\r\n  File \"<string>\", line 3, in <module>\r\n    d=json.loads(urllib.request.urlopen(u,timeout=15).read().decode('utf-8'))\r\n                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 189, in urlopen\r\n    return opener.open(url, data, timeout)\r\n           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 489, in open\r\n    response = self._open(req, data)\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 506, in _open\r\n    result = self._call_chain(self.handle_open, protocol, protocol +\r\n                              '_open', req)\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 466, in _call_chain\r\n    result = func(*args)\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 1348, in http_open\r\n    return self.do_open(http.client.HTTPConnection, req)\r\n           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 1323, in do_open\r\n    r = h.getresponse()\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\http\\client.py\", line 1459, in getresponse\r\n    response.begin()\r\n    ~~~~~~~~~~~~~~^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\http\\client.py\", line 336, in begin\r\n    version, status, reason = self._read_status()\r\n                              ~~~~~~~~~~~~~~~~~^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\http\\client.py\", line 297, in _read_status\r\n    line = str(self.fp.readline(_MAXLINE + 1), \"iso-8859-1\")\r\n               ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\socket.py\", line 723, in readinto\r\n    return self._sock.recv_into(b)\r\n           ~~~~~~~~~~~~~~~~~~~~^^^\r\nTimeoutError: timed out\r\n",
+      "stderr_bytes": 2475,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T11:08:06.758Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T11:08:06.623Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1936-exactid-snapshot-after-restart-01"
+    },
+    "request_id": "20261006T1936-exactid-snapshot-after-restart-01",
+    "started_at": "2026-10-06T11:07:51.154Z",
+    "status": "completed"
+  },
+  "id": "20261006T1936-exactid-snapshot-after-restart-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
