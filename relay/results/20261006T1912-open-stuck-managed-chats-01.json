@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,time\nids=['chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c','chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0','agent-pc-control','chat-6ac45fb0-9074-83eb-99eb-397265b228e7']\nout=[]\nfor cid in ids:\n data=json.dumps({'id':cid}).encode('utf-8')\n req=urllib.request.Request('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/open',data=data,headers={'Content-Type':'application/json'},method='POST')\n try:\n  d=json.loads(urllib.request.urlopen(req,timeout=15).read().decode('utf-8'))\n  out.append({'id':cid,'ok':True,'result':d})\n except Exception as e:\n  out.append({'id':cid,'ok':False,'error':type(e).__name__+': '+str(e)})\n time.sleep(0.5)\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"ok\":true,\"result\":{\"opened\":false,\"alreadyOpen\":true,\"chatId\":\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"chatName\":\"Implement R37 Driver\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"profileName\":\"ChatGPT \\u043f\\u0440\\u043e\\u0444\\u0438\\u043b\\u044c 2\",\"targetId\":\"C7A7207052C7F10350379336B9D05473\"}},{\"id\":\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"ok\":true,\"result\":{\"opened\":false,\"alreadyOpen\":true,\"chatId\":\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"chatName\":\"Implement Live Review Ingest\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"profileName\":\"ChatGPT \\u043f\\u0440\\u043e\\u0444\\u0438\\u043b\\u044c 2\",\"targetId\":\"BE65410914FEC5633289721AF21CC403\"}},{\"id\":\"agent-pc-control\",\"ok\":true,\"result\":{\"opened\":false,\"alreadyOpen\":true,\"chatId\":\"agent-pc-control\",\"chatName\":\"Native PC Control existing agent\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"profileName\":\"ChatGPT \\u043f\\u0440\\u043e\\u0444\\u0438\\u043b\\u044c 2\",\"targetId\":\"3F70475C0F610C0F4B27CE75A3B80B8F\"}},{\"id\":\"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\",\"ok\":true,\"result\":{\"opened\":false,\"alreadyOpen\":true,\"chatId\":\"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\",\"chatName\":\"R8 integration acceptance verdict\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45fb0-9074-83eb-99eb-397265b228e7\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"profileName\":\"ChatGPT \\u043f\\u0440\\u043e\\u0444\\u0438\\u043b\\u044c 2\",\"targetId\":\"E5A74C31B39DE271EE342324A2688C22\"}}]\r\n",
+      "stdout_bytes": 1858,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T10:59:41.876Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T10:59:41.741Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1912-open-stuck-managed-chats-01"
+    },
+    "request_id": "20261006T1912-open-stuck-managed-chats-01",
+    "started_at": "2026-10-06T10:59:39.230Z",
+    "status": "completed"
+  },
+  "id": "20261006T1912-open-stuck-managed-chats-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
