@@ -1,0 +1,41 @@
+EXECUTE NOW — NATIVE MCP R37 EXACT SOURCE-PIN CORRECTIVE. Do not stop at diagnosis.
+
+Repo: foto6/help-pc-2
+Writable branch ONLY: agent/native-mcp-r37-operator-lifecycle-20261006
+Current exact HEAD: b13243e687173a5342356361956a2fd5eec81138
+Failing CI: 37398892815
+
+Exact failure:
+R31_SOURCE_BLOB_DRIFT
+path: src/direct-remote-mcp.js
+expected blob: cb6d74888514d3262d206df4f3cbd13a1f8899e2
+actual blob:   8df50ca3792091625d4de1143b4625ae2f970ecd
+
+Other R29/R30 evidence in the same run was green/source-ready. Do not weaken the pin validator.
+
+Required:
+1. Determine WHY src/direct-remote-mcp.js legitimately changed relative to the frozen R31 source pin.
+2. If change belongs to accepted/required R37 lineage, update the exact frozen authority tuple/blob evidence with explicit lineage and regression proof.
+3. If change is accidental drift, restore the exact intended source instead.
+4. Never replace strict blob checking with branch/SHA-only equivalence.
+5. Add regression:
+   - correct exact blob tuple passes;
+   - same repo/head metadata with altered source blob fails;
+   - stale prior blob tuple fails with stable error;
+   - mixed authority tuple fails atomically.
+6. Preserve R37 operator lifecycle states RUNNING / PAUSED / DRAINING / RECONCILIATION_REQUIRED.
+7. Preserve PAUSED read-only health/status and block new side effects.
+8. Preserve explicit idempotent resume with no replay of unknown side effects.
+9. Add operator status evidence clearly separating:
+   - Native MCP/control autostart;
+   - GitHub relay fallback;
+   - WebAIBridge/browser autostart as a separate subsystem, not implicitly coupled.
+10. Re-run exact-head Ubuntu + Windows CI and publish exact readiness artifacts.
+11. No live cutover/service mutation/autostart apply in CI. No process kill. No merge.
+
+Completion:
+- exact final SHA;
+- exact-head CI SUCCESS Windows + Ubuntu;
+- artifact IDs/digests;
+- root-cause statement for the blob drift;
+- strict source-pin regression proof.
