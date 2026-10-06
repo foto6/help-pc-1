@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n[pscustomobject]@{\n rootExists=(Test-Path 'E:\\WebAIBridge');\n rootGit=(Test-Path 'E:\\WebAIBridge\\.git');\n appExists=(Test-Path 'E:\\WebAIBridge\\app');\n appGit=(Test-Path 'E:\\WebAIBridge\\app\\.git');\n rootItems=@(Get-ChildItem -LiteralPath 'E:\\WebAIBridge' -Force | Select-Object -First 40 Name,Mode);\n appItems=@(Get-ChildItem -LiteralPath 'E:\\WebAIBridge\\app' -Force | Select-Object -First 40 Name,Mode)\n}|ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"rootExists\":true,\"rootGit\":true,\"appExists\":true,\"appGit\":false,\"rootItems\":[{\"Name\":\".git\",\"Mode\":\"d--h--\"},{\"Name\":\".github\",\"Mode\":\"d-----\"},{\"Name\":\"app\",\"Mode\":\"d-----\"},{\"Name\":\"chrome-profiles\",\"Mode\":\"d-----\"},{\"Name\":\"data\",\"Mode\":\"d-----\"},{\"Name\":\"docs\",\"Mode\":\"d-----\"},{\"Name\":\"extension\",\"Mode\":\"d-----\"},{\"Name\":\".gitattributes\",\"Mode\":\"-a----\"},{\"Name\":\".gitignore\",\"Mode\":\"-a----\"},{\"Name\":\"attachment-state.png\",\"Mode\":\"-a----\"},{\"Name\":\"CHANGELOG.md\",\"Mode\":\"-a----\"},{\"Name\":\"README.md\",\"Mode\":\"-a----\"},{\"Name\":\"upload-menu.png\",\"Mode\":\"-a----\"}],\"appItems\":[{\"Name\":\"data\",\"Mode\":\"d-----\"},{\"Name\":\"docs\",\"Mode\":\"d-----\"},{\"Name\":\"examples\",\"Mode\":\"d-----\"},{\"Name\":\"sdk\",\"Mode\":\"d-----\"},{\"Name\":\"tests\",\"Mode\":\"d-----\"},{\"Name\":\".env\",\"Mode\":\"-a----\"},{\"Name\":\".env.example\",\"Mode\":\"-a----\"},{\"Name\":\".env.production.example\",\"Mode\":\"-a----\"},{\"Name\":\"agent-assignment-live-dry-run.js\",\"Mode\":\"-a----\"},{\"Name\":\"agent-assignment-restart-harness.js\",\"Mode\":\"-a----\"},{\"Name\":\"agent-evidence-collector.js\",\"Mode\":\"-a----\"},{\"Name\":\"agent-evidence-collector.test.js\",\"Mode\":\"-a----\"},{\"Name\":\"agent-execution-control.js\",\"Mode\":\"-a----\"},{\"Name\":\"agent-execution-control.test.js\",\"Mode\":\"-a----\"},{\"Name\":\"agent-project-native-dry-run.js\",\"Mode\":\"-a----\"},{\"Name\":\"agent-project-native-dry-run.test.js\",\"Mode\":\"-a----\"},{\"Name\":\"bridge-control-reliability.test.js\",\"Mode\":\"-a----\"},{\"Name\":\"bridge-core.js\",\"Mode\":\"-a----\"},{\"Name\":\"bridge-core.test.js\",\"Mode\":\"-a----\"},{\"Name\":\"close-public-api-access.ps1\",\"Mode\":\"-a----\"},{\"Name\":\"CLOSE_PUBLIC_API_ACCESS.cmd\",\"Mode\":\"-a----\"},{\"Name\":\"COPY_PUBLIC_URL.cmd\",\"Mode\":\"-a----\"},{\"Name\":\"cutout-study-start-error.log\",\"Mode\":\"-a----\"},{\"Name\":\"cutout-study-start.log\",\"Mode\":\"-a----\"},{\"Name\":\"doctor.js\",\"Mode\":\"-a----\"},{\"Name\":\"ensure-supervisor-watchdog.ps1\",\"Mode\":\"-a----\"},{\"Name\":\"ENSURE_SUPERVISOR_WATCHDOG.cmd\",\"Mode\":\"-a----\"},{\"Name\":\"generate-smoke-history.js\",\"Mode\":\"-a----\"},{\"Name\":\"inspect-attachments.js\",\"Mode\":\"-a----\"},{\"Name\":\"inspect-composer.js\",\"Mode\":\"-a----\"},{\"Name\":\"inspect-extension.js\",\"Mode\":\"-a----\"},{\"Name\":\"inspect-file-chooser.js\",\"Mode\":\"-a----\"},{\"Name\":\"inspect-page.js\",\"Mode\":\"-a----\"},{\"Name\":\"install.ps1\",\"Mode\":\"-a----\"},{\"Name\":\"localtunnel-public.ps1\",\"Mode\":\"-a----\"},{\"Name\":\"LOGIN_TAILSCALE.cmd\",\"Mode\":\"-a----\"},{\"Name\":\"managed-composer-readback.js\",\"Mode\":\"-a----\"},{\"Name\":\"manhwa-experiment-start-error.log\",\"Mode\":\"-a----\"},{\"Name\":\"manhwa-experiment-start.log\",\"Mode\":\"-a----\"},{\"Name\":\"model-contract.test.js\",\"Mode\":\"-a----\"}]}\r\n",
+      "stdout_bytes": 2563,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T03:40:24.653Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T03:40:24.537Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1153-bridge-root-minimal-01"
+    },
+    "request_id": "20261006T1153-bridge-root-minimal-01",
+    "started_at": "2026-10-06T03:40:24.001Z",
+    "status": "completed"
+  },
+  "id": "20261006T1153-bridge-root-minimal-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
