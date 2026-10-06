@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1028-python-uia-tab-list-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python",
+      "-c",
+      "import uiautomation as auto\nauto.SetGlobalSearchTimeout(1)\nroot=auto.ControlFromHandle(8456336)\ndef walk(c,depth=0):\n    if depth>8: return\n    try:\n        typ=c.ControlTypeName\n        if typ in (\"TabItemControl\",\"EditControl\",\"DocumentControl\"):\n            print(depth,typ,repr(c.Name),repr(c.AutomationId),repr(c.ClassName))\n        for k in c.GetChildren():\n            walk(k,depth+1)\n    except Exception:\n        return\nwalk(root)\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only enumerate Chrome UIA tab/edit/document controls"
+}
