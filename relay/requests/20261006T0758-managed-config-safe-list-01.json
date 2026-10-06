@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0758-managed-config-safe-list-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; $j=Get-Content -LiteralPath $p -Raw | ConvertFrom-Json; [pscustomobject]@{count=@($j.managedChats).Count;rows=@($j.managedChats | ForEach-Object {[pscustomobject]@{id=$_.id;name=$_.name;url=$_.url;providerConversationId=$_.providerConversationId;profileId=$_.profileId;repository=$_.repository;branch=$_.branch;gitHead=$_.gitHead;enabled=$_.enabled;projectId=$_.projectId}})} | ConvertTo-Json -Depth 7 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 7000,
+  "note": "Read-only safe managed chat fields only"
+}
