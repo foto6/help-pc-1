@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$repo='E:\\work\\video2-r25-local'\n$run='E:\\work\\video2-r25-local-run'\nif((git -C $repo rev-parse HEAD).Trim() -ne 'b11a93664f9b64bf6da626119758c841a0a75c1e'){ throw 'HEAD drift' }\nif(-not [string]::IsNullOrWhiteSpace(((git -C $repo status --porcelain) -join ''))){ throw 'repo dirty' }\n$script=@'\n$ErrorActionPreference = \"Continue\"\nSet-Location \"E:\\work\\video2-r25-local\"\n$log = \"E:\\work\\video2-r25-local-run\\focused2.log\"\n$exitFile = \"E:\\work\\video2-r25-local-run\\focused2.exit\"\nRemove-Item -LiteralPath $log -Force -ErrorAction SilentlyContinue\nRemove-Item -LiteralPath $exitFile -Force -ErrorAction SilentlyContinue\n& npm run test:r25 *> $log\n$code = $LASTEXITCODE\nSet-Content -LiteralPath $exitFile -Value ([string]$code) -Encoding Ascii\nexit $code\n'@\n$scriptPath=Join-Path $run 'focused2.ps1'\nSet-Content -LiteralPath $scriptPath -Value $script -Encoding UTF8\n$p=Start-Process -FilePath 'powershell.exe' -ArgumentList @('-NoProfile','-ExecutionPolicy','Bypass','-File',$scriptPath) -WindowStyle Hidden -PassThru\n[pscustomobject]@{pid=$p.Id;script=$scriptPath;exit=(Join-Path $run 'focused2.exit');log=(Join-Path $run 'focused2.log')} | ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"pid\":10068,\"script\":\"E:\\\\work\\\\video2-r25-local-run\\\\focused2.ps1\",\"exit\":\"E:\\\\work\\\\video2-r25-local-run\\\\focused2.exit\",\"log\":\"E:\\\\work\\\\video2-r25-local-run\\\\focused2.log\"}\r\n",
+      "stdout_bytes": 179,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T00:12:09.677Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T00:12:09.571Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0747-start-media-focused-bg-v2-01"
+    },
+    "request_id": "20261006T0747-start-media-focused-bg-v2-01",
+    "started_at": "2026-10-06T00:12:08.918Z",
+    "status": "completed"
+  },
+  "id": "20261006T0747-start-media-focused-bg-v2-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
