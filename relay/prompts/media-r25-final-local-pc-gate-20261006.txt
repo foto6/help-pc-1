@@ -1,0 +1,44 @@
+EXECUTE NOW — MEDIA R25 FINAL LOCAL-PC GATE. Do not stop at diagnosis or a plan.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r25-multicandidate-round-engine-20261004
+Current HEAD at dispatch: b11a93664f9b64bf6da626119758c841a0a75c1e
+
+Known exact failure:
+- candidate-3 is green.
+- candidate-4-segment-1 and dedicated render-path benchmark both start successfully after exact ffmpeg runtime verification.
+- both are killed by GitHub-hosted runner shutdown/SIGTERM exit 143 after ~30–40s.
+- downstream candidate-4/finalize/targeted-evidence/postdownload are skipped.
+- this is not permission for more speculative churn or blind reruns.
+
+Goal: prove the montage engine itself is complete, then package it for one real local-PC rehearsal.
+
+Required:
+1. STOP optimizing for GitHub-hosted runner survival if the render path is intrinsically longer than runner lifetime. Keep CI deterministic and bounded.
+2. Introduce a LOCAL_PC_REHEARSAL path that uses the exact R25 deterministic graph/runtime contracts on Windows/local execution without changing candidate semantics.
+3. Provide one command/script that on an operator PC:
+   - verifies source + runtime hashes;
+   - materializes all 4 distinct candidates;
+   - emits blinded bracket packages;
+   - consumes one deterministic targeted re-edit directive;
+   - materializes re-edit;
+   - finalizes winner package;
+   - runs post-download/post-export verifier;
+   - writes a single machine-readable evidence bundle.
+4. Local path must be restartable/idempotent and reuse verified completed subphases.
+5. Keep CI small enough to verify contracts/checkpoint logic without requiring the full heavy render to finish on GitHub-hosted infrastructure.
+6. Add independent local verifier that can validate a completed local evidence bundle without trusting the producer process.
+7. Produce Windows instructions and exact resource/runtime expectations.
+8. No provider/browser/model/publish call.
+9. Freeze branch after:
+   - unit/contract CI green;
+   - local rehearsal package scripts committed;
+   - independent verifier green on fixture;
+   - exact command for coordinator to run on user's PC.
+10. Completion report MUST clearly separate:
+   - CI_PROVEN
+   - LOCAL_PC_READY
+   - LOCAL_PC_E2E_NOT_YET_RUN
+   and must not claim the final local E2E until the coordinator actually runs it on the user's PC.
+
+Deliver exact final SHA, CI run, files/commands, expected local outputs/artifact manifest.
