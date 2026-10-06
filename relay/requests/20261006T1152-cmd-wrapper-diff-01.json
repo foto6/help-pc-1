@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1152-cmd-wrapper-diff-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "git.exe -C E:\\WebAIBridge diff --no-ext-diff --text -- app/scripts/operator-lifecycle-r40.ps1"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 6000,
+  "note": "Read-only cmd/git diff of one R42 dirty wrapper after PowerShell lane instability"
+}
