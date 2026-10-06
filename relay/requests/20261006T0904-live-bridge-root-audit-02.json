@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0904-live-bridge-root-audit-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='SilentlyContinue';\n$procs=Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match '17448|WebAIBridge|server\\.js|worker\\.js' -and $_.CommandLine -notmatch 'E:\\\\manhwa' } | Select-Object ProcessId,ParentProcessId,Name,ExecutablePath,CommandLine;\n$candidates=@('E:\\WebAIBridge','E:\\WebAIBridge\\app','E:\\web-ai-bridge','E:\\web-ai-bridge\\app');\n$roots=@();\nforeach($c in $candidates){\n if(Test-Path $c){\n  $gitDir=Test-Path (Join-Path $c '.git');\n  $head='';$branch='';\n  if($gitDir){\n    Push-Location $c;\n    $head=(git rev-parse HEAD 2>$null);\n    $branch=(git branch --show-current 2>$null);\n    Pop-Location;\n  }\n  $roots += [pscustomobject]@{path=$c;exists=$true;git=$gitDir;head=$head;branch=$branch}\n }\n}\n$dirs=Get-ChildItem 'E:\\' -Directory -Force | Where-Object {$_.Name -match 'Bridge|bridge|WebAI|webai'} | Select-Object FullName;\n[pscustomobject]@{processes=@($procs);roots=@($roots);topDirs=@($dirs)} | ConvertTo-Json -Depth 6 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only locate live WebAIBridge process and git root"
+}
