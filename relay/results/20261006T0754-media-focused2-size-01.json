@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/c",
+        "dir /-C /A:-D E:\\work\\video2-r25-local-run\\focused2.exit E:\\work\\video2-r25-local-run\\focused2.log"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": " Volume in drive E has no label.\r\n Volume Serial Number is 6442-F4F9\r\n\r\n Directory of E:\\work\\video2-r25-local-run\r\n\r\n06.10.2026  07:12                 3 focused2.exit\r\n\r\n Directory of E:\\work\\video2-r25-local-run\r\n\r\n06.10.2026  07:12             19294 focused2.log\r\n               2 File(s)          19297 bytes\r\n               0 Dir(s)     86332882944 bytes free\r\n",
+      "stdout_bytes": 366,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T00:14:01.114Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T00:14:01.014Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0754-media-focused2-size-01"
+    },
+    "request_id": "20261006T0754-media-focused2-size-01",
+    "started_at": "2026-10-06T00:14:00.799Z",
+    "status": "completed"
+  },
+  "id": "20261006T0754-media-focused2-size-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
