@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$f='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json';\nif(!(Test-Path $f)){ [pscustomobject]@{exists=$false;path=$f} | ConvertTo-Json -Compress; exit 0 }\n$j=Get-Content $f -Raw | ConvertFrom-Json;\n[pscustomobject]@{\n  exists=$true;\n  path=$f;\n  enabled=$j.enabled;\n  mode=$j.mode;\n  enforceHighMode=$j.enforceHighMode;\n  highModeStrategy=$j.highModeStrategy;\n  autoContinueEnabled=$j.autoContinueEnabled;\n  allowAutonomousSend=$j.allowAutonomousSend;\n  migrationEnabled=$j.migrationEnabled\n} | ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"exists\":true,\"path\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\supervisor-watchdog.json\",\"enabled\":false,\"mode\":\"off\",\"enforceHighMode\":true,\"highModeStrategy\":\"verify_only\",\"autoContinueEnabled\":true,\"allowAutonomousSend\":true,\"migrationEnabled\":true}\r\n",
+      "stdout_bytes": 242,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:05:31.311Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:05:31.205Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0914-live-high-config-01"
+    },
+    "request_id": "20261006T0914-live-high-config-01",
+    "started_at": "2026-10-06T02:05:30.663Z",
+    "status": "completed"
+  },
+  "id": "20261006T0914-live-high-config-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
