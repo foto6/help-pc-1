@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0433-successor-role-evidence-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\nconst specs=[\n[\"A\",\"6ac46a9a-4d60-83ed-979a-abb3f8e6d3e7\"],\n[\"B\",\"6ac455e9-bea0-83eb-aa94-fd3dde516c0c\"],\n[\"C\",\"6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\"],\n[\"D\",\"6ac45fb0-9074-83eb-99eb-397265b228e7\"]\n];\nconst markers=[\n\"foto6/video1\",\"foto6/video2\",\"foto6/video3\",\"foto6/boss\",\"foto6/WebAIBridge\",\"foto6/help-pc-2\",\n\"creator-r37\",\"creator-r38\",\"media-r25\",\"media-r26\",\"growth-r36\",\"growth-r37\",\n\"integration-r8\",\"hardwave\",\"LOCAL INTEGRATION\",\"LOCAL WINDOWS\",\"R8\",\"R37\"\n];\nconst conv=v=>{try{const u=new URL(String(v||\"\"));const p=u.pathname.split(\"/\").filter(Boolean);if(p.length===2&&p[0]===\"c\")return p[1];if(p.length===4&&p[0]===\"g\"&&p[2]===\"c\")return p[3]}catch{}return \"\"};\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const out=[];\nfor(const [label,cid] of specs){\n const ms=tabs.filter(t=>t.type===\"page\"&&conv(t.url)===cid);\n if(ms.length!==1){out.push({label,cid,count:ms.length});continue}\n const tab=ms[0],ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1;const p=new Map();\n ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\n const expr=`JSON.stringify((()=>{const t=document.body?.innerText||'';const low=t.toLowerCase();const ms=${JSON.stringify(markers)};const hits=ms.filter(x=>low.includes(x.toLowerCase()));const excerpts=[];for(const x of hits){const i=low.indexOf(x.toLowerCase());excerpts.push(t.slice(Math.max(0,i-260),Math.min(t.length,i+900)).replace(/\\\\s+/g,' '))}return {title:document.title,hits,excerpts:excerpts.slice(0,12),textLength:t.length}})())`;\n try{const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});out.push({label,cid,...JSON.parse(rr.result.value)})}catch(e){out.push({label,cid,error:String(e)})}\n ws.close();\n}\nprocess.stdout.write(JSON.stringify(out));\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only content marker evidence for exact successor role mapping"
+}
