@@ -1,0 +1,53 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "E:\\WebAIBridge\\app\\r42-rollback.ps1",
+        "-Manifest",
+        "E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261006T043453Z\\rollback-manifest.json",
+        "-ValidateOnly"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Rollback refuses dirty worktree\r\nAt E:\\WebAIBridge\\app\\r42-rollback.ps1:58 char:12\r\n+ if($dirty){throw 'Rollback refuses dirty worktree'}\r\n+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (Rollback refuses dirty worktree:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : Rollback refuses dirty worktree\r\n \r\n",
+      "stderr_bytes": 370,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:36:42.523Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:36:42.406Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261006-r42-rollback-preflight-01"
+    },
+    "request_id": "coord-20261006-r42-rollback-preflight-01",
+    "started_at": "2026-10-06T04:36:41.750Z",
+    "status": "completed"
+  },
+  "id": "coord-20261006-r42-rollback-preflight-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
