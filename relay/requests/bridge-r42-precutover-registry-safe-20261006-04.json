@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-r42-precutover-registry-safe-20261006-04",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();\n$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json';\nif(-not(Test-Path $p)){throw 'supervisor-watchdog.json missing'}\n$j=Get-Content -LiteralPath $p -Raw | ConvertFrom-Json;\n$o=[ordered]@{\n config=[ordered]@{\n  mode=$j.mode;enabled=$j.enabled;allowAutonomousSend=$j.allowAutonomousSend;enforceHighMode=$j.enforceHighMode;\n  highModeStrategy=$j.highModeStrategy;migrationEnabled=$j.migrationEnabled;autoContinueEnabled=$j.autoContinueEnabled;\n  sendProtectedDraftEnabled=$j.sendProtectedDraftEnabled;openExistingChatIfMissing=$j.openExistingChatIfMissing;\n  stopStaleGenerationEnabled=$j.stopStaleGenerationEnabled\n };\n managedProjects=@($j.managedProjects|ForEach-Object{[ordered]@{id=$_.id;name=$_.name;url=$_.url;profileId=$_.profileId;rotationPolicy=$_.rotationPolicy}});\n managedChats=@($j.managedChats|ForEach-Object{[ordered]@{id=$_.id;name=$_.name;url=$_.url;role=$_.role;projectId=$_.projectId;profileId=$_.profileId;repository=$_.repository;branch=$_.branch;gitHead=$_.gitHead;runtimeTargetTabId=$_.runtimeTargetTabId;rotateWithProject=$_.rotateWithProject;enabled=$_.enabled}})\n};\n$o|ConvertTo-Json -Depth 10 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "R42 read-only safe pre-cutover registry and Full-autonomy fields; excludes tokens credentials and secrets"
+}
