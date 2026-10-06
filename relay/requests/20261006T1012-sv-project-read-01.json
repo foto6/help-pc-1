@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1012-sv-project-read-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst r=await fetch('http://127.0.0.1:17448/api/supervisor-watchdog/projects?inspect=0');\nconst j=await r.json();\nconst rows=(j.projects||[]).filter(x=>String(x.name||'').toLowerCase()==='sv'||/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/.test(String(x.url||''))).map(x=>({\n id:x.id,name:x.name,url:x.url,profileId:x.profileId,enabled:x.enabled,rotationPolicy:x.rotationPolicy\n}));\nprocess.stdout.write(JSON.stringify({http:r.status,count:rows.length,rows}));\n\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only exact sv managed Project lookup"
+}
