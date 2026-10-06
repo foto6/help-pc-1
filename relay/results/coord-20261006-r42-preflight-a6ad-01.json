@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$target='a6adf698764776856567239b07b0687e8ac89fa5';\n$branch='agent/bridge-r42-live-control-plane-cutover-20261006';\n$temp=Join-Path $env:TEMP ('r42-preflight-' + $target + '.ps1');\n& git.exe -C $repo fetch origin $branch;\nif($LASTEXITCODE -ne 0){ throw \"git fetch failed: $LASTEXITCODE\" }\n$lines=@(& git.exe -C $repo show ($target + ':app/r42-cutover.ps1'));\nif($LASTEXITCODE -ne 0 -or $lines.Count -eq 0){ throw \"git show preflight script failed\" }\n[IO.File]::WriteAllText($temp,(($lines -join [Environment]::NewLine)+[Environment]::NewLine),[Text.UTF8Encoding]::new($false));\ntry{\n  & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $temp -TargetSha $target -TargetBranch $branch -RepoPath $repo -PreflightOnly;\n  if($LASTEXITCODE -ne 0){ throw \"R42 preflight failed with exit $LASTEXITCODE\" }\n} finally {\n  Remove-Item -LiteralPath $temp -Force -ErrorAction SilentlyContinue\n}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "From https://github.com/foto6/WebAIBridge\n * branch            agent/bridge-r42-live-control-plane-cutover-20261006 -> FETCH_HEAD\n   4e880a9..a6adf69  agent/bridge-r42-live-control-plane-cutover-20261006 -> origin/agent/bridge-r42-live-control-plane-cutover-20261006\nR42 cutover refuses material worktree changes: pp/scripts/operator-lifecycle-r40.ps1\r\nAt C:\\Users\\foto6\\AppData\\Local\\Temp\\r42-preflight-a6adf698764776856567239b07b0687e8ac89fa5.ps1:137 char:3\r\n+   throw \"R42 cutover refuses material worktree changes: $($materialDi ...\r\n+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (R42 cutover ref...fecycle-r40.ps1:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : R42 cutover refuses material worktree changes: pp/scripts/operator-lifecycle-r40.ps1\r\n \r\nR42 preflight failed with exit 1\r\nAt line:13 char:28\r\n+ ... ITCODE -ne 0){ throw \"R42 preflight failed with exit $LASTEXITCODE\" }\r\n+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (R42 preflight failed with exit 1:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : R42 preflight failed with exit 1\r\n \r\n",
+      "stderr_bytes": 1228,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T05:15:50.499Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T05:15:50.290Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261006-r42-preflight-a6ad-01"
+    },
+    "request_id": "coord-20261006-r42-preflight-a6ad-01",
+    "started_at": "2026-10-06T05:15:44.137Z",
+    "status": "completed"
+  },
+  "id": "coord-20261006-r42-preflight-a6ad-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
