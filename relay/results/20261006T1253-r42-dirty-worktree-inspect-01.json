@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path;\n$status=@(& $git -C $repo status --short);\n$diffNames=@(& $git -C $repo diff --name-status);\n$cached=@(& $git -C $repo diff --cached --name-status);\n$head=((@(& $git -C $repo rev-parse HEAD))-join '').Trim();\n[pscustomobject]@{head=$head;status=$status;diffNames=$diffNames;cached=$cached}|ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"head\":\"e8033f2e42bd335c10a397eb3d2cb62c8bb837a9\",\"status\":[\" M app/scripts/operator-lifecycle-r40.ps1\",\" M app/scripts/pause-all-r40.cmd\",\" M app/scripts/pause-browser-r40.cmd\",\" M app/scripts/resume-attach-r40.cmd\",\" M app/scripts/resume-managed-r40.cmd\"],\"diffNames\":[\"M\\tapp/scripts/operator-lifecycle-r40.ps1\",\"M\\tapp/scripts/pause-all-r40.cmd\",\"M\\tapp/scripts/pause-browser-r40.cmd\",\"M\\tapp/scripts/resume-attach-r40.cmd\",\"M\\tapp/scripts/resume-managed-r40.cmd\"],\"cached\":[]}\r\n",
+      "stdout_bytes": 484,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:37:22.232Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:37:22.113Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1253-r42-dirty-worktree-inspect-01"
+    },
+    "request_id": "20261006T1253-r42-dirty-worktree-inspect-01",
+    "started_at": "2026-10-06T04:37:21.464Z",
+    "status": "completed"
+  },
+  "id": "20261006T1253-r42-dirty-worktree-inspect-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
