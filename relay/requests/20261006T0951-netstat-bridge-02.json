@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0951-netstat-bridge-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "netstat -ano"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only netstat check for Bridge listener"
+}
