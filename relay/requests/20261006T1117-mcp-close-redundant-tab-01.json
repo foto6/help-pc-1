@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1117-mcp-close-redundant-tab-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$keep='831BB6DD8686782FB7C934F7B6DF7D7D';\n$close='BDA8B7EBDCC88BDC33081229B15F8978';\n$before=@(Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3 | Where-Object {$_.id -in @($keep,$close)});\nif($before.Count -ne 2){ throw \"expected exact two inspected MCP targets before close\" }\nInvoke-RestMethod -Uri ('http://127.0.0.1:17410/json/close/'+$close) -TimeoutSec 3 | Out-Null;\nStart-Sleep -Milliseconds 300;\n$after=@(Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3 | Where-Object {$_.id -in @($keep,$close)});\n[pscustomobject]@{kept=$keep;closed=$close;remaining=@($after|Select-Object id,title,url);count=$after.Count}|ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 8000,
+  "note": "Close one verified idle redundant MCP browser target only; provider conversation untouched"
+}
