@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1145-r42-cutover-status-readonly-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$u='http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status';\ntry{$r=Invoke-RestMethod -Uri $u -Method Get -TimeoutSec 3; $r|ConvertTo-Json -Depth 16 -Compress}\ncatch{[pscustomobject]@{error=$_.Exception.Message}|ConvertTo-Json -Compress}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 6000,
+  "note": "Read-only check whether exact-green R42 is now live locally"
+}
