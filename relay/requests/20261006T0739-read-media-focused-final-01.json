@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0739-read-media-focused-final-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,json\nexitp=r\"E:\\work\\video2-r25-local-run\\focused.exit\"\nlogp=r\"E:\\work\\video2-r25-local-run\\focused.log\"\ndef tail(path,n=16384):\n    size=os.path.getsize(path)\n    with open(path,\"rb\") as f:\n        f.seek(max(0,size-n)); return f.read().decode(\"utf-8\",\"replace\")\ndata={\"exit_exists\":os.path.exists(exitp),\"exit_size\":os.path.getsize(exitp) if os.path.exists(exitp) else None,\"exit_text\":open(exitp,\"rb\").read().decode(\"ascii\",\"replace\") if os.path.exists(exitp) else None,\"log_size\":os.path.getsize(logp) if os.path.exists(logp) else None,\"log_tail\":tail(logp) if os.path.exists(logp) else None}\nprint(json.dumps(data,ensure_ascii=True))"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 15000,
+  "note": "Read completed Media R25 focused test exit and log tail"
+}
