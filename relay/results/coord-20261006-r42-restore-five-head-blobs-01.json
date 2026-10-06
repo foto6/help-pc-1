@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$expectedHead='e8033f2e42bd335c10a397eb3d2cb62c8bb837a9';\n$files=@('app/scripts/operator-lifecycle-r40.ps1','app/scripts/pause-all-r40.cmd','app/scripts/pause-browser-r40.cmd','app/scripts/resume-attach-r40.cmd','app/scripts/resume-managed-r40.cmd');\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path;\n$head=((@(& $git -C $repo rev-parse HEAD))-join '').Trim();\nif($head -ne $expectedHead){throw ('Unexpected HEAD: '+$head)}\n$status=@(& $git -C $repo status --short);\n$expected=@($files|ForEach-Object{' M '+$_});\nif((($status|Sort-Object)-join [Environment]::NewLine) -ne (($expected|Sort-Object)-join [Environment]::NewLine)){throw ('Dirty set changed: '+($status -join '; '))}\n$latest=Get-ChildItem (Join-Path $repo 'app\\data\\backups') -Directory -Filter 'r42-dirty-quarantine-*' | Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 1;\nif($null -eq $latest){throw 'Quarantine backup not found'}\n$qmanifest=Join-Path $latest.FullName 'manifest.json';\nif(!(Test-Path -LiteralPath $qmanifest)){throw 'Quarantine manifest missing'}\n$restored=@();\nforeach($f in $files){\n  $blob=((@(& $git -C $repo rev-parse ('HEAD:'+$f)))-join '').Trim();\n  if($blob -notmatch '^[0-9a-f]{40}$'){throw ('Invalid HEAD blob for '+$f)}\n  $dest=Join-Path $repo $f;\n  $psi=New-Object System.Diagnostics.ProcessStartInfo;\n  $psi.FileName=$git;\n  $psi.Arguments=('-C '+$repo+' cat-file blob '+$blob);\n  $psi.UseShellExecute=$false;\n  $psi.RedirectStandardOutput=$true;\n  $psi.RedirectStandardError=$true;\n  $p=New-Object System.Diagnostics.Process;\n  $p.StartInfo=$psi;\n  if(-not $p.Start()){throw ('Failed to start git cat-file for '+$f)}\n  $fs=[IO.File]::Open($dest,[IO.FileMode]::Create,[IO.FileAccess]::Write,[IO.FileShare]::None);\n  try{$p.StandardOutput.BaseStream.CopyTo($fs)}finally{$fs.Dispose()}\n  $err=$p.StandardError.ReadToEnd();$p.WaitForExit();\n  if($p.ExitCode -ne 0){throw ('git cat-file failed for '+$f+': '+$err)}\n  $workBlob=((@(& $git -C $repo hash-object --path=$f $dest))-join '').Trim();\n  if($workBlob -ne $blob){throw ('Restored blob mismatch for '+$f+' expected '+$blob+' got '+$workBlob)}\n  $restored += [pscustomobject]@{file=$f;blob=$blob;rawSha256=(Get-FileHash -LiteralPath $dest -Algorithm SHA256).Hash.ToLowerInvariant()}\n}\n$after=@(& $git -C $repo status --short);\nif($after.Count -ne 0){throw ('Worktree still dirty after exact blob restore: '+($after -join '; '))}\n[pscustomobject]@{status='EXACT_FIVE_BLOBS_RESTORED';head=$head;quarantine=$latest.FullName;files=$restored;dirtyAfter=0}|ConvertTo-Json -Depth 6 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Restored blob mismatch for app/scripts/operator-lifecycle-r40.ps1 expected 5e40cb2058af7be3a60fe1228aedcc7c0224a8aa got\r\n 81195aebb65e533ca6602228515d3c398b2c46bd\r\nAt line:34 char:27\r\n+ ...  -ne $blob){throw ('Restored blob mismatch for '+$f+' expected '+$blo ...\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (Restored blob m...15d3c398b2c46bd:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : Restored blob mismatch for app/scripts/operator-lifecycle-r40.ps1 expected 5e40cb2058af7 \r\n   be3a60fe1228aedcc7c0224a8aa got 81195aebb65e533ca6602228515d3c398b2c46bd\r\n \r\n",
+      "stderr_bytes": 656,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:42:51.319Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:42:51.202Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261006-r42-restore-five-head-blobs-01"
+    },
+    "request_id": "coord-20261006-r42-restore-five-head-blobs-01",
+    "started_at": "2026-10-06T04:42:50.360Z",
+    "status": "completed"
+  },
+  "id": "coord-20261006-r42-restore-five-head-blobs-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
