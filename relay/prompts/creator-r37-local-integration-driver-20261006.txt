@@ -1,0 +1,23 @@
+EXECUTE NOW — CREATOR R37 LOCAL INTEGRATION DRIVER / CLOSED-LOOP PC REHEARSAL. Do not stop at a plan.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r37-local-integration-driver-20261006
+Exact starting HEAD: 89e769e61cb5f5e2ee4ab5fc2197e4ba72ad5c22
+Accepted parent: Creator R36, CI 37246601604 SUCCESS, artifact 11319566378.
+
+Goal: prepare one local command that composes the accepted Creator proof-carrying release logic with a future exact-green Media R25 local evidence bundle, current Growth decision evidence, and Bridge exact-ID orchestration — but FAIL CLOSED until each exact authority is supplied.
+
+Required:
+1. Define creator.local_integration_driver.r37.v1.
+2. CLI/command accepts exact authority tuples for Media/Growth/Bridge and verifies SHA/CI/artifact/contract.
+3. Media R25 is REQUIRED and currently UNACCEPTED. The driver must refuse to run the integrated flow without an independently accepted Media tuple.
+4. When supplied with valid fixtures, simulate full closed loop:
+   Media candidates -> review packages -> Growth/consensus input -> targeted re-edit -> winner -> Creator proof graph -> release escrow status.
+5. No live publish. final state must be LOCAL_REHEARSAL_COMPLETE / LIVE_AUTHORIZATION_FALSE.
+6. Durable restart ledger and exact replay idempotency.
+7. Add a one-command Windows rehearsal wrapper for coordinator use after Media is accepted.
+8. >=25 adversarial tests: stale tuple, changed artifact digest, missing Media, wrong round, unresolved reconciliation, duplicate winner, changed final.mp4 hash.
+9. CI green + deterministic evidence artifact.
+10. Completion report: exact SHA/run/artifact and exact local command, but do not claim real local E2E until coordinator runs it.
+
+No merge, no browser/provider mutation.
