@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261006-r42-preflight-a6ad-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$target='a6adf698764776856567239b07b0687e8ac89fa5';\n$branch='agent/bridge-r42-live-control-plane-cutover-20261006';\n$temp=Join-Path $env:TEMP ('r42-preflight-' + $target + '.ps1');\n& git.exe -C $repo fetch origin $branch;\nif($LASTEXITCODE -ne 0){ throw \"git fetch failed: $LASTEXITCODE\" }\n$lines=@(& git.exe -C $repo show ($target + ':app/r42-cutover.ps1'));\nif($LASTEXITCODE -ne 0 -or $lines.Count -eq 0){ throw \"git show preflight script failed\" }\n[IO.File]::WriteAllText($temp,(($lines -join [Environment]::NewLine)+[Environment]::NewLine),[Text.UTF8Encoding]::new($false));\ntry{\n  & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $temp -TargetSha $target -TargetBranch $branch -RepoPath $repo -PreflightOnly;\n  if($LASTEXITCODE -ne 0){ throw \"R42 preflight failed with exit $LASTEXITCODE\" }\n} finally {\n  Remove-Item -LiteralPath $temp -Force -ErrorAction SilentlyContinue\n}"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only R42 exact-green preflight for a6adf698 before new apply-04. No provider/chat mutation."
+}
