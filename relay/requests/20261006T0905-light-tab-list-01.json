@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0905-light-tab-list-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $a=Invoke-RestMethod 'http://127.0.0.1:17410/json/list' -TimeoutSec 3; @($a|?{$_.type-eq'page'}|Select-Object id,title,url,webSocketDebuggerUrl)|ConvertTo-Json -Depth 3 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only light CDP tab inventory"
+}
