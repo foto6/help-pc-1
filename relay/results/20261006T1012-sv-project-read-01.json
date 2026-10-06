@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst r=await fetch('http://127.0.0.1:17448/api/supervisor-watchdog/projects?inspect=0');\nconst j=await r.json();\nconst rows=(j.projects||[]).filter(x=>String(x.name||'').toLowerCase()==='sv'||/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/.test(String(x.url||''))).map(x=>({\n id:x.id,name:x.name,url:x.url,profileId:x.profileId,enabled:x.enabled,rotationPolicy:x.rotationPolicy\n}));\nprocess.stdout.write(JSON.stringify({http:r.status,count:rows.length,rows}));\n\n'@; $code | node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"http\":200,\"count\":1,\"rows\":[{\"id\":\"project-g-p-6ab839fa4f8c81919adad01c4a5497dc\",\"name\":\"sv\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc/project\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"enabled\":true,\"rotationPolicy\":{\"enabled\":false,\"onContextLimit\":true,\"onMissingChat\":true,\"keepPredecessor\":true,\"requireHighMode\":true,\"maxHandoffChars\":18000}}]}",
+      "stdout_bytes": 386,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:30:23.974Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:30:23.865Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1012-sv-project-read-01"
+    },
+    "request_id": "20261006T1012-sv-project-read-01",
+    "started_at": "2026-10-06T02:30:23.350Z",
+    "status": "completed"
+  },
+  "id": "20261006T1012-sv-project-read-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
