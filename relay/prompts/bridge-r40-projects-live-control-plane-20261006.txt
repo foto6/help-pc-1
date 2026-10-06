@@ -1,0 +1,53 @@
+EXECUTE NOW — BRIDGE R40 PROJECTS LIVE SELF-RECONCILING CONTROL PLANE. Do not stop at a plan.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r40-projects-live-control-plane-20261006
+Exact starting HEAD: 82656ad0f49bcc3cb21f08cdae78fab2db2765b1
+Accepted parent: bridge.fenced_coordinator.r39.v1 / CI 37246182912 SUCCESS.
+
+Authoritative design spec:
+foto6/boss branch agent/supervision
+docs/PROJECTS_LIVE_CONTROL_PLANE.md
+spec commit 84b4a56f9444302006574698fbf82ff4863cf3bb
+
+Real incident observed immediately before this task:
+- Creator old chat, Media old chat, Bridge old chat, and Supervisor/QA old chat all showed confirmed maximum-conversation-length exhaustion and "Начать новый чат".
+- Growth chat remained healthy.
+- Manual coordinator rollover is being used now as the temporary fallback.
+This must become an automated lifecycle capability.
+
+Goal: upgrade Projects from stale local registry/cache into a live, editable, self-reconciling agent control plane.
+
+Required:
+1. Implement desired_state vs observed_state for logical agents.
+2. Add freshness/TTL and explicit LIVE / STALE / UNKNOWN / HISTORICAL / CONFLICT states.
+3. Add AUTO / PINNED / OVERRIDE_ONCE semantics for operator-editable discovered fields.
+4. Introduce logical agent identity with conversation generations:
+   CURRENT / HEALTHY / EXHAUSTED / SUCCESSOR_PENDING / SUPERSEDED / HISTORICAL / UNAVAILABLE / CONFLICT.
+5. Context-exhaustion preflight before every managed Send:
+   exact providerConversationId -> exact runtime URL -> generation/draft safety -> exhaustion check.
+6. Confirmed exhaustion must block Send and trigger safe successor workflow:
+   structured handoff -> successor creation -> role/identity verification -> current-pointer switch -> predecessor retained.
+7. Never route successor by title/foreground/last-open/only-open/tabId.
+8. Implement real Reconcile now:
+   compare local registry, CDP exact conversations, Git repo/branch/HEAD, CI, artifacts, assignment ledger, WebAIBridge Jobs, and external PC Control operations.
+9. Reconciliation returns/apply-safe diff and surfaces ambiguous conflicts.
+10. Unify operation ledger across BRIDGE_MANAGED_JOB and PC_CONTROL_CDP transports using stable operation IDs.
+11. Every coordinator dispatch must be representable in Projects/Jobs even if it bypassed Bridge Jobs API.
+12. Preserve historical conversations; do not flatten successor generations into unrelated top-level agents.
+13. Add operator controls for rename, role, project, branch, repo, make-current conversation, pin/unpin/override, archive/supersede, pause/resume.
+14. Add migration for existing stale flat registry; migration must not silently promote unrelated personal chats.
+15. Update counters to logical current agents/running/idle/blocked/stale/unknown/exhausted/history.
+16. Add fake-CDP tests covering today's real incident: 4 exhausted managed chats, 1 healthy, duplicate unrelated tabs, stale cached working states, branch drift.
+17. Tests must prove stale cached "generating" cannot remain presented as LIVE beyond TTL.
+18. Tests must prove external PC_CONTROL_CDP dispatch appears in unified ledger.
+19. Preserve R34-R39 exact-ID, fencing, at-most-once and reconciliation invariants.
+20. No live production cutover/restart/repoint in this milestone. No provider publish. No merge.
+
+Completion:
+- substantive implementation/tests/docs/migration;
+- exact final SHA;
+- exact-head Windows + Ubuntu CI SUCCESS;
+- artifact IDs/digests;
+- deterministic exhaustion rollover rehearsal;
+- explicit evidence for all acceptance criteria in PROJECTS_LIVE_CONTROL_PLANE.md.
