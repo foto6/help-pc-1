@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1154-r42-all-wrappers-eol-proof-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "git.exe -C E:\\WebAIBridge diff --ignore-space-at-eol --exit-code -- app/scripts/operator-lifecycle-r40.ps1 app/scripts/pause-all-r40.cmd app/scripts/pause-browser-r40.cmd app/scripts/resume-attach-r40.cmd app/scripts/resume-managed-r40.cmd >NUL 2>&1 && echo ONLY_EOL || echo CONTENT_DIFF"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only prove all five R42 dirty wrappers differ only by line endings"
+}
