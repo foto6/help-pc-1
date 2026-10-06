@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261006-r42-live-read-state-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\nfunction GetEndpoint([string]$u){\n  try{\n    $r=Invoke-RestMethod -Uri $u -TimeoutSec 6;\n    return [pscustomobject]@{ok=$true;url=$u;body=$r;error=''}\n  }catch{\n    return [pscustomobject]@{ok=$false;url=$u;body=$null;error=$_.Exception.Message}\n  }\n}\n@(\n  (GetEndpoint 'http://127.0.0.1:17448/api/status'),\n  (GetEndpoint 'http://127.0.0.1:17448/api/operator-lifecycle'),\n  (GetEndpoint 'http://127.0.0.1:17448/api/projects/control-plane?inspect=0'),\n  (GetEndpoint 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status')\n) | ConvertTo-Json -Depth 30 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only live R42 API state only"
+}
