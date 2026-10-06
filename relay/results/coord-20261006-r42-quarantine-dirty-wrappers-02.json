@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$expectedHead='e8033f2e42bd335c10a397eb3d2cb62c8bb837a9';\n$files=@('app/scripts/operator-lifecycle-r40.ps1','app/scripts/pause-all-r40.cmd','app/scripts/pause-browser-r40.cmd','app/scripts/resume-attach-r40.cmd','app/scripts/resume-managed-r40.cmd');\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path;\n$head=((@(& $git -C $repo rev-parse HEAD))-join '').Trim();\nif($head -ne $expectedHead){throw ('Unexpected HEAD before quarantine: '+$head)}\n$status=@(& $git -C $repo status --short);\n$expected=@($files|ForEach-Object{' M '+$_});\n$statusNorm=($status|Sort-Object) -join [Environment]::NewLine;\n$expectedNorm=($expected|Sort-Object) -join [Environment]::NewLine;\nif($statusNorm -ne $expectedNorm){throw ('Dirty set changed; refusing quarantine/restore. Observed: '+($status -join '; '))}\n$stamp=(Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssZ');\n$root=Join-Path $repo ('app\\data\\backups\\r42-dirty-quarantine-'+$stamp);\nNew-Item -ItemType Directory -Force -Path $root|Out-Null;\n$entries=@();\nforeach($f in $files){$src=Join-Path $repo $f;if(!(Test-Path -LiteralPath $src)){throw ('Missing dirty file: '+$f)};$safe=($f -replace '[\\\\/:*?\"<>|]','_');$dst=Join-Path $root $safe;Copy-Item -LiteralPath $src -Destination $dst -Force;$entries += [ordered]@{path=$f;backup=$dst;sha256=(Get-FileHash -LiteralPath $src -Algorithm SHA256).Hash.ToLowerInvariant()}}\n$manifest=Join-Path $root 'manifest.json';\n[ordered]@{object='r42.dirty_quarantine.v1';createdAt=(Get-Date).ToUniversalTime().ToString('o');head=$head;files=$entries}|ConvertTo-Json -Depth 8|Set-Content -LiteralPath $manifest -Encoding UTF8;\n& $git -C $repo restore --worktree -- @files;\nif($LASTEXITCODE -ne 0){throw ('git restore failed: '+$LASTEXITCODE)}\n$after=@(& $git -C $repo status --short);\nif($after.Count -ne 0){throw ('Worktree still dirty after targeted restore: '+($after -join '; '))}\n[pscustomobject]@{status='QUARANTINED_AND_CLEAN';head=$head;quarantineRoot=$root;manifest=$manifest;files=$entries;dirtyAfter=$after.Count}|ConvertTo-Json -Depth 8 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Worktree still dirty after targeted restore:  M app/scripts/operator-lifecycle-r40.ps1;  M app/scripts/pause-all-r40.cm\r\nd;  M app/scripts/pause-browser-r40.cmd;  M app/scripts/resume-attach-r40.cmd;  M app/scripts/resume-managed-r40.cmd\r\nAt line:23 char:24\r\n+ ... ount -ne 0){throw ('Worktree still dirty after targeted restore: '+($ ...\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (Worktree still ...managed-r40.cmd:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : Worktree still dirty after targeted restore:  M app/scripts/operator-lifecycle-r40.ps1;  \r\n    M app/scripts/pause-all-r40.cmd;  M app/scripts/pause-browser-r40.cmd;  M app/scripts/resume-attach-r40.cmd;  M a  \r\n  pp/scripts/resume-managed-r40.cmd\r\n \r\n",
+      "stderr_bytes": 812,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:39:05.499Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:39:05.380Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261006-r42-quarantine-dirty-wrappers-02"
+    },
+    "request_id": "coord-20261006-r42-quarantine-dirty-wrappers-02",
+    "started_at": "2026-10-06T04:39:04.491Z",
+    "status": "completed"
+  },
+  "id": "coord-20261006-r42-quarantine-dirty-wrappers-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
