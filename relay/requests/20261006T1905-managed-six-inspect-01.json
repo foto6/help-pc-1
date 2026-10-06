@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1905-managed-six-inspect-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1'\nd=json.loads(urllib.request.urlopen(u,timeout=35).read().decode('utf-8'))\nwant={'agent-media','agent-pc-control','chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982','chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c','chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0','chat-6ac45fb0-9074-83eb-99eb-397265b228e7'}\nrows=d.get('managedChats') or d.get('rows') or d.get('chats') or []\nout=[]\nfor x in rows:\n cid=x.get('id') or x.get('chatId')\n if cid in want:\n  out.append(x)\nprint(json.dumps({'keys':list(d.keys()),'rows':out},ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 45000,
+  "note": "Read-only managed chat inspect for active production-readiness roles; no provider mutation"
+}
