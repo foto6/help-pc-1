@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T2002-unsent-draft-preview-growth-native-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nids=[('Growth','11e3962c-57fb-4218-94cd-ee9ba7c25a4c'),('Native','b1314ed6-5b22-4cbf-8865-e044b4bd683f')]\nout=[]\nfor label,aid in ids:\n u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/'+aid+'/recover-unsent-draft'\n try:\n  d=json.loads(urllib.request.urlopen(u,timeout=12).read().decode('utf-8'))\n  out.append({'label':label,**d})\n except Exception as e:\n  out.append({'label':label,'error':type(e).__name__+': '+str(e)})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only preview of exact existing drafts for Growth and Native assignments; no typing/send"
+}
