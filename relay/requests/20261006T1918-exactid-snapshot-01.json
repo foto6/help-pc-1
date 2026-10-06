@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1918-exactid-snapshot-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/multiagent-exactid-snapshot'\nd=json.loads(urllib.request.urlopen(u,timeout=20).read().decode('utf-8'))\nwant={'chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982','chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c','chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0','agent-pc-control','chat-6ac45fb0-9074-83eb-99eb-397265b228e7','agent-media'}\nrows=[x for x in d.get('rows',[]) if x.get('managedChatId') in want]\nprint(json.dumps({'contract':d.get('contract'),'checkedAt':d.get('checkedAt'),'rows':rows},ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only exact-ID managed-chat snapshot for production-readiness agents; no provider mutation"
+}
