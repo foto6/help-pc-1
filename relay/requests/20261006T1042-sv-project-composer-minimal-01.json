@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1042-sv-project-composer-minimal-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst tabs=await(await fetch('http://127.0.0.1:17410/json/list')).json();const t=tabs.find(x=>x.id===\"81D5E6500283B48A883973A9FE8E670B\");if(!t)throw new Error('missing');\nconst ws=new WebSocket(t.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let n=1;const p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const id=n++;p.set(id,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id,method,params}))});\nconst exp=`JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect(),s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!=='none'&&s.visibility!=='hidden'};const boxes=[...document.querySelectorAll('textarea,[contenteditable=\"true\"],[role=\"textbox\"]')].filter(vis);const x=boxes[0]||null;const txt=x?(('value'in x?x.value:(x.innerText||x.textContent||''))||''):'';const bs=[...document.querySelectorAll('button,[role=\"button\"]')].filter(vis);const high=bs.some(b=>/^(Высокий|High)$/iu.test((b.innerText||b.textContent||'').trim()));return {url:location.href,title:document.title,boxCount:boxes.length,box:x?{tag:x.tagName,id:x.id||'',aria:x.getAttribute('aria-label')||'',placeholder:x.getAttribute('placeholder')||x.getAttribute('data-placeholder')||'',textLength:txt.length}:null,high}})())`;\nconst r=await call('Runtime.evaluate',{expression:exp,returnByValue:true});ws.close();process.stdout.write(r.result.value);\n\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 5000,
+  "note": "Minimal read-only sv Project composer/High probe"
+}
