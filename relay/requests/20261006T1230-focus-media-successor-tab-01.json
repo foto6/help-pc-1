@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1230-focus-media-successor-tab-01",
+  "action": "uia.focus",
+  "params": {
+    "query": {
+      "window_title": "Отчёт о проверке - Google Chrome",
+      "name": "Вкладка \"Implement Local Windows Render Gate\" использует 301 МБ памяти",
+      "control_type": "TabItemControl",
+      "class_name": "Tab"
+    }
+  },
+  "timeout_ms": 8000,
+  "note": "Focus exact Media successor browser tab by UIA; no coordinate fallback"
+}
