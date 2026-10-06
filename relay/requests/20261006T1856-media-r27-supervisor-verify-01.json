@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1856-media-r27-supervisor-verify-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request;u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/41e3e19f-75a3-478d-a0ef-c498bbe2fa49/evidence';p=\"{\\\"branch\\\":\\\"agent/media-r27-real-input-local-rehearsal-20261006\\\",\\\"currentHead\\\":\\\"183838a24205c6885b2366ad6ffa394164283d91\\\",\\\"exactCommitSha\\\":\\\"183838a24205c6885b2366ad6ffa394164283d91\\\",\\\"ciRunId\\\":\\\"37451069045\\\",\\\"ciConclusion\\\":\\\"success\\\",\\\"supervisorVerified\\\":true}\".encode('utf-8');q=urllib.request.Request(u,data=p,headers={'Content-Type':'application/json'},method='POST');d=json.loads(urllib.request.urlopen(q,timeout=15).read().decode('utf-8'));print(json.dumps({'id':d.get('id'),'state':d.get('state'),'lastDiagnostic':d.get('lastDiagnostic'),'currentHead':d.get('currentHead'),'ciRunId':d.get('ciRunId'),'ciConclusion':d.get('ciConclusion'),'supervisorVerified':d.get('supervisorVerified')},separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 25000,
+  "note": "Supervisor verifies Media R27 coding milestone exact SHA/CI; does not independently accept Media authority"
+}
