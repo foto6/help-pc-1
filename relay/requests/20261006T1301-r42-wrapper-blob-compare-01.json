@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1301-r42-wrapper-blob-compare-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$files=@('app/scripts/operator-lifecycle-r40.ps1','app/scripts/pause-all-r40.cmd','app/scripts/pause-browser-r40.cmd','app/scripts/resume-attach-r40.cmd','app/scripts/resume-managed-r40.cmd');\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path;\n$out=@();\nforeach($f in $files){\n  $headBlob=((@(& $git -C $repo rev-parse ('HEAD:'+$f)))-join '').Trim();\n  $workBlob=((@(& $git -C $repo hash-object --path=$f (Join-Path $repo $f)))-join '').Trim();\n  $rawSha=(Get-FileHash -LiteralPath (Join-Path $repo $f) -Algorithm SHA256).Hash.ToLowerInvariant();\n  $out += [pscustomobject]@{file=$f;headBlob=$headBlob;workBlob=$workBlob;filteredEqual=($headBlob -eq $workBlob);rawSha256=$rawSha}\n}\n$status=@(& $git -C $repo status --short);\n[pscustomobject]@{status=$status;files=$out}|ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only compare HEAD blobs vs filtered working blobs for five quarantined R42 wrapper files"
+}
