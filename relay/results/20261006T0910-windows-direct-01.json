@@ -1,0 +1,122 @@
+{
+  "action": "windows.list",
+  "executor_result": {
+    "action": "windows.list",
+    "data": {
+      "windows": [
+        {
+          "app_name": null,
+          "hwnd": 8456336,
+          "pid": 12576,
+          "title": "ChatGPT - sv - Google Chrome",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 1115130,
+          "pid": 23396,
+          "title": "E:\\manhwa короче надро переделывать | foto6",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 66478,
+          "pid": 6024,
+          "title": "foto6 — Mozilla Firefox",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 21891106,
+          "pid": 19984,
+          "title": "Lightshot — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 65806,
+          "pid": 9900,
+          "title": "Program Manager",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 66722,
+          "pid": 6040,
+          "title": "Proxifier",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 2688394,
+          "pid": 1064,
+          "title": "Steam",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 526456,
+          "pid": 1672,
+          "title": "Диспетчер задач",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 131328,
+          "pid": 13196,
+          "title": "Друзья - Discord",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 2228242,
+          "pid": 24064,
+          "title": "Интерфейс ввода Windows",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 1966846,
+          "pid": 9572,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 2688866,
+          "pid": 4868,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 327874,
+          "pid": 9900,
+          "title": "Этот компьютер — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 66910,
+          "pid": 18208,
+          "title": "‎Носок С мылом (1229791)",
+          "visible": true
+        }
+      ]
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T01:47:10.505Z",
+    "ok": true,
+    "request_id": "20261006T0910-windows-direct-01",
+    "started_at": "2026-10-06T01:47:10.500Z",
+    "status": "completed"
+  },
+  "id": "20261006T0910-windows-direct-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
