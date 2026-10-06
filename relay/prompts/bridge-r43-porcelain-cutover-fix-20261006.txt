@@ -1,0 +1,45 @@
+EXECUTE NOW — BRIDGE R43 PORCELAIN-SAFE CUTOVER / LIVE CONTROL-PLANE COMPLETION. Do not stop at a plan.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r43-porcelain-cutover-fix-20261006
+Exact starting HEAD: a6adf698764776856567239b07b0687e8ac89fa5
+Parent exact-head CI: 37416629592 SUCCESS.
+Parent Windows artifact: 11391646754 / sha256:5d805a7a3354fe260f11369e0e5891cb4c792d73280092ca3df4225db7e9f03b
+Parent Ubuntu artifact: 11391281748 / sha256:a6562035438c131650182b0e8230c2b75fb9a7f3315273874026840fe161a6af
+
+Observed live preflight blocker:
+coord-20261006-r42-preflight-a6ad-01 returned terminal returncode=1, effect_state=completed, no provider/chat mutation.
+Error: R42 cutover refuses material worktree changes: pp/scripts/operator-lifecycle-r40.ps1
+
+Root cause:
+- InvokeCutoverGit returns output after Trim().
+- git status --porcelain uses leading status whitespace as data: " M app/scripts/...".
+- Trim() removes the leading space before GetMaterialDirtyPaths parses it.
+- XY becomes "M " and the path loses its first character: "pp/scripts/...".
+- Filter-only CRLF/EOL state is then falsely classified as material dirtiness.
+
+Goal: preserve fail-closed dirty-worktree safety while making porcelain parsing record-correct, then complete the controlled live control-plane cutover and managed-chat lifecycle recovery.
+
+Required:
+1. Define bridge.porcelain_safe_cutover.r43.v1.
+2. Fix porcelain parsing robustly. Prefer a dedicated raw Git invocation plus status --porcelain=v1 -z / exact NUL-record parsing, or another design that preserves significant leading status bytes. Do NOT globally remove Trim() in a way that destabilizes scalar Git reads.
+3. Add adversarial tests for filter-only CRLF exact-blob equality, true byte drift, staged change, untracked, deleted, rename/copy, quoted/special/space paths, multiple records, leading-space XY preservation, malformed status.
+4. Preserve all R41/R42 rollback/cutover invariants and tests.
+5. Exact-head Windows + Ubuntu CI SUCCESS and artifacts required.
+6. After exact-green source evidence, run a NEW local PreflightOnly operation against the current local checkout. Do not reuse apply-02/apply-03 or any old operation ID.
+7. Only if PreflightOnly is green and the PC relay has no new reconciliation blocker, perform ONE new cutover operation with a stable new operation ID. Use exact final R43 SHA, backup-first, rollback-manifest-first.
+8. Verify exact local HEAD, Bridge responsive, R41 control-plane endpoint, R42/R43 status, CUTOVER_APPLIED_HOLD_ACTIVE, rollback manifest/command, and zero provider mutation during hold.
+9. Perform read-only live Projects reconcile and persist before/after/diff.
+10. Handle lifecycle incidents through the live control plane:
+   - Media predecessor 6abda64b-aac4-83eb-adee-dc7143ca5d2b exhausted;
+   - QA/Supervisor predecessor 6abe03fa-9728-83eb-90d2-5ee81bbac12c exhausted;
+   - Native predecessor 6ab946b7-46f0-83ed-bc98-dc74acc6e810 observed exhausted;
+   - Creator logical role must be reconciled from old 6abda62d-8198-83ed-aaa2-40b16f96a8a0 without title/foreground guessing.
+11. For each exhausted predecessor: re-confirm exhaustion, create successor in bound Project, enforce/read back High, send bounded handoff, verify exact successor URL/ID, then atomically switch current pointer. Retain predecessor as EXHAUSTED/SUPERSEDED.
+12. Reconcile duplicate exact-ID tabs fail-closed.
+13. Restore Full autonomy only after all required current/successor pointers are verified and no unknown Send outcome remains.
+14. Return exact current conversation IDs for Bridge, Media, QA, Native, Creator and Growth.
+15. Do not dispatch downstream product tasks yourself; report successor IDs first.
+16. No provider chat deletion, no credential entry, no merge, no social publish.
+
+Completion evidence: exact final R43 SHA; CI run; artifacts/digests; local PreflightOnly result; cutover operation ID/result; pre/post local HEAD; rollback manifest; live reconcile evidence; successor exact IDs; final Full autonomy state.
