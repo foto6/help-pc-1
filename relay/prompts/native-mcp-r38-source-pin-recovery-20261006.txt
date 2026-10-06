@@ -1,0 +1,31 @@
+EXECUTE NOW — NATIVE MCP R38 SOURCE-PIN RECOVERY / OPERATOR LIFECYCLE CLOSEOUT. Do not stop at a plan.
+
+Repo: foto6/help-pc-2
+Writable branch ONLY: agent/native-mcp-r38-source-pin-recovery-20261006
+Exact starting HEAD: b13243e687173a5342356361956a2fd5eec81138
+Failing exact-head CI: 37398892815.
+
+Observed exact failure:
+PcControlDirectGatewayError: Pinned R30 source blob drifted.
+code R31_SOURCE_BLOB_DRIFT
+path src/direct-remote-mcp.js
+expected blob cb6d74888514d3262d206df4f3cbd13a1f8899e2
+actual blob 8df50ca3792091625d4de1143b4625ae2f970ecd
+
+Important: all prior R29 relay-cutover QA gates in that run were PASS. Do not weaken source-pin validation merely to turn CI green.
+
+Goal: determine the legitimate source authority, repair pin lineage exactly, and get Native MCP operator lifecycle green on Windows + Ubuntu.
+
+Required:
+1. Trace why src/direct-remote-mcp.js changed relative to the R30 authority.
+2. Classify change as legitimate accepted successor vs accidental drift. Evidence required: commit lineage, diff, tests/contracts.
+3. If legitimate, advance the pin tuple atomically (source SHA/blob/contract/CI evidence) and update every consumer/readiness report consistently.
+4. If accidental, restore exact accepted source bytes instead. Do not just rewrite expected hash to actual without justification.
+5. Add regression where same repo/head metadata with wrong blob is rejected and exact accepted blob passes.
+6. Preserve R37 RUNNING/PAUSED/DRAINING/RECONCILIATION_REQUIRED semantics, idempotent resume, no replay of unknown side effects.
+7. One status command must still report native MCP host, control service, executor, relay fallback, direct lane, reconciliation, authority.
+8. Exact-head Windows + Ubuntu CI SUCCESS required.
+9. Produce readiness artifact with exact SHA/blob lineage and blocker list.
+10. No live remote registration/cutover, no firewall/tunnel mutation, no credentials, no merge.
+
+Completion: substantive fix/tests/docs; exact final SHA; exact-head CI SUCCESS both OS; artifact IDs/digests; explicit explanation of the drift root cause.
