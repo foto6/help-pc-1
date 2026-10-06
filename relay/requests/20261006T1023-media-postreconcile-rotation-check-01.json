@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1023-media-postreconcile-rotation-check-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst r=await fetch('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1');\nconst j=await r.json();const x=(j.chats||[]).find(x=>x.id==='agent-media');\nprocess.stdout.write(JSON.stringify({http:r.status,media:x?{\n id:x.id,url:x.url,predecessorUrl:x.predecessorUrl,projectId:x.projectId,branch:x.branch,gitHead:x.gitHead,\n status:x.status,contextLimit:x.contextLimit,highMode:x.highMode,openTabs:x.openTabs,lastSeenAt:x.lastSeenAt\n}:null}));\n\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only check whether automatic Media rollover already occurred"
+}
