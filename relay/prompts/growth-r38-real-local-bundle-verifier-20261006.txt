@@ -1,0 +1,25 @@
+EXECUTE NOW — GROWTH R38 REAL LOCAL BUNDLE VERIFIER / CURRENT CREATOR AUTHORITY. Do not stop at a plan.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r38-real-local-bundle-verifier-20261006
+Exact starting HEAD: f3cb8ec0d8aa7155b6169d5f86828de3fbc9d3ba
+Parent CI: 37406299930 SUCCESS.
+Parent contract: growth.local_fullstack_verifier.r37.v1.
+
+Goal: extend exact-green R37 to the current Media R27 + Creator R39 authority model without weakening sealed-bundle verification or evidence-class separation.
+
+Required:
+1. Define growth.real_local_bundle_verifier.r38.v1.
+2. Preserve R37 verifier/history; implement successor authority adapter.
+3. Accept only explicit exact authority manifests: Media R27 exact producer + independent QA tuple, Creator R39 exact accepted/source-ready tuple per gate policy, Growth own exact source authority.
+4. Verify real sealed Media bundle: source bytes/hash/size, all candidates, final bytes, final manifest, runtime manifest, clip/normalization lineage, targeted re-edit parent/child/directive lineage.
+5. Preserve three-reviewer deterministic consensus and evidence classes FIXTURE / OFFLINE_MODEL / GENUINE_REVIEW. Never relabel model evidence as human ground truth.
+6. Decisions remain READY_FOR_LOCAL_DEMO / NEEDS_REEDIT / HUMAN_REVIEW_REQUIRED / BLOCKED_INCOMPLETE_EVIDENCE.
+7. READY_FOR_LOCAL_DEMO never authorizes publish/provider mutation.
+8. Add authority-drift tests: wrong Media SHA/artifact, pending QA, changed Creator authority, mixed old/new tuple, sealed bundle produced under different Media authority.
+9. Durable verifier ledger: exact replay no-op; changed bundle under same identity conflict.
+10. >=25 new/adapted adversarial tests.
+11. Exact-head CI SUCCESS + deterministic R38 artifact.
+12. Return exact verification command template for coordinator after Media local run.
+
+No browser/provider/network/social publish effects. No merge.
