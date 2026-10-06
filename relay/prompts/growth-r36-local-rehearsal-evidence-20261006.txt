@@ -1,0 +1,26 @@
+EXECUTE NOW — GROWTH R36 LOCAL REHEARSAL EVIDENCE / OFFLINE DECISION ADAPTER.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r36-local-rehearsal-evidence-20261006
+Exact starting HEAD: c97f987e6ae780489f2a5fef1883d5596843c64c
+Current parent R35 exact-head CI 37247403389 SUCCESS with artifact growth-r35-canary-evidence-registry id 11319801779 digest sha256:d6a01a548f05c14723a0740218ce39a8a6edee902ed66cfa716e3aa78000cf02.
+Parent R35 still requires independent QA refresh; do not call it accepted until QA says so.
+
+Goal: make Growth consumable in one local end-to-end video rehearsal with zero network/provider side effects.
+
+Required:
+1. Define growth.local_rehearsal_evidence.r36.v1.
+2. Consume a frozen local Media review/evidence bundle and emit deterministic:
+   - review evidence normalization;
+   - consensus/advisory decision;
+   - targeted re-edit directives or winner;
+   - canary evidence envelope.
+3. Bind exact source/candidate/round hashes and parent authority tuple.
+4. Refuse execution if parent R35 is not explicitly marked independently accepted in supplied authority manifest; fixtures may exercise WAITING_PARENT_QA.
+5. No live metrics, no browser/provider calls.
+6. CLI usable from Windows/local coordinator.
+7. Independent verifier + >=25 adversarial fixtures.
+8. CI green and R36-specific artifact.
+9. Completion report with exact SHA/run/artifact and local command.
+
+No merge, no live action.
