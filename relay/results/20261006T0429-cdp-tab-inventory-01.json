@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$tabs=Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3;\n@($tabs | Where-Object {$_.type -eq 'page'} | Select-Object id,title,url) | ConvertTo-Json -Depth 4 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"4D49928E73992710160EA1822383D243\",\"title\":\"Отчёт о проверке\",\"url\":\"https://chatgpt.com/c/6ac21684-8b5c-83ed-aad9-5fd7254e5492\"},{\"id\":\"430478E2BC32BA1C1B7C6260E1CC3CF2\",\"title\":\"Отчёт о проверке\",\"url\":\"https://chatgpt.com/c/6ac21684-8b5c-83ed-aad9-5fd7254e5492\"},{\"id\":\"909193792FAF7094DE1044EE0479559A\",\"title\":\"R37 Local Integration Implemented\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac46a9a-4d60-83ed-979a-abb3f8e6d3e7\"},{\"id\":\"1909B6A186BD2A820F9DBB7E20866AD8\",\"title\":\"Deliver R11 Editor\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\"},{\"id\":\"2FBD66B0ADB288F6A1DA9338379B05A3\",\"title\":\"Implement Live Review Ingest\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\"},{\"id\":\"A2C7D34C9E288B07AD8D68226CE99C5B\",\"title\":\"Project Agent Supervision\",\"url\":\"https://chatgpt.com/c/6abe03fa-9728-83eb-90d2-5ee81bbac12c\"},{\"id\":\"4177A4A81D42C03E3850CAB9CFBAC24A\",\"title\":\"ChatGPT\",\"url\":\"https://chatgpt.com/\"},{\"id\":\"D14340239F69AC3CBA402CDE3B9ED872\",\"title\":\"Native Connector Implementation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\"},{\"id\":\"4999FB143B444AA27132FA1F51B73D62\",\"title\":\"Implement R37 Driver\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac455e9-bea0-83eb-aa94-fd3dde516c0c\"},{\"id\":\"AC3C07426A46C8611E1AF713816B6517\",\"title\":\"Агент моста\",\"url\":\"https://chatgpt.com/c/6ac45836-87a0-83ed-bea4-0ad0f99c8982\"},{\"id\":\"81D5E6500283B48A883973A9FE8E670B\",\"title\":\"Implement Local Windows Render Gate\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\"},{\"id\":\"C785CFB38CAAD21388D610488989D04E\",\"title\":\"R8 integration acceptance verdict\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45fb0-9074-83eb-99eb-397265b228e7\"},{\"id\":\"33BAAE31CE5563266254CB17B4A437B0\",\"title\":\"Implement Publish Provider Layer\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\"},{\"id\":\"D3E7DB76704BA0FA16DA4F6EEC37AE46\",\"title\":\"Fix Assignment Replacement Runtime\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c\"},{\"id\":\"A8E9513C4F4A157978D0072EDC3A2949\",\"title\":\"Отчёт о проверке\",\"url\":\"https://chatgpt.com/c/6ac21684-8b5c-83ed-aad9-5fd7254e5492\"},{\"id\":\"B6FA608B5D9C4C7EBDA0E789737D1606\",\"title\":\"A2 Integration Verified\",\"url\":\"https://chatgpt.com/c/6ab8bed2-8d0c-83eb-b793-8e504335a57d\"},{\"id\":\"92C3BE935CB12C758B0310B904E359F4\",\"title\":\"Bridge R19 Implementation Report\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\"},{\"id\":\"0CC647D2F87485BA5DB6FB2FC36AA90C\",\"title\":\"Web AI Bridge\",\"url\":\"http://127.0.0.1:17448/\"},{\"id\":\"927960791DFBD3BE382175A94DD3859E\",\"title\":\"Fix Assignment Replacement Runtime\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c\"},{\"id\":\"831BB6DD8686782FB7C934F7B6DF7D7D\",\"title\":\"A 2\",\"url\":\"https://chatgpt.com/c/6ab67022-ae5c-83ed-a654-5dcc82c3b351\"},{\"id\":\"BDA8B7EBDCC88BDC33081229B15F8978\",\"title\":\"A 2\",\"url\":\"https://chatgpt.com/c/6ab67022-ae5c-83ed-a654-5dcc82c3b351\"},{\"id\":\"E6C8770CC984DF60E3BA2D4942E07049\",\"title\":\"ChatGPT\",\"url\":\"https://chatgpt.com/\"},{\"id\":\"C2F3C3F2410C3C06ABE98C389CA977C7\",\"title\":\"ChatGPT\",\"url\":\"https://chatgpt.com/\"}]\r\n",
+      "stdout_bytes": 3605,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:25:23.747Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:25:23.629Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0429-cdp-tab-inventory-01"
+    },
+    "request_id": "20261006T0429-cdp-tab-inventory-01",
+    "started_at": "2026-10-06T04:25:22.937Z",
+    "status": "completed"
+  },
+  "id": "20261006T0429-cdp-tab-inventory-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
