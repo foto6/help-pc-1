@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T2022-r42-hold-status-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nbase='http://127.0.0.1:17448'\nout={}\nfor name,path in [('cutover','/api/projects/control-plane/cutover-r42/status'),('lifecycle','/api/operator-lifecycle')]:\n try:\n  out[name]=json.loads(urllib.request.urlopen(base+path,timeout=8).read().decode('utf-8'))\n except Exception as e:\n  out[name]={'error':type(e).__name__+': '+str(e)}\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only R42 cutover hold and operator lifecycle status before successor rotation"
+}
