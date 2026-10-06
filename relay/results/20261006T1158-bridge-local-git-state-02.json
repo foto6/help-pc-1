@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue'; Set-Location 'E:\\WebAIBridge';\nWrite-Output ('HEAD=' + (git rev-parse HEAD));\n$b=(git symbolic-ref --short -q HEAD 2>$null); Write-Output ('BRANCH=' + [string]$b);\nWrite-Output 'STATUS_BEGIN'; git status --porcelain=v1; Write-Output 'STATUS_END';\nWrite-Output ('REMOTE=' + (git remote get-url origin));"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "HEAD=cb852e013634287669f957253d13d8ef2b45cada\r\nBRANCH=\r\nSTATUS_BEGIN\r\nSTATUS_END\r\nREMOTE=https://github.com/foto6/WebAIBridge.git\r\n",
+      "stdout_bytes": 131,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T03:41:23.956Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T03:41:23.835Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1158-bridge-local-git-state-02"
+    },
+    "request_id": "20261006T1158-bridge-local-git-state-02",
+    "started_at": "2026-10-06T03:41:22.659Z",
+    "status": "completed"
+  },
+  "id": "20261006T1158-bridge-local-git-state-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
