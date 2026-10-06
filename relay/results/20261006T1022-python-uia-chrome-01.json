@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python",
+        "-c",
+        "import uiautomation as auto\nauto.SetGlobalSearchTimeout(2)\nroot=auto.ControlFromHandle(8456336)\nprint(\"ROOT\",repr(root.Name),root.ControlTypeName,repr(root.ClassName))\nkids=root.GetChildren()\nprint(\"CHILDREN\",len(kids))\nfor k in kids[:80]:\n    try:\n        print(k.ControlTypeName,repr(k.Name),repr(k.AutomationId),repr(k.ClassName))\n    except Exception as e:\n        print(\"ERR\",repr(e))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "ROOT '����� � �������� - Google Chrome' WindowControl 'Chrome_WidgetWin_1'\r\nCHILDREN 2\r\nPaneControl '' '' 'Intermediate D3D Window'\r\nPaneControl '����� � �������� - Google Chrome' '' 'BrowserRootView'\r\n",
+      "stdout_bytes": 202,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:05:59.798Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:05:59.688Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1022-python-uia-chrome-01"
+    },
+    "request_id": "20261006T1022-python-uia-chrome-01",
+    "started_at": "2026-10-06T02:05:59.093Z",
+    "status": "completed"
+  },
+  "id": "20261006T1022-python-uia-chrome-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
