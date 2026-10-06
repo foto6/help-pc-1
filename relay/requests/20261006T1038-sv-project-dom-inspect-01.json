@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1038-sv-project-dom-inspect-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst tabs=await(await fetch('http://127.0.0.1:17410/json/list')).json();const t=tabs.find(x=>x.id===\"81D5E6500283B48A883973A9FE8E670B\");if(!t)throw new Error('project tab missing');\nconst ws=new WebSocket(t.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let n=1;const p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const id=n++;p.set(id,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id,method,params}))});\nconst exp=`JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect(),s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!=='none'&&s.visibility!=='hidden'};const boxes=[...document.querySelectorAll('textarea,[contenteditable=\"true\"],[role=\"textbox\"]')].filter(vis).map((e,i)=>({i,tag:e.tagName,id:e.id||'',role:e.getAttribute('role')||'',aria:e.getAttribute('aria-label')||'',placeholder:e.getAttribute('placeholder')||e.getAttribute('data-placeholder')||'',text:(('value'in e?e.value:(e.innerText||e.textContent||''))||'').slice(0,300),x:Math.round(e.getBoundingClientRect().x),y:Math.round(e.getBoundingClientRect().y),w:Math.round(e.getBoundingClientRect().width),h:Math.round(e.getBoundingClientRect().height),cls:(e.className||'').toString().slice(0,160)}));const bs=[...document.querySelectorAll('button,[role=\"button\"]')].filter(vis).map((b,i)=>({i,text:(b.innerText||b.textContent||'').trim().slice(0,100),aria:(b.getAttribute('aria-label')||'').slice(0,100),testid:(b.getAttribute('data-testid')||'').slice(0,100),title:(b.getAttribute('title')||'').slice(0,100),disabled:!!b.disabled,x:Math.round(b.getBoundingClientRect().x),y:Math.round(b.getBoundingClientRect().y)}));const high=bs.some(b=>/^(Высокий|High)$/iu.test((b.text||'').trim()));return {url:location.href,title:document.title,ready:document.readyState,boxes,high,buttons:bs.filter(b=>/High|Высок|Medium|Сред|send|отправ|chat|чат|source|источ|new|нов/i.test([b.text,b.aria,b.testid,b.title].join(' '))).slice(0,80)}})())`;\nconst r=await call('Runtime.evaluate',{expression:exp,returnByValue:true});ws.close();process.stdout.write(r.result.value);\n\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only current ChatGPT Project DOM inspection for Media rollover"
+}
