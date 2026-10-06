@@ -56,6 +56,14 @@ Required:
 17. No live publish, no credentials, no browser/provider mutation, no merge.
 
 Important current candidates for schema/tests only, NOT automatically accepted authority:
+Bridge R42 exact source candidate evidence available for future QA-approved bundle:
+- SHA e8033f2e42bd335c10a397eb3d2cb62c8bb837a9
+- CI 37412502084 SUCCESS
+- contract bridge.projects_live_control_plane_cutover.r42.v1
+- Windows artifact 11390250540 / sha256:90809c0c9e0f5afdd51c8e8c9e292a15af2e77eeab19a6e0e98e76086c61a902
+- Ubuntu artifact 11389623324 / sha256:530c75ea28d771a0d311b147c1c2fed4490b1e28f8ac8942c66df6e124cdb9de
+This is source evidence only. Creator R38 must reject it as current live Bridge authority until R8 binds verified local cutover/reconcile evidence to the same exact source SHA.
+
 Growth R37 exact candidate evidence available for future QA-approved bundle:
 - SHA 14409d572c494ec8b6f471ea915a27afae1b5521
 - CI 37409772193 SUCCESS
