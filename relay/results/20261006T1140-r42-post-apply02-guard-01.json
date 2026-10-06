@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\nPush-Location $repo;\n$head=([string](git rev-parse HEAD)).Trim();\n$dirty=@(git status --porcelain);\nPop-Location;\n$cut='E:\\WebAIBridge\\app\\data\\projects-live-control-plane-cutover-r42.json';\n$cutState=$null;if(Test-Path $cut){try{$cutState=Get-Content $cut -Raw|ConvertFrom-Json}catch{}}\n$health=Get-Content 'E:\\pc-github-relay\\.pc-relay\\health.json' -Raw|ConvertFrom-Json;\n[pscustomobject]@{\n head=$head;dirtyCount=$dirty.Count;cutoverExists=(Test-Path $cut);\n cutoverStatus=if($cutState){[string]$cutState.status}else{''};\n holdActive=if($cutState){[bool]$cutState.holdActive}else{$false};\n relayReconciliationRequired=[bool]$health.reconciliation_required;\n relayLastError=$health.last_error\n}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"head\":\"cb852e013634287669f957253d13d8ef2b45cada\",\"dirtyCount\":0,\"cutoverExists\":false,\"cutoverStatus\":\"\",\"holdActive\":false,\"relayReconciliationRequired\":false,\"relayLastError\":null}\r\n",
+      "stdout_bytes": 186,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:34:09.680Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:34:09.560Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1140-r42-post-apply02-guard-01"
+    },
+    "request_id": "20261006T1140-r42-post-apply02-guard-01",
+    "started_at": "2026-10-06T04:34:08.945Z",
+    "status": "completed"
+  },
+  "id": "20261006T1140-r42-post-apply02-guard-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
