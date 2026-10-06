@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0842-open-check-mcp-chat-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$cid='6ab946b7-46f0-83ed-bc98-dc74acc6e810';\n$url='https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/'+$cid;\nfunction Get-Cid([string]$u){ try{$x=[uri]$u;$p=$x.AbsolutePath.Trim('/').Split('/');if($p.Length -eq 2 -and $p[0]-eq 'c'){return $p[1]};if($p.Length -eq 4 -and $p[0]-eq 'g' -and $p[2]-eq 'c'){return $p[3]}}catch{};return '' }\n$list=@(Invoke-RestMethod 'http://127.0.0.1:17410/json/list');\n$m=@($list|?{$_.type-eq'page' -and (Get-Cid $_.url)-eq$cid});\nif($m.Count -gt 1){throw \"duplicate exact tabs\"}\nif($m.Count -eq 0){$n=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17410/json/new?'+[uri]::EscapeDataString($url));[pscustomobject]@{state='opened';id=$n.id;url=$n.url}|ConvertTo-Json -Compress}else{[pscustomobject]@{state='already_open';id=$m[0].id;url=$m[0].url}|ConvertTo-Json -Compress}"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 10000,
+  "note": "Open exact Native PC Control agent chat for read-only lifecycle check"
+}
