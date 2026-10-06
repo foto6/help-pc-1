@@ -1,0 +1,27 @@
+EXECUTE NOW — MEDIA R27 REAL-INPUT LOCAL REHEARSAL ADAPTER. Do not stop at a plan.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r27-real-input-local-rehearsal-20261006
+Exact starting HEAD: dba0dce8d44c3b5786c37d2ce793172a058fb40f
+Parent CI: 37405928263 SUCCESS.
+Parent contract: media.local_windows_render_gate.r26.v1.
+
+Goal: extend exact-green R26 from deterministic source fixture to an explicit user-supplied input video while reusing the proven R25/R26 renderer/checkpoint engine and producing a sealed bundle consumable by Growth/Creator.
+
+Required:
+1. Define media.real_input_local_rehearsal.r27.v1.
+2. Add Windows wrappers: RUN_REAL_R27.cmd <input-video> <output-root> [options], STATUS_REAL_R27.cmd, VERIFY_REAL_R27.cmd.
+3. Explicit input path only; hash source bytes before work; ffprobe metadata snapshot; explicit clip range/duration policy; fail closed on corrupt/unsupported input; never modify/delete source.
+4. Reuse R26/R25 actual renderer/checkpoint graph. Do not implement a second encoder/tournament engine.
+5. If normalization is needed, make it a hashed durable phase with stable operation identity and exact output hash.
+6. Produce 4 real encoded candidates, bracket package, targeted re-edit, final artifact and phase timings/checkpoints.
+7. Emit a sealed evidence bundle directly consumable by Growth R37/R38: source, candidates, final.mp4, manifest, final-manifest, prompt/review placeholders, exact hashes/sizes/lineage and runtime manifest.
+8. Emit a Media authority candidate tuple: repository foto6/video2, exact R27 producer SHA/CI/artifact tuple, status CANDIDATE_PENDING_INDEPENDENT_QA until QA signs it. Never self-issue independent QA acceptance.
+9. Exact completed-phase replay verifies/reuses evidence; changed input/clip/runtime/render graph under same operation ID => conflict; corrupt checkpoint => fail closed.
+10. Safety: no browser/provider/model/network calls, no social publish, writes only under explicit output root, path escape/symlink/junction tests, no admin/service/registry mutation.
+11. Hosted CI uses bounded fixtures only; no heavy real-render claim.
+12. >=25 adversarial tests including corrupt source, changed clip, runtime drift, output escape, interrupted phase, duplicate operation ID, final tamper.
+13. Exact-head CI SUCCESS + deterministic R27 artifact.
+14. Return exact local command template, expected disk/runtime envelope and independent verification command.
+
+Do not execute a heavy user-PC render in CI. No merge.
