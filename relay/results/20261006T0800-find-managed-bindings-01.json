@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='SilentlyContinue'; $files=@('E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json','E:\\WebAIBridge\\app\\data\\state.json'); $ids=@('6abda62d-8198-83ed-aaa2-40b16f96a8a0','6abda64b-aac4-83eb-adee-dc7143ca5d2b','6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0','6abda61c-a440-83ed-9482-1d0fc7923e03'); $out=@(); foreach($f in $files){if(Test-Path $f){foreach($cid in $ids){$m=Select-String -LiteralPath $f -SimpleMatch $cid -Context 0,0 | Select-Object -First 5; foreach($x in $m){$line=[string]$x.Line; if($line.Length -gt 1200){$line=$line.Substring(0,1200)}; $out += [pscustomobject]@{file=$f;cid=$cid;line=$line}}}}}; $out | ConvertTo-Json -Depth 3 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"file\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json\",\"cid\":\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"line\":\"      \\\"url\\\": \\\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\\\",\"},{\"file\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json\",\"cid\":\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"line\":\"      \\\"url\\\": \\\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\\\",\"},{\"file\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json\",\"cid\":\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"line\":\"      \\\"url\\\": \\\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\\\",\"},{\"file\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json\",\"cid\":\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"line\":\"        \\\"url\\\": \\\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\\\",\"},{\"file\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json\",\"cid\":\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"line\":\"        \\\"url\\\": \\\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\\\",\"},{\"file\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json\",\"cid\":\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"line\":\"      \\\"url\\\": \\\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\\\",\"},{\"file\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json\",\"cid\":\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"line\":\"      \\\"url\\\": \\\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\\\",\"},{\"file\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json\",\"cid\":\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"line\":\"      \\\"url\\\": \\\"https://chatgpt.com/g/g-p-6ab839fa4f8c8191aa94c8c0a43e0807-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\\\",\"},{\"file\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json\",\"cid\":\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"line\":\"        \\\"url\\\": \\\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\\\",\"},{\"file\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json\",\"cid\":\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"line\":\"        \\\"url\\\": \\\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\\\",\"},{\"file\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json\",\"cid\":\"6abda61c-a440-83ed-9482-1d0fc7923e03\",\"line\":\"        \\\"url\\\": \\\"https://chatgpt.com/g/g-p-6ab839fa4f8c8191aa94c8c0a43e0807-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\\\",\"},{\"file\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json\",\"cid\":\"6abda61c-a440-83ed-9482-1d0fc7923e03\",\"line\":\"    \\\"pageUrl\\\": \\\"https://chatgpt.com/g/g-p-6ab839fa4f8c8191aa94c8c0a43e0807-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\\\",\"},{\"file\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json\",\"cid\":\"6abda61c-a440-83ed-9482-1d0fc7923e03\",\"line\":\"      \\\"url\\\": \\\"https://chatgpt.com/g/g-p-6ab839fa4f8c8191aa94c8c0a43e0807-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\\\",\"},{\"file\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json\",\"cid\":\"6abda61c-a440-83ed-9482-1d0fc7923e03\",\"line\":\"        \\\"pageUrl\\\": \\\"https://chatgpt.com/g/g-p-6ab839fa4f8c8191aa94c8c0a43e0807-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\\\",\"},{\"file\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json\",\"cid\":\"6abda61c-a440-83ed-9482-1d0fc7923e03\",\"line\":\"          \\\"url\\\": \\\"https://chatgpt.com/g/g-p-6ab839fa4f8c8191aa94c8c0a43e0807-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\\\",\"}]\r\n",
+      "stdout_bytes": 3400,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T00:54:20.736Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T00:54:20.632Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0800-find-managed-bindings-01"
+    },
+    "request_id": "20261006T0800-find-managed-bindings-01",
+    "started_at": "2026-10-06T00:54:19.430Z",
+    "status": "completed"
+  },
+  "id": "20261006T0800-find-managed-bindings-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
