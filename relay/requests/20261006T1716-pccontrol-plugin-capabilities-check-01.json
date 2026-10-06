@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1716-pccontrol-plugin-capabilities-check-01",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "@PC Control connection check: harmless read-only capability probe"
+}
