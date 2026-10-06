@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$expectedHead='e8033f2e42bd335c10a397eb3d2cb62c8bb837a9';\n$manifest='E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261006T043453Z\\rollback-manifest.json';\n$allowed=@('app/scripts/operator-lifecycle-r40.ps1','app/scripts/pause-all-r40.cmd','app/scripts/pause-browser-r40.cmd','app/scripts/resume-attach-r40.cmd','app/scripts/resume-managed-r40.cmd');\nPush-Location $repo;\n$head=([string](git rev-parse HEAD)).Trim();\nif($head -ne $expectedHead){ throw \"unexpected current head before rollback: $head\" }\n$status=@(git status --porcelain);\n$paths=@($status | ForEach-Object { ($_ -replace '^.. ','').Trim() });\n$extra=@($paths | Where-Object { $_ -notin $allowed });\n$missing=@($allowed | Where-Object { $_ -notin $paths });\nif($extra.Count -gt 0){ throw \"unexpected dirty paths: $($extra -join ', ')\" }\nif($missing.Count -gt 0){ throw \"expected generated dirty paths missing: $($missing -join ', ')\" }\n& git restore --source=HEAD --worktree -- @allowed;\nif($LASTEXITCODE -ne 0){ throw \"git restore generated wrappers failed\" }\n$after=@(git status --porcelain);\nif($after.Count -ne 0){ throw \"worktree still dirty before rollback: $($after -join '; ')\" }\nPop-Location;\nif(!(Test-Path $manifest)){ throw \"rollback manifest missing: $manifest\" }\n& powershell.exe -NoProfile -ExecutionPolicy Bypass -File 'E:\\WebAIBridge\\app\\r42-rollback.ps1' -Manifest $manifest;\nif($LASTEXITCODE -ne 0){ throw \"R42 rollback failed with exit $LASTEXITCODE\" }\nPush-Location $repo;\n$restored=([string](git rev-parse HEAD)).Trim();\n$restoredDirty=@(git status --porcelain);\nPop-Location;\n$statusApi=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/status' -TimeoutSec 5;\n[pscustomobject]@{\n  restoredHead=$restored;\n  dirtyCount=$restoredDirty.Count;\n  bridgeResponsive=$true;\n  serverStartedAt=$statusApi.serverStartedAt;\n  rollbackManifest=$manifest\n}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "worktree still dirty before rollback:  M app/scripts/operator-lifecycle-r40.ps1;  M app/scripts/pause-all-r40.cmd;  M a\r\npp/scripts/pause-browser-r40.cmd;  M app/scripts/resume-attach-r40.cmd;  M app/scripts/resume-managed-r40.cmd\r\nAt line:18 char:25\r\n+ ... unt -ne 0){ throw \"worktree still dirty before rollback: $($after -jo ...\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (worktree still ...managed-r40.cmd:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : worktree still dirty before rollback:  M app/scripts/operator-lifecycle-r40.ps1;  M app/ \r\n   scripts/pause-all-r40.cmd;  M app/scripts/pause-browser-r40.cmd;  M app/scripts/resume-attach-r40.cmd;  M app/scri  \r\n  pts/resume-managed-r40.cmd\r\n \r\n",
+      "stderr_bytes": 798,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:38:31.418Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:38:31.294Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261006-r42-rollback-apply03-01"
+    },
+    "request_id": "coord-20261006-r42-rollback-apply03-01",
+    "started_at": "2026-10-06T04:38:30.574Z",
+    "status": "completed"
+  },
+  "id": "coord-20261006-r42-rollback-apply03-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
