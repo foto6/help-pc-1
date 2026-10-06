@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1031-select-native-tab-read-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python",
+      "-c",
+      "import uiautomation as auto, time\nauto.SetGlobalSearchTimeout(2)\nroot=auto.ControlFromHandle(8456336)\ntarget=None\nfor c in root.GetChildren():\n    pass\ndef walk(c,depth=0):\n    global target\n    if target is not None or depth>9: return\n    try:\n        if c.ControlTypeName==\"TabItemControl\" and \"Native Connector Implementation\" in (c.Name or \"\"):\n            target=c; return\n        for k in c.GetChildren(): walk(k,depth+1)\n    except Exception: return\nwalk(root)\nif not target:\n    print(\"NO_TARGET\"); raise SystemExit(2)\npat=target.GetSelectionItemPattern()\nif pat: pat.Select()\nelse: target.SetFocus()\ntime.sleep(0.8)\nprint(\"SELECTED\",repr(target.Name))\n# enumerate visible document/edit/button controls after selection\ndef walk2(c,depth=0):\n    if depth>12: return\n    try:\n        typ=c.ControlTypeName\n        name=c.Name or \"\"\n        if typ in (\"EditControl\",\"DocumentControl\",\"ButtonControl\",\"TextControl\") and (typ!=\"TextControl\" or len(name)<200):\n            if typ!=\"TextControl\" or any(x in name.lower() for x in [\"максим\",\"новый чат\",\"ask\",\"спрос\",\"stop\",\"отправ\",\"send\",\"высок\",\"high\"]):\n                print(depth,typ,repr(name),repr(c.AutomationId),repr(c.ClassName))\n        for k in c.GetChildren(): walk2(k,depth+1)\n    except Exception: return\nwalk2(root)\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Select exact Native MCP tab via UIA selection pattern and read controls"
+}
