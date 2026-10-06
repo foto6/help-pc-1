@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst [a,b]=await Promise.all([\n fetch('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=0').then(r=>r.json()),\n fetch('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/discover').then(r=>r.json())\n]);\nconst slim=x=>({id:x.id,name:x.name,url:x.url,projectId:x.projectId,profileId:x.profileId,repository:x.repository,branch:x.branch,gitHead:x.gitHead,role:x.role,enabled:x.enabled,rotateWithProject:x.rotateWithProject,status:x.status});\nconst managed=(a.chats||[]).filter(x=>/media|editor|video2|deliver r11/i.test([x.name,x.role,x.repository,x.branch,x.url].join(' '))).map(slim);\nconst discRaw=Array.isArray(b)?b:(b.chats||b.discovered||b.candidates||b.rows||[]);\nconst discovered=discRaw.filter(x=>/media|editor|video2|deliver r11|6abda64b-aac4-83eb-adee-dc7143ca5d2b/i.test(JSON.stringify(x))).slice(0,20);\nprocess.stdout.write(JSON.stringify({managed,discoveredShape:Object.keys(b||{}),discovered}));\n\n'@; $code | node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"managed\":[{\"id\":\"agent-media\",\"name\":\"Media existing agent\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b24f-9c40-83eb-9b7b-766af74defe0\",\"projectId\":\"\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"repository\":\"foto6/video2\",\"branch\":\"agent/media-r10-native-mcp-consumer-20260929\",\"gitHead\":\"2366b3820c2cbf429aa734f2e623689699e73003\",\"role\":\"media\",\"enabled\":true,\"rotateWithProject\":true,\"status\":\"closed\"}],\"discoveredShape\":[\"candidates\",\"profileErrors\",\"registeredCount\",\"discoveredCount\",\"unregisteredCount\",\"checkedAt\"],\"discovered\":[{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"title\":\"Deliver R11 Editor\",\"profiles\":[{\"id\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"name\":\"ChatGPT профиль 2\",\"debugPort\":17410}],\"openTabs\":1,\"registered\":false,\"suggestedName\":\"Deliver R11 Editor\",\"suggestedProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"ambiguousProfile\":false}]}",
+      "stdout_bytes": 986,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:29:49.974Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:29:49.860Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1008-media-registry-reconcile-read-01"
+    },
+    "request_id": "20261006T1008-media-registry-reconcile-read-01",
+    "started_at": "2026-10-06T02:29:49.253Z",
+    "status": "completed"
+  },
+  "id": "20261006T1008-media-registry-reconcile-read-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
