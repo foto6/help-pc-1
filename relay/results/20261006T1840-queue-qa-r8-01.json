@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request;u=\"http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ac45fb0-9074-83eb-99eb-397265b228e7/assignments\";p=\"{\\\"text\\\":\\\"EXECUTE NOW — Integration R8 independent QA. Work ONLY on agent/integration-r8-final-local-stack-20261006 from exact HEAD 00cb4716bc838e84db32d9f13c297fbd5f6096a3. Read TASKS/INTEGRATION_R8_FINAL_LOCAL_STACK.md and issue foto6/boss#7. Do not modify product branches. Verify exact successor SHA/CI/artifacts, run cross-repo adversarial gate, and emit LOCAL_PC_REHEARSAL_GO or exact blockers. No merge, no live publish.\\\",\\\"repository\\\":\\\"foto6/boss\\\",\\\"branch\\\":\\\"agent/integration-r8-final-local-stack-20261006\\\",\\\"expectedHead\\\":\\\"00cb4716bc838e84db32d9f13c297fbd5f6096a3\\\",\\\"idempotencyKey\\\":\\\"coord-20261006-qa-r8-assignment-01\\\",\\\"supervisorVerificationRequired\\\":true,\\\"evidenceTimeoutMinutes\\\":90}\".encode('utf-8');q=urllib.request.Request(u,data=p,headers={'Content-Type':'application/json'},method='POST');d=json.loads(urllib.request.urlopen(q,timeout=20).read().decode('utf-8'));print(json.dumps({'id':d.get('id'),'state':d.get('state'),'targetChatId':d.get('targetChatId'),'targetChatUrl':d.get('targetChatUrl'),'repository':d.get('repository'),'branch':d.get('branch'),'expectedHead':d.get('expectedHead')},ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"992349b1-8367-4822-9b6c-7cf0779e0e93\",\"state\":\"queued\",\"targetChatId\":\"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\",\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45fb0-9074-83eb-99eb-397265b228e7\",\"repository\":\"foto6/boss\",\"branch\":\"agent/integration-r8-final-local-stack-20261006\",\"expectedHead\":\"00cb4716bc838e84db32d9f13c297fbd5f6096a3\"}\r\n",
+      "stdout_bytes": 385,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T10:45:10.189Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T10:45:10.066Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1840-queue-qa-r8-01"
+    },
+    "request_id": "20261006T1840-queue-qa-r8-01",
+    "started_at": "2026-10-06T10:45:09.620Z",
+    "status": "completed"
+  },
+  "id": "20261006T1840-queue-qa-r8-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
