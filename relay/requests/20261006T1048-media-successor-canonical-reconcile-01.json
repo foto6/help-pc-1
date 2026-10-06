@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1048-media-successor-canonical-reconcile-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst sleep=ms=>new Promise(r=>setTimeout(r,ms));\nconst conv=v=>{try{const u=new URL(String(v||''));const p=u.pathname.split('/').filter(Boolean);if(p.length===2&&p[0]==='c')return p[1];if(p.length===4&&p[0]==='g'&&p[2]==='c')return p[3]}catch{}return ''};\nlet found=null;\nfor(let i=0;i<40;i++){\n  const tabs=await(await fetch('http://127.0.0.1:17410/json/list')).json();\n  const cand=tabs.find(x=>x.type==='page'&&(conv(x.url)===\"local-chatgpt%3A78baa0b7-d4ff-4c2f-b745-55c31453d043\"||/78baa0b7-d4ff-4c2f-b745-55c31453d043/.test(x.url)||(/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv\\/c\\//.test(x.url)&&x.title!=='Deliver R11 Editor')));\n  if(cand){found=cand; const c=conv(cand.url); if(c&&!String(c).startsWith('local-chatgpt')) break}\n  await sleep(500);\n}\nif(!found){process.stdout.write(JSON.stringify({state:'MISSING_SUCCESSOR'}));process.exit(2)}\nconst ws=new WebSocket(found.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let n=1;const p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const id=n++;p.set(id,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id,method,params}))});\nconst exp=`JSON.stringify((()=>{const us=[...document.querySelectorAll('[data-message-author-role=\"user\"]')].map(x=>(x.innerText||x.textContent||''));const as=[...document.querySelectorAll('[data-message-author-role=\"assistant\"]')].map(x=>(x.innerText||x.textContent||''));const bs=[...document.querySelectorAll('button,[role=\"button\"]')];const generating=bs.some(b=>{const q=((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')).toLowerCase();return q.includes('stop')});const high=bs.some(b=>/^(Высокий|High)$/iu.test((b.innerText||b.textContent||'').trim()));return {url:location.href,title:document.title,userCount:us.length,assistantCount:as.length,markerInUsers:us.some(x=>x.includes(\"MEDIA R26 LOCAL WINDOWS REAL-RENDER CLOSURE\")),lastUser:(us.at(-1)||'').slice(0,500),generating,high}})())`;\nconst r=await call('Runtime.evaluate',{expression:exp,returnByValue:true});ws.close();const s=JSON.parse(r.result.value);process.stdout.write(JSON.stringify({state:String(conv(s.url)).startsWith('local-chatgpt')?'TEMPORARY_ID':'CANONICAL',conversationId:conv(s.url),...s}));\n\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only reconcile canonical Media successor ID and R26 user turn"
+}
