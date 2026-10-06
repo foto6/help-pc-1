@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0429-cdp-tab-inventory-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$tabs=Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3;\n@($tabs | Where-Object {$_.type -eq 'page'} | Select-Object id,title,url) | ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 6000,
+  "note": "Read-only CDP page inventory for exact successor discovery"
+}
