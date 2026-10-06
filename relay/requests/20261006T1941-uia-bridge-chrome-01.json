@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1941-uia-bridge-chrome-01",
+  "action": "uia.snapshot",
+  "params": {
+    "window_title": "Web AI Bridge - Google Chrome"
+  },
+  "timeout_ms": 15000,
+  "note": "Native read-only UIA snapshot: Web AI Bridge - Google Chrome"
+}
