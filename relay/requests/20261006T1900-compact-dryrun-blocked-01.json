@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1900-compact-dryrun-blocked-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request;u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/dry-run';d=json.loads(urllib.request.urlopen(u,timeout=45).read().decode('utf-8'));want=set([\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"agent-pc-control\"]);out=[]\nfor r in d.get('rows',[]):\n cid=r.get('chatId')\n if cid in want:\n  out.append({'chatId':cid,'name':r.get('name'),'url':r.get('url'),'openTabs':r.get('openTabs'),'preflightAllowed':r.get('preflightAllowed'),'preflightReason':r.get('preflightReason'),'targetId':r.get('targetId'),'snapshots':r.get('snapshots')})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 60000,
+  "note": "Read-only compact dry-run for four blocked managed assignments"
+}
