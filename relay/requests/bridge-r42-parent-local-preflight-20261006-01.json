@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-r42-parent-local-preflight-20261006-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='SilentlyContinue';$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();\n$out=[ordered]@{};\n$out.time=(Get-Date).ToString('o');\n$out.bridgeStatus=@();\nforeach($u in @('http://127.0.0.1:17448/api/status','http://127.0.0.1:17448/api/operator-lifecycle','http://127.0.0.1:17448/api/projects/control-plane?inspect=0')){\n try{$r=Invoke-RestMethod -Uri $u -Method Get -TimeoutSec 4;$out.bridgeStatus += [ordered]@{url=$u;ok=$true;data=$r}}\n catch{$out.bridgeStatus += [ordered]@{url=$u;ok=$false;error=$_.Exception.Message}}\n}\n$out.processes=@(Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match 'WebAIBridge|server\\.js|start\\.ps1|17448' } | Select-Object ProcessId,Name,CommandLine);\n$out.checkouts=@();\n$roots=@('E:\\WebAIBridge','E:\\web-ai-bridge','E:\\bridge','C:\\WebAIBridge','C:\\web-ai-bridge','D:\\WebAIBridge','D:\\web-ai-bridge');\nforeach($p in $roots){\n if(Test-Path \"$p\\.git\"){\n  $out.checkouts += [ordered]@{path=$p;branch=(git -C $p branch --show-current 2>$null);head=(git -C $p rev-parse HEAD 2>$null);status=(git -C $p status --porcelain 2>$null);remote=(git -C $p remote get-url origin 2>$null)}\n }\n}\n$out|ConvertTo-Json -Depth 12 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "R42 read-only local Bridge compatibility/pre-cutover authority gate; no mutation"
+}
