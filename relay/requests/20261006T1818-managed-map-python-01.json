@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1818-managed-map-python-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request;u='http://127.0.0.1:17448/api/supervisor-watchdog?detect=0';d=json.loads(urllib.request.urlopen(u,timeout=10).read().decode('utf-8'));c=d.get('config',d);rows=c.get('managedChats') or c.get('managed_chats') or [];out=[];for x in rows:; out.append({k:x.get(k) for k in ['id','name','url','repository','branch','gitHead','projectId','enabled','profileId']});print(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only minimal managed chat mapping for assignment routing"
+}
