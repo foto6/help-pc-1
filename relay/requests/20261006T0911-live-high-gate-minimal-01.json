@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0911-live-high-gate-minimal-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$out=@();\nforeach($f in @('E:\\WebAIBridge\\app\\worker.js','E:\\WebAIBridge\\app\\server.js','E:\\WebAIBridge\\app\\supervisor-watchdog.js')){\n  if(Test-Path $f){\n    $m=Select-String -Path $f -Pattern @('Managed agent High mode is not confirmed','managed_assignment_high_race','ensureHighMode','highModeStrategy','Высокий|High') -SimpleMatch -CaseSensitive:$false | Select-Object LineNumber,Line;\n    $out += [pscustomobject]@{path=$f;exists=$true;matches=@($m)}\n  } else {\n    $out += [pscustomobject]@{path=$f;exists=$false;matches=@()}\n  }\n}\n$out | ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Minimal read-only deployed Bridge High-mode code check"
+}
