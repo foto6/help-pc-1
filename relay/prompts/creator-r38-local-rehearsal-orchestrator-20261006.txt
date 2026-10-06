@@ -56,6 +56,14 @@ Required:
 17. No live publish, no credentials, no browser/provider mutation, no merge.
 
 Important current candidates for schema/tests only, NOT automatically accepted authority:
+Growth R37 exact candidate evidence available for future QA-approved bundle:
+- SHA 14409d572c494ec8b6f471ea915a27afae1b5521
+- CI 37409772193 SUCCESS
+- contract growth.local_pc_selection_adapter.r37.v1
+- artifact 11388657274 / growth-r37-local-pc-selection-adapter
+- digest sha256:d516d5ac448365d6101183f11ef4dedb47309fed44efcb902c452553f7b7f652
+This is candidate producer evidence only; R38 must still require the independent R8 bundle before accepting it as current integration authority.
+
 - Media R26: pending.
 - Growth R37 candidate: 14409d572c494ec8b6f471ea915a27afae1b5521, CI 37409772193 SUCCESS.
 - Bridge R42 current source candidate is moving; do not freeze it until Integration QA supplies an accepted exact tuple.
