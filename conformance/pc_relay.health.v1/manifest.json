@@ -11,7 +11,7 @@
     },
     "relay": {
       "path": "tools/github_relay.py",
-      "git_blob_sha1": "b87ef62c6e55eb071e6180780f56343deacd4cb0"
+      "git_blob_sha1": "91d0997ce4b253ddb9e62a7513766e20a4aae446"
     },
     "launcher": {
       "path": "tools/start_pc_control_relay.ps1",

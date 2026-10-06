@@ -838,7 +838,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="GitHub-backed relay for PC Executor")
     parser.add_argument("--repo", default=".", help="dedicated checkout path")
     parser.add_argument("--branch", default="agent/pc-github-relay")
-    parser.add_argument("--poll-seconds", type=float, default=3.0)
+    parser.add_argument("--poll-seconds", type=float, default=1.0)
     parser.add_argument("--live", action="store_true", help="allow Executor side effects; default is dry-run")
     parser.add_argument(
         "--allow-action",
