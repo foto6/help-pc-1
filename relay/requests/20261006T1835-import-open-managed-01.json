@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1835-import-open-managed-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request;u='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/import-open';req=urllib.request.Request(u,data=b'{}',headers={'Content-Type':'application/json'},method='POST');d=json.loads(urllib.request.urlopen(req,timeout=45).read().decode('utf-8'));o={'importedCount':d.get('importedCount'),'registeredCount':(d.get('discovery') or {}).get('registeredCount'),'discoveredCount':(d.get('discovery') or {}).get('discoveredCount'),'unregisteredCount':(d.get('discovery') or {}).get('unregisteredCount')};print(json.dumps(o,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 60000,
+  "note": "Register already-open ChatGPT tabs as managed chats; no message send/provider deletion"
+}
