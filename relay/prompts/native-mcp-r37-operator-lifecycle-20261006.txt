@@ -1,0 +1,30 @@
+EXECUTE NOW — NATIVE MCP R37 OPERATOR LIFECYCLE / DIRECT-HOST REHEARSAL. Do not stop at a plan.
+
+Repo: foto6/help-pc-2
+Writable branch ONLY: agent/native-mcp-r37-operator-lifecycle-20261006
+Exact starting HEAD: 13b32fef54cc65503938d5f890c52ac6fcd6ea43
+Parent: native-mcp-r36-public-host-gate-20261003.
+
+Goal: keep PC Control/MCP progressing toward a clean personal-production operator experience while video stack is being finished.
+
+Required:
+1. Define native_mcp.operator_lifecycle.r37.v1.
+2. One command/status must report:
+   - native MCP host;
+   - control service;
+   - executor;
+   - GitHub relay fallback;
+   - direct lane availability;
+   - reconciliation requirement;
+   - current authority SHA/version.
+3. Add explicit operator states RUNNING / PAUSED / DRAINING / RECONCILIATION_REQUIRED.
+4. PAUSED must prevent new side-effect dispatch while preserving read-only health/status.
+5. Resume must be explicit/idempotent and must not replay unknown side effects.
+6. Reboot persistence and cold-start test.
+7. Direct-host rehearsal: prove a read-only request and one harmless reversible local test operation through native direct lane, with relay fallback disabled for that rehearsal. If public/direct host is unavailable, fail closed with exact blocker — do not fake it.
+8. Add lifecycle commands/scripts suitable for later private plugin use.
+9. Keep existing relay operational; do NOT cut over live PC Control in this milestone.
+10. >=30 lifecycle/reboot/reconciliation tests + CI artifact.
+11. Completion exact SHA/run/artifact and cutover-readiness report.
+
+No credential handling, no protected-path access, no merge.
