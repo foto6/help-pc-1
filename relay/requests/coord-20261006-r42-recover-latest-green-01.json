@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261006-r42-recover-latest-green-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$target='7351d8478600ceb1db50ea136efccb1c10a943c7';\n$branch='agent/bridge-r42-live-control-plane-cutover-20261006';\n& git.exe -C $repo fetch origin $branch;\nif($LASTEXITCODE -ne 0){ throw \"git fetch failed: $LASTEXITCODE\" }\n$dirty=@(& git.exe -C $repo status --porcelain);\nif($LASTEXITCODE -ne 0){ throw \"git status failed: $LASTEXITCODE\" }\nif($dirty.Count -gt 0){ throw \"R42 recovery refuses dirty worktree\" }\n$current=(& git.exe -C $repo rev-parse HEAD).Trim();\n$resolved=(& git.exe -C $repo rev-parse $target).Trim();\nif($resolved -ne $target){ throw \"target SHA mismatch: $resolved\" }\n& git.exe -C $repo switch --detach $target;\nif($LASTEXITCODE -ne 0){ throw \"git switch failed: $LASTEXITCODE\" }\n& powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $repo 'app\\start.ps1') | Out-Null;\nif($LASTEXITCODE -ne 0){ throw \"start.ps1 failed: $LASTEXITCODE\" }\n$deadline=(Get-Date).AddSeconds(35);\n$status=$null;\ndo{\n  try{$status=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/status' -TimeoutSec 2}catch{}\n  if($status){break}\n  Start-Sleep -Milliseconds 500\n}while((Get-Date)-lt $deadline);\nif(-not $status){ throw \"Bridge did not become responsive after latest-green recovery\" }\n$lifecycle=$null;$control=$null;$r42=$null;\ntry{$lifecycle=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/operator-lifecycle' -TimeoutSec 4}catch{}\ntry{$control=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/projects/control-plane?inspect=0' -TimeoutSec 5}catch{}\ntry{$r42=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 5}catch{}\n$post=(& git.exe -C $repo rev-parse HEAD).Trim();\n[pscustomobject]@{\n  object='bridge.r42_partial_cutover_recovery.v1';\n  preRecoveryHead=$current;\n  targetSha=$target;\n  postRecoveryHead=$post;\n  bridgeResponsive=[bool]$status;\n  statusObject=$status.object;\n  lifecycle=$lifecycle;\n  controlPlaneObject=$control.object;\n  cutoverObject=$r42.object;\n  cutoverState=$r42.cutoverState;\n  providerMutationPerformed=$false;\n  chatDeletionPerformed=$false\n}|ConvertTo-Json -Depth 20 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 60000,
+  "note": "NEW recovery operation after apply-03 partially cut over to e803 and start.ps1 failed. Switch exact clean worktree to latest-green 7351d847, start Bridge under existing R42 hold, verify status/lifecycle/control-plane. No chat/provider mutation."
+}
