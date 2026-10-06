@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1215-r42-file-state-only-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$data='E:\\WebAIBridge\\app\\data';\n$names=@(\n  'projects-live-control-plane-cutover-r42.json',\n  'projects-live-control-plane-cutover-r42-reconcile.json',\n  'projects-live-control-plane-r41.json',\n  'projects-operation-ledger-r41.json',\n  'supervisor-watchdog.json',\n  'state.json'\n);\n$out=@();\nforeach($n in $names){\n  $p=Join-Path $data $n;\n  if(Test-Path -LiteralPath $p){\n    $txt=[IO.File]::ReadAllText($p);\n    $out += [pscustomobject]@{\n      name=$n;exists=$true;lastWrite=(Get-Item $p).LastWriteTimeUtc.ToString('o');\n      sha256=(Get-FileHash -LiteralPath $p -Algorithm SHA256).Hash.ToLowerInvariant();\n      text=$txt.Substring(0,[Math]::Min(12000,$txt.Length))\n    }\n  } else {$out += [pscustomobject]@{name=$n;exists=$false}}\n}\n$backs=@();\n$root=Join-Path $data 'backups';\nif(Test-Path $root){\n  $backs=@(Get-ChildItem $root -Directory -Filter 'r42-cutover-*' |\n    Sort-Object LastWriteTimeUtc -Descending |\n    Select-Object -First 5 Name,FullName,@{n='LastWriteUtc';e={$_.LastWriteTimeUtc.ToString('o')}})\n}\n[pscustomobject]@{files=$out;backups=$backs}|ConvertTo-Json -Depth 7 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only R42 durable files only; no git, no HTTP, no mutation"
+}
