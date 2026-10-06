@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0924-managed-registry-read-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$c='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json';\n$s='E:\\WebAIBridge\\app\\data\\managed-chat-status.json';\n$j=Get-Content $c -Raw | ConvertFrom-Json;\n$st=$null;if(Test-Path $s){$st=Get-Content $s -Raw | ConvertFrom-Json}\n$rows=@();\nforeach($m in @($j.managedChats)){\n  $status=$null;\n  if($st -and $st.chats){$status=$st.chats.PSObject.Properties | Where-Object {$_.Name -eq $m.id} | Select-Object -ExpandProperty Value -First 1}\n  $rows += [pscustomobject]@{\n    id=$m.id;name=$m.name;role=$m.role;url=$m.url;repository=$m.repository;branch=$m.branch;gitHead=$m.gitHead;\n    enabled=$m.enabled;projectId=$m.projectId;\n    status=$status.status;lastSeenAt=$status.lastSeenAt;generating=$status.generating;highMode=$status.highMode;\n    contextLimit=$status.contextLimit;openTabs=$status.openTabs\n  }\n}\n[pscustomobject]@{rows=$rows;mode=$j.mode;highModeStrategy=$j.highModeStrategy} | ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 6000,
+  "note": "Read-only managed agent registry and live-status cache"
+}
