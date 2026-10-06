@@ -1,0 +1,14 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1953-focus-creator-tab-01",
+  "action": "uia.focus",
+  "params": {
+    "query": {
+      "name": "Implement R37 Driver",
+      "control_type": "TabItemControl",
+      "window_title": "Implement Local Windows Render Gate - Google Chrome"
+    }
+  },
+  "timeout_ms": 10000,
+  "note": "Focus exact Creator ChatGPT tab via UIA; no typing/send"
+}
