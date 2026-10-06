@@ -1,0 +1,47 @@
+EXECUTE NOW — MEDIA R25 FINAL LOCAL-PC RENDER GATE / WINDOWS E2E HARNESS. Do not stop at a plan.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r25-multicandidate-round-engine-20261004
+Current exact HEAD: b11a93664f9b64bf6da626119758c841a0a75c1e
+
+Known evidence:
+- candidate-3 is green.
+- candidate-4 heavy render has repeatedly been killed by GitHub-hosted runner shutdown/SIGTERM/exit143 after ~30–40s.
+- exact ffmpeg/ffprobe runtime manifest verification succeeds before execution.
+- the same shutdown occurs in the dedicated candidate-4 benchmark.
+- this is no longer a useful GitHub-hosted proof path.
+
+User goal: finish the editing stack, then run the full real montage loop on the user's Windows PC.
+
+Required milestone:
+1. Stop treating long GitHub-hosted candidate-4 rendering as the release authority.
+2. Preserve all deterministic R25 contracts and short CI/unit/conformance checks.
+3. Define media.r25_local_pc_render_gate.v1 and a one-command Windows local E2E entry point.
+4. Local preflight must record:
+   - exact repo HEAD;
+   - source video SHA-256;
+   - edit brief/graph digest;
+   - ffmpeg + ffprobe executable absolute paths, versions and file hashes;
+   - OS/CPU/free-disk facts;
+   - output root;
+   - resume/checkpoint state.
+5. Local command must execute the REAL R25 path:
+   source -> 4 distinct candidate MP4s -> blinded bracket packages -> targeted re-edit -> final candidate evidence -> post-render verifier.
+6. Reuse durable subphase checkpoints. Restart after interruption must not rerender verified completed work.
+7. Produce a machine-readable local evidence bundle containing exact hashes, ffprobe facts, operation graph, segment/checkpoint lineage, candidate mappings, targeted-reedit evidence, and final verification result.
+8. Add an independent local verifier command that consumes only the bundle + files and returns PASS/FAIL.
+9. GitHub CI should validate the contract/CLI/checkpoint logic using bounded short deterministic fixtures. It must NOT require a long real encode that GitHub-hosted runners repeatedly terminate.
+10. The local evidence bundle must clearly distinguish:
+    - CI_CONTRACT_GREEN
+    - LOCAL_PC_REAL_RENDER_NOT_RUN
+    - LOCAL_PC_REAL_RENDER_PASS
+11. Do NOT claim final Media R25 acceptance until the real local Windows command is actually run and independently verified on the user's PC.
+12. No model/browser/provider/social calls. No publish. No merge.
+13. Freeze exact code head once CI for the local-PC gate is green.
+
+Completion evidence required now:
+- substantive code/tests/docs/conformance;
+- exact final HEAD;
+- exact-head CI SUCCESS for bounded contract tests;
+- exact Windows command to run later on user's PC;
+- readiness artifact with state LOCAL_PC_REAL_RENDER_NOT_RUN until we execute it physically.
