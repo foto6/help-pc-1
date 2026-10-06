@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1840-queue-qa-r8-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request;u=\"http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ac45fb0-9074-83eb-99eb-397265b228e7/assignments\";p=\"{\\\"text\\\":\\\"EXECUTE NOW — Integration R8 independent QA. Work ONLY on agent/integration-r8-final-local-stack-20261006 from exact HEAD 00cb4716bc838e84db32d9f13c297fbd5f6096a3. Read TASKS/INTEGRATION_R8_FINAL_LOCAL_STACK.md and issue foto6/boss#7. Do not modify product branches. Verify exact successor SHA/CI/artifacts, run cross-repo adversarial gate, and emit LOCAL_PC_REHEARSAL_GO or exact blockers. No merge, no live publish.\\\",\\\"repository\\\":\\\"foto6/boss\\\",\\\"branch\\\":\\\"agent/integration-r8-final-local-stack-20261006\\\",\\\"expectedHead\\\":\\\"00cb4716bc838e84db32d9f13c297fbd5f6096a3\\\",\\\"idempotencyKey\\\":\\\"coord-20261006-qa-r8-assignment-01\\\",\\\"supervisorVerificationRequired\\\":true,\\\"evidenceTimeoutMinutes\\\":90}\".encode('utf-8');q=urllib.request.Request(u,data=p,headers={'Content-Type':'application/json'},method='POST');d=json.loads(urllib.request.urlopen(q,timeout=20).read().decode('utf-8'));print(json.dumps({'id':d.get('id'),'state':d.get('state'),'targetChatId':d.get('targetChatId'),'targetChatUrl':d.get('targetChatUrl'),'repository':d.get('repository'),'branch':d.get('branch'),'expectedHead':d.get('expectedHead')},ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 30000,
+  "note": "Queue idempotent managed assignment coord-20261006-qa-r8-assignment-01"
+}
