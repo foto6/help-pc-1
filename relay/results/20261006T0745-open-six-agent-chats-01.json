@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$targets=@(\n  '6abda62d-8198-83ed-aaa2-40b16f96a8a0',\n  '6abda64b-aac4-83eb-adee-dc7143ca5d2b',\n  '6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0',\n  '6abda61c-a440-83ed-9482-1d0fc7923e03',\n  '6abe03fa-9728-83eb-90d2-5ee81bbac12c',\n  '6ab8bed2-8d0c-83eb-b793-8e504335a57d'\n);\nfunction Get-ConvId([string]$url){\n  try {\n    $u=[uri]$url; $p=$u.AbsolutePath.Trim('/').Split('/');\n    if($p.Length -eq 2 -and $p[0] -eq 'c'){ return $p[1] }\n    if($p.Length -eq 4 -and $p[0] -eq 'g' -and $p[2] -eq 'c'){ return $p[3] }\n  } catch {}\n  return ''\n}\n$list=@(Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3);\n$out=@();\nforeach($cid in $targets){\n  $m=@($list | Where-Object { $_.type -eq 'page' -and (Get-ConvId $_.url) -eq $cid });\n  if($m.Count -gt 1){ throw \"duplicate exact conversation tabs: $cid\" }\n  if($m.Count -eq 1){ $out += [pscustomobject]@{conversationId=$cid;state='already_open';id=$m[0].id;url=$m[0].url}; continue }\n  $url='https://chatgpt.com/c/'+$cid;\n  $created=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17410/json/new?'+[uri]::EscapeDataString($url)) -TimeoutSec 3;\n  $out += [pscustomobject]@{conversationId=$cid;state='opened';id=$created.id;url=$created.url};\n}\n$out | ConvertTo-Json -Depth 3 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"conversationId\":\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"state\":\"opened\",\"id\":\"909193792FAF7094DE1044EE0479559A\",\"url\":\"https://chatgpt.com/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\"},{\"conversationId\":\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"state\":\"opened\",\"id\":\"1909B6A186BD2A820F9DBB7E20866AD8\",\"url\":\"https://chatgpt.com/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\"},{\"conversationId\":\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"state\":\"opened\",\"id\":\"2FBD66B0ADB288F6A1DA9338379B05A3\",\"url\":\"https://chatgpt.com/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\"},{\"conversationId\":\"6abda61c-a440-83ed-9482-1d0fc7923e03\",\"state\":\"opened\",\"id\":\"92C3BE935CB12C758B0310B904E359F4\",\"url\":\"https://chatgpt.com/c/6abda61c-a440-83ed-9482-1d0fc7923e03\"},{\"conversationId\":\"6abe03fa-9728-83eb-90d2-5ee81bbac12c\",\"state\":\"opened\",\"id\":\"A2C7D34C9E288B07AD8D68226CE99C5B\",\"url\":\"https://chatgpt.com/c/6abe03fa-9728-83eb-90d2-5ee81bbac12c\"},{\"conversationId\":\"6ab8bed2-8d0c-83eb-b793-8e504335a57d\",\"state\":\"opened\",\"id\":\"B6FA608B5D9C4C7EBDA0E789737D1606\",\"url\":\"https://chatgpt.com/c/6ab8bed2-8d0c-83eb-b793-8e504335a57d\"}]\r\n",
+      "stdout_bytes": 1095,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T00:46:01.869Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T00:46:01.631Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0745-open-six-agent-chats-01"
+    },
+    "request_id": "20261006T0745-open-six-agent-chats-01",
+    "started_at": "2026-10-06T00:46:00.840Z",
+    "status": "completed"
+  },
+  "id": "20261006T0745-open-six-agent-chats-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
