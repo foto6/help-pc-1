@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1129-r42-apply02-preflight-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$healthPath='E:\\pc-github-relay\\.pc-relay\\health.json';\n$health=$null;if(Test-Path $healthPath){$health=Get-Content $healthPath -Raw | ConvertFrom-Json}\n$cid='6ac45836-87a0-83ed-bea4-0ad0f99c8982';\nfunction Conv([string]$u){try{$x=[uri]$u;$p=$x.AbsolutePath.Trim('/').Split('/');if($p.Length-eq2-and$p[0]-eq'c'){return $p[1]};if($p.Length-eq4-and$p[0]-eq'g'-and$p[2]-eq'c'){return $p[3]}}catch{};return ''}\n$tabs=@(Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3);\n$m=@($tabs|Where-Object{$_.type-eq'page'-and(Conv $_.url)-eq$cid});\n$out=[ordered]@{\n  relay=[ordered]@{phase=$health.phase;pid=$health.pid;reconciliation_required=$health.reconciliation_required;last_error=$health.last_error}\n  exactChatCount=$m.Count\n  chats=@()\n};\nforeach($tab in $m){\n  $ws=[System.Net.WebSockets.ClientWebSocket]::new();\n  $uri=[uri]$tab.webSocketDebuggerUrl;\n  $ct=[Threading.CancellationToken]::None;\n  $ws.ConnectAsync($uri,$ct).Wait();\n  $idn=1;\n  $expr=\"JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect(),s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!=='none'&&s.visibility!=='hidden'};const bs=[...document.querySelectorAll('button,[role=button]')].filter(vis);const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=true]')].find(vis)||null;const txt=document.body?.innerText||'';return {title:document.title,href:location.href,high:bs.some(b=>/^(Высокий|High)$/iu.test((b.innerText||b.textContent||'').trim())),medium:bs.some(b=>/^(Средний|Medium)$/iu.test((b.innerText||b.textContent||'').trim())),generating:bs.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||''))),draftLength:c?((('value'in c?c.value:(c.innerText||c.textContent||''))||'').trim().length):0,exhausted:/maximum length|max(?:imum)? conversation length|context window is full|достиг.{0,80}(?:максимальн|лимит)|начав новый чат|начните новый чат/iu.test(txt)}})())\";\n  $msg=@{id=$idn;method='Runtime.evaluate';params=@{expression=$expr;returnByValue=$true}}|ConvertTo-Json -Depth 6 -Compress;\n  $bytes=[Text.Encoding]::UTF8.GetBytes($msg);$seg=[ArraySegment[byte]]::new($bytes);\n  $ws.SendAsync($seg,[System.Net.WebSockets.WebSocketMessageType]::Text,$true,$ct).Wait();\n  $buf=New-Object byte[] 65536;$res=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$ct).Result;\n  $txtResp=[Text.Encoding]::UTF8.GetString($buf,0,$res.Count)|ConvertFrom-Json;\n  $state=$txtResp.result.result.value|ConvertFrom-Json;\n  $out.chats += [ordered]@{targetId=$tab.id;state=$state};\n  $ws.Dispose();\n}\n$out|ConvertTo-Json -Depth 8 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only R42 apply-02 preflight: relay reconciliation + exact Bridge chat state"
+}
