@@ -1,0 +1,226 @@
+{
+  "action": "capabilities.get",
+  "executor_result": {
+    "action": "capabilities.get",
+    "data": {
+      "capabilities": {
+        "actions": {
+          "action.preflight": {
+            "adapter": null,
+            "safety_gate": null,
+            "side_effecting": false,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "capabilities.get": {
+            "adapter": null,
+            "safety_gate": null,
+            "side_effecting": false,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "clipboard.get": {
+            "adapter": "clipboard",
+            "safety_gate": null,
+            "side_effecting": false,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "clipboard.set": {
+            "adapter": "clipboard",
+            "safety_gate": null,
+            "side_effecting": true,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "keyboard.press": {
+            "adapter": "input",
+            "safety_gate": null,
+            "side_effecting": true,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "keyboard.type_text": {
+            "adapter": "input",
+            "safety_gate": null,
+            "side_effecting": true,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "mouse.click": {
+            "adapter": "input",
+            "safety_gate": "coordinate_fallback",
+            "side_effecting": true,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "outcome.lookup": {
+            "adapter": null,
+            "safety_gate": null,
+            "side_effecting": false,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "screenshot.capture": {
+            "adapter": "screenshot",
+            "safety_gate": null,
+            "side_effecting": false,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "shell.run": {
+            "adapter": "shell",
+            "safety_gate": null,
+            "side_effecting": true,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "uia.focus": {
+            "adapter": "uia",
+            "safety_gate": null,
+            "side_effecting": true,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "uia.inspect": {
+            "adapter": "uia",
+            "safety_gate": null,
+            "side_effecting": false,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "uia.invoke": {
+            "adapter": "uia",
+            "safety_gate": null,
+            "side_effecting": true,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "uia.set_value": {
+            "adapter": "uia",
+            "safety_gate": null,
+            "side_effecting": true,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "uia.snapshot": {
+            "adapter": "uia",
+            "safety_gate": null,
+            "side_effecting": false,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "vision.target.invoke": {
+            "adapter": "uia",
+            "safety_gate": null,
+            "side_effecting": true,
+            "supported": true,
+            "unsupported_reason": null
+          },
+          "windows.list": {
+            "adapter": "windows",
+            "safety_gate": null,
+            "side_effecting": false,
+            "supported": true,
+            "unsupported_reason": null
+          }
+        },
+        "adapters": {
+          "clipboard": {
+            "available": true,
+            "provider": "native",
+            "unsupported_reason": null
+          },
+          "input": {
+            "available": true,
+            "provider": "native",
+            "unsupported_reason": null
+          },
+          "screenshot": {
+            "available": true,
+            "provider": "native",
+            "unsupported_reason": null
+          },
+          "shell": {
+            "available": true,
+            "provider": "native",
+            "unsupported_reason": null
+          },
+          "uia": {
+            "available": true,
+            "provider": "native",
+            "unsupported_reason": null
+          },
+          "windows": {
+            "available": true,
+            "provider": "native",
+            "unsupported_reason": null
+          }
+        },
+        "attestation": {
+          "algorithm": "sha256",
+          "digest": "0bbd01b7c7700e466d4121806780b1503283b14a24a0014bdf801735628d53af"
+        },
+        "contract_version": "pc_executor.capabilities.v1",
+        "runtime": {
+          "executor_version": "0.1.0",
+          "os_family": "nt",
+          "platform_machine": "AMD64",
+          "platform_system": "Windows",
+          "python_implementation": "cpython",
+          "python_major_minor": "3.13"
+        },
+        "safety": {
+          "captcha_entry_allowed": false,
+          "coordinate_fallback_enabled": false,
+          "credential_entry_allowed": false,
+          "dry_run_default": false,
+          "operation_timeout_ms": 120000,
+          "outcome_journal_configured": true,
+          "protected_windows_roots": [
+            "E:\\manhwa"
+          ],
+          "shell_allowlist": [
+            "cmd",
+            "cmd.exe",
+            "git",
+            "git.exe",
+            "hostname",
+            "hostname.exe",
+            "ipconfig",
+            "ipconfig.exe",
+            "powershell",
+            "powershell.exe",
+            "pwsh",
+            "pwsh.exe",
+            "py",
+            "py.exe",
+            "python",
+            "python.exe",
+            "tasklist",
+            "tasklist.exe",
+            "where",
+            "where.exe",
+            "whoami",
+            "whoami.exe"
+          ],
+          "shell_output_limit_bytes": 65536
+        }
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T00:00:36.860Z",
+    "ok": true,
+    "request_id": "20261006T0716-relay-liveness-after-long-task-01",
+    "started_at": "2026-10-06T00:00:36.731Z",
+    "status": "completed"
+  },
+  "id": "20261006T0716-relay-liveness-after-long-task-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
