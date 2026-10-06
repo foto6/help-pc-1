@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1153-bridge-root-minimal-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n[pscustomobject]@{\n rootExists=(Test-Path 'E:\\WebAIBridge');\n rootGit=(Test-Path 'E:\\WebAIBridge\\.git');\n appExists=(Test-Path 'E:\\WebAIBridge\\app');\n appGit=(Test-Path 'E:\\WebAIBridge\\app\\.git');\n rootItems=@(Get-ChildItem -LiteralPath 'E:\\WebAIBridge' -Force | Select-Object -First 40 Name,Mode);\n appItems=@(Get-ChildItem -LiteralPath 'E:\\WebAIBridge\\app' -Force | Select-Object -First 40 Name,Mode)\n}|ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Minimal read-only file structure check for live WebAIBridge install"
+}
