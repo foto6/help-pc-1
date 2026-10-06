@@ -1,0 +1,19 @@
+EXECUTE NOW — CREATOR R37 ZERO-PROGRESS CORRECTIVE. Previous LOCAL INTEGRATION DRIVER task was sent, but branch produced ZERO Git progress. Do not answer with a plan.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r37-local-integration-driver-20261006
+Exact current HEAD remains: 89e769e61cb5f5e2ee4ab5fc2197e4ba72ad5c22
+
+Implement creator.local_integration_driver.r37.v1 NOW:
+1. Add CLI + Windows wrapper.
+2. Verify exact authority tuples for Media/Growth/Bridge.
+3. Media must be REQUIRED and currently unaccepted; fail closed without an independently accepted Media tuple.
+4. Fixture closed loop: candidates -> review/decision -> targeted re-edit/winner -> Creator proof graph -> release escrow.
+5. Durable restart ledger and replay idempotency.
+6. No live publish; final fixture state LOCAL_REHEARSAL_COMPLETE / LIVE_AUTHORIZATION_FALSE.
+7. >=25 adversarial tests.
+8. Exact-head CI + deterministic R37 artifact.
+9. Do not claim actual local PC E2E before coordinator executes it.
+10. Commit substantive implementation/tests/docs and push. New SHA is mandatory evidence.
+
+No browser/provider mutation, no merge.
