@@ -1,0 +1,61 @@
+EXECUTE NOW — CREATOR R38 LOCAL-PC REHEARSAL ORCHESTRATOR / MEDIA-R26 + GROWTH-R37 AUTHORITY UPGRADE. Do not stop at a plan.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r38-local-rehearsal-orchestrator-20261006
+Exact starting HEAD: 1f7cb9ed8f1985cd4faca79ce55f1c5fda9e3a57
+Parent contract: creator.local_integration_driver.r37.v1
+Parent CI: 37398299900 SUCCESS.
+
+Goal:
+upgrade the existing R37 local integration driver so it can run the forthcoming accepted Media R26 local render pipeline and consume the Growth R37 offline selection envelope for the first real local-PC rehearsal. Until independent QA supplies exact accepted tuples, remain fail-closed.
+
+Required:
+1. Define creator.local_pc_rehearsal_orchestrator.r38.v1.
+2. Replace the old Media R25 authority expectation with the NEW contract:
+   media.local_render_runner.r26.v1.
+   Do NOT guess/pin future Media SHA/CI/artifact. Represent authority as UNRESOLVED until supplied.
+3. Add Growth consumer for:
+   growth.local_pc_selection_adapter.r37.v1.
+   Also UNRESOLVED until exact accepted Growth R37 tuple is supplied.
+4. Keep Bridge authority configurable so the coordinator can bind the accepted live control-plane authority (R42 once accepted) rather than the older frozen R38 tuple.
+5. One local command must orchestrate:
+   - preflight exact source/input hash;
+   - exact accepted Media R26 authority;
+   - exact accepted Growth R37 authority;
+   - accepted Bridge control-plane authority;
+   - invoke or consume Media local runner output;
+   - validate 4 candidate hashes + targeted re-edit + final manifest;
+   - pass Media evidence to Growth R37 offline selector;
+   - validate Growth advisory envelope;
+   - freeze selected candidate/re-edit/final lineage into Creator durable ledger;
+   - emit LOCAL_PC_REHEARSAL_COMPLETE only when all exact authorities/evidence are valid.
+6. No browser/model/provider/publish call inside the rehearsal orchestrator.
+7. Explicit wait states:
+   WAITING_MEDIA_R26_AUTHORITY
+   WAITING_GROWTH_R37_AUTHORITY
+   WAITING_BRIDGE_AUTHORITY
+   WAITING_LOCAL_MEDIA_EVIDENCE
+   RECONCILIATION_REQUIRED
+8. Preserve durable restart/idempotency semantics from R37:
+   same operation replay => no duplicate work;
+   changed source/brief/authority under same operation ID => conflict.
+9. Add failure cases:
+   wrong Media manifest digest;
+   missing candidate;
+   wrong targeted re-edit lineage;
+   Growth selects unknown candidate;
+   stale Growth policy;
+   final.mp4 hash differs from Media evidence;
+   Bridge authority drift;
+   interrupted local run;
+   same operation ID changed input.
+10. Add a dry-run/preflight command that prints exactly what is missing and the future approved local command shape.
+11. CI uses fixtures only; do not execute heavy real rendering in hosted CI.
+12. Exact-head CI + artifact required.
+13. No merge, no social publish, no provider/browser mutation.
+
+Completion:
+- substantive implementation/tests/docs/conformance/report;
+- exact final SHA + exact-head CI SUCCESS;
+- artifact id/name/digest;
+- readiness must remain WAITING_* until R26/R37/R42 accepted tuples are supplied.
