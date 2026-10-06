@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1931-bridge-server-stop-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$p=Get-CimInstance Win32_Process -Filter \"ProcessId=2968\"; if(-not $p){ throw 'server pid missing' }; if($p.CommandLine -notlike '*E:\\WebAIBridge\\app\\server.js*'){ throw 'pid no longer belongs to WebAIBridge server.js' }; Stop-Process -Id 2968 -Force; Write-Output 'SERVER_STOPPED_2968'"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 10000,
+  "note": "Scoped stop of verified WebAIBridge server.js PID 2968 only; workers/watchdog/Chrome untouched"
+}
