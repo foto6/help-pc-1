@@ -1,0 +1,23 @@
+EXECUTE NOW — GROWTH R37 LOCAL CLOSED-LOOP VERIFIER / FINAL DECISION EVIDENCE. Do not stop at a plan.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r37-local-fullstack-verifier-20261006
+Exact starting HEAD: a53f9deb180bb256d193f0422c6ffd7a5923d97a
+Parent CI: 37398558145 SUCCESS.
+
+Goal: verify and score the upcoming LOCAL Windows montage rehearsal without becoming a live publisher or silently accepting incomplete Media evidence.
+
+Required:
+1. Define growth.local_fullstack_verifier.r37.v1.
+2. Consume a sealed Media local evidence bundle only if all required candidate/final hashes and exact Media authority tuple are present.
+3. Bind exact Creator R38 authority when available; until then expose WAITING_CREATOR_AUTHORITY.
+4. Re-run deterministic review/consensus/targeted-reedit decision from sealed evidence; distinguish fixture, offline-model, and genuine-review evidence.
+5. Detect lineage mismatch, missing candidate, duplicate candidate bytes, stale review, wrong targeted re-edit, final.mp4 not matching selected lineage, altered timestamps/manifest, and source drift.
+6. Emit one machine-readable final decision:
+   READY_FOR_LOCAL_DEMO / NEEDS_REEDIT / HUMAN_REVIEW_REQUIRED / BLOCKED_INCOMPLETE_EVIDENCE.
+7. No publish recommendation may authorize provider mutation by itself.
+8. Add >=20 adversarial fixtures around local evidence tampering/replay/resume.
+9. CI focused + full and deterministic artifact/report.
+10. No provider/browser mutation, no credentials, no merge.
+
+Completion: exact final SHA + exact-head CI SUCCESS + artifact id/digest and a verifier command Creator R38 can call locally.
