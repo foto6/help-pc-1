@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$branch='agent/bridge-r42-live-control-plane-cutover-20261006';\n$sha='0cefcd33eb5b4f75ef52dbe443c2f7395e4ea966';\n$tmp=Join-Path $env:TEMP ('webai-r42-cutover-'+$sha+'.ps1');\nSet-Location $repo;\n& git fetch origin $branch;\nif($LASTEXITCODE -ne 0){throw 'git fetch failed'}\n$content=& git show ($sha+':app/r42-cutover.ps1');\nif($LASTEXITCODE -ne 0){throw 'git show cutover script failed'}\n$content | Set-Content -LiteralPath $tmp -Encoding UTF8;\n& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $tmp -TargetSha $sha -TargetBranch $branch -RepoPath $repo;\n$code=$LASTEXITCODE;\nif($code -ne 0){throw \"R42 cutover exited $code\"}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "From https://github.com/foto6/WebAIBridge\n * branch            agent/bridge-r42-live-control-plane-cutover-20261006 -> FETCH_HEAD\n * [new branch]      agent/bridge-r42-live-control-plane-cutover-20261006 -> origin/agent/bridge-r42-live-control-plane-cutover-20261006\nC:\\Users\\foto6\\AppData\\Local\\Temp\\webai-r42-cutover-0cefcd33eb5b4f75ef52dbe443c2f7395e4ea966.ps1 : The script failed du\r\ne to call depth overflow.\r\n    + CategoryInfo          : InvalidOperation: (0:Int32) [webai-r42-cutov...7395e4ea966.ps1], RuntimeException\r\n    + FullyQualifiedErrorId : CallDepthOverflow,webai-r42-cutover-0cefcd33eb5b4f75ef52dbe443c2f7395e4ea966.ps1\r\n \r\nR42 cutover exited 1\r\nAt line:14 char:17\r\n+ if($code -ne 0){throw \"R42 cutover exited $code\"}\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (R42 cutover exited 1:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : R42 cutover exited 1\r\n \r\n",
+      "stderr_bytes": 945,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T03:43:41.121Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T03:43:40.904Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261006-r42-live-cutover-apply-01"
+    },
+    "request_id": "coord-20261006-r42-live-cutover-apply-01",
+    "started_at": "2026-10-06T03:42:29.772Z",
+    "status": "completed"
+  },
+  "id": "coord-20261006-r42-live-cutover-apply-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
