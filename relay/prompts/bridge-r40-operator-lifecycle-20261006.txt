@@ -1,0 +1,28 @@
+EXECUTE NOW — BRIDGE R40 OPERATOR LIFECYCLE / PAUSE-RESUME / NO-AUTOSTART GATE.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r40-operator-lifecycle-20261006
+Exact starting HEAD: 82656ad0f49bcc3cb21f08cdae78fab2db2765b1
+Accepted parent: Bridge R39, CI 37246182912 SUCCESS, Ubuntu artifact 11319685397, Windows artifact 11319127311.
+
+Goal: make Bridge operable on the user's PC without surprise Chrome/browser resurrection, while preserving exact-ID safety.
+
+Required:
+1. Define bridge.operator_lifecycle.r40.v1.
+2. Explicit operator modes:
+   - RUNNING_MANAGED
+   - RUNNING_ATTACH
+   - PAUSED_BROWSER
+   - PAUSED_ALL
+3. PAUSED_BROWSER must keep Bridge/server state available if configured but MUST NOT auto-start Chrome/profile workers.
+4. PAUSED_ALL must make all managed workers/browser launchers quiescent and report exact reason/state.
+5. Resume is explicit and idempotent.
+6. Persist lifecycle state across reboot; restart must respect PAUSED_BROWSER/PAUSED_ALL.
+7. No title/last-open/foreground fallback; exact providerConversationId rules remain frozen.
+8. Add status API/UI showing per-profile launch mode, attachAutoStart, effective lifecycle state, and why Chrome will/will not start.
+9. Add one-click/one-command pause/resume scripts, but NO live cutover in this task.
+10. >=30 reboot/autostart/duplicate-tab/unknown-send adversarial tests.
+11. Windows + Ubuntu CI where relevant and R40 artifacts.
+12. Completion report exact SHA/runs/artifacts and manual cutover steps only.
+
+Do not restart/repoint the live Bridge during implementation. No provider mutation, no merge.
