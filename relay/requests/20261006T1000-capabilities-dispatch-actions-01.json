@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1000-capabilities-dispatch-actions-01",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 8000,
+  "note": "Read-only capability inventory for safe agent dispatch"
+}
