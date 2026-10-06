@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$data='E:\\WebAIBridge\\app\\data';\n$state=Join-Path $data 'projects-live-control-plane-cutover-r42.json';\n$stateText=if(Test-Path $state){[IO.File]::ReadAllText($state)}else{''};\n$root=Join-Path $data 'backups';\n$backs=@();\nif(Test-Path $root){\n  $backs=@(Get-ChildItem $root -Directory -Filter 'r42-cutover-*' |\n    Sort-Object LastWriteTimeUtc -Descending |\n    Select-Object -First 8 Name,FullName,@{n='LastWriteUtc';e={$_.LastWriteTimeUtc.ToString('o')}},@{n='Manifest';e={Join-Path $_.FullName 'rollback-manifest.json'}},@{n='ManifestExists';e={Test-Path (Join-Path $_.FullName 'rollback-manifest.json')}})\n}\n[pscustomobject]@{cutoverStateExists=(Test-Path $state);cutoverState=$stateText;backups=$backs}|ConvertTo-Json -Depth 6 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"cutoverStateExists\":true,\"cutoverState\":\"{\\r\\n    \\\"object\\\":  \\\"bridge.projects_live_control_plane_cutover.r42.v1\\\",\\r\\n    \\\"updatedAt\\\":  \\\"2026-10-06T04:34:54.8607726Z\\\",\\r\\n    \\\"status\\\":  \\\"CUTOVER_HOLD_PREPARED\\\",\\r\\n    \\\"holdActive\\\":  true,\\r\\n    \\\"preCutoverHead\\\":  \\\"cb852e013634287669f957253d13d8ef2b45cada\\\",\\r\\n    \\\"targetSha\\\":  \\\"e8033f2e42bd335c10a397eb3d2cb62c8bb837a9\\\",\\r\\n    \\\"originalAutonomy\\\":  {\\r\\n                             \\\"mode\\\":  \\\"full\\\",\\r\\n                             \\\"enabled\\\":  true,\\r\\n                             \\\"allowAutonomousSend\\\":  true,\\r\\n                             \\\"enforceHighMode\\\":  true,\\r\\n                             \\\"highModeStrategy\\\":  \\\"verify_only\\\",\\r\\n                             \\\"migrationEnabled\\\":  true,\\r\\n                             \\\"autoContinueEnabled\\\":  true,\\r\\n                             \\\"sendProtectedDraftEnabled\\\":  true,\\r\\n                             \\\"stopStaleGenerationEnabled\\\":  false,\\r\\n                             \\\"allowProfileRecovery\\\":  true,\\r\\n                             \\\"closeChatDuringProviderBackoff\\\":  true,\\r\\n                             \\\"openExistingChatIfMissing\\\":  true\\r\\n                         },\\r\\n    \\\"originalOperatorLifecycleMode\\\":  \\\"RUNNING_MANAGED\\\",\\r\\n    \\\"originalQueuePaused\\\":  false,\\r\\n    \\\"rollbackManifest\\\":  \\\"E:\\\\\\\\WebAIBridge\\\\\\\\app\\\\\\\\data\\\\\\\\backups\\\\\\\\r42-cutover-20261006T043453Z\\\\\\\\rollback-manifest.json\\\",\\r\\n    \\\"rollbackCommand\\\":  \\\"powershell.exe -NoProfile -ExecutionPolicy Bypass -File \\\\\\\"E:\\\\\\\\WebAIBridge\\\\\\\\app\\\\\\\\r42-rollback.ps1\\\\\\\" -Manifest \\\\\\\"E:\\\\\\\\WebAIBridge\\\\\\\\app\\\\\\\\data\\\\\\\\backups\\\\\\\\r42-cutover-20261006T043453Z\\\\\\\\rollback-manifest.json\\\\\\\"\\\",\\r\\n    \\\"providerChatDeletionAutomatic\\\":  false,\\r\\n    \\\"events\\\":  [\\r\\n                   {\\r\\n                       \\\"type\\\":  \\\"cutover_hold_prepared\\\",\\r\\n                       \\\"at\\\":  \\\"2026-10-06T04:34:54.8607726Z\\\",\\r\\n                       \\\"preCutoverHead\\\":  \\\"cb852e013634287669f957253d13d8ef2b45cada\\\"\\r\\n                   }\\r\\n               ]\\r\\n}\\r\\n\",\"backups\":[{\"Name\":\"r42-cutover-20261006T043453Z\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261006T043453Z\",\"LastWriteUtc\":\"2026-10-06T04:34:54.4323518Z\",\"Manifest\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261006T043453Z\\\\rollback-manifest.json\",\"ManifestExists\":true},{\"Name\":\"r42-cutover-20261006T034236Z\",\"FullName\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261006T034236Z\",\"LastWriteUtc\":\"2026-10-06T03:42:36.1029010Z\",\"Manifest\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261006T034236Z\\\\rollback-manifest.json\",\"ManifestExists\":false}]}\r\n",
+      "stdout_bytes": 2711,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:36:05.130Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:36:05.016Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1249-r42-partial-cutover-reconcile-01"
+    },
+    "request_id": "20261006T1249-r42-partial-cutover-reconcile-01",
+    "started_at": "2026-10-06T04:36:04.454Z",
+    "status": "completed"
+  },
+  "id": "20261006T1249-r42-partial-cutover-reconcile-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
