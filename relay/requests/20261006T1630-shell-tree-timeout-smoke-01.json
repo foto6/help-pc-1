@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1630-shell-tree-timeout-smoke-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "& node -e \"setTimeout(()=>{},30000)\""
+    ],
+    "cwd": "E:\\pc-github-relay"
+  },
+  "timeout_ms": 1500,
+  "note": "Regression smoke: child Node must be terminated with parent tree on shell timeout; no external side effect"
+}
