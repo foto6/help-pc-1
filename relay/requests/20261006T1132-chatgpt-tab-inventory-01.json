@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1132-chatgpt-tab-inventory-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$tabs=@(Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3 | Where-Object {$_.type -eq 'page' -and $_.url -match 'chatgpt.com'});\n$tabs | Select-Object id,title,url,webSocketDebuggerUrl | ConvertTo-Json -Depth 3 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only ChatGPT tab inventory after exact Bridge open redirected"
+}
