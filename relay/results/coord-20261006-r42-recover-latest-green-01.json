@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$target='7351d8478600ceb1db50ea136efccb1c10a943c7';\n$branch='agent/bridge-r42-live-control-plane-cutover-20261006';\n& git.exe -C $repo fetch origin $branch;\nif($LASTEXITCODE -ne 0){ throw \"git fetch failed: $LASTEXITCODE\" }\n$dirty=@(& git.exe -C $repo status --porcelain);\nif($LASTEXITCODE -ne 0){ throw \"git status failed: $LASTEXITCODE\" }\nif($dirty.Count -gt 0){ throw \"R42 recovery refuses dirty worktree\" }\n$current=(& git.exe -C $repo rev-parse HEAD).Trim();\n$resolved=(& git.exe -C $repo rev-parse $target).Trim();\nif($resolved -ne $target){ throw \"target SHA mismatch: $resolved\" }\n& git.exe -C $repo switch --detach $target;\nif($LASTEXITCODE -ne 0){ throw \"git switch failed: $LASTEXITCODE\" }\n& powershell.exe -NoProfile -ExecutionPolicy Bypass -File (Join-Path $repo 'app\\start.ps1') | Out-Null;\nif($LASTEXITCODE -ne 0){ throw \"start.ps1 failed: $LASTEXITCODE\" }\n$deadline=(Get-Date).AddSeconds(35);\n$status=$null;\ndo{\n  try{$status=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/status' -TimeoutSec 2}catch{}\n  if($status){break}\n  Start-Sleep -Milliseconds 500\n}while((Get-Date)-lt $deadline);\nif(-not $status){ throw \"Bridge did not become responsive after latest-green recovery\" }\n$lifecycle=$null;$control=$null;$r42=$null;\ntry{$lifecycle=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/operator-lifecycle' -TimeoutSec 4}catch{}\ntry{$control=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/projects/control-plane?inspect=0' -TimeoutSec 5}catch{}\ntry{$r42=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 5}catch{}\n$post=(& git.exe -C $repo rev-parse HEAD).Trim();\n[pscustomobject]@{\n  object='bridge.r42_partial_cutover_recovery.v1';\n  preRecoveryHead=$current;\n  targetSha=$target;\n  postRecoveryHead=$post;\n  bridgeResponsive=[bool]$status;\n  statusObject=$status.object;\n  lifecycle=$lifecycle;\n  controlPlaneObject=$control.object;\n  cutoverObject=$r42.object;\n  cutoverState=$r42.cutoverState;\n  providerMutationPerformed=$false;\n  chatDeletionPerformed=$false\n}|ConvertTo-Json -Depth 20 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "From https://github.com/foto6/WebAIBridge\n * branch            agent/bridge-r42-live-control-plane-cutover-20261006 -> FETCH_HEAD\n   e8033f2..4e880a9  agent/bridge-r42-live-control-plane-cutover-20261006 -> origin/agent/bridge-r42-live-control-plane-cutover-20261006\nPrevious HEAD position was cb852e0 Regress head-of-line global empty project quota and preserve explicit Project resource policy\nHEAD is now at 7351d84 R42 fix PowerShell 5.1 lifecycle interpolation\n",
+      "stderr_bytes": 466,
+      "stderr_truncated": false,
+      "stdout": "{\"object\":\"bridge.r42_partial_cutover_recovery.v1\",\"preRecoveryHead\":\"cb852e013634287669f957253d13d8ef2b45cada\",\"targetSha\":\"7351d8478600ceb1db50ea136efccb1c10a943c7\",\"postRecoveryHead\":\"7351d8478600ceb1db50ea136efccb1c10a943c7\",\"bridgeResponsive\":true,\"statusObject\":null,\"lifecycle\":null,\"controlPlaneObject\":null,\"cutoverObject\":null,\"cutoverState\":null,\"providerMutationPerformed\":false,\"chatDeletionPerformed\":false}\r\n",
+      "stdout_bytes": 423,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:57:20.950Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:57:20.716Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261006-r42-recover-latest-green-01"
+    },
+    "request_id": "coord-20261006-r42-recover-latest-green-01",
+    "started_at": "2026-10-06T04:57:11.646Z",
+    "status": "completed"
+  },
+  "id": "coord-20261006-r42-recover-latest-green-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
