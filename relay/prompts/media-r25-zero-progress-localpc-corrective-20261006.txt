@@ -1,0 +1,28 @@
+EXECUTE NOW — MEDIA R25 ZERO-PROGRESS CORRECTIVE. The previous FINAL LOCAL-PC GATE instruction produced ZERO product Git progress. Do not reply with a plan, diagnosis, acknowledgement, or another CI rerun.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r25-multicandidate-round-engine-20261004
+Current exact HEAD remains: b11a93664f9b64bf6da626119758c841a0a75c1e
+
+Known blocker is frozen:
+- GitHub-hosted runner kills candidate-4 heavy render with SIGTERM/exit143 after runtime verification.
+- candidate-3 is already green.
+- repeated hosted-runner optimization is no longer the milestone.
+
+EXECUTE the LOCAL-PC solution now:
+1. Add a concrete Windows/local rehearsal entrypoint committed to this repo.
+2. It must run the exact deterministic R25 pipeline:
+   source/runtime hash verify -> 4 candidates -> blinded packages -> targeted re-edit -> winner/final package -> post verifier.
+3. Add restart/idempotency checkpoint reuse.
+4. Add an independent verifier for the local evidence bundle.
+5. Add a bounded CI fixture that proves command wiring/contracts/verifier WITHOUT requiring the long full render.
+6. Add docs with ONE exact PowerShell/cmd command the coordinator can execute on the user's PC.
+7. Emit machine-readable readiness with exactly:
+   CI_PROVEN,
+   LOCAL_PC_READY,
+   LOCAL_PC_E2E_NOT_YET_RUN.
+8. Do not claim local E2E success before coordinator actually executes it.
+9. Commit substantive code/tests/docs and push immediately; then obtain exact-head CI.
+10. No browser/model/provider/publish, no merge.
+
+Completion requires a NEW SHA, substantive diff, exact-head CI, and exact local command. If a real code blocker exists, implement every non-blocked part first and report the precise remaining blocker with files/tests.
