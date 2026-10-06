@@ -1,0 +1,38 @@
+EXECUTE NOW — CREATOR R37 LOCAL-PC CLOSED-LOOP REHEARSAL COORDINATOR. Do not stop at a plan.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r37-local-pc-rehearsal-20261006
+Exact starting HEAD: 89e769e61cb5f5e2ee4ab5fc2197e4ba72ad5c22
+Accepted parent: creator.proof_carrying_release_rehearsal.r36.v1
+Parent CI: 37246601604 SUCCESS
+Parent artifact: 11319566378 / sha256:fa207b0e3df2fcbc020cbf7213d35a9c722e757d08dc2a49085b74273036ca2c
+
+Goal: prepare the one-command local closed-loop rehearsal that we will run on the user's PC after Media R25 local render authority is green.
+
+Important:
+- Media R25 is NOT accepted yet. Do not fabricate or pin an unaccepted Media authority.
+- Growth R36 candidate is green but remains subject to independent QA.
+- Bridge R39 is accepted.
+- No live publish in this milestone.
+
+Required:
+1. Define creator.local_pc_closed_loop.r37.v1.
+2. Build a durable local orchestration CLI/state machine for:
+   verified Media bundle -> blinded review package -> verified review/consensus evidence -> targeted re-edit if required -> next round -> winner -> R35/R36 release escrow handoff.
+3. Upstream authority inputs must be external evidence tuples, never branch-name assumptions.
+4. If Media exact local authority is unavailable, status must be WAITING_MEDIA_LOCAL_AUTHORITY, not fake success.
+5. If Growth/Bridge authority is not independently accepted, status must explicitly block at that dependency.
+6. Add one command that accepts an evidence workspace and reports:
+   exact current state, accepted authorities, missing authorities, next permitted action, final.mp4 identity if available, and live_publish_authorized=false.
+7. Restart/crash safe: local ledger before/after every side-effect boundary; exact replay idempotent.
+8. No blind replay of unknown browser/provider effects.
+9. Add deterministic fixture rehearsal proving the whole state machine without claiming real local Media execution.
+10. Prepare the adapter contract that will consume the real Media R25 local evidence bundle when produced.
+11. CI focused + full, deterministic artifact.
+12. No provider/browser/social mutation in CI. No live publish. No merge.
+
+Completion:
+- exact final SHA + exact-head CI SUCCESS;
+- artifact ID/name/digest;
+- one-command local coordinator documented;
+- disposition SOURCE_READY_WAITING_MEDIA_LOCAL_AUTHORITY unless real accepted upstream evidence exists.
