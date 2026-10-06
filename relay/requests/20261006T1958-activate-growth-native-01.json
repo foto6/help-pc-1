@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1958-activate-growth-native-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,time,json\ntargets=[('Growth','BE65410914FEC5633289721AF21CC403'),('Native','3F70475C0F610C0F4B27CE75A3B80B8F')]\nout=[]\nfor label,tid in targets:\n try:\n  s=urllib.request.urlopen('http://127.0.0.1:17410/json/activate/'+tid,timeout=5).read().decode('utf-8','replace')\n  out.append({'label':label,'ok':True,'result':s.strip()})\n except Exception as e:\n  out.append({'label':label,'ok':False,'error':str(e)})\n time.sleep(1.5)\nprint(json.dumps(out,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 15000,
+  "note": "Activate exact Growth and Native ChatGPT targets to refresh page inspection; no typing/send"
+}
