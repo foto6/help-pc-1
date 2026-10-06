@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$configPath='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json';\n$config=$null;if(Test-Path $configPath){$config=Get-Content $configPath -Raw | ConvertFrom-Json}\n$tabs=@();\ntry {$tabs=@(Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3 | Where-Object {$_.type -eq 'page'} | Select-Object id,title,url)} catch {}\n[pscustomobject]@{\n  config=[pscustomobject]@{\n    enabled=$config.enabled;mode=$config.mode;enforceHighMode=$config.enforceHighMode;\n    highModeStrategy=$config.highModeStrategy;autoContinueEnabled=$config.autoContinueEnabled;\n    allowAutonomousSend=$config.allowAutonomousSend;migrationEnabled=$config.migrationEnabled\n  };\n  tabs=$tabs\n} | ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"config\":{\"enabled\":true,\"mode\":\"full\",\"enforceHighMode\":true,\"highModeStrategy\":\"verify_only\",\"autoContinueEnabled\":true,\"allowAutonomousSend\":true,\"migrationEnabled\":true},\"tabs\":[{\"id\":null,\"title\":null,\"url\":null}]}\r\n",
+      "stdout_bytes": 222,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:11:25.115Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:11:25.010Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0920-autonomy-tabs-map-01"
+    },
+    "request_id": "20261006T0920-autonomy-tabs-map-01",
+    "started_at": "2026-10-06T02:11:24.402Z",
+    "status": "completed"
+  },
+  "id": "20261006T0920-autonomy-tabs-map-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
