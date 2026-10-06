@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1140-r42-post-apply02-guard-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\nPush-Location $repo;\n$head=([string](git rev-parse HEAD)).Trim();\n$dirty=@(git status --porcelain);\nPop-Location;\n$cut='E:\\WebAIBridge\\app\\data\\projects-live-control-plane-cutover-r42.json';\n$cutState=$null;if(Test-Path $cut){try{$cutState=Get-Content $cut -Raw|ConvertFrom-Json}catch{}}\n$health=Get-Content 'E:\\pc-github-relay\\.pc-relay\\health.json' -Raw|ConvertFrom-Json;\n[pscustomobject]@{\n head=$head;dirtyCount=$dirty.Count;cutoverExists=(Test-Path $cut);\n cutoverStatus=if($cutState){[string]$cutState.status}else{''};\n holdActive=if($cutState){[bool]$cutState.holdActive}else{$false};\n relayReconciliationRequired=[bool]$health.reconciliation_required;\n relayLastError=$health.last_error\n}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only guard after apply-02 wrapper failure; verify no cutover effects"
+}
