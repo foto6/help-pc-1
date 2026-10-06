@@ -1,0 +1,27 @@
+EXECUTE NOW — CREATOR R39 CURRENT-AUTHORITY BINDER / LOCAL FULLSTACK DRIVER. Do not stop at a plan.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r39-current-authority-binder-20261006
+Exact starting HEAD: b4d0b3a940357eec333d5a1d9b9141bd61b89809
+Parent CI: 37405132939 SUCCESS.
+Parent contract: creator.local_fullstack_rehearsal.r38.v1.
+
+Goal: accept exact independently-approved current Media/Growth/Bridge successor authorities without rewriting R38 historical evidence, and expose one local fullstack driver that remains fail-closed until Media is accepted.
+
+Required:
+1. Define creator.current_authority_binder.r39.v1.
+2. Keep R38 historical authority immutable; add a successor binder layer.
+3. Inputs are explicit authority files for Media R27 (required, independently ACCEPTED), Growth R38/R37, Bridge R43/R42 current control-plane authority, and Creator own exact R39 source tuple.
+4. Never accept branch names/moving refs as authority.
+5. Validate repo/SHA/CI/artifact/digest/contracts/blob identities and cross-tuple lineage.
+6. Reject old Media R25, Media pending QA, mismatched producer/QA tuples, newer branch with old artifact, Bridge runtime differing from supplied accepted authority, stale Growth/Creator pairing.
+7. Add one-command local orchestration planner/wrapper that, when supplied accepted exact authorities and a sealed Media bundle, plans Media evidence -> Growth decision -> Creator proof graph -> release escrow.
+8. No live publish/provider effects.
+9. Durable stage ledger, exact replay idempotency, changed authority/input conflict.
+10. Fixture final state remains LOCAL_REHEARSAL_COMPLETE / LIVE_AUTHORIZATION_FALSE.
+11. >=25 adversarial tests.
+12. Exact-head CI SUCCESS + deterministic R39 artifact.
+13. Readiness must clearly state WAITING_MEDIA_R27_QA or SOURCE_READY.
+14. Do not claim actual local-PC E2E before coordinator executes it.
+
+No browser/provider mutation, no live publish, no merge.
