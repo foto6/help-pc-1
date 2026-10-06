@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1956-uia-creator-active-01",
+  "action": "uia.snapshot",
+  "params": {
+    "window_title": "Implement R37 Driver - Google Chrome"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only UIA snapshot of active Creator ChatGPT tab"
+}
