@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$data='E:\\WebAIBridge\\app\\data';\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path;\n$head=((@(& $git -C $repo rev-parse HEAD) -join '').Trim());\n$branch=((@(& $git -C $repo branch --show-current) -join '').Trim());\n$dirty=@(& $git -C $repo status --porcelain);\nfunction ReadObj([string]$name){\n  $p=Join-Path $data $name;\n  if(!(Test-Path -LiteralPath $p)){return $null}\n  try{return Get-Content -LiteralPath $p -Raw | ConvertFrom-Json}catch{return $null}\n}\n$r42=ReadObj 'projects-live-control-plane-cutover-r42.json';\n$r41=ReadObj 'projects-live-control-plane-r41.json';\n$state=ReadObj 'state.json';\n$sup=ReadObj 'supervisor-watchdog.json';\n$rec=ReadObj 'projects-live-control-plane-cutover-r42-reconcile.json';\n$backs=@();\n$br=Join-Path $data 'backups';\nif(Test-Path $br){$backs=@(Get-ChildItem $br -Directory -Filter 'r42-cutover-*' | Sort-Object LastWriteTime -Descending | Select-Object -First 3 -ExpandProperty Name)}\n[pscustomobject]@{\n head=$head;branch=$branch;detached=[string]::IsNullOrWhiteSpace($branch);dirtyCount=$dirty.Count;\n r42Exists=($null-ne$r42);r42Status=[string]$r42.status;r42Hold=$r42.holdActive;r42Target=[string]$r42.targetSha;\n r41Object=[string]$r41.object;\n lifecycleMode=[string]$state.operatorLifecycle.mode;queuePaused=$state.settings.paused;\n supervisorEnabled=$sup.enabled;supervisorMode=[string]$sup.mode;allowAutonomousSend=$sup.allowAutonomousSend;\n enforceHighMode=$sup.enforceHighMode;highModeStrategy=[string]$sup.highModeStrategy;migrationEnabled=$sup.migrationEnabled;\n reconcileExists=($null-ne$rec);reconcileStatus=[string]$rec.status;\n backups=$backs\n}|ConvertTo-Json -Depth 4 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"head\":\"cb852e013634287669f957253d13d8ef2b45cada\",\"branch\":\"\",\"detached\":true,\"dirtyCount\":0,\"r42Exists\":false,\"r42Status\":\"\",\"r42Hold\":null,\"r42Target\":\"\",\"r41Object\":\"\",\"lifecycleMode\":\"\",\"queuePaused\":false,\"supervisorEnabled\":true,\"supervisorMode\":\"full\",\"allowAutonomousSend\":true,\"enforceHighMode\":true,\"highModeStrategy\":\"verify_only\",\"migrationEnabled\":true,\"reconcileExists\":false,\"reconcileStatus\":\"\",\"backups\":[\"r42-cutover-20261006T034236Z\"]}\r\n",
+      "stdout_bytes": 457,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:21:03.806Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:21:03.690Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0422-r42-local-state-minimal-04"
+    },
+    "request_id": "20261006T0422-r42-local-state-minimal-04",
+    "started_at": "2026-10-06T04:21:02.589Z",
+    "status": "completed"
+  },
+  "id": "20261006T0422-r42-local-state-minimal-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
