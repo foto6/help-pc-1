@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$targetId='C7A7207052C7F10350379336B9D05473'\n$targets=Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 5\n$t=$targets | Where-Object { $_.id -eq $targetId } | Select-Object -First 1\nif(-not $t){ throw 'target missing' }\n$ws=[System.Net.WebSockets.ClientWebSocket]::new()\n$uri=[System.Uri]$t.webSocketDebuggerUrl\n$cts=[System.Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(8))\n$ws.ConnectAsync($uri,$cts.Token).GetAwaiter().GetResult()\n$msg='{\"id\":1,\"method\":\"Accessibility.getFullAXTree\",\"params\":{}}'\n$bytes=[System.Text.Encoding]::UTF8.GetBytes($msg)\n$seg=[System.ArraySegment[byte]]::new($bytes)\n$ws.SendAsync($seg,[System.Net.WebSockets.WebSocketMessageType]::Text,$true,$cts.Token).GetAwaiter().GetResult()\n$buf=New-Object byte[] 65536\n$ms=[System.IO.MemoryStream]::new()\ndo {\n  $recvSeg=[System.ArraySegment[byte]]::new($buf)\n  $res=$ws.ReceiveAsync($recvSeg,$cts.Token).GetAwaiter().GetResult()\n  if($res.Count -gt 0){ $ms.Write($buf,0,$res.Count) }\n} while(-not $res.EndOfMessage)\n$txt=[System.Text.Encoding]::UTF8.GetString($ms.ToArray())\n$obj=$txt | ConvertFrom-Json -Depth 100\n$names=@($obj.result.nodes | ForEach-Object { [string]$_.name.value } | Where-Object { $_ })\n$interesting=@($names | Where-Object { $_ -match 'EXECUTE|R39|R38|R43|Высок|High|Средн|Medium|Останов|Stop|Отправ|Send|готов|completed|success|CI|artifact|maximum|context|начните новый чат|продолж' } | Select-Object -Unique)\n$tail=@($names | Select-Object -Last 80)\n[pscustomobject]@{title=$t.title;url=$t.url;nameCount=$names.Count;interesting=$interesting;tail=$tail}|ConvertTo-Json -Depth 8 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "�᪫�祭�� �� �맮�� \"GetResult\" � \"0\" ��㬥�⠬�: \"������ �뫠 �⬥����.\"\r\n��ப�:18 ����:3\r\n+   $res=$ws.ReceiveAsync($recvSeg,$cts.Token).GetAwaiter().GetResult()\r\n+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : OperationCanceledException\r\n \r\n",
+      "stderr_bytes": 393,
+      "stderr_truncated": false,
+      "stdout": "System.Threading.Tasks.VoidTaskResult\r\nSystem.Threading.Tasks.VoidTaskResult\r\n",
+      "stdout_bytes": 78,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T11:13:33.073Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T11:13:32.933Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1950-creator-ax-read-01"
+    },
+    "request_id": "20261006T1950-creator-ax-read-01",
+    "started_at": "2026-10-06T11:13:24.141Z",
+    "status": "completed"
+  },
+  "id": "20261006T1950-creator-ax-read-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
