@@ -1,0 +1,29 @@
+EXECUTE NOW — HARD WAVE QA R8 / LOCAL-PC E2E ACCEPTANCE GATE. Independent QA only.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/video-local-e2e-acceptance-r8-20261006
+Exact starting HEAD: 3cd57e3d464ba1b4e33ecc390c673ede5f35c867
+
+Frozen accepted:
+- Creator R36: 89e769e61cb5f5e2ee4ab5fc2197e4ba72ad5c22 / CI 37246601604 / artifact 11319566378.
+- Bridge R39: 82656ad0f49bcc3cb21f08cdae78fab2db2765b1 / CI 37246182912 / Ubuntu 11319685397 / Windows 11319127311.
+
+Current Growth R35 candidate:
+- c97f987e6ae780489f2a5fef1883d5596843c64c / CI 37247403389 SUCCESS / artifact 11319801779 / digest sha256:d6a01a548f05c14723a0740218ce39a8a6edee902ed66cfa716e3aa78000cf02.
+Independently accept/reject this exact tuple first.
+
+Media R25 remains the required blocker. Current dev head at dispatch: b11a93664f9b64bf6da626119758c841a0a75c1e; current CI fails at candidate-4-segment-1 due runner shutdown SIGTERM, not proven product defect.
+
+R8 mission:
+1. Independently accept/reject current Growth R35 exact tuple.
+2. Define the exact evidence Media R25 must produce for LOCAL_PC_READY and then LOCAL_PC_E2E_ACCEPTED.
+3. Predeclare local-PC acceptance manifest for:
+   source -> 4 candidates -> blinded review -> targeted re-edit -> winner -> final.mp4 -> post-verifier -> Creator proof graph.
+4. Prepare an independent verifier runnable on the user's PC after Media/Creator/Growth local wrappers exist.
+5. Accept Creator R37/Growth R36/Bridge R40 only on exact-green tuples; branch existence is zero evidence.
+6. Require one real local rehearsal before declaring VIDEO_STACK_LOCAL_GREEN.
+7. >=40 adversarial local/reboot/authority/artifact cases.
+8. No product repo mutations, no live publish, no live Bridge cutover, no merge.
+9. Emit exact blocker matrix and the ONE command sequence the coordinator should run locally when prerequisites are green.
+
+Completion requires exact QA SHA/run/artifact and explicit READY_FOR_LOCAL_RUN or BLOCKED.
