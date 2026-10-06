@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0939-managed-chats-cmdcurl-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "curl.exe -sS --max-time 8 \"http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1\""
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 12000,
+  "note": "Read live managed chat registry via cmd curl"
+}
