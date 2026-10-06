@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T2009-growth-screenshot-01",
+  "action": "screenshot.capture",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read-only screenshot of active Growth ChatGPT tab"
+}
