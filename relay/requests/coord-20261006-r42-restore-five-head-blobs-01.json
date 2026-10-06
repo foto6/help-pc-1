@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261006-r42-restore-five-head-blobs-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$expectedHead='e8033f2e42bd335c10a397eb3d2cb62c8bb837a9';\n$files=@('app/scripts/operator-lifecycle-r40.ps1','app/scripts/pause-all-r40.cmd','app/scripts/pause-browser-r40.cmd','app/scripts/resume-attach-r40.cmd','app/scripts/resume-managed-r40.cmd');\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path;\n$head=((@(& $git -C $repo rev-parse HEAD))-join '').Trim();\nif($head -ne $expectedHead){throw ('Unexpected HEAD: '+$head)}\n$status=@(& $git -C $repo status --short);\n$expected=@($files|ForEach-Object{' M '+$_});\nif((($status|Sort-Object)-join [Environment]::NewLine) -ne (($expected|Sort-Object)-join [Environment]::NewLine)){throw ('Dirty set changed: '+($status -join '; '))}\n$latest=Get-ChildItem (Join-Path $repo 'app\\data\\backups') -Directory -Filter 'r42-dirty-quarantine-*' | Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 1;\nif($null -eq $latest){throw 'Quarantine backup not found'}\n$qmanifest=Join-Path $latest.FullName 'manifest.json';\nif(!(Test-Path -LiteralPath $qmanifest)){throw 'Quarantine manifest missing'}\n$restored=@();\nforeach($f in $files){\n  $blob=((@(& $git -C $repo rev-parse ('HEAD:'+$f)))-join '').Trim();\n  if($blob -notmatch '^[0-9a-f]{40}$'){throw ('Invalid HEAD blob for '+$f)}\n  $dest=Join-Path $repo $f;\n  $psi=New-Object System.Diagnostics.ProcessStartInfo;\n  $psi.FileName=$git;\n  $psi.Arguments=('-C '+$repo+' cat-file blob '+$blob);\n  $psi.UseShellExecute=$false;\n  $psi.RedirectStandardOutput=$true;\n  $psi.RedirectStandardError=$true;\n  $p=New-Object System.Diagnostics.Process;\n  $p.StartInfo=$psi;\n  if(-not $p.Start()){throw ('Failed to start git cat-file for '+$f)}\n  $fs=[IO.File]::Open($dest,[IO.FileMode]::Create,[IO.FileAccess]::Write,[IO.FileShare]::None);\n  try{$p.StandardOutput.BaseStream.CopyTo($fs)}finally{$fs.Dispose()}\n  $err=$p.StandardError.ReadToEnd();$p.WaitForExit();\n  if($p.ExitCode -ne 0){throw ('git cat-file failed for '+$f+': '+$err)}\n  $workBlob=((@(& $git -C $repo hash-object --path=$f $dest))-join '').Trim();\n  if($workBlob -ne $blob){throw ('Restored blob mismatch for '+$f+' expected '+$blob+' got '+$workBlob)}\n  $restored += [pscustomobject]@{file=$f;blob=$blob;rawSha256=(Get-FileHash -LiteralPath $dest -Algorithm SHA256).Hash.ToLowerInvariant()}\n}\n$after=@(& $git -C $repo status --short);\nif($after.Count -ne 0){throw ('Worktree still dirty after exact blob restore: '+($after -join '; '))}\n[pscustomobject]@{status='EXACT_FIVE_BLOBS_RESTORED';head=$head;quarantine=$latest.FullName;files=$restored;dirtyAfter=0}|ConvertTo-Json -Depth 6 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 15000,
+  "note": "Restore only five quarantined R42 lifecycle wrapper files from exact HEAD blob bytes; verify clean worktree"
+}
