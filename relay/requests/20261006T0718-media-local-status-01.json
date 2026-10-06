@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0718-media-local-status-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$repo='E:\\work\\video2-r25-local'\n$status=git -C $repo status --short\n[pscustomobject]@{head=(git -C $repo rev-parse HEAD).Trim();status=@($status)} | ConvertTo-Json -Depth 3 -Compress"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only inspect isolated Media local clone dirty state"
+}
