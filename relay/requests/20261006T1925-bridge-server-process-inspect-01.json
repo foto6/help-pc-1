@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1925-bridge-server-process-inspect-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Get-CimInstance Win32_Process -Filter \"name='node.exe'\" | Where-Object { $_.CommandLine -like '*E:\\\\WebAIBridge\\\\app\\\\server.js*' } | Select-Object ProcessId,CommandLine | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only inspect exact WebAIBridge server.js process before scoped restart"
+}
