@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst base='http://127.0.0.1:17448';\nconst body={\n  automatic:true,\n  worklog:[\n    'Context exhaustion confirmed on the current Media conversation.',\n    'Logical role: Media / foto6/video2.',\n    'Current work branch: agent/media-r26-local-windows-render-gate-20261006.',\n    'Exact starting authority for R26: b11a93664f9b64bf6da626119758c841a0a75c1e.',\n    'R25 hosted CI real candidate-4 was repeatedly terminated by GitHub-hosted runner shutdown/SIGTERM after verified ffmpeg runtime started.',\n    'Next task is Media R26 LOCAL WINDOWS REAL-RENDER CLOSURE. Do not claim completion from this handoff.'\n  ].join('\\n'),\n  remainingWork:[\n    'Accept the next explicit R26 implementation instruction.',\n    'Implement deterministic Windows local real-render path with checkpoints/resume and tiny CI fixtures.',\n    'Return exact SHA/CI/artifact evidence; no provider/social publish.'\n  ]\n};\nconst r=await fetch(base+'/api/supervisor-watchdog/managed-chats/agent-media/rotate',{\n method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)\n});\nconst text=await r.text();\nprocess.stdout.write(JSON.stringify({http:r.status,ok:r.ok,body:text.slice(0,12000)}));\n\n'@; $code | node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"http\":409,\"ok\":false,\"body\":\"{\\\"error\\\":{\\\"message\\\":\\\"Project DOM is not compatible: project_composer_missing, chat_tab_missing, sources_tab_missing\\\",\\\"type\\\":\\\"invalid_request_error\\\",\\\"code\\\":\\\"managed_project_dom_incompatible\\\"}}\"}",
+      "stdout_bytes": 238,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:33:25.765Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:33:25.625Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1030-media-context-rollover-01"
+    },
+    "request_id": "20261006T1030-media-context-rollover-01",
+    "started_at": "2026-10-06T02:33:22.541Z",
+    "status": "completed"
+  },
+  "id": "20261006T1030-media-context-rollover-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
