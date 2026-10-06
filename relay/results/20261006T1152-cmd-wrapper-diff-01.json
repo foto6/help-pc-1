@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "git.exe -C E:\\WebAIBridge diff --no-ext-diff --text -- app/scripts/operator-lifecycle-r40.ps1"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "diff --git a/app/scripts/operator-lifecycle-r40.ps1 b/app/scripts/operator-lifecycle-r40.ps1\nindex 5e40cb2..81195ae 100644\n--- a/app/scripts/operator-lifecycle-r40.ps1\n+++ b/app/scripts/operator-lifecycle-r40.ps1\n@@ -1,60 +1,60 @@\n-param(\r\n-  [Parameter(Mandatory=$false)]\r\n-  [ValidateSet(\"RUNNING_MANAGED\",\"RUNNING_ATTACH\",\"PAUSED_BROWSER\",\"PAUSED_ALL\")]\r\n-  [string]$Mode = \"PAUSED_BROWSER\",\r\n-\r\n-  [Parameter(Mandatory=$false)]\r\n-  [string]$BaseUrl = \"http://127.0.0.1:17448\",\r\n-\r\n-  [Parameter(Mandatory=$false)]\r\n-  [switch]$DryRun\r\n-)\r\n-\r\n-$ErrorActionPreference = \"Stop\"\r\n-\r\n-function Invoke-BridgeJson {\r\n-  param(\r\n-    [string]$Method,\r\n-    [string]$Path,\r\n-    [object]$Body = $null\r\n-  )\r\n-  $uri = ($BaseUrl.TrimEnd(\"/\")) + $Path\r\n-  if ($null -eq $Body) {\r\n-    return Invoke-RestMethod -Method $Method -Uri $uri -TimeoutSec 10\r\n-  }\r\n-  $params = @{\r\n-    Method = $Method\r\n-    Uri = $uri\r\n-    ContentType = \"application/json\"\r\n-    Body = ($Body | ConvertTo-Json -Depth 8 -Compress)\r\n-    TimeoutSec = 20\r\n-  }\r\n-  return Invoke-RestMethod @params\r\n-}\r\n-\r\n-$current = Invoke-BridgeJson -Method \"GET\" -Path \"/api/operator-lifecycle\"\r\n-if ($DryRun) {\r\n-  [pscustomobject]@{\r\n-    contract = \"bridge.operator_lifecycle.r40.v1\"\r\n-    dryRun = $true\r\n-    requestedMode = $Mode\r\n-    currentMode = $current.mode\r\n-    currentRevision = $current.revision\r\n-    mutationPerformed = $false\r\n-    note = \"Dry-run is read-only. No Chrome, worker, queue or Bridge process is changed.\"\r\n-  } | ConvertTo-Json -Depth 8\r\n-  exit 0\r\n-}\r\n-\r\n-$result = Invoke-BridgeJson -Method \"POST\" -Path \"/api/operator-lifecycle\" -Body @{\r\n-  mode = $Mode\r\n-  changedBy = \"operator_script\"\r\n-  reason = \"explicit R40 operator lifecycle command\"\r\n-}\r\n-\r\n-$result | ConvertTo-Json -Depth 12\r\n-if ($Mode -eq \"PAUSED_ALL\" -and -not $result.quiesced) {\r\n-  Write-Error \"PAUSED_ALL was persisted but quiescence was not fully confirmed. Review lifecycle.quiescence.errors before any resume/cutover.\"\r\n-  exit 3\r\n-}\r\n-exit 0\r\n+param(\n+  [Parameter(Mandatory=$false)]\n+  [ValidateSet(\"RUNNING_MANAGED\",\"RUNNING_ATTACH\",\"PAUSED_BROWSER\",\"PAUSED_ALL\")]\n+  [string]$Mode = \"PAUSED_BROWSER\",\n+\n+  [Parameter(Mandatory=$false)]\n+  [string]$BaseUrl = \"http://127.0.0.1:17448\",\n+\n+  [Parameter(Mandatory=$false)]\n+  [switch]$DryRun\n+)\n+\n+$ErrorActionPreference = \"Stop\"\n+\n+function Invoke-BridgeJson {\n+  param(\n+    [string]$Method,\n+    [string]$Path,\n+    [object]$Body = $null\n+  )\n+  $uri = ($BaseUrl.TrimEnd(\"/\")) + $Path\n+  if ($null -eq $Body) {\n+    return Invoke-RestMethod -Method $Method -Uri $uri -TimeoutSec 10\n+  }\n+  $params = @{\n+    Method = $Method\n+    Uri = $uri\n+    ContentType = \"application/json\"\n+    Body = ($Body | ConvertTo-Json -Depth 8 -Compress)\n+    TimeoutSec = 20\n+  }\n+  return Invoke-RestMethod @params\n+}\n+\n+$current = Invoke-BridgeJson -Method \"GET\" -Path \"/api/operator-lifecycle\"\n+if ($DryRun) {\n+  [pscustomobject]@{\n+    contract = \"bridge.operator_lifecycle.r40.v1\"\n+    dryRun = $true\n+    requestedMode = $Mode\n+    currentMode = $current.mode\n+    currentRevision = $current.revision\n+    mutationPerformed = $false\n+    note = \"Dry-run is read-only. No Chrome, worker, queue or Bridge process is changed.\"\n+  } | ConvertTo-Json -Depth 8\n+  exit 0\n+}\n+\n+$result = Invoke-BridgeJson -Method \"POST\" -Path \"/api/operator-lifecycle\" -Body @{\n+  mode = $Mode\n+  changedBy = \"operator_script\"\n+  reason = \"explicit R40 operator lifecycle command\"\n+}\n+\n+$result | ConvertTo-Json -Depth 12\n+if ($Mode -eq \"PAUSED_ALL\" -and -not $result.quiesced) {\n+  Write-Error \"PAUSED_ALL was persisted but quiescence was not fully confirmed. Review lifecycle.quiescence.errors before any resume/cutover.\"\n+  exit 3\n+}\n+exit 0\n",
+      "stdout_bytes": 3727,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:46:12.582Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:46:12.457Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1152-cmd-wrapper-diff-01"
+    },
+    "request_id": "20261006T1152-cmd-wrapper-diff-01",
+    "started_at": "2026-10-06T04:46:12.059Z",
+    "status": "completed"
+  },
+  "id": "20261006T1152-cmd-wrapper-diff-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
