@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "(Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/dry-run' -TimeoutSec 10) | ConvertTo-Json -Depth 12 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"dryRun\":true,\"inspectedAt\":\"2026-10-06T10:25:30.319Z\",\"sendAttempted\":false,\"replacementAttempted\":false,\"openedClosedChats\":false,\"autoContinueEnabled\":true,\"rows\":[{\"chatId\":\"chat-6ab67031-7290-83eb-965e-8cd7c16b3504\",\"name\":\"A3\",\"url\":\"https://chatgpt.com/c/6ab67031-7290-83eb-965e-8cd7c16b3504\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"profileWorkerConnected\":true,\"profileWorkerLastSeenAt\":\"2026-10-06T10:25:28.190Z\",\"profileWorkerRegistrationState\":\"registered\",\"repository\":\"\",\"branch\":\"agent/vnext-enhancement\",\"expectedHead\":\"b0f677fbc13dab73e00854c6931d511b7149694d\",\"openTabs\":1,\"preflightAllowed\":false,\"preflightReason\":\"active_generation\",\"targetId\":\"\",\"snapshots\":[{\"targetId\":\"16053D080571B34ACAB87AF1D583BC6A\",\"highMode\":true,\"generating\":true,\"draftPresent\":false,\"providerLoadError\":false,\"contextLimit\":false,\"inspectionError\":\"\"}],\"schedulerSelected\":false,\"wouldDispatch\":false},{\"chatId\":\"agent-pc-executor\",\"name\":\"PC Executor\",\"url\":\"https://chatgpt.com/c/6ab8bed2-8d0c-83eb-b793-8e504335a57d\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"profileWorkerConnected\":true,\"profileWorkerLastSeenAt\":\"2026-10-06T10:25:28.190Z\",\"profileWorkerRegistrationState\":\"registered\",\"repository\":\"\",\"branch\":\"agent/pc-executor\",\"expectedHead\":\"606074456ca00681fac30a40ee28f7bb0f67c79c\",\"openTabs\":1,\"preflightAllowed\":false,\"preflightReason\":\"active_generation\",\"targetId\":\"\",\"snapshots\":[{\"targetId\":\"001675101F598B65152D77CB44718460\",\"highMode\":true,\"generating\":true,\"draftPresent\":false,\"providerLoadError\":false,\"contextLimit\":false,\"inspectionError\":\"\"}],\"schedulerSelected\":false,\"wouldDispatch\":false},{\"chatId\":\"agent-media\",\"name\":\"Media existing agent\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"profileWorkerConnected\":true,\"profileWorkerLastSeenAt\":\"2026-10-06T10:25:28.190Z\",\"profileWorkerRegistrationState\":\"registered\",\"repository\":\"foto6/video2\",\"branch\":\"agent/media-r26-local-windows-render-gate-20261006\",\"expectedHead\":\"b11a93664f9b64bf6da626119758c841a0a75c1e\",\"openTabs\":0,\"preflightAllowed\":false,\"preflightReason\":\"target_chat_unavailable\",\"targetId\":\"\",\"snapshots\":[],\"schedulerSelected\":false,\"wouldDispatch\":false}],\"selectedChatIds\":[]}\r\n",
+      "stdout_bytes": 2314,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T10:25:30.570Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T10:25:30.435Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1736-bridge-managed-dryrun-02"
+    },
+    "request_id": "20261006T1736-bridge-managed-dryrun-02",
+    "started_at": "2026-10-06T10:25:29.713Z",
+    "status": "completed"
+  },
+  "id": "20261006T1736-bridge-managed-dryrun-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
