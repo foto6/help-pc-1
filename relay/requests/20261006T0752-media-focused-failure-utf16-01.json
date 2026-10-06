@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0752-media-focused-failure-utf16-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,re\np=r\"E:\\work\\video2-r25-local-run\\focused2.log\"\nwith open(p,\"r\",encoding=\"utf-16\",errors=\"replace\") as f:\n    lines=f.read().splitlines()\nhits=[]\nfor i,line in enumerate(lines):\n    if re.search(r\"(not ok|AssertionError|ERR|# fail|error:|Error:|failed)\",line,re.I):\n        a=max(0,i-4); b=min(len(lines),i+12)\n        hits.append({\"line\":i+1,\"context\":lines[a:b]})\nprint(json.dumps({\"line_count\":len(lines),\"hits\":hits[-12:]},ensure_ascii=True))"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only parse UTF-16 Media R25 focused test failures"
+}
