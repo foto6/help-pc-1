@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1847-native-config-slice-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import mmap,sys; p=r'E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; f=open(p,'rb'); m=mmap.mmap(f.fileno(),0,access=mmap.ACCESS_READ); needle=b'6ab946b7-46f0-83ed-bc98-dc74acc6e810'; i=m.find(needle); s=max(0,i-1800); e=min(len(m),i+1800); sys.stdout.buffer.write(m[s:e] if i>=0 else b'NOT_FOUND'); m.close(); f.close()"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only bounded config slice around exact Native managed conversation id"
+}
