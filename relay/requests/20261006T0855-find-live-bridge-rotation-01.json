@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0855-find-live-bridge-rotation-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; Set-Location 'E:\\WebAIBridge'; $terms=@('Enable automatic project-native chat rotation','Allow this agent to follow Project rotation policy','replacement_policy_unavailable','context exhaustion','successor'); foreach($t in $terms){ Write-Host \"--- $t ---\"; Get-ChildItem -Recurse -File -Include *.js,*.html,*.json,*.md,*.ps1 | Where-Object {$_.FullName -notmatch '\\\\node_modules\\\\'} | Select-String -SimpleMatch $t | Select-Object -First 40 Path,LineNumber,Line | Format-List }"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only find live Bridge project rotation implementation"
+}
