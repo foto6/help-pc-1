@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1100-qa-registry-read-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst j=await fetch('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=0').then(r=>r.json());\nconst rows=(j.chats||[]).filter(x=>/supervisor|qa|boss|project agent supervision/i.test([x.id,x.name,x.role,x.repository,x.branch,x.url].join(' '))).map(x=>({\n id:x.id,name:x.name,role:x.role,url:x.url,projectId:x.projectId,profileId:x.profileId,repository:x.repository,branch:x.branch,gitHead:x.gitHead,enabled:x.enabled,rotateWithProject:x.rotateWithProject\n}));\nprocess.stdout.write(JSON.stringify(rows));\n\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 6000,
+  "note": "Read-only QA/Supervisor managed registry lookup"
+}
