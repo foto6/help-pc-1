@@ -14,6 +14,15 @@ R31 direct-readiness source pin rejected src/direct-remote-mcp.js:
 All earlier safety suites shown in the same run remained green before this source-pin failure.
 
 Goal: repair authority lineage correctly and finish a clean operator lifecycle for personal production. Do NOT weaken source-pin validation or accept "same feature" by prose.
+Coordinator root-cause evidence already established:
+- R31/R30 source authority SHA is 29cefa62efcf3f3295dca32b0a202b21c5831969.
+- The exact drift is ONLY in src/direct-remote-mcp.js line 76:
+  old pinned blob source: if (!value || /[s/]/.test(value)) return null;
+  current source:          if (!value || /[\\s/]/.test(value)) return null;
+- The change was introduced by exact commit 7f643b4f1f803b637e1b377ac4989bc79d03c4dd, message: "r36: accept valid public MCP Host headers".
+- That commit is a direct successor of R35 evidence head 5ce23dcbe442633c2f3157d1c4d5d5fc03872672 and is included in accepted R36 start 13b32fef54cc65503938d5f890c52ac6fcd6ea43.
+- Therefore do NOT restore the malformed old regex merely to satisfy R31. Treat this as a legitimate post-R31 source evolution and define a successor authority tuple that preserves the fixed Host-header validation while keeping old R31 evidence immutable/history-only.
+
 
 Required:
 1. Trace why src/direct-remote-mcp.js differs from the frozen R30/R31 source blob. Identify the exact commit(s), intended contract change, and whether the current file is legitimate successor code or accidental drift.
