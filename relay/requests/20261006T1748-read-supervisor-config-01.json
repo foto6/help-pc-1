@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1748-read-supervisor-config-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Get-Content -LiteralPath 'E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json' -Raw"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only supervisor config to resolve managed logical chat IDs for assignment wave"
+}
