@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\nPush-Location $repo;\n$head=(git rev-parse HEAD).Trim();\n$branch=(git branch --show-current).Trim();\n$dirty=@(git status --porcelain);\nPop-Location;\n$cut='E:\\WebAIBridge\\app\\data\\projects-live-control-plane-cutover-r42.json';\n$cutState=$null;if(Test-Path $cut){try{$cutState=Get-Content $cut -Raw|ConvertFrom-Json}catch{}}\n$procs=@(Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match 'r42-cutover\\.ps1' -and $_.ProcessId -ne $PID } | Select-Object ProcessId,Name,CommandLine);\n$health=Get-Content 'E:\\pc-github-relay\\.pc-relay\\health.json' -Raw|ConvertFrom-Json;\n[pscustomobject]@{\n head=$head;branch=$branch;dirtyCount=$dirty.Count;\n cutoverExists=(Test-Path $cut);\n cutoverStatus=$cutState.status;holdActive=$cutState.holdActive;\n activeCutoverProcesses=@($procs);\n relayReconciliationRequired=$health.reconciliation_required;\n relayLastError=$health.last_error\n}|ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "You cannot call a method on a null-valued expression.\r\nAt line:5 char:1\r\n+ $branch=(git branch --show-current).Trim();\r\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : InvokeMethodOnNull\r\n \r\n",
+      "stderr_bytes": 311,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:31:55.972Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:31:55.857Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1134-r42-final-local-guard-01"
+    },
+    "request_id": "20261006T1134-r42-final-local-guard-01",
+    "started_at": "2026-10-06T04:31:55.274Z",
+    "status": "completed"
+  },
+  "id": "20261006T1134-r42-final-local-guard-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
