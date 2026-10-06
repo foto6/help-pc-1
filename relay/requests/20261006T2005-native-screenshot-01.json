@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T2005-native-screenshot-01",
+  "action": "screenshot.capture",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read-only screenshot of currently active Native Connector ChatGPT tab for visual diagnosis"
+}
