@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0728-poll-media-focused-bg-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='SilentlyContinue'\n$run='E:\\work\\video2-r25-local-run'\n$exit=Join-Path $run 'focused.exit'\n$log=Join-Path $run 'focused.log'\n$p=Get-Process -Id 22588 -ErrorAction SilentlyContinue\n[pscustomobject]@{\n running=[bool]$p\n exitCode=if(Test-Path $exit){(Get-Content $exit -Raw).Trim()}else{$null}\n logTail=if(Test-Path $log){@(Get-Content $log -Tail 35)}else{@()}\n} | ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only poll of background Media R25 focused tests"
+}
