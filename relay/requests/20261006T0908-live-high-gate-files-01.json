@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0908-live-high-gate-files-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$files=@('E:\\WebAIBridge\\app\\worker.js','E:\\WebAIBridge\\app\\server.js','E:\\WebAIBridge\\app\\supervisor-watchdog.js');\n$out=@();\nforeach($f in $files){\n if(Test-Path $f){\n   $patterns=@('requireHighMode','High mode is not confirmed','managed_assignment_high_race','enforceHighMode','highModeStrategy','Высокий|High','Средний|Medium');\n   $matches=@();\n   foreach($p in $patterns){\n     $m=Select-String -Path $f -Pattern $p -SimpleMatch -CaseSensitive:$false | Select-Object -First 12 LineNumber,Line;\n     if($m){$matches += [pscustomobject]@{pattern=$p;items=@($m)}}\n   }\n   $blob=(git hash-object $f 2>$null);\n   $sha=(Get-FileHash -Algorithm SHA256 $f).Hash;\n   $out += [pscustomobject]@{path=$f;gitBlob=$blob;sha256=$sha;matches=@($matches)}\n }\n}\n$procs=Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match 'E:\\\\WebAIBridge\\\\app|17448' -and $_.CommandLine -notmatch 'E:\\\\manhwa' } | Select-Object ProcessId,ParentProcessId,Name,CommandLine;\n[pscustomobject]@{files=@($out);processes=@($procs)} | ConvertTo-Json -Depth 7 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only inspect deployed Bridge High-mode gates and process command lines"
+}
