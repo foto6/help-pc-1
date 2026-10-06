@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1158-bridge-local-git-state-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue'; Set-Location 'E:\\WebAIBridge';\nWrite-Output ('HEAD=' + (git rev-parse HEAD));\n$b=(git symbolic-ref --short -q HEAD 2>$null); Write-Output ('BRANCH=' + [string]$b);\nWrite-Output 'STATUS_BEGIN'; git status --porcelain=v1; Write-Output 'STATUS_END';\nWrite-Output ('REMOTE=' + (git remote get-url origin));"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only local Bridge git state without branch assumption"
+}
