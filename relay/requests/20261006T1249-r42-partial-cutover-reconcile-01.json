@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1249-r42-partial-cutover-reconcile-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$data='E:\\WebAIBridge\\app\\data';\n$state=Join-Path $data 'projects-live-control-plane-cutover-r42.json';\n$stateText=if(Test-Path $state){[IO.File]::ReadAllText($state)}else{''};\n$root=Join-Path $data 'backups';\n$backs=@();\nif(Test-Path $root){\n  $backs=@(Get-ChildItem $root -Directory -Filter 'r42-cutover-*' |\n    Sort-Object LastWriteTimeUtc -Descending |\n    Select-Object -First 8 Name,FullName,@{n='LastWriteUtc';e={$_.LastWriteTimeUtc.ToString('o')}},@{n='Manifest';e={Join-Path $_.FullName 'rollback-manifest.json'}},@{n='ManifestExists';e={Test-Path (Join-Path $_.FullName 'rollback-manifest.json')}})\n}\n[pscustomobject]@{cutoverStateExists=(Test-Path $state);cutoverState=$stateText;backups=$backs}|ConvertTo-Json -Depth 6 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only reconcile partial R42 apply-03: locate durable rollback manifest/state"
+}
