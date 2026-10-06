@@ -17,6 +17,12 @@ Current exact authorities / candidates:
 
 Goal:
 independently decide when the system is safe and complete enough to perform the first real LOCAL-PC montage rehearsal on the user's machine, while preserving exact authority and avoiding premature merge/cutover.
+Coordinator integration audit discovered an authority-version compatibility risk that R8 MUST resolve explicitly:
+- Creator R37 source 1f7cb9ed8f1985cd4faca79ce55f1c5fda9e3a57 internally freezes Growth R34 (9ff243bc...) and Bridge R38 (f4f6070a...) in creator.local_integration_driver.r37.v1.
+- Current candidate stack is Growth R36 (a53f9deb...) and Bridge R42 (0cefcd33... source-green, live cutover pending).
+- Do NOT assume newer accepted authorities are automatically substitutable. Verify whether Creator R37 can legitimately consume nested/compatible older authorities while current control-plane runs R42, or whether Creator needs a new authority-refresh milestone before LOCAL_PC_REHEARSAL_GO.
+- Media R26 should preferably emit an accepted Media authority JSON directly consumable by Creator R37 validate_media_authority(): repository foto6/video2, contract media.multicandidate_round.r25.v1, exact producer SHA/CI/artifact/digest, exact blobs {contract,schema,manifest,runtime}, and independentQa tuple binding the same producer values. If R26 cannot produce this without weakening lineage, R8 must block and specify the exact adapter/Creator update needed.
+
 
 Required:
 1. Preserve all R1-R7 adversarial corpora.
