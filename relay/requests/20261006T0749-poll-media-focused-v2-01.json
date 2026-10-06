@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0749-poll-media-focused-v2-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/c",
+      "if exist E:\\work\\video2-r25-local-run\\focused2.exit (type E:\\work\\video2-r25-local-run\\focused2.exit) else (echo RUNNING)"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 8000,
+  "note": "Minimal numeric exit poll for Media R25 focused tests v2"
+}
