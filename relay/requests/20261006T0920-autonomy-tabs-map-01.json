@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0920-autonomy-tabs-map-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$configPath='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json';\n$config=$null;if(Test-Path $configPath){$config=Get-Content $configPath -Raw | ConvertFrom-Json}\n$tabs=@();\ntry {$tabs=@(Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3 | Where-Object {$_.type -eq 'page'} | Select-Object id,title,url)} catch {}\n[pscustomobject]@{\n  config=[pscustomobject]@{\n    enabled=$config.enabled;mode=$config.mode;enforceHighMode=$config.enforceHighMode;\n    highModeStrategy=$config.highModeStrategy;autoContinueEnabled=$config.autoContinueEnabled;\n    allowAutonomousSend=$config.allowAutonomousSend;migrationEnabled=$config.migrationEnabled\n  };\n  tabs=$tabs\n} | ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only Full autonomy config and exact CDP tab map"
+}
