@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1144-r42-wrapper-bom-audit-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\nfunction GitBlobSha([byte[]]$bytes){\n  $prefix=[Text.Encoding]::ASCII.GetBytes(('blob '+$bytes.Length+[char]0));\n  $all=New-Object byte[] ($prefix.Length+$bytes.Length);\n  [Array]::Copy($prefix,0,$all,0,$prefix.Length);\n  [Array]::Copy($bytes,0,$all,$prefix.Length,$bytes.Length);\n  $sha=[Security.Cryptography.SHA1]::Create();\n  return (($sha.ComputeHash($all)|ForEach-Object{$_.ToString('x2')}) -join '');\n}\n$out=@();\nforeach($rel in @('app/scripts/operator-lifecycle-r40.ps1','app/scripts/pause-all-r40.cmd','app/scripts/pause-browser-r40.cmd','app/scripts/resume-attach-r40.cmd','app/scripts/resume-managed-r40.cmd')){\n  $path=Join-Path $repo $rel;\n  $raw=[IO.File]::ReadAllBytes($path);\n  $hasBom=($raw.Length-ge 3 -and $raw[0]-eq 239 -and $raw[1]-eq 187 -and $raw[2]-eq 191);\n  $offset=if($hasBom){3}else{0};\n  $text=[Text.Encoding]::UTF8.GetString($raw,$offset,$raw.Length-$offset);\n  $crlf=([string][char]13)+([string][char]10);\n  $lf=[string][char]10;\n  $normText=$text.Replace($crlf,$lf);\n  $norm=[Text.Encoding]::UTF8.GetBytes($normText);\n  $head=([string](git.exe -C $repo rev-parse ('HEAD:'+$rel))).Trim();\n  $noBomNorm=GitBlobSha $norm;\n  $out += [pscustomobject]@{\n    file=$rel; hasUtf8Bom=$hasBom;\n    firstBytes=(($raw|Select-Object -First 6|ForEach-Object{$_.ToString('X2')}) -join ' ');\n    headBlob=$head; normalizedNoBomBlob=$noBomNorm;\n    matchesHeadAfterBomStrip=($head -eq $noBomNorm)\n  };\n}\n$out|ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only determine whether five R42 dirty wrappers differ only by UTF-8 BOM/line endings"
+}
