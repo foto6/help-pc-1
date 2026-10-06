@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0805-creator-media-last-response-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst specs=[[\"creator\",\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\"],[\"media\",\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\"]];const sleep=ms=>new Promise(r=>setTimeout(r,ms));\nconst conv=v=>{try{const u=new URL(String(v||\"\"));const p=u.pathname.split(\"/\").filter(Boolean);if(p.length===2&&p[0]===\"c\")return p[1];if(p.length===4&&p[0]===\"g\"&&p[2]===\"c\")return p[3]}catch{}return \"\"};\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const out=[];\nfor(const [name,cid,url] of specs){const ms=tabs.filter(t=>t.type===\"page\"&&conv(t.url)===cid);if(ms.length!==1){out.push({name,state:\"tab_count\",count:ms.length});continue}const ws=new WebSocket(ms[0].webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1;const p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});await call(\"Page.enable\");await call(\"Page.navigate\",{url});let s=null;for(let i=0;i<30;i++){await sleep(300);const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const msgs=[...document.querySelectorAll('[data-message-author-role]')];const us=msgs.filter(x=>x.getAttribute('data-message-author-role')==='user');const as=msgs.filter(x=>x.getAttribute('data-message-author-role')==='assistant');const bs=[...document.querySelectorAll('button')];const gen=bs.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')));return {title:document.title,href:location.href,generating:gen,userCount:us.length,assistantCount:as.length,lastUser:us.length?((us.at(-1).innerText||us.at(-1).textContent||'').slice(-4000)):'',lastAssistant:as.length?((as.at(-1).innerText||as.at(-1).textContent||'').slice(-6000)):''}})())\",returnByValue:true});s=JSON.parse(rr.result.value);if(s.userCount||s.assistantCount||s.generating)break}out.push({name,...s});ws.close()}\nprocess.stdout.write(JSON.stringify(out));\n\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 16000,
+  "note": "Read-only inspect Creator/Media last messages after task send"
+}
