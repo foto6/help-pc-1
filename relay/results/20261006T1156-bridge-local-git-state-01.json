@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; Set-Location 'E:\\WebAIBridge';\n[pscustomobject]@{\n head=(git rev-parse HEAD).Trim();\n branch=(git branch --show-current).Trim();\n status=@(git status --porcelain);\n remote=(git remote get-url origin).Trim()\n}|ConvertTo-Json -Depth 3 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "You cannot call a method on a null-valued expression.\r\nAt line:2 char:1\r\n+ [pscustomobject]@{\r\n+ ~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : InvokeMethodOnNull\r\n \r\n",
+      "stderr_bytes": 262,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T03:40:54.282Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T03:40:54.166Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1156-bridge-local-git-state-01"
+    },
+    "request_id": "20261006T1156-bridge-local-git-state-01",
+    "started_at": "2026-10-06T03:40:53.564Z",
+    "status": "completed"
+  },
+  "id": "20261006T1156-bridge-local-git-state-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
