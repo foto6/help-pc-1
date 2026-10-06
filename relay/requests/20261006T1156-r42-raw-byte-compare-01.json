@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1156-r42-raw-byte-compare-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "\nimport json, pathlib, subprocess\nrepo=pathlib.Path(r\"E:\\WebAIBridge\")\nfiles=[\n\"app/scripts/operator-lifecycle-r40.ps1\",\n\"app/scripts/pause-all-r40.cmd\",\n\"app/scripts/pause-browser-r40.cmd\",\n\"app/scripts/resume-attach-r40.cmd\",\n\"app/scripts/resume-managed-r40.cmd\",\n]\nout=[]\nfor rel in files:\n    exp=subprocess.check_output([\"git.exe\",\"-C\",str(repo),\"show\",\"HEAD:\"+rel])\n    act=(repo/rel).read_bytes()\n    first=None\n    for i,(a,b) in enumerate(zip(exp,act)):\n        if a!=b:\n            first=i; break\n    if first is None and len(exp)!=len(act):\n        first=min(len(exp),len(act))\n    out.append({\n        \"file\":rel,\n        \"equalRaw\":exp==act,\n        \"expectedLen\":len(exp),\n        \"actualLen\":len(act),\n        \"firstDiff\":first,\n        \"expectedFirst12\":exp[:12].hex(\" \"),\n        \"actualFirst12\":act[:12].hex(\" \"),\n        \"expectedCRLF\":exp.count(b\"\\r\\n\"),\n        \"actualCRLF\":act.count(b\"\\r\\n\"),\n        \"expectedLF\":exp.count(b\"\\n\"),\n        \"actualLF\":act.count(b\"\\n\"),\n        \"expectedTail\":exp[-12:].hex(\" \"),\n        \"actualTail\":act[-12:].hex(\" \"),\n    })\nprint(json.dumps(out))\n"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only raw byte comparison of five R42 wrappers against exact HEAD blobs"
+}
