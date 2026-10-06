@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1134-r42-live-runtime-readonly-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$base='http://127.0.0.1:17448';\n$out=[ordered]@{};\nforeach($p in @('/api/projects/control-plane/cutover-r42/status','/api/projects/control-plane?inspect=1','/api/status')){\n  try{$out[$p]=Invoke-RestMethod -Uri ($base+$p) -Method Get -TimeoutSec 5}catch{$out[$p]=[ordered]@{error=$_.Exception.Message}}\n}\n$out | ConvertTo-Json -Depth 12 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only GET local Bridge R42 status/control-plane endpoints"
+}
