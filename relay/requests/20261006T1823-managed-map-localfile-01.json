@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1823-managed-map-localfile-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json; p=r'E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; d=json.load(open(p,'r',encoding='utf-8')); rows=d.get('managedChats') or d.get('managed_chats') or []; f=['id','name','url','repository','branch','gitHead','projectId','enabled','profileId']; print(json.dumps([{k:x.get(k) for k in f} for x in rows],ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only local supervisor config projection for managed chat routing"
+}
