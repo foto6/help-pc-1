@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-06T04:37:00.853Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261006T1147-r42-dirty-diff-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:9899d5fdeb8ebdcbd82d40283edaae7f276279101b06f3f4f8927e72df2eb0bb",
+            "journal_sequence": 1904,
+            "previous_record_sha256": "66eb85dc30710d2b3653ac2e29368734b35887495f93de421f476dd6ed255dbc",
+            "record_sha256": "4327ff3044a4b4d74b17e3ebd82f56c4c87459eb727216eb971f5ba1ebc6569a",
+            "recorded_at": "2026-10-06T04:37:00.957Z",
+            "request_id": "20261006T1147-r42-dirty-diff-01",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-06T04:37:08.991Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261006T1147-r42-dirty-diff-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:9899d5fdeb8ebdcbd82d40283edaae7f276279101b06f3f4f8927e72df2eb0bb",
+            "journal_sequence": 1905,
+            "previous_record_sha256": "4327ff3044a4b4d74b17e3ebd82f56c4c87459eb727216eb971f5ba1ebc6569a",
+            "record_sha256": "d6fa4da5718d3a79370d4d87c25f25bb87a93cc98ed47f96bb422594d4e8fae2",
+            "recorded_at": "2026-10-06T04:37:09.102Z",
+            "request_id": "20261006T1147-r42-dirty-diff-01",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-06T04:37:08.991Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "20261006T1147-r42-dirty-diff-01"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-06T04:37:08.991Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "20261006T1147-r42-dirty-diff-01"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:9899d5fdeb8ebdcbd82d40283edaae7f276279101b06f3f4f8927e72df2eb0bb",
+          "journal_sequence": 1905,
+          "previous_record_sha256": "4327ff3044a4b4d74b17e3ebd82f56c4c87459eb727216eb971f5ba1ebc6569a",
+          "record_sha256": "d6fa4da5718d3a79370d4d87c25f25bb87a93cc98ed47f96bb422594d4e8fae2",
+          "recorded_at": "2026-10-06T04:37:09.102Z",
+          "request_id": "20261006T1147-r42-dirty-diff-01",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "cca04d10ddc47ec1df5914f20765b444f79e50b49a48392c5e23a5b7b2188b7d",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 1907
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "20261006T1147-r42-dirty-diff-01",
+        "request_id": "20261006T1147-r42-dirty-diff-01",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:37:35.833Z",
+    "ok": true,
+    "request_id": "20261006T1149-reconcile-r42-dirty-diff-01",
+    "started_at": "2026-10-06T04:37:35.716Z",
+    "status": "completed"
+  },
+  "id": "20261006T1149-reconcile-r42-dirty-diff-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
