@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request;u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/992349b1-8367-4822-9b6c-7cf0779e0e93/evidence';p=\"{\\\"branch\\\":\\\"agent/integration-r8-final-local-stack-20261006\\\",\\\"currentHead\\\":\\\"6ab529846e99e572d77006dee48d6c4b01caea12\\\",\\\"exactCommitSha\\\":\\\"6ab529846e99e572d77006dee48d6c4b01caea12\\\",\\\"ciRunId\\\":\\\"37452884976\\\",\\\"ciConclusion\\\":\\\"success\\\",\\\"supervisorVerified\\\":true}\".encode('utf-8');q=urllib.request.Request(u,data=p,headers={'Content-Type':'application/json'},method='POST');d=json.loads(urllib.request.urlopen(q,timeout=10).read().decode('utf-8'));print(json.dumps({'id':d.get('id'),'state':d.get('state'),'lastDiagnostic':d.get('lastDiagnostic'),'currentHead':d.get('currentHead'),'ciRunId':d.get('ciRunId'),'ciConclusion':d.get('ciConclusion'),'supervisorVerified':d.get('supervisorVerified')},separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"992349b1-8367-4822-9b6c-7cf0779e0e93\",\"state\":\"completed\",\"lastDiagnostic\":\"evidence_verified\",\"currentHead\":\"6ab529846e99e572d77006dee48d6c4b01caea12\",\"ciRunId\":\"37452884976\",\"ciConclusion\":\"success\",\"supervisorVerified\":true}\r\n",
+      "stdout_bytes": 236,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T11:29:44.409Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T11:29:44.273Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T2025-qa-r8-supervisor-verify-01"
+    },
+    "request_id": "20261006T2025-qa-r8-supervisor-verify-01",
+    "started_at": "2026-10-06T11:29:43.828Z",
+    "status": "completed"
+  },
+  "id": "20261006T2025-qa-r8-supervisor-verify-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
