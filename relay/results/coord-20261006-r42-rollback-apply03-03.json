@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "\nimport json, pathlib, subprocess, urllib.request, sys\nrepo = pathlib.Path(r\"E:\\WebAIBridge\")\nexpected_head = \"e8033f2e42bd335c10a397eb3d2cb62c8bb837a9\"\npre_head = \"cb852e013634287669f957253d13d8ef2b45cada\"\nmanifest = pathlib.Path(r\"E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261006T043453Z\\rollback-manifest.json\")\nrollback = repo / \"app\" / \"r42-rollback.ps1\"\nallowed = [\n    \"app/scripts/operator-lifecycle-r40.ps1\",\n    \"app/scripts/pause-all-r40.cmd\",\n    \"app/scripts/pause-browser-r40.cmd\",\n    \"app/scripts/resume-attach-r40.cmd\",\n    \"app/scripts/resume-managed-r40.cmd\",\n]\ndef run(args, check=True, timeout=30):\n    p = subprocess.run(args, cwd=str(repo), text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=timeout)\n    if check and p.returncode != 0:\n        raise RuntimeError(f\"command failed {p.returncode}: {args}\\nSTDOUT={p.stdout}\\nSTDERR={p.stderr}\")\n    return p\nhead = run([\"git.exe\",\"-C\",str(repo),\"rev-parse\",\"HEAD\"]).stdout.strip()\nif head != expected_head:\n    raise RuntimeError(f\"unexpected head before rollback: {head}\")\nstatus_lines = [x for x in run([\"git.exe\",\"-C\",str(repo),\"status\",\"--porcelain\"]).stdout.splitlines() if x.strip()]\npaths = [x[3:].strip() for x in status_lines]\nif set(paths) != set(allowed):\n    raise RuntimeError(f\"dirty set mismatch before EOL normalization: {paths}\")\neol = run([\"git.exe\",\"-C\",str(repo),\"diff\",\"--ignore-space-at-eol\",\"--exit-code\",\"--\",*allowed], check=False)\nif eol.returncode != 0:\n    raise RuntimeError(\"wrapper differences are not EOL-only\")\nfor rel in allowed:\n    p = repo / pathlib.Path(rel)\n    data = p.read_bytes()\n    data = data.replace(b\"\\r\\n\", b\"\\n\").replace(b\"\\r\", b\"\\n\")\n    p.write_bytes(data.replace(b\"\\n\", b\"\\r\\n\"))\nafter = run([\"git.exe\",\"-C\",str(repo),\"status\",\"--porcelain\"]).stdout.strip()\nif after:\n    raise RuntimeError(f\"worktree still dirty after CRLF normalization: {after}\")\nif not manifest.exists():\n    raise RuntimeError(f\"rollback manifest missing: {manifest}\")\nrb = run([\"powershell.exe\",\"-NoProfile\",\"-ExecutionPolicy\",\"Bypass\",\"-File\",str(rollback),\"-Manifest\",str(manifest)], timeout=50)\nrestored = run([\"git.exe\",\"-C\",str(repo),\"rev-parse\",\"HEAD\"]).stdout.strip()\nif restored != pre_head:\n    raise RuntimeError(f\"rollback head mismatch: {restored}\")\ndirty = run([\"git.exe\",\"-C\",str(repo),\"status\",\"--porcelain\"]).stdout.strip()\nwith urllib.request.urlopen(\"http://127.0.0.1:17448/api/status\", timeout=5) as resp:\n    status = json.load(resp)\nprint(json.dumps({\n    \"rollback_stdout\": rb.stdout.strip(),\n    \"restoredHead\": restored,\n    \"dirty\": dirty,\n    \"bridgeResponsive\": True,\n    \"serverStartedAt\": status.get(\"serverStartedAt\"),\n    \"manifest\": str(manifest)\n}, ensure_ascii=False))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\r\n  File \"<string>\", line 37, in <module>\r\n    raise RuntimeError(f\"worktree still dirty after CRLF normalization: {after}\")\r\nRuntimeError: worktree still dirty after CRLF normalization: M app/scripts/operator-lifecycle-r40.ps1\r\n M app/scripts/pause-all-r40.cmd\r\n M app/scripts/pause-browser-r40.cmd\r\n M app/scripts/resume-attach-r40.cmd\r\n M app/scripts/resume-managed-r40.cmd\r\n",
+      "stderr_bytes": 412,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:47:42.580Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:47:42.449Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261006-r42-rollback-apply03-03"
+    },
+    "request_id": "coord-20261006-r42-rollback-apply03-03",
+    "started_at": "2026-10-06T04:47:41.223Z",
+    "status": "completed"
+  },
+  "id": "coord-20261006-r42-rollback-apply03-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
