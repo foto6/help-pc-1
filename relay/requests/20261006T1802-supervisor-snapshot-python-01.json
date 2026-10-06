@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1802-supervisor-snapshot-python-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request; u='http://127.0.0.1:17448/api/supervisor-watchdog?detect=0'; print(urllib.request.urlopen(u,timeout=20).read().decode('utf-8'))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only supervisor snapshot via Python loopback HTTP"
+}
