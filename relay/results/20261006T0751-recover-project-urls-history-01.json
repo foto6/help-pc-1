@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$proc=Get-CimInstance Win32_Process -Filter \"name='chrome.exe'\" | Where-Object { $_.CommandLine -like '*--remote-debugging-port=17410*' } | Select-Object -First 1\nif(-not $proc){ throw 'Chrome debug 17410 process not found' }\n$cmd=[string]$proc.CommandLine\n$profilePath=''\nif($cmd -match '--user-data-dir=(?:\"([^\"]+)\"|([^\\s]+))'){ $profilePath=if($Matches[1]){$Matches[1]}else{$Matches[2]} }\nif(-not $profilePath){ throw 'user-data-dir not found' }\n$histCandidates=@(\n  (Join-Path $profilePath 'Default\\History'),\n  (Join-Path $profilePath 'History')\n)\n$hist=$histCandidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1\nif(-not $hist){ throw \"History not found under $profilePath\" }\n$tmp='E:\\WebAIBridge\\.tmp-history-17410.db'\nCopy-Item -LiteralPath $hist -Destination $tmp -Force\n$py=@'\nimport sqlite3, json\nids=[\n\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\n\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\n\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\n\"6abda61c-a440-83ed-9482-1d0fc7923e03\",\n]\ndb=r\"E:\\WebAIBridge\\.tmp-history-17410.db\"\ncon=sqlite3.connect(db)\nout={}\nfor cid in ids:\n    rows=con.execute(\"select url,title,last_visit_time from urls where url like ? order by last_visit_time desc limit 20\",('%'+cid+'%',)).fetchall()\n    out[cid]=[{\"url\":r[0],\"title\":r[1]} for r in rows]\nprint(json.dumps(out,ensure_ascii=False))\ncon.close()\n'@\n$result=$py | python -\nRemove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue\n[pscustomobject]@{profilePath=$profilePath;matches=($result|ConvertFrom-Json)} | ConvertTo-Json -Depth 8 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"profilePath\":\"E:\\\\WebAIBridge\\\\chrome-profiles\\\\chatgpt-ChatGPT_2-ef72920c\",\"matches\":{\"6abda62d-8198-83ed-aaa2-40b16f96a8a0\":[{\"url\":\"https://chatgpt.com/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"title\":\"ChatGPT\"},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"title\":\"Implement Publish Provider Layer\"},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"title\":\"Implement Publish Provider Layer\"}],\"6abda64b-aac4-83eb-adee-dc7143ca5d2b\":[{\"url\":\"https://chatgpt.com/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"title\":\"ChatGPT\"},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"title\":\"Deliver R11 Editor\"},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"title\":\"Deliver R11 Editor\"}],\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\":[{\"url\":\"https://chatgpt.com/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"title\":\"ChatGPT\"},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"title\":\"Implement Live Review Ingest\"},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"title\":\"Implement Live Review Ingest\"}],\"6abda61c-a440-83ed-9482-1d0fc7923e03\":[{\"url\":\"https://chatgpt.com/c/6abda61c-a440-83ed-9482-1d0fc7923e03\",\"title\":\"ChatGPT\"},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\",\"title\":\"Bridge R19 Implementation Report\"},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc/c/6abda61c-a440-83ed-9482-1d0fc7923e03\",\"title\":\"Bridge R19 Implementation Report\"}]}}\r\n",
+      "stdout_bytes": 1788,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T00:49:46.280Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T00:49:46.180Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0751-recover-project-urls-history-01"
+    },
+    "request_id": "20261006T0751-recover-project-urls-history-01",
+    "started_at": "2026-10-06T00:49:45.332Z",
+    "status": "completed"
+  },
+  "id": "20261006T0751-recover-project-urls-history-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
