@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\ncid='6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0'\ntabs=json.loads(urllib.request.urlopen('http://127.0.0.1:17410/json/list',timeout=6).read().decode('utf-8'))\ntargets=[{'id':x.get('id'),'title':x.get('title'),'url':x.get('url')} for x in tabs if cid in str(x.get('url',''))]\nd=json.loads(urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId=chat-'+cid,timeout=8).read().decode('utf-8'))\nrow=next((x for x in d.get('assignments',[]) if x.get('id')=='11e3962c-57fb-4218-94cd-ee9ba7c25a4c'),{})\nkeep=['state','lastPreflightReason','lastDiagnostic','dispatchTargetId','dispatchCount','dispatchSubmitAttempted','currentHead','updatedAt']\nprint(json.dumps({'targets':targets,'assignment':{k:row.get(k) for k in keep}},ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"targets\":[],\"assignment\":{\"state\":\"blocked\",\"lastPreflightReason\":\"target_chat_unavailable\",\"lastDiagnostic\":\"replacement_unavailable:legacy_project_rebind_required\",\"dispatchTargetId\":\"\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"currentHead\":\"d74147329c4c0269c5ac5fbdf4fa99e7a1b9b2d1\",\"updatedAt\":\"2026-10-06T11:25:13.839Z\"}}\r\n",
+      "stdout_bytes": 339,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T11:25:28.900Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T11:25:28.768Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T2014-growth-after-reopen-status-01"
+    },
+    "request_id": "20261006T2014-growth-after-reopen-status-01",
+    "started_at": "2026-10-06T11:25:28.338Z",
+    "status": "completed"
+  },
+  "id": "20261006T2014-growth-after-reopen-status-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
