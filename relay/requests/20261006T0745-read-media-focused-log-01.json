@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0745-read-media-focused-log-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/c",
+      "type E:\\work\\video2-r25-local-run\\focused.log"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 12000,
+  "note": "Read completed 9KB Media R25 focused-test log"
+}
