@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request;u='http://127.0.0.1:17448/api/supervisor-watchdog?detect=0';d=json.loads(urllib.request.urlopen(u,timeout=10).read().decode('utf-8'));c=d.get('config',d);rows=c.get('managedChats') or c.get('managed_chats') or [];out=[];for x in rows:; out.append({k:x.get(k) for k in ['id','name','url','repository','branch','gitHead','projectId','enabled','profileId']});print(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "  File \"<string>\", line 1\r\n    import json,urllib.request;u='http://127.0.0.1:17448/api/supervisor-watchdog?detect=0';d=json.loads(urllib.request.urlopen(u,timeout=10).read().decode('utf-8'));c=d.get('config',d);rows=c.get('managedChats') or c.get('managed_chats') or [];out=[];for x in rows:; out.append({k:x.get(k) for k in ['id','name','url','repository','branch','gitHead','projectId','enabled','profileId']});print(json.dumps(out,ensure_ascii=True,separators=(',',':')))\r\n                                                                                                                                                                                                                                                           ^^^\r\nSyntaxError: invalid syntax\r\n",
+      "stderr_bytes": 762,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T10:37:21.902Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T10:37:21.775Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1818-managed-map-python-01"
+    },
+    "request_id": "20261006T1818-managed-map-python-01",
+    "started_at": "2026-10-06T10:37:21.461Z",
+    "status": "completed"
+  },
+  "id": "20261006T1818-managed-map-python-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
