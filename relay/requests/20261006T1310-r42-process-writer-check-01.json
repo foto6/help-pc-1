@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1310-r42-process-writer-check-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$procs=@(Get-CimInstance Win32_Process | Where-Object {\n  $_.CommandLine -and $_.CommandLine -match [regex]::Escape($repo) -and\n  $_.Name -in @('node.exe','powershell.exe','pwsh.exe','cmd.exe')\n} | Select-Object ProcessId,ParentProcessId,Name,CommandLine);\n$procs | ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only inspect WebAIBridge-owned process candidates before exact five-file raw restore"
+}
