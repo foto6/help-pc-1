@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1743-queue-media-r27-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$body='{\"text\":\"EXECUTE NOW — Media R27. Work ONLY on agent/media-r27-real-input-local-rehearsal-20261006 at exact starting HEAD bd915b7c6587ce5f5647a3457196c7752443e94e. Read TASKS/R27_REAL_INPUT_LOCAL_REHEARSAL.md and GitHub issue foto6/video2#2, then implement the milestone completely. Do not stop at a plan. Return substantive commit SHA, exact-head CI/artifact evidence, local RUN/STATUS/VERIFY commands, and any exact blocker. No live publish/provider mutation.\",\"repository\":\"foto6/video2\",\"branch\":\"agent/media-r27-real-input-local-rehearsal-20261006\",\"expectedHead\":\"bd915b7c6587ce5f5647a3457196c7752443e94e\",\"idempotencyKey\":\"coord-20261006-media-r27-assignment-01\",\"supervisorVerificationRequired\":true,\"evidenceTimeoutMinutes\":60}'; Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-media/assignments' -ContentType 'application/json' -Body $body -TimeoutSec 15 | ConvertTo-Json -Depth 12 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 25000,
+  "note": "Queue idempotent Media R27 managed assignment; Bridge enforces exact chat/High gate"
+}
