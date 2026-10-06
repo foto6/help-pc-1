@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1840-queue-bridge-r43-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request;u=\"http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982/assignments\";p=\"{\\\"text\\\":\\\"EXECUTE NOW — Bridge R43. Work ONLY on agent/bridge-r43-porcelain-cutover-fix-20261006 from exact HEAD 24b511cdf522ac915213adcf90620a2d73dabd39. Read TASKS/R43.md and GitHub issue foto6/WebAIBridge#16. Finish rollback raw-porcelain symmetry, adversarial tests, exact-head Windows+Ubuntu CI, then controlled preflight/cutover/reconcile/rollover per issue. Do not stop at a plan. Return exact SHA/CI/artifacts and exact blockers. No merge or live publish.\\\",\\\"repository\\\":\\\"foto6/WebAIBridge\\\",\\\"branch\\\":\\\"agent/bridge-r43-porcelain-cutover-fix-20261006\\\",\\\"expectedHead\\\":\\\"24b511cdf522ac915213adcf90620a2d73dabd39\\\",\\\"idempotencyKey\\\":\\\"coord-20261006-bridge-r43-assignment-01\\\",\\\"supervisorVerificationRequired\\\":true,\\\"evidenceTimeoutMinutes\\\":90}\".encode('utf-8');q=urllib.request.Request(u,data=p,headers={'Content-Type':'application/json'},method='POST');d=json.loads(urllib.request.urlopen(q,timeout=20).read().decode('utf-8'));print(json.dumps({'id':d.get('id'),'state':d.get('state'),'targetChatId':d.get('targetChatId'),'targetChatUrl':d.get('targetChatUrl'),'repository':d.get('repository'),'branch':d.get('branch'),'expectedHead':d.get('expectedHead')},ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 30000,
+  "note": "Queue idempotent managed assignment coord-20261006-bridge-r43-assignment-01"
+}
