@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-06T04:19:55.374Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261006T1207-r42-local-durable-state-03"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:ef20def8666a5c3169be137629d98419caad3082b429f055a9ede93cae7981bb",
+            "journal_sequence": 1856,
+            "previous_record_sha256": "62b877dfd11726253af324d8855d4018d8ea85c9f280365e193776e7f1de1a92",
+            "record_sha256": "717422121e6d8a29823993f5398f441f266f670b9bf6955069827175582f2696",
+            "recorded_at": "2026-10-06T04:19:55.488Z",
+            "request_id": "20261006T1207-r42-local-durable-state-03",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-06T04:20:05.560Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261006T1207-r42-local-durable-state-03"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:ef20def8666a5c3169be137629d98419caad3082b429f055a9ede93cae7981bb",
+            "journal_sequence": 1857,
+            "previous_record_sha256": "717422121e6d8a29823993f5398f441f266f670b9bf6955069827175582f2696",
+            "record_sha256": "53bffcbb547f6978ce85c58be43c466f77d8790087f66de37851e3240b3f6772",
+            "recorded_at": "2026-10-06T04:20:05.673Z",
+            "request_id": "20261006T1207-r42-local-durable-state-03",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-06T04:20:05.560Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "20261006T1207-r42-local-durable-state-03"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-06T04:20:05.560Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "20261006T1207-r42-local-durable-state-03"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:ef20def8666a5c3169be137629d98419caad3082b429f055a9ede93cae7981bb",
+          "journal_sequence": 1857,
+          "previous_record_sha256": "717422121e6d8a29823993f5398f441f266f670b9bf6955069827175582f2696",
+          "record_sha256": "53bffcbb547f6978ce85c58be43c466f77d8790087f66de37851e3240b3f6772",
+          "recorded_at": "2026-10-06T04:20:05.673Z",
+          "request_id": "20261006T1207-r42-local-durable-state-03",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "5d83d43170566112b391bcbf5b6e9dacaa844a087a542cefd2a6f1527e61e08e",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 1857
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "20261006T1207-r42-local-durable-state-03",
+        "request_id": "20261006T1207-r42-local-durable-state-03",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:20:43.864Z",
+    "ok": true,
+    "request_id": "20261006T1210-reconcile-r42-durable-probe-01",
+    "started_at": "2026-10-06T04:20:43.748Z",
+    "status": "completed"
+  },
+  "id": "20261006T1210-reconcile-r42-durable-probe-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
