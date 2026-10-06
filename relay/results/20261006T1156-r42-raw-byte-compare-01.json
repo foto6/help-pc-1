@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "\nimport json, pathlib, subprocess\nrepo=pathlib.Path(r\"E:\\WebAIBridge\")\nfiles=[\n\"app/scripts/operator-lifecycle-r40.ps1\",\n\"app/scripts/pause-all-r40.cmd\",\n\"app/scripts/pause-browser-r40.cmd\",\n\"app/scripts/resume-attach-r40.cmd\",\n\"app/scripts/resume-managed-r40.cmd\",\n]\nout=[]\nfor rel in files:\n    exp=subprocess.check_output([\"git.exe\",\"-C\",str(repo),\"show\",\"HEAD:\"+rel])\n    act=(repo/rel).read_bytes()\n    first=None\n    for i,(a,b) in enumerate(zip(exp,act)):\n        if a!=b:\n            first=i; break\n    if first is None and len(exp)!=len(act):\n        first=min(len(exp),len(act))\n    out.append({\n        \"file\":rel,\n        \"equalRaw\":exp==act,\n        \"expectedLen\":len(exp),\n        \"actualLen\":len(act),\n        \"firstDiff\":first,\n        \"expectedFirst12\":exp[:12].hex(\" \"),\n        \"actualFirst12\":act[:12].hex(\" \"),\n        \"expectedCRLF\":exp.count(b\"\\r\\n\"),\n        \"actualCRLF\":act.count(b\"\\r\\n\"),\n        \"expectedLF\":exp.count(b\"\\n\"),\n        \"actualLF\":act.count(b\"\\n\"),\n        \"expectedTail\":exp[-12:].hex(\" \"),\n        \"actualTail\":act[-12:].hex(\" \"),\n    })\nprint(json.dumps(out))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"file\": \"app/scripts/operator-lifecycle-r40.ps1\", \"equalRaw\": true, \"expectedLen\": 1718, \"actualLen\": 1718, \"firstDiff\": null, \"expectedFirst12\": \"70 61 72 61 6d 28 0d 0a 20 20 5b 50\", \"actualFirst12\": \"70 61 72 61 6d 28 0d 0a 20 20 5b 50\", \"expectedCRLF\": 60, \"actualCRLF\": 60, \"expectedLF\": 60, \"actualLF\": 60, \"expectedTail\": \"0a 7d 0d 0a 65 78 69 74 20 30 0d 0a\", \"actualTail\": \"0a 7d 0d 0a 65 78 69 74 20 30 0d 0a\"}, {\"file\": \"app/scripts/pause-all-r40.cmd\", \"equalRaw\": true, \"expectedLen\": 122, \"actualLen\": 122, \"firstDiff\": null, \"expectedFirst12\": \"40 65 63 68 6f 20 6f 66 66 0d 0a 70\", \"actualFirst12\": \"40 65 63 68 6f 20 6f 66 66 0d 0a 70\", \"expectedCRLF\": 2, \"actualCRLF\": 2, \"expectedLF\": 2, \"actualLF\": 2, \"expectedTail\": \"53 45 44 5f 41 4c 4c 20 25 2a 0d 0a\", \"actualTail\": \"53 45 44 5f 41 4c 4c 20 25 2a 0d 0a\"}, {\"file\": \"app/scripts/pause-browser-r40.cmd\", \"equalRaw\": true, \"expectedLen\": 126, \"actualLen\": 126, \"firstDiff\": null, \"expectedFirst12\": \"40 65 63 68 6f 20 6f 66 66 0d 0a 70\", \"actualFirst12\": \"40 65 63 68 6f 20 6f 66 66 0d 0a 70\", \"expectedCRLF\": 2, \"actualCRLF\": 2, \"expectedLF\": 2, \"actualLF\": 2, \"expectedTail\": \"42 52 4f 57 53 45 52 20 25 2a 0d 0a\", \"actualTail\": \"42 52 4f 57 53 45 52 20 25 2a 0d 0a\"}, {\"file\": \"app/scripts/resume-attach-r40.cmd\", \"equalRaw\": true, \"expectedLen\": 126, \"actualLen\": 126, \"firstDiff\": null, \"expectedFirst12\": \"40 65 63 68 6f 20 6f 66 66 0d 0a 70\", \"actualFirst12\": \"40 65 63 68 6f 20 6f 66 66 0d 0a 70\", \"expectedCRLF\": 2, \"actualCRLF\": 2, \"expectedLF\": 2, \"actualLF\": 2, \"expectedTail\": \"5f 41 54 54 41 43 48 20 25 2a 0d 0a\", \"actualTail\": \"5f 41 54 54 41 43 48 20 25 2a 0d 0a\"}, {\"file\": \"app/scripts/resume-managed-r40.cmd\", \"equalRaw\": true, \"expectedLen\": 127, \"actualLen\": 127, \"firstDiff\": null, \"expectedFirst12\": \"40 65 63 68 6f 20 6f 66 66 0d 0a 70\", \"actualFirst12\": \"40 65 63 68 6f 20 6f 66 66 0d 0a 70\", \"expectedCRLF\": 2, \"actualCRLF\": 2, \"expectedLF\": 2, \"actualLF\": 2, \"expectedTail\": \"4d 41 4e 41 47 45 44 20 25 2a 0d 0a\", \"actualTail\": \"4d 41 4e 41 47 45 44 20 25 2a 0d 0a\"}]\r\n",
+      "stdout_bytes": 2070,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:48:29.914Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:48:29.768Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1156-r42-raw-byte-compare-01"
+    },
+    "request_id": "20261006T1156-r42-raw-byte-compare-01",
+    "started_at": "2026-10-06T04:48:28.678Z",
+    "status": "completed"
+  },
+  "id": "20261006T1156-r42-raw-byte-compare-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
