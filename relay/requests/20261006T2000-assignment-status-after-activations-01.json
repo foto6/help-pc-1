@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T2000-assignment-status-after-activations-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nspecs=[\n ('Media','agent-media','41e3e19f-75a3-478d-a0ef-c498bbe2fa49'),\n ('Bridge','chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982','f3799077-0fd5-4668-8fef-4402fcb43671'),\n ('Creator','chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c','74cfcb00-58d7-404d-9613-a99383f0d149'),\n ('Growth','chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0','11e3962c-57fb-4218-94cd-ee9ba7c25a4c'),\n ('QA','chat-6ac45fb0-9074-83eb-99eb-397265b228e7','992349b1-8367-4822-9b6c-7cf0779e0e93'),\n ('Native','agent-pc-control','b1314ed6-5b22-4cbf-8865-e044b4bd683f')\n]\nout=[]\nfor label,chat,aid in specs:\n u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId='+chat\n try:\n  d=json.loads(urllib.request.urlopen(u,timeout=8).read().decode('utf-8'))\n  row=next((x for x in d.get('assignments',[]) if x.get('id')==aid),{})\n  keep=['state','lastPreflightReason','lastDiagnostic','dispatchTargetId','dispatchCount','dispatchFailureCode','dispatchSubmitAttempted','currentHead','ciRunId','ciConclusion','updatedAt','completedAt']\n  out.append({'label':label,**{k:row.get(k) for k in keep}})\n except Exception as e:\n  out.append({'label':label,'error':type(e).__name__+': '+str(e)})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only assignment status after activating exact managed chat targets"
+}
