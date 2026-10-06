@@ -1,0 +1,41 @@
+EXECUTE NOW — INTEGRATION R8 FINAL LOCAL-STACK ACCEPTANCE / GO-NO-GO. Independent QA only. Do not stop at a plan.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/integration-r8-final-local-stack-20261006
+Exact starting HEAD: 3cd57e3d464ba1b4e33ecc390c673ede5f35c867
+Parent: Hard Wave R7.
+
+Do not modify product repositories.
+
+Candidate successor branches:
+- Bridge R43: agent/bridge-r43-porcelain-cutover-fix-20261006
+- Native MCP R39: agent/native-mcp-r39-local-canary-20261006
+- Media R27: agent/media-r27-real-input-local-rehearsal-20261006
+- Creator R39: agent/creator-r39-current-authority-binder-20261006
+- Growth R38: agent/growth-r38-real-local-bundle-verifier-20261006
+
+Baseline exact-green parents:
+- Bridge R42 a6adf698764776856567239b07b0687e8ac89fa5 / CI 37416629592 SUCCESS
+- Native MCP R38 a0d8438f0e4fa93e6be50402efb6783f92c3412b / CI 37406258361 SUCCESS
+- Media R26 dba0dce8d44c3b5786c37d2ce793172a058fb40f / CI 37405928263 SUCCESS
+- Creator R38 b4d0b3a940357eec333d5a1d9b9141bd61b89809 / CI 37405132939 SUCCESS
+- Growth R37 f3cb8ec0d8aa7155b6169d5f86828de3fbc9d3ba / CI 37406299930 SUCCESS
+
+Goal: independently decide whether the complete local stack is safe to execute against one real user-supplied video on the user's Windows PC.
+
+Required:
+1. Preserve all R1-R7 adversarial evidence.
+2. Verify exact final SHA/CI/artifact tuples for every successor. Branch name alone is insufficient.
+3. Bridge gate: porcelain parser fix proven; exact-green PreflightOnly; successful controlled live cutover; rollback manifest; live reconcile; successor chat IDs; High proofs; no provider deletion/blind replay.
+4. Native MCP gate: R39 exact-green; staged local canary/preflight contract; current GitHub relay remains safe fallback; no production MCP authority cutover required for montage GO unless the control path depends on it.
+5. Media gate: R27 exact-green; explicit input/output confinement; real-input adapter reuses R26 engine; sealed bundle/verifier; no heavy hosted-CI claim.
+6. Creator/Growth authority compatibility: Media R27 independent accepted tuple; Creator R39 exact binder; Growth R38 exact verifier; no stale R25/R34/R38 substitutions.
+7. Add >=30 cross-repo adversarial cases including wrong exact chat, exhausted predecessor, Medium/High race, stale accepted authority, branch moved after acceptance, Media pending QA, changed input under operation ID, runtime drift, output escape, interrupted render, corrupt checkpoint, final tamper, wrong review lineage, wrong Creator/Growth pairing, MCP unknown outcome and Bridge rollback state.
+8. Produce machine-readable matrix for Bridge / Native MCP / Media / Creator / Growth with ACCEPTED / WAITING_EXACT_GREEN / BLOCKED / REJECTED.
+9. Issue Media independent QA acceptance tuple only if exact R27 evidence satisfies policy. Never self-sign without exact tests/artifact review.
+10. Emit LOCAL_PC_REHEARSAL_GO or LOCAL_PC_REHEARSAL_BLOCKED.
+11. If GO, emit exact approved coordinator commands in order: Bridge/control preflight if required; Media real-input run; Media verify; Growth verify; Creator orchestration/escrow verify. Do not execute heavy render inside QA.
+12. Exact-head CI SUCCESS + QA artifact required.
+13. No merge, no live social publish, no SpectraTrack work.
+
+Completion requires exact QA SHA/CI/artifact and exact minimum blockers if not GO.
