@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0741-check-media-node-children-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='SilentlyContinue'\n$out=@()\nGet-CimInstance Win32_Process -Filter \"Name='node.exe'\" | Where-Object {\n  $_.CommandLine -like '*video2-r25-local*' -or $_.CommandLine -like '*tournament-r25.test.js*' -or $_.CommandLine -like '*r25-candidate4-checkpoint.test.js*'\n} | ForEach-Object {$out += [pscustomobject]@{pid=$_.ProcessId;ppid=$_.ParentProcessId;cmd=$_.CommandLine}}\n$out | ConvertTo-Json -Depth 3 -Compress"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only check for orphan Media R25 Node test processes"
+}
