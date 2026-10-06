@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/c",
+        "findstr /N /C:\"not ok\" /C:\"AssertionError\" /C:\"ERR\" /C:\"# fail\" /C:\"error:\" /C:\"Error:\" E:\\work\\video2-r25-local-run\\focused2.log"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "FINDSTR: Cannot open ok\"\r\nFINDSTR: Cannot open /C:\"AssertionError\"\r\nFINDSTR: Cannot open /C:\"ERR\"\r\nFINDSTR: Cannot open /C:\"#\r\nFINDSTR: Cannot open fail\"\r\nFINDSTR: Cannot open /C:\"error:\"\r\nFINDSTR: Cannot open /C:\"Error:\"\r\nFINDSTR: Warning - input file E:\\work\\video2-r25-local-run\\focused2.log is in Unicode format.\r\n",
+      "stderr_bytes": 318,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T00:12:51.892Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T00:12:51.795Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0750-media-focused-failure-lines-01"
+    },
+    "request_id": "20261006T0750-media-focused-failure-lines-01",
+    "started_at": "2026-10-06T00:12:51.555Z",
+    "status": "completed"
+  },
+  "id": "20261006T0750-media-focused-failure-lines-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
