@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0743-media-focused-filemeta-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/c",
+      "dir /-C /A:-D E:\\work\\video2-r25-local-run\\focused.exit E:\\work\\video2-r25-local-run\\focused.log & echo ---EXIT--- & type E:\\work\\video2-r25-local-run\\focused.exit"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only file metadata and exit marker for completed Media focused tests"
+}
