@@ -1,0 +1,45 @@
+EXECUTE NOW — NATIVE MCP R38 SOURCE-AUTHORITY REPAIR / OPERATOR LIFECYCLE CLOSEOUT. Do not stop at a plan.
+
+Repo: foto6/help-pc-2
+Writable branch ONLY: agent/native-mcp-r38-authority-repair-20261006
+Exact starting HEAD: b13243e687173a5342356361956a2fd5eec81138
+Parent branch: agent/native-mcp-r37-operator-lifecycle-20261006
+Observed exact-head CI: 37398892815 FAILURE.
+
+Exact failure to fix, not hide:
+R31 direct-readiness source pin rejected src/direct-remote-mcp.js:
+- expected git blob: cb6d74888514d3262d206df4f3cbd13a1f8899e2
+- actual git blob: 8df50ca3792091625d4de1143b4625ae2f970ecd
+- error: R31_SOURCE_BLOB_DRIFT
+All earlier safety suites shown in the same run remained green before this source-pin failure.
+
+Goal: repair authority lineage correctly and finish a clean operator lifecycle for personal production. Do NOT weaken source-pin validation or accept "same feature" by prose.
+
+Required:
+1. Trace why src/direct-remote-mcp.js differs from the frozen R30/R31 source blob. Identify the exact commit(s), intended contract change, and whether the current file is legitimate successor code or accidental drift.
+2. If legitimate, define a new exact source-authority tuple for R38 and update consumers atomically. If not legitimate, restore the exact intended source. Never merely replace expected hash with actual hash without lineage proof.
+3. Preserve fail-closed source pin validation and add regression:
+   - exact accepted blob passes;
+   - alternate blob at same path fails;
+   - same SHA metadata with wrong blob fails;
+   - mixed old/new authority tuple fails.
+4. Keep and finish native_mcp.operator_lifecycle.r37.v1 semantics:
+   RUNNING / PAUSED / DRAINING / RECONCILIATION_REQUIRED.
+5. One operator status command must report:
+   - native MCP host;
+   - control service;
+   - executor;
+   - GitHub relay fallback;
+   - direct lane availability;
+   - reconciliation requirement;
+   - current authority SHA/version;
+   - autostart status.
+6. PAUSED blocks new side-effect dispatch but preserves read-only health/status.
+7. Resume is explicit/idempotent and never replays unknown side effects.
+8. Reboot/process-replacement semantics must preserve outcome journal and unknown-effect reconciliation.
+9. Add one-command local canary/preflight command suitable for the user's PC. It must be read-only by default; applying install/cutover requires an explicit flag.
+10. Exact-head CI on Windows + Ubuntu must both SUCCESS.
+11. Produce R38 readiness artifact with exact SHA/run/artifact digests and explicit release disposition.
+12. No credential entry, no firewall/tunnel mutation, no automatic process kill, no live cutover/install unless separately authorized after exact-green evidence.
+
+Completion requires substantive code/tests/docs/report + exact final SHA + exact-head green CI + artifacts.
