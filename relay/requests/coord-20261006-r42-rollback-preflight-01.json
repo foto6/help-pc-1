@@ -1,0 +1,21 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261006-r42-rollback-preflight-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "E:\\WebAIBridge\\app\\r42-rollback.ps1",
+      "-Manifest",
+      "E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261006T043453Z\\rollback-manifest.json",
+      "-ValidateOnly"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 20000,
+  "note": "R42 rollback preflight after known partial apply-03 failure; exact manifest only"
+}
