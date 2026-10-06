@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$cid='6ac45836-87a0-83ed-bea4-0ad0f99c8982';\nfunction Conv([string]$u){try{$x=[uri]$u;$p=$x.AbsolutePath.Trim('/').Split('/');if($p.Length-eq2-and$p[0]-eq'c'){return $p[1]};if($p.Length-eq4-and$p[0]-eq'g'-and$p[2]-eq'c'){return $p[3]}}catch{};return ''}\n$tabs=@(Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3);\n$m=@($tabs|Where-Object{$_.type-eq'page'-and(Conv $_.url)-eq$cid});\nif($m.Count -gt 1){ throw \"duplicate exact Bridge conversation tabs: $($m.Count)\" }\nif($m.Count -eq 0){\n  $url='https://chatgpt.com/c/'+$cid;\n  Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17410/json/new?'+[uri]::EscapeDataString($url)) -TimeoutSec 3|Out-Null;\n  Start-Sleep -Milliseconds 1200;\n}\n$tabs=@(Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 3);\n$m=@($tabs|Where-Object{$_.type-eq'page'-and(Conv $_.url)-eq$cid});\n[pscustomobject]@{count=$m.Count;tabs=@($m|Select-Object id,title,url,webSocketDebuggerUrl)}|ConvertTo-Json -Depth 4 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"count\":0,\"tabs\":[]}\r\n",
+      "stdout_bytes": 23,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:30:13.631Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:30:13.469Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1131-open-bridge-apply02-chat-01"
+    },
+    "request_id": "20261006T1131-open-bridge-apply02-chat-01",
+    "started_at": "2026-10-06T04:30:11.654Z",
+    "status": "completed"
+  },
+  "id": "20261006T1131-open-bridge-apply02-chat-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
