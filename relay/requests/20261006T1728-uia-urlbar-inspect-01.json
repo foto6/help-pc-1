@@ -1,0 +1,13 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1728-uia-urlbar-inspect-01",
+  "action": "uia.inspect",
+  "params": {
+    "query": {
+      "automation_id": "urlbar-input",
+      "window_title": "Собрать и доработать MCP — Mozilla Firefox"
+    }
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only inspect current Firefox address bar for exact active ChatGPT URL"
+}
