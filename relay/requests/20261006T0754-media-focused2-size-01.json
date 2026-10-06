@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0754-media-focused2-size-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/c",
+      "dir /-C /A:-D E:\\work\\video2-r25-local-run\\focused2.exit E:\\work\\video2-r25-local-run\\focused2.log"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only metadata for Media R25 focused2 log"
+}
