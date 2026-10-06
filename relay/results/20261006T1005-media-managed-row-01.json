@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst r=await fetch('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1');\nconst j=await r.json();\nconst cid='6abda64b-aac4-83eb-adee-dc7143ca5d2b';\nconst conv=v=>{try{const u=new URL(String(v||''));const p=u.pathname.split('/').filter(Boolean);if(p.length===2&&p[0]==='c')return p[1];if(p.length===4&&p[0]==='g'&&p[2]==='c')return p[3]}catch{}return ''};\nconst rows=(j.chats||[]).filter(x=>conv(x.url)===cid).map(x=>({\n id:x.id,name:x.name,url:x.url,projectId:x.projectId,profileId:x.profileId,\n repository:x.repository,branch:x.branch,gitHead:x.gitHead,status:x.status,\n contextLimit:x.contextLimit,highMode:x.highMode,openTabs:x.openTabs,\n rotateWithProject:x.rotateWithProject,enabled:x.enabled,lastSeenAt:x.lastSeenAt\n}));\nprocess.stdout.write(JSON.stringify({http:r.status,count:rows.length,rows}));\n\n'@; $code | node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"http\":200,\"count\":0,\"rows\":[]}",
+      "stdout_bytes": 32,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:29:16.188Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:29:16.078Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1005-media-managed-row-01"
+    },
+    "request_id": "20261006T1005-media-managed-row-01",
+    "started_at": "2026-10-06T02:29:15.439Z",
+    "status": "completed"
+  },
+  "id": "20261006T1005-media-managed-row-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
