@@ -8,6 +8,15 @@ Parent QA: Hard Wave R7.
 Do not mutate product repositories.
 
 Current exact authorities / candidates:
+Bridge R42 exact source candidate is now frozen for evaluation:
+- repository: foto6/WebAIBridge
+- exact SHA: e8033f2e42bd335c10a397eb3d2cb62c8bb837a9
+- exact-head CI: 37412502084 SUCCESS
+- contract: bridge.projects_live_control_plane_cutover.r42.v1
+- Windows artifact: 11390250540 / sha256:90809c0c9e0f5afdd51c8e8c9e292a15af2e77eeab19a6e0e98e76086c61a902
+- Ubuntu artifact: 11389623324 / sha256:530c75ea28d771a0d311b147c1c2fed4490b1e28f8ac8942c66df6e124cdb9de
+- source-green alone is NOT live acceptance; R8 must still require the controlled local cutover/post-cutover exact-head/reconcile/rollback/successor evidence.
+
 Current Growth local-PC producer candidate to evaluate:
 - repository: foto6/video3
 - branch: agent/growth-r37-local-pc-selection-adapter-20261006
