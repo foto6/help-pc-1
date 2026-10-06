@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0935-cmd-health-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "echo ok"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Minimal cmd shell health probe"
+}
