@@ -1,0 +1,42 @@
+EXECUTE NOW — INDEPENDENT QA R8 / LOCAL-PC READINESS + CHAT-ROLLOVER CONTROL-PLANE GATE. Independent QA only.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/video-r8-local-pc-qa-20261006
+Exact starting HEAD: 3cd57e3d464ba1b4e33ecc390c673ede5f35c867
+Parent QA CI: 37247325407 SUCCESS.
+
+Current independently known candidates:
+- Creator R36 accepted: video1@89e769e61cb5f5e2ee4ab5fc2197e4ba72ad5c22.
+- Bridge R39 accepted: WebAIBridge@82656ad0f49bcc3cb21f08cdae78fab2db2765b1.
+- Growth R36 candidate: video3@a53f9deb180bb256d193f0422c6ffd7a5923d97a, CI 37398558145 SUCCESS, contract growth.local_rehearsal_evidence.r36.v1. Must be independently accepted, not inferred.
+- Media R25 current code head b11a93664f9b64bf6da626119758c841a0a75c1e is NOT accepted; real local-PC render authority is still missing.
+- New Creator R37 / Bridge R40 / Media local-PC work are candidates only until exact-green.
+
+Real rollover incident:
+- exact old Creator, Media, Bridge and Supervisor chats showed confirmed context exhaustion;
+- Growth remained healthy;
+- successor chats are being created manually by coordinator as temporary fallback.
+Use this as an observed fixture, not as proof Bridge R40 works.
+
+Mission:
+1. Independently accept/reject Growth R36 by exact SHA, CI, artifact and contract evidence.
+2. Predeclare local-PC Media acceptance contract before the real PC run:
+   code head green + local evidence schema + exact source/runtime/output hashes + independent verifier + real Windows execution evidence.
+3. Do NOT accept Media from CI-only fixtures.
+4. Independently evaluate Creator R37 only against accepted upstream authority tuples.
+5. Independently evaluate Bridge R40 Projects-control-plane implementation against boss spec commit 84b4a56....
+6. Add exhaustion rollover QA:
+   4 exhausted roles, 1 healthy role, duplicate unrelated tabs, stale cached state, successor creation, predecessor history retention, exact current-pointer switch.
+7. Add unified ledger QA proving PC_CONTROL_CDP dispatch and BRIDGE_MANAGED_JOB are both visible with stable operation IDs.
+8. Add >=50 deterministic faults across local render evidence, authority drift, exhaustion rollover, TTL/staleness, duplicate successor creation, wrong-chat routing, unknown Send replay.
+9. Produce machine-readable acceptance matrix:
+   ACCEPTED / WAITING_LOCAL_EXECUTION / WAITING_EXACT_GREEN / INCOMPATIBLE / REJECTED.
+10. Define LOCAL_PC_FULL_REHEARSAL_READY only when Media local execution evidence and all required exact upstream authorities are accepted.
+11. No product repo mutations. No merge. No live Bridge cutover. No live publish. No SpectraTrack work.
+
+Completion:
+- exact QA HEAD + exact-head CI SUCCESS;
+- artifact id/name/digest;
+- accepted/rejected authority matrix;
+- explicit minimum fixes;
+- one final boolean LOCAL_PC_FULL_REHEARSAL_READY.
