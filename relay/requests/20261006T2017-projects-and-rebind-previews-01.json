@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T2017-projects-and-rebind-previews-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,urllib.parse\nbase='http://127.0.0.1:17448'\np=json.loads(urllib.request.urlopen(base+'/api/supervisor-watchdog/projects',timeout=10).read().decode('utf-8'))\nprojects=p.get('projects') or p.get('managedProjects') or []\nout={'projects':[{'id':x.get('id'),'name':x.get('name'),'profileId':x.get('profileId'),'enabled':x.get('enabled')} for x in projects],'previews':[]}\nfor cid in ['chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0','agent-pc-control']:\n for proj in projects:\n  pid=str(proj.get('id') or '')\n  if not pid: continue\n  u=base+'/api/supervisor-watchdog/managed-chats/'+cid+'/legacy-rebind?projectId='+urllib.parse.quote(pid,safe='')\n  try:\n   d=json.loads(urllib.request.urlopen(u,timeout=6).read().decode('utf-8'))\n   out['previews'].append({'chatId':cid,'projectId':pid,'projectName':proj.get('name'),'eligible':d.get('eligible'),'reason':d.get('reason'),'managedProfileId':d.get('managedProfileId'),'projectProfileId':d.get('projectProfileId'),'url':d.get('managedChatUrl')})\n  except Exception as e:\n   out['previews'].append({'chatId':cid,'projectId':pid,'error':type(e).__name__+': '+str(e)})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only managed Projects and legacy-rebind previews for Growth/Native"
+}
