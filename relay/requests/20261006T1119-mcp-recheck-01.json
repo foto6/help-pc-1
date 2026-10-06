@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1119-mcp-recheck-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\nconst cid=\"6ab67022-ae5c-83ed-a654-5dcc82c3b351\";\nconst conv=v=>{try{const u=new URL(String(v||\"\"));const p=u.pathname.split(\"/\").filter(Boolean);if(p.length===2&&p[0]===\"c\")return p[1];if(p.length===4&&p[0]===\"g\"&&p[2]===\"c\")return p[3]}catch{}return \"\"};\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst ms=tabs.filter(t=>t.type===\"page\"&&conv(t.url)===cid);\nconst out=[];\nfor(const tab of ms){\n const row={id:tab.id,title:tab.title,url:tab.url};\n try{\n  const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1;const p=new Map();\n  ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n  const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\n  const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect(),s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!=='none'&&s.visibility!=='hidden'};const bs=[...document.querySelectorAll('button,[role=\\\"button\\\"]')].filter(vis);const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\"true\\\"]')].find(vis)||null;const txt=document.body?.innerText||'';return {high:bs.some(b=>/^(Высокий|High)$/iu.test((b.innerText||b.textContent||'').trim())),generating:bs.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||''))),composer:!!c,draftLength:c?((('value'in c?c.value:(c.innerText||c.textContent||''))||'').trim().length):0,exhausted:/maximum length|max(?:imum)? conversation length|context window is full|достиг.{0,80}(?:максимальн|лимит)|начав новый чат|начните новый чат/iu.test(txt)}})())\",returnByValue:true});\n  Object.assign(row,JSON.parse(rr.result.value));ws.close();\n }catch(e){row.error=String(e)}\n out.push(row);\n}\nprocess.stdout.write(JSON.stringify({count:ms.length,tabs:out}));\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only recheck MCP exact tabs after concurrent reconciliation"
+}
