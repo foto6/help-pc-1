@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\nPush-Location $repo;\n$head=([string](git rev-parse HEAD)).Trim();\n$dirty=@(git status --porcelain);\nPop-Location;\n$cut='E:\\WebAIBridge\\app\\data\\projects-live-control-plane-cutover-r42.json';\nif(!(Test-Path $cut)){ throw 'R42 cutover state missing after apply-03 effects' }\n$state=Get-Content $cut -Raw|ConvertFrom-Json;\n$manifest=[string]$state.rollbackManifest;\n$manifestExists=Test-Path $manifest;\n$m=$null;if($manifestExists){$m=Get-Content $manifest -Raw|ConvertFrom-Json}\n[pscustomobject]@{\n head=$head;dirtyCount=$dirty.Count;\n cutoverStatus=$state.status;holdActive=$state.holdActive;\n rollbackManifest=$manifest;rollbackManifestExists=$manifestExists;\n rollbackCommand=[string]$state.rollbackCommand;\n preCutoverHead=if($m){[string]$m.preCutoverHead}else{''};\n backupRoot=if($m){[string]$m.backupRoot}else{''};\n targetSha=if($m){[string]$m.targetSha}else{''}\n}|ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"head\":\"e8033f2e42bd335c10a397eb3d2cb62c8bb837a9\",\"dirtyCount\":5,\"cutoverStatus\":\"CUTOVER_HOLD_PREPARED\",\"holdActive\":true,\"rollbackManifest\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261006T043453Z\\\\rollback-manifest.json\",\"rollbackManifestExists\":true,\"rollbackCommand\":\"powershell.exe -NoProfile -ExecutionPolicy Bypass -File \\\"E:\\\\WebAIBridge\\\\app\\\\r42-rollback.ps1\\\" -Manifest \\\"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261006T043453Z\\\\rollback-manifest.json\\\"\",\"preCutoverHead\":\"cb852e013634287669f957253d13d8ef2b45cada\",\"backupRoot\":\"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261006T043453Z\",\"targetSha\":\"e8033f2e42bd335c10a397eb3d2cb62c8bb837a9\"}\r\n",
+      "stdout_bytes": 686,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:36:14.471Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:36:14.355Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1143-r42-apply03-state-read-01"
+    },
+    "request_id": "20261006T1143-r42-apply03-state-read-01",
+    "started_at": "2026-10-06T04:36:13.687Z",
+    "status": "completed"
+  },
+  "id": "20261006T1143-r42-apply03-state-read-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
