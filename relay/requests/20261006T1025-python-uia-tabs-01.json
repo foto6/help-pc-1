@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1025-python-uia-tabs-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python",
+      "-c",
+      "import uiautomation as auto\nauto.SetGlobalSearchTimeout(1)\nroot=auto.ControlFromHandle(8456336)\nnames=[\"Native Connector Implementation\",\"Deliver R11 Editor\",\"Bridge R19 Implementation Report\",\"Project Agent Supervision\",\"Implement Publish Provider Layer\",\"Implement Live Review Ingest\"]\nfor name in names:\n    try:\n        c=root.TabItemControl(Name=name,searchDepth=8)\n        print(name,\"EXISTS\",c.Exists(1,0),\"OFFSCREEN\",getattr(c,\"IsOffscreen\",None) if c.Exists(0,0) else None)\n    except Exception as e:\n        print(name,\"ERR\",repr(e))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only targeted UIA check for known agent tabs"
+}
