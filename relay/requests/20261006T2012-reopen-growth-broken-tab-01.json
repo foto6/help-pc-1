@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T2012-reopen-growth-broken-tab-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,time\ntid='BE65410914FEC5633289721AF21CC403'\ncid='chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0'\nout={}\ntry:\n out['close']=urllib.request.urlopen('http://127.0.0.1:17410/json/close/'+tid,timeout=5).read().decode('utf-8','replace').strip()\nexcept Exception as e:\n out['close_error']=type(e).__name__+': '+str(e)\ntime.sleep(1)\ndata=json.dumps({'id':cid}).encode('utf-8')\nreq=urllib.request.Request('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/open',data=data,headers={'Content-Type':'application/json'},method='POST')\nout['open']=json.loads(urllib.request.urlopen(req,timeout=15).read().decode('utf-8'))\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 25000,
+  "note": "Close only broken Growth browser target and reopen same exact managed conversation; no provider deletion/send"
+}
