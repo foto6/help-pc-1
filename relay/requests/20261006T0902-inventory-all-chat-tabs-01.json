@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0902-inventory-all-chat-tabs-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const out=[];\nfor(const tab of tabs.filter(t=>t.type===\"page\"&&/chatgpt\\.com/.test(t.url))){\n const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\n let seq=1;const p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n const call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\n try{\n  const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const txt=document.body?.innerText||'';const exhausted=/максимальн.{0,20}длин.{0,20}(обсуждения|чата)|maximum.{0,20}(length|conversation)/i.test(txt)&&/нов(ый|ого) чат|new chat/i.test(txt);const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const bs=[...document.querySelectorAll('button')].filter(vis);const generating=bs.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||'')));const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\"true\\\"]')].find(vis)||null;const draft=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const msgs=[...document.querySelectorAll('[data-message-author-role]')];const users=msgs.filter(m=>m.getAttribute('data-message-author-role')==='user');const assistants=msgs.filter(m=>m.getAttribute('data-message-author-role')==='assistant');const lastUser=users.length?((users[users.length-1].innerText||users[users.length-1].textContent||'').trim()):'';const lastAssistant=assistants.length?((assistants[assistants.length-1].innerText||assistants[assistants.length-1].textContent||'').trim()):'';return {href:location.href,title:document.title,exhausted,generating,draftLength:draft.trim().length,lastUser:lastUser.slice(0,1200),lastAssistant:lastAssistant.slice(-1200)}})())\",returnByValue:true});\n  out.push({tabId:tab.id,...JSON.parse(rr.result.value)});\n }catch(e){out.push({tabId:tab.id,url:tab.url,error:String(e)})}\n ws.close();await new Promise(r=>setTimeout(r,35));\n}\nprocess.stdout.write(JSON.stringify(out));\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 22000,
+  "note": "Read-only inventory all open ChatGPT tabs and current tasks"
+}
