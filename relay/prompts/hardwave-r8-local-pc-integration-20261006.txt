@@ -1,0 +1,70 @@
+EXECUTE NOW — HARD WAVE R8 LOCAL-PC INTEGRATION ACCEPTANCE / NO-FALSE-GREEN GATE. Independent QA only. Do not stop at a plan.
+
+Repo: foto6/boss
+Writable branch ONLY: agent/video-local-pc-acceptance-r8-20261006
+Exact starting HEAD: 3cd57e3d464ba1b4e33ecc390c673ede5f35c867
+Parent R7 was accepted on its own exact evidence; preserve all prior fault corpora.
+
+Current active successor lines (moving until exact final evidence):
+- Creator R38 branch agent/creator-r38-local-fullstack-rehearsal-20261006; observed during dispatch wave at b4d0b3a940357eec333d5a1d9b9141bd61b89809 and may move further.
+- Media R26 branch agent/media-r26-local-windows-render-gate-20261006; starting authority b11a93664f9b64bf6da626119758c841a0a75c1e. Old Media chat exhausted; successor canonical conversation is 6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf. R26 task marker is visibly present in successor body at High.
+- Growth R37 branch agent/growth-r37-local-fullstack-verifier-20261006; observed at 70d9696abb1a75461a7bcbbb1649076a33d69f46 and may move.
+- Bridge R41 branch agent/bridge-r41-projects-live-control-plane-20261006; observed at c1f96bf1953f9acc4d456c1d26b6b3e152384e4a and may move.
+- Native MCP R38 branch agent/native-mcp-r38-source-pin-recovery-20261006; observed at 43ff426b9abe43a78c6334add632e323e8694e56 and may move.
+
+Real coordinator evidence to incorporate:
+1. Full autonomy is enabled in deployed WebAIBridge.
+2. Direct PC-Control sends now enforce High before typing/sending.
+3. Existing R40 managed-agent paths already had fail-closed High verification, but PC-Control direct sends previously bypassed it; R41 is tasked with a unified High gate.
+4. Media predecessor 6abda64b-aac4-83eb-adee-dc7143ca5d2b was directly confirmed context-exhausted.
+5. Stale Projects registry pointed Media to ancient R10/old conversation. Coordinator reconciled logical agent-media to current R26 branch and then created a successor when R40 built-in rotation failed due current Project DOM incompatibility.
+6. The canonical Media successor is 6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf, title "Implement Local Windows Render Gate", High=true, and R26 marker exists in its body.
+7. Old/current predecessor URLs remain preserved in agent-media history.
+8. R40 managed rotate failed before provider mutation with managed_project_dom_incompatible (project_composer_missing/chat_tab_missing/sources_tab_missing); R41 must address current UI, not paper over this evidence.
+
+R8 mission:
+1. Independently resolve FINAL exact head for each active successor only after branch stops moving enough to produce exact-head CI/artifacts. Never accept an older successful run for a newer head.
+2. Media R26 is the hard release blocker. Require:
+   - control-plane CI exact-head SUCCESS;
+   - local Windows real-render launcher and verifier;
+   - 4 real MP4 candidate semantics preserved;
+   - bracket/selection evidence;
+   - targeted re-edit;
+   - final.mp4 lineage;
+   - checkpoint/restart evidence;
+   - explicit READY_FOR_LOCAL_REAL_RENDER.
+   Hosted CI may use tiny fixtures, but may NOT fake the heavy real render.
+3. Creator R38 must remain WAITING_MEDIA_AUTHORITY until an accepted Media R26 tuple exists. Then verify its one-command local rehearsal package consumes the exact accepted Media tuple, not a branch name.
+4. Growth R37 must verify sealed local evidence and remain advisory/no-publish. Reject missing/duplicate/tampered candidate/final evidence.
+5. Bridge R41 must independently prove:
+   - desired vs observed state/freshness;
+   - logical conversation generations;
+   - context exhaustion rollover on current ChatGPT Project DOM;
+   - Medium->High auto-select + readback before first successor send;
+   - High recheck before Enter;
+   - PC_CONTROL_CDP operation ledger ingestion;
+   - stale registry reconcile;
+   - no title/foreground/only-open routing authority.
+6. Native MCP R38 must independently prove legitimate source-pin lineage recovery. Do not accept "expected hash = actual hash" without commit/diff/authority justification. Require Windows + Ubuntu exact-head green.
+7. Add cross-stack compatibility matrix:
+   Creator R38 -> Media R26 -> Growth R37 -> Bridge R41 -> Native MCP R38
+   with exact SHA, CI, artifact id/name/digest, contract, parent authority, disposition.
+8. Define final states:
+   - READY_TO_RUN_ON_USER_PC
+   - WAITING_MEDIA_LOCAL_RENDER
+   - WAITING_EXACT_GREEN
+   - INCOMPATIBLE
+   - REJECTED
+9. READY_TO_RUN_ON_USER_PC requires all SOFTWARE/control-plane gates exact-green and compatible. It does NOT mean a real heavy local render has already been executed; that is the next coordinator action on the user's PC.
+10. Produce a local-run preflight checklist: command(s), expected inputs, disk/RAM/CPU/GPU assumptions, expected artifacts, abort/reconcile procedure. Do not execute the user's heavy render from QA.
+11. Preserve no-publish/no-credential/no-live-Bridge-cutover boundaries.
+12. Zero product repo mutations. No merge. No SpectraTrack work.
+13. CI focused + full for R8 QA itself. Deterministic QA artifact/report required.
+
+Completion evidence:
+- substantive QA implementation/tests/docs/checkpoint;
+- exact final QA SHA;
+- exact-head CI SUCCESS;
+- artifact id/name/digest;
+- exact successor acceptance matrix;
+- explicit blocker(s) or READY_TO_RUN_ON_USER_PC verdict.
