@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1138-r42-final-local-guard-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\nPush-Location $repo;\n$head=([string](git rev-parse HEAD)).Trim();\n$branchRaw=git branch --show-current;\n$branch=if($null -eq $branchRaw){''}else{([string]$branchRaw).Trim()};\n$dirty=@(git status --porcelain);\nPop-Location;\n$cut='E:\\WebAIBridge\\app\\data\\projects-live-control-plane-cutover-r42.json';\n$cutState=$null;if(Test-Path $cut){try{$cutState=Get-Content $cut -Raw|ConvertFrom-Json}catch{}}\n$procs=@(Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match 'r42-cutover\\.ps1' -and $_.ProcessId -ne $PID } | Select-Object ProcessId,Name,CommandLine);\n$health=Get-Content 'E:\\pc-github-relay\\.pc-relay\\health.json' -Raw|ConvertFrom-Json;\n[pscustomobject]@{\n head=$head;branch=$branch;detached=([string]::IsNullOrWhiteSpace($branch));dirtyCount=$dirty.Count;\n cutoverExists=(Test-Path $cut);\n cutoverStatus=if($cutState){[string]$cutState.status}else{''};\n holdActive=if($cutState){[bool]$cutState.holdActive}else{$false};\n activeCutoverProcesses=@($procs);\n relayReconciliationRequired=[bool]$health.reconciliation_required;\n relayLastError=$health.last_error\n}|ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 10000,
+  "note": "Final corrected read-only guard before R42 apply-02"
+}
