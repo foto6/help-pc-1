@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1044-bridge-status-python-http-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python",
+      "-c",
+      "import http.client\nc=http.client.HTTPConnection(\"127.0.0.1\",17448,timeout=4)\nc.request(\"GET\",\"/api/status\")\nr=c.getresponse()\nprint(r.status)\nprint(r.read(12000).decode(\"utf-8\",\"replace\"))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only Bridge API status via local Python HTTP"
+}
