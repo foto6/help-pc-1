@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-r42-local-git-baseline-20261006-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();\n$p='E:\\WebAIBridge';\n$o=[ordered]@{path=$p;exists=(Test-Path \"$p\\.git\")};\nif($o.exists){\n $o.branch=(git -C $p branch --show-current);\n $o.head=(git -C $p rev-parse HEAD);\n $o.remote=(git -C $p remote get-url origin);\n $o.status=@(git -C $p status --porcelain);\n $o.serverSha=(Get-FileHash \"$p\\app\\server.js\" -Algorithm SHA256).Hash.ToLowerInvariant();\n}\n$o|ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "R42 read-only exact local WebAIBridge git baseline and cleanliness gate"
+}
