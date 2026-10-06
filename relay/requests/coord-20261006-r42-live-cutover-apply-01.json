@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261006-r42-live-cutover-apply-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$branch='agent/bridge-r42-live-control-plane-cutover-20261006';\n$sha='0cefcd33eb5b4f75ef52dbe443c2f7395e4ea966';\n$tmp=Join-Path $env:TEMP ('webai-r42-cutover-'+$sha+'.ps1');\nSet-Location $repo;\n& git fetch origin $branch;\nif($LASTEXITCODE -ne 0){throw 'git fetch failed'}\n$content=& git show ($sha+':app/r42-cutover.ps1');\nif($LASTEXITCODE -ne 0){throw 'git show cutover script failed'}\n$content | Set-Content -LiteralPath $tmp -Encoding UTF8;\n& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $tmp -TargetSha $sha -TargetBranch $branch -RepoPath $repo;\n$code=$LASTEXITCODE;\nif($code -ne 0){throw \"R42 cutover exited $code\"}"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 90000,
+  "note": "Apply exact-green R42 controlled live cutover with autonomous hold and rollback manifest"
+}
