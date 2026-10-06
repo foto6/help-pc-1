@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1222-capabilities-schema-01",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 8000,
+  "note": "Read-only capability/schema inspection for UIA/screenshot monitoring"
+}
