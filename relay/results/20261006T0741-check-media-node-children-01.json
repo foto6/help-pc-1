@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='SilentlyContinue'\n$out=@()\nGet-CimInstance Win32_Process -Filter \"Name='node.exe'\" | Where-Object {\n  $_.CommandLine -like '*video2-r25-local*' -or $_.CommandLine -like '*tournament-r25.test.js*' -or $_.CommandLine -like '*r25-candidate4-checkpoint.test.js*'\n} | ForEach-Object {$out += [pscustomobject]@{pid=$_.ProcessId;ppid=$_.ParentProcessId;cmd=$_.CommandLine}}\n$out | ConvertTo-Json -Depth 3 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T00:10:17.094Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T00:10:16.996Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0741-check-media-node-children-01"
+    },
+    "request_id": "20261006T0741-check-media-node-children-01",
+    "started_at": "2026-10-06T00:10:16.474Z",
+    "status": "completed"
+  },
+  "id": "20261006T0741-check-media-node-children-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
