@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\nfunction GetEndpoint([string]$u){\n  try{\n    $r=Invoke-RestMethod -Uri $u -TimeoutSec 6;\n    return [pscustomobject]@{ok=$true;url=$u;body=$r;error=''}\n  }catch{\n    return [pscustomobject]@{ok=$false;url=$u;body=$null;error=$_.Exception.Message}\n  }\n}\n$repo='E:\\WebAIBridge';\n$head=[string](& git.exe -C $repo rev-parse HEAD);\n$branch=[string](& git.exe -C $repo branch --show-current);\n$dirty=@(& git.exe -C $repo status --porcelain);\n$out=@(\n  (GetEndpoint 'http://127.0.0.1:17448/api/status'),\n  (GetEndpoint 'http://127.0.0.1:17448/api/operator-lifecycle'),\n  (GetEndpoint 'http://127.0.0.1:17448/api/projects/control-plane?inspect=0'),\n  (GetEndpoint 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status')\n);\n[pscustomobject]@{\n  object='bridge.r42_live_read_state.v1';\n  head=$head.Trim();branch=$branch.Trim();dirtyCount=$dirty.Count;\n  endpoints=$out\n}|ConvertTo-Json -Depth 30 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "You cannot call a method on a null-valued expression.\r\nAt line:20 char:1\r\n+ [pscustomobject]@{\r\n+ ~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : InvokeMethodOnNull\r\n \r\n",
+      "stderr_bytes": 263,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T05:00:44.893Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T05:00:44.670Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261006-r42-live-read-state-02"
+    },
+    "request_id": "coord-20261006-r42-live-read-state-02",
+    "started_at": "2026-10-06T05:00:42.007Z",
+    "status": "completed"
+  },
+  "id": "coord-20261006-r42-live-read-state-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
