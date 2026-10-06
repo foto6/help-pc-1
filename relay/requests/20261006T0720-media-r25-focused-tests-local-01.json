@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0720-media-r25-focused-tests-local-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$repo='E:\\work\\video2-r25-local'\nif((git -C $repo rev-parse HEAD).Trim() -ne 'b11a93664f9b64bf6da626119758c841a0a75c1e'){ throw 'HEAD drift' }\n$status=@(git -C $repo status --short)\nif($status.Count -gt 1 -or ($status.Count -eq 1 -and $status[0] -ne '?? package-lock.json')){ throw ('unexpected dirty state: '+($status -join '; ')) }\nif(Test-Path (Join-Path $repo 'package-lock.json')){ Remove-Item -LiteralPath (Join-Path $repo 'package-lock.json') -Force }\nnpm --prefix $repo run test:r25\n$after=@(git -C $repo status --short)\n[pscustomobject]@{head=(git -C $repo rev-parse HEAD).Trim();clean=($after.Count -eq 0);status=@($after)} | ConvertTo-Json -Depth 3 -Compress"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 120000,
+  "note": "Remove only our untracked lockfile and run focused Media R25 tests locally"
+}
