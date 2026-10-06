@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python",
+        "-c",
+        "import uiautomation as auto\nauto.SetGlobalSearchTimeout(1)\nroot=auto.ControlFromHandle(8456336)\nnames=[\"Native Connector Implementation\",\"Deliver R11 Editor\",\"Bridge R19 Implementation Report\",\"Project Agent Supervision\",\"Implement Publish Provider Layer\",\"Implement Live Review Ingest\"]\nfor name in names:\n    try:\n        c=root.TabItemControl(Name=name,searchDepth=8)\n        print(name,\"EXISTS\",c.Exists(1,0),\"OFFSCREEN\",getattr(c,\"IsOffscreen\",None) if c.Exists(0,0) else None)\n    except Exception as e:\n        print(name,\"ERR\",repr(e))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "Native Connector Implementation EXISTS False OFFSCREEN None\r\nDeliver R11 Editor EXISTS False OFFSCREEN None\r\nBridge R19 Implementation Report EXISTS True OFFSCREEN False\r\nProject Agent Supervision EXISTS False OFFSCREEN None\r\nImplement Publish Provider Layer EXISTS False OFFSCREEN None\r\nImplement Live Review Ingest EXISTS True OFFSCREEN False\r\n",
+      "stdout_bytes": 346,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:06:39.304Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:06:39.197Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1025-python-uia-tabs-01"
+    },
+    "request_id": "20261006T1025-python-uia-tabs-01",
+    "started_at": "2026-10-06T02:06:33.886Z",
+    "status": "completed"
+  },
+  "id": "20261006T1025-python-uia-tabs-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
