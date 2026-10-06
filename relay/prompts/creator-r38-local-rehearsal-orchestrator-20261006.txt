@@ -1,0 +1,64 @@
+EXECUTE NOW — CREATOR R38 AUTHORITY-REFRESH / LOCAL REHEARSAL ORCHESTRATOR. Do not stop at a plan.
+
+Repo: foto6/video1
+Writable branch ONLY: agent/creator-r38-local-rehearsal-orchestrator-20261006
+Exact starting HEAD: 1f7cb9ed8f1985cd4faca79ce55f1c5fda9e3a57
+Parent contract: creator.local_integration_driver.r37.v1
+Parent CI: 37398299900 SUCCESS
+Parent R37 artifact: 11384432595
+Parent artifact digest: sha256:a03cc06b1df49af78d1529a9c714eacddcb4fe284ccad26b13b18e9418d1ff02
+
+Problem:
+R37 correctly freezes older accepted Growth R34 + Bridge R38 + QA R6 authorities, but the current integration stack is moving to Growth R37 / Bridge R42 / Media R26 / Integration QA R8. Newer authorities MUST NOT be silently substituted into the frozen R37 tuple.
+
+Goal:
+implement creator.local_rehearsal_orchestrator.r38.v1 as a compatibility-safe successor. It must consume a single independently accepted integration authority bundle instead of hardcoding moving branch names.
+
+Required:
+1. Preserve all R37 fail-closed semantics, durable ledger, replay idempotency, proof graph and release escrow behavior.
+2. Define creator.integration_authority_bundle.r38.v1 with exact tuples for:
+   - Media producer authority;
+   - Growth producer authority;
+   - Bridge control-plane authority;
+   - independent Integration QA authority that accepts/binds the exact producer tuples;
+   - Creator parent authority.
+3. Branch names are never authority. Each producer tuple must bind exact SHA, exact-head CI run/conclusion, required artifact ID/name/digest, contract ID and required implementation blob identities.
+4. Media remains REQUIRED. No accepted Media tuple => no local rehearsal start.
+5. The independent QA tuple must bind exact Media/Growth/Bridge producer values. Self-issued producer acceptance is forbidden.
+6. Support authority generations without rewriting R37 history:
+   - R37 frozen tuple remains valid historical evidence;
+   - R38 accepts only a new explicit R38 bundle;
+   - mixed old/new tuple fails closed.
+7. Provide one command:
+   creator-local-rehearsal-r38 run --source <video> --brief <text> --authority-bundle <qa-approved.json> --out <root>
+   and Windows .cmd wrapper.
+8. The orchestrator must perform/drive:
+   source fingerprint -> Media local candidate generation -> review package -> Growth selection/re-edit decision -> targeted re-edit -> winner -> Creator proof graph -> release escrow -> LOCAL_REHEARSAL_COMPLETE.
+   It must use real component artifacts/outputs, not fixture substitutions, when mode=local.
+9. No model/browser/provider mutation in R38 itself. Bridge authority is control-plane evidence only; actual agent/provider review remains a separately authorized integration step.
+10. Durable restart:
+   - phase operation IDs;
+   - exact input/output hashes;
+   - interrupted phase resumes only after checkpoint validation;
+   - changed source/brief/authority under same session => conflict;
+   - unknown side effect never replays.
+11. Emit a machine-readable local rehearsal evidence package suitable for QA:
+   exact source hash, authority bundle digest, candidate hashes, review/decision hashes, targeted re-edit lineage, winner hash, Creator proof graph digest, escrow digest, restart ledger digest, final state.
+12. Final state before live publish must remain:
+   LOCAL_REHEARSAL_COMPLETE
+   LIVE_AUTHORIZATION_FALSE
+13. Add >=30 adversarial tests including:
+   mixed old/new authority tuple; QA accepting different Media SHA; moving branch name only; artifact digest mismatch; Media missing; Growth stale; Bridge source-green but live-cutover-unaccepted; ledger tamper; changed source same session; interrupted targeted re-edit; duplicate operation changed payload; final winner not in decision lineage.
+14. Exact-head Windows + Ubuntu CI and deterministic R38 artifact.
+15. Produce readiness state:
+   SOURCE_READY_WAITING_INTEGRATION_QA until an R8-approved exact authority bundle exists.
+16. Do NOT claim actual local-PC E2E before coordinator executes it.
+17. No live publish, no credentials, no browser/provider mutation, no merge.
+
+Important current candidates for schema/tests only, NOT automatically accepted authority:
+- Media R26: pending.
+- Growth R37 candidate: 14409d572c494ec8b6f471ea915a27afae1b5521, CI 37409772193 SUCCESS.
+- Bridge R42 current source candidate is moving; do not freeze it until Integration QA supplies an accepted exact tuple.
+- Integration R8: pending.
+
+Completion requires substantive code/tests/docs/report, new exact SHA, exact-head green CI, deterministic artifact.
