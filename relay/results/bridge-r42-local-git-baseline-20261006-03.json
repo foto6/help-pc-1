@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();\n$p='E:\\WebAIBridge';\n$o=[ordered]@{path=$p;exists=(Test-Path \"$p\\.git\")};\nif($o.exists){\n $o.branch=(git -C $p branch --show-current);\n $o.head=(git -C $p rev-parse HEAD);\n $o.remote=(git -C $p remote get-url origin);\n $o.status=@(git -C $p status --porcelain);\n $o.serverSha=(Get-FileHash \"$p\\app\\server.js\" -Algorithm SHA256).Hash.ToLowerInvariant();\n}\n$o|ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"path\":\"E:\\\\WebAIBridge\",\"exists\":true,\"branch\":null,\"head\":\"cb852e013634287669f957253d13d8ef2b45cada\",\"remote\":\"https://github.com/foto6/WebAIBridge.git\",\"status\":[],\"serverSha\":\"d70b38c0e3f393619a83e7e5883caa5e52cfa962511628f1e981fb743dc93a12\"}\r\n",
+      "stdout_bytes": 249,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T03:11:24.809Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T03:11:24.696Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-r42-local-git-baseline-20261006-03"
+    },
+    "request_id": "bridge-r42-local-git-baseline-20261006-03",
+    "started_at": "2026-10-06T03:11:23.849Z",
+    "status": "completed"
+  },
+  "id": "bridge-r42-local-git-baseline-20261006-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
