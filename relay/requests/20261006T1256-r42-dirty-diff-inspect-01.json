@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1256-r42-dirty-diff-inspect-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path;\n$files=@(\n'app/scripts/operator-lifecycle-r40.ps1',\n'app/scripts/pause-all-r40.cmd',\n'app/scripts/pause-browser-r40.cmd',\n'app/scripts/resume-attach-r40.cmd',\n'app/scripts/resume-managed-r40.cmd'\n);\n$out=@();\nforeach($f in $files){\n  $diff=@(& $git -C $repo diff -- $f);\n  $out += [pscustomobject]@{file=$f;diff=($diff -join [Environment]::NewLine)}\n}\n$out|ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only inspect exact lifecycle wrapper diffs after failed R42 startup"
+}
