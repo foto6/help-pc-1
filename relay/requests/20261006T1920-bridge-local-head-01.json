@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1920-bridge-local-head-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "git.exe",
+      "-C",
+      "E:\\WebAIBridge",
+      "rev-parse",
+      "HEAD"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only local WebAIBridge HEAD"
+}
