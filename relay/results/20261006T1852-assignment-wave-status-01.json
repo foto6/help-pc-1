@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request;specs=[[\"Media\",\"agent-media\",\"41e3e19f-75a3-478d-a0ef-c498bbe2fa49\"],[\"Bridge\",\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"f3799077-0fd5-4668-8fef-4402fcb43671\"],[\"Creator\",\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"74cfcb00-58d7-404d-9613-a99383f0d149\"],[\"Growth\",\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"11e3962c-57fb-4218-94cd-ee9ba7c25a4c\"],[\"QA\",\"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\",\"992349b1-8367-4822-9b6c-7cf0779e0e93\"],[\"Native\",\"agent-pc-control\",\"b1314ed6-5b22-4cbf-8865-e044b4bd683f\"]];out=[]\nfor label,chat,aid in specs:\n u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId='+chat\n d=json.loads(urllib.request.urlopen(u,timeout=8).read().decode('utf-8'))\n row=next((x for x in d.get('assignments',[]) if x.get('id')==aid),{})\n out.append({'label':label,'id':aid,'state':row.get('state'),'lastPreflightReason':row.get('lastPreflightReason'),'lastDiagnostic':row.get('lastDiagnostic'),'dispatchTargetId':row.get('dispatchTargetId'),'dispatchCount':row.get('dispatchCount'),'dispatchFailureCode':row.get('dispatchFailureCode'),'dispatchSubmitAttempted':row.get('dispatchSubmitAttempted'),'replacementCount':row.get('replacementCount'),'replacementReason':row.get('replacementReason'),'targetChatUrl':row.get('targetChatUrl'),'currentHead':row.get('currentHead'),'ciRunId':row.get('ciRunId'),'ciConclusion':row.get('ciConclusion')})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"label\":\"Media\",\"id\":\"41e3e19f-75a3-478d-a0ef-c498bbe2fa49\",\"state\":\"awaiting_evidence\",\"lastPreflightReason\":\"ready\",\"lastDiagnostic\":\"supervisor_verification_missing\",\"dispatchTargetId\":\"884B301C522B41E679A92C60328E2B3F\",\"dispatchCount\":1,\"dispatchFailureCode\":\"\",\"dispatchSubmitAttempted\":true,\"replacementCount\":0,\"replacementReason\":null,\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\"currentHead\":\"183838a24205c6885b2366ad6ffa394164283d91\",\"ciRunId\":\"37451069045\",\"ciConclusion\":\"success\"},{\"label\":\"Bridge\",\"id\":\"f3799077-0fd5-4668-8fef-4402fcb43671\",\"state\":\"queued\",\"lastPreflightReason\":\"target_inspection_failed\",\"lastDiagnostic\":\"git_baseline_verified\",\"dispatchTargetId\":\"\",\"dispatchCount\":0,\"dispatchFailureCode\":\"\",\"dispatchSubmitAttempted\":false,\"replacementCount\":0,\"replacementReason\":null,\"targetChatUrl\":\"https://chatgpt.com/c/6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"currentHead\":\"24b511cdf522ac915213adcf90620a2d73dabd39\",\"ciRunId\":\"\",\"ciConclusion\":\"\"},{\"label\":\"Creator\",\"id\":\"74cfcb00-58d7-404d-9613-a99383f0d149\",\"state\":\"queued\",\"lastPreflightReason\":\"target_inspection_failed\",\"lastDiagnostic\":\"git_baseline_verified\",\"dispatchTargetId\":\"\",\"dispatchCount\":0,\"dispatchFailureCode\":\"\",\"dispatchSubmitAttempted\":false,\"replacementCount\":0,\"replacementReason\":null,\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"currentHead\":\"66efe791d816f07aca42d772e57eb53ad7ed331f\",\"ciRunId\":\"\",\"ciConclusion\":\"\"},{\"label\":\"Growth\",\"id\":\"11e3962c-57fb-4218-94cd-ee9ba7c25a4c\",\"state\":\"queued\",\"lastPreflightReason\":\"target_inspection_failed\",\"lastDiagnostic\":\"git_baseline_verified\",\"dispatchTargetId\":\"\",\"dispatchCount\":0,\"dispatchFailureCode\":\"\",\"dispatchSubmitAttempted\":false,\"replacementCount\":0,\"replacementReason\":null,\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"currentHead\":\"d74147329c4c0269c5ac5fbdf4fa99e7a1b9b2d1\",\"ciRunId\":\"\",\"ciConclusion\":\"\"},{\"label\":\"QA\",\"id\":\"992349b1-8367-4822-9b6c-7cf0779e0e93\",\"state\":\"awaiting_evidence\",\"lastPreflightReason\":\"ready\",\"lastDiagnostic\":\"git_head_unchanged\",\"dispatchTargetId\":\"E5A74C31B39DE271EE342324A2688C22\",\"dispatchCount\":1,\"dispatchFailureCode\":\"\",\"dispatchSubmitAttempted\":true,\"replacementCount\":0,\"replacementReason\":null,\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45fb0-9074-83eb-99eb-397265b228e7\",\"currentHead\":\"00cb4716bc838e84db32d9f13c297fbd5f6096a3\",\"ciRunId\":\"\",\"ciConclusion\":\"\"},{\"label\":\"Native\",\"id\":\"b1314ed6-5b22-4cbf-8865-e044b4bd683f\",\"state\":\"queued\",\"lastPreflightReason\":\"target_inspection_failed\",\"lastDiagnostic\":\"git_baseline_verified\",\"dispatchTargetId\":\"\",\"dispatchCount\":0,\"dispatchFailureCode\":\"\",\"dispatchSubmitAttempted\":false,\"replacementCount\":0,\"replacementReason\":null,\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"currentHead\":\"d8c7661d52670fe50e58bc68d50f59a624253e44\",\"ciRunId\":\"\",\"ciConclusion\":\"\"}]\r\n",
+      "stdout_bytes": 3148,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T10:47:12.104Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T10:47:11.977Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1852-assignment-wave-status-01"
+    },
+    "request_id": "20261006T1852-assignment-wave-status-01",
+    "started_at": "2026-10-06T10:47:11.189Z",
+    "status": "completed"
+  },
+  "id": "20261006T1852-assignment-wave-status-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
