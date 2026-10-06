@@ -1,0 +1,50 @@
+EXECUTE NOW — MEDIA R26 LOCAL-PC REAL RENDER RUNNER / RESUMABLE 4-CANDIDATE PIPELINE. Do not stop at a plan.
+
+Repo: foto6/video2
+Writable branch ONLY: agent/media-r26-local-render-runner-20261006
+Exact starting HEAD: b11a93664f9b64bf6da626119758c841a0a75c1e
+Parent: Media R25 multicandidate round engine.
+
+Observed R25 blocker:
+- candidate-3 succeeds;
+- verified checkpoint ffmpeg/ffprobe starts correctly;
+- GitHub-hosted runner repeatedly terminates candidate-4 / segment rendering with runner shutdown / SIGTERM exit 143;
+- separate render-path benchmark is also killed by hosted-runner shutdown.
+Treat this as a hosted-runtime limitation, not permission to fake the real render.
+
+Goal: make the real montage pipeline runnable deterministically on the user's own PC, then prove it can render the full 4-candidate -> bracket -> targeted re-edit -> final artifact chain with resumable evidence.
+
+Required:
+1. Define media.local_render_runner.r26.v1.
+2. Add a Windows-friendly one-command local runner that:
+   - validates exact R26 source authority;
+   - validates ffmpeg/ffprobe runtime identity;
+   - accepts an explicit input video/path and explicit output root;
+   - executes the real R25 plan, not a synthetic shortcut;
+   - produces 4 real encoded MP4 candidates;
+   - produces bracket/review package;
+   - performs one targeted re-edit;
+   - produces final.mp4;
+   - writes deterministic manifest, hashes, timings and lineage.
+3. Resume/checkpoint:
+   - every expensive phase has stable operation identity;
+   - completed valid outputs are verified/reused;
+   - corrupt/wrong-source/wrong-runtime checkpoints fail closed;
+   - restart never silently duplicates or substitutes a different candidate.
+4. Local runner must be safe by default:
+   - no provider/browser/network/model calls;
+   - no publish;
+   - no delete outside explicit output root;
+   - no service install;
+   - no registry/system mutation;
+   - dry-run/preflight mode.
+5. Hosted CI should test contract, checkpoint corruption, manifest identity, command planning, and a small bounded fixture only. Do not require the full heavy real render to succeed on GitHub-hosted runners.
+6. Add local-rehearsal evidence schema that independent QA can ingest:
+   machine fingerprint (non-secret), exact source SHA, runtime hashes, input hash, candidate hashes, final hash, phase timings, resume events, exit state.
+7. Add a deterministic validation command that verifies a completed local run without rerendering it.
+8. Windows path quoting and PowerShell/CMD behavior must be covered.
+9. Exact-head CI must be green for source/tests.
+10. Do NOT execute the heavy user-PC render inside CI. Prepare it for coordinator-controlled local execution after QA.
+11. Produce exact final SHA + CI + artifact/report and the exact local command the coordinator should run on the user's PC.
+
+No merge. No live social publish. No browser/provider mutation.
