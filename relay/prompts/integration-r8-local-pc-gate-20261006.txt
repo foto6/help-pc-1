@@ -88,3 +88,12 @@ Required:
 12. No merge, no provider publish, no SpectraTrack work.
 
 Completion requires exact QA SHA + CI + artifact + matrix + local-PC gate.
+Coordinator discovery after prompt creation: Creator R38 already exists and is exact-green.
+Use this as the current Creator local orchestrator candidate instead of requiring a new Creator refresh:
+- repo foto6/video1
+- branch agent/creator-r38-local-fullstack-rehearsal-20261006
+- exact SHA b4d0b3a940357eec333d5a1d9b9141bd61b89809
+- CI 37405132939 SUCCESS
+- contract creator.local_fullstack_rehearsal.r38.v1
+- primary R38 artifact 11387350709 / creator-r38-local-fullstack-rehearsal-b4d0b3a940357eec333d5a1d9b9141bd61b89809 / sha256:2b37c0a5747daf2baff343001f58d16de9b1e2ee0098ceba31e345c87e72e407
+Creator R38 freezes Growth R36 correctly but freezes Bridge R40 as its authority envelope. R8 must explicitly determine whether running Creator R38 under a separately accepted/live Bridge R42 control plane is compatible because Creator does not itself start/cut over Bridge. Do NOT rewrite the Creator artifact or silently substitute Bridge R42 into Creator R38's frozen envelope. If that separation is acceptable, document why and bind both tuples. If not, return the exact minimal Creator successor required.
