@@ -1,0 +1,63 @@
+EXECUTE NOW — GROWTH R37 LOCAL-PC SELECTION ADAPTER / OFFLINE REAL-VIDEO DECISION GATE. Do not stop at a plan.
+
+Repo: foto6/video3
+Writable branch ONLY: agent/growth-r37-local-pc-selection-adapter-20261006
+Exact starting HEAD: a53f9deb180bb256d193f0422c6ffd7a5923d97a
+Parent contract: growth.local_rehearsal_evidence.r36.v1
+Parent CI: 37403145649 SUCCESS.
+
+Goal:
+prepare Growth to consume the forthcoming real local Media R26 rehearsal evidence from the user's PC and emit a deterministic offline advisory selection package for Creator. This must NOT assume Media R26 is already accepted and must fail closed until its exact authority is provided.
+
+Required:
+1. Define growth.local_pc_selection_adapter.r37.v1.
+2. Consumer input must require:
+   - media contract ID exactly media.local_render_runner.r26.v1;
+   - exact Media source SHA;
+   - exact Media CI run/conclusion;
+   - exact Media artifact tuple when available;
+   - exact local-run manifest digest;
+   - exact input video hash;
+   - candidate IDs/hashes;
+   - targeted re-edit hash;
+   - final artifact hash;
+   - runtime ffmpeg/ffprobe identity;
+   - phase timings/resume events.
+3. Do NOT pin a guessed Media R26 SHA/artifact. Represent the authority as UNRESOLVED until independent QA supplies exact accepted values. Any unresolved authority => WAITING_MEDIA_R26_AUTHORITY, never a positive selection decision.
+4. Add normalization from Media R26 local-run evidence into the existing R36 evidence model without discarding lineage.
+5. Add deterministic offline candidate comparison and advisory outputs:
+   - KEEP_BASELINE
+   - SELECT_CANDIDATE
+   - TARGETED_REEDIT_RECOMMENDED
+   - HUMAN_REVIEW_REQUIRED
+   - WAITING_MEDIA_R26_AUTHORITY
+   - EVIDENCE_INVALID
+6. Decision must distinguish:
+   - candidate rendered bytes;
+   - review-derived scores/evidence;
+   - targeted re-edit lineage;
+   - final artifact lineage.
+   Never infer "best" from filename/order.
+7. Add evidence-quality gates:
+   - missing candidate;
+   - duplicate candidate identity;
+   - hash mismatch;
+   - input hash mismatch;
+   - wrong runtime hash;
+   - resumed phase missing checkpoint evidence;
+   - final manifest tamper;
+   - Media authority drift;
+   - local-run evidence pretending hosted CI evidence;
+   - stale policy.
+8. Add one command that, given a completed local Media evidence bundle, outputs a Creator-consumable advisory envelope without browser/provider calls.
+9. Add >=25 deterministic adversarial cases, including ties, conflicting scores, missing review evidence, partial candidate set, wrong final lineage, targeted re-edit not derived from selected source, duplicate operation IDs.
+10. Preserve R36 anti-leakage / authority rules.
+11. Exact-head CI + artifact required.
+12. No provider/browser mutation, no social publish, no merge.
+
+Completion:
+- substantive code/tests/docs/conformance/report;
+- exact final SHA;
+- exact-head CI SUCCESS;
+- artifact ID/name/digest;
+- explicit WAITING_MEDIA_R26_AUTHORITY state until QA supplies exact accepted Media R26 tuple.
