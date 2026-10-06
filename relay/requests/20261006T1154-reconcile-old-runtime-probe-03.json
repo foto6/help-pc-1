@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1154-reconcile-old-runtime-probe-03",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "20261006T1144-r42-local-runtime-status-01",
+    "action": "shell.run"
+  },
+  "timeout_ms": 8000,
+  "note": "Re-check durable outcome for old timed-out read-only R42 runtime probe before new live cutover"
+}
