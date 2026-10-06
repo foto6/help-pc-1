@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1751-read-supervisor-config-cmd-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "type",
+      "E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only supervisor managed chat config via cmd to resolve logical IDs"
+}
