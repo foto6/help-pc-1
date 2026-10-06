@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request;u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/dry-run';d=json.loads(urllib.request.urlopen(u,timeout=45).read().decode('utf-8'));want=set([\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"agent-pc-control\"]);out=[]\nfor r in d.get('rows',[]):\n cid=r.get('chatId')\n if cid in want:\n  out.append({'chatId':cid,'name':r.get('name'),'url':r.get('url'),'openTabs':r.get('openTabs'),'preflightAllowed':r.get('preflightAllowed'),'preflightReason':r.get('preflightReason'),'targetId':r.get('targetId'),'snapshots':r.get('snapshots')})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[]\r\n",
+      "stdout_bytes": 4,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T10:51:28.927Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T10:51:28.805Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1900-compact-dryrun-blocked-01"
+    },
+    "request_id": "20261006T1900-compact-dryrun-blocked-01",
+    "started_at": "2026-10-06T10:51:28.376Z",
+    "status": "completed"
+  },
+  "id": "20261006T1900-compact-dryrun-blocked-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
