@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0732-read-media-focused-result-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$exit='E:\\work\\video2-r25-local-run\\focused.exit'\n$log='E:\\work\\video2-r25-local-run\\focused.log'\n[pscustomobject]@{\n exitLength=if(Test-Path $exit){(Get-Item $exit).Length}else{$null}\n exitText=if(Test-Path $exit){Get-Content $exit -Raw}else{$null}\n logBytes=if(Test-Path $log){(Get-Item $log).Length}else{$null}\n logTail=if(Test-Path $log){@(Get-Content $log -Tail 80)}else{@()}\n} | ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only local Media focused test result without unsupported .NET helpers"
+}
