@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0846-check-native-mcp-chat-state-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\nconst cid=\"6ab946b7-46f0-83ed-bc98-dc74acc6e810\";\nconst conv=v=>{try{const u=new URL(String(v||\"\"));const p=u.pathname.split(\"/\").filter(Boolean);if(p.length===2&&p[0]===\"c\")return p[1];if(p.length===4&&p[0]===\"g\"&&p[2]===\"c\")return p[3]}catch{}return \"\"};\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const ms=tabs.filter(t=>t.type===\"page\"&&conv(t.url)===cid);\nif(ms.length!==1){process.stdout.write(JSON.stringify({state:ms.length?\"duplicate\":\"missing\",count:ms.length}));process.exit(0)}\nconst tab=ms[0],ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1;const p=new Map();\nws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\nconst call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\nconst rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const txt=document.body?.innerText||'';const exhausted=/максимальн.{0,20}длин.{0,20}(обсуждения|чата)|maximum.{0,20}(length|conversation)/i.test(txt)&&/нов(ый|ого) чат|new chat/i.test(txt);const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const bs=[...document.querySelectorAll('button')].filter(vis);const generating=bs.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||'')));const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\"true\\\"]')].find(vis)||null;const draft=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';return {title:document.title,href:location.href,exhausted,generating,draftLength:draft.trim().length}})())\",returnByValue:true});\nprocess.stdout.write(rr.result.value);ws.close();\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only Native MCP chat lifecycle check"
+}
