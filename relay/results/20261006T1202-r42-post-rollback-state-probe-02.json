@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "\nimport json, pathlib, subprocess, urllib.request\nrepo=pathlib.Path(r\"E:\\WebAIBridge\")\ndef run(args):\n    p=subprocess.run(args,cwd=str(repo),stdout=subprocess.PIPE,stderr=subprocess.PIPE,timeout=8)\n    return p.stdout.decode(errors=\"replace\").strip()\nhead=run([\"git.exe\",\"-C\",str(repo),\"rev-parse\",\"HEAD\"])\nstatus=run([\"git.exe\",\"-C\",str(repo),\"status\",\"--porcelain\"]).splitlines()\ncut=repo/\"app\"/\"data\"/\"projects-live-control-plane-cutover-r42.json\"\ncut_state=None\nif cut.exists():\n    try: cut_state=json.loads(cut.read_text(encoding=\"utf-8-sig\"))\n    except Exception as e: cut_state={\"parseError\":str(e)}\napi_ok=False\nserver_started=None\napi_error=None\ntry:\n    with urllib.request.urlopen(\"http://127.0.0.1:17448/api/status\",timeout=3) as resp:\n        body=json.load(resp)\n    api_ok=True\n    server_started=body.get(\"serverStartedAt\")\nexcept Exception as e:\n    api_error=str(e)\nprint(json.dumps({\n    \"head\":head,\n    \"gitStatus\":status,\n    \"cutoverExists\":cut.exists(),\n    \"cutoverStatus\":None if cut_state is None else cut_state.get(\"status\"),\n    \"holdActive\":None if cut_state is None else cut_state.get(\"holdActive\"),\n    \"apiOk\":api_ok,\n    \"serverStartedAt\":server_started,\n    \"apiError\":api_error\n},ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"head\": \"cb852e013634287669f957253d13d8ef2b45cada\", \"gitStatus\": [], \"cutoverExists\": false, \"cutoverStatus\": null, \"holdActive\": null, \"apiOk\": true, \"serverStartedAt\": null, \"apiError\": null}\r\n",
+      "stdout_bytes": 196,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:55:00.873Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:55:00.638Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1202-r42-post-rollback-state-probe-02"
+    },
+    "request_id": "20261006T1202-r42-post-rollback-state-probe-02",
+    "started_at": "2026-10-06T04:54:59.178Z",
+    "status": "completed"
+  },
+  "id": "20261006T1202-r42-post-rollback-state-probe-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
