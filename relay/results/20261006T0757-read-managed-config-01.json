@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'; $j=Get-Content -LiteralPath $p -Raw | ConvertFrom-Json; $want=@('6abda62d-8198-83ed-aaa2-40b16f96a8a0','6abda64b-aac4-83eb-adee-dc7143ca5d2b','6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0','6abda61c-a440-83ed-9482-1d0fc7923e03'); @($j.managedChats | Where-Object { $want -contains [string]$_.providerConversationId } | Select-Object id,name,providerConversationId,url,profileId,repository,branch,gitHead,enabled,projectId) | ConvertTo-Json -Depth 6 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T00:53:19.556Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T00:53:19.456Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T0757-read-managed-config-01"
+    },
+    "request_id": "20261006T0757-read-managed-config-01",
+    "started_at": "2026-10-06T00:53:18.928Z",
+    "status": "completed"
+  },
+  "id": "20261006T0757-read-managed-config-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
