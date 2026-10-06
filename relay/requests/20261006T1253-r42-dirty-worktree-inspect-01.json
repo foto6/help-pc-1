@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1253-r42-dirty-worktree-inspect-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path;\n$status=@(& $git -C $repo status --short);\n$diffNames=@(& $git -C $repo diff --name-status);\n$cached=@(& $git -C $repo diff --cached --name-status);\n$head=((@(& $git -C $repo rev-parse HEAD))-join '').Trim();\n[pscustomobject]@{head=$head;status=$status;diffNames=$diffNames;cached=$cached}|ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only inspect dirty R42 worktree before rollback; no reset/clean"
+}
