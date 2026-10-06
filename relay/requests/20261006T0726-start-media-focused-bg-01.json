@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0726-start-media-focused-bg-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$repo='E:\\work\\video2-r25-local'\n$run='E:\\work\\video2-r25-local-run'\nNew-Item -ItemType Directory -Force -Path $run | Out-Null\nif((git -C $repo rev-parse HEAD).Trim() -ne 'b11a93664f9b64bf6da626119758c841a0a75c1e'){ throw 'HEAD drift' }\nif(-not [string]::IsNullOrWhiteSpace(((git -C $repo status --porcelain) -join ''))){ throw 'repo dirty' }\n$cmd=@'\n@echo off\ncd /d E:\\work\\video2-r25-local\nif exist E:\\work\\video2-r25-local-run\\focused.exit del /q E:\\work\\video2-r25-local-run\\focused.exit\ncall npm run test:r25 > E:\\work\\video2-r25-local-run\\focused.log 2>&1\necho %ERRORLEVEL%> E:\\work\\video2-r25-local-run\\focused.exit\n'@\nSet-Content -LiteralPath (Join-Path $run 'focused.cmd') -Value $cmd -Encoding ASCII\nRemove-Item -LiteralPath (Join-Path $run 'focused.log') -Force -ErrorAction SilentlyContinue\nRemove-Item -LiteralPath (Join-Path $run 'focused.exit') -Force -ErrorAction SilentlyContinue\n$p=Start-Process -FilePath 'cmd.exe' -ArgumentList @('/c',(Join-Path $run 'focused.cmd')) -WindowStyle Hidden -PassThru\n[pscustomobject]@{pid=$p.Id;runner=(Join-Path $run 'focused.cmd');log=(Join-Path $run 'focused.log');exit=(Join-Path $run 'focused.exit');head=(git -C $repo rev-parse HEAD).Trim()} | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 10000,
+  "note": "Start reconciled Media R25 focused tests as durable background process"
+}
