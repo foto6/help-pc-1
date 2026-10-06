@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request;u=\"http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0/assignments\";p=\"{\\\"text\\\":\\\"EXECUTE NOW — Growth R38. Work ONLY on agent/growth-r38-real-local-bundle-verifier-20261006 from exact HEAD d74147329c4c0269c5ac5fbdf4fa99e7a1b9b2d1. Read TASKS/R38.md and issue foto6/video3#2. Implement real local bundle verification against current Media/Creator authorities, preserve evidence-class separation, no publish authorization. Return exact SHA/CI/artifact and verification command.\\\",\\\"repository\\\":\\\"foto6/video3\\\",\\\"branch\\\":\\\"agent/growth-r38-real-local-bundle-verifier-20261006\\\",\\\"expectedHead\\\":\\\"d74147329c4c0269c5ac5fbdf4fa99e7a1b9b2d1\\\",\\\"idempotencyKey\\\":\\\"coord-20261006-growth-r38-assignment-01\\\",\\\"supervisorVerificationRequired\\\":true,\\\"evidenceTimeoutMinutes\\\":90}\".encode('utf-8');q=urllib.request.Request(u,data=p,headers={'Content-Type':'application/json'},method='POST');d=json.loads(urllib.request.urlopen(q,timeout=20).read().decode('utf-8'));print(json.dumps({'id':d.get('id'),'state':d.get('state'),'targetChatId':d.get('targetChatId'),'targetChatUrl':d.get('targetChatUrl'),'repository':d.get('repository'),'branch':d.get('branch'),'expectedHead':d.get('expectedHead')},ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"11e3962c-57fb-4218-94cd-ee9ba7c25a4c\",\"state\":\"queued\",\"targetChatId\":\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"repository\":\"foto6/video3\",\"branch\":\"agent/growth-r38-real-local-bundle-verifier-20261006\",\"expectedHead\":\"d74147329c4c0269c5ac5fbdf4fa99e7a1b9b2d1\"}\r\n",
+      "stdout_bytes": 392,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T10:45:04.222Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T10:45:04.095Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1840-queue-growth-r38-01"
+    },
+    "request_id": "20261006T1840-queue-growth-r38-01",
+    "started_at": "2026-10-06T10:45:03.614Z",
+    "status": "completed"
+  },
+  "id": "20261006T1840-queue-growth-r38-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
