@@ -1,0 +1,104 @@
+{
+  "action": "shell.run",
+  "executor_result": null,
+  "id": "20261006T1224-bridge-duplicate-detail-01",
+  "live": true,
+  "reconciliation": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": 1,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-06T05:23:41.192Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261006T1224-bridge-duplicate-detail-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:a11ef7d40784fad847518e6c3edff8a576356b2119d29090eb9daa97f8f45f28",
+            "journal_sequence": 1964,
+            "previous_record_sha256": "f4171bb5008a4f27b2b639e01c82dfd2dd1cc398f3bf4f5e220ca41cbd92547d",
+            "record_sha256": "ab4d1df3f62f2e49826969ef143b4be51232fbb4db24cfdeeffe630bf8446831",
+            "recorded_at": "2026-10-06T05:23:41.409Z",
+            "request_id": "20261006T1224-bridge-duplicate-detail-01",
+            "transition": "dispatch_started"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-06T05:23:41.192Z",
+          "reason": "dispatch_started",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "20261006T1224-bridge-duplicate-detail-01"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-06T05:23:41.192Z",
+            "reason": "dispatch_started",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "20261006T1224-bridge-duplicate-detail-01"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:a11ef7d40784fad847518e6c3edff8a576356b2119d29090eb9daa97f8f45f28",
+          "journal_sequence": 1964,
+          "previous_record_sha256": "f4171bb5008a4f27b2b639e01c82dfd2dd1cc398f3bf4f5e220ca41cbd92547d",
+          "record_sha256": "ab4d1df3f62f2e49826969ef143b4be51232fbb4db24cfdeeffe630bf8446831",
+          "recorded_at": "2026-10-06T05:23:41.409Z",
+          "request_id": "20261006T1224-bridge-duplicate-detail-01",
+          "transition": "dispatch_started"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "f7f35c62f5fb45dcef1995514c820cd9089ac1452debff44e17d752591364751",
+          "matched_records": 1,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 1964
+        },
+        "reason": "dispatch_started",
+        "replay_authorized": false,
+        "requestId": "20261006T1224-bridge-duplicate-detail-01",
+        "request_id": "20261006T1224-bridge-duplicate-detail-01",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": true,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T08:25:17.462Z",
+    "ok": true,
+    "request_id": "20261006T1224-bridge-duplicate-detail-01.relay-reconcile",
+    "started_at": "2026-10-06T08:25:17.329Z",
+    "status": "dry_run"
+  },
+  "reexecuted": false,
+  "relay_status": "interrupted_requires_reconciliation",
+  "replay_authorized": false,
+  "version": "pc_relay.result.v1"
+}
