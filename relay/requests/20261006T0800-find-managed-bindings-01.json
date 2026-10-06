@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0800-find-managed-bindings-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='SilentlyContinue'; $files=@('E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json','E:\\WebAIBridge\\app\\data\\state.json'); $ids=@('6abda62d-8198-83ed-aaa2-40b16f96a8a0','6abda64b-aac4-83eb-adee-dc7143ca5d2b','6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0','6abda61c-a440-83ed-9482-1d0fc7923e03'); $out=@(); foreach($f in $files){if(Test-Path $f){foreach($cid in $ids){$m=Select-String -LiteralPath $f -SimpleMatch $cid -Context 0,0 | Select-Object -First 5; foreach($x in $m){$line=[string]$x.Line; if($line.Length -gt 1200){$line=$line.Substring(0,1200)}; $out += [pscustomobject]@{file=$f;cid=$cid;line=$line}}}}}; $out | ConvertTo-Json -Depth 3 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 6000,
+  "note": "Read-only find exact managed conversation bindings"
+}
