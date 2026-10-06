@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1208-r42-no-filters-proof-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "for %f in (app\\scripts\\operator-lifecycle-r40.ps1) do @for /f %h in ('git.exe -C E:\\WebAIBridge rev-parse HEAD:app/scripts/operator-lifecycle-r40.ps1') do @for /f %w in ('git.exe -C E:\\WebAIBridge hash-object --no-filters -- app/scripts/operator-lifecycle-r40.ps1') do @echo HEAD=%h WORK=%w"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only verify git hash-object --no-filters can recognize raw-identical legacy wrapper despite porcelain dirty"
+}
