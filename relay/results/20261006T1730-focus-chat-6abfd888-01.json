@@ -1,0 +1,11 @@
+{
+  "action": null,
+  "error": "ValueError: action is not enabled by relay: 'uia.focus'",
+  "executor_result": null,
+  "id": "20261006T1730-focus-chat-6abfd888-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "relay_error",
+  "version": "pc_relay.result.v1"
+}
