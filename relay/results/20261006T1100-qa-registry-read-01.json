@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst j=await fetch('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=0').then(r=>r.json());\nconst rows=(j.chats||[]).filter(x=>/supervisor|qa|boss|project agent supervision/i.test([x.id,x.name,x.role,x.repository,x.branch,x.url].join(' '))).map(x=>({\n id:x.id,name:x.name,role:x.role,url:x.url,projectId:x.projectId,profileId:x.profileId,repository:x.repository,branch:x.branch,gitHead:x.gitHead,enabled:x.enabled,rotateWithProject:x.rotateWithProject\n}));\nprocess.stdout.write(JSON.stringify(rows));\n\n'@; $code | node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"chat-6ab77f2d-b9bc-83ed-906e-a0e35cca142e\",\"name\":\"SpectraTrack Agent Watch (supervisor)\",\"role\":\"\",\"url\":\"https://chatgpt.com/c/6ab77f2d-b9bc-83ed-906e-a0e35cca142e\",\"projectId\":\"\",\"profileId\":\"\",\"repository\":\"\",\"branch\":\"\",\"gitHead\":\"\",\"enabled\":true,\"rotateWithProject\":true},{\"id\":\"agent-boss-conformance\",\"name\":\"Boss conformance existing agent\",\"role\":\"conformance\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946ce-eafc-83eb-a3bc-7e4646ac498b\",\"projectId\":\"\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"repository\":\"foto6/boss\",\"branch\":\"\",\"gitHead\":\"\",\"enabled\":true,\"rotateWithProject\":true}]",
+      "stdout_bytes": 647,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:41:30.505Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:41:30.394Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1100-qa-registry-read-01"
+    },
+    "request_id": "20261006T1100-qa-registry-read-01",
+    "started_at": "2026-10-06T02:41:29.857Z",
+    "status": "completed"
+  },
+  "id": "20261006T1100-qa-registry-read-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
