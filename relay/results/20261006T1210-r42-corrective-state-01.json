@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\nconst cid=\"6ac45836-87a0-83ed-bea4-0ad0f99c8982\";\nconst conv=v=>{try{const u=new URL(String(v||\"\"));const p=u.pathname.split(\"/\").filter(Boolean);if(p.length===2&&p[0]===\"c\")return p[1];if(p.length===4&&p[0]===\"g\"&&p[2]===\"c\")return p[3]}catch{}return \"\"};\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json(),m=tabs.filter(t=>t.type===\"page\"&&conv(t.url)===cid);\nif(m.length!==1){process.stdout.write(JSON.stringify({count:m.length}));process.exit(0)}\nconst ws=new WebSocket(m[0].webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let n=1;const p=new Map();\nws.onmessage=e=>{const x=JSON.parse(e.data);if(x.id&&p.has(x.id)){p.get(x.id)(x);p.delete(x.id)}};\nconst call=(method,params={})=>new Promise((r,j)=>{const id=n++;p.set(id,x=>x.error?j(new Error(JSON.stringify(x.error))):r(x.result));ws.send(JSON.stringify({id,method,params}))});\nconst rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const v=e=>{if(!e)return false;const r=e.getBoundingClientRect(),s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!=='none'&&s.visibility!=='hidden'};const b=[...document.querySelectorAll('button,[role=\\\"button\\\"]')].filter(v);const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\"true\\\"]')].find(v)||null;return {high:b.some(x=>/^(Высокий|High)$/iu.test((x.innerText||x.textContent||'').trim())),generating:b.some(x=>/stop|останов/i.test((x.getAttribute('aria-label')||'')+' '+(x.getAttribute('data-testid')||'')+' '+(x.innerText||''))),draftLength:c?((('value'in c?c.value:(c.innerText||c.textContent||''))||'').trim().length):0}})())\",returnByValue:true});\nprocess.stdout.write(rr.result.value);ws.close();\n'@; $code | node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"high\":true,\"generating\":true,\"draftLength\":0}",
+      "stdout_bytes": 47,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T03:48:50.985Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T03:48:50.864Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1210-r42-corrective-state-01"
+    },
+    "request_id": "20261006T1210-r42-corrective-state-01",
+    "started_at": "2026-10-06T03:48:50.320Z",
+    "status": "completed"
+  },
+  "id": "20261006T1210-r42-corrective-state-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
