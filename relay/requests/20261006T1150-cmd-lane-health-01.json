@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1150-cmd-lane-health-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "echo PC_CONTROL_CMD_OK"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 4000,
+  "note": "Minimal cmd.exe health probe after PowerShell read timeouts; no filesystem mutation"
+}
