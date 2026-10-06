@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-r42-safe-registry-node-20261006-05",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "C:\\Program Files\\nodejs\\node.exe",
+      "-e",
+      "const fs=require('fs');const p='E:/WebAIBridge/app/data/supervisor-watchdog.json';const j=JSON.parse(fs.readFileSync(p,'utf8'));const o={config:{mode:j.mode,enabled:j.enabled,allowAutonomousSend:j.allowAutonomousSend,enforceHighMode:j.enforceHighMode,highModeStrategy:j.highModeStrategy,migrationEnabled:j.migrationEnabled,autoContinueEnabled:j.autoContinueEnabled,sendProtectedDraftEnabled:j.sendProtectedDraftEnabled},managedProjects:(j.managedProjects||[]).map(x=>({id:x.id,name:x.name,url:x.url,profileId:x.profileId,rotationPolicy:x.rotationPolicy})),managedChats:(j.managedChats||[]).map(x=>({id:x.id,name:x.name,url:x.url,role:x.role,projectId:x.projectId,profileId:x.profileId,repository:x.repository,branch:x.branch,gitHead:x.gitHead,runtimeTargetTabId:x.runtimeTargetTabId,rotateWithProject:x.rotateWithProject,enabled:x.enabled}))};process.stdout.write(JSON.stringify(o));"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 8000,
+  "note": "R42 read-only safe registry metadata via Node; no tokens secrets credentials or provider mutation"
+}
