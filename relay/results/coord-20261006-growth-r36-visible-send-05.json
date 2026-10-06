@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\nimport fs from \"node:fs\";\nconst cid=\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",url=\"https://chatgpt.com/g/g-p-6ab839fa4f8c8191aa94c8c0a43e0807-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",prompt=fs.readFileSync(\"E:\\\\pc-github-relay\\\\relay\\\\prompts\\\\growth-r36-local-rehearsal-evidence-20261006.txt\",\"utf8\"),marker=\"GROWTH R36 LOCAL REHEARSAL EVIDENCE / OFFLINE DECISION ADAPTER\";\nconst sleep=ms=>new Promise(r=>setTimeout(r,ms)),norm=s=>String(s||\"\").replace(/\\s+/g,\" \").trim();\nconst conv=v=>{try{const u=new URL(String(v||\"\"));const p=u.pathname.split(\"/\").filter(Boolean);if(p.length===2&&p[0]===\"c\")return p[1];if(p.length===4&&p[0]===\"g\"&&p[2]===\"c\")return p[3]}catch{}return \"\"};\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();const ms=tabs.filter(t=>t.type===\"page\"&&conv(t.url)===cid);\nif(ms.length!==1){process.stdout.write(JSON.stringify({state:ms.length?\"BLOCKED_DUPLICATE\":\"BLOCKED_MISSING\",count:ms.length}));process.exit(7)}\nconst ws=new WebSocket(ms[0].webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1;const p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\nconst call=(method,params={})=>new Promise((r,j)=>{const k=seq++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\nconst get=async()=>{const rr=await call(\"Runtime.evaluate\",{expression:\"JSON.stringify((()=>{const parse=v=>{try{const u=new URL(String(v||''));const p=u.pathname.split('/').filter(Boolean);if(p.length===2&&p[0]==='c')return p[1];if(p.length===4&&p[0]==='g'&&p[2]==='c')return p[3];return ''}catch{return ''}};const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\"true\\\"]')].find(vis)||null;const draft=c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'';const buttons=[...document.querySelectorAll('button')].filter(vis);const generating=buttons.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')));const send=buttons.find(b=>/отправ|send/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')))||null;const users=[...document.querySelectorAll('[data-message-author-role=\\\"user\\\"]')];const lastUser=users.length?((users.at(-1).innerText||users.at(-1).textContent||'').trim()):'';return {href:location.href,conversationId:parse(location.href),composer:!!c,draft,generating,sendPresent:!!send,sendDisabled:send?!!send.disabled:null,lastUser}})())\",returnByValue:true});return JSON.parse(rr.result.value)};\nawait call(\"Page.enable\");await call(\"Page.navigate\",{url});\nlet s=null;for(let i=0;i<35;i++){await sleep(300);s=await get();if(s.conversationId!==cid)break;if(s.lastUser.includes(marker)||s.generating||(s.composer&&!norm(s.draft)))break}\nif(!s||s.conversationId!==cid){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_ID_DRIFT\"}));process.exit(8)}\nif(s.lastUser.includes(marker)){ws.close();process.stdout.write(JSON.stringify({state:\"ALREADY_PRESENT\",generating:s.generating}));process.exit(0)}\nif(s.generating){ws.close();process.stdout.write(JSON.stringify({state:\"BUSY_NO_SEND\"}));process.exit(4)}\nif(!s.composer||norm(s.draft)){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_NO_SAFE_VISIBLE_COMPOSER\",draftLength:s.draft.length}));process.exit(5)}\nconst focus=await call(\"Runtime.evaluate\",{expression:\"(()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\\\"true\\\"]')].find(vis)||null;if(!c)return false;c.focus();return true})()\",returnByValue:true});\nif(focus.result.value!==true){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_FOCUS\"}));process.exit(6)}\nawait call(\"Input.insertText\",{text:prompt});await sleep(700);s=await get();\nif(s.conversationId!==cid||norm(s.draft)!==norm(prompt)){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_READBACK\",draftLength:s.draft.length,promptLength:prompt.length}));process.exit(9)}\nfor(let i=0;i<30;i++){if(s.sendPresent&&!s.sendDisabled)break;await sleep(250);s=await get();if(s.conversationId!==cid||norm(s.draft)!==norm(prompt)||s.generating)break}\nif(s.conversationId!==cid||norm(s.draft)!==norm(prompt)){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_CHANGED_DURING_WAIT\"}));process.exit(10)}\nif(!s.sendPresent||s.sendDisabled){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_SEND_NOT_READY\"}));process.exit(11)}\nconst click=await call(\"Runtime.evaluate\",{expression:\"(()=>{const vis=e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const b=[...document.querySelectorAll('button')].filter(vis).find(x=>/отправ|send/i.test((x.getAttribute('aria-label')||'')+' '+(x.getAttribute('data-testid')||''))&&!x.disabled);if(!b)return false;b.click();return true})()\",returnByValue:true});\nif(click.result.value!==true){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_CLICK\"}));process.exit(12)}\nlet post=null;for(let i=0;i<20;i++){await sleep(250);post=await get();if(post.generating||post.lastUser.includes(marker)||norm(post.draft)!==norm(prompt))break}\nws.close();process.stdout.write(JSON.stringify({state:post?.generating?\"SEND_STARTED\":post?.lastUser?.includes(marker)?\"SENT_CONFIRMED\":\"SEND_EFFECT_OBSERVED\",generating:post?.generating||false,draftLength:post?.draft?.length||0,url:post?.href||\"\"}));\n'@; $code | node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"state\":\"BLOCKED_SEND_NOT_READY\"}",
+      "stdout_bytes": 34,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T00:59:42.330Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T00:59:42.204Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261006-growth-r36-visible-send-05"
+    },
+    "request_id": "coord-20261006-growth-r36-visible-send-05",
+    "started_at": "2026-10-06T00:59:29.002Z",
+    "status": "completed"
+  },
+  "id": "coord-20261006-growth-r36-visible-send-05",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
