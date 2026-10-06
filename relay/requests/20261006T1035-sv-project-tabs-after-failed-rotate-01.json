@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1035-sv-project-tabs-after-failed-rotate-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst a=await (await fetch('http://127.0.0.1:17410/json/list')).json();\nconst rows=a.filter(x=>x.type==='page'&&(/g-p-6ab839fa4f8c81919adad01c4a5497dc/.test(x.url)||/sv/i.test(x.title))).map(x=>({id:x.id,title:x.title,url:x.url,ws:x.webSocketDebuggerUrl}));\nprocess.stdout.write(JSON.stringify(rows));\n\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 6000,
+  "note": "Read-only sv Project/CDP tabs after failed managed rotation"
+}
