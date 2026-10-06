@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$code=@'\n\nimport fs from \"node:fs\";\nconst cid=\"6ac45836-87a0-83ed-bea4-0ad0f99c8982\", prompt=fs.readFileSync(\"E:\\\\pc-github-relay\\\\relay\\\\prompts\\\\bridge-r41-projects-live-control-plane-20261006.txt\",\"utf8\"), marker=\"BRIDGE R41 PROJECTS LIVE CONTROL PLANE / AUTO-ROLLOVER / UNIFIED HIGH GATE\";\nconst sleep=ms=>new Promise(r=>setTimeout(r,ms)), norm=s=>String(s||\"\").replace(/\\s+/g,\" \").trim();\nconst conv=v=>{try{const u=new URL(String(v||\"\"));const p=u.pathname.split(\"/\").filter(Boolean);if(p.length===2&&p[0]===\"c\")return p[1];if(p.length===4&&p[0]===\"g\"&&p[2]===\"c\")return p[3]}catch{}return \"\"};\nconst tabs=await(await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst ms=tabs.filter(x=>x.type===\"page\"&&conv(x.url)===cid);\nif(ms.length!==1){process.stdout.write(JSON.stringify({state:ms.length?\"BLOCKED_DUPLICATE_EXACT_TABS\":\"BLOCKED_EXACT_TAB_MISSING\",count:ms.length}));process.exit(7)}\nconst ws=new WebSocket(ms[0].webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let seq=1;const p=new Map();\nws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\nconst call=(method,params={})=>new Promise((r,j)=>{const id=seq++;p.set(id,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id,method,params}))});\nconst evalv=async expression=>{const r=await call(\"Runtime.evaluate\",{expression,returnByValue:true});if(r.exceptionDetails)throw new Error(r.exceptionDetails.exception?.description||r.exceptionDetails.text||\"Runtime.evaluate exception\");return r.result.value};\nconst stateExp=`JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect();const s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!==\"none\"&&s.visibility!==\"hidden\"};const buttons=[...document.querySelectorAll('button,[role=\"button\"]')].filter(vis);const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\"true\"],[role=\"textbox\"]')].find(vis)||null;const draft=c?(('value' in c?c.value:(c.innerText||c.textContent||''))||''):'';const generating=buttons.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||'')));const high=buttons.some(b=>/^(Высокий|High)$/iu.test((b.innerText||b.textContent||'').trim()));const body=document.body?.innerText||'';const contextLimit=/максимальн.{0,40}длин.{0,40}обсуждени|maximum.{0,40}(conversation|discussion).{0,40}(length|limit)|вы достигли максимальной длины|you.ve reached the maximum length/i.test(body);const users=[...document.querySelectorAll('[data-message-author-role=\"user\"]')];const lastUser=users.length?((users[users.length-1].innerText||users[users.length-1].textContent||'').trim()):'';return {title:document.title,url:location.href,composer:!!c,draft,generating,high,contextLimit,lastUser}})())`;\nconst getState=async()=>JSON.parse(await evalv(stateExp));\nconst ensureHigh=async()=>{let s=await getState();if(s.high)return {ok:true,changed:false};const opened=await evalv(`(()=>{const vis=e=>{if(!e||e.disabled)return false;const r=e.getBoundingClientRect();const s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!==\"none\"&&s.visibility!==\"hidden\"};const bs=[...document.querySelectorAll('button,[role=\"button\"]')].filter(vis);const b=bs.find(x=>/^(Средний|Medium|Низкий|Low)$/iu.test((x.innerText||x.textContent||'').trim()));if(!b)return false;b.click();return true})()`);if(!opened)return {ok:false,reason:\"MODE_SELECTOR_NOT_FOUND\"};await sleep(300);const selected=await evalv(`(()=>{const vis=e=>{if(!e||e.disabled)return false;const r=e.getBoundingClientRect();const s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!==\"none\"&&s.visibility!==\"hidden\"};const es=[...document.querySelectorAll('[role=\"menuitem\"],[role=\"menuitemradio\"],[role=\"option\"],button,[role=\"button\"]')].filter(vis);const h=es.find(x=>/^(Высокий|High)$/iu.test((x.innerText||x.textContent||'').replace(/\\\\s+/g,' ').trim()));if(!h)return false;h.click();return true})()`);if(!selected)return {ok:false,reason:\"HIGH_OPTION_NOT_FOUND\"};for(let i=0;i<12;i++){await sleep(250);s=await getState();if(s.high)return {ok:true,changed:true}}return {ok:false,reason:\"HIGH_READBACK_FAILED\"};};\nlet s=await getState();\nif(conv(s.url)!==cid){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_ID_DRIFT\",url:s.url}));process.exit(8)}\nif(s.contextLimit){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_CONTEXT_LIMIT\",title:s.title,url:s.url}));process.exit(12)}\nif(s.lastUser.includes(marker)){ws.close();process.stdout.write(JSON.stringify({state:\"ALREADY_PRESENT\",generating:s.generating,high:s.high,title:s.title}));process.exit(0)}\nif(s.generating){ws.close();process.stdout.write(JSON.stringify({state:\"BUSY_NO_SEND\",title:s.title,high:s.high}));process.exit(4)}\nif(!s.composer||norm(s.draft)){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_DRAFT_OR_NO_COMPOSER\",draftLength:norm(s.draft).length,title:s.title}));process.exit(5)}\nconst h=await ensureHigh();if(!h.ok){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_HIGH_NOT_VERIFIED\",reason:h.reason}));process.exit(13)}\ns=await getState();if(!s.high||s.contextLimit||s.generating||norm(s.draft)||conv(s.url)!==cid){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_POST_HIGH_PREFLIGHT\",snapshot:{high:s.high,contextLimit:s.contextLimit,generating:s.generating,draftLength:norm(s.draft).length,url:s.url}}));process.exit(14)}\nconst focused=await evalv(`(()=>{const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=\"true\"],[role=\"textbox\"]')].find(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0});if(!c)return false;c.focus();return true})()`);if(!focused){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_FOCUS\"}));process.exit(15)}\nawait call(\"Input.insertText\",{text:prompt});await sleep(300);s=await getState();\nif(!s.high||s.contextLimit||s.generating||conv(s.url)!==cid||norm(s.draft)!==norm(prompt)){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_DRAFT_OR_HIGH_VERIFY\",high:s.high,contextLimit:s.contextLimit,draftLength:norm(s.draft).length}));process.exit(16)}\nconst clicked=await evalv(`(()=>{const vis=e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0};const bs=[...document.querySelectorAll('button')].filter(vis);const b=bs.find(x=>/send|отправить/i.test((x.getAttribute('aria-label')||'')+' '+(x.getAttribute('data-testid')||'')+' '+(x.innerText||'')));if(!b||b.disabled)return false;b.click();return true})()`);\nif(!clicked){ws.close();process.stdout.write(JSON.stringify({state:\"BLOCKED_SEND_CLICK\"}));process.exit(17)}\nlet post=null;for(let i=0;i<20;i++){await sleep(300);post=await getState();if(conv(post.url)!==cid)break;if(post.generating||post.lastUser.includes(marker))break}\nws.close();process.stdout.write(JSON.stringify({state:post&&post.lastUser.includes(marker)?\"SENT_CONFIRMED\":post&&post.generating?\"SEND_STARTED\":\"SEND_NOT_CONFIRMED\",highAutoSelected:h.changed,highBeforeSend:true,generating:post?.generating||false,title:post?.title||s.title,url:post?.url||s.url}));\n\n'@; $code | node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "file:///E:/WebAIBridge/app/[eval1]:12\r\nconst evalv=async expression=>{const r=await call(\"Runtime.evaluate\",{expression,returnByValue:true});if(r.exceptionDetails)throw new Error(r.exceptionDetails.exception?.description||r.exceptionDetails.text||\"Runtime.evaluate exception\");return r.result.value};\r\n                                                                                                                                  ^\r\n\r\nError: SyntaxError: Invalid regular expression: /stop|???????/i: Nothing to repeat\r\n    at evalv (file:///E:/WebAIBridge/app/[eval1]:12:131)\r\n    at async getState (file:///E:/WebAIBridge/app/[eval1]:14:36)\r\n    at async file:///E:/WebAIBridge/app/[eval1]:16:7\r\n\r\nNode.js v24.18.0\r\n",
+      "stderr_bytes": 719,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:18:37.931Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:18:37.823Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "coord-20261006-bridge-r41-live-control-plane-send2-01"
+    },
+    "request_id": "coord-20261006-bridge-r41-live-control-plane-send2-01",
+    "started_at": "2026-10-06T02:18:37.261Z",
+    "status": "completed"
+  },
+  "id": "coord-20261006-bridge-r41-live-control-plane-send2-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
