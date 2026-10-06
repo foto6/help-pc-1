@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python",
+        "-c",
+        "import uiautomation as auto\nauto.SetGlobalSearchTimeout(1)\nroot=auto.ControlFromHandle(8456336)\ndef walk(c,depth=0):\n    if depth>8: return\n    try:\n        typ=c.ControlTypeName\n        if typ in (\"TabItemControl\",\"EditControl\",\"DocumentControl\"):\n            print(depth,typ,repr(c.Name),repr(c.AutomationId),repr(c.ClassName))\n        for k in c.GetChildren():\n            walk(k,depth+1)\n    except Exception:\n        return\nwalk(root)\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "8 EditControl '�������� ������ � ������ ������' 'view_1012' 'OmniboxViewViews'\r\n7 DocumentControl '' 'view_1034' 'WebView'\r\n8 DocumentControl '����� � ��������' 'RootWebArea' ''\r\n7 DocumentControl '' '' 'NewTabFooterWebView'\r\n7 DocumentControl '' 'view_1034' 'WebView'\r\n7 DocumentControl '' 'view_1033' 'ContentsWebView'\r\n7 DocumentControl '' '' 'NewTabFooterWebView'\r\n8 TabItemControl '������� \"Web AI Bridge\" ���������� 66,1 �� ������' 'view_20' 'Tab'\r\n8 TabItemControl 'ChatGPT' 'view_20' 'Tab'\r\n8 TabItemControl 'ChatGPT' 'view_20' 'Tab'\r\n8 TabItemControl 'A 2' 'view_20' 'Tab'\r\n8 TabItemControl 'Fix Assignment Replacement Runtime' 'view_20' 'Tab'\r\n8 TabItemControl '������� \"����� � ��������\" ���������� 449 �� ������' 'view_20' 'Tab'\r\n8 TabItemControl '������� \"����� � ��������\" ���������� 433 �� ������' 'view_20' 'Tab'\r\n8 TabItemControl 'A 2' 'view_20' 'Tab'\r\n8 TabItemControl 'Fix Assignment Replacement Runtime' 'view_20' 'Tab'\r\n8 TabItemControl '����� � ��������' 'view_20' 'Tab'\r\n8 TabItemControl '������� \"ChatGPT\" ���������� 425 �� ������' 'view_20' 'Tab'\r\n8 TabItemControl '������� \"Deliver R11 Editor\" ���������� 366 �� ������' 'view_20' 'Tab'\r\n8 TabItemControl 'Implement Live Review Ingest' 'view_20' 'Tab'\r\n8 TabItemControl 'Bridge R19 Implementation Report' 'view_20' 'Tab'\r\n8 TabItemControl '������� \"Project Agent Supervision\" ���������� 300 �� ������' 'view_20' 'Tab'\r\n8 TabItemControl '������� \"A2 Integration Verified\" ���������� 357 �� ������' 'view_20' 'Tab'\r\n8 TabItemControl '������� \"ChatGPT\" ���������� 281 �� ������' 'view_20' 'Tab'\r\n8 TabItemControl '������� \"Native Connector Implementation\" ���������� 382 �� ������' 'view_20' 'Tab'\r\n8 TabItemControl '������� \"Implement R37 Driver\" ���������� 373 �� ������' 'view_20' 'Tab'\r\n",
+      "stdout_bytes": 1763,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:07:07.943Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:07:07.834Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1028-python-uia-tab-list-01"
+    },
+    "request_id": "20261006T1028-python-uia-tab-list-01",
+    "started_at": "2026-10-06T02:07:07.268Z",
+    "status": "completed"
+  },
+  "id": "20261006T1028-python-uia-tab-list-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
