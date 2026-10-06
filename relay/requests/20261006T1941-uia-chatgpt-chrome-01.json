@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1941-uia-chatgpt-chrome-01",
+  "action": "uia.snapshot",
+  "params": {
+    "window_title": "Implement Local Windows Render Gate - Google Chrome"
+  },
+  "timeout_ms": 15000,
+  "note": "Native read-only UIA snapshot: Implement Local Windows Render Gate - Google Chrome"
+}
