@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\nfunction GitBlobSha([byte[]]$bytes){\n  $prefix=[Text.Encoding]::ASCII.GetBytes(('blob '+$bytes.Length+[char]0));\n  $all=New-Object byte[] ($prefix.Length+$bytes.Length);\n  [Array]::Copy($prefix,0,$all,0,$prefix.Length);\n  [Array]::Copy($bytes,0,$all,$prefix.Length,$bytes.Length);\n  $sha=[Security.Cryptography.SHA1]::Create();\n  return (($sha.ComputeHash($all)|ForEach-Object{$_.ToString('x2')}) -join '');\n}\n$out=@();\nforeach($rel in @('app/scripts/operator-lifecycle-r40.ps1','app/scripts/pause-all-r40.cmd','app/scripts/pause-browser-r40.cmd','app/scripts/resume-attach-r40.cmd','app/scripts/resume-managed-r40.cmd')){\n  $path=Join-Path $repo $rel;\n  $raw=[IO.File]::ReadAllBytes($path);\n  $hasBom=($raw.Length-ge 3 -and $raw[0]-eq 239 -and $raw[1]-eq 187 -and $raw[2]-eq 191);\n  $offset=if($hasBom){3}else{0};\n  $text=[Text.Encoding]::UTF8.GetString($raw,$offset,$raw.Length-$offset);\n  $crlf=([string][char]13)+([string][char]10);\n  $lf=[string][char]10;\n  $normText=$text.Replace($crlf,$lf);\n  $norm=[Text.Encoding]::UTF8.GetBytes($normText);\n  $head=([string](git.exe -C $repo rev-parse ('HEAD:'+$rel))).Trim();\n  $noBomNorm=GitBlobSha $norm;\n  $out += [pscustomobject]@{\n    file=$rel; hasUtf8Bom=$hasBom;\n    firstBytes=(($raw|Select-Object -First 6|ForEach-Object{$_.ToString('X2')}) -join ' ');\n    headBlob=$head; normalizedNoBomBlob=$noBomNorm;\n    matchesHeadAfterBomStrip=($head -eq $noBomNorm)\n  };\n}\n$out|ConvertTo-Json -Depth 4 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"file\":\"app/scripts/operator-lifecycle-r40.ps1\",\"hasUtf8Bom\":false,\"firstBytes\":\"70 61 72 61 6D 28\",\"headBlob\":\"5e40cb2058af7be3a60fe1228aedcc7c0224a8aa\",\"normalizedNoBomBlob\":\"81195aebb65e533ca6602228515d3c398b2c46bd\",\"matchesHeadAfterBomStrip\":false},{\"file\":\"app/scripts/pause-all-r40.cmd\",\"hasUtf8Bom\":false,\"firstBytes\":\"40 65 63 68 6F 20\",\"headBlob\":\"3940376100c05e177358aee44a36413e912fd4a4\",\"normalizedNoBomBlob\":\"c2342a706a00f32af2f727e2c6b3fddb1764d35c\",\"matchesHeadAfterBomStrip\":false},{\"file\":\"app/scripts/pause-browser-r40.cmd\",\"hasUtf8Bom\":false,\"firstBytes\":\"40 65 63 68 6F 20\",\"headBlob\":\"66a918dd3e7e0762bab6c1498f41a4e291696ea9\",\"normalizedNoBomBlob\":\"d1a41e26b88af17afc3d96f759783eade6613d7f\",\"matchesHeadAfterBomStrip\":false},{\"file\":\"app/scripts/resume-attach-r40.cmd\",\"hasUtf8Bom\":false,\"firstBytes\":\"40 65 63 68 6F 20\",\"headBlob\":\"58860eb74ec1a071259a09c8f8e46d67a0485a41\",\"normalizedNoBomBlob\":\"59a080f5224a0c5b5598e7018f0e1958c9512c63\",\"matchesHeadAfterBomStrip\":false},{\"file\":\"app/scripts/resume-managed-r40.cmd\",\"hasUtf8Bom\":false,\"firstBytes\":\"40 65 63 68 6F 20\",\"headBlob\":\"8d87df6091bb30aed48f7996dac73cb14684ca6c\",\"normalizedNoBomBlob\":\"338693677615b940747c91237f99d00dafdccb29\",\"matchesHeadAfterBomStrip\":false}]\r\n",
+      "stdout_bytes": 1250,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:43:30.761Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:43:30.642Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1144-r42-wrapper-bom-audit-02"
+    },
+    "request_id": "20261006T1144-r42-wrapper-bom-audit-02",
+    "started_at": "2026-10-06T04:43:29.363Z",
+    "status": "completed"
+  },
+  "id": "20261006T1144-r42-wrapper-bom-audit-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
