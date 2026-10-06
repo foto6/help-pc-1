@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1148-r42-one-wrapper-read-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$f='E:\\WebAIBridge\\app\\scripts\\operator-lifecycle-r40.ps1';\n[pscustomobject]@{\n path=$f;\n first40=@(Get-Content -LiteralPath $f -TotalCount 40);\n length=(Get-Item $f).Length;\n lastWriteUtc=(Get-Item $f).LastWriteTimeUtc.ToString('o')\n}|ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 6000,
+  "note": "Read-only short content sample of one R42 dirty wrapper; not a replay of timed-out full-content request"
+}
