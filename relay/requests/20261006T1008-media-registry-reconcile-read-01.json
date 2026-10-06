@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1008-media-registry-reconcile-read-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst [a,b]=await Promise.all([\n fetch('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=0').then(r=>r.json()),\n fetch('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/discover').then(r=>r.json())\n]);\nconst slim=x=>({id:x.id,name:x.name,url:x.url,projectId:x.projectId,profileId:x.profileId,repository:x.repository,branch:x.branch,gitHead:x.gitHead,role:x.role,enabled:x.enabled,rotateWithProject:x.rotateWithProject,status:x.status});\nconst managed=(a.chats||[]).filter(x=>/media|editor|video2|deliver r11/i.test([x.name,x.role,x.repository,x.branch,x.url].join(' '))).map(slim);\nconst discRaw=Array.isArray(b)?b:(b.chats||b.discovered||b.candidates||b.rows||[]);\nconst discovered=discRaw.filter(x=>/media|editor|video2|deliver r11|6abda64b-aac4-83eb-adee-dc7143ca5d2b/i.test(JSON.stringify(x))).slice(0,20);\nprocess.stdout.write(JSON.stringify({managed,discoveredShape:Object.keys(b||{}),discovered}));\n\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only reconcile stale Media registry against discovered chats"
+}
