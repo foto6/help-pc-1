@@ -1,0 +1,44 @@
+EXECUTE NOW — BRIDGE R41 PROJECTS LIVE CONTROL PLANE / AUTO-ROLLOVER / UNIFIED HIGH GATE. Do not stop at a plan.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r41-projects-live-control-plane-20261006
+Exact starting HEAD: 9fca5e7e4cdc820a1a3aee6ada9102fc97649d16
+Parent R40 CI: 37399009019 SUCCESS.
+Coordinator design authority: foto6/boss agent/supervision @ 84b4a56f9444302006574698fbf82ff4863cf3bb, docs/PROJECTS_LIVE_CONTROL_PLANE.md.
+
+This task is assigned in the NEW Bridge conversation:
+providerConversationId 6ac45836-87a0-83ed-bea4-0ad0f99c8982.
+
+Goal: make Projects a live editable self-reconciling control plane, not a stale registry.
+
+Required:
+1. Implement the boss design spec substantially, not cosmetically:
+   desired vs observed state, freshness TTL, LIVE/STALE/UNKNOWN/HISTORICAL/CONFLICT, editable AUTO/PINNED/OVERRIDE_ONCE.
+2. Logical agent survives conversation generations. Model CURRENT/EXHAUSTED/SUCCESSOR_PENDING/SUPERSEDED/HISTORICAL/UNAVAILABLE/CONFLICT.
+3. Automatic context-limit rollover:
+   - detect provider context-exhaustion semantically;
+   - block further Send to exhausted conversation;
+   - build compact structured handoff;
+   - create/select successor inside the bound ChatGPT Project;
+   - set High before first successor Send;
+   - verify High readback;
+   - send handoff;
+   - verify exact new providerConversationId/canonical URL;
+   - atomically switch current pointer;
+   - preserve predecessor/history.
+4. Unify High gate ACROSS ALL managed send paths:
+   - Projects assignment;
+   - Jobs managed_agent_instruction;
+   - supervisor/auto-continue;
+   - external/PC-Control-originated dispatch registered through Bridge.
+   Required behavior: requested High -> if Medium, auto-select High -> readback High -> type -> recheck High -> Send. If verification fails, no Send.
+5. Add explicit operation ledger capable of importing/registering PC Control/CDP dispatches by stable operation ID, transport=PC_CONTROL_CDP, exact chat, prompt hash, resulting SHA/CI/artifact/acceptance.
+6. Reconcile now must compare registry vs CDP exact IDs vs Git branch/HEAD/evidence and propose/apply safe diffs.
+7. Do not auto-import unrelated personal chats as managed agents.
+8. UI must clearly separate development HEAD from accepted authority.
+9. Context-exhausted current Project Agent Supervision is a real regression fixture; do not mutate that real chat in CI.
+10. Add tests for Medium->High auto-select/readback, High race before Enter, new successor defaulting Medium, context-limit rollover, duplicate tabs, stale status TTL, manual override, PC Control ledger import.
+11. Windows + Ubuntu exact-head CI, deterministic R41 artifact/readiness.
+12. No live Bridge cutover/restart/repoint during implementation; no provider account deletion; no merge.
+
+Completion: exact final SHA, exact-head Windows+Ubuntu SUCCESS, artifact IDs/digests, proof rollover+High+ledger gates are fail-closed.
