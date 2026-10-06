@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0902-live-bridge-code-audit-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\nSet-Location $repo;\n$branch=(git branch --show-current).Trim();\n$head=(git rev-parse HEAD).Trim();\n$status=(git status --short);\n$procs=Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match 'WebAIBridge|17448|server\\.js|worker\\.js' -and $_.CommandLine -notmatch 'E:\\\\manhwa' } | Select-Object ProcessId,ParentProcessId,Name,CommandLine;\n$hits=@();\n$patterns=@('reasoning_effort','extended_thinking','thinking effort','reasoning effort','Высок','Средний','high','medium');\nforeach($p in $patterns){\n  $m=Get-ChildItem \"$repo\\app\" -Recurse -File -Include *.js,*.mjs,*.json,*.md,*.html | Select-String -Pattern $p -SimpleMatch -CaseSensitive:$false | Select-Object -First 40 Path,LineNumber,Line;\n  if($m){$hits += [pscustomobject]@{pattern=$p;matches=@($m)}}\n}\n[pscustomobject]@{branch=$branch;head=$head;status=@($status);processes=@($procs);hits=@($hits)} | ConvertTo-Json -Depth 7 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only audit current live WebAIBridge branch/head and thinking-mode code"
+}
