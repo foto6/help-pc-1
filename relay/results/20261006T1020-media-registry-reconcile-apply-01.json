@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\n\nconst base='http://127.0.0.1:17448';\nconst expected={\n agentId:'agent-media',\n oldUrl:'https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b24f-9c40-83eb-9b7b-766af74defe0',\n newUrl:'https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b',\n projectId:'project-g-p-6ab839fa4f8c81919adad01c4a5497dc',\n profileId:'ef72920c-cfe7-4824-a79b-7a0e0943ce7e',\n branch:'agent/media-r26-local-windows-render-gate-20261006',\n head:'b11a93664f9b64bf6da626119758c841a0a75c1e'\n};\nconst [mc,pr]=await Promise.all([\n fetch(base+'/api/supervisor-watchdog/managed-chats?inspect=0').then(r=>r.json()),\n fetch(base+'/api/supervisor-watchdog/projects?inspect=0').then(r=>r.json())\n]);\nconst chats=mc.chats||[]; const projects=pr.projects||[];\nconst a=chats.find(x=>x.id===expected.agentId);\nconst p=projects.find(x=>x.id===expected.projectId);\nif(!a||!p) throw new Error('expected media/project record missing');\nif(a.url!==expected.oldUrl) throw new Error('media old URL precondition changed: '+a.url);\nif(String(a.profileId||'')!==expected.profileId) throw new Error('media profile precondition changed');\nif(String(p.profileId||'')!==expected.profileId) throw new Error('project profile mismatch');\nif(chats.some(x=>x.id!==a.id&&x.url===expected.newUrl)) throw new Error('new Media URL already owned by another managed record');\nconst prev=[...(a.chatHistory||[])]; if(a.url&&!prev.includes(a.url))prev.push(a.url);\na.predecessorUrl=a.url;\na.chatHistory=prev.slice(-50);\na.url=expected.newUrl;\na.projectId=expected.projectId;\na.repository='foto6/video2';\na.branch=expected.branch;\na.gitHead=expected.head;\na.role='media';\na.enabled=true;\na.rotateWithProject=true;\np.rotationPolicy={...(p.rotationPolicy||{}),enabled:true,onContextLimit:true,onMissingChat:true,keepPredecessor:true,requireHighMode:true};\nconst putM=await fetch(base+'/api/supervisor-watchdog/managed-chats',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({managedChats:chats})});\nconst jm=await putM.json(); if(!putM.ok) throw new Error('managed PUT failed '+putM.status+' '+JSON.stringify(jm));\nconst putP=await fetch(base+'/api/supervisor-watchdog/projects',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({managedProjects:projects})});\nconst jp=await putP.json(); if(!putP.ok) throw new Error('project PUT failed '+putP.status+' '+JSON.stringify(jp));\nprocess.stdout.write(JSON.stringify({\n state:'APPLIED',\n media:{id:a.id,url:a.url,predecessorUrl:a.predecessorUrl,projectId:a.projectId,branch:a.branch,gitHead:a.gitHead,historyCount:a.chatHistory.length},\n project:{id:p.id,rotationPolicy:p.rotationPolicy}\n}));\n\n'@; $code | node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"state\":\"APPLIED\",\"media\":{\"id\":\"agent-media\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"predecessorUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab8b24f-9c40-83eb-9b7b-766af74defe0\",\"projectId\":\"project-g-p-6ab839fa4f8c81919adad01c4a5497dc\",\"branch\":\"agent/media-r26-local-windows-render-gate-20261006\",\"gitHead\":\"b11a93664f9b64bf6da626119758c841a0a75c1e\",\"historyCount\":1},\"project\":{\"id\":\"project-g-p-6ab839fa4f8c81919adad01c4a5497dc\",\"rotationPolicy\":{\"enabled\":true,\"onContextLimit\":true,\"onMissingChat\":true,\"keepPredecessor\":true,\"requireHighMode\":true,\"maxHandoffChars\":18000}}}",
+      "stdout_bytes": 679,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T02:31:41.845Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T02:31:41.736Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1020-media-registry-reconcile-apply-01"
+    },
+    "request_id": "20261006T1020-media-registry-reconcile-apply-01",
+    "started_at": "2026-10-06T02:31:41.090Z",
+    "status": "completed"
+  },
+  "id": "20261006T1020-media-registry-reconcile-apply-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
