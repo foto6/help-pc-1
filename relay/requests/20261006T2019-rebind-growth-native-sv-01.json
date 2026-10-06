@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T2019-rebind-growth-native-sv-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nbase='http://127.0.0.1:17448'\npid='project-g-p-6ab839fa4f8c81919adad01c4a5497dc'\nrows=[\n ('chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0'),\n ('agent-pc-control','https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810')\n]\nprofile='ef72920c-cfe7-4824-a79b-7a0e0943ce7e'\nout=[]\nfor cid,url in rows:\n body={'projectId':pid,'confirmLegacyRebind':True,'expectedUrl':url,'expectedProfileId':profile}\n req=urllib.request.Request(base+'/api/supervisor-watchdog/managed-chats/'+cid+'/legacy-rebind',data=json.dumps(body).encode('utf-8'),headers={'Content-Type':'application/json'},method='POST')\n try:\n  d=json.loads(urllib.request.urlopen(req,timeout=12).read().decode('utf-8'))\n  out.append({'chatId':cid,'ok':True,'result':d})\n except Exception as e:\n  out.append({'chatId':cid,'ok':False,'error':type(e).__name__+': '+str(e)})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 30000,
+  "note": "Confirm exact legacy managed-chat rebind of Growth and Native to sv project after eligible previews; no provider chat deletion"
+}
