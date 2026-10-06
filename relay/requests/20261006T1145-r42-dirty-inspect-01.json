@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1145-r42-dirty-inspect-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\nPush-Location 'E:\\WebAIBridge';\n$status=@(git status --porcelain);\nPop-Location;\n$status | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only inspect exact dirty paths after R42 apply-03 partial cutover"
+}
