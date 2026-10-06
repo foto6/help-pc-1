@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0927-cdp-exact-tabs-node-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$code=@'\nconst a=await (await fetch('http://127.0.0.1:17410/json/list')).json();process.stdout.write(JSON.stringify(a.filter(x=>x.type==='page').map(x=>({id:x.id,title:x.title,url:x.url}))));\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only exact CDP page inventory"
+}
