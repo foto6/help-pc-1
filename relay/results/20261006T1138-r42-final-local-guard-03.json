@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\nPush-Location $repo;\n$head=([string](git rev-parse HEAD)).Trim();\n$branchRaw=git branch --show-current;\n$branch=if($null -eq $branchRaw){''}else{([string]$branchRaw).Trim()};\n$dirty=@(git status --porcelain);\nPop-Location;\n$cut='E:\\WebAIBridge\\app\\data\\projects-live-control-plane-cutover-r42.json';\n$cutState=$null;if(Test-Path $cut){try{$cutState=Get-Content $cut -Raw|ConvertFrom-Json}catch{}}\n$procs=@(Get-CimInstance Win32_Process | Where-Object { $_.CommandLine -match 'r42-cutover\\.ps1' -and $_.ProcessId -ne $PID } | Select-Object ProcessId,Name,CommandLine);\n$health=Get-Content 'E:\\pc-github-relay\\.pc-relay\\health.json' -Raw|ConvertFrom-Json;\n[pscustomobject]@{\n head=$head;branch=$branch;detached=([string]::IsNullOrWhiteSpace($branch));dirtyCount=$dirty.Count;\n cutoverExists=(Test-Path $cut);\n cutoverStatus=if($cutState){[string]$cutState.status}else{''};\n holdActive=if($cutState){[bool]$cutState.holdActive}else{$false};\n activeCutoverProcesses=@($procs);\n relayReconciliationRequired=[bool]$health.reconciliation_required;\n relayLastError=$health.last_error\n}|ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"head\":\"cb852e013634287669f957253d13d8ef2b45cada\",\"branch\":\"\",\"detached\":true,\"dirtyCount\":0,\"cutoverExists\":false,\"cutoverStatus\":\"\",\"holdActive\":false,\"activeCutoverProcesses\":[],\"relayReconciliationRequired\":false,\"relayLastError\":null}\r\n",
+      "stdout_bytes": 242,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T04:32:48.604Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T04:32:48.463Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1138-r42-final-local-guard-03"
+    },
+    "request_id": "20261006T1138-r42-final-local-guard-03",
+    "started_at": "2026-10-06T04:32:47.447Z",
+    "status": "completed"
+  },
+  "id": "20261006T1138-r42-final-local-guard-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
