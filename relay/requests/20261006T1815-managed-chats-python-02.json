@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1815-managed-chats-python-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,sys; u='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=0'; d=urllib.request.urlopen(u,timeout=12).read(); sys.stdout.buffer.write(d)"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only managed chat config via binary stdout"
+}
