@@ -1,0 +1,18 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T0737-check-media-focused-pid-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "tasklist.exe",
+      "/FI",
+      "PID eq 22588",
+      "/FO",
+      "CSV",
+      "/NH"
+    ],
+    "cwd": "E:\\work\\video2-r25-local"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only PID check for background Media R25 focused tests"
+}
