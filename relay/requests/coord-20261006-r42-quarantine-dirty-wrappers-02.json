@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "coord-20261006-r42-quarantine-dirty-wrappers-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$expectedHead='e8033f2e42bd335c10a397eb3d2cb62c8bb837a9';\n$files=@('app/scripts/operator-lifecycle-r40.ps1','app/scripts/pause-all-r40.cmd','app/scripts/pause-browser-r40.cmd','app/scripts/resume-attach-r40.cmd','app/scripts/resume-managed-r40.cmd');\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path;\n$head=((@(& $git -C $repo rev-parse HEAD))-join '').Trim();\nif($head -ne $expectedHead){throw ('Unexpected HEAD before quarantine: '+$head)}\n$status=@(& $git -C $repo status --short);\n$expected=@($files|ForEach-Object{' M '+$_});\n$statusNorm=($status|Sort-Object) -join [Environment]::NewLine;\n$expectedNorm=($expected|Sort-Object) -join [Environment]::NewLine;\nif($statusNorm -ne $expectedNorm){throw ('Dirty set changed; refusing quarantine/restore. Observed: '+($status -join '; '))}\n$stamp=(Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssZ');\n$root=Join-Path $repo ('app\\data\\backups\\r42-dirty-quarantine-'+$stamp);\nNew-Item -ItemType Directory -Force -Path $root|Out-Null;\n$entries=@();\nforeach($f in $files){$src=Join-Path $repo $f;if(!(Test-Path -LiteralPath $src)){throw ('Missing dirty file: '+$f)};$safe=($f -replace '[\\\\/:*?\"<>|]','_');$dst=Join-Path $root $safe;Copy-Item -LiteralPath $src -Destination $dst -Force;$entries += [ordered]@{path=$f;backup=$dst;sha256=(Get-FileHash -LiteralPath $src -Algorithm SHA256).Hash.ToLowerInvariant()}}\n$manifest=Join-Path $root 'manifest.json';\n[ordered]@{object='r42.dirty_quarantine.v1';createdAt=(Get-Date).ToUniversalTime().ToString('o');head=$head;files=$entries}|ConvertTo-Json -Depth 8|Set-Content -LiteralPath $manifest -Encoding UTF8;\n& $git -C $repo restore --worktree -- @files;\nif($LASTEXITCODE -ne 0){throw ('git restore failed: '+$LASTEXITCODE)}\n$after=@(& $git -C $repo status --short);\nif($after.Count -ne 0){throw ('Worktree still dirty after targeted restore: '+($after -join '; '))}\n[pscustomobject]@{status='QUARANTINED_AND_CLEAN';head=$head;quarantineRoot=$root;manifest=$manifest;files=$entries;dirtyAfter=$after.Count}|ConvertTo-Json -Depth 8 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 15000,
+  "note": "Quarantine exactly five dirty lifecycle wrappers, then restore only those paths from exact R42 HEAD; no unrelated reset"
+}
