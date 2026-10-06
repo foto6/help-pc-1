@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nspecs=[\n ('Bridge','chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982','f3799077-0fd5-4668-8fef-4402fcb43671'),\n ('Creator','chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c','74cfcb00-58d7-404d-9613-a99383f0d149'),\n ('Growth','chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0','11e3962c-57fb-4218-94cd-ee9ba7c25a4c'),\n ('Native','agent-pc-control','b1314ed6-5b22-4cbf-8865-e044b4bd683f'),\n ('QA','chat-6ac45fb0-9074-83eb-99eb-397265b228e7','992349b1-8367-4822-9b6c-7cf0779e0e93')\n]\nout=[]\nfor label,chat,aid in specs:\n u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId='+chat\n d=json.loads(urllib.request.urlopen(u,timeout=10).read().decode('utf-8'))\n row=next((x for x in d.get('assignments',[]) if x.get('id')==aid),{})\n keep=['state','lastPreflightReason','lastDiagnostic','dispatchTargetId','dispatchCount','dispatchFailureCode','dispatchSubmitAttempted','replacementCount','replacementReason','targetChatUrl','currentHead','ciRunId','ciConclusion','updatedAt','awaitingEvidenceAt','completedAt']\n out.append({'label':label,**{k:row.get(k) for k in keep}})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"label\":\"Bridge\",\"state\":\"queued\",\"lastPreflightReason\":\"target_inspection_failed\",\"lastDiagnostic\":\"git_baseline_verified\",\"dispatchTargetId\":\"\",\"dispatchCount\":0,\"dispatchFailureCode\":\"\",\"dispatchSubmitAttempted\":false,\"replacementCount\":0,\"replacementReason\":null,\"targetChatUrl\":\"https://chatgpt.com/c/6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"currentHead\":\"24b511cdf522ac915213adcf90620a2d73dabd39\",\"ciRunId\":\"\",\"ciConclusion\":\"\",\"updatedAt\":\"2026-10-06T11:00:17.887Z\",\"awaitingEvidenceAt\":\"\",\"completedAt\":\"\"},{\"label\":\"Creator\",\"state\":\"queued\",\"lastPreflightReason\":\"target_inspection_failed\",\"lastDiagnostic\":\"git_baseline_verified\",\"dispatchTargetId\":\"\",\"dispatchCount\":0,\"dispatchFailureCode\":\"\",\"dispatchSubmitAttempted\":false,\"replacementCount\":0,\"replacementReason\":null,\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"currentHead\":\"66efe791d816f07aca42d772e57eb53ad7ed331f\",\"ciRunId\":\"\",\"ciConclusion\":\"\",\"updatedAt\":\"2026-10-06T11:00:16.955Z\",\"awaitingEvidenceAt\":\"\",\"completedAt\":\"\"},{\"label\":\"Growth\",\"state\":\"queued\",\"lastPreflightReason\":\"target_inspection_failed\",\"lastDiagnostic\":\"git_baseline_verified\",\"dispatchTargetId\":\"\",\"dispatchCount\":0,\"dispatchFailureCode\":\"\",\"dispatchSubmitAttempted\":false,\"replacementCount\":0,\"replacementReason\":null,\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"currentHead\":\"d74147329c4c0269c5ac5fbdf4fa99e7a1b9b2d1\",\"ciRunId\":\"\",\"ciConclusion\":\"\",\"updatedAt\":\"2026-10-06T11:00:16.906Z\",\"awaitingEvidenceAt\":\"\",\"completedAt\":\"\"},{\"label\":\"Native\",\"state\":\"queued\",\"lastPreflightReason\":\"target_inspection_failed\",\"lastDiagnostic\":\"git_baseline_verified\",\"dispatchTargetId\":\"\",\"dispatchCount\":0,\"dispatchFailureCode\":\"\",\"dispatchSubmitAttempted\":false,\"replacementCount\":0,\"replacementReason\":null,\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"currentHead\":\"d8c7661d52670fe50e58bc68d50f59a624253e44\",\"ciRunId\":\"\",\"ciConclusion\":\"\",\"updatedAt\":\"2026-10-06T11:00:17.000Z\",\"awaitingEvidenceAt\":\"\",\"completedAt\":\"\"},{\"label\":\"QA\",\"state\":\"awaiting_evidence\",\"lastPreflightReason\":\"ready\",\"lastDiagnostic\":\"supervisor_verification_missing\",\"dispatchTargetId\":\"E5A74C31B39DE271EE342324A2688C22\",\"dispatchCount\":1,\"dispatchFailureCode\":\"\",\"dispatchSubmitAttempted\":true,\"replacementCount\":0,\"replacementReason\":null,\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45fb0-9074-83eb-99eb-397265b228e7\",\"currentHead\":\"6ab529846e99e572d77006dee48d6c4b01caea12\",\"ciRunId\":\"37452884976\",\"ciConclusion\":\"success\",\"updatedAt\":\"2026-10-06T11:00:15.976Z\",\"awaitingEvidenceAt\":\"2026-10-06T10:45:19.027Z\",\"completedAt\":\"\"}]\r\n",
+      "stdout_bytes": 2813,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T11:00:21.787Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T11:00:21.658Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1915-assignment-status-after-open-01"
+    },
+    "request_id": "20261006T1915-assignment-status-after-open-01",
+    "started_at": "2026-10-06T11:00:21.200Z",
+    "status": "completed"
+  },
+  "id": "20261006T1915-assignment-status-after-open-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
