@@ -1,0 +1,43 @@
+{
+  "action": "uia.inspect",
+  "executor_result": {
+    "action": "uia.inspect",
+    "data": {
+      "element": {
+        "automation_id": "urlbar-input",
+        "bounds": {
+          "height": 32,
+          "width": 1106,
+          "x": 343,
+          "y": 49
+        },
+        "class_name": "urlbar-input textbox-input",
+        "control_type": "ComboBoxControl",
+        "display_id": "monitor:65537",
+        "is_enabled": true,
+        "is_offscreen": true,
+        "is_password": false,
+        "name": "Найдите в Google или введите адрес",
+        "native_handle": null,
+        "process_id": 6024,
+        "supports_invoke": false,
+        "supports_value": true,
+        "window_handle": null
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T10:23:31.833Z",
+    "ok": true,
+    "request_id": "20261006T1728-uia-urlbar-inspect-01",
+    "started_at": "2026-10-06T10:23:26.090Z",
+    "status": "completed"
+  },
+  "id": "20261006T1728-uia-urlbar-inspect-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
