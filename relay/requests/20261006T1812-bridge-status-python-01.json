@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261006T1812-bridge-status-python-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request; u='http://127.0.0.1:17448/api/status'; print(urllib.request.urlopen(u,timeout=5).read().decode('utf-8'))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only Bridge status probe after managed assignment queue"
+}
