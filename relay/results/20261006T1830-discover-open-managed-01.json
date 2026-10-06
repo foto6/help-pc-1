@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,re;u='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/discover';d=json.loads(urllib.request.urlopen(u,timeout=15).read().decode('utf-8'));p=re.compile(r'(Publish Provider|Deliver R11|Live Review|Bridge R19|Project Agent Supervision|Native Connector|Implement R37 Driver|Агент моста|Local Windows Render Gate|R8 integration acceptance|Fix Assignment Replacement Runtime|R37 Local Integration)',re.I);rows=[{k:x.get(k) for k in ['url','title','registered','suggestedName','suggestedProfileId','openTabs']} for x in d.get('candidates',[]) if p.search(x.get('title',''))];print(json.dumps(rows,ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"url\":\"https://chatgpt.com/c/6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"title\":\"\\u0410\\u0433\\u0435\\u043d\\u0442 \\u043c\\u043e\\u0441\\u0442\\u0430\",\"registered\":false,\"suggestedName\":\"\\u0410\\u0433\\u0435\\u043d\\u0442 \\u043c\\u043e\\u0441\\u0442\\u0430\",\"suggestedProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"openTabs\":2},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda61c-a440-83ed-9482-1d0fc7923e03\",\"title\":\"Bridge R19 Implementation Report\",\"registered\":false,\"suggestedName\":\"Bridge R19 Implementation Report\",\"suggestedProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"openTabs\":1},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"title\":\"Deliver R11 Editor\",\"registered\":false,\"suggestedName\":\"Deliver R11 Editor\",\"suggestedProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"openTabs\":1},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"title\":\"Implement Live Review Ingest\",\"registered\":false,\"suggestedName\":\"Implement Live Review Ingest\",\"suggestedProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"openTabs\":1},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc/c/6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\"title\":\"Implement Local Windows Render Gate\",\"registered\":false,\"suggestedName\":\"Implement Local Windows Render Gate\",\"suggestedProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"openTabs\":1},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda62d-8198-83ed-aaa2-40b16f96a8a0\",\"title\":\"Implement Publish Provider Layer\",\"registered\":false,\"suggestedName\":\"Implement Publish Provider Layer\",\"suggestedProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"openTabs\":1},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"title\":\"Implement R37 Driver\",\"registered\":false,\"suggestedName\":\"Implement R37 Driver\",\"suggestedProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"openTabs\":1},{\"url\":\"https://chatgpt.com/c/6abe03fa-9728-83eb-90d2-5ee81bbac12c\",\"title\":\"Project Agent Supervision\",\"registered\":false,\"suggestedName\":\"Project Agent Supervision\",\"suggestedProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"openTabs\":1},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac46a9a-4d60-83ed-979a-abb3f8e6d3e7\",\"title\":\"R37 Local Integration Implemented\",\"registered\":false,\"suggestedName\":\"R37 Local Integration Implemented\",\"suggestedProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"openTabs\":1},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45fb0-9074-83eb-99eb-397265b228e7\",\"title\":\"R8 integration acceptance verdict\",\"registered\":false,\"suggestedName\":\"R8 integration acceptance verdict\",\"suggestedProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"openTabs\":1},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab958d2-a674-83ed-9c68-cbbdf253366c\",\"title\":\"Fix Assignment Replacement Runtime\",\"registered\":true,\"suggestedName\":\"Fix Assignment Replacement Runtime\",\"suggestedProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"openTabs\":2},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\"title\":\"Implement Local Windows Render Gate\",\"registered\":true,\"suggestedName\":\"Implement Local Windows Render Gate\",\"suggestedProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"openTabs\":1},{\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"title\":\"Native Connector Implementation\",\"registered\":true,\"suggestedName\":\"Native Connector Implementation\",\"suggestedProfileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"openTabs\":1}]\r\n",
+      "stdout_bytes": 3776,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-06T10:41:12.704Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-06T10:41:12.577Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261006T1830-discover-open-managed-01"
+    },
+    "request_id": "20261006T1830-discover-open-managed-01",
+    "started_at": "2026-10-06T10:41:12.178Z",
+    "status": "completed"
+  },
+  "id": "20261006T1830-discover-open-managed-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
