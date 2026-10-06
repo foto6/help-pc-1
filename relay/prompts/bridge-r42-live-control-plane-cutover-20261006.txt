@@ -1,0 +1,88 @@
+EXECUTE NOW — BRIDGE R42 LIVE CONTROL PLANE CUTOVER / REAL ROLLOVER / UNIFIED HIGH GATE. Do not stop at a plan.
+
+Repo: foto6/WebAIBridge
+Writable branch ONLY: agent/bridge-r42-live-control-plane-cutover-20261006
+Exact starting HEAD: e4ee875db5ad62b514a8d1edeff85888ef83fb8c
+Parent R41 CI: 37405448329 SUCCESS.
+Parent contract: bridge.projects_live_control_plane.r41.v1.
+Coordinator design authority: foto6/boss agent/supervision @ 84b4a56f9444302006574698fbf82ff4863cf3bb, docs/PROJECTS_LIVE_CONTROL_PLANE.md.
+
+This task is assigned in the NEW Bridge conversation:
+providerConversationId 6ac45836-87a0-83ed-bea4-0ad0f99c8982.
+Treat this exact ID as the current Bridge-agent conversation authority.
+
+User has enabled Full autonomy in the Bridge UI. That is NOT permission to weaken fail-closed guarantees.
+
+Observed live preflight immediately before this assignment:
+- Bridge new chat 6ac45836-87a0-83ed-bea4-0ad0f99c8982: exactly one tab, High=true, generating=false, empty composer, not exhausted.
+- Media chat 6abda64b-aac4-83eb-adee-dc7143ca5d2b: High=true, idle, empty composer, contextExhausted=true.
+- QA/Supervisor chat 6abe03fa-9728-83eb-90d2-5ee81bbac12c: High=true, idle, empty composer, contextExhausted=true.
+- MCP chat 6ab67022-ae5c-83ed-a654-5dcc82c3b351: duplicate exact-ID tabs count=2; must fail closed until reconciled.
+
+Goal:
+promote R41 from SOURCE_READY_NO_LIVE_MUTATION into a controlled real local cutover/rehearsal on the user's existing sv Project, then use it to recover the three real lifecycle failures above without wrong-chat mutation or blind replay.
+
+Required:
+1. Define bridge.projects_live_control_plane_cutover.r42.v1 and explicit rollback contract.
+2. First independently validate the exact R41 parent SHA/CI/artifacts and current local installed code compatibility. No live mutation before this gate is green.
+3. Add/complete any missing runtime wiring so the actual Projects UI/runtime—not just fixture helpers—uses:
+   - desired vs observed state;
+   - freshness TTL LIVE/STALE/UNKNOWN/HISTORICAL/CONFLICT;
+   - AUTO/PINNED/OVERRIDE_ONCE;
+   - development HEAD separate from accepted authority;
+   - unified operation ledger;
+   - exact providerConversationId authority;
+   - semantic context exhaustion;
+   - unified High gate with Medium->High auto-select, readback, recheck before Enter.
+4. Controlled live cutover must preserve current state/config and provide one-command rollback to the exact pre-cutover Bridge code/config. Do not delete provider chats.
+5. After cutover, perform a REAL read-only reconcile of the sv Project and compare old registry vs observed live state. Persist before/after/diff evidence.
+6. Use the live R41/R42 lifecycle path to handle the two known exhausted managed chats:
+   - Media old conversation 6abda64b-aac4-83eb-adee-dc7143ca5d2b;
+   - QA/Supervisor old conversation 6abe03fa-9728-83eb-90d2-5ee81bbac12c.
+   For each:
+   - confirm exhaustion again at execution time;
+   - block Send to predecessor;
+   - create successor inside the bound Project;
+   - force High if successor defaults Medium;
+   - read High back before typing;
+   - send bounded handoff;
+   - recheck High immediately before submit;
+   - confirm exact successor providerConversationId + canonical URL;
+   - atomically switch current pointer only after successor verification;
+   - retain predecessor as EXHAUSTED/SUPERSEDED history.
+   Report the NEW exact conversation IDs.
+7. Reconcile the MCP duplicate exact-ID condition for 6ab67022-ae5c-83ed-a654-5dcc82c3b351 safely:
+   - inspect both exact tabs;
+   - do not choose by title/foreground/last-open;
+   - if one can be closed as a redundant idle duplicate with zero draft/generation, close only the redundant browser target, not the provider conversation;
+   - otherwise mark CONFLICT and leave it for explicit successor creation.
+8. External PC_CONTROL_CDP dispatches must enter the unified ledger with stable operation ID and High proof. Missing High proof => RECONCILIATION_REQUIRED, never silently accepted.
+9. Verify Full autonomy path itself:
+   - watchdog config and runtime mode;
+   - High enforcement strategy;
+   - context-limit migration path;
+   - no blind replay after unknown Send;
+   - no automatic provider deletion.
+10. Add deterministic tests for the exact real incidents:
+   - exhausted predecessor with visible composer;
+   - successor defaults Medium;
+   - High changes back before Enter;
+   - duplicate exact-ID tabs;
+   - rollover crash after submit before new URL confirmation;
+   - stale Projects branch/head;
+   - PC Control external dispatch missing High proof.
+11. Exact-head Windows + Ubuntu CI must be SUCCESS.
+12. Produce durable cutover report with:
+   - exact final SHA;
+   - CI run IDs;
+   - artifact IDs/digests;
+   - pre-cutover and post-cutover local Bridge authority;
+   - new Media successor conversation ID;
+   - new QA successor conversation ID;
+   - MCP duplicate resolution result;
+   - live reconcile diff;
+   - rollback command/state;
+   - explicit statement whether local Bridge is now running R42.
+13. No provider chat deletion. No credential entry. No destructive cleanup. No social publish. No merge.
+
+After R42 is proven live, leave the control plane running and ready for coordinator assignments.
