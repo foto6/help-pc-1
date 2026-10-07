@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2231-chatgpt-attach-recovery-observe-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "exec(\"import json,time\\nfrom pathlib import Path\\ntime.sleep(6)\\nd=json.loads(Path(r'E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json').read_text(encoding='utf-8'))\\nx=next(x for x in d.get('aiProfiles') or [] if x.get('id')=='ef72920c-cfe7-4824-a79b-7a0e0943ce7e')\\nprint('workerConnected',x.get('workerConnected'))\\nprint('workerLastSeenAt',x.get('workerLastSeenAt'))\\nprint('workerError',repr(x.get('workerError')))\\n\")"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only observe whether ChatGPT attach worker self-recovers after one CDP timeout; no restart"
+}
