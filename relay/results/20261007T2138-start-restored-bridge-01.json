@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "TimeoutExpired: Command '['cmd.exe', '/d', '/c', 'E:\\\\WebAIBridge\\\\app\\\\START.cmd']' timed out after 5 seconds",
+    "error_kind": "executor_failure",
+    "finished_at": "2026-10-07T14:22:02.245Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "unknown",
+      "observed_at": "2026-10-07T14:22:01.431Z",
+      "reason": "executor_failure",
+      "reconciliation_required": true,
+      "reexecution_safe": false,
+      "request_id": "20261007T2138-start-restored-bridge-01"
+    },
+    "request_id": "20261007T2138-start-restored-bridge-01",
+    "started_at": "2026-10-07T14:21:36.360Z",
+    "status": "error"
+  },
+  "id": "20261007T2138-start-restored-bridge-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
