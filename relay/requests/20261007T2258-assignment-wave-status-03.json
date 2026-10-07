@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2258-assignment-wave-status-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nspecs=[\n(\"Bridge\",\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"e908ffdf-f5b0-4537-b290-5ecfd3dfa966\"),\n(\"Creator\",\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"c1df9edf-6da6-4388-a39a-7fe773728013\"),\n(\"Growth\",\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"eff91a96-514b-4cc7-93b6-19e1f19c5741\"),\n(\"Native\",\"agent-pc-control\",\"dfcf8cae-1ea4-4d79-9690-a3df9064cd48\")]\nout=[]\nfor label,chat,aid in specs:\n d=json.loads(urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId='+chat,timeout=6).read().decode())\n row=next((x for x in d.get('assignments',[]) if x.get('id')==aid),{})\n keep=['state','lastPreflightReason','lastDiagnostic','dispatchTargetId','dispatchCount','dispatchSubmitAttempted','currentHead','ciRunId','ciConclusion','updatedAt']\n out.append({'label':label,**{k:row.get(k) for k in keep}})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only successor assignment status refresh"
+}
