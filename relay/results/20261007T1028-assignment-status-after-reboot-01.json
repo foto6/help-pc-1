@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nbase='http://127.0.0.1:17448'\nspecs=[\n ('Media','agent-media','agent/media-r27-real-input-local-rehearsal-20261006'),\n ('Bridge','chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982','agent/bridge-r43-porcelain-cutover-fix-20261006'),\n ('Creator','chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c','agent/creator-r39-current-authority-binder-20261006'),\n ('Growth','chat-6abf3eb2-40ec-83ed-9f7f-c4a32ad11fc0','agent/growth-r38-real-local-bundle-verifier-20261006'),\n ('Native','agent-pc-control','agent/native-mcp-r39-local-canary-20261006'),\n ('QA','chat-6ac45fb0-9074-83eb-99eb-397265b228e7','agent/integration-r8-final-local-stack-20261006')\n]\nout=[]\nfor label,chat,branch in specs:\n    try:\n        d=json.loads(urllib.request.urlopen(base+'/api/supervisor-watchdog/agent-assignments?chatId='+chat,timeout=10).read().decode('utf-8'))\n        rows=[x for x in d.get('assignments',[]) if x.get('branch')==branch]\n        rows=sorted(rows,key=lambda x:str(x.get('createdAt') or x.get('updatedAt') or ''))\n        row=rows[-1] if rows else {}\n        keep=['id','state','lastPreflightReason','lastDiagnostic','dispatchTargetId','dispatchCount','dispatchSubmitAttempted','dispatchFailureCode','currentHead','ciRunId','ciConclusion','supervisorVerified','updatedAt','completedAt','targetChatUrl']\n        out.append({'label':label,'chat':chat,'branch':branch,'assignment':{k:row.get(k) for k in keep}})\n    except Exception as e:\n        out.append({'label':label,'chat':chat,'branch':branch,'error':type(e).__name__+': '+str(e)})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"label\":\"Media\",\"chat\":\"agent-media\",\"branch\":\"agent/media-r27-real-input-local-rehearsal-20261006\",\"assignment\":{\"id\":\"41e3e19f-75a3-478d-a0ef-c498bbe2fa49\",\"state\":\"completed\",\"lastPreflightReason\":\"ready\",\"lastDiagnostic\":\"evidence_verified\",\"dispatchTargetId\":\"884B301C522B41E679A92C60328E2B3F\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"dispatchFailureCode\":\"\",\"currentHead\":\"183838a24205c6885b2366ad6ffa394164283d91\",\"ciRunId\":\"37451069045\",\"ciConclusion\":\"success\",\"supervisorVerified\":true,\"updatedAt\":\"2026-10-06T10:50:51.987Z\",\"completedAt\":\"2026-10-06T10:50:51.987Z\",\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\"}},{\"label\":\"Bridge\",\"chat\":\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"branch\":\"agent/bridge-r43-porcelain-cutover-fix-20261006\",\"assignment\":{\"id\":\"f3799077-0fd5-4668-8fef-4402fcb43671\",\"state\":\"blocked\",\"lastPreflightReason\":\"ready\",\"lastDiagnostic\":\"ci_failed\",\"dispatchTargetId\":\"6276F3B7BF76CABECD140E23324D6CD9\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"dispatchFailureCode\":\"\",\"currentHead\":\"c9915d539f2a3666bc85f88ca0f7376308e17460\",\"ciRunId\":\"37460124522\",\"ciConclusion\":\"failure\",\"supervisorVerified\":false,\"updatedAt\":\"2026-10-06T12:02:06.965Z\",\"completedAt\":\"\",\"targetChatUrl\":\"https://chatgpt.com/c/6ac45836-87a0-83ed-bea4-0ad0f99c8982\"}},{\"label\":\"Creator\",\"chat\":\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"branch\":\"agent/creator-r39-current-authority-binder-20261006\",\"assignment\":{\"id\":\"74cfcb00-58d7-404d-9613-a99383f0d149\",\"state\":\"blocked\",\"lastPreflightReason\":\"ready\",\"lastDiagnostic\":\"evidence_timeout\",\"dispatchTargetId\":\"C7A7207052C7F10350379336B9D05473\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"dispatchFailureCode\":\"\",\"currentHead\":\"69b4cb17ba81e79b15583fbbf64c0b6e9de51c0e\",\"ciRunId\":\"37457718418\",\"ciConclusion\":\"success\",\"supervisorVerified\":false,\"updatedAt\":\"2026-10-06T12:46:20.313Z\",\"completedAt\":\"\",\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac455e9-bea0-83eb-aa94-fd3dde516c0c\"}},{\"label\":\"Growth\",\"chat\":\"chat-6abf3eb2-40ec-83ed-9f7f-c4a32ad11fc0\",\"branch\":\"agent/growth-r38-real-local-bundle-verifier-20261006\",\"assignment\":{\"id\":null,\"state\":null,\"lastPreflightReason\":null,\"lastDiagnostic\":null,\"dispatchTargetId\":null,\"dispatchCount\":null,\"dispatchSubmitAttempted\":null,\"dispatchFailureCode\":null,\"currentHead\":null,\"ciRunId\":null,\"ciConclusion\":null,\"supervisorVerified\":null,\"updatedAt\":null,\"completedAt\":null,\"targetChatUrl\":null}},{\"label\":\"Native\",\"chat\":\"agent-pc-control\",\"branch\":\"agent/native-mcp-r39-local-canary-20261006\",\"assignment\":{\"id\":\"b1314ed6-5b22-4cbf-8865-e044b4bd683f\",\"state\":\"failed\",\"lastPreflightReason\":\"ready\",\"lastDiagnostic\":\"R41 unified High gate blocked managed assignment: active_generation\",\"dispatchTargetId\":\"2C5EC1149D30E5109ACD7BD72F96B636\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"dispatchFailureCode\":\"managed_assignment_r41_high_gate_failed\",\"currentHead\":\"d8c7661d52670fe50e58bc68d50f59a624253e44\",\"ciRunId\":\"\",\"ciConclusion\":\"\",\"supervisorVerified\":false,\"updatedAt\":\"2026-10-06T11:48:21.402Z\",\"completedAt\":\"\",\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\"}},{\"label\":\"QA\",\"chat\":\"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\",\"branch\":\"agent/integration-r8-final-local-stack-20261006\",\"assignment\":{\"id\":\"992349b1-8367-4822-9b6c-7cf0779e0e93\",\"state\":\"completed\",\"lastPreflightReason\":\"ready\",\"lastDiagnostic\":\"evidence_verified\",\"dispatchTargetId\":\"E5A74C31B39DE271EE342324A2688C22\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"dispatchFailureCode\":\"\",\"currentHead\":\"6ab529846e99e572d77006dee48d6c4b01caea12\",\"ciRunId\":\"37452884976\",\"ciConclusion\":\"success\",\"supervisorVerified\":true,\"updatedAt\":\"2026-10-06T11:29:44.204Z\",\"completedAt\":\"2026-10-06T11:29:44.204Z\",\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45fb0-9074-83eb-99eb-397265b228e7\"}}]\r\n",
+      "stdout_bytes": 4023,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T10:27:10.403Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T10:27:10.254Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T1028-assignment-status-after-reboot-01"
+    },
+    "request_id": "20261007T1028-assignment-status-after-reboot-01",
+    "started_at": "2026-10-07T10:27:09.615Z",
+    "status": "completed"
+  },
+  "id": "20261007T1028-assignment-status-after-reboot-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
