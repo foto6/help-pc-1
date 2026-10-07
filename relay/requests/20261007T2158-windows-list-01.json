@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2158-windows-list-01",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 8000,
+  "note": "Post-reboot read-only window inventory before reopening managed ChatGPT chats"
+}
