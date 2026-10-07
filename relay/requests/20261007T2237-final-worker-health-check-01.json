@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2237-final-worker-health-check-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "exec(\"import json,time\\nfrom pathlib import Path\\ntime.sleep(5)\\nd=json.loads(Path(r'E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json').read_text(encoding='utf-8'))\\nprint('COUNTS',len(d.get('aiProfiles') or []),len(d.get('chats') or []),len(d.get('tasks') or []),len(d.get('agentAssignments') or []),len(d.get('projects') or []))\\nfor pid in ['gemini-personal-attach','ef72920c-cfe7-4824-a79b-7a0e0943ce7e']:\\n x=next(x for x in d.get('aiProfiles') or [] if x.get('id')==pid)\\n print(pid,'workerConnected='+str(x.get('workerConnected')),'workerLastSeenAt='+str(x.get('workerLastSeenAt')),'workerError='+repr(x.get('workerError')))\\n\")"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only final Bridge state and worker health verification after worker-only restart"
+}
