@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "exec(\"import json\\nfrom pathlib import Path\\npaths=[\\n ('current',Path(r'E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json')),\\n ('backup',Path(r'E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261007T111557Z\\\\state.json'))\\n]\\nfor label,p in paths:\\n d=json.loads(p.read_text(encoding='utf-8',errors='replace'))\\n print('===',label,'===')\\n for k,v in d.items():\\n  if isinstance(v,(list,dict)):\\n   print(k,len(v))\\n ol=d.get('operatorLifecycle') or {}\\n print('operatorLifecycle.mode',ol.get('mode'))\\n s=d.get('settings') or {}\\n print('settings.paused',s.get('paused'))\\n\")"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "=== current ===\r\nsettings 59\r\naiProfiles 2\r\nbrowser 0\r\nbrowserBroker 2\r\ndomDiagnostics 0\r\nchats 0\r\ntasks 0\r\nagentAssignments 0\r\nagentAssignmentHeartbeats 0\r\nchatInventoryCache 0\r\nchatDeleteAttempts 0\r\nchatLifecycleAudit 0\r\nchatMetadataArchive 0\r\noperatorLifecycle 9\r\nfileAttachmentOperations 0\r\nexistingChatVideoReviewOperations 0\r\noperationalHealth 3\r\nprojects 0\r\nactors 0\r\nthreads 0\r\nmessages 0\r\nmemories 0\r\npolicies 0\r\noutbox 0\r\nimports 0\r\ncoordinator 10\r\npeople 0\r\nfacts 0\r\nfactCandidates 0\r\ndecisions 0\r\neventLog 0\r\ne2eRuns 0\r\nloginSessions 0\r\nagentAssignmentCutover 4\r\noperatorLifecycle.mode RUNNING_MANAGED\r\nsettings.paused False\r\n=== backup ===\r\nsettings 59\r\naiProfiles 4\r\nbrowser 19\r\nbrowserBroker 2\r\ndomDiagnostics 397\r\nchats 16\r\ntasks 324\r\nagentAssignments 60\r\nagentAssignmentHeartbeats 140\r\nchatInventoryCache 0\r\nchatDeleteAttempts 0\r\nchatLifecycleAudit 0\r\nchatMetadataArchive 0\r\noperatorLifecycle 9\r\nfileAttachmentOperations 0\r\nexistingChatVideoReviewOperations 0\r\noperationalHealth 3\r\nprojects 9\r\nactors 0\r\nthreads 10\r\nmessages 20\r\nmemories 0\r\npolicies 0\r\noutbox 0\r\nimports 0\r\ncoordinator 10\r\npeople 0\r\nfacts 0\r\nfactCandidates 0\r\ndecisions 0\r\neventLog 2000\r\ne2eRuns 0\r\nloginSessions 0\r\nagentAssignmentCutover 4\r\ntabOpenLedger 2\r\nlastManagedChatTabOpenRouting 11\r\noperatorLifecycle.mode RUNNING_MANAGED\r\nsettings.paused False\r\n",
+      "stdout_bytes": 1340,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T13:22:14.942Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T13:22:14.727Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2034-bridge-state-counts-compare-02"
+    },
+    "request_id": "20261007T2034-bridge-state-counts-compare-02",
+    "started_at": "2026-10-07T13:22:13.806Z",
+    "status": "completed"
+  },
+  "id": "20261007T2034-bridge-state-counts-compare-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
