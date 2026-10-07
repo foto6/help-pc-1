@@ -1,0 +1,51 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "git.exe",
+        "-C",
+        "E:\\WebAIBridge",
+        "diff",
+        "--name-status",
+        "7351d8478600ceb1db50ea136efccb1c10a943c7",
+        "8afbac2b7ae67e2e4cc2b778830163689d83ba74"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "M\t.github/workflows/r42-live-control-plane-cutover.yml\nA\t.github/workflows/r43-porcelain-cutover-fix.yml\nM\t.github/workflows/test.yml\nA\tTASKS/R43.md\nM\tapp/package.json\nM\tapp/r42-contract.test.js\nM\tapp/r42-cutover.ps1\nA\tapp/r42-json-encoding.test.ps1\nM\tapp/r42-powershell-git-wrapper-regression.ps1\nM\tapp/r42-rollback.ps1\nA\tapp/r43-filter-only-switch-regression.ps1\nA\tapp/r43-porcelain-adversarial.ps1\nA\tapp/r43-porcelain-contract.test.js\nA\tapp/r43-porcelain.ps1\nA\tapp/r43-readiness-report.js\nM\tapp/scripts/operator-lifecycle-r40.ps1\nM\tapp/scripts/pause-all-r40.cmd\nM\tapp/scripts/pause-browser-r40.cmd\nM\tapp/scripts/resume-attach-r40.cmd\nM\tapp/scripts/resume-managed-r40.cmd\n",
+      "stdout_bytes": 674,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T14:33:46.776Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T14:33:46.547Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2209-bridge-fix-tree-diff-01"
+    },
+    "request_id": "20261007T2209-bridge-fix-tree-diff-01",
+    "started_at": "2026-10-07T14:33:46.047Z",
+    "status": "completed"
+  },
+  "id": "20261007T2209-bridge-fix-tree-diff-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
