@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "exec(\"import json,hashlib,shutil,os,datetime\\nfrom pathlib import Path\\ncur=Path(r'E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json')\\nsrc=Path(r'E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261007T111557Z\\\\state.json')\\nrec=Path(r'E:\\\\PC-Control-Recovery\\\\bridge-state-restore-20261007-211458')\\nexpected_cur='058bc360ca5d28d00b6e100cee510c524a0ec4ade8de6ab134209b55d1320a63'\\nexpected_src='d3b5870f613af9fd10eaf4326d1714fd8721ed4c855a967a2e085674f0717a67'\\ndef sha(p):\\n h=hashlib.sha256()\\n with p.open('rb') as f:\\n  for b in iter(lambda:f.read(1024*1024),b''): h.update(b)\\n return h.hexdigest()\\nassert sha(cur)==expected_cur, 'ABORT: stopped state changed before restore'\\nassert sha(src)==expected_src, 'ABORT: backup hash changed'\\ncandidate=json.loads(src.read_text(encoding='utf-8'))\\nassert len(candidate.get('aiProfiles') or [])==4\\nassert len(candidate.get('chats') or [])==16\\nassert len(candidate.get('tasks') or [])==324\\nassert len(candidate.get('agentAssignments') or [])==60\\nassert len(candidate.get('projects') or [])==9\\nshutil.copy2(cur,rec/'current-final-before-restore.json')\\ntmp=cur.with_name('state.restore.tmp')\\nif tmp.exists(): tmp.unlink()\\nshutil.copy2(src,tmp)\\nassert sha(tmp)==expected_src\\njson.loads(tmp.read_text(encoding='utf-8'))\\nos.replace(tmp,cur)\\nassert sha(cur)==expected_src\\nrecord={'restoredAt':datetime.datetime.now().isoformat(),'from':str(src),'to':str(cur),'sha256':sha(cur),'counts':{'aiProfiles':4,'chats':16,'tasks':324,'agentAssignments':60,'projects':9}}\\n(rec/'restore-record.json').write_text(json.dumps(record,indent=2),encoding='utf-8')\\nprint('RESTORE_OK',cur.stat().st_size,sha(cur))\\n\")"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "RESTORE_OK 7475825 d3b5870f613af9fd10eaf4326d1714fd8721ed4c855a967a2e085674f0717a67\r\n",
+      "stdout_bytes": 85,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T14:21:08.160Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T14:21:07.947Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2136-bridge-state-restore-atomic-02"
+    },
+    "request_id": "20261007T2136-bridge-state-restore-atomic-02",
+    "started_at": "2026-10-07T14:21:07.019Z",
+    "status": "completed"
+  },
+  "id": "20261007T2136-bridge-state-restore-atomic-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
