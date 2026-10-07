@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-07T10:40:20.034Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261007T1057-native-direct-dispatch-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:cbf3afa03730780344693f8bf96ae2789f19bcffe6d1c3fc91885963895e1942",
+            "journal_sequence": 2094,
+            "previous_record_sha256": "17bcc4ff5749402ad9fd9974283c5df5a74591328f6a10cb78980bdd984c9ca6",
+            "record_sha256": "61f2f76acb18126a9d77066cb6fa5d93bd7c2dd3df04914aa6e33f1895b11392",
+            "recorded_at": "2026-10-07T10:40:20.153Z",
+            "request_id": "20261007T1057-native-direct-dispatch-01",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-07T10:40:50.999Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261007T1057-native-direct-dispatch-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:cbf3afa03730780344693f8bf96ae2789f19bcffe6d1c3fc91885963895e1942",
+            "journal_sequence": 2095,
+            "previous_record_sha256": "61f2f76acb18126a9d77066cb6fa5d93bd7c2dd3df04914aa6e33f1895b11392",
+            "record_sha256": "4f021a2da5e53c55d3ea2c1ec4d2bea76185449b50ed3a549906488ec6cd280d",
+            "recorded_at": "2026-10-07T10:40:51.132Z",
+            "request_id": "20261007T1057-native-direct-dispatch-01",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-07T10:40:50.999Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "20261007T1057-native-direct-dispatch-01"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-07T10:40:50.999Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "20261007T1057-native-direct-dispatch-01"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:cbf3afa03730780344693f8bf96ae2789f19bcffe6d1c3fc91885963895e1942",
+          "journal_sequence": 2095,
+          "previous_record_sha256": "61f2f76acb18126a9d77066cb6fa5d93bd7c2dd3df04914aa6e33f1895b11392",
+          "record_sha256": "4f021a2da5e53c55d3ea2c1ec4d2bea76185449b50ed3a549906488ec6cd280d",
+          "recorded_at": "2026-10-07T10:40:51.132Z",
+          "request_id": "20261007T1057-native-direct-dispatch-01",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "7ac2ea0ad9d72e66a9ab2d737820915e9bf35c91f94c9cde5bc0e0ee526c9a5b",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 2095
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "20261007T1057-native-direct-dispatch-01",
+        "request_id": "20261007T1057-native-direct-dispatch-01",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T10:41:46.768Z",
+    "ok": true,
+    "request_id": "20261007T1062-native-direct-outcome-lookup-01",
+    "started_at": "2026-10-07T10:41:46.622Z",
+    "status": "completed"
+  },
+  "id": "20261007T1062-native-direct-outcome-lookup-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
