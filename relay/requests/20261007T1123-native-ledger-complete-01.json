@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1123-native-ledger-complete-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request;u='http://127.0.0.1:17448/api/projects/control-plane/operations/register';b={'operationId':'coord-20261007-native-r39-direct-01','logicalAgentId':'agent-pc-control','generation':0,'providerConversationId':'6ab946b7-46f0-83ed-bc98-dc74acc6e810','transport':'PC_CONTROL_CDP','promptHash':'b090f4d78bb0166c6ca4602f7a644739e0b7f4276bbbe0be3b5b4c9aa0d7c6de','repository':'foto6/help-pc-2','branch':'agent/native-mcp-r39-local-canary-20261006','expectedStartingSha':'d8c7661d52670fe50e58bc68d50f59a624253e44','dispatchState':'COMPLETED','reconciliationState':'RECONCILED','resultingSha':'8264b87bcb3ab06993f46cb5cd59ff5e5574b4a1','ciRunId':'37610672352','ciConclusion':'SUCCESS','acceptance':'ACCEPTED','artifacts':[{'id':'11478153041','name':'r39-local-canary-readiness-windows-latest','digest':'sha256:d9fcdde81593602e4cf3820d2f6e5842088f720fd899765c44b15301eea4847c'},{'id':'11477622595','name':'r39-local-canary-readiness-ubuntu-latest','digest':'sha256:87a17c4cb7f2743dbf4511e234a0ec435baf139f9c4685597dad325ee279202c'}],'highGateProof':{'expectedPromptHash':'b090f4d78bb0166c6ca4602f7a644739e0b7f4276bbbe0be3b5b4c9aa0d7c6de','preSubmitHigh':True,'preTypeHigh':True,'providerConversationId':'6ab946b7-46f0-83ed-bc98-dc74acc6e810','requestedHigh':True,'typedPromptHash':'b090f4d78bb0166c6ca4602f7a644739e0b7f4276bbbe0be3b5b4c9aa0d7c6de'}};q=urllib.request.Request(u,data=json.dumps(b).encode(),headers={'Content-Type':'application/json'},method='POST');d=json.loads(urllib.request.urlopen(q,timeout=10).read());op=d.get('operation') or {};print(json.dumps({'idempotent':d.get('idempotent'),'state':op.get('dispatchState'),'reconcile':op.get('reconciliationState'),'head':op.get('resultingSha'),'ci':op.get('ciRunId'),'acceptance':op.get('acceptance')},separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 15000,
+  "note": "Idempotently merge Native R39 exact-green evidence into existing PC_CONTROL_CDP operation ledger entry"
+}
