@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1064-native-exact-reconcile-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\nconst cid=\"6ab946b7-46f0-83ed-bc98-dc74acc6e810\";\nconst tabs=await (await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst conv=u=>{try{const p=new URL(u).pathname.split(\"/\").filter(Boolean);return p[p.length-1]||\"\"}catch{return\"\"}};\nconst ms=tabs.filter(t=>t.type===\"page\"&&conv(t.url)===cid);\nconst out={count:ms.length,targets:[]};\nfor(const t of ms){\n const one={targetId:t.id,title:t.title,url:t.url};\n try{\n  const ws=new WebSocket(t.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\n  let n=1;const p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n  const call=(method,params={})=>new Promise((r,j)=>{const k=n++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\n  const expr=\"JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect(),s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!=='none'&&s.visibility!=='hidden'};const bs=[...document.querySelectorAll('button,[role=button]')].filter(vis);const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=true]')].find(vis)||null;const users=[...document.querySelectorAll('[data-message-author-role=user]')];const a=[...document.querySelectorAll('[data-message-author-role=assistant]')];return {high:bs.some(b=>/^(Высокий|High)$/iu.test((b.innerText||b.textContent||'').trim())),generating:bs.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||''))),draft:c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'',lastUser:users.length?((users.at(-1).innerText||users.at(-1).textContent||'').trim()):'',lastAssistant:a.length?((a.at(-1).innerText||a.at(-1).textContent||'').trim().slice(-1500)):''}})())\";\n  const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});\n  Object.assign(one,JSON.parse(rr.result.value));ws.close();\n }catch(e){one.error=String(e)}\n out.targets.push(one);\n}\nprocess.stdout.write(JSON.stringify(out));\n'@; $code | node --input-type=module -"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only exact Native reconciliation after unknown direct-dispatch outcome; no mutation."
+}
