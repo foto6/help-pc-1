@@ -1,0 +1,108 @@
+{
+  "action": "windows.list",
+  "executor_result": {
+    "action": "windows.list",
+    "data": {
+      "windows": [
+        {
+          "app_name": null,
+          "hwnd": 133452,
+          "pid": 27372,
+          "title": "E:\\manhwa короче надро переделывать | foto6",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 1444284,
+          "pid": 26736,
+          "title": "Lightshot — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 17301708,
+          "pid": 12524,
+          "title": "manhwa — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 722006,
+          "pid": 27372,
+          "title": "PC Control - Start and Check",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 65784,
+          "pid": 12524,
+          "title": "Program Manager",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 66870,
+          "pid": 22692,
+          "title": "Proxifier",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 198162,
+          "pid": 4100,
+          "title": "Steam",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 13829984,
+          "pid": 19500,
+          "title": "Диспетчер задач",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 197430,
+          "pid": 17444,
+          "title": "Интерфейс ввода Windows",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 525388,
+          "pid": 11924,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 591138,
+          "pid": 12560,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 131586,
+          "pid": 22704,
+          "title": "Отчёт о проверке — Mozilla Firefox",
+          "visible": true
+        }
+      ]
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T11:25:50.220Z",
+    "ok": true,
+    "request_id": "20261007T1148-windows-list-native-02",
+    "started_at": "2026-10-07T11:25:50.216Z",
+    "status": "completed"
+  },
+  "id": "20261007T1148-windows-list-native-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
