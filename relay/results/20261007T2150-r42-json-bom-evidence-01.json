@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "exec(\"from pathlib import Path\\nroot=Path(r'E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261007T111557Z')\\nfor name in ['rollback-manifest.json','cutover-report.json','state.json']:\\n p=root/name\\n print(name,'exists='+str(p.exists()),'head='+((p.read_bytes()[:4].hex()) if p.exists() else ''))\\n\")"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "rollback-manifest.json exists=True head=efbbbf7b\r\ncutover-report.json exists=False head=\r\nstate.json exists=True head=7b0a2020\r\n",
+      "stdout_bytes": 128,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T14:26:01.356Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T14:26:01.109Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2150-r42-json-bom-evidence-01"
+    },
+    "request_id": "20261007T2150-r42-json-bom-evidence-01",
+    "started_at": "2026-10-07T14:26:00.346Z",
+    "status": "completed"
+  },
+  "id": "20261007T2150-r42-json-bom-evidence-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
