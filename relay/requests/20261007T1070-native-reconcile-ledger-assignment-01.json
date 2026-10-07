@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1070-native-reconcile-ledger-assignment-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nbase='http://127.0.0.1:17448'\nout={}\ntry:\n d=json.loads(urllib.request.urlopen(base+'/api/supervisor-watchdog/agent-assignments?chatId=agent-pc-control',timeout=10).read().decode('utf-8'))\n rows=[x for x in d.get('assignments',[]) if x.get('id') in ['5dc21cfa-6bad-4df8-a493-99d0ece5a248','b1314ed6-5b22-4cbf-8865-e044b4bd683f']]\n out['assignments']=[{k:x.get(k) for k in ['id','state','lastPreflightReason','lastDiagnostic','dispatchCount','dispatchSubmitAttempted','dispatchTargetId','updatedAt','completedAt']} for x in rows]\nexcept Exception as e:\n out['assignments_error']=type(e).__name__+': '+str(e)\ntry:\n d=json.loads(urllib.request.urlopen(base+'/api/projects/control-plane/operations',timeout=10).read().decode('utf-8'))\n ops=d.get('operations') or []\n out['operation']=[x for x in ops if x.get('operationId')=='coord-20261007-native-r39-direct-01']\nexcept Exception as e:\n out['operations_error']=type(e).__name__+': '+str(e)\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only reconciliation for unknown Native direct dispatch: assignment state + R41 ledger only. No replay."
+}
