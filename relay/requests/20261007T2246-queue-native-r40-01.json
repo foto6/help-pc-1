@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2246-queue-native-r40-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-pc-control/assignments'\nbody={\"text\":\"EXECUTE NOW — Native MCP R40. Work ONLY on agent/native-mcp-r40-staged-local-canary-20261007 from exact HEAD b6e0cbf326138a81ded36f6c18dbb5efee4965cd. Read TASKS/R40_STAGED_LOCAL_CANARY.md. Execute the R39 staged local canary on the user's Windows PC in an isolated non-production root/port, validate lifecycle and reconciliation semantics, keep GitHub relay as production authority, perform NO production cutover/service/firewall/tunnel mutation, commit only non-secret evidence, and return exact SHA/CI/artifacts plus CANARY_READY or exact blocker.\",\"repository\":\"foto6/help-pc-2\",\"branch\":\"agent/native-mcp-r40-staged-local-canary-20261007\",\"expectedHead\":\"b6e0cbf326138a81ded36f6c18dbb5efee4965cd\",\"idempotencyKey\":\"coord-20261007-native-r40-assignment-01\",\"supervisorVerificationRequired\":True,\"evidenceTimeoutMinutes\":120}\nq=urllib.request.Request(u,data=json.dumps(body).encode(),headers={'Content-Type':'application/json'},method='POST')\nd=json.loads(urllib.request.urlopen(q,timeout=15).read().decode())\nprint(json.dumps({k:d.get(k) for k in ['id','state','targetChatId','targetChatUrl','projectId','expectedHead']},separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 25000,
+  "note": "Queue Native MCP R40 managed assignment after supervisor registry recovery"
+}
