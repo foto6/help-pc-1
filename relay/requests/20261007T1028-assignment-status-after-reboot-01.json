@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1028-assignment-status-after-reboot-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nbase='http://127.0.0.1:17448'\nspecs=[\n ('Media','agent-media','agent/media-r27-real-input-local-rehearsal-20261006'),\n ('Bridge','chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982','agent/bridge-r43-porcelain-cutover-fix-20261006'),\n ('Creator','chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c','agent/creator-r39-current-authority-binder-20261006'),\n ('Growth','chat-6abf3eb2-40ec-83ed-9f7f-c4a32ad11fc0','agent/growth-r38-real-local-bundle-verifier-20261006'),\n ('Native','agent-pc-control','agent/native-mcp-r39-local-canary-20261006'),\n ('QA','chat-6ac45fb0-9074-83eb-99eb-397265b228e7','agent/integration-r8-final-local-stack-20261006')\n]\nout=[]\nfor label,chat,branch in specs:\n    try:\n        d=json.loads(urllib.request.urlopen(base+'/api/supervisor-watchdog/agent-assignments?chatId='+chat,timeout=10).read().decode('utf-8'))\n        rows=[x for x in d.get('assignments',[]) if x.get('branch')==branch]\n        rows=sorted(rows,key=lambda x:str(x.get('createdAt') or x.get('updatedAt') or ''))\n        row=rows[-1] if rows else {}\n        keep=['id','state','lastPreflightReason','lastDiagnostic','dispatchTargetId','dispatchCount','dispatchSubmitAttempted','dispatchFailureCode','currentHead','ciRunId','ciConclusion','supervisorVerified','updatedAt','completedAt','targetChatUrl']\n        out.append({'label':label,'chat':chat,'branch':branch,'assignment':{k:row.get(k) for k in keep}})\n    except Exception as e:\n        out.append({'label':label,'chat':chat,'branch':branch,'error':type(e).__name__+': '+str(e)})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 30000,
+  "note": "Read current managed assignment states after reboot and chat reopen; no mutation."
+}
