@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2116-bridge-restore-preflight-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "exec(\"import json,hashlib,shutil,datetime,os\\nfrom pathlib import Path\\nroot=Path(r'E:\\\\WebAIBridge\\\\app\\\\data')\\ncur=root/'state.json'\\nsrc=root/'backups'/'r42-cutover-20261007T111557Z'/'state.json'\\nstamp=datetime.datetime.now().strftime('%Y%m%d-%H%M%S')\\ndst=Path(r'E:\\\\PC-Control-Recovery')/('bridge-state-restore-'+stamp)\\ndst.mkdir(parents=True,exist_ok=False)\\ndef sha(p):\\n h=hashlib.sha256()\\n with p.open('rb') as f:\\n  for b in iter(lambda:f.read(1024*1024),b''): h.update(b)\\n return h.hexdigest()\\nfor p,name in [(cur,'current-before.json'),(src,'candidate-backup.json')]:\\n shutil.copy2(p,dst/name)\\n d=json.loads(p.read_text(encoding='utf-8'))\\n print(name,'bytes',p.stat().st_size,'sha256',sha(p))\\n print(' profiles',len(d.get('aiProfiles') or []),'chats',len(d.get('chats') or []),'tasks',len(d.get('tasks') or []),'assignments',len(d.get('agentAssignments') or []),'projects',len(d.get('projects') or []))\\n print(' lifecycle',(d.get('operatorLifecycle') or {}).get('mode'),'paused',(d.get('settings') or {}).get('paused'))\\n print(' profile_ids',[(x.get('id'),x.get('name'),x.get('provider'),x.get('chromeLaunchMode')) for x in (d.get('aiProfiles') or [])])\\nmanifest={'createdAt':datetime.datetime.now().isoformat(),'current':{'path':str(cur),'bytes':cur.stat().st_size,'sha256':sha(cur)},'candidate':{'path':str(src),'bytes':src.stat().st_size,'sha256':sha(src)},'recoveryDir':str(dst)}\\n(dst/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')\\nprint('RECOVERY_DIR',dst)\\n\")"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only validation plus copies of current and candidate WebAIBridge state into PC-Control-Recovery before any restore; no process changes"
+}
