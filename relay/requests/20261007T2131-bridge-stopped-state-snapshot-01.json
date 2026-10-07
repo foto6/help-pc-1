@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2131-bridge-stopped-state-snapshot-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "exec(\"import json,hashlib,shutil,datetime\\nfrom pathlib import Path\\ncur=Path(r'E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json')\\nrec=Path(r'E:\\\\PC-Control-Recovery\\\\bridge-state-restore-20261007-211458')\\ndef sha(p):\\n h=hashlib.sha256()\\n with p.open('rb') as f:\\n  for b in iter(lambda:f.read(1024*1024),b''): h.update(b)\\n return h.hexdigest()\\nd=json.loads(cur.read_text(encoding='utf-8'))\\ntarget=rec/'current-after-stop.json'\\nshutil.copy2(cur,target)\\nprint('CURRENT_AFTER_STOP',cur.stat().st_size,sha(cur))\\nprint('COUNTS',len(d.get('aiProfiles') or []),len(d.get('chats') or []),len(d.get('tasks') or []),len(d.get('agentAssignments') or []),len(d.get('projects') or []))\\nprint('LIFECYCLE',(d.get('operatorLifecycle') or {}).get('mode'),'PAUSED',(d.get('settings') or {}).get('paused'))\\nprint('PROFILE_IDS',[(x.get('id'),x.get('provider'),x.get('chromeLaunchMode')) for x in (d.get('aiProfiles') or [])])\\n\")"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only snapshot of WebAIBridge state after verified server stop; copy to recovery package and print only aggregate counts/profile identifiers"
+}
