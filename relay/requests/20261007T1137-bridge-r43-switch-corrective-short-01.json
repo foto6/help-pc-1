@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1137-bridge-r43-switch-corrective-short-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request;u='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982/assignments';b={'text':'EXECUTE NOW — Bridge R43 corrective. Work ONLY on agent/bridge-r43-porcelain-cutover-fix-20261006 from exact HEAD 545412513f09c396fe0e3f6f7ba04ca609b9a195. Real PreflightOnly passed, but controlled cutover failed before switch because git switch refused five R40 wrappers that preflight had already proven raw-identical filter-only. Fix cutover to safely normalize ONLY exact raw-identical filter-only tracked paths immediately before switch, re-verify them, and still fail closed on any staged/untracked/deleted/renamed/conflict/material drift. Add regression for this exact checkout refusal. Preserve rollback and all R43 safety gates. Run exact-head Windows+Ubuntu focused/full CI and return final SHA/CI/artifacts. Do not perform live cutover yourself.','repository':'foto6/WebAIBridge','branch':'agent/bridge-r43-porcelain-cutover-fix-20261006','expectedHead':'545412513f09c396fe0e3f6f7ba04ca609b9a195','idempotencyKey':'coord-20261007-bridge-r43-switch-corrective-02','supervisorVerificationRequired':True,'evidenceTimeoutMinutes':90};q=urllib.request.Request(u,data=json.dumps(b).encode(),headers={'Content-Type':'application/json'},method='POST');d=json.loads(urllib.request.urlopen(q,timeout=15).read());print(json.dumps({k:d.get(k) for k in ['id','state','targetChatId','expectedHead']},separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 20000,
+  "note": "Queue Bridge R43 filter-only checkout corrective"
+}
