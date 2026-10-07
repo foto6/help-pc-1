@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "exec(\"import json,hashlib,shutil,datetime,os\\nfrom pathlib import Path\\nroot=Path(r'E:\\\\WebAIBridge\\\\app\\\\data')\\ncur=root/'state.json'\\nsrc=root/'backups'/'r42-cutover-20261007T111557Z'/'state.json'\\nstamp=datetime.datetime.now().strftime('%Y%m%d-%H%M%S')\\ndst=Path(r'E:\\\\PC-Control-Recovery')/('bridge-state-restore-'+stamp)\\ndst.mkdir(parents=True,exist_ok=False)\\ndef sha(p):\\n h=hashlib.sha256()\\n with p.open('rb') as f:\\n  for b in iter(lambda:f.read(1024*1024),b''): h.update(b)\\n return h.hexdigest()\\nfor p,name in [(cur,'current-before.json'),(src,'candidate-backup.json')]:\\n shutil.copy2(p,dst/name)\\n d=json.loads(p.read_text(encoding='utf-8'))\\n print(name,'bytes',p.stat().st_size,'sha256',sha(p))\\n print(' profiles',len(d.get('aiProfiles') or []),'chats',len(d.get('chats') or []),'tasks',len(d.get('tasks') or []),'assignments',len(d.get('agentAssignments') or []),'projects',len(d.get('projects') or []))\\n print(' lifecycle',(d.get('operatorLifecycle') or {}).get('mode'),'paused',(d.get('settings') or {}).get('paused'))\\n print(' profile_ids',[(x.get('id'),x.get('name'),x.get('provider'),x.get('chromeLaunchMode')) for x in (d.get('aiProfiles') or [])])\\nmanifest={'createdAt':datetime.datetime.now().isoformat(),'current':{'path':str(cur),'bytes':cur.stat().st_size,'sha256':sha(cur)},'candidate':{'path':str(src),'bytes':src.stat().st_size,'sha256':sha(src)},'recoveryDir':str(dst)}\\n(dst/'manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')\\nprint('RECOVERY_DIR',dst)\\n\")"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "current-before.json bytes 9713 sha256 3d8cac13ea3b570dafcc3de2af170da2733722a24dc9a436ca80490a030102d5\r\n profiles 2 chats 0 tasks 0 assignments 0 projects 0\r\n lifecycle RUNNING_MANAGED paused False\r\n profile_ids [('builtin-chatgpt', 'ChatGPT ��������', 'chatgpt', 'managed'), ('builtin-gemini', 'Gemini ��������', 'gemini', 'managed')]\r\ncandidate-backup.json bytes 7475825 sha256 d3b5870f613af9fd10eaf4326d1714fd8721ed4c855a967a2e085674f0717a67\r\n profiles 4 chats 16 tasks 324 assignments 60 projects 9\r\n lifecycle RUNNING_MANAGED paused False\r\n profile_ids [('builtin-chatgpt', 'ChatGPT ��������', 'chatgpt', 'attach'), ('builtin-gemini', 'Gemini ��������', 'gemini', 'managed'), ('gemini-personal-attach', 'Gemini Personal - attached', 'gemini', 'attach'), ('ef72920c-cfe7-4824-a79b-7a0e0943ce7e', 'ChatGPT ������� 2', 'chatgpt', 'attach')]\r\nRECOVERY_DIR E:\\PC-Control-Recovery\\bridge-state-restore-20261007-211458\r\n",
+      "stdout_bytes": 918,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T14:14:58.504Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T14:14:58.254Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2116-bridge-restore-preflight-01"
+    },
+    "request_id": "20261007T2116-bridge-restore-preflight-01",
+    "started_at": "2026-10-07T14:14:57.288Z",
+    "status": "completed"
+  },
+  "id": "20261007T2116-bridge-restore-preflight-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
