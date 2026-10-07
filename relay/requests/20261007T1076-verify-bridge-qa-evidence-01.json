@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1076-verify-bridge-qa-evidence-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nbase='http://127.0.0.1:17448'\nrows=[\n ('Bridge','4e67b543-7d83-42df-9389-0707659dd36a',{\n  'branch':'agent/bridge-r43-porcelain-cutover-fix-20261006',\n  'currentHead':'6f4d3b976a9a61fc17ff1ca38b798d79f4532bba',\n  'exactCommitSha':'6f4d3b976a9a61fc17ff1ca38b798d79f4532bba',\n  'ciRunId':'37608981517','ciConclusion':'success','supervisorVerified':True\n }),\n ('QA','49bac301-f296-4501-a478-05a9b7de5456',{\n  'branch':'agent/integration-r8-final-local-stack-20261006',\n  'currentHead':'06ade2b1e8d40c4ab6559f3ffe1d69b0ee36fd78',\n  'exactCommitSha':'06ade2b1e8d40c4ab6559f3ffe1d69b0ee36fd78',\n  'ciRunId':'37608989585','ciConclusion':'success','supervisorVerified':True\n })\n]\nout=[]\nfor label,aid,body in rows:\n try:\n  data=json.dumps(body).encode('utf-8')\n  req=urllib.request.Request(base+'/api/supervisor-watchdog/agent-assignments/'+aid+'/evidence',data=data,headers={'Content-Type':'application/json'},method='POST')\n  d=json.loads(urllib.request.urlopen(req,timeout=10).read().decode('utf-8'))\n  out.append({'label':label,'ok':True,'result':{k:d.get(k) for k in ['id','state','lastDiagnostic','currentHead','ciRunId','ciConclusion','supervisorVerified']}})\n except Exception as e:\n  out.append({'label':label,'ok':False,'error':type(e).__name__+': '+str(e)})\nprint(json.dumps(out,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 20000,
+  "note": "Submit exact-green evidence for Bridge R43 corrective and QA certificate refresh."
+}
