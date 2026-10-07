@@ -1,0 +1,21 @@
+{
+  "action": "uia.inspect",
+  "executor_result": {
+    "action": "uia.inspect",
+    "data": {},
+    "dry_run": false,
+    "error": "UIA automation_id not found: NewTabButton",
+    "error_kind": "stale_target",
+    "finished_at": "2026-10-07T15:04:10.468Z",
+    "ok": false,
+    "request_id": "20261007T2215-chrome-newtab-id-inspect-01",
+    "started_at": "2026-10-07T15:04:09.530Z",
+    "status": "stale_target"
+  },
+  "id": "20261007T2215-chrome-newtab-id-inspect-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
