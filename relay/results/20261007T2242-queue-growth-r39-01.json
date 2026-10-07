@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0/assignments'\nbody=\"{\\\"text\\\":\\\"EXECUTE NOW — Growth R39. Work ONLY on agent/growth-r39-media-qa-bind-20261007 from exact HEAD 887567bb62a3df0879505d68ac6a2be725b57173. Read TASKS/R39_MEDIA_QA_BIND.md. Consume the exact accepted Media R27 independent QA certificate from foto6/boss@06ade2b1e8d40c4ab6559f3ffe1d69b0ee36fd78, preserve sealed-bundle verification and evidence-class separation, reject stale/fixture-only/mismatched QA, get exact-head CI green and deterministic artifact. Return exact SHA/CI/artifact and verification command.\\\",\\\"repository\\\":\\\"foto6/video3\\\",\\\"branch\\\":\\\"agent/growth-r39-media-qa-bind-20261007\\\",\\\"expectedHead\\\":\\\"887567bb62a3df0879505d68ac6a2be725b57173\\\",\\\"idempotencyKey\\\":\\\"coord-20261007-growth-r39-assignment-01\\\",\\\"supervisorVerificationRequired\\\":true,\\\"evidenceTimeoutMinutes\\\":120}\"\nq=urllib.request.Request(u,data=body.encode(),headers={'Content-Type':'application/json'},method='POST')\nd=json.loads(urllib.request.urlopen(q,timeout=15).read().decode())\nprint(json.dumps({k:d.get(k) for k in ['id','state','targetChatId','targetChatUrl','projectId','expectedHead']},separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"eff91a96-514b-4cc7-93b6-19e1f19c5741\",\"state\":\"queued\",\"targetChatId\":\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"projectId\":\"project-g-p-6ab839fa4f8c81919adad01c4a5497dc\",\"expectedHead\":\"887567bb62a3df0879505d68ac6a2be725b57173\"}\r\n",
+      "stdout_bytes": 359,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T15:45:42.977Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T15:45:42.827Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2242-queue-growth-r39-01"
+    },
+    "request_id": "20261007T2242-queue-growth-r39-01",
+    "started_at": "2026-10-07T15:45:42.254Z",
+    "status": "completed"
+  },
+  "id": "20261007T2242-queue-growth-r39-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
