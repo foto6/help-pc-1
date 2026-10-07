@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats'\nd=json.loads(urllib.request.urlopen(u,timeout=8).read().decode())\nrows=d.get('managedChats',d.get('rows',d if isinstance(d,list) else []))\nout=[]\nfor x in rows:\n  out.append({k:x.get(k) for k in ['id','managedChatId','url','managedChatUrl','projectId','profileId','title','enabled','mode']})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[]\r\n",
+      "stdout_bytes": 4,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T15:39:41.646Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T15:39:41.498Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2224-managed-registry-read-01"
+    },
+    "request_id": "20261007T2224-managed-registry-read-01",
+    "started_at": "2026-10-07T15:39:40.900Z",
+    "status": "completed"
+  },
+  "id": "20261007T2224-managed-registry-read-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
