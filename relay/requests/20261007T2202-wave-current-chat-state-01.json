@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2202-wave-current-chat-state-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json, urllib.request\nassign_url='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments'\ntabs_url='http://127.0.0.1:17410/json/list'\nbranches=[\n'agent/bridge-r43-porcelain-cutover-fix-20261006',\n'agent/native-mcp-r39-local-canary-20261006',\n'agent/media-r27-real-input-local-rehearsal-20261006',\n'agent/creator-r39-current-authority-binder-20261006',\n'agent/growth-r38-real-local-bundle-verifier-20261006',\n'agent/integration-r8-final-local-stack-20261006'\n]\na=json.loads(urllib.request.urlopen(assign_url,timeout=12).read().decode('utf-8'))\ntabs=json.loads(urllib.request.urlopen(tabs_url,timeout=8).read().decode('utf-8'))\nrows=[]\nfor x in a.get('assignments',[]):\n    txt=json.dumps(x,ensure_ascii=False)\n    if any(b in txt for b in branches):\n        rows.append({k:x.get(k) for k in [\n            'id','managedChatId','providerConversationId','logicalAgentId','state',\n            'lastPreflightReason','lastDiagnostic','dispatchCount','dispatchSubmitAttempted',\n            'currentHead','expectedBranch','updatedAt'\n        ]})\nouttabs=[]\nfor t in tabs:\n    u=str(t.get('url',''))\n    if 'chatgpt.com' in u:\n        outtabs.append({'id':t.get('id'),'title':t.get('title'),'url':u,'type':t.get('type')})\nprint(json.dumps({'assignments':rows,'tabs':outtabs},ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 25000,
+  "note": "Post-recovery read-only snapshot of current managed assignments and ChatGPT tabs before opening missing chats"
+}
