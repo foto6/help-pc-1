@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$target='545412513f09c396fe0e3f6f7ba04ca609b9a195';\n$branch='agent/bridge-r43-porcelain-cutover-fix-20261006';\n$temp=Join-Path $env:TEMP ('r43-preflight-' + $target + '-final.ps1');\n& git.exe -C $repo fetch origin $branch;\nif($LASTEXITCODE -ne 0){throw \"git fetch failed: $LASTEXITCODE\"}\n$lines=@(& git.exe -C $repo show ($target + ':app/r42-cutover.ps1'));\nif($LASTEXITCODE -ne 0 -or $lines.Count -eq 0){throw 'git show cutover script failed'}\n[IO.File]::WriteAllText($temp,(($lines -join [Environment]::NewLine)+[Environment]::NewLine),[Text.UTF8Encoding]::new($false));\ntry{\n  & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $temp -TargetSha $target -TargetBranch $branch -RepoPath $repo -PreflightOnly;\n  if($LASTEXITCODE -ne 0){throw \"R43 final PreflightOnly failed with exit $LASTEXITCODE\"}\n} finally {\n  Remove-Item -LiteralPath $temp -Force -ErrorAction SilentlyContinue\n}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "From https://github.com/foto6/WebAIBridge\n * branch            agent/bridge-r43-porcelain-cutover-fix-20261006 -> FETCH_HEAD\n   6f4d3b9..5454125  agent/bridge-r43-porcelain-cutover-fix-20261006 -> origin/agent/bridge-r43-porcelain-cutover-fix-20261006\n",
+      "stderr_bytes": 252,
+      "stderr_truncated": false,
+      "stdout": "{\"object\":\"bridge.projects_live_control_plane_cutover_preflight.r42.v1\",\"status\":\"PREFLIGHT_OK\",\"repoPath\":\"E:\\\\WebAIBridge\",\"preCutoverHead\":\"7351d8478600ceb1db50ea136efccb1c10a943c7\",\"preCutoverBranch\":\"\",\"targetSha\":\"545412513f09c396fe0e3f6f7ba04ca609b9a195\",\"targetBranch\":\"agent/bridge-r43-porcelain-cutover-fix-20261006\",\"parentSha\":\"e4ee875db5ad62b514a8d1edeff85888ef83fb8c\",\"gitExecutable\":\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\",\"externalGitResolved\":true,\"porcelainParserSource\":\"TARGET_SHA_GIT_BLOB\",\"porcelainParserBlob\":\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\",\"porcelainParserExpectedBlob\":\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\",\"porcelainParserProductionFileRequired\":false,\"callDepthOverflowDetected\":false,\"liveMutationPerformed\":false,\"providerMutationPerformed\":false}\r\n",
+      "stdout_bytes": 794,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T11:14:45.362Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T11:14:45.222Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T1126-r43-preflight-final-01"
+    },
+    "request_id": "20261007T1126-r43-preflight-final-01",
+    "started_at": "2026-10-07T11:14:40.314Z",
+    "status": "completed"
+  },
+  "id": "20261007T1126-r43-preflight-final-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
