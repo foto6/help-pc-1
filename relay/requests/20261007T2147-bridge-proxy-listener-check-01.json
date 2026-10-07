@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2147-bridge-proxy-listener-check-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "netstat -ano -p tcp | findstr LISTENING | findstr :17449"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only verify WebAIBridge local proxy forwarder port 17449 is listening after restore"
+}
