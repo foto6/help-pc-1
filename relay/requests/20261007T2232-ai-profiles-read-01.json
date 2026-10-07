@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2232-ai-profiles-read-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nd=json.loads(urllib.request.urlopen('http://127.0.0.1:17448/api/ai-profiles',timeout=8).read().decode())\nout={'defaultAiProfileId':d.get('settings',{}).get('defaultAiProfileId'),'profiles':[]}\nfor p in d.get('aiProfiles',[]):\n  out['profiles'].append({k:p.get(k) for k in ['id','name','provider','role','enabled','debugPort','chromeProfilePath','workerConnected','workerLikelyLoggedIn','workerLastSeenAt']})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only current Bridge AI profile inventory for supervisor registry recovery"
+}
