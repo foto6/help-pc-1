@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2210-current-assignments-from-state-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json\np=r'E:\\WebAIBridge\\app\\data\\state.json'\nwith open(p,'r',encoding='utf-8-sig') as f:\n    d=json.load(f)\nbranches={\n'bridge':'agent/bridge-r43-porcelain-cutover-fix-20261006',\n'native':'agent/native-mcp-r39-local-canary-20261006',\n'media':'agent/media-r27-real-input-local-rehearsal-20261006',\n'creator':'agent/creator-r39-current-authority-binder-20261006',\n'growth':'agent/growth-r38-real-local-bundle-verifier-20261006',\n'qa':'agent/integration-r8-final-local-stack-20261006'\n}\nrows=[]\nfor a in d.get('agentAssignments',[]):\n    s=json.dumps(a,ensure_ascii=False)\n    role=next((k for k,b in branches.items() if b in s),None)\n    if role:\n        rows.append({'role':role, **{k:a.get(k) for k in ['id','managedChatId','providerConversationId','logicalAgentId','state','expectedBranch','currentHead','dispatchCount','dispatchSubmitAttempted','updatedAt']}})\nprint(json.dumps({'topKeys':sorted(d.keys()),'rows':rows},ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only exact current assignment IDs from restored Bridge state file before opening chats"
+}
