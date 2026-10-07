@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nbase='http://127.0.0.1:17448'\ns=json.loads(urllib.request.urlopen(base+'/api/supervisor-watchdog?detect=0',timeout=8).read().decode())\np=json.loads(urllib.request.urlopen(base+'/api/supervisor-watchdog/projects',timeout=8).read().decode())\ncfg=s.get('config',{})\nout={\n'profileId':cfg.get('profileId'),\n'debugPort':cfg.get('debugPort'),\n'enabled':cfg.get('enabled'),\n'mode':cfg.get('mode'),\n'enforceHighMode':cfg.get('enforceHighMode'),\n'highModeStrategy':cfg.get('highModeStrategy'),\n'allowAutonomousSend':cfg.get('allowAutonomousSend'),\n'managedProjects':cfg.get('managedProjects',[]),\n'projects':p.get('projects',p.get('rows',[]))}\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"profileId\":\"\",\"debugPort\":0,\"enabled\":false,\"mode\":\"off\",\"enforceHighMode\":true,\"highModeStrategy\":\"verify_only\",\"allowAutonomousSend\":true,\"managedProjects\":[],\"projects\":[]}\r\n",
+      "stdout_bytes": 179,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T15:40:54.432Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T15:40:54.280Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2228-supervisor-binding-read-01"
+    },
+    "request_id": "20261007T2228-supervisor-binding-read-01",
+    "started_at": "2026-10-07T15:40:53.794Z",
+    "status": "completed"
+  },
+  "id": "20261007T2228-supervisor-binding-read-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
