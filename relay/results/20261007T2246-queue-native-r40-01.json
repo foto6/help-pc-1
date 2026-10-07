@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-pc-control/assignments'\nbody={\"text\":\"EXECUTE NOW — Native MCP R40. Work ONLY on agent/native-mcp-r40-staged-local-canary-20261007 from exact HEAD b6e0cbf326138a81ded36f6c18dbb5efee4965cd. Read TASKS/R40_STAGED_LOCAL_CANARY.md. Execute the R39 staged local canary on the user's Windows PC in an isolated non-production root/port, validate lifecycle and reconciliation semantics, keep GitHub relay as production authority, perform NO production cutover/service/firewall/tunnel mutation, commit only non-secret evidence, and return exact SHA/CI/artifacts plus CANARY_READY or exact blocker.\",\"repository\":\"foto6/help-pc-2\",\"branch\":\"agent/native-mcp-r40-staged-local-canary-20261007\",\"expectedHead\":\"b6e0cbf326138a81ded36f6c18dbb5efee4965cd\",\"idempotencyKey\":\"coord-20261007-native-r40-assignment-01\",\"supervisorVerificationRequired\":True,\"evidenceTimeoutMinutes\":120}\nq=urllib.request.Request(u,data=json.dumps(body).encode(),headers={'Content-Type':'application/json'},method='POST')\nd=json.loads(urllib.request.urlopen(q,timeout=15).read().decode())\nprint(json.dumps({k:d.get(k) for k in ['id','state','targetChatId','targetChatUrl','projectId','expectedHead']},separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"dfcf8cae-1ea4-4d79-9690-a3df9064cd48\",\"state\":\"queued\",\"targetChatId\":\"agent-pc-control\",\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"projectId\":\"project-g-p-6ab839fa4f8c81919adad01c4a5497dc\",\"expectedHead\":\"b6e0cbf326138a81ded36f6c18dbb5efee4965cd\"}\r\n",
+      "stdout_bytes": 334,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T15:46:55.296Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T15:46:55.146Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2246-queue-native-r40-01"
+    },
+    "request_id": "20261007T2246-queue-native-r40-01",
+    "started_at": "2026-10-07T15:46:54.550Z",
+    "status": "completed"
+  },
+  "id": "20261007T2246-queue-native-r40-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
