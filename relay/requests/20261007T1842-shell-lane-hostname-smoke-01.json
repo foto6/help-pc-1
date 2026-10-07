@@ -1,0 +1,13 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1842-shell-lane-hostname-smoke-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "hostname.exe"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Harmless shell-lane liveness probe after two Bridge log-read timeouts"
+}
