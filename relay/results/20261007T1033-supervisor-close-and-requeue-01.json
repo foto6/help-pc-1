@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nbase='http://127.0.0.1:17448'\nout=[]\n\ndef post(url,obj,timeout=15):\n    data=json.dumps(obj).encode('utf-8')\n    req=urllib.request.Request(url,data=data,headers={'Content-Type':'application/json'},method='POST')\n    return json.loads(urllib.request.urlopen(req,timeout=timeout).read().decode('utf-8'))\n\n# Creator R39: exact green evidence after prior evidence timeout\ntry:\n    d=post(base+'/api/supervisor-watchdog/agent-assignments/74cfcb00-58d7-404d-9613-a99383f0d149/evidence',{\n      'branch':'agent/creator-r39-current-authority-binder-20261006',\n      'currentHead':'69b4cb17ba81e79b15583fbbf64c0b6e9de51c0e',\n      'exactCommitSha':'69b4cb17ba81e79b15583fbbf64c0b6e9de51c0e',\n      'ciRunId':'37457718418',\n      'ciConclusion':'success',\n      'supervisorVerified':True\n    })\n    out.append({'label':'Creator','ok':True,'result':{k:d.get(k) for k in ['id','state','lastDiagnostic','currentHead','ciRunId','ciConclusion','supervisorVerified']}})\nexcept Exception as e:\n    out.append({'label':'Creator','ok':False,'error':type(e).__name__+': '+str(e)})\n\n# Growth R38: latest requeued assignment exact green evidence\ntry:\n    d=post(base+'/api/supervisor-watchdog/agent-assignments/518e4617-ba53-4a4c-81b4-f5f84e8c783e/evidence',{\n      'branch':'agent/growth-r38-real-local-bundle-verifier-20261006',\n      'currentHead':'608ec634d9f38ecf054ccd63ba6e7f3a1cd79cae',\n      'exactCommitSha':'608ec634d9f38ecf054ccd63ba6e7f3a1cd79cae',\n      'ciRunId':'37458782192',\n      'ciConclusion':'success',\n      'supervisorVerified':True\n    })\n    out.append({'label':'Growth','ok':True,'result':{k:d.get(k) for k in ['id','state','lastDiagnostic','currentHead','ciRunId','ciConclusion','supervisorVerified']}})\nexcept Exception as e:\n    out.append({'label':'Growth','ok':False,'error':type(e).__name__+': '+str(e)})\n\n# Bridge corrective, new logical assignment on current exact head\ntry:\n    d=post(base+'/api/supervisor-watchdog/managed-chats/chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982/assignments',{\n      'text':'EXECUTE NOW — Bridge R43 corrective. Work ONLY on agent/bridge-r43-porcelain-cutover-fix-20261006 from exact HEAD f5400fd369a4c9943f46c6f5f7aa760ee784469b. Current exact-head general Test 37461965662 is SUCCESS, but focused R43 workflow 37461959773 FAILS only on Windows adversarial harness cleanup: git reset --hard hits smudge filter r43 failed in app/r43-porcelain-adversarial.ps1. Fix the harness/cleanup without weakening the parser or tests; preserve Ubuntu success, cutover/rollback raw porcelain symmetry, High/rollover safety. Run exact-head Windows+Ubuntu focused CI, return final SHA/CI/artifacts. Then controlled local PreflightOnly/cutover/reconcile only if source exact-green. No merge, provider deletion or live publish.',\n      'repository':'foto6/WebAIBridge',\n      'branch':'agent/bridge-r43-porcelain-cutover-fix-20261006',\n      'expectedHead':'f5400fd369a4c9943f46c6f5f7aa760ee784469b',\n      'idempotencyKey':'coord-20261007-bridge-r43-corrective-01',\n      'supervisorVerificationRequired':True,\n      'evidenceTimeoutMinutes':90\n    })\n    out.append({'label':'Bridge','ok':True,'result':{k:d.get(k) for k in ['id','state','targetChatId','targetChatUrl','expectedHead']}})\nexcept Exception as e:\n    out.append({'label':'Bridge','ok':False,'error':type(e).__name__+': '+str(e)})\n\n# Native R39 retry after reboot. Old assignment had dispatchCount=0 / active_generation and no prompt submission.\ntry:\n    d=post(base+'/api/supervisor-watchdog/managed-chats/agent-pc-control/assignments',{\n      'text':'EXECUTE NOW — Native MCP R39. Work ONLY on agent/native-mcp-r39-local-canary-20261006 from exact HEAD d8c7661d52670fe50e58bc68d50f59a624253e44. Read TASKS/R39_LOCAL_CANARY.md and foto6/help-pc-2#14. Implement staged local canary by composing R32/R33/R37/R38: read-only Windows preflight, isolated canary root/port/service identity, RUNNING/PAUSED/DRAINING/RECONCILIATION_REQUIRED validation, explicit idempotent resume, no blind replay, GitHub relay fallback, cutover-plan generator only, staged reboot/autostart contract, exact-head Windows+Ubuntu CI and deterministic readiness artifact. Do not replace production relay or perform live production cutover. Return exact SHA/CI/artifacts and local commands.',\n      'repository':'foto6/help-pc-2',\n      'branch':'agent/native-mcp-r39-local-canary-20261006',\n      'expectedHead':'d8c7661d52670fe50e58bc68d50f59a624253e44',\n      'idempotencyKey':'coord-20261007-native-r39-retry-after-reboot-01',\n      'supervisorVerificationRequired':True,\n      'evidenceTimeoutMinutes':90\n    })\n    out.append({'label':'Native','ok':True,'result':{k:d.get(k) for k in ['id','state','targetChatId','targetChatUrl','expectedHead']}})\nexcept Exception as e:\n    out.append({'label':'Native','ok':False,'error':type(e).__name__+': '+str(e)})\n\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"label\":\"Creator\",\"ok\":true,\"result\":{\"id\":\"74cfcb00-58d7-404d-9613-a99383f0d149\",\"state\":\"completed\",\"lastDiagnostic\":\"evidence_verified\",\"currentHead\":\"69b4cb17ba81e79b15583fbbf64c0b6e9de51c0e\",\"ciRunId\":\"37457718418\",\"ciConclusion\":\"success\",\"supervisorVerified\":true}},{\"label\":\"Growth\",\"ok\":true,\"result\":{\"id\":\"518e4617-ba53-4a4c-81b4-f5f84e8c783e\",\"state\":\"completed\",\"lastDiagnostic\":\"evidence_verified\",\"currentHead\":\"608ec634d9f38ecf054ccd63ba6e7f3a1cd79cae\",\"ciRunId\":\"37458782192\",\"ciConclusion\":\"success\",\"supervisorVerified\":true}},{\"label\":\"Bridge\",\"ok\":true,\"result\":{\"id\":\"4e67b543-7d83-42df-9389-0707659dd36a\",\"state\":\"queued\",\"targetChatId\":\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"targetChatUrl\":\"https://chatgpt.com/c/6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"expectedHead\":\"f5400fd369a4c9943f46c6f5f7aa760ee784469b\"}},{\"label\":\"Native\",\"ok\":true,\"result\":{\"id\":\"5dc21cfa-6bad-4df8-a493-99d0ece5a248\",\"state\":\"queued\",\"targetChatId\":\"agent-pc-control\",\"targetChatUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"expectedHead\":\"d8c7661d52670fe50e58bc68d50f59a624253e44\"}}]\r\n",
+      "stdout_bytes": 1157,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T10:28:42.895Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T10:28:42.748Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T1033-supervisor-close-and-requeue-01"
+    },
+    "request_id": "20261007T1033-supervisor-close-and-requeue-01",
+    "started_at": "2026-10-07T10:28:42.045Z",
+    "status": "completed"
+  },
+  "id": "20261007T1033-supervisor-close-and-requeue-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
