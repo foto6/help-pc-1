@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1840-worker-error-log-python-read-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "from pathlib import Path; p=Path(r'E:\\WebAIBridge\\app\\worker-gemini-personal-attach-error.log'); print('\\n'.join(p.read_text(encoding='utf-8',errors='replace').splitlines()[-120:]) if p.exists() else 'LOG_MISSING')"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only Python tail of saved browser worker error log after PowerShell diagnostic timeout"
+}
