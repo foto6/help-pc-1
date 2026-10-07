@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2138-start-restored-bridge-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "E:\\WebAIBridge\\app\\START.cmd"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 15000,
+  "note": "Authorized start of WebAIBridge after verified state restore; use checked-in START.cmd"
+}
