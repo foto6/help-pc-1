@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1140-bridge-corrective-outcome-lookup-01",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "20261007T1137-bridge-r43-switch-corrective-short-01",
+    "action": "shell.run"
+  },
+  "timeout_ms": 8000,
+  "note": "Reconcile timed-out Bridge corrective assignment creation; no replay"
+}
