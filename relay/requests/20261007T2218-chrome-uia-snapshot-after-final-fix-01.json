@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2218-chrome-uia-snapshot-after-final-fix-01",
+  "action": "uia.snapshot",
+  "params": {
+    "window_title": "Отчёт о проверке - Google Chrome"
+  },
+  "timeout_ms": 12000,
+  "note": "Fresh read-only Chrome UIA snapshot after user's final Bridge/profile fix"
+}
