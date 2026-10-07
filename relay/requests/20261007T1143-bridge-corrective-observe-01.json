@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1143-bridge-corrective-observe-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request;u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId=chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982';d=json.loads(urllib.request.urlopen(u,timeout=6).read());rows=d.get('assignments',[]);rows=[x for x in rows if x.get('branch')=='agent/bridge-r43-porcelain-cutover-fix-20261006'];print(json.dumps([{k:x.get(k) for k in ['id','state','lastPreflightReason','lastDiagnostic','dispatchCount','dispatchSubmitAttempted','currentHead','updatedAt','createdAt']} for x in rows[-5:]],separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 12000,
+  "note": "Observe Bridge assignment ledger only; reconcile unknown corrective-create outcome; no resend"
+}
