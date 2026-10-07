@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1062-native-direct-outcome-lookup-01",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "20261007T1057-native-direct-dispatch-01",
+    "action": "shell.run"
+  },
+  "timeout_ms": 8000,
+  "note": "Reconcile timed-out Native direct dispatch. Read durable outcome only; no replay."
+}
