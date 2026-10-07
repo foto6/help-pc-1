@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "exec(\"from pathlib import Path\\np=Path(r'E:\\\\PC-Control-Recovery\\\\bridge-state-restore-20261007-211458\\\\RECOVERY_SUMMARY.txt')\\ntext='''WebAIBridge recovery summary - 2026-10-07\\n\\nINCIDENT\\n- Bridge loaded a near-default state (~9.7 KB) instead of the real production state.\\n- Current empty state contained 2 builtin profiles, 0 chats, 0 tasks, 0 assignments, 0 projects.\\n- Verified pre-cutover R42 backup contained 4 profiles, 16 chats, 324 tasks, 60 assignments, 9 projects.\\n\\nRECOVERY\\n- Source backup:\\n  E:\\\\\\\\WebAIBridge\\\\\\\\app\\\\\\\\data\\\\\\\\backups\\\\\\\\r42-cutover-20261007T111557Z\\\\\\\\state.json\\n- Source backup SHA-256:\\n  d3b5870f613af9fd10eaf4326d1714fd8721ed4c855a967a2e085674f0717a67\\n- Recovery directory:\\n  E:\\\\\\\\PC-Control-Recovery\\\\\\\\bridge-state-restore-20261007-211458\\n- Bridge server listener was verified as node.exe PID 22356 and only that PID was stopped.\\n- Chrome and browser tabs were not terminated.\\n- State replacement was atomic and hash-gated.\\n- Bridge restart outcome was reconciled by listener evidence; no blind replay.\\n- Restored Bridge listener after restart: PID 4040 on 127.0.0.1:17448.\\n- Local proxy forwarder verified on 127.0.0.1:17449 under the same Bridge server.\\n\\nPOST-RESTORE COUNTS\\n- profiles: 4\\n- chats: 16\\n- tasks: 324\\n- agent assignments: 60\\n- projects: 9\\n- lifecycle: RUNNING_MANAGED\\n- queue paused: false\\n\\nROOT CAUSE EVIDENCE\\n- R42 WriteJsonAtomic used Windows PowerShell 5.1 Set-Content -Encoding UTF8.\\n- Real rollback-manifest.json written by that path began with bytes EF BB BF 7B (UTF-8 BOM + '{').\\n- Pre-cutover state.json began with 7B and had no BOM.\\n- server.js uses JSON.parse(fs.readFileSync(..., 'utf8')) and silently falls back to defaultState() on parse failure.\\n- This explains the observed full-state -> near-default-state collapse.\\n\\nPRODUCTION HOTFIX\\n- Previous production HEAD:\\n  7351d8478600ceb1db50ea136efccb1c10a943c7\\n- Installed minimal hotfix HEAD:\\n  2d5f902a52f875f3385da0a9babe29e2761a0f5b\\n- Exact production diff:\\n  M app/r42-cutover.ps1\\n  A app/r42-json-encoding.test.ps1\\n- BOM regression on Windows PowerShell 5.1:\\n  NODE_JSON_OK\\n  R42_JSON_ENCODING_PASS\\n- Bridge was not restarted for the hotfix checkout.\\n\\nGITHUB\\n- PR #18 was opened from the production hotfix toward R43.\\n- Its Test run 37638935785 failed because the PR head was based on the older production tree while R43 base had newer porcelain-contract expectations.\\n- This is an integration-base mismatch, not a failure of the BOM regression.\\n- Do not merge PR #18 as-is.\\n\\nREMAINING RUNTIME NOTE\\n- gemini-personal-attach is connected and healthy.\\n- ChatGPT attach profile ef72920c-cfe7-4824-a79b-7a0e0943ce7e reconnects to the existing Chrome but then hits Runtime.evaluate timed out.\\n- One worker-only restart was attempted with restartChrome=false; Chrome/tab was preserved.\\n- Do not repeatedly restart or reload that Chrome tab while an agent may be working in it.\\n'''\\np.write_text(text,encoding='utf-8')\\nprint('SUMMARY_WRITTEN',p)\\n\")"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "SUMMARY_WRITTEN E:\\PC-Control-Recovery\\bridge-state-restore-20261007-211458\\RECOVERY_SUMMARY.txt\r\n",
+      "stdout_bytes": 98,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T14:46:08.159Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T14:46:07.912Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2250-bridge-recovery-summary-write-01"
+    },
+    "request_id": "20261007T2250-bridge-recovery-summary-write-01",
+    "started_at": "2026-10-07T14:46:07.126Z",
+    "status": "completed"
+  },
+  "id": "20261007T2250-bridge-recovery-summary-write-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
