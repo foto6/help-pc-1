@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2203-six-chat-supervisor-snapshot-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nbase=\"http://127.0.0.1:17448\"\nwant={\n\"bridge\":\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\n\"media\":\"chat-6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\n\"creator\":\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\n\"growth\":\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\n\"native\":\"agent-pc-control\",\n\"qa\":\"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\"}\nout={\"assignments\":{},\"snapshot\":[]}\nallj=json.loads(urllib.request.urlopen(base+\"/api/supervisor-watchdog/agent-assignments\",timeout=15).read().decode())\nrows=allj.get(\"assignments\",[])\nfor role,cid in want.items():\n    xs=[x for x in rows if x.get(\"targetChatId\")==cid]\n    xs=sorted(xs,key=lambda x:str(x.get(\"updatedAt\",\"\")),reverse=True)[:3]\n    out[\"assignments\"][role]=[{k:x.get(k) for k in [\"id\",\"state\",\"lastPreflightReason\",\"lastDiagnostic\",\"dispatchCount\",\"dispatchSubmitAttempted\",\"currentHead\",\"expectedHead\",\"ciRunId\",\"ciConclusion\",\"updatedAt\"]} for x in xs]\ntry:\n    snap=json.loads(urllib.request.urlopen(base+\"/api/supervisor-watchdog/multiagent-exactid-snapshot\",timeout=15).read().decode())\n    rows=snap.get(\"rows\",[])\n    for role,cid in want.items():\n        x=next((z for z in rows if z.get(\"managedChatId\")==cid),None)\n        out[\"snapshot\"].append({\"role\":role,\"row\":x})\nexcept Exception as e:\n    out[\"snapshot_error\"]=type(e).__name__+\": \"+str(e)\nprint(json.dumps(out,ensure_ascii=True,separators=(\",\",\":\")))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 35000,
+  "note": "Read-only six managed chat supervisor and exact-id snapshot after reboot/profile repair"
+}
