@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog'\nbody=\"{\\\"mode\\\":\\\"full\\\",\\\"profileId\\\":\\\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\\\",\\\"debugPort\\\":17410,\\\"supervisorChatUrl\\\":\\\"https://chatgpt.com/c/6ac45836-87a0-83ed-bea4-0ad0f99c8982\\\",\\\"supervisorChatTitlePattern\\\":\\\"Агент моста\\\",\\\"autoDetectProfile\\\":false,\\\"autoDetectChat\\\":false,\\\"enforceHighMode\\\":true,\\\"highModeStrategy\\\":\\\"verify_only\\\",\\\"openExistingChatIfMissing\\\":true,\\\"freshVerifyBeforeKick\\\":true,\\\"allowProfileRecovery\\\":true,\\\"allowAutonomousSend\\\":true,\\\"autoContinueEnabled\\\":true,\\\"migrationEnabled\\\":true,\\\"managedProjects\\\":[{\\\"id\\\":\\\"project-g-p-6ab839fa4f8c81919adad01c4a5497dc\\\",\\\"name\\\":\\\"sv\\\",\\\"url\\\":\\\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/project\\\",\\\"profileId\\\":\\\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\\\",\\\"enabled\\\":true}],\\\"managedChats\\\":[{\\\"id\\\":\\\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\\\",\\\"name\\\":\\\"Bridge\\\",\\\"role\\\":\\\"bridge\\\",\\\"url\\\":\\\"https://chatgpt.com/c/6ac45836-87a0-83ed-bea4-0ad0f99c8982\\\",\\\"profileId\\\":\\\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\\\",\\\"enabled\\\":true,\\\"repository\\\":\\\"foto6/WebAIBridge\\\",\\\"branch\\\":\\\"agent/bridge-r44-hotfix-r43-integration-20261007\\\",\\\"gitHead\\\":\\\"edbf94a8760139b2f8259746c344a54410420465\\\",\\\"resourceClass\\\":\\\"cpu\\\",\\\"priority\\\":500},{\\\"id\\\":\\\"agent-media\\\",\\\"name\\\":\\\"Media\\\",\\\"role\\\":\\\"media\\\",\\\"url\\\":\\\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\\\",\\\"profileId\\\":\\\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\\\",\\\"enabled\\\":true,\\\"projectId\\\":\\\"project-g-p-6ab839fa4f8c81919adad01c4a5497dc\\\",\\\"repository\\\":\\\"foto6/video2\\\",\\\"branch\\\":\\\"agent/media-r27-real-input-local-rehearsal-20261006\\\",\\\"gitHead\\\":\\\"183838a24205c6885b2366ad6ffa394164283d91\\\",\\\"resourceClass\\\":\\\"cpu\\\",\\\"priority\\\":300},{\\\"id\\\":\\\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\\\",\\\"name\\\":\\\"Creator\\\",\\\"role\\\":\\\"creator\\\",\\\"url\\\":\\\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac455e9-bea0-83eb-aa94-fd3dde516c0c\\\",\\\"profileId\\\":\\\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\\\",\\\"enabled\\\":true,\\\"projectId\\\":\\\"project-g-p-6ab839fa4f8c81919adad01c4a5497dc\\\",\\\"repository\\\":\\\"foto6/video1\\\",\\\"branch\\\":\\\"agent/creator-r40-media-qa-bind-20261007\\\",\\\"gitHead\\\":\\\"6a21591b84a1654efd91c425eabfe6a5c2ae1619\\\",\\\"resourceClass\\\":\\\"cpu\\\",\\\"priority\\\":400},{\\\"id\\\":\\\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\\\",\\\"name\\\":\\\"Growth\\\",\\\"role\\\":\\\"growth\\\",\\\"url\\\":\\\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\\\",\\\"profileId\\\":\\\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\\\",\\\"enabled\\\":true,\\\"projectId\\\":\\\"project-g-p-6ab839fa4f8c81919adad01c4a5497dc\\\",\\\"repository\\\":\\\"foto6/video3\\\",\\\"branch\\\":\\\"agent/growth-r39-media-qa-bind-20261007\\\",\\\"gitHead\\\":\\\"887567bb62a3df0879505d68ac6a2be725b57173\\\",\\\"resourceClass\\\":\\\"cpu\\\",\\\"priority\\\":350},{\\\"id\\\":\\\"agent-pc-control\\\",\\\"name\\\":\\\"Native MCP\\\",\\\"role\\\":\\\"native-mcp\\\",\\\"url\\\":\\\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\\\",\\\"profileId\\\":\\\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\\\",\\\"enabled\\\":true,\\\"projectId\\\":\\\"project-g-p-6ab839fa4f8c81919adad01c4a5497dc\\\",\\\"repository\\\":\\\"foto6/help-pc-2\\\",\\\"branch\\\":\\\"agent/native-mcp-r40-staged-local-canary-20261007\\\",\\\"gitHead\\\":\\\"b6e0cbf326138a81ded36f6c18dbb5efee4965cd\\\",\\\"resourceClass\\\":\\\"cpu\\\",\\\"priority\\\":450},{\\\"id\\\":\\\"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\\\",\\\"name\\\":\\\"QA\\\",\\\"role\\\":\\\"qa\\\",\\\"url\\\":\\\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45fb0-9074-83eb-99eb-397265b228e7\\\",\\\"profileId\\\":\\\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\\\",\\\"enabled\\\":true,\\\"projectId\\\":\\\"project-g-p-6ab839fa4f8c81919adad01c4a5497dc\\\",\\\"repository\\\":\\\"foto6/boss\\\",\\\"branch\\\":\\\"agent/integration-r8-final-local-stack-20261006\\\",\\\"gitHead\\\":\\\"06ade2b1e8d40c4ab6559f3ffe1d69b0ee36fd78\\\",\\\"resourceClass\\\":\\\"cpu\\\",\\\"priority\\\":500}]}\"\nq=urllib.request.Request(u,data=body.encode(),headers={'Content-Type':'application/json'},method='PUT')\nd=json.loads(urllib.request.urlopen(q,timeout=20).read().decode())\ncfg=d.get('config',{})\nprint(json.dumps({'mode':cfg.get('mode'),'enabled':cfg.get('enabled'),'profileId':cfg.get('profileId'),'debugPort':cfg.get('debugPort'),'managedProjects':len(cfg.get('managedProjects',[])),'managedChats':len(cfg.get('managedChats',[])),'process':d.get('process'),'capabilities':d.get('capabilities')},ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"mode\":\"full\",\"enabled\":true,\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"debugPort\":17410,\"managedProjects\":1,\"managedChats\":6,\"process\":{\"started\":true,\"reason\":\"started\",\"pid\":22324},\"capabilities\":{\"mode\":\"full\",\"active\":true,\"monitor\":true,\"recoverBridge\":true,\"recoverProfile\":true,\"openExistingChat\":true,\"mutateProviderUi\":true,\"autonomousSend\":true,\"stopStaleGeneration\":true,\"autoContinue\":true,\"sendProtectedDraft\":true,\"migrateConversation\":true}}\r\n",
+      "stdout_bytes": 469,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T15:44:17.716Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T15:44:17.553Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2238-restore-supervisor-registry-01"
+    },
+    "request_id": "20261007T2238-restore-supervisor-registry-01",
+    "started_at": "2026-10-07T15:44:16.981Z",
+    "status": "completed"
+  },
+  "id": "20261007T2238-restore-supervisor-registry-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
