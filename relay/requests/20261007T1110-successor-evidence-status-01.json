@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1110-successor-evidence-status-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nbase='http://127.0.0.1:17448'\nspecs=[\n ('Bridge','chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982'),\n ('Creator','chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c'),\n ('Growth','chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0'),\n ('Native','agent-pc-control')\n]\nout=[]\nfor label,chat in specs:\n try:\n  d=json.loads(urllib.request.urlopen(base+'/api/supervisor-watchdog/agent-assignments?chatId='+chat,timeout=10).read().decode('utf-8'))\n  rows=d.get('assignments',[])\n  rows=sorted(rows,key=lambda x:str(x.get('createdAt') or x.get('updatedAt') or ''))\n  keep=['id','branch','state','lastPreflightReason','lastDiagnostic','dispatchCount','dispatchSubmitAttempted','currentHead','ciRunId','ciConclusion','supervisorVerified','updatedAt','completedAt']\n  out.append({'label':label,'rows':[{k:x.get(k) for k in keep} for x in rows[-4:]]})\n except Exception as e:\n  out.append({'label':label,'error':type(e).__name__+': '+str(e)})\ntry:\n d=json.loads(urllib.request.urlopen(base+'/api/projects/control-plane/operations',timeout=10).read().decode('utf-8'))\n out.append({'operations':[x for x in (d.get('operations') or []) if x.get('operationId')=='coord-20261007-native-r39-direct-01']})\nexcept Exception as e:\n out.append({'operations_error':type(e).__name__+': '+str(e)})\nprint(json.dumps(out,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 20000,
+  "note": "Read current supervisor assignment and Native operation ledger state before evidence acceptance"
+}
