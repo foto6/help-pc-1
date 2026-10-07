@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1042-qa-media-cert-refresh-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nbase='http://127.0.0.1:17448'\nbody={\n 'text':'EXECUTE NOW — Integration R8 Media-QA certificate refresh. Work ONLY on agent/integration-r8-final-local-stack-20261006 from exact HEAD 6ab529846e99e572d77006dee48d6c4b01caea12. R8 already independently ACCEPTED Media R27 exact tuple 183838a24205c6885b2366ad6ffa394164283d91 / CI 37451069045 SUCCESS / artifact 11406357346 / digest sha256:9cfa2ddd358f2b25a3066ee60792c44c460c62715590210bacf5c5430d14a4b5 / contracts media.real_input_local_rehearsal.r27.v1 + media.real_input_growth_bundle.r27.v1. Now materialize TWO standalone accepted certificates from that independent QA: (1) creator.media_r27_independent_qa.r39.v1 matching Creator R39 schema, (2) growth.media_r27_independent_qa.r38.v1 matching Growth R38 validate_media_qa exactly with fixture_only=false. Bind them to the exact R8 QA producer SHA/CI/artifact/digest and SHA256 matrix digest; never self-sign from Media. Update R8 matrix to current exact-green Creator R39 69b4cb17ba81e79b15583fbbf64c0b6e9de51c0e / CI 37457718418 / artifact 11410406339 / digest sha256:5f20fae0cce19a0ddacc1d9cda6af96b99b3379717ee4de9fe11dd42e237ef43 and Growth R38 608ec634d9f38ecf054ccd63ba6e7f3a1cd79cae / CI 37458782192 / artifact 11411480167 / digest sha256:3a2ee4f8756f47174e7f91224004f867763799c979cc088a29fbd6b00f8caa03. Add deterministic tests that both certificates satisfy the exact required fields/contracts and accepted Media tuple. Do NOT issue LOCAL_PC_REHEARSAL_GO yet: Bridge R43 remains pending focused Windows exact-green and Native MCP R39 remains pending implementation. Return exact SHA/CI/artifact and certificate paths/digests. No product repo mutation, merge, heavy render, live publish or Bridge cutover.',\n 'repository':'foto6/boss',\n 'branch':'agent/integration-r8-final-local-stack-20261006',\n 'expectedHead':'6ab529846e99e572d77006dee48d6c4b01caea12',\n 'idempotencyKey':'coord-20261007-qa-media-cert-refresh-01',\n 'supervisorVerificationRequired':True,\n 'evidenceTimeoutMinutes':90\n}\ndata=json.dumps(body).encode('utf-8')\nreq=urllib.request.Request(base+'/api/supervisor-watchdog/managed-chats/chat-6ac45fb0-9074-83eb-99eb-397265b228e7/assignments',data=data,headers={'Content-Type':'application/json'},method='POST')\nd=json.loads(urllib.request.urlopen(req,timeout=15).read().decode('utf-8'))\nprint(json.dumps({k:d.get(k) for k in ['id','state','targetChatId','targetChatUrl','expectedHead']},ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 25000,
+  "note": "Queue independent QA refresh to materialize Media R27 accepted certificates for Creator/Growth."
+}
