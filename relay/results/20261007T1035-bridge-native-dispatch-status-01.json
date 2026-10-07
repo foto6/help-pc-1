@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nbase='http://127.0.0.1:17448'\nspecs=[\n ('Bridge','chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982','4e67b543-7d83-42df-9389-0707659dd36a'),\n ('Native','agent-pc-control','5dc21cfa-6bad-4df8-a493-99d0ece5a248')\n]\nout=[]\nfor label,chat,aid in specs:\n    try:\n        d=json.loads(urllib.request.urlopen(base+'/api/supervisor-watchdog/agent-assignments?chatId='+chat,timeout=10).read().decode('utf-8'))\n        row=next((x for x in d.get('assignments',[]) if x.get('id')==aid),{})\n        keep=['id','state','lastPreflightReason','lastDiagnostic','dispatchTargetId','dispatchCount','dispatchSubmitAttempted','dispatchFailureCode','currentHead','ciRunId','ciConclusion','updatedAt','awaitingEvidenceAt','completedAt']\n        out.append({'label':label,**{k:row.get(k) for k in keep}})\n    except Exception as e:\n        out.append({'label':label,'error':type(e).__name__+': '+str(e)})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"label\":\"Bridge\",\"id\":\"4e67b543-7d83-42df-9389-0707659dd36a\",\"state\":\"queued\",\"lastPreflightReason\":\"active_generation\",\"lastDiagnostic\":\"active_generation\",\"dispatchTargetId\":\"\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"dispatchFailureCode\":\"\",\"currentHead\":\"f5400fd369a4c9943f46c6f5f7aa760ee784469b\",\"ciRunId\":\"\",\"ciConclusion\":\"\",\"updatedAt\":\"2026-10-07T10:29:08.859Z\",\"awaitingEvidenceAt\":\"\",\"completedAt\":\"\"},{\"label\":\"Native\",\"id\":\"5dc21cfa-6bad-4df8-a493-99d0ece5a248\",\"state\":\"queued\",\"lastPreflightReason\":\"active_generation\",\"lastDiagnostic\":\"active_generation\",\"dispatchTargetId\":\"\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"dispatchFailureCode\":\"\",\"currentHead\":\"d8c7661d52670fe50e58bc68d50f59a624253e44\",\"ciRunId\":\"\",\"ciConclusion\":\"\",\"updatedAt\":\"2026-10-07T10:29:08.930Z\",\"awaitingEvidenceAt\":\"\",\"completedAt\":\"\"}]\r\n",
+      "stdout_bytes": 851,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T10:29:14.165Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T10:29:14.028Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T1035-bridge-native-dispatch-status-01"
+    },
+    "request_id": "20261007T1035-bridge-native-dispatch-status-01",
+    "started_at": "2026-10-07T10:29:13.413Z",
+    "status": "completed"
+  },
+  "id": "20261007T1035-bridge-native-dispatch-status-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
