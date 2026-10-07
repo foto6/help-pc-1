@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "exec(\"import json,hashlib\\nfrom pathlib import Path\\np=Path(r'E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json')\\nd=json.loads(p.read_text(encoding='utf-8'))\\nh=hashlib.sha256(p.read_bytes()).hexdigest()\\nprint('BYTES',p.stat().st_size,'SHA256',h)\\nprint('COUNTS',len(d.get('aiProfiles') or []),len(d.get('chats') or []),len(d.get('tasks') or []),len(d.get('agentAssignments') or []),len(d.get('projects') or []))\\nprint('LIFECYCLE',(d.get('operatorLifecycle') or {}).get('mode'),'PAUSED',(d.get('settings') or {}).get('paused'))\\nfor x in d.get('aiProfiles') or []:\\n print('PROFILE',x.get('id'),x.get('provider'),x.get('chromeLaunchMode'),'enabled='+str(x.get('enabled')),'workerConnected='+str(x.get('workerConnected')),'online='+str(x.get('online')),'lastLaunchAt='+str(x.get('lastLaunchAt') or ''))\\n\")"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "BYTES 7481471 SHA256 722fd718f090852e07ae40f5ab14c3bf1fe320a5fb8a31fbd8c55d8da02d8352\r\nCOUNTS 4 16 324 60 9\r\nLIFECYCLE RUNNING_MANAGED PAUSED False\r\nPROFILE builtin-chatgpt chatgpt attach enabled=False workerConnected=False online=None lastLaunchAt=2026-09-26T17:38:59.196Z\r\nPROFILE builtin-gemini gemini managed enabled=True workerConnected=False online=None lastLaunchAt=\r\nPROFILE gemini-personal-attach gemini attach enabled=True workerConnected=True online=None lastLaunchAt=2026-10-07T14:21:46.650Z\r\nPROFILE ef72920c-cfe7-4824-a79b-7a0e0943ce7e chatgpt attach enabled=True workerConnected=True online=None lastLaunchAt=2026-10-07T14:21:41.065Z\r\n",
+      "stdout_bytes": 650,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T14:23:16.749Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T14:23:16.507Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2144-bridge-post-restore-state-check-01"
+    },
+    "request_id": "20261007T2144-bridge-post-restore-state-check-01",
+    "started_at": "2026-10-07T14:23:15.635Z",
+    "status": "completed"
+  },
+  "id": "20261007T2144-bridge-post-restore-state-check-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
