@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "exec(\"import json,time\\nfrom pathlib import Path\\ntime.sleep(6)\\nd=json.loads(Path(r'E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json').read_text(encoding='utf-8'))\\nx=next(x for x in d.get('aiProfiles') or [] if x.get('id')=='ef72920c-cfe7-4824-a79b-7a0e0943ce7e')\\nprint('workerConnected',x.get('workerConnected'))\\nprint('workerLastSeenAt',x.get('workerLastSeenAt'))\\nprint('workerError',repr(x.get('workerError')))\\n\")"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "workerConnected False\r\nworkerLastSeenAt 2026-10-07T14:38:47.967Z\r\nworkerError 'Runtime.evaluate timed out'\r\n",
+      "stdout_bytes": 108,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T14:39:07.540Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T14:39:07.327Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2231-chatgpt-attach-recovery-observe-01"
+    },
+    "request_id": "20261007T2231-chatgpt-attach-recovery-observe-01",
+    "started_at": "2026-10-07T14:39:00.659Z",
+    "status": "completed"
+  },
+  "id": "20261007T2231-chatgpt-attach-recovery-observe-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
