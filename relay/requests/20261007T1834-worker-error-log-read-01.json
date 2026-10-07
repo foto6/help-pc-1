@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1834-worker-error-log-read-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "Get-Content 'E:\\WebAIBridge\\app\\worker-gemini-personal-attach-error.log' -Tail 120"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 10000,
+  "note": "Read only the saved browser worker error log to diagnose startup failure"
+}
