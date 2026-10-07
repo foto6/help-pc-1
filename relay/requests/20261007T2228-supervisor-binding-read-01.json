@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2228-supervisor-binding-read-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nbase='http://127.0.0.1:17448'\ns=json.loads(urllib.request.urlopen(base+'/api/supervisor-watchdog?detect=0',timeout=8).read().decode())\np=json.loads(urllib.request.urlopen(base+'/api/supervisor-watchdog/projects',timeout=8).read().decode())\ncfg=s.get('config',{})\nout={\n'profileId':cfg.get('profileId'),\n'debugPort':cfg.get('debugPort'),\n'enabled':cfg.get('enabled'),\n'mode':cfg.get('mode'),\n'enforceHighMode':cfg.get('enforceHighMode'),\n'highModeStrategy':cfg.get('highModeStrategy'),\n'allowAutonomousSend':cfg.get('allowAutonomousSend'),\n'managedProjects':cfg.get('managedProjects',[]),\n'projects':p.get('projects',p.get('rows',[]))}\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 16000,
+  "note": "Read-only supervisor profile/project binding after bridge profile reset"
+}
