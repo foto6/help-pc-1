@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2208-chrome-uia-snapshot-01",
+  "action": "uia.snapshot",
+  "params": {
+    "window_title": "Отчёт о проверке - Google Chrome"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only UIA snapshot of Chrome after Bridge/profile recovery to identify tabs/address bar before opening managed chats"
+}
