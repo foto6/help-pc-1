@@ -1,0 +1,21 @@
+{
+  "action": "uia.inspect",
+  "executor_result": {
+    "action": "uia.inspect",
+    "data": {},
+    "dry_run": false,
+    "error": "UIA selector matched 2 elements; add stable selector metadata",
+    "error_kind": "ambiguous_target",
+    "finished_at": "2026-10-07T15:02:53.862Z",
+    "ok": false,
+    "request_id": "20261007T2213-chrome-newtab-inspect-01",
+    "started_at": "2026-10-07T15:02:52.902Z",
+    "status": "ambiguous_target"
+  },
+  "id": "20261007T2213-chrome-newtab-inspect-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
