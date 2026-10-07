@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2203-r43-bomfix-app-tests-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "node --check server.js && node --check worker.js && npm test"
+    ],
+    "cwd": "E:\\WebAIBridge-BOM-Test\\app"
+  },
+  "timeout_ms": 30000,
+  "note": "Run isolated WebAIBridge syntax checks and npm safe suite on BOM-fix worktree; production checkout untouched"
+}
