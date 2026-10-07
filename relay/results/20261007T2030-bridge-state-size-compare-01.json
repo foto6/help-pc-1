@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "dir /-c /t:w E:\\WebAIBridge\\app\\data\\state.json E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261007T111557Z\\state.json E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261006T043453Z\\state.json"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": " Volume in drive E has no label.\r\n Volume Serial Number is 6442-F4F9\r\n\r\n Directory of E:\\WebAIBridge\\app\\data\r\n\r\n07.10.2026  20:21              9713 state.json\r\n               1 File(s)           9713 bytes\r\n\r\n Directory of E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261007T111557Z\r\n\r\n07.10.2026  18:15           7475825 state.json\r\n               1 File(s)        7475825 bytes\r\n\r\n Directory of E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261006T043453Z\r\n\r\n06.10.2026  11:34           7096147 state.json\r\n               1 File(s)        7096147 bytes\r\n               0 Dir(s)     86070013952 bytes free\r\n",
+      "stdout_bytes": 610,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T13:21:09.860Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T13:21:09.659Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2030-bridge-state-size-compare-01"
+    },
+    "request_id": "20261007T2030-bridge-state-size-compare-01",
+    "started_at": "2026-10-07T13:21:09.192Z",
+    "status": "completed"
+  },
+  "id": "20261007T2030-bridge-state-size-compare-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
