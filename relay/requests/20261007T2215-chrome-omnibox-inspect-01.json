@@ -1,0 +1,14 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2215-chrome-omnibox-inspect-01",
+  "action": "uia.inspect",
+  "params": {
+    "query": {
+      "name": "Адресная строка и строка поиска",
+      "control_type": "EditControl",
+      "window_title": "Отчёт о проверке - Google Chrome"
+    }
+  },
+  "timeout_ms": 8000,
+  "note": "inspect Chrome omnibox control"
+}
