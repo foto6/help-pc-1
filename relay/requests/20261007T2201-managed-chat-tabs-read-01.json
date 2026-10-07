@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2201-managed-chat-tabs-read-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nids={\n\"bridge\":\"6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\n\"media\":\"6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\n\"creator\":\"6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\n\"growth\":\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\n\"native\":\"6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\n\"qa\":\"6ac45fb0-9074-83eb-99eb-397265b228e7\"}\ntabs=json.loads(urllib.request.urlopen(\"http://127.0.0.1:17410/json/list\",timeout=8).read().decode())\nout=[]\nfor role,cid in ids.items():\n    rows=[{\"id\":x.get(\"id\"),\"title\":x.get(\"title\"),\"url\":x.get(\"url\"),\"type\":x.get(\"type\")} for x in tabs if cid in str(x.get(\"url\",\"\"))]\n    out.append({\"role\":role,\"conversationId\":cid,\"count\":len(rows),\"tabs\":rows})\nprint(json.dumps(out,ensure_ascii=True,separators=(\",\",\":\")))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only managed Chrome exact conversation tab inventory after reboot"
+}
