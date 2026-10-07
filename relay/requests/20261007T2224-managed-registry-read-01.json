@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2224-managed-registry-read-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats'\nd=json.loads(urllib.request.urlopen(u,timeout=8).read().decode())\nrows=d.get('managedChats',d.get('rows',d if isinstance(d,list) else []))\nout=[]\nfor x in rows:\n  out.append({k:x.get(k) for k in ['id','managedChatId','url','managedChatUrl','projectId','profileId','title','enabled','mode']})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only current supervisor managed-chat registry after profile reset"
+}
