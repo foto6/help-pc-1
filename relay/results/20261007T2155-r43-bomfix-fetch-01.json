@@ -1,0 +1,50 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "git.exe",
+        "-C",
+        "E:\\WebAIBridge",
+        "fetch",
+        "origin",
+        "agent/bridge-r43-bomless-state-fix-20261007"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "From https://github.com/foto6/WebAIBridge\n * branch            agent/bridge-r43-bomless-state-fix-20261007 -> FETCH_HEAD\n * [new branch]      agent/bridge-r43-bomless-state-fix-20261007 -> origin/agent/bridge-r43-bomless-state-fix-20261007\n",
+      "stderr_bytes": 240,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T14:30:10.663Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T14:30:10.387Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2155-r43-bomfix-fetch-01"
+    },
+    "request_id": "20261007T2155-r43-bomfix-fetch-01",
+    "started_at": "2026-10-07T14:30:04.295Z",
+    "status": "completed"
+  },
+  "id": "20261007T2155-r43-bomfix-fetch-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
