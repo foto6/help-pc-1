@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1086-bridge-bootstrap-status-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nbase='http://127.0.0.1:17448'\nchat='chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982'\naid='169f3052-133a-4ca0-bfb3-b886443897c1'\nd=json.loads(urllib.request.urlopen(base+'/api/supervisor-watchdog/agent-assignments?chatId='+chat,timeout=10).read().decode('utf-8'))\nrow=next((x for x in d.get('assignments',[]) if x.get('id')==aid),{})\nkeep=['state','lastPreflightReason','lastDiagnostic','dispatchTargetId','dispatchCount','dispatchSubmitAttempted','currentHead','ciRunId','ciConclusion','updatedAt','awaitingEvidenceAt','completedAt']\nprint(json.dumps({k:row.get(k) for k in keep},separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 15000,
+  "note": "Read Bridge bootstrap corrective assignment state; no mutation."
+}
