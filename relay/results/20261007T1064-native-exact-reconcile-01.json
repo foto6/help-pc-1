@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new(); $code=@'\nconst cid=\"6ab946b7-46f0-83ed-bc98-dc74acc6e810\";\nconst tabs=await (await fetch(\"http://127.0.0.1:17410/json/list\")).json();\nconst conv=u=>{try{const p=new URL(u).pathname.split(\"/\").filter(Boolean);return p[p.length-1]||\"\"}catch{return\"\"}};\nconst ms=tabs.filter(t=>t.type===\"page\"&&conv(t.url)===cid);\nconst out={count:ms.length,targets:[]};\nfor(const t of ms){\n const one={targetId:t.id,title:t.title,url:t.url};\n try{\n  const ws=new WebSocket(t.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});\n  let n=1;const p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};\n  const call=(method,params={})=>new Promise((r,j)=>{const k=n++;p.set(k,m=>m.error?j(new Error(JSON.stringify(m.error))):r(m.result));ws.send(JSON.stringify({id:k,method,params}))});\n  const expr=\"JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect(),s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!=='none'&&s.visibility!=='hidden'};const bs=[...document.querySelectorAll('button,[role=button]')].filter(vis);const c=document.querySelector('#prompt-textarea')||[...document.querySelectorAll('textarea,[contenteditable=true]')].find(vis)||null;const users=[...document.querySelectorAll('[data-message-author-role=user]')];const a=[...document.querySelectorAll('[data-message-author-role=assistant]')];return {high:bs.some(b=>/^(Высокий|High)$/iu.test((b.innerText||b.textContent||'').trim())),generating:bs.some(b=>/stop|останов/i.test((b.getAttribute('aria-label')||'')+' '+(b.getAttribute('data-testid')||'')+' '+(b.innerText||''))),draft:c?(('value'in c?c.value:(c.innerText||c.textContent||''))||''):'',lastUser:users.length?((users.at(-1).innerText||users.at(-1).textContent||'').trim()):'',lastAssistant:a.length?((a.at(-1).innerText||a.at(-1).textContent||'').trim().slice(-1500)):''}})())\";\n  const rr=await call(\"Runtime.evaluate\",{expression:expr,returnByValue:true});\n  Object.assign(one,JSON.parse(rr.result.value));ws.close();\n }catch(e){one.error=String(e)}\n out.targets.push(one);\n}\nprocess.stdout.write(JSON.stringify(out));\n'@; $code | node --input-type=module -"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"count\":1,\"targets\":[{\"targetId\":\"7CBBA348271AAEE1317DF32E83D24BDE\",\"title\":\"Native Connector Implementation\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"high\":true,\"generating\":true,\"draft\":\"\\n\",\"lastUser\":\"\",\"lastAssistant\":\"\"}]}",
+      "stdout_bytes": 298,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T10:42:25.317Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T10:42:25.095Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T1064-native-exact-reconcile-01"
+    },
+    "request_id": "20261007T1064-native-exact-reconcile-01",
+    "started_at": "2026-10-07T10:42:24.281Z",
+    "status": "completed"
+  },
+  "id": "20261007T1064-native-exact-reconcile-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
