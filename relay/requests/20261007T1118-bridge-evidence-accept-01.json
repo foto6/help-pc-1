@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1118-bridge-evidence-accept-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request;u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/169f3052-133a-4ca0-bfb3-b886443897c1/evidence';b={'branch':'agent/bridge-r43-porcelain-cutover-fix-20261006','currentHead':'545412513f09c396fe0e3f6f7ba04ca609b9a195','exactCommitSha':'545412513f09c396fe0e3f6f7ba04ca609b9a195','ciRunId':'37611156702','ciConclusion':'success','supervisorVerified':True};q=urllib.request.Request(u,data=json.dumps(b).encode(),headers={'Content-Type':'application/json'},method='POST');d=json.loads(urllib.request.urlopen(q,timeout=10).read());print(json.dumps({k:d.get(k) for k in ['id','state','lastDiagnostic','currentHead','ciRunId','ciConclusion','supervisorVerified']},separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 15000,
+  "note": "Bridge R43 exact-green supervisor evidence acceptance"
+}
