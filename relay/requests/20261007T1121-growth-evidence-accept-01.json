@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1121-growth-evidence-accept-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request;u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/518e4617-ba53-4a4c-81b4-f5f84e8c783e/evidence';b={'branch':'agent/growth-r38-real-local-bundle-verifier-20261006','currentHead':'608ec634d9f38ecf054ccd63ba6e7f3a1cd79cae','exactCommitSha':'608ec634d9f38ecf054ccd63ba6e7f3a1cd79cae','ciRunId':'37458782192','ciConclusion':'success','supervisorVerified':True};q=urllib.request.Request(u,data=json.dumps(b).encode(),headers={'Content-Type':'application/json'},method='POST');d=json.loads(urllib.request.urlopen(q,timeout=10).read());print(json.dumps({k:d.get(k) for k in ['id','state','lastDiagnostic','currentHead','ciRunId','ciConclusion','supervisorVerified']},separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 15000,
+  "note": "Growth R38 exact-green supervisor evidence acceptance"
+}
