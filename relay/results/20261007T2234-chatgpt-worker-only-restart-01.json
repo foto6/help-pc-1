@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$body=@{restartChrome=$false}|ConvertTo-Json -Compress; Invoke-RestMethod -Method Post -Uri 'http://127.0.0.1:17448/api/ai-profiles/ef72920c-cfe7-4824-a79b-7a0e0943ce7e/restart' -ContentType 'application/json' -Body $body | ConvertTo-Json -Depth 6 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"profile\":{\"id\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"name\":\"ChatGPT профиль 2\",\"provider\":\"chatgpt\",\"modelId\":\"chatgpt-web\",\"modelSelectionStrategy\":\"auto\",\"role\":\"default\",\"enabled\":true,\"priority\":350,\"maxParallel\":1,\"debugPort\":17410,\"chromeLaunchMode\":\"attach\",\"attachAutoStart\":true,\"cooldownSeconds\":0,\"proxyMode\":\"global\",\"proxyUrl\":\"\",\"proxyServer\":\"\",\"proxyUsername\":\"\",\"proxyPassword\":\"\",\"proxyBypass\":\"\",\"timezoneMode\":\"global\",\"timezone\":\"\",\"detectedTimezone\":\"\",\"detectedIp\":\"\",\"timezoneDetectedAt\":\"\",\"timezoneDetectionError\":\"\",\"chromeProfilePath\":\"E:\\\\WebAIBridge\\\\chrome-profiles\\\\chatgpt-ChatGPT_2-ef72920c\",\"chromeProfileDirectory\":\"\",\"chromePath\":\"\",\"workerClientId\":\"ai-web-worker-ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"workerDebugUrl\":\"http://127.0.0.1:17410\",\"workerLastSeenAt\":\"\",\"workerConnected\":false,\"workerProvider\":\"\",\"workerLikelyLoggedIn\":true,\"sessionLostAt\":\"2026-10-06T00:51:45.455Z\",\"sessionRestoredAt\":\"2026-10-06T00:55:06.036Z\",\"loginRecoveryStatus\":\"\",\"loginRecoveryReason\":\"\",\"loginRecoveryRequestedAt\":\"2026-09-26T17:47:05.237Z\",\"loginRecoveryLastAttemptAt\":\"2026-10-06T00:53:56.658Z\",\"loginRecoveryLastOpenedAt\":\"2026-10-06T00:53:56.692Z\",\"loginRecoveryAttempts\":0,\"loginRecoveryError\":\"\",\"workerError\":\"\",\"healthScore\":-80,\"consecutiveFailures\":10,\"cooldownUntil\":\"\",\"lastSuccessAt\":\"\",\"lastFailureAt\":\"2026-09-27T08:03:47.428Z\",\"lastFailureReason\":\"\",\"domDiagnostics\":{\"compatible\":true,\"missing\":[],\"composer\":{\"tag\":\"DIV\",\"id\":\"\",\"role\":\"textbox\",\"aria\":\"Спросить ChatGPT\",\"className\":\"ProseMirror\"},\"fileInputCount\":3,\"fileAccept\":[\"image/*,video/*\",\"image/*\",\"*/*\"],\"sendControlFound\":false,\"uploadControlFound\":true,\"resultFound\":false,\"title\":\"Deliver R11 Editor\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abda64b-aac4-83eb-adee-dc7143ca5d2b\",\"fingerprint\":\"6fe1ad9afe5a445c\",\"checkedAt\":\"2026-10-07T14:31:47.275Z\",\"provider\":\"ChatGPT\"},\"notes\":\"Primary ChatGPT bridge profile. Before creating a new provider chat, verify UI shows ???????.\",\"createdAt\":\"2026-09-26T17:46:43.796Z\",\"updatedAt\":\"2026-10-07T14:40:09.892Z\",\"lastLaunchAt\":\"2026-10-07T14:40:09.892Z\",\"launchError\":\"\"},\"stopped\":{\"gracefullyClosed\":false,\"forced\":[{\"pid\":25848,\"name\":\"node.exe\"}]},\"launch\":{\"dryRun\":false,\"chromePid\":0,\"chromeReused\":true,\"chromeLaunchMode\":\"attach\",\"attachAutoStart\":true,\"workerPid\":10568,\"workerReused\":false,\"operatorLifecycle\":{\"contract\":\"bridge.operator_lifecycle.r40.v1\",\"lifecycleMode\":\"RUNNING_MANAGED\",\"configuredLaunchMode\":\"attach\",\"configuredAttachAutoStart\":true,\"effectiveLaunchMode\":\"attach\",\"effectiveAttachAutoStart\":true,\"chromeOnline\":true,\"workerOnline\":false,\"chromeAutoStartAllowed\":false,\"workerAutoStartAllowed\":true,\"browserWillStartIfLaunchRequested\":false,\"workerWillStartIfLaunchRequested\":true,\"launchBlocked\":false,\"reason\":\"attach profile reuses existing browser\"}}}\r\n",
+      "stdout_bytes": 2896,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T14:40:10.356Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T14:40:10.102Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2234-chatgpt-worker-only-restart-01"
+    },
+    "request_id": "20261007T2234-chatgpt-worker-only-restart-01",
+    "started_at": "2026-10-07T14:40:05.567Z",
+    "status": "completed"
+  },
+  "id": "20261007T2234-chatgpt-worker-only-restart-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
