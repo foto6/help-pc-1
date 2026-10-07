@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nbase='http://127.0.0.1:17448'\nrows=[\n ('Bridge','4e67b543-7d83-42df-9389-0707659dd36a',{\n  'branch':'agent/bridge-r43-porcelain-cutover-fix-20261006',\n  'currentHead':'6f4d3b976a9a61fc17ff1ca38b798d79f4532bba',\n  'exactCommitSha':'6f4d3b976a9a61fc17ff1ca38b798d79f4532bba',\n  'ciRunId':'37608981517','ciConclusion':'success','supervisorVerified':True\n }),\n ('QA','49bac301-f296-4501-a478-05a9b7de5456',{\n  'branch':'agent/integration-r8-final-local-stack-20261006',\n  'currentHead':'06ade2b1e8d40c4ab6559f3ffe1d69b0ee36fd78',\n  'exactCommitSha':'06ade2b1e8d40c4ab6559f3ffe1d69b0ee36fd78',\n  'ciRunId':'37608989585','ciConclusion':'success','supervisorVerified':True\n })\n]\nout=[]\nfor label,aid,body in rows:\n try:\n  data=json.dumps(body).encode('utf-8')\n  req=urllib.request.Request(base+'/api/supervisor-watchdog/agent-assignments/'+aid+'/evidence',data=data,headers={'Content-Type':'application/json'},method='POST')\n  d=json.loads(urllib.request.urlopen(req,timeout=10).read().decode('utf-8'))\n  out.append({'label':label,'ok':True,'result':{k:d.get(k) for k in ['id','state','lastDiagnostic','currentHead','ciRunId','ciConclusion','supervisorVerified']}})\n except Exception as e:\n  out.append({'label':label,'ok':False,'error':type(e).__name__+': '+str(e)})\nprint(json.dumps(out,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"label\":\"Bridge\",\"ok\":true,\"result\":{\"id\":\"4e67b543-7d83-42df-9389-0707659dd36a\",\"state\":\"completed\",\"lastDiagnostic\":\"evidence_verified\",\"currentHead\":\"6f4d3b976a9a61fc17ff1ca38b798d79f4532bba\",\"ciRunId\":\"37608981517\",\"ciConclusion\":\"success\",\"supervisorVerified\":true}},{\"label\":\"QA\",\"ok\":true,\"result\":{\"id\":\"49bac301-f296-4501-a478-05a9b7de5456\",\"state\":\"completed\",\"lastDiagnostic\":\"evidence_verified\",\"currentHead\":\"06ade2b1e8d40c4ab6559f3ffe1d69b0ee36fd78\",\"ciRunId\":\"37608989585\",\"ciConclusion\":\"success\",\"supervisorVerified\":true}}]\r\n",
+      "stdout_bytes": 545,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T10:46:18.922Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T10:46:18.781Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T1076-verify-bridge-qa-evidence-01"
+    },
+    "request_id": "20261007T1076-verify-bridge-qa-evidence-01",
+    "started_at": "2026-10-07T10:46:18.077Z",
+    "status": "completed"
+  },
+  "id": "20261007T1076-verify-bridge-qa-evidence-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
