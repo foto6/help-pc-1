@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2206-bridge-dirty-filteronly-check-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "exec(\"import subprocess\\nrepo=r'E:\\\\WebAIBridge'\\npaths=[\\n'app/scripts/operator-lifecycle-r40.ps1',\\n'app/scripts/pause-all-r40.cmd',\\n'app/scripts/pause-browser-r40.cmd',\\n'app/scripts/resume-attach-r40.cmd',\\n'app/scripts/resume-managed-r40.cmd']\\nfor p in paths:\\n head=subprocess.check_output(['git','-C',repo,'rev-parse','HEAD:'+p],text=True,timeout=5).strip()\\n work=subprocess.check_output(['git','-C',repo,'hash-object','--no-filters','--',p],text=True,timeout=5).strip()\\n print(p,'FILTER_ONLY' if head.lower()==work.lower() else 'MATERIAL',head,work)\\n\")"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only classify the five dirty WebAIBridge lifecycle files as filter-only vs material using exact Git blob comparison"
+}
