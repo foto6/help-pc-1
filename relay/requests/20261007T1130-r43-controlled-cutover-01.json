@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1130-r43-controlled-cutover-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$target='545412513f09c396fe0e3f6f7ba04ca609b9a195';\n$branch='agent/bridge-r43-porcelain-cutover-fix-20261006';\n$temp=Join-Path $env:TEMP ('r43-cutover-' + $target + '-1130.ps1');\n$lines=@(& git.exe -C $repo show ($target + ':app/r42-cutover.ps1'));\nif($LASTEXITCODE -ne 0 -or $lines.Count -eq 0){throw 'git show cutover script failed'}\n[IO.File]::WriteAllText($temp,(($lines -join [Environment]::NewLine)+[Environment]::NewLine),[Text.UTF8Encoding]::new($false));\ntry{\n  & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $temp -TargetSha $target -TargetBranch $branch -RepoPath $repo;\n  if($LASTEXITCODE -ne 0){throw \"R43 controlled cutover failed with exit $LASTEXITCODE\"}\n} finally {\n  Remove-Item -LiteralPath $temp -Force -ErrorAction SilentlyContinue\n}"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 90000,
+  "note": "NEW controlled R43 cutover after exact-green source and PREFLIGHT_OK. Backup/rollback-first. No provider chat deletion or social publish."
+}
