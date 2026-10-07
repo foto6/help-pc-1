@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nbase='http://127.0.0.1:17448'\nout={}\ntry:\n d=json.loads(urllib.request.urlopen(base+'/api/supervisor-watchdog/agent-assignments?chatId=agent-pc-control',timeout=10).read().decode('utf-8'))\n rows=[x for x in d.get('assignments',[]) if x.get('id') in ['5dc21cfa-6bad-4df8-a493-99d0ece5a248','b1314ed6-5b22-4cbf-8865-e044b4bd683f']]\n out['assignments']=[{k:x.get(k) for k in ['id','state','lastPreflightReason','lastDiagnostic','dispatchCount','dispatchSubmitAttempted','dispatchTargetId','updatedAt','completedAt']} for x in rows]\nexcept Exception as e:\n out['assignments_error']=type(e).__name__+': '+str(e)\ntry:\n d=json.loads(urllib.request.urlopen(base+'/api/projects/control-plane/operations',timeout=10).read().decode('utf-8'))\n ops=d.get('operations') or []\n out['operation']=[x for x in ops if x.get('operationId')=='coord-20261007-native-r39-direct-01']\nexcept Exception as e:\n out['operations_error']=type(e).__name__+': '+str(e)\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"assignments\":[{\"id\":\"b1314ed6-5b22-4cbf-8865-e044b4bd683f\",\"state\":\"failed\",\"lastPreflightReason\":\"ready\",\"lastDiagnostic\":\"R41 unified High gate blocked managed assignment: active_generation\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"dispatchTargetId\":\"2C5EC1149D30E5109ACD7BD72F96B636\",\"updatedAt\":\"2026-10-06T11:48:21.402Z\",\"completedAt\":\"\"},{\"id\":\"5dc21cfa-6bad-4df8-a493-99d0ece5a248\",\"state\":\"cancelled\",\"lastPreflightReason\":\"active_generation\",\"lastDiagnostic\":\"cancelled_by_operator\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"dispatchTargetId\":\"\",\"updatedAt\":\"2026-10-07T10:40:21.106Z\",\"completedAt\":\"\"}],\"operation\":[{\"contract\":\"bridge.operation_ledger.r41.v1\",\"operationId\":\"coord-20261007-native-r39-direct-01\",\"logicalAgentId\":\"agent-pc-control\",\"generation\":0,\"providerConversationId\":\"6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"transport\":\"PC_CONTROL_CDP\",\"promptHash\":\"b090f4d78bb0166c6ca4602f7a644739e0b7f4276bbbe0be3b5b4c9aa0d7c6de\",\"repository\":\"foto6/help-pc-2\",\"branch\":\"agent/native-mcp-r39-local-canary-20261006\",\"expectedStartingSha\":\"d8c7661d52670fe50e58bc68d50f59a624253e44\",\"dispatchState\":\"AWAITING_EVIDENCE\",\"reconciliationState\":\"PENDING\",\"resultingSha\":\"\",\"ciRunId\":\"\",\"ciConclusion\":\"\",\"artifacts\":[],\"acceptance\":\"\",\"blockers\":[],\"highGateProof\":{\"expectedPromptHash\":\"b090f4d78bb0166c6ca4602f7a644739e0b7f4276bbbe0be3b5b4c9aa0d7c6de\",\"preSubmitHigh\":true,\"preTypeHigh\":true,\"providerConversationId\":\"6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"requestedHigh\":true,\"typedPromptHash\":\"b090f4d78bb0166c6ca4602f7a644739e0b7f4276bbbe0be3b5b4c9aa0d7c6de\"},\"createdAt\":\"2026-10-07T10:40:22.449Z\",\"updatedAt\":\"2026-10-07T10:40:22.449Z\",\"immutableFingerprint\":\"f42e334201a599299c6292803bfd6c44264f01e88d91bb3f0eb996c81d498cff\"}]}\r\n",
+      "stdout_bytes": 1768,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T10:44:12.876Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T10:44:12.725Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T1070-native-reconcile-ledger-assignment-01"
+    },
+    "request_id": "20261007T1070-native-reconcile-ledger-assignment-01",
+    "started_at": "2026-10-07T10:44:12.032Z",
+    "status": "completed"
+  },
+  "id": "20261007T1070-native-reconcile-ledger-assignment-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
