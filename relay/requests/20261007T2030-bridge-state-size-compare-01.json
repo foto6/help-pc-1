@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2030-bridge-state-size-compare-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "dir /-c /t:w E:\\WebAIBridge\\app\\data\\state.json E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261007T111557Z\\state.json E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261006T043453Z\\state.json"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only compare current and recent WebAIBridge state file sizes/timestamps"
+}
