@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2032-bridge-state-counts-compare-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json; from pathlib import Path; paths=[('current',Path(r'E:\\WebAIBridge\\app\\data\\state.json')),('backup',Path(r'E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261007T111557Z\\state.json'))]; for label,p in paths:;   d=json.loads(p.read_text(encoding='utf-8',errors='replace'));   print('===',label,'===');   for k,v in d.items():;     if isinstance(v,(list,dict)): print(k, len(v));   ol=d.get('operatorLifecycle') or {};   print('operatorLifecycle.mode', ol.get('mode'));   s=d.get('settings') or {};   print('settings.paused', s.get('paused'))"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only compare only aggregate counts of current and backup WebAIBridge state; do not print secrets or item contents"
+}
