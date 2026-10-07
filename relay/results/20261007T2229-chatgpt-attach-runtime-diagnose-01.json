@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "exec(\"import json\\nfrom pathlib import Path\\nd=json.loads(Path(r'E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json').read_text(encoding='utf-8'))\\nfor x in d.get('aiProfiles') or []:\\n if x.get('id')=='ef72920c-cfe7-4824-a79b-7a0e0943ce7e':\\n  keys=['id','provider','enabled','chromeLaunchMode','attachAutoStart','debugPort','workerConnected','workerLastSeenAt','lastLaunchAt','workerError','launchError','lastFailureReason','cooldownUntil']\\n  for k in keys: print(k,repr(x.get(k)))\\n\")"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "id 'ef72920c-cfe7-4824-a79b-7a0e0943ce7e'\r\nprovider 'chatgpt'\r\nenabled True\r\nchromeLaunchMode 'attach'\r\nattachAutoStart True\r\ndebugPort 17410\r\nworkerConnected False\r\nworkerLastSeenAt '2026-10-07T14:38:27.941Z'\r\nlastLaunchAt '2026-10-07T14:21:41.065Z'\r\nworkerError 'Runtime.evaluate timed out'\r\nlaunchError ''\r\nlastFailureReason ''\r\ncooldownUntil ''\r\n",
+      "stdout_bytes": 350,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T14:38:28.988Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T14:38:28.766Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2229-chatgpt-attach-runtime-diagnose-01"
+    },
+    "request_id": "20261007T2229-chatgpt-attach-runtime-diagnose-01",
+    "started_at": "2026-10-07T14:38:28.052Z",
+    "status": "completed"
+  },
+  "id": "20261007T2229-chatgpt-attach-runtime-diagnose-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
