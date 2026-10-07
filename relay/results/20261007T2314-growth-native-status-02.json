@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nspecs=[\n(\"Growth\",\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"eff91a96-514b-4cc7-93b6-19e1f19c5741\"),\n(\"Native\",\"agent-pc-control\",\"dfcf8cae-1ea4-4d79-9690-a3df9064cd48\")]\nout=[]\nfor label,chat,aid in specs:\n d=json.loads(urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId='+chat,timeout=6).read().decode())\n row=next((x for x in d.get('assignments',[]) if x.get('id')==aid),{})\n keep=['state','lastPreflightReason','lastDiagnostic','dispatchTargetId','dispatchCount','dispatchSubmitAttempted','dispatchFailureCode','currentHead','ciRunId','ciConclusion','updatedAt']\n out.append({'label':label,**{k:row.get(k) for k in keep}})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"label\":\"Growth\",\"state\":\"queued\",\"lastPreflightReason\":\"active_generation\",\"lastDiagnostic\":\"active_generation\",\"dispatchTargetId\":\"\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"dispatchFailureCode\":\"\",\"currentHead\":\"887567bb62a3df0879505d68ac6a2be725b57173\",\"ciRunId\":\"\",\"ciConclusion\":\"\",\"updatedAt\":\"2026-10-07T15:57:52.241Z\"},{\"label\":\"Native\",\"state\":\"queued\",\"lastPreflightReason\":\"active_generation\",\"lastDiagnostic\":\"active_generation\",\"dispatchTargetId\":\"\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"dispatchFailureCode\":\"\",\"currentHead\":\"b6e0cbf326138a81ded36f6c18dbb5efee4965cd\",\"ciRunId\":\"\",\"ciConclusion\":\"\",\"updatedAt\":\"2026-10-07T15:57:50.552Z\"}]\r\n",
+      "stdout_bytes": 681,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T15:57:57.259Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T15:57:57.101Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2314-growth-native-status-02"
+    },
+    "request_id": "20261007T2314-growth-native-status-02",
+    "started_at": "2026-10-07T15:57:56.577Z",
+    "status": "completed"
+  },
+  "id": "20261007T2314-growth-native-status-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
