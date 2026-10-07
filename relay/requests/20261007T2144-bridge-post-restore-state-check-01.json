@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2144-bridge-post-restore-state-check-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "exec(\"import json,hashlib\\nfrom pathlib import Path\\np=Path(r'E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json')\\nd=json.loads(p.read_text(encoding='utf-8'))\\nh=hashlib.sha256(p.read_bytes()).hexdigest()\\nprint('BYTES',p.stat().st_size,'SHA256',h)\\nprint('COUNTS',len(d.get('aiProfiles') or []),len(d.get('chats') or []),len(d.get('tasks') or []),len(d.get('agentAssignments') or []),len(d.get('projects') or []))\\nprint('LIFECYCLE',(d.get('operatorLifecycle') or {}).get('mode'),'PAUSED',(d.get('settings') or {}).get('paused'))\\nfor x in d.get('aiProfiles') or []:\\n print('PROFILE',x.get('id'),x.get('provider'),x.get('chromeLaunchMode'),'enabled='+str(x.get('enabled')),'workerConnected='+str(x.get('workerConnected')),'online='+str(x.get('online')),'lastLaunchAt='+str(x.get('lastLaunchAt') or ''))\\n\")"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only post-restore verification of WebAIBridge state counts and non-secret profile runtime flags"
+}
