@@ -1,0 +1,18 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2012-bridge-local-version-check-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "git.exe",
+      "-C",
+      "E:\\WebAIBridge",
+      "status",
+      "--short",
+      "--branch"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only check of local WebAIBridge branch and worktree state"
+}
