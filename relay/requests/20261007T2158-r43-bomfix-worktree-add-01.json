@@ -1,0 +1,20 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2158-r43-bomfix-worktree-add-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "git.exe",
+      "-C",
+      "E:\\WebAIBridge",
+      "worktree",
+      "add",
+      "--detach",
+      "E:\\WebAIBridge-BOM-Test",
+      "origin/agent/bridge-r43-bomless-state-fix-20261007"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Create isolated temporary worktree for BOM regression test; production WebAIBridge worktree remains untouched"
+}
