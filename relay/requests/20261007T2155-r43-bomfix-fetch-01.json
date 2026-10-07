@@ -1,0 +1,18 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2155-r43-bomfix-fetch-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "git.exe",
+      "-C",
+      "E:\\WebAIBridge",
+      "fetch",
+      "origin",
+      "agent/bridge-r43-bomless-state-fix-20261007"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Fetch isolated WebAIBridge BOM-fix branch for local regression test; do not switch production worktree"
+}
