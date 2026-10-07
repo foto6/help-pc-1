@@ -1,0 +1,52 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "git.exe",
+        "-C",
+        "E:\\WebAIBridge",
+        "worktree",
+        "add",
+        "--detach",
+        "E:\\WebAIBridge-BOM-Test",
+        "origin/agent/bridge-r43-bomless-state-fix-20261007"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Preparing worktree (detached HEAD 8afbac2)\n",
+      "stderr_bytes": 43,
+      "stderr_truncated": false,
+      "stdout": "HEAD is now at 8afbac2 ci: run R42 BOM regression on Windows PowerShell 5.1\n",
+      "stdout_bytes": 76,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T14:30:38.308Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T14:30:38.085Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2158-r43-bomfix-worktree-add-01"
+    },
+    "request_id": "20261007T2158-r43-bomfix-worktree-add-01",
+    "started_at": "2026-10-07T14:30:37.288Z",
+    "status": "completed"
+  },
+  "id": "20261007T2158-r43-bomfix-worktree-add-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
