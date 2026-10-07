@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2226-production-state-final-check-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "exec(\"import json\\nfrom pathlib import Path\\np=Path(r'E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json')\\nd=json.loads(p.read_text(encoding='utf-8'))\\nprint('COUNTS',len(d.get('aiProfiles') or []),len(d.get('chats') or []),len(d.get('tasks') or []),len(d.get('agentAssignments') or []),len(d.get('projects') or []))\\nprint('LIFECYCLE',(d.get('operatorLifecycle') or {}).get('mode'),'PAUSED',(d.get('settings') or {}).get('paused'))\\nfor x in d.get('aiProfiles') or []:\\n if x.get('id') in ('gemini-personal-attach','ef72920c-cfe7-4824-a79b-7a0e0943ce7e'):\\n  print('LIVE_PROFILE',x.get('id'),'workerConnected='+str(x.get('workerConnected')),'launchMode='+str(x.get('chromeLaunchMode')))\\n\")"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only final verification that restored WebAIBridge state and live attach workers remain intact after hotfix checkout"
+}
