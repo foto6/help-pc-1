@@ -1,0 +1,50 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "git.exe",
+        "-C",
+        "E:\\WebAIBridge",
+        "status",
+        "--short",
+        "--branch"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "## HEAD (no branch)\n M app/scripts/operator-lifecycle-r40.ps1\n M app/scripts/pause-all-r40.cmd\n M app/scripts/pause-browser-r40.cmd\n M app/scripts/resume-attach-r40.cmd\n M app/scripts/resume-managed-r40.cmd\n",
+      "stdout_bytes": 207,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T13:11:31.527Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T13:11:31.390Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2012-bridge-local-version-check-01"
+    },
+    "request_id": "20261007T2012-bridge-local-version-check-01",
+    "started_at": "2026-10-07T13:11:31.077Z",
+    "status": "completed"
+  },
+  "id": "20261007T2012-bridge-local-version-check-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
