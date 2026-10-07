@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1048-windows-list-for-uia-01",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 8000,
+  "note": "Read-only window inventory to inspect active managed ChatGPT tab with UIA."
+}
