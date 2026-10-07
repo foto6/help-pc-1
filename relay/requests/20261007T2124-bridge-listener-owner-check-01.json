@@ -1,0 +1,18 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2124-bridge-listener-owner-check-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "tasklist.exe",
+      "/FI",
+      "PID eq 22356",
+      "/FO",
+      "CSV",
+      "/NH"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only verify the owner image name for the exact WebAIBridge port 17448 listener PID"
+}
