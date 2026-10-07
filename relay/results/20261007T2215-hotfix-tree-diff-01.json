@@ -1,0 +1,51 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "git.exe",
+        "-C",
+        "E:\\WebAIBridge",
+        "diff",
+        "--name-status",
+        "7351d8478600ceb1db50ea136efccb1c10a943c7",
+        "2d5f902a52f875f3385da0a9babe29e2761a0f5b"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "M\tapp/r42-cutover.ps1\nA\tapp/r42-json-encoding.test.ps1\n",
+      "stdout_bytes": 55,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T14:35:37.428Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T14:35:37.228Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2215-hotfix-tree-diff-01"
+    },
+    "request_id": "20261007T2215-hotfix-tree-diff-01",
+    "started_at": "2026-10-07T14:35:36.780Z",
+    "status": "completed"
+  },
+  "id": "20261007T2215-hotfix-tree-diff-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
