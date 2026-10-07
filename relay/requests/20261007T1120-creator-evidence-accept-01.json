@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1120-creator-evidence-accept-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request;u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/74cfcb00-58d7-404d-9613-a99383f0d149/evidence';b={'branch':'agent/creator-r39-current-authority-binder-20261006','currentHead':'69b4cb17ba81e79b15583fbbf64c0b6e9de51c0e','exactCommitSha':'69b4cb17ba81e79b15583fbbf64c0b6e9de51c0e','ciRunId':'37457718418','ciConclusion':'success','supervisorVerified':True};q=urllib.request.Request(u,data=json.dumps(b).encode(),headers={'Content-Type':'application/json'},method='POST');d=json.loads(urllib.request.urlopen(q,timeout=10).read());print(json.dumps({k:d.get(k) for k in ['id','state','lastDiagnostic','currentHead','ciRunId','ciConclusion','supervisorVerified']},separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 15000,
+  "note": "Creator R39 exact-green supervisor evidence acceptance"
+}
