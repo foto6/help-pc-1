@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2028-bridge-find-state-files-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "where.exe",
+      "/r",
+      "E:\\WebAIBridge",
+      "state.json"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only locate state.json files under WebAIBridge"
+}
