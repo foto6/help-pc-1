@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nbase='http://127.0.0.1:17448'\nbody={\n 'text':'EXECUTE NOW — Bridge R43 final deployment-bootstrap corrective. Work ONLY on agent/bridge-r43-porcelain-cutover-fix-20261006 from exact HEAD 6f4d3b976a9a61fc17ff1ca38b798d79f4532bba. Source/CI is exact-green: focused 37608981517 SUCCESS on Windows+Ubuntu, general 37608988871 SUCCESS. But the first real local PreflightOnly after reboot, request 20261007T1078-r43-preflight-01, failed BEFORE any live mutation because r42-cutover.ps1 resolves $porcelainParser from current production $app and requires E:\\\\WebAIBridge\\\\app\\\\r43-porcelain.ps1 before switching/fetching target. A pre-R43 local worktree legitimately lacks that file, so upgrade bootstrap is impossible. Fix this without copying/untracked material into production and without weakening dirty-worktree safety. The cutover/preflight must consume an exact target-bound/bundled R43 parser before production switch, with provenance tied to TargetSha. Add regression that starts from a clean pre-R43 local worktree lacking app/r43-porcelain.ps1, runs the real R43 PreflightOnly bundle, and gets PREFLIGHT_OK; wrong/missing/mismatched target parser must fail closed. Preserve raw porcelain symmetry, exact-parent/target checks, rollback, High/rollover safety, no provider deletion. Run exact-head Windows+Ubuntu focused/full CI and return SHA/CI/artifacts. Do NOT perform live cutover yourself; coordinator will rerun NEW PreflightOnly after exact-green.',\n 'repository':'foto6/WebAIBridge',\n 'branch':'agent/bridge-r43-porcelain-cutover-fix-20261006',\n 'expectedHead':'6f4d3b976a9a61fc17ff1ca38b798d79f4532bba',\n 'idempotencyKey':'coord-20261007-bridge-r43-bootstrap-corrective-01',\n 'supervisorVerificationRequired':True,\n 'evidenceTimeoutMinutes':90\n}\ndata=json.dumps(body).encode('utf-8')\nreq=urllib.request.Request(base+'/api/supervisor-watchdog/managed-chats/chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982/assignments',data=data,headers={'Content-Type':'application/json'},method='POST')\nd=json.loads(urllib.request.urlopen(req,timeout=15).read().decode('utf-8'))\nprint(json.dumps({k:d.get(k) for k in ['id','state','targetChatId','targetChatUrl','expectedHead']},separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"169f3052-133a-4ca0-bfb3-b886443897c1\",\"state\":\"queued\",\"targetChatId\":\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"targetChatUrl\":\"https://chatgpt.com/c/6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"expectedHead\":\"6f4d3b976a9a61fc17ff1ca38b798d79f4532bba\"}\r\n",
+      "stdout_bytes": 258,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T10:49:24.396Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T10:49:24.245Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T1082-bridge-r43-bootstrap-corrective-01"
+    },
+    "request_id": "20261007T1082-bridge-r43-bootstrap-corrective-01",
+    "started_at": "2026-10-07T10:49:23.737Z",
+    "status": "completed"
+  },
+  "id": "20261007T1082-bridge-r43-bootstrap-corrective-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
