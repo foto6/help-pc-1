@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request;u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/74cfcb00-58d7-404d-9613-a99383f0d149/evidence';b={'branch':'agent/creator-r39-current-authority-binder-20261006','currentHead':'69b4cb17ba81e79b15583fbbf64c0b6e9de51c0e','exactCommitSha':'69b4cb17ba81e79b15583fbbf64c0b6e9de51c0e','ciRunId':'37457718418','ciConclusion':'success','supervisorVerified':True};q=urllib.request.Request(u,data=json.dumps(b).encode(),headers={'Content-Type':'application/json'},method='POST');d=json.loads(urllib.request.urlopen(q,timeout=10).read());print(json.dumps({k:d.get(k) for k in ['id','state','lastDiagnostic','currentHead','ciRunId','ciConclusion','supervisorVerified']},separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"74cfcb00-58d7-404d-9613-a99383f0d149\",\"state\":\"completed\",\"lastDiagnostic\":\"evidence_verified\",\"currentHead\":\"69b4cb17ba81e79b15583fbbf64c0b6e9de51c0e\",\"ciRunId\":\"37457718418\",\"ciConclusion\":\"success\",\"supervisorVerified\":true}\r\n",
+      "stdout_bytes": 236,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T11:12:40.784Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T11:12:40.645Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T1120-creator-evidence-accept-01"
+    },
+    "request_id": "20261007T1120-creator-evidence-accept-01",
+    "started_at": "2026-10-07T11:12:40.120Z",
+    "status": "completed"
+  },
+  "id": "20261007T1120-creator-evidence-accept-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
