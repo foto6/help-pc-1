@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json; from pathlib import Path; paths=[('current',Path(r'E:\\WebAIBridge\\app\\data\\state.json')),('backup',Path(r'E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261007T111557Z\\state.json'))]; for label,p in paths:;   d=json.loads(p.read_text(encoding='utf-8',errors='replace'));   print('===',label,'===');   for k,v in d.items():;     if isinstance(v,(list,dict)): print(k, len(v));   ol=d.get('operatorLifecycle') or {};   print('operatorLifecycle.mode', ol.get('mode'));   s=d.get('settings') or {};   print('settings.paused', s.get('paused'))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "  File \"<string>\", line 1\r\n    import json; from pathlib import Path; paths=[('current',Path(r'E:\\WebAIBridge\\app\\data\\state.json')),('backup',Path(r'E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261007T111557Z\\state.json'))]; for label,p in paths:;   d=json.loads(p.read_text(encoding='utf-8',errors='replace'));   print('===',label,'===');   for k,v in d.items():;     if isinstance(v,(list,dict)): print(k, len(v));   ol=d.get('operatorLifecycle') or {};   print('operatorLifecycle.mode', ol.get('mode'));   s=d.get('settings') or {};   print('settings.paused', s.get('paused'))\r\n                                                                                                                                                                                                        ^^^\r\nSyntaxError: invalid syntax\r\n",
+      "stderr_bytes": 817,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T13:21:49.063Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T13:21:48.814Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2032-bridge-state-counts-compare-01"
+    },
+    "request_id": "20261007T2032-bridge-state-counts-compare-01",
+    "started_at": "2026-10-07T13:21:47.956Z",
+    "status": "completed"
+  },
+  "id": "20261007T2032-bridge-state-counts-compare-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
