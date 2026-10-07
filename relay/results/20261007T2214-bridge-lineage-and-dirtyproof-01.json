@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$head=(& git.exe -C $repo rev-parse HEAD).Trim();\n$branches=@(& git.exe -C $repo branch -r --contains $head);\n$paths=@(\n'app/scripts/operator-lifecycle-r40.ps1',\n'app/scripts/pause-all-r40.cmd',\n'app/scripts/pause-browser-r40.cmd',\n'app/scripts/resume-attach-r40.cmd',\n'app/scripts/resume-managed-r40.cmd'\n);\n$rows=@();\nforeach($p in $paths){\n  $headBlob=(& git.exe -C $repo rev-parse ('HEAD:'+$p) 2>$null);\n  $workBlob=(& git.exe -C $repo hash-object --no-filters -- $p 2>$null);\n  $rows += [pscustomobject]@{path=$p;headBlob=($headBlob|Out-String).Trim();workBlob=($workBlob|Out-String).Trim();rawIdentical=((($headBlob|Out-String).Trim()) -eq (($workBlob|Out-String).Trim()))}\n}\n[pscustomobject]@{head=$head;remoteBranches=$branches;files=$rows}|ConvertTo-Json -Depth 6 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"head\":\"2d5f902a52f875f3385da0a9babe29e2761a0f5b\",\"remoteBranches\":[\"  origin/agent/bridge-r42-bomless-production-hotfix-20261007\"],\"files\":[{\"path\":\"app/scripts/operator-lifecycle-r40.ps1\",\"headBlob\":\"5e40cb2058af7be3a60fe1228aedcc7c0224a8aa\",\"workBlob\":\"5e40cb2058af7be3a60fe1228aedcc7c0224a8aa\",\"rawIdentical\":true},{\"path\":\"app/scripts/pause-all-r40.cmd\",\"headBlob\":\"3940376100c05e177358aee44a36413e912fd4a4\",\"workBlob\":\"3940376100c05e177358aee44a36413e912fd4a4\",\"rawIdentical\":true},{\"path\":\"app/scripts/pause-browser-r40.cmd\",\"headBlob\":\"66a918dd3e7e0762bab6c1498f41a4e291696ea9\",\"workBlob\":\"66a918dd3e7e0762bab6c1498f41a4e291696ea9\",\"rawIdentical\":true},{\"path\":\"app/scripts/resume-attach-r40.cmd\",\"headBlob\":\"58860eb74ec1a071259a09c8f8e46d67a0485a41\",\"workBlob\":\"58860eb74ec1a071259a09c8f8e46d67a0485a41\",\"rawIdentical\":true},{\"path\":\"app/scripts/resume-managed-r40.cmd\",\"headBlob\":\"8d87df6091bb30aed48f7996dac73cb14684ca6c\",\"workBlob\":\"8d87df6091bb30aed48f7996dac73cb14684ca6c\",\"rawIdentical\":true}]}\r\n",
+      "stdout_bytes": 1012,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T15:36:32.187Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T15:36:32.037Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2214-bridge-lineage-and-dirtyproof-01"
+    },
+    "request_id": "20261007T2214-bridge-lineage-and-dirtyproof-01",
+    "started_at": "2026-10-07T15:36:30.893Z",
+    "status": "completed"
+  },
+  "id": "20261007T2214-bridge-lineage-and-dirtyproof-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
