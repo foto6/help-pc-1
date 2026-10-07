@@ -1,0 +1,18 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2219-hotfix-regression-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "E:\\WebAIBridge-BOM-Hotfix\\app\\r42-json-encoding.test.ps1"
+    ],
+    "cwd": "E:\\WebAIBridge-BOM-Hotfix\\app"
+  },
+  "timeout_ms": 10000,
+  "note": "Run Windows PowerShell 5.1 BOM regression on minimal production hotfix"
+}
