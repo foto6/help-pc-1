@@ -1,0 +1,19 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2209-bridge-fix-tree-diff-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "git.exe",
+      "-C",
+      "E:\\WebAIBridge",
+      "diff",
+      "--name-status",
+      "7351d8478600ceb1db50ea136efccb1c10a943c7",
+      "8afbac2b7ae67e2e4cc2b778830163689d83ba74"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only compare exact production WebAIBridge HEAD to isolated BOM-fix HEAD before installing it"
+}
