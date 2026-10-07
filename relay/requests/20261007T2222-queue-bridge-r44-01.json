@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2222-queue-bridge-r44-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982/assignments'\nbody={\n\"text\":\"EXECUTE NOW — Bridge R44. Work ONLY on agent/bridge-r44-hotfix-r43-integration-20261007 from exact HEAD edbf94a8760139b2f8259746c344a54410420465. Read TASKS/R44_HOTFIX_R43_INTEGRATION.md and execute it fully. Preserve production BOM-less hotfix lineage, integrate source-green R43 without reset/force overwrite, get exact-head Windows+Ubuntu CI green, then perform NEW local PreflightOnly and only if green one controlled cutover with rollback manifest. No provider chat deletion, no merge, no live publish. Return exact SHA/CI/artifacts and local evidence.\",\n\"repository\":\"foto6/WebAIBridge\",\n\"branch\":\"agent/bridge-r44-hotfix-r43-integration-20261007\",\n\"expectedHead\":\"edbf94a8760139b2f8259746c344a54410420465\",\n\"idempotencyKey\":\"coord-20261007-bridge-r44-assignment-01\",\n\"supervisorVerificationRequired\":True,\n\"evidenceTimeoutMinutes\":120}\nq=urllib.request.Request(u,data=json.dumps(body).encode(),headers={'Content-Type':'application/json'},method='POST')\nd=json.loads(urllib.request.urlopen(q,timeout=15).read().decode())\nprint(json.dumps({k:d.get(k) for k in ['id','state','targetChatId','targetChatUrl','projectId','expectedHead']},separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 25000,
+  "note": "Queue idempotent Bridge R44 managed assignment to exact open chat"
+}
