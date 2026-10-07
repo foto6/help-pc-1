@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "dir /-c \"E:\\WebAIBridge\\app\\worker-gemini-personal-attach-error.log\""
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "The filename, directory name, or volume label syntax is incorrect.\r\n",
+      "stderr_bytes": 68,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T11:33:41.379Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T11:33:41.244Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T1844-worker-log-metadata-01"
+    },
+    "request_id": "20261007T1844-worker-log-metadata-01",
+    "started_at": "2026-10-07T11:33:40.947Z",
+    "status": "completed"
+  },
+  "id": "20261007T1844-worker-log-metadata-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
