@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T1037-bridge-native-status-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nbase='http://127.0.0.1:17448'\nspecs=[\n ('Bridge','chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982','4e67b543-7d83-42df-9389-0707659dd36a'),\n ('Native','agent-pc-control','5dc21cfa-6bad-4df8-a493-99d0ece5a248')\n]\nout=[]\nfor label,chat,aid in specs:\n d=json.loads(urllib.request.urlopen(base+'/api/supervisor-watchdog/agent-assignments?chatId='+chat,timeout=10).read().decode('utf-8'))\n row=next((x for x in d.get('assignments',[]) if x.get('id')==aid),{})\n keep=['state','lastPreflightReason','lastDiagnostic','dispatchTargetId','dispatchCount','dispatchSubmitAttempted','currentHead','ciRunId','ciConclusion','updatedAt']\n out.append({'label':label,**{k:row.get(k) for k in keep}})\nprint(json.dumps(out,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 20000,
+  "note": "Second status poll only; no mutation."
+}
