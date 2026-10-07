@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2229-chatgpt-attach-runtime-diagnose-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "exec(\"import json\\nfrom pathlib import Path\\nd=json.loads(Path(r'E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json').read_text(encoding='utf-8'))\\nfor x in d.get('aiProfiles') or []:\\n if x.get('id')=='ef72920c-cfe7-4824-a79b-7a0e0943ce7e':\\n  keys=['id','provider','enabled','chromeLaunchMode','attachAutoStart','debugPort','workerConnected','workerLastSeenAt','lastLaunchAt','workerError','launchError','lastFailureReason','cooldownUntil']\\n  for k in keys: print(k,repr(x.get(k)))\\n\")"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only diagnose non-secret runtime fields for disconnected ChatGPT attach profile; do not restart browser or worker"
+}
