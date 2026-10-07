@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-07T11:17:50.765Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261007T1137-bridge-r43-switch-corrective-short-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:cf2446229e7868dd1bc7fa02b4b0f9a53451bf67f03f55d2fba9dca4b60f763e",
+            "journal_sequence": 2122,
+            "previous_record_sha256": "4baa6a5f7243e6725c804dca50fcf1edfc752d8b44fe3f92badc267ef893f20f",
+            "record_sha256": "856da4f7caf14b2b8a5c53fa9ff7239d707f49142be27c1aa67183e4aef2e9a5",
+            "recorded_at": "2026-10-07T11:17:50.891Z",
+            "request_id": "20261007T1137-bridge-r43-switch-corrective-short-01",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-07T11:18:11.109Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261007T1137-bridge-r43-switch-corrective-short-01"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:cf2446229e7868dd1bc7fa02b4b0f9a53451bf67f03f55d2fba9dca4b60f763e",
+            "journal_sequence": 2123,
+            "previous_record_sha256": "856da4f7caf14b2b8a5c53fa9ff7239d707f49142be27c1aa67183e4aef2e9a5",
+            "record_sha256": "6fac2494d175929aa36273d9ece2184918b3e0126090037a07e18b73db888707",
+            "recorded_at": "2026-10-07T11:18:11.247Z",
+            "request_id": "20261007T1137-bridge-r43-switch-corrective-short-01",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-07T11:18:11.109Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "20261007T1137-bridge-r43-switch-corrective-short-01"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-07T11:18:11.109Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "20261007T1137-bridge-r43-switch-corrective-short-01"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:cf2446229e7868dd1bc7fa02b4b0f9a53451bf67f03f55d2fba9dca4b60f763e",
+          "journal_sequence": 2123,
+          "previous_record_sha256": "856da4f7caf14b2b8a5c53fa9ff7239d707f49142be27c1aa67183e4aef2e9a5",
+          "record_sha256": "6fac2494d175929aa36273d9ece2184918b3e0126090037a07e18b73db888707",
+          "recorded_at": "2026-10-07T11:18:11.247Z",
+          "request_id": "20261007T1137-bridge-r43-switch-corrective-short-01",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "791e9609f8c7c9dfd7a3960996eb49a767d9e0134ac4f29a1749c02c442f5004",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 2123
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "20261007T1137-bridge-r43-switch-corrective-short-01",
+        "request_id": "20261007T1137-bridge-r43-switch-corrective-short-01",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T11:19:00.398Z",
+    "ok": true,
+    "request_id": "20261007T1140-bridge-corrective-outcome-lookup-01",
+    "started_at": "2026-10-07T11:19:00.265Z",
+    "status": "completed"
+  },
+  "id": "20261007T1140-bridge-corrective-outcome-lookup-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
