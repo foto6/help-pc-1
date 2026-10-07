@@ -1,0 +1,18 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2213-hotfix-fetch-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "git.exe",
+      "-C",
+      "E:\\WebAIBridge",
+      "fetch",
+      "origin",
+      "agent/bridge-r42-bomless-production-hotfix-20261007"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Fetch minimal production hotfix branch based exactly on current WebAIBridge HEAD; do not switch production yet"
+}
