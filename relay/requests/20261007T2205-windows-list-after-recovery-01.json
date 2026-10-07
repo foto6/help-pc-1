@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2205-windows-list-after-recovery-01",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 8000,
+  "note": "Native read-only window inventory after Bridge/profile recovery before opening managed chats"
+}
