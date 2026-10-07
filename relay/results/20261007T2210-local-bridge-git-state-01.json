@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $repo='E:\\WebAIBridge'; $head=(& git.exe -C $repo rev-parse HEAD).Trim(); $status=@(& git.exe -C $repo status --porcelain); [pscustomobject]@{head=$head;dirtyCount=$status.Count;dirty=$status}|ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"head\":\"2d5f902a52f875f3385da0a9babe29e2761a0f5b\",\"dirtyCount\":5,\"dirty\":[\" M app/scripts/operator-lifecycle-r40.ps1\",\" M app/scripts/pause-all-r40.cmd\",\" M app/scripts/pause-browser-r40.cmd\",\" M app/scripts/resume-attach-r40.cmd\",\" M app/scripts/resume-managed-r40.cmd\"]}\r\n",
+      "stdout_bytes": 275,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T15:35:21.202Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T15:35:21.040Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2210-local-bridge-git-state-01"
+    },
+    "request_id": "20261007T2210-local-bridge-git-state-01",
+    "started_at": "2026-10-07T15:35:20.330Z",
+    "status": "completed"
+  },
+  "id": "20261007T2210-local-bridge-git-state-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
