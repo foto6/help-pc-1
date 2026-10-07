@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nu='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982/assignments'\nbody={\n\"text\":\"EXECUTE NOW — Bridge R44. Work ONLY on agent/bridge-r44-hotfix-r43-integration-20261007 from exact HEAD edbf94a8760139b2f8259746c344a54410420465. Read TASKS/R44_HOTFIX_R43_INTEGRATION.md and execute it fully. Preserve production BOM-less hotfix lineage, integrate source-green R43 without reset/force overwrite, get exact-head Windows+Ubuntu CI green, then perform NEW local PreflightOnly and only if green one controlled cutover with rollback manifest. No provider chat deletion, no merge, no live publish. Return exact SHA/CI/artifacts and local evidence.\",\n\"repository\":\"foto6/WebAIBridge\",\n\"branch\":\"agent/bridge-r44-hotfix-r43-integration-20261007\",\n\"expectedHead\":\"edbf94a8760139b2f8259746c344a54410420465\",\n\"idempotencyKey\":\"coord-20261007-bridge-r44-assignment-01\",\n\"supervisorVerificationRequired\":True,\n\"evidenceTimeoutMinutes\":120}\nq=urllib.request.Request(u,data=json.dumps(body).encode(),headers={'Content-Type':'application/json'},method='POST')\nd=json.loads(urllib.request.urlopen(q,timeout=15).read().decode())\nprint(json.dumps({k:d.get(k) for k in ['id','state','targetChatId','targetChatUrl','projectId','expectedHead']},separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\r\n  File \"<string>\", line 12, in <module>\r\n    d=json.loads(urllib.request.urlopen(q,timeout=15).read().decode())\r\n                 ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 189, in urlopen\r\n    return opener.open(url, data, timeout)\r\n           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 495, in open\r\n    response = meth(req, response)\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 604, in http_response\r\n    response = self.parent.error(\r\n        'http', request, response, code, msg, hdrs)\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 533, in error\r\n    return self._call_chain(*args)\r\n           ~~~~~~~~~~~~~~~~^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 466, in _call_chain\r\n    result = func(*args)\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 613, in http_error_default\r\n    raise HTTPError(req.full_url, code, msg, hdrs, fp)\r\nurllib.error.HTTPError: HTTP Error 404: Not Found\r\n",
+      "stderr_bytes": 1543,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T15:39:10.375Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T15:39:10.215Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2222-queue-bridge-r44-01"
+    },
+    "request_id": "20261007T2222-queue-bridge-r44-01",
+    "started_at": "2026-10-07T15:39:09.684Z",
+    "status": "completed"
+  },
+  "id": "20261007T2222-queue-bridge-r44-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
