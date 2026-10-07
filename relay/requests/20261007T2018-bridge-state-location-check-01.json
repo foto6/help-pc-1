@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2018-bridge-state-location-check-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$app='E:\\WebAIBridge\\app'; Write-Output '=== ENV FILE KEYS ==='; if(Test-Path \"$app\\.env\"){Get-Content \"$app\\.env\" | Where-Object {$_ -match '^(WEB_AI_BRIDGE_DATA_DIR|WEB_AI_BRIDGE_RESULT_DIR|WEB_AI_BRIDGE_PORT|WEB_AI_BRIDGE_LOCAL_BASE_URL)='}}; Write-Output '=== STATE CANDIDATES ==='; Get-ChildItem 'E:\\WebAIBridge' -Recurse -File -Filter state.json -ErrorAction SilentlyContinue | Where-Object {$_.FullName -notmatch '\\\\.git\\\\'} | Select-Object FullName,Length,LastWriteTime | Sort-Object LastWriteTime -Descending | Select-Object -First 20 | Format-Table -AutoSize; Write-Output '=== DATA DIR CONTENTS ==='; Get-ChildItem \"$app\\data\" -Force -ErrorAction SilentlyContinue | Select-Object Name,Length,LastWriteTime | Sort-Object LastWriteTime -Descending | Select-Object -First 40 | Format-Table -AutoSize"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only locate WebAIBridge state/data files to diagnose empty dashboard; do not touch active agents"
+}
