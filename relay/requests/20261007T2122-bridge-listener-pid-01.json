@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2122-bridge-listener-pid-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "netstat -ano -p tcp | findstr LISTENING | findstr :17448"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only identify the exact TCP listener PID for WebAIBridge port 17448"
+}
