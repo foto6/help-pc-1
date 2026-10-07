@@ -1,0 +1,50 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$repo='E:\\WebAIBridge'\n$target='004bca97fe0db5c3cbba9d086f5000345af4e843'\n$targetBranch='agent/bridge-r44-hotfix-r43-integration-20261007'\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path\n$headBefore=(& $git -C $repo rev-parse HEAD).Trim()\nif($LASTEXITCODE -ne 0){throw 'rev-parse HEAD failed'}\n$branchBefore=(& $git -C $repo branch --show-current).Trim()\n$statusBefore=(@(& $git -C $repo status --porcelain=v1 --untracked-files=all) -join [Environment]::NewLine)\nWrite-Output ('R44_LOCAL_HEAD_BEFORE='+$headBefore)\nWrite-Output ('R44_LOCAL_BRANCH_BEFORE='+$branchBefore)\nWrite-Output ('R44_LOCAL_STATUS_BEFORE_SHA256='+([Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($statusBefore))).ToLowerInvariant()))\n& $git -C $repo fetch origin $targetBranch\nif($LASTEXITCODE -ne 0){throw 'fetch target branch failed'}\n$resolved=(& $git -C $repo rev-parse $target).Trim()\nif($resolved.ToLowerInvariant() -ne $target){throw 'target SHA mismatch after fetch'}\n$tmp=Join-Path ([IO.Path]::GetTempPath()) ('r44-preflight-'+[guid]::NewGuid().ToString('N'))\nNew-Item -ItemType Directory -Force -Path $tmp | Out-Null\ntry{\n  $zip=Join-Path $tmp 'bundle.zip'\n  & $git -C $repo archive --format=zip ('--output='+$zip) $target app/r42-cutover.ps1\n  if($LASTEXITCODE -ne 0){throw 'git archive target cutover bundle failed'}\n  Expand-Archive -LiteralPath $zip -DestinationPath $tmp -Force\n  $bundle=Join-Path $tmp 'app\\r42-cutover.ps1'\n  $expected=(& $git -C $repo rev-parse ($target+':app/r42-cutover.ps1')).Trim()\n  $observed=(& $git -C $repo hash-object --no-filters -- $bundle).Trim()\n  if($expected.ToLowerInvariant() -ne $observed.ToLowerInvariant()){throw 'cutover bundle provenance mismatch'}\n  Write-Output ('R44_CUTOVER_BUNDLE_BLOB='+$observed.ToLowerInvariant())\n  & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $bundle -TargetSha $target -TargetBranch $targetBranch -RepoPath $repo -PreflightOnly\n  $preflightExit=$LASTEXITCODE\n  if($preflightExit -ne 0){throw ('R44 PreflightOnly exited '+$preflightExit)}\n} finally {\n  Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue\n}\n$headAfter=(& $git -C $repo rev-parse HEAD).Trim()\n$statusAfter=(@(& $git -C $repo status --porcelain=v1 --untracked-files=all) -join [Environment]::NewLine)\nWrite-Output ('R44_LOCAL_HEAD_AFTER='+$headAfter)\nWrite-Output ('R44_LOCAL_STATUS_AFTER_SHA256='+([Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes($statusAfter))).ToLowerInvariant()))\nif($headAfter -ne $headBefore){throw 'PreflightOnly changed production HEAD'}\nif($statusAfter -cne $statusBefore){throw 'PreflightOnly changed production worktree status'}\nWrite-Output 'R44_PREFLIGHT_WRAPPER_PASS'"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "You cannot call a method on a null-valued expression.\r\nAt line:8 char:1\r\n+ $branchBefore=(& $git -C $repo branch --show-current).Trim()\r\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : InvokeMethodOnNull\r\n \r\n",
+      "stderr_bytes": 346,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T16:02:40.142Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T16:02:39.885Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2245-r44-preflight-01"
+    },
+    "request_id": "20261007T2245-r44-preflight-01",
+    "started_at": "2026-10-07T16:02:39.124Z",
+    "status": "completed"
+  },
+  "id": "20261007T2245-r44-preflight-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
