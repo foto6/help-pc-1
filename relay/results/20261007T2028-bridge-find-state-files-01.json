@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "where.exe",
+        "/r",
+        "E:\\WebAIBridge",
+        "state.json"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "E:\\WebAIBridge\\app\\data\\state.json\r\nE:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261006T043453Z\\state.json\r\nE:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261007T111557Z\\state.json\r\nE:\\WebAIBridge\\app\\data\\backups\\r6-supervised-cutover-20260929-01\\state.json\r\nE:\\WebAIBridge\\app\\data\\backups\\r7-supervised-cutover-20260929-01\\state.json\r\nE:\\WebAIBridge\\app\\data\\backups\\r7b-supervised-cutover-20260929-01\\state.json\r\nE:\\WebAIBridge\\app\\data\\backups\\r7c-supervised-cutover-20260929-01\\state.json\r\nE:\\WebAIBridge\\app\\data\\managed-chats-e2e\\state.json\r\nE:\\WebAIBridge\\app\\data\\managed-import-e2e\\state.json\r\nE:\\WebAIBridge\\app\\data\\singleton-e2e\\state.json\r\nE:\\WebAIBridge\\app\\data\\supervisor-control-e2e\\state.json\r\nE:\\WebAIBridge\\app\\data\\supervisor-control-e2e2\\state.json\r\nE:\\WebAIBridge\\app\\data\\supervisor-lifecycle-e2e\\state.json\r\n",
+      "stdout_bytes": 835,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T13:20:38.621Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T13:20:38.392Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T2028-bridge-find-state-files-01"
+    },
+    "request_id": "20261007T2028-bridge-find-state-files-01",
+    "started_at": "2026-10-07T13:20:37.658Z",
+    "status": "completed"
+  },
+  "id": "20261007T2028-bridge-find-state-files-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
