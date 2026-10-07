@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2214-bridge-lineage-and-dirtyproof-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$head=(& git.exe -C $repo rev-parse HEAD).Trim();\n$branches=@(& git.exe -C $repo branch -r --contains $head);\n$paths=@(\n'app/scripts/operator-lifecycle-r40.ps1',\n'app/scripts/pause-all-r40.cmd',\n'app/scripts/pause-browser-r40.cmd',\n'app/scripts/resume-attach-r40.cmd',\n'app/scripts/resume-managed-r40.cmd'\n);\n$rows=@();\nforeach($p in $paths){\n  $headBlob=(& git.exe -C $repo rev-parse ('HEAD:'+$p) 2>$null);\n  $workBlob=(& git.exe -C $repo hash-object --no-filters -- $p 2>$null);\n  $rows += [pscustomobject]@{path=$p;headBlob=($headBlob|Out-String).Trim();workBlob=($workBlob|Out-String).Trim();rawIdentical=((($headBlob|Out-String).Trim()) -eq (($workBlob|Out-String).Trim()))}\n}\n[pscustomobject]@{head=$head;remoteBranches=$branches;files=$rows}|ConvertTo-Json -Depth 6 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only Bridge production lineage and raw dirty-file equivalence proof"
+}
