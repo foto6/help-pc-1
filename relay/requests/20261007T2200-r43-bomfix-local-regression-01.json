@@ -1,0 +1,18 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2200-r43-bomfix-local-regression-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "E:\\WebAIBridge-BOM-Test\\app\\r42-json-encoding.test.ps1"
+    ],
+    "cwd": "E:\\WebAIBridge-BOM-Test\\app"
+  },
+  "timeout_ms": 10000,
+  "note": "Run isolated Windows PowerShell 5.1 regression proving R42 JSON writer emits BOM-less JSON parseable by Node"
+}
