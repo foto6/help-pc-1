@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2126-stop-bridge-server-only-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "taskkill /PID 22356 /F"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Authorized recovery: stop only the verified node.exe listener PID for WebAIBridge port 17448; do not terminate process tree or Chrome/workers"
+}
