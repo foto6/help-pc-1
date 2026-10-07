@@ -1,0 +1,19 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2215-hotfix-tree-diff-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "git.exe",
+      "-C",
+      "E:\\WebAIBridge",
+      "diff",
+      "--name-status",
+      "7351d8478600ceb1db50ea136efccb1c10a943c7",
+      "2d5f902a52f875f3385da0a9babe29e2761a0f5b"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only confirm minimal production hotfix changes only expected files"
+}
