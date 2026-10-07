@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$target='545412513f09c396fe0e3f6f7ba04ca609b9a195';\n$branch='agent/bridge-r43-porcelain-cutover-fix-20261006';\n$temp=Join-Path $env:TEMP ('r43-cutover-' + $target + '-1130.ps1');\n$lines=@(& git.exe -C $repo show ($target + ':app/r42-cutover.ps1'));\nif($LASTEXITCODE -ne 0 -or $lines.Count -eq 0){throw 'git show cutover script failed'}\n[IO.File]::WriteAllText($temp,(($lines -join [Environment]::NewLine)+[Environment]::NewLine),[Text.UTF8Encoding]::new($false));\ntry{\n  & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $temp -TargetSha $target -TargetBranch $branch -RepoPath $repo;\n  if($LASTEXITCODE -ne 0){throw \"R43 controlled cutover failed with exit $LASTEXITCODE\"}\n} finally {\n  Remove-Item -LiteralPath $temp -Force -ErrorAction SilentlyContinue\n}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "git.exe switch --detach 545412513f09c396fe0e3f6f7ba04ca609b9a195 failed with exit 1: error: Your local changes to the f\r\nollowing files would be overwritten by checkout: \tapp/scripts/operator-lifecycle-r40.ps1 \tapp/scripts/pause-all-r40.cmd\r\n \tapp/scripts/pause-browser-r40.cmd \tapp/scripts/resume-attach-r40.cmd \tapp/scripts/resume-managed-r40.cmd Please commi\r\nt your changes or stash them before you switch branches. Aborting\r\nAt C:\\Users\\foto6\\AppData\\Local\\Temp\\r43-cutover-545412513f09c396fe0e3f6f7ba04ca609b9a195-1130.ps1:37 char:5\r\n+     throw \"git.exe $($GitArgs -join ' ') failed with exit ${exitCode} ...\r\n+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (git.exe switch ...nches. Aborting:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : git.exe switch --detach 545412513f09c396fe0e3f6f7ba04ca609b9a195 failed with exit 1: err \r\n   or: Your local changes to the following files would be overwritten by checkout: \tapp/scripts/operator-lifecycle-r4  \r\n  0.ps1 \tapp/scripts/pause-all-r40.cmd \tapp/scripts/pause-browser-r40.cmd \tapp/scripts/resume-attach-r40.cmd \tapp/sc   \r\n ripts/resume-managed-r40.cmd Please commit your changes or stash them before you switch branches. Aborting\r\n \r\nR43 controlled cutover failed with exit 1\r\nAt line:11 char:27\r\n+ ... CODE -ne 0){throw \"R43 controlled cutover failed with exit $LASTEXITC ...\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (R43 controlled ...led with exit 1:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : R43 controlled cutover failed with exit 1\r\n \r\n",
+      "stderr_bytes": 1688,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T11:15:59.991Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T11:15:59.853Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T1130-r43-controlled-cutover-01"
+    },
+    "request_id": "20261007T1130-r43-controlled-cutover-01",
+    "started_at": "2026-10-07T11:15:53.069Z",
+    "status": "completed"
+  },
+  "id": "20261007T1130-r43-controlled-cutover-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
