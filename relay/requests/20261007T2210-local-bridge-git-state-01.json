@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2210-local-bridge-git-state-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $repo='E:\\WebAIBridge'; $head=(& git.exe -C $repo rev-parse HEAD).Trim(); $status=@(& git.exe -C $repo status --porcelain); [pscustomobject]@{head=$head;dirtyCount=$status.Count;dirty=$status}|ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only local WebAIBridge exact HEAD and dirty state after user-reported bridge/profile repair"
+}
