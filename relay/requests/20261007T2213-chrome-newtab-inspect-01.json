@@ -1,0 +1,14 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2213-chrome-newtab-inspect-01",
+  "action": "uia.inspect",
+  "params": {
+    "query": {
+      "name": "Новая вкладка",
+      "control_type": "ButtonControl",
+      "window_title": "Отчёт о проверке - Google Chrome"
+    }
+  },
+  "timeout_ms": 8000,
+  "note": "Read-only inspect Chrome New Tab control after Bridge recovery"
+}
