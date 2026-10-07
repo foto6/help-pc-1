@@ -1,0 +1,19 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2245-remove-temp-worktree-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "git.exe",
+      "-C",
+      "E:\\WebAIBridge",
+      "worktree",
+      "remove",
+      "--force",
+      "E:\\WebAIBridge-BOM-Hotfix"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Cleanup isolated temporary WebAIBridge test worktree only; preserve production checkout and recovery backups"
+}
