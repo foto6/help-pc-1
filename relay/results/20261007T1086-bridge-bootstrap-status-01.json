@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nbase='http://127.0.0.1:17448'\nchat='chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982'\naid='169f3052-133a-4ca0-bfb3-b886443897c1'\nd=json.loads(urllib.request.urlopen(base+'/api/supervisor-watchdog/agent-assignments?chatId='+chat,timeout=10).read().decode('utf-8'))\nrow=next((x for x in d.get('assignments',[]) if x.get('id')==aid),{})\nkeep=['state','lastPreflightReason','lastDiagnostic','dispatchTargetId','dispatchCount','dispatchSubmitAttempted','currentHead','ciRunId','ciConclusion','updatedAt','awaitingEvidenceAt','completedAt']\nprint(json.dumps({k:row.get(k) for k in keep},separators=(',',':')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"state\":\"awaiting_evidence\",\"lastPreflightReason\":\"ready\",\"lastDiagnostic\":\"git_head_unchanged\",\"dispatchTargetId\":\"846A74E9A774DE0D0873DD12ECAD1448\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"currentHead\":\"6f4d3b976a9a61fc17ff1ca38b798d79f4532bba\",\"ciRunId\":\"37608981517\",\"ciConclusion\":\"success\",\"updatedAt\":\"2026-10-07T10:50:10.796Z\",\"awaitingEvidenceAt\":\"2026-10-07T10:49:30.759Z\",\"completedAt\":\"\"}\r\n",
+      "stdout_bytes": 412,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T10:50:25.088Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T10:50:24.949Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T1086-bridge-bootstrap-status-01"
+    },
+    "request_id": "20261007T1086-bridge-bootstrap-status-01",
+    "started_at": "2026-10-07T10:50:24.466Z",
+    "status": "completed"
+  },
+  "id": "20261007T1086-bridge-bootstrap-status-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
