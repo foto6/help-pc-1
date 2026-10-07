@@ -1,0 +1,19 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2223-install-minimal-bridge-hotfix-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "git.exe",
+      "-C",
+      "E:\\WebAIBridge",
+      "switch",
+      "--discard-changes",
+      "--detach",
+      "2d5f902a52f875f3385da0a9babe29e2761a0f5b"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Authorized install of minimal two-file WebAIBridge BOM hotfix; five prior dirty files were proven filter-only; do not restart Bridge or Chrome"
+}
