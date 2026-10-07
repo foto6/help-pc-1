@@ -1,0 +1,13 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2215-chrome-newtab-id-inspect-01",
+  "action": "uia.inspect",
+  "params": {
+    "query": {
+      "automation_id": "NewTabButton",
+      "window_title": "Отчёт о проверке - Google Chrome"
+    }
+  },
+  "timeout_ms": 8000,
+  "note": "inspect Chrome NewTabButton automation id"
+}
