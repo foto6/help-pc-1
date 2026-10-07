@@ -1,0 +1,20 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2217-hotfix-worktree-add-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "git.exe",
+      "-C",
+      "E:\\WebAIBridge",
+      "worktree",
+      "add",
+      "--detach",
+      "E:\\WebAIBridge-BOM-Hotfix",
+      "2d5f902a52f875f3385da0a9babe29e2761a0f5b"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Create isolated temporary worktree for minimal production hotfix validation; production worktree untouched"
+}
