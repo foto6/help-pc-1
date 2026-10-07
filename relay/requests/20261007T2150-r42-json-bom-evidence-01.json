@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2150-r42-json-bom-evidence-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "exec(\"from pathlib import Path\\nroot=Path(r'E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261007T111557Z')\\nfor name in ['rollback-manifest.json','cutover-report.json','state.json']:\\n p=root/name\\n print(name,'exists='+str(p.exists()),'head='+((p.read_bytes()[:4].hex()) if p.exists() else ''))\\n\")"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 5000,
+  "note": "Read-only inspect first four bytes of R42 cutover JSON artifacts to prove or refute UTF-8 BOM corruption; no secrets/content printed"
+}
