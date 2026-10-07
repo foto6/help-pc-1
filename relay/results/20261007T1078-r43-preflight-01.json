@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';\n$repo='E:\\WebAIBridge';\n$target='6f4d3b976a9a61fc17ff1ca38b798d79f4532bba';\n$branch='agent/bridge-r43-porcelain-cutover-fix-20261006';\n$temp=Join-Path $env:TEMP ('r43-preflight-' + $target + '.ps1');\n& git.exe -C $repo fetch origin $branch;\nif($LASTEXITCODE -ne 0){throw \"git fetch failed: $LASTEXITCODE\"}\n$lines=@(& git.exe -C $repo show ($target + ':app/r42-cutover.ps1'));\nif($LASTEXITCODE -ne 0 -or $lines.Count -eq 0){throw 'git show cutover script failed'}\n[IO.File]::WriteAllText($temp,(($lines -join [Environment]::NewLine)+[Environment]::NewLine),[Text.UTF8Encoding]::new($false));\ntry{\n  & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $temp -TargetSha $target -TargetBranch $branch -RepoPath $repo -PreflightOnly;\n  if($LASTEXITCODE -ne 0){throw \"R43 PreflightOnly failed with exit $LASTEXITCODE\"}\n} finally {\n  Remove-Item -LiteralPath $temp -Force -ErrorAction SilentlyContinue\n}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "From https://github.com/foto6/WebAIBridge\n * branch            agent/bridge-r43-porcelain-cutover-fix-20261006 -> FETCH_HEAD\n * [new branch]      agent/bridge-r43-porcelain-cutover-fix-20261006 -> origin/agent/bridge-r43-porcelain-cutover-fix-20261006\nR43 porcelain parser missing: E:\\WebAIBridge\\app\\r43-porcelain.ps1\r\nAt C:\\Users\\foto6\\AppData\\Local\\Temp\\r43-preflight-6f4d3b976a9a61fc17ff1ca38b798d79f4532bba.ps1:21 char:51\r\n+ ... elainParser)){throw \"R43 porcelain parser missing: $porcelainParser\"}\r\n+                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (R43 porcelain p...3-porcelain.ps1:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : R43 porcelain parser missing: E:\\WebAIBridge\\app\\r43-porcelain.ps1\r\n \r\nR43 PreflightOnly failed with exit 1\r\nAt line:13 char:27\r\n+ ... CODE -ne 0){throw \"R43 PreflightOnly failed with exit $LASTEXITCODE\"} ...\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (R43 PreflightOnly failed with exit 1:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : R43 PreflightOnly failed with exit 1\r\n \r\n",
+      "stderr_bytes": 1197,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T10:47:06.797Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-07T10:47:06.660Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261007T1078-r43-preflight-01"
+    },
+    "request_id": "20261007T1078-r43-preflight-01",
+    "started_at": "2026-10-07T10:47:02.421Z",
+    "status": "completed"
+  },
+  "id": "20261007T1078-r43-preflight-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
