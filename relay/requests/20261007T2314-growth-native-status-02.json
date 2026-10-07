@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261007T2314-growth-native-status-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nspecs=[\n(\"Growth\",\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"eff91a96-514b-4cc7-93b6-19e1f19c5741\"),\n(\"Native\",\"agent-pc-control\",\"dfcf8cae-1ea4-4d79-9690-a3df9064cd48\")]\nout=[]\nfor label,chat,aid in specs:\n d=json.loads(urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments?chatId='+chat,timeout=6).read().decode())\n row=next((x for x in d.get('assignments',[]) if x.get('id')==aid),{})\n keep=['state','lastPreflightReason','lastDiagnostic','dispatchTargetId','dispatchCount','dispatchSubmitAttempted','dispatchFailureCode','currentHead','ciRunId','ciConclusion','updatedAt']\n out.append({'label':label,**{k:row.get(k) for k in keep}})\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only Growth Native assignment status after watchdog grace"
+}
