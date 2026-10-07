@@ -1,0 +1,43 @@
+{
+  "action": "uia.inspect",
+  "executor_result": {
+    "action": "uia.inspect",
+    "data": {
+      "element": {
+        "automation_id": "view_1012",
+        "bounds": {
+          "height": 24,
+          "width": 1633,
+          "x": 158,
+          "y": 51
+        },
+        "class_name": "OmniboxViewViews",
+        "control_type": "EditControl",
+        "display_id": "monitor:65537",
+        "is_enabled": true,
+        "is_offscreen": false,
+        "is_password": false,
+        "name": "Адресная строка и строка поиска",
+        "native_handle": null,
+        "process_id": 13436,
+        "supports_invoke": false,
+        "supports_value": true,
+        "window_handle": null
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-07T15:04:24.168Z",
+    "ok": true,
+    "request_id": "20261007T2215-chrome-omnibox-inspect-01",
+    "started_at": "2026-10-07T15:04:23.334Z",
+    "status": "completed"
+  },
+  "id": "20261007T2215-chrome-omnibox-inspect-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
