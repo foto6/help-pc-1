@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-cdp-17410-tab-census-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$items=@(Invoke-RestMethod -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 4|Where-Object {$_.type -eq 'page'});$r=@();foreach($x in $items){try{$u=[uri]$x.url;$r+=@{target_id=$x.id;scheme=$u.Scheme;host=$u.Host;path_category=if($u.Host -eq '127.0.0.1'){'localhost'}else{'remote'}}}catch{}};$r|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only Chrome target inventory with sanitized host and ID only; no titles, URL paths or secrets."
+}
