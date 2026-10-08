@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-status-20261008-1219-live-read-a91f",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,datetime\nbase='http://127.0.0.1:17448'\ndef get(path):\n try:\n  with urllib.request.urlopen(base+path,timeout=6) as r:\n   obj=json.load(r)\n  return obj\n except Exception as e:\n  return {'probe_error':type(e).__name__+': '+str(e)[:120]}\nh=get('/health')\ncs=get('/api/supervisor-watchdog/managed-chats')\nass=get('/api/supervisor-watchdog/agent-assignments')\nout={'time':datetime.datetime.now().isoformat(),'health':{k:h.get(k) for k in ('status','ok','version','uptime','probe_error') if k in h},'chats':[{k:v.get(k) for k in ('name','status','error','highMode','generating','openTabs','lastSeenAt')} for v in cs.get('chats',[])],'bridge_assignments':[{k:v.get(k) for k in ('id','state','dispatchCount','lastDiagnostic','lastPreflightReason','currentHead','ciConclusion')} for v in ass.get('assignments',[]) if 'bridge' in str(v.get('targetChatId','')).lower() or v.get('targetChatId')=='chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982'],'query_errors':{k:x.get('probe_error') for k,x in [('chats',cs),('assignments',ass)] if x.get('probe_error')}}\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only local WebAIBridge HTTP status and managed chat/assignment states; no sends or changes"
+}
