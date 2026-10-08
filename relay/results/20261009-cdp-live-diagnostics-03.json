@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$file='E:\\PC-Control\\CDP_TabCapture_20261009\\chrome-diagnostic-20261009.js';if(Test-Path -LiteralPath $file){throw 'diagnostic_already_exists'};$js=@'\nconst fs=require('node:fs');\nconst os=require('node:os');\nconst path=require('node:path');\nconst {captureTab}=require('./browser-tab-capture.js');\nconst ids=['16F20C983A306AB7E31D2165E2544898','68D17114431457A201D7F164508E4318','F1B7A8CCFAA2C7EBF4AC1B9AAC48BEE2','FEE472581AE3C19E2018E04D8EE45831'];\nasync function rawError(id) {\n const list=await(await fetch('http://127.0.0.1:17410/json/list')).json();\n const target=list.find(t=>t.id===id);\n if(!target)return 'target_missing';\n return await new Promise(resolve=>{\n  let done=false;\n  const finish=value=>{if(done)return;done=true;clearTimeout(timeout);try{ws.close()}catch{};resolve(value)};\n  const ws=new WebSocket(target.webSocketDebuggerUrl);\n  const timeout=setTimeout(()=>finish('timeout'),6500);\n  ws.addEventListener('open',()=>ws.send(JSON.stringify({id:1,method:'Page.captureScreenshot',params:{format:'png',fromSurface:true,captureBeyondViewport:false}})),{once:true});\n  ws.addEventListener('message',event=>{let response;try{response=JSON.parse(event.data)}catch{return}if(response.id!==1)return;\n   if(response.error)finish({code:response.error.code,message:String(response.error.message).slice(0,180)});\n   else finish({success:true,base64Characters:String(response.result?.data||'').length});\n  });\n  ws.addEventListener('error',()=>finish('socket_error'),{once:true});\n });\n}\n(async()=>{const result=[];for(const id of ids){try{const cap=await captureTab({port:17410,targetId:id});const dir=fs.mkdtempSync(path.join(os.tmpdir(),'pc-cdp-diagnostic-'));const file=path.join(dir,'capture.png');fs.writeFileSync(file,cap.bytes,{flag:'wx',mode:0o600});result.push({target_id:id,ok:true,width:cap.width,height:cap.height,bytes:cap.bytes.length,sha256:cap.sha256,path:file});break;}catch(e){result.push({target_id:id,ok:false,err:String(e.message),cdp:await rawError(id)});}}\nconsole.log(JSON.stringify({results:result}));})().catch(e=>{console.log(JSON.stringify({error:e.message}));process.exitCode=1});\n'@;[System.IO.File]::WriteAllText($file,$js,(New-Object System.Text.UTF8Encoding($false)));Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public static class ChromeFG3 {[DllImport(\"user32.dll\")] public static extern IntPtr GetForegroundWindow();}';$before=[ChromeFG3]::GetForegroundWindow().ToInt64();$out=& node.exe $file;$code=$LASTEXITCODE;$after=[ChromeFG3]::GetForegroundWindow().ToInt64();[ordered]@{ok=($code -eq 0);foreground_unchanged=($before -eq $after);diagnostic=$out}|ConvertTo-Json -Compress -Depth 7;exit $code"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"foreground_unchanged\":true,\"diagnostic\":\"{\\\"results\\\":[{\\\"target_id\\\":\\\"16F20C983A306AB7E31D2165E2544898\\\",\\\"ok\\\":true,\\\"width\\\":1920,\\\"height\\\":945,\\\"bytes\\\":107418,\\\"sha256\\\":\\\"4aaf6e266f149fc64b24229ddee8c8d9ec136b2a91524646128c8b19909aed7e\\\",\\\"path\\\":\\\"C:\\\\\\\\Users\\\\\\\\foto6\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\pc-cdp-diagnostic-XIsTyG\\\\\\\\capture.png\\\"}]}\"}\r\n",
+      "stdout_bytes": 369,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T17:19:37.384Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T17:19:37.195Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-cdp-live-diagnostics-03"
+    },
+    "request_id": "20261009-cdp-live-diagnostics-03",
+    "started_at": "2026-10-08T17:19:36.099Z",
+    "status": "completed"
+  },
+  "id": "20261009-cdp-live-diagnostics-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
