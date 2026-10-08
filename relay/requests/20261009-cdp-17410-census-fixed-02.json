@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-cdp-17410-census-fixed-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$out=[ordered]@{port=17410;ok=$false;target_count=0;type_counts=@{};pages=@()};try{$raw=Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 5;$a=@(ConvertFrom-Json -InputObject $raw.Content);$out.ok=$true;$out.target_count=$a.Count;foreach($item in $a){$type=[string]$item.type;if(!$out.type_counts.Contains($type)){$out.type_counts[$type]=0};$out.type_counts[$type]++;if($type -eq 'page'){$host='';try{$host=([uri]$item.url).Host}catch{};$out.pages+=@{target_id=$item.id;host=$host}}}}catch{$out.error=$_.Exception.GetType().Name};$out|ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only sanitized CDP target census with explicit count and error."
+}
