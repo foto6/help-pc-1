@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r51-20261008-extra-draft-prewake-10",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,json,datetime\ns=\"const crypto=require('node:crypto');\\nconst m=require('E:/WebAIBridge/app/data/operator-tools/r50-read-only-chrome-check/releases/814c0e7e328599c85d7927e2a48b3e0f5df1becc/r50-restart-readiness-preflight.js');\\nconst canonical=require('E:/WebAIBridge/app/data/operator-tools/r50-read-only-chrome-check/releases/814c0e7e328599c85d7927e2a48b3e0f5df1becc/chrome-restart-readiness-r50.js').canonicalChat;\\n(async()=>{\\nconst [o,w,t]=await Promise.all([\\n fetch('http://127.0.0.1:17448/api/operator-lifecycle').then(r=>r.json()),\\n fetch('http://127.0.0.1:17448/api/supervisor-watchdog?detect=0').then(r=>r.json()),\\n fetch('http://127.0.0.1:17410/json/list').then(r=>r.json())]);\\nif(o.queuePaused!==true||w.config?.mode!=='off'||w.config?.allowAutonomousSend!==false)throw Error('hold_gate_failed');\\nconst specs=[[\\\"extra-1\\\",\\\"26F93091439AEEBB8DB6788AD17BFA02\\\",\\\"f9bb5b80e58b379e3e3fd3455e5b00ca104ffc98b44ff462558c27a437fd5002\\\"],[\\\"extra-2\\\",\\\"68D17114431457A201D7F164508E4318\\\",\\\"81e83f517574a2aa3054fdd85738b1bcb69d363ed0778173b521b36b5505458a\\\"],[\\\"extra-3\\\",\\\"6BBACA4F54475A91307D471FFBB8E0E5\\\",\\\"5d9354f7cb0eac0c0506ad03735ee6263a1e4ed75aa107e7852a5e26d49ecd3a\\\"]];\\nconst result=await Promise.all(specs.map(async ([alias,id,digest])=>{\\n const matches=t.filter(x=>x.type==='page'&&x.id===id&&crypto.createHash('sha256').update(x.url).digest('hex')===digest);\\n if(matches.length!==1)return {alias,exactIdentity:false,probeStatus:'IDENTITY_CHANGED'};\\n const x=await m.inspectTarget(matches[0].webSocketDebuggerUrl,canonical(matches[0].url),3200);\\n return {alias,exactIdentity:true,probeStatus:x.probeStatus,composerConfirmed:x.composerConfirmed,draftPresent:x.draftPresent,generating:x.generating,domIdentityConfirmed:x.domIdentityConfirmed,sourceIsConversation:Boolean(canonical(matches[0].url))};\\n}));\\nconsole.log(JSON.stringify({otherCount:result.length,rows:result,textNotReturned:true}));\\n})().catch(e=>{console.log(JSON.stringify({error:String(e.message).slice(0,100)}));process.exitCode=2});\"\np=subprocess.run(['node.exe','-e',s],capture_output=True,text=True,timeout=12)\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'exit':p.returncode,'stdout':p.stdout.strip()[-3500:],'stderrCode':'invalid_script' if p.returncode and not p.stdout else ''},ensure_ascii=True))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 24000,
+  "note": "Read-only bounded boolean state for all three additional exact Chrome ChatGPT targets by full SHA256 URL and target ID, no text logged, no browser focus/restart."
+}
