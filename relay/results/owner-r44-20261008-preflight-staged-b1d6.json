@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,subprocess,tempfile,hashlib,datetime\nrepo=r'E:\\WebAIBridge'\nsha='9a8898a70355bbae2d465ee49739030aa27e9f4e'\nbranch='agent/bridge-r44-hotfix-r43-integration-20261007'\nexpected='ca53b0e3a8e1e11ca48e162b72be4ca983e378a3'\ndef git(*args):\n return subprocess.run(['git.exe','-C',repo,*args],capture_output=True,timeout=15)\ndef fingerprint():\n h=git('rev-parse','HEAD')\n s=git('status','--porcelain=v1','-z','--untracked-files=all')\n return {'head':h.stdout.decode('ascii','replace').strip(),'status_sha256':hashlib.sha256(s.stdout).hexdigest(),'status_count':len([x for x in s.stdout.split(b'\\0') if x]),'git_codes':[h.returncode,s.returncode]}\nout={'at':datetime.datetime.now().isoformat(),'target':sha,'before':fingerprint()}\ntry:\n b=git('cat-file','blob',sha+':app/r42-cutover.ps1')\n if b.returncode:raise RuntimeError('target cutover git blob unavailable')\n with tempfile.TemporaryDirectory(prefix='r44-staged-preflight-') as d:\n  staged=os.path.join(d,'r42-cutover.ps1')\n  with open(staged,'wb') as f:f.write(b.stdout)\n  blob_check=subprocess.run(['git.exe','hash-object','--no-filters',staged],capture_output=True,text=True,timeout=12)\n  observed=blob_check.stdout.strip()\n  out['verified_blob']=observed==expected\n  if observed!=expected:raise RuntimeError('source blob SHA mismatch')\n  cmd=['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',staged,'-TargetSha',sha,'-TargetBranch',branch,'-RepoPath',repo,'-PreflightOnly']\n  run=subprocess.run(cmd,capture_output=True,text=True,errors='replace',timeout=95)\n  out['preflight']={'exit_code':run.returncode,'stdout':run.stdout.strip()[-6500:],'stderr':run.stderr.strip()[-2600:]}\nexcept Exception as e:out['error']=type(e).__name__+': '+str(e)[:400]\nout['after']=fingerprint()\nout['worktree_unchanged']=out['before']==out['after']\nprint(json.dumps(out,ensure_ascii=True,default=str))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T12:35:25.226739\", \"target\": \"9a8898a70355bbae2d465ee49739030aa27e9f4e\", \"before\": {\"head\": \"2d5f902a52f875f3385da0a9babe29e2761a0f5b\", \"status_sha256\": \"0a0dcf0b565edf5dc653d34ae49eb11c15b268507fd44e7d0171512e10edcab2\", \"status_count\": 5, \"git_codes\": [0, 0]}, \"verified_blob\": true, \"preflight\": {\"exit_code\": 0, \"stdout\": \"{\\\"object\\\":\\\"bridge.projects_live_control_plane_cutover_preflight.r42.v1\\\",\\\"status\\\":\\\"PREFLIGHT_OK\\\",\\\"repoPath\\\":\\\"E:\\\\\\\\WebAIBridge\\\",\\\"preCutoverHead\\\":\\\"2d5f902a52f875f3385da0a9babe29e2761a0f5b\\\",\\\"preCutoverBranch\\\":\\\"\\\",\\\"targetSha\\\":\\\"9a8898a70355bbae2d465ee49739030aa27e9f4e\\\",\\\"targetBranch\\\":\\\"agent/bridge-r44-hotfix-r43-integration-20261007\\\",\\\"parentSha\\\":\\\"e4ee875db5ad62b514a8d1edeff85888ef83fb8c\\\",\\\"gitExecutable\\\":\\\"C:\\\\\\\\Program Files\\\\\\\\Git\\\\\\\\cmd\\\\\\\\git.exe\\\",\\\"externalGitResolved\\\":true,\\\"porcelainParserSource\\\":\\\"TARGET_SHA_GIT_BLOB\\\",\\\"porcelainParserBlob\\\":\\\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\\\",\\\"porcelainParserExpectedBlob\\\":\\\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\\\",\\\"porcelainParserProductionFileRequired\\\":false,\\\"callDepthOverflowDetected\\\":false,\\\"liveMutationPerformed\\\":false,\\\"providerMutationPerformed\\\":false}\", \"stderr\": \"\"}, \"after\": {\"head\": \"2d5f902a52f875f3385da0a9babe29e2761a0f5b\", \"status_sha256\": \"0a0dcf0b565edf5dc653d34ae49eb11c15b268507fd44e7d0171512e10edcab2\", \"status_count\": 5, \"git_codes\": [0, 0]}, \"worktree_unchanged\": true}\r\n",
+      "stdout_bytes": 1440,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T05:35:27.422Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T05:35:27.257Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r44-20261008-preflight-staged-b1d6"
+    },
+    "request_id": "owner-r44-20261008-preflight-staged-b1d6",
+    "started_at": "2026-10-08T05:35:24.731Z",
+    "status": "completed"
+  },
+  "id": "owner-r44-20261008-preflight-staged-b1d6",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
