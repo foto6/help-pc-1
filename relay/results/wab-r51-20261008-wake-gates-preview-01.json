@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,urllib.parse,subprocess,datetime\nbase='http://127.0.0.1:17448'\ndef get(path,t=4):\n with urllib.request.urlopen(base+path,timeout=t) as r:return json.load(r)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'scope':'R51_EXACT_EXISTING_TAB_PREVIEW_ONLY'}\nhead=subprocess.run(['git.exe','-C',r'E:\\WebAIBridge','rev-parse','HEAD'],capture_output=True,text=True,timeout=5).stdout.strip()\nout['head']=head\nif head!='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03':raise RuntimeError('unexpected_live_sha')\noperator=get('/api/operator-lifecycle');wd=get('/api/supervisor-watchdog?detect=0').get('config',{});health=get('/api/health')\nq=health.get('assignmentQueue',{})\nsafe=(operator.get('queuePaused') is True and wd.get('mode')=='off' and wd.get('enabled') is False and wd.get('allowAutonomousSend') is False and wd.get('autoContinueEnabled') is False and q.get('active')==0 and q.get('queued')==2)\nout['safety']={'passed':safe,'queuePaused':operator.get('queuePaused'),'watchdogMode':wd.get('mode'),'activeAssignments':q.get('active'),'queuedHeld':q.get('queued')}\nif not safe:raise RuntimeError('freeze_gate_failed')\nchats=get('/api/supervisor-watchdog/managed-chats?inspect=0').get('chats',[])\nout['chats']=[]\nfor c in chats:\n row={'name':c.get('name'),'id':c.get('id')}\n if c.get('name') in ('Bridge','Media','Creator','Growth','Native MCP'):\n  path='/api/supervisor-watchdog/managed-chats/'+urllib.parse.quote(c['id'],safe='')+'/wake-preview'\n  try:\n   d=get(path,t=4)\n   row.update({'state':d.get('state'),'targetId':d.get('exactTargetId'),'targetCount':d.get('exactTargetCount'),'requiredConfirmation':d.get('requiredConfirmation'),'focusChange':d.get('foregroundFocusWillChange'),'noNavigation':d.get('navigationPerformed') is False})\n  except Exception as e:row.update({'state':'PREVIEW_FAILED','reason':type(e).__name__})\n out['chats'].append(row)\nprint(json.dumps(out,ensure_ascii=True)[:6500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T15:50:56\", \"scope\": \"R51_EXACT_EXISTING_TAB_PREVIEW_ONLY\", \"head\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"safety\": {\"passed\": true, \"queuePaused\": true, \"watchdogMode\": \"off\", \"activeAssignments\": 0, \"queuedHeld\": 2}, \"chats\": [{\"name\": \"Bridge\", \"id\": \"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\", \"state\": \"READY_FOR_EXPLICIT_TAB_WAKE\", \"targetId\": \"5AE5AA3239743E1E8A765F7834058A7B\", \"targetCount\": 1, \"requiredConfirmation\": \"WAKE_EXISTING_TAB_ONLY\", \"focusChange\": true, \"noNavigation\": true}, {\"name\": \"Media\", \"id\": \"agent-media\", \"state\": \"READY_FOR_EXPLICIT_TAB_WAKE\", \"targetId\": \"591D559FB52E45508FFE33D3557D5A18\", \"targetCount\": 1, \"requiredConfirmation\": \"WAKE_EXISTING_TAB_ONLY\", \"focusChange\": true, \"noNavigation\": true}, {\"name\": \"Creator\", \"id\": \"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\", \"state\": \"READY_FOR_EXPLICIT_TAB_WAKE\", \"targetId\": \"EB09521CCA0E12E9BD8102BDF70C2128\", \"targetCount\": 1, \"requiredConfirmation\": \"WAKE_EXISTING_TAB_ONLY\", \"focusChange\": true, \"noNavigation\": true}, {\"name\": \"Growth\", \"id\": \"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\", \"state\": \"READY_FOR_EXPLICIT_TAB_WAKE\", \"targetId\": \"3F795CD9D23CDD56EF5075ADCB9CEB43\", \"targetCount\": 1, \"requiredConfirmation\": \"WAKE_EXISTING_TAB_ONLY\", \"focusChange\": true, \"noNavigation\": true}, {\"name\": \"Native MCP\", \"id\": \"agent-pc-control\", \"state\": \"READY_FOR_EXPLICIT_TAB_WAKE\", \"targetId\": \"107CE228A48A7D97852455FF0C3FF623\", \"targetCount\": 1, \"requiredConfirmation\": \"WAKE_EXISTING_TAB_ONLY\", \"focusChange\": true, \"noNavigation\": true}, {\"name\": \"QA\", \"id\": \"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\"}]}\r\n",
+      "stdout_bytes": 1621,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T08:50:57.037Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T08:50:56.872Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r51-20261008-wake-gates-preview-01"
+    },
+    "request_id": "wab-r51-20261008-wake-gates-preview-01",
+    "started_at": "2026-10-08T08:50:56.100Z",
+    "status": "completed"
+  },
+  "id": "wab-r51-20261008-wake-gates-preview-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
