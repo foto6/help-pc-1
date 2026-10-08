@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import importlib.util,sys,json; print(json.dumps({'python':sys.version.split()[0],'websocket_client':bool(importlib.util.find_spec('websocket')),'websockets':bool(importlib.util.find_spec('websockets'))}))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"python\": \"3.13.14\", \"websocket_client\": false, \"websockets\": false}\r\n",
+      "stdout_bytes": 71,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T05:06:37.819Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T05:06:37.564Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-20261008-1216-python-websocket-capability-10"
+    },
+    "request_id": "owner-20261008-1216-python-websocket-capability-10",
+    "started_at": "2026-10-08T05:06:36.935Z",
+    "status": "completed"
+  },
+  "id": "owner-20261008-1216-python-websocket-capability-10",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
