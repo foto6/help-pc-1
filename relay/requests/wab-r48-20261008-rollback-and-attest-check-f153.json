@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r48-20261008-rollback-and-attest-check-f153",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,json,subprocess,datetime,hashlib\nrepo=r'E:\\WebAIBridge';sha='8360bed73554011e7d6ff816c6365196c5e483ee'\nmanifest=r'E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261008T073836Z\\rollback-manifest.json'\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'sha':sha}\nif not os.path.isfile(manifest):raise RuntimeError('new_r48_manifest_missing')\np=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',os.path.join(repo,'app','r42-rollback.ps1'),'-Manifest',manifest,'-ValidateOnly'],capture_output=True,text=True,timeout=23)\nout['rollbackValidate']={'exitCode':p.returncode,'passed':'PREFLIGHT_OK' in p.stdout,'stderrTail':p.stderr[-400:]}\nif p.returncode or not out['rollbackValidate']['passed']:raise RuntimeError('rollback_validate_failed')\np=subprocess.run(['node.exe',os.path.join(repo,'app','r48-cutover-attest.js'),'--repo='+repo,'--manifest='+manifest,'--target-sha='+sha],capture_output=True,text=True,timeout=22)\nout['attestExitCode']=p.returncode\nif p.stdout.strip():\n d=json.loads(p.stdout)\n out['attestation']={k:d.get(k) for k in ('ok','outcome','targetSHA','preCutoverSHA','originalCutoverState','originalCutoverScriptExitVerified','rollbackBackupFileCount','invalidBackupNames','exactChatTargetCounts','queuePaused','supervisorOff','historicalQueueRetained','evidenceSha256')}\nelse:out['stderr']=p.stderr[-850:]\nout['receiptAlreadyExists']=os.path.isfile(os.path.join(os.path.dirname(manifest),'r48-independent-attestation.json'))\nprint(json.dumps(out,ensure_ascii=True)[:6200])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 60000,
+  "note": "Read-only post R48 release audit: rollback -ValidateOnly plus native R48 attestor, exact target SHA and six preserved chats; no attestation sidecar write yet, no Chrome restart/agents."
+}
