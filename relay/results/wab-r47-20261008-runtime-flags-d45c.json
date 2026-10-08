@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json,re,datetime,urllib.request\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'scope':'read_only_minimal_chrome_launch_flags'}\ndef get(path,timeout=3):\n with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=timeout) as f:return json.load(f)\ntry:\n x=get('/api/operator-lifecycle')\n w=get('/api/supervisor-watchdog?detect=0').get('config',{})\n out['safety']={'queuePaused':x.get('queuePaused'),'lifecycle':x.get('mode'),'supervisorMode':w.get('mode'),'allowAutonomousSend':w.get('allowAutonomousSend')}\nexcept Exception as e:out['safety']={'error':type(e).__name__}\np=subprocess.run(['powershell.exe','-NoProfile','-Command',\"$p=Get-CimInstance Win32_Process -Filter \\\"Name='chrome.exe'\\\" | Where-Object { $_.CommandLine -match 'remote-debugging-port=17410' }; $p | ForEach-Object { [pscustomobject]@{ Id=$_.ProcessId; ParentId=$_.ParentProcessId; Cmd=$_.CommandLine } } | ConvertTo-Json -Compress\"],capture_output=True,text=True,timeout=8)\nif p.returncode:\n out['processError']='ps_process_query_failed'\nelse:\n try:\n  raw=json.loads(p.stdout) if p.stdout.strip() else []\n  if isinstance(raw,dict):raw=[raw]\n  keep=('--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows','--disable-features','--process-per-site','--renderer-process-limit')\n  out['chrome']=[{'pid':z.get('Id'),'parent':z.get('ParentId'),'flags':{q:(q+'=') in str(z.get('Cmd')) or q in str(z.get('Cmd')).split() for q in keep},'hasMainBrowserNoType':'--type=' not in str(z.get('Cmd'))} for z in raw[:9]]\n except Exception as e:out['processError']=type(e).__name__\nprint(json.dumps(out,ensure_ascii=True)[:4700])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T14:08:54\", \"scope\": \"read_only_minimal_chrome_launch_flags\", \"safety\": {\"queuePaused\": true, \"lifecycle\": \"PAUSED_BROWSER\", \"supervisorMode\": \"off\", \"allowAutonomousSend\": false}, \"chrome\": [{\"pid\": 13436, \"parent\": 4040, \"flags\": {\"--disable-background-timer-throttling\": false, \"--disable-renderer-backgrounding\": false, \"--disable-backgrounding-occluded-windows\": false, \"--disable-features\": false, \"--process-per-site\": false, \"--renderer-process-limit\": false}, \"hasMainBrowserNoType\": true}, {\"pid\": 6036, \"parent\": 13436, \"flags\": {\"--disable-background-timer-throttling\": false, \"--disable-renderer-backgrounding\": false, \"--disable-backgrounding-occluded-windows\": false, \"--disable-features\": false, \"--process-per-site\": false, \"--renderer-process-limit\": false}, \"hasMainBrowserNoType\": false}, {\"pid\": 5880, \"parent\": 13436, \"flags\": {\"--disable-background-timer-throttling\": false, \"--disable-renderer-backgrounding\": false, \"--disable-backgrounding-occluded-windows\": false, \"--disable-features\": false, \"--process-per-site\": false, \"--renderer-process-limit\": false}, \"hasMainBrowserNoType\": false}, {\"pid\": 2380, \"parent\": 13436, \"flags\": {\"--disable-background-timer-throttling\": false, \"--disable-renderer-backgrounding\": false, \"--disable-backgrounding-occluded-windows\": false, \"--disable-features\": false, \"--process-per-site\": false, \"--renderer-process-limit\": false}, \"hasMainBrowserNoType\": false}, {\"pid\": 19048, \"parent\": 13436, \"flags\": {\"--disable-background-timer-throttling\": false, \"--disable-renderer-backgrounding\": false, \"--disable-backgrounding-occluded-windows\": false, \"--disable-features\": false, \"--process-per-site\": false, \"--renderer-process-limit\": false}, \"hasMainBrowserNoType\": false}, {\"pid\": 4264, \"parent\": 13436, \"flags\": {\"--disable-background-timer-throttling\": false, \"--disable-renderer-backgrounding\": false, \"--disable-backgrounding-occluded-windows\": false, \"--disable-features\": false, \"--process-per-site\": false, \"--renderer-process-limit\": false}, \"hasMainBrowserNoType\": false}, {\"pid\": 22588, \"parent\": 13436, \"flags\": {\"--disable-background-timer-throttling\": false, \"--disable-renderer-backgrounding\": false, \"--disable-backgrounding-occluded-windows\": false, \"--disable-features\": false, \"--process-per-site\": false, \"--renderer-process-limit\": false}, \"hasMainBrowserNoType\": false}, {\"pid\": 7340, \"parent\": 13436, \"flags\": {\"--disable-background-timer-throttling\": false, \"--disable-renderer-backgrounding\": false, \"--disable-backgrounding-occluded-windows\": false, \"--disable-features\": false, \"--process-per-site\": false, \"--renderer-process-limit\": false}, \"hasMainBrowserNoType\": false}, {\"pid\": 22988, \"parent\": 13436, \"flags\": {\"--disable-background-timer-throttling\": false, \"--disable-renderer-backgrounding\": false, \"--disable-backgrounding-occluded-windows\": false, \"--disable-features\": false, \"--process-per-site\": false, \"--renderer-process-limit\": false}, \"hasMainBrowserNoType\": false}]}\r\n",
+      "stdout_bytes": 2995,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T07:08:55.771Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T07:08:55.602Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r47-20261008-runtime-flags-d45c"
+    },
+    "request_id": "wab-r47-20261008-runtime-flags-d45c",
+    "started_at": "2026-10-08T07:08:53.745Z",
+    "status": "completed"
+  },
+  "id": "wab-r47-20261008-runtime-flags-d45c",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
