@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r49-20261008-post-timeout-proof-a3ce",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,json,urllib.request,datetime,os\nrepo=r'E:\\WebAIBridge';data=r'E:\\WebAIBridge\\app\\data\\backups\\owner-r49-safety-20261008T082255Z'\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'object':'R49_READONLY_POST_TIMEOUT'}\np=subprocess.run(['git.exe','-C',repo,'rev-parse','HEAD'],capture_output=True,text=True,timeout=5);out['head']=p.stdout.strip()\np=subprocess.run(['git.exe','-C',repo,'status','--porcelain=v1','-z','--untracked-files=all'],capture_output=True,timeout=5);out['worktreeClean']=not bool(p.stdout)\ndef get(path,timeout=4):\n with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=timeout) as f:return json.load(f)\nfor n,u in [('health','/api/health'),('operator','/api/operator-lifecycle'),('watchdog','/api/supervisor-watchdog?detect=0'),('cutover','/api/projects/control-plane/cutover-r42/status')]:\n try:\n  d=get(u)\n  if n=='health':out[n]={'state':d.get('state'),'ok':d.get('ok'),'operationalMode':d.get('operationalMode'),'reasons':d.get('reasons'),'blockers':d.get('blockers'),'notices':d.get('notices'),'dormant':d.get('dormantComponents'),'queueSafety':d.get('queueSafety'),'components':{k:{'state':v.get('state'),'reason':v.get('reason'),'stale':v.get('stale')} for k,v in d.get('components',{}).items()},'queue':{k:d.get('assignmentQueue',{}).get(k) for k in ('total','active','queued')}}\n  if n=='operator':out[n]={'queuePaused':d.get('queuePaused'),'mode':d.get('mode')}\n  if n=='watchdog':out[n]={k:d.get('config',{}).get(k) for k in ('mode','enabled','allowAutonomousSend','autoContinueEnabled')}\n  if n=='cutover':out[n]={k:d.get('cutoverState',{}).get(k) for k in ('status','holdActive','targetSha','preCutoverHead','rollbackManifest')}\n except Exception as e:out[n]={'error':type(e).__name__}\nout['manifestExists']=os.path.isfile(out.get('cutover',{}).get('rollbackManifest',''))\nout['normalReportExists']=os.path.isfile(os.path.join(data,'r49-cutover-report.json'))\np=subprocess.run(['powershell.exe','-NoProfile','-Command',\"$p=Get-CimInstance Win32_Process -Filter 'ProcessId=13436';if($p){'ALIVE'}else{'ABSENT'}\"],capture_output=True,text=True,timeout=5)\nout['originalChromeAlive']=p.stdout.strip()=='ALIVE'\nprint(json.dumps(out,ensure_ascii=True)[:7600])"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 34000,
+  "note": "Independent read-only R49 local SHA, explicit PAUSED health/dormant probes and protected Chrome, original rollback pointer after unknown cutover; no agent reactivation or Send."
+}
