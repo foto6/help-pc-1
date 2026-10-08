@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261008-owner-assignment-audit-1105-r03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$j=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -Method Get -TimeoutSec 7;$ids=@('chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982','chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c','agent-media','chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0','agent-pc-control','chat-6ac45fb0-9074-83eb-99eb-397265b228e7');$out=[ordered]@{count=@($j.assignments).Count;byAgent=@()};foreach($i in $ids){$rows=@($j.assignments|Where-Object{$_.targetChatId -eq $i}|Sort-Object -Property createdAt|Select-Object -Last 4);$out.byAgent+=@{id=$i;entries=@($rows|ForEach-Object{@{id=$_.id;state=$_.state;repo=$_.repository;branch=$_.branch;expectedHead=$_.expectedHead;createdAt=$_.createdAt;dispatchCount=$_.dispatchCount;dispatchSubmitAttempted=$_.dispatchSubmitAttempted;lastPreflightReason=$_.lastPreflightReason;lastDiagnostic=$_.lastDiagnostic;dispatchFailureCode=$_.dispatchFailureCode;lastDispatchAt=$_.lastDispatchAt}})}};$out|ConvertTo-Json -Compress -Depth 8"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only per-existing ChatGPT agent task queue/recent delivery audit; no content, secrets or mutations."
+}
