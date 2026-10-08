@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r54-20261008-2249-relay-health-01",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 12000,
+  "note": "Read-only relay capabilities and health before R54 follow-up; no browser or agent actions."
+}
