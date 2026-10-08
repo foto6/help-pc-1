@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,subprocess,json,hashlib,datetime,urllib.request\nrepo=r'E:\\WebAIBridge'\nsha='96614e673d0df33b0089b3f28ef50dbfe91d3c4e'\nroot=os.path.join(repo,'app','data','operator-tools','r54-managed-observation')\nbaseline=os.path.join(repo,'app','data','operator-tools','r51-target-continuity','baseline.json')\ndef git(*args,timeout=9):return subprocess.run(['git.exe','-C',repo,*args],capture_output=True,timeout=timeout)\ndef get(path):\n with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=5) as r:return json.load(r)\nhead=git('rev-parse','HEAD',timeout=5).stdout.decode().strip()\nporcelain=git('status','--porcelain=v1','-z','--untracked-files=all',timeout=5).stdout\nif head!='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03' or porcelain:raise RuntimeError('LIVE_R49_EXACT_CLEAN_HEAD_REQUIRED')\nif os.path.exists(root):raise RuntimeError('R54_ALREADY_PRESENT_NO_OVERWRITE')\no=get('/api/operator-lifecycle');wd=get('/api/supervisor-watchdog?detect=0').get('config',{});q=get('/api/health').get('assignmentQueue',{})\nif not(o.get('queuePaused') is True and wd.get('mode')=='off' and wd.get('enabled') is False and wd.get('allowAutonomousSend') is False and wd.get('autoContinueEnabled') is False and q.get('active')==0 and q.get('queued')==2):raise RuntimeError('OWNER_PAUSED_SAFETY_GATE_FAILED')\nwith open(baseline,'rb') as f:oldsha=hashlib.file_digest(f,'sha256').hexdigest()\nif oldsha!='bf14616d0207730f63c93b5fcdfdc1a97a0dd7daafcb0b0a0652973c62e6c11b':raise RuntimeError('ORIGINAL_R51_BASELINE_ALTERED')\nnames=['managed-observation-r54.js','r54-managed-observation.js','managed-observation-r54.test.js','r51-target-continuity.js','chrome-target-continuity-r51.js','r50-restart-readiness-preflight.js','chrome-restart-readiness-r50.js']\nblobs=[]\nfor name in names:\n p=git('show',sha+':app/'+name,timeout=11)\n if p.returncode:raise RuntimeError('R54_SOURCE_BLOB_MISSING:'+name)\n blobs.append((name,p.stdout))\nos.makedirs(root,exist_ok=False)\nfor name,contents in blobs:\n path=os.path.join(root,name)\n with open(path,'xb') as f:f.write(contents)\n with open(path,'rb') as f:dig=hashlib.file_digest(f,'sha256').hexdigest()\n if dig!=hashlib.sha256(contents).hexdigest():raise RuntimeError('SOURCE_VERIFICATION_FAILED:'+name)\ntests=subprocess.run(['node.exe','--test','managed-observation-r54.test.js'],cwd=root,capture_output=True,text=True,timeout=15)\nif tests.returncode:raise RuntimeError('R54_NINE_TESTS_FAILED')\ns=subprocess.run(['node.exe','--check','r54-managed-observation.js'],cwd=root,capture_output=True,text=True,timeout=6)\nif s.returncode:raise RuntimeError('R54_NODE_SYNTAX_FAILED')\np=subprocess.run(['node.exe','r54-managed-observation.js','--baseline='+baseline],cwd=root,capture_output=True,text=True,timeout=53)\ntry:observed=json.loads(p.stdout.strip())\nexcept:observed={'status':'UNKNOWN','reason':'NO_VALID_JSON'}\nlaunch='@echo off\\r\\nsetlocal\\r\\ncd /d \"%~dp0\"\\r\\necho R54 six-managed ChatGPT READ-ONLY health (no Send or browser restart).\\r\\nnode.exe r54-managed-observation.js --baseline=\"'+baseline+'\"\\r\\nset \"EXITCODE=%ERRORLEVEL%\"\\r\\nif not \"%EXITCODE%\"==\"0\" echo READ-ONLY MONITOR IS BLOCKED. DO NOT RESTART CHROME OR REBIND AGENTS.\\r\\npause\\r\\nexit /b %EXITCODE%\\r\\n'\nwith open(os.path.join(root,'RUN_READ_ONLY_CHECK.cmd'),'x',encoding='ascii',newline='') as f:f.write(launch)\nmanifest={'contract':'bridge.r54.readonly.operator_kit.v1','sourceSHA':sha,'originalR49SHA':head,'baselineSHA256':oldsha,'installedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'files':[{'name':name,'sha256':hashlib.sha256(b).hexdigest()} for name,b in blobs],'automaticChromeRestart':False,'automaticAgentResume':False,'automaticProviderSend':False,'originalR51BaselineOverwritten':False}\nwith open(os.path.join(root,'manifest.json'),'x',encoding='utf-8') as f:json.dump(manifest,f,indent=2)\nheadAfter=git('rev-parse','HEAD',timeout=5).stdout.decode().strip()\ncleanAfter=not bool(git('status','--porcelain=v1','-z','--untracked-files=all',timeout=5).stdout)\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'kitPath':root,'launcher':os.path.join(root,'RUN_READ_ONLY_CHECK.cmd'),'sourceSHA':sha,'verifiedFiles':len(blobs),'unitTestsPassed':9,'realReadOnlyProbeExit':p.returncode,'realReadOnlyResult':{k:observed.get(k) for k in ('status','sixManagedResponsive','historicR51Differences','currentTargetIdentityStable','browserRestartAuthorized','providerSendAuthorized','agentResumeAuthorized','blockers')},'R51BaselineUnchanged':True,'productionR49SourceUnchanged':headAfter==head,'productionWorktreeStillClean':cleanAfter,'agentsPaused':True,'chromeTouched':False},ensure_ascii=True)[:5500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T23:06:20\", \"kitPath\": \"E:\\\\WebAIBridge\\\\app\\\\data\\\\operator-tools\\\\r54-managed-observation\", \"launcher\": \"E:\\\\WebAIBridge\\\\app\\\\data\\\\operator-tools\\\\r54-managed-observation\\\\RUN_READ_ONLY_CHECK.cmd\", \"sourceSHA\": \"96614e673d0df33b0089b3f28ef50dbfe91d3c4e\", \"verifiedFiles\": 7, \"unitTestsPassed\": 9, \"realReadOnlyProbeExit\": 0, \"realReadOnlyResult\": {\"status\": \"MANAGED_READ_ONLY_HEALTHY_AT_SNAPSHOT\", \"sixManagedResponsive\": 6, \"historicR51Differences\": [\"CDP_TARGET_ID_CHANGED:QA\", \"BROWSER_PAGE_COUNT_CHANGED\"], \"currentTargetIdentityStable\": true, \"browserRestartAuthorized\": false, \"providerSendAuthorized\": false, \"agentResumeAuthorized\": false, \"blockers\": []}, \"R51BaselineUnchanged\": true, \"productionR49SourceUnchanged\": true, \"productionWorktreeStillClean\": true, \"agentsPaused\": true, \"chromeTouched\": false}\r\n",
+      "stdout_bytes": 841,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T16:06:20.412Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T16:06:20.149Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r54-20261008-2306-install-readonly-operator-10"
+    },
+    "request_id": "wab-r54-20261008-2306-install-readonly-operator-10",
+    "started_at": "2026-10-08T16:06:17.944Z",
+    "status": "completed"
+  },
+  "id": "wab-r54-20261008-2306-install-readonly-operator-10",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
