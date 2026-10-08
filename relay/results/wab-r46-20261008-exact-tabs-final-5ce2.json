@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,urllib.parse,subprocess,datetime\nbase='http://127.0.0.1:17448'\ndef get(u,timeout=3):\n with urllib.request.urlopen(u,timeout=timeout) as r:return json.load(r)\ndef norm(u):\n try:\n  z=urllib.parse.urlparse(u)\n  return z.path.rstrip('/') if z.hostname in ('chatgpt.com','www.chatgpt.com') else ''\n except:return ''\nc=get(base+'/api/supervisor-watchdog/managed-chats?inspect=0')['chats']\nt=get('http://127.0.0.1:17410/json/list')\nrows=[{'chat':x.get('name'),'exactTabCount':len([y for y in t if norm(y.get('url',''))==norm(x.get('url','')) and y.get('type')=='page']),'errorStatus':x.get('status')} for x in c]\np=subprocess.run(['git.exe','-C',r'E:\\WebAIBridge','rev-parse','HEAD'],capture_output=True,timeout=4)\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'head':p.stdout.decode().strip(),'rows':rows,'tabsUnchangedAndUnique':len(rows)==6 and all(x['exactTabCount']==1 for x in rows)},ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T13:47:11\", \"head\": \"943c0b1d509fb8b73cef2f8bbe566ef957854a47\", \"rows\": [{\"chat\": \"Bridge\", \"exactTabCount\": 1, \"errorStatus\": \"inspect_error\"}, {\"chat\": \"Media\", \"exactTabCount\": 1, \"errorStatus\": \"inspect_error\"}, {\"chat\": \"Creator\", \"exactTabCount\": 1, \"errorStatus\": \"inspect_error\"}, {\"chat\": \"Growth\", \"exactTabCount\": 1, \"errorStatus\": \"inspect_error\"}, {\"chat\": \"Native MCP\", \"exactTabCount\": 1, \"errorStatus\": \"inspect_error\"}, {\"chat\": \"QA\", \"exactTabCount\": 1, \"errorStatus\": \"idle\"}], \"tabsUnchangedAndUnique\": true}\r\n",
+      "stdout_bytes": 548,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:47:11.967Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:47:11.810Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r46-20261008-exact-tabs-final-5ce2"
+    },
+    "request_id": "wab-r46-20261008-exact-tabs-final-5ce2",
+    "started_at": "2026-10-08T06:47:11.190Z",
+    "status": "completed"
+  },
+  "id": "wab-r46-20261008-exact-tabs-final-5ce2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
