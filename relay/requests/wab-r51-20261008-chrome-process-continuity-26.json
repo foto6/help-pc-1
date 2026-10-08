@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r51-20261008-chrome-process-continuity-26",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,json,urllib.request,datetime,hashlib,urllib.parse\nps=r'''$p=Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\" | Where-Object { $_.CommandLine -match '--remote-debugging-port=17410' -and $_.CommandLine -notmatch '--type=' }; $p | ForEach-Object { [pscustomobject]@{pid=$_.ProcessId;parent=$_.ParentProcessId;created=[string]$_.CreationDate;flagThrottle=($_.CommandLine -like '*--disable-background-timer-throttling*');flagRenderer=($_.CommandLine -like '*--disable-renderer-backgrounding*');flagOcclusion=($_.CommandLine -like '*--disable-backgrounding-occluded-windows*')} } | ConvertTo-Json -Compress'''\np=subprocess.run(['powershell.exe','-NoProfile','-Command',ps],capture_output=True,text=True,timeout=8)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'processLookupExit':p.returncode}\ntry:\n raw=json.loads(p.stdout) if p.stdout.strip() else []\n out['ChromeMainProcesses']=[raw] if isinstance(raw,dict) else raw\nexcept:out['processLookupError']='no_parsed_main_process'\nps2=\"Get-CimInstance Win32_Process -Filter 'ProcessId=13436' | ForEach-Object { [pscustomobject]@{ pid=$_.ProcessId; name=$_.Name; created=[string]$_.CreationDate } } | ConvertTo-Json -Compress\"\np=subprocess.run(['powershell.exe','-NoProfile','-Command',ps2],capture_output=True,text=True,timeout=8)\ntry:out['oldChromePIDStillAlive']=json.loads(p.stdout) if p.stdout.strip() else None\nexcept:out['oldChromePIDStillAlive']='QUERY_FAILED'\nwith urllib.request.urlopen('http://127.0.0.1:17410/json/list',timeout=3) as r:pages=json.load(r)\nextras={'26F93091439AEEBB8DB6788AD17BFA02':'extra-1','68D17114431457A201D7F164508E4318':'extra-2','6BBACA4F54475A91307D471FFBB8E0E5':'extra-3'}\nout['previousExtraTargetsStillPresent']={alias:any(t.get('type')=='page' and t.get('id')==id for t in pages) for id,alias in extras.items()}\nwith urllib.request.urlopen('http://127.0.0.1:17410/json/version',timeout=3) as r:version=json.load(r)\nout['chromeVersion']=version.get('Browser')\nout['currentPageCount']=len([t for t in pages if t.get('type')=='page'])\nprint(json.dumps(out,ensure_ascii=True)[:3700])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 26000,
+  "note": "Read-only Chrome process+PID continuity and background flags booleans; compare original 3 extra target IDs; never output raw commandline, page URLs, or secrets; no browser changes."
+}
