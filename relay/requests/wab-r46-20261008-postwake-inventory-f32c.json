@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r46-20261008-postwake-inventory-f32c",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,tempfile,subprocess\ns=\"'use strict';\\nconst get=async u=>{let r=await fetch(u,{signal:AbortSignal.timeout(4000)});return r.json()},norm=u=>{try{let x=new URL(u);return /^((www\\\\.)?chatgpt\\\\.com)$/.test(x.hostname)?x.pathname.replace(/\\\\/$/,''):''}catch{return ''}};\\nconst hash=x=>require('node:crypto').createHash('sha256').update(String(x)).digest('hex').slice(0,12);\\nasync function main(){\\n let [m,targets,o,w]=await Promise.all([get('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=0'),get('http://127.0.0.1:17410/json/list'),get('http://127.0.0.1:17448/api/operator-lifecycle'),get('http://127.0.0.1:17448/api/supervisor-watchdog?detect=0')]);\\n let rows=(m.chats||[]).map(z=>{\\n let expected=norm(z.url),match=targets.filter(t=>norm(t.url)===expected);\\n let byConversation=targets.filter(t=>{const path=norm(t.url),id=expected.split('/').pop();return id&&path.endsWith('/'+id)});\\n return {name:z.name,exact:match.length,byConversation:byConversation.length,targetKinds:match.map(t=>({idHash:hash(t.id),type:t.type,route:t.url.includes('/g/')?'project': 'direct'})),sameConversationOtherRoute:byConversation.length>match.length};\\n });\\n console.log(JSON.stringify({at:new Date().toISOString(),targets:targets.length,rows,paused:o.queuePaused,watchdogOff:w.config?.mode==='off',hasDuplicateTargets:rows.some(x=>x.byConversation>1)}))\\n}main().catch(e=>console.log(JSON.stringify({error:e.message})))\"\nwith tempfile.TemporaryDirectory(prefix='wab-r46-readback-') as d:\n p=os.path.join(d,'check.js');open(p,'w',encoding='utf-8').write(s)\n x=subprocess.run(['node.exe',p],capture_output=True,text=True,timeout=17)\n print(x.stdout[-5700:]);print('exit='+str(x.returncode))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 27000,
+  "note": "Read-only exact identity inventory after focusing Chrome tabs, hashed target IDs only; no navigation or provider action."
+}
