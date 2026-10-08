@@ -1,0 +1,115 @@
+{
+  "action": "windows.list",
+  "executor_result": {
+    "action": "windows.list",
+    "data": {
+      "windows": [
+        {
+          "app_name": null,
+          "hwnd": 131586,
+          "pid": 22704,
+          "title": "* Договор_безвозмездного_пользования_бланк.pdf — Mozilla Firefox",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 1444284,
+          "pid": 26736,
+          "title": "Lightshot — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 17301708,
+          "pid": 12524,
+          "title": "manhwa — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 722006,
+          "pid": 27372,
+          "title": "PC Control - Start and Check",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 65784,
+          "pid": 12524,
+          "title": "Program Manager",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 66870,
+          "pid": 22692,
+          "title": "Proxifier",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 198162,
+          "pid": 4100,
+          "title": "Steam",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 13829984,
+          "pid": 19500,
+          "title": "Диспетчер задач",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 197430,
+          "pid": 17444,
+          "title": "Интерфейс ввода Windows",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 525388,
+          "pid": 11924,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 8325376,
+          "pid": 13436,
+          "title": "Проверка репозитория и задач - Google Chrome",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 854828,
+          "pid": 3952,
+          "title": "‎Подслушка 141 Chat @ ‎Носок С мылом (1261736)",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 133452,
+          "pid": 27372,
+          "title": "⠋ E:\\manhwa короче надро переделывать | foto6",
+          "visible": true
+        }
+      ]
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T03:02:56.487Z",
+    "ok": true,
+    "request_id": "20261008-owner-readonly-windows-02-7f1a",
+    "started_at": "2026-10-08T03:02:56.479Z",
+    "status": "completed"
+  },
+  "id": "20261008-owner-readonly-windows-02-7f1a",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
