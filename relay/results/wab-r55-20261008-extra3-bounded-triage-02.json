@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json\np=subprocess.run(['node.exe','-e',\"const crypto=require('node:crypto');const expected=[[\\\"extra-1\\\",\\\"16F20C983A306AB7E31D2165E2544898\\\",\\\"5d9354f7cb0eac0c0506ad03735ee6263a1e4ed75aa107e7852a5e26d49ecd3a\\\"],[\\\"extra-2\\\",\\\"68D17114431457A201D7F164508E4318\\\",\\\"81e83f517574a2aa3054fdd85738b1bcb69d363ed0778173b521b36b5505458a\\\"],[\\\"extra-3\\\",\\\"F1B7A8CCFAA2C7EBF4AC1B9AAC48BEE2\\\",\\\"f9bb5b80e58b379e3e3fd3455e5b00ca104ffc98b44ff462558c27a437fd5002\\\"]];\\nasync function get(url){const r=await fetch(url,{signal:AbortSignal.timeout(3000)});if(!r.ok)throw Error('http_response_not_ok');return r.json()}\\nfunction ping(url){return new Promise(resolve=>{let ws,done=false;const tm=setTimeout(()=>end('TIMEOUT'),2800);function end(x){if(done)return;done=true;clearTimeout(tm);try{ws?.close()}catch{}resolve(x)}\\ntry{ws=new WebSocket(url);ws.addEventListener('open',()=>ws.send(JSON.stringify({id:55,method:'Runtime.evaluate',params:{expression:'2+2',returnByValue:true}})));ws.addEventListener('message',e=>{try{const p=JSON.parse(e.data);if(p.id===55)end(p.result?.result?.value===4?'RESPONSIVE':'UNKNOWN_RESULT')}catch{end('INVALID_JSON')}});ws.addEventListener('error',()=>end('SOCKET_ERROR'))}catch{end('CONNECT_ERROR')}})}\\n(async()=>{const [o,w,h,t]=await Promise.all([get('http://127.0.0.1:17448/api/operator-lifecycle'),get('http://127.0.0.1:17448/api/supervisor-watchdog?detect=0'),get('http://127.0.0.1:17448/api/health'),get('http://127.0.0.1:17410/json/list')]);\\nif(!(o.queuePaused===true&&w.config?.mode==='off'&&w.config?.enabled===false&&w.config?.allowAutonomousSend===false&&w.config?.autoContinueEnabled===false&&h.assignmentQueue?.active===0))throw Error('pause_guard_failed');\\nconst rows=await Promise.all(expected.map(async ([name,id,hash])=>{const x=t.filter(p=>p.type==='page'&&p.id===id&&crypto.createHash('sha256').update(p.url).digest('hex')===hash);return {name,exactTargetUnique:x.length===1,status:x.length===1?await ping(x[0].webSocketDebuggerUrl):'CHANGED_TARGET'}}));\\nconsole.log(JSON.stringify({scope:'R55 three extra ChatGPT read-only ping',rows,providerTextNotRead:true,chromeMutated:false,agentsStillOff:true}));})().catch(e=>{console.log(JSON.stringify({state:'BLOCKED',reason:String(e.message).slice(0,110)}));process.exitCode=2});\"],capture_output=True,text=True,timeout=13)\nprint(json.dumps({'exit':p.returncode,'result':p.stdout.strip()[-3100:],'stderrHead':p.stderr[:160]},ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"exit\": 0, \"result\": \"{\\\"scope\\\":\\\"R55 three extra ChatGPT read-only ping\\\",\\\"rows\\\":[{\\\"name\\\":\\\"extra-1\\\",\\\"exactTargetUnique\\\":true,\\\"status\\\":\\\"TIMEOUT\\\"},{\\\"name\\\":\\\"extra-2\\\",\\\"exactTargetUnique\\\":true,\\\"status\\\":\\\"RESPONSIVE\\\"},{\\\"name\\\":\\\"extra-3\\\",\\\"exactTargetUnique\\\":true,\\\"status\\\":\\\"TIMEOUT\\\"}],\\\"providerTextNotRead\\\":true,\\\"chromeMutated\\\":false,\\\"agentsStillOff\\\":true}\", \"stderrHead\": \"\"}\r\n",
+      "stdout_bytes": 409,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T16:14:15.388Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T16:14:15.151Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r55-20261008-extra3-bounded-triage-02"
+    },
+    "request_id": "wab-r55-20261008-extra3-bounded-triage-02",
+    "started_at": "2026-10-08T16:14:11.183Z",
+    "status": "completed"
+  },
+  "id": "wab-r55-20261008-extra3-bounded-triage-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
