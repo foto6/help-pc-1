@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r47-20261008-post-timeout-audit-5f26",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,json,subprocess,urllib.request,datetime\nrepo=r'E:\\WebAIBridge';root=r'E:\\WebAIBridge\\app\\data\\backups\\owner-r47-safety-20261008T071638Z'\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'mode':'read_only_after_unknown_r47'}\np=subprocess.run(['git.exe','-C',repo,'rev-parse','HEAD'],capture_output=True,text=True,timeout=4);out['head']=p.stdout.strip()\nfor name,path in [('health','/api/health'),('operator','/api/operator-lifecycle'),('watchdog','/api/supervisor-watchdog?detect=0'),('cutover','/api/projects/control-plane/cutover-r42/status')]:\n try:\n  with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=3) as f:d=json.load(f)\n  if name=='health':out[name]={'state':d.get('state'),'queue':{k:d.get('assignmentQueue',{}).get(k) for k in ('total','active','queued')},'reasons':d.get('reasons')}\n  if name=='operator':out[name]={'mode':d.get('mode'),'queuePaused':d.get('queuePaused')}\n  if name=='watchdog':out[name]={k:d.get('config',{}).get(k) for k in ('mode','enabled','allowAutonomousSend','autoContinueEnabled')}\n  if name=='cutover':out[name]={k:d.get('cutoverState',{}).get(k) for k in ('status','targetSha','preCutoverHead','holdActive','rollbackManifest')}\n except Exception as e:out[name]={'error':type(e).__name__}\nout['r47ReportExists']=os.path.isfile(os.path.join(root,'r47-cutover-controlled-report.json'))\nback=os.path.join(repo,'app','data','backups')\nout['latestBackupNames']=sorted([x for x in os.listdir(back) if x.startswith('r42-cutover-')],reverse=True)[:2]\np=subprocess.run(['powershell.exe','-NoProfile','-Command',\"$p=Get-CimInstance Win32_Process -Filter \\\"ProcessId=13436\\\"; if($p){'ALIVE'}else{'ABSENT'}\"],capture_output=True,text=True,timeout=5)\nout['originalChromeAlive']=p.stdout.strip()=='ALIVE'\nprint(json.dumps(out,ensure_ascii=True)[:6600])"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 28000,
+  "note": "Independent read-only local R47 cutover head/hold/manifest and Chrome PID check after UNKNOWN. Do not retry mutation."
+}
