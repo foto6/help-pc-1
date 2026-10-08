@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r48-20261008-write-receipt-approved-lane-991e",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,subprocess,json,datetime\nrepo=r'E:\\WebAIBridge'\nmanifest=r'E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261008T073836Z\\rollback-manifest.json'\nreceipt=os.path.join(os.path.dirname(manifest),'r48-independent-attestation.json')\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'requestId':'wab-r48-20261008-write-receipt-approved-lane-991e'}\nif os.path.isfile(receipt):raise RuntimeError('receipt_already_exists_no_replay')\ncmd=['node.exe',os.path.join(repo,'app','r48-cutover-attest.js'),'--repo='+repo,'--manifest='+manifest,'--target-sha=8360bed73554011e7d6ff816c6365196c5e483ee','--write-attestation']\np=subprocess.run(cmd,capture_output=True,text=True,timeout=22)\nout['exitCode']=p.returncode\nif p.stdout.strip():\n x=json.loads(p.stdout)\n out['evidence']={k:x.get(k) for k in ('ok','outcome','targetSHA','originalCutoverState','originalCutoverScriptExitVerified','rollbackBackupFileCount','evidenceSha256','writtenTo')}\nelse:out['stderrTail']=p.stderr[-400:]\nout['receiptExists']=os.path.isfile(receipt)\nprint(json.dumps(out,ensure_ascii=True)[:3000])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 37000,
+  "note": "One exclusive independent R48 receipt through allowed Python shell after prior node direct call was policy-blocked NOT_STARTED; attestor rechecks current SHA, rollback digests and all six IDs; no Send/reload/replay."
+}
