@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-r44-live-bindings-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\nfunction J([string]$u,[int]$t=20){Invoke-RestMethod -Uri $u -Method Get -TimeoutSec $t}\n$base='http://127.0.0.1:17448'\n$watch=J ($base+'/api/supervisor-watchdog?detect=0') 8\n$exact=J ($base+'/api/supervisor-watchdog/multiagent-exactid-snapshot') 25\n$chats=J ($base+'/api/supervisor-watchdog/managed-chats?inspect=1') 25\n$life=J ($base+'/api/operator-lifecycle') 8\n$wanted='(?i)(creator|media|growth|native|qa|bridge)'\n$chatRows=@($chats.chats|Where-Object {([string]$_.role+' '+[string]$_.name+' '+[string]$_.id) -match $wanted}|ForEach-Object {\n [ordered]@{id=$_.id;name=$_.name;role=$_.role;url=$_.url;repository=$_.repository;branch=$_.branch;status=$_.status;openTabs=$_.openTabs;highMode=$_.highMode;generating=$_.generating;draftPresent=$_.draftPresent;contextLimit=$_.contextLimit;profileName=$_.profileName;latestAssignmentState=$_.latestAssignment.state}\n})\n$exactRows=@($exact.rows|Where-Object {([string]$_.role+' '+[string]$_.managedChatId) -match $wanted}|ForEach-Object {\n [ordered]@{role=$_.role;managedChatId=$_.managedChatId;expectedConversationId=$_.expectedConversationId;identityState=$_.identityState;observedExactTargetCount=$_.observedExactTargetCount;canonicalUrl=$_.observedExactTarget.canonicalUrl;generationState=$_.generationState;draftState=$_.draftState;branchStatus=$_.branchStatus;lastAssignmentState=$_.lastAssignmentState;error=$_.error}\n})\n[ordered]@{\n object='owner.r44.live_bindings.v1'\n checkedAt=(Get-Date).ToUniversalTime().ToString('o')\n autonomy=[ordered]@{enabled=$watch.config.enabled;mode=$watch.config.mode;allowAutonomousSend=$watch.config.allowAutonomousSend;enforceHighMode=$watch.config.enforceHighMode;highModeStrategy=$watch.config.highModeStrategy;migrationEnabled=$watch.config.migrationEnabled;autoContinueEnabled=$watch.config.autoContinueEnabled;sendProtectedDraftEnabled=$watch.config.sendProtectedDraftEnabled}\n lifecycle=$life\n chats=$chatRows\n exact=$exactRows\n providerMutationPerformed=$false\n chatDeletionPerformed=$false\n}|ConvertTo-Json -Depth 20 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 65000,
+  "note": "R44 provider-read-only exact bindings and High inspection; managed status cache refresh only; no provider mutation"
+}
