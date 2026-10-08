@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,datetime,urllib.request,subprocess,tempfile,hashlib,shutil\nrepo=r'E:\\WebAIBridge';data=os.path.join(repo,'app','data')\nsha='4638fd18def71dbfa07227c4b9b1bcbf89bba2a5';branch='agent/bridge-r47-background-tab-reliability-20261008'\ndef git(*a,t=10):return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,timeout=t)\ndef get(path):\n with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=5) as f:return json.load(f)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'targetSHA':sha,'backup':{},'preflight':{}}\nhead=git('rev-parse','HEAD').stdout.decode().strip();out['headBefore']=head\nif head!='943c0b1d509fb8b73cef2f8bbe566ef957854a47':raise RuntimeError('production_sha_changed')\nq=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{})\nif q.get('queuePaused') is not True or w.get('mode')!='off' or w.get('allowAutonomousSend') is not False or w.get('autoContinueEnabled') is not False:raise RuntimeError('autonomy_not_frozen')\nassign=get('/api/supervisor-watchdog/agent-assignments').get('assignments',[])\nunsafe=[x for x in assign if x.get('state') in ('dispatching','running','sending','dispatch_pending','preflight_running')]\nif unsafe or len(assign)!=68:raise RuntimeError('queue_not_stable')\nout['queue']={'entries':len(assign),'unsafeInFlight':0,'paused':True,'supervisorOff':True}\nout['porcelainBefore']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all').stdout).hexdigest()\nwith tempfile.TemporaryDirectory(prefix='wab-r47-preflight-') as d:\n script=os.path.join(d,'r42-cutover.ps1')\n obj=git('cat-file','blob',sha+':app/r42-cutover.ps1')\n if obj.returncode:raise RuntimeError('target_preflight_blob_missing')\n open(script,'wb').write(obj.stdout)\n result=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',script,'-TargetSha',sha,'-TargetBranch',branch,'-RepoPath',repo,'-PreflightOnly'],capture_output=True,text=True,timeout=38)\n out['preflight']={'exitCode':result.returncode,'ok':'PREFLIGHT_OK' in result.stdout,'stderrTail':result.stderr[-160:]}\n if not(out['preflight']['ok'] and result.returncode==0):raise RuntimeError('preflight_failed')\ntimestamp=datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')\ndest=os.path.join(data,'backups','owner-r47-safety-'+timestamp)\nos.makedirs(dest,exist_ok=False)\nfiles=['state.json','supervisor-watchdog.json','supervisor-watchdog-state.json','managed-chat-status.json','managed-project-status.json','managed-project-timeline.json','projects-live-control-plane-cutover-r42.json','projects-live-control-plane-cutover-r42-reconcile.json','projects-operation-ledger-r41.json']\nrows=[]\nfor name in files:\n src=os.path.join(data,name)\n if not os.path.isfile(src):continue\n dst=os.path.join(dest,name);shutil.copy2(src,dst)\n with open(src,'rb') as f:a=hashlib.file_digest(f,'sha256').hexdigest()\n with open(dst,'rb') as f:b=hashlib.file_digest(f,'sha256').hexdigest()\n if a!=b:raise RuntimeError('backup_hash_mismatch')\n rows.append({'name':name,'sha256':a,'bytes':os.path.getsize(src)})\nwith open(os.path.join(dest,'manifest.json'),'w',encoding='utf-8') as f:json.dump({'object':'bridge.owner_r47_safety.v1','sourceHead':head,'targetHead':sha,'files':rows,'requiresExplicitRollback':True},f,indent=2)\nout['backup']={'path':dest,'verifiedFiles':len(rows),'hashMatch':True}\nout['porcelainAfter']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all').stdout).hexdigest()\nout['productionUntouched']=out['porcelainBefore']==out['porcelainAfter'] and git('rev-parse','HEAD').stdout.decode().strip()==head\nprint(json.dumps(out,ensure_ascii=True)[:4600])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T14:16:37\", \"targetSHA\": \"4638fd18def71dbfa07227c4b9b1bcbf89bba2a5\", \"backup\": {\"path\": \"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\owner-r47-safety-20261008T071638Z\", \"verifiedFiles\": 8, \"hashMatch\": true}, \"preflight\": {\"exitCode\": 0, \"ok\": true, \"stderrTail\": \"\"}, \"headBefore\": \"943c0b1d509fb8b73cef2f8bbe566ef957854a47\", \"queue\": {\"entries\": 68, \"unsafeInFlight\": 0, \"paused\": true, \"supervisorOff\": true}, \"porcelainBefore\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"porcelainAfter\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"productionUntouched\": true}\r\n",
+      "stdout_bytes": 627,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T07:16:38.876Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T07:16:38.719Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r47-20261008-preflight-backup-9b72"
+    },
+    "request_id": "wab-r47-20261008-preflight-backup-9b72",
+    "started_at": "2026-10-08T07:16:36.544Z",
+    "status": "completed"
+  },
+  "id": "wab-r47-20261008-preflight-backup-9b72",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
