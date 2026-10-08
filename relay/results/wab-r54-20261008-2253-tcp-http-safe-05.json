@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json, socket, concurrent.futures, subprocess, datetime, urllib.request, ctypes\ndef tcp(p):\n try:\n  with socket.create_connection(('127.0.0.1',p),1.4):return 'CONNECTED'\n except Exception as e:return type(e).__name__\ndef get(arg):\n name,url=arg\n try:\n  with urllib.request.urlopen(url,timeout=2) as r:return {'name':name,'status':r.status,'bytes':len(r.read(32768))}\n except Exception as e:return {'name':name,'error':type(e).__name__}\nwith concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:\n futs={p:pool.submit(tcp,p) for p in [17448,17410,17447]}\n checks={name:pool.submit(get,(name,url)) for name,url in [\n  ('bridge_health','http://127.0.0.1:17448/api/health'),\n  ('bridge_operator','http://127.0.0.1:17448/api/operator-lifecycle'),\n  ('chrome_version','http://127.0.0.1:17410/json/version'),\n  ('chrome_targets','http://127.0.0.1:17410/json/list')]}\n port={str(k):v.result() for k,v in futs.items()}\n http=[f.result() for f in checks.values()]\ntry:\n handle=ctypes.windll.kernel32.OpenProcess(0x1000,False,13436)\n alive=bool(handle)\n if handle:ctypes.windll.kernel32.CloseHandle(handle)\nexcept Exception as e:alive=None\ntry:\n git=subprocess.run(['git.exe','-C',r'E:\\WebAIBridge','rev-parse','HEAD'],capture_output=True,text=True,timeout=4).stdout.strip()\nexcept Exception as e:git='UNAVAILABLE'\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'tcp':port,'http':http,'originalChromePid13436Alive':alive,'liveGitSHA':git,'noMutations':True},ensure_ascii=True)[:3800])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T22:53:26\", \"tcp\": {\"17448\": \"CONNECTED\", \"17410\": \"CONNECTED\", \"17447\": \"TimeoutError\"}, \"http\": [{\"name\": \"bridge_health\", \"status\": 200, \"bytes\": 6629}, {\"name\": \"bridge_operator\", \"status\": 200, \"bytes\": 4929}, {\"name\": \"chrome_version\", \"status\": 200, \"bytes\": 422}, {\"name\": \"chrome_targets\", \"status\": 200, \"bytes\": 15358}], \"originalChromePid13436Alive\": true, \"liveGitSHA\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"noMutations\": true}\r\n",
+      "stdout_bytes": 467,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T15:53:26.859Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T15:53:26.689Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r54-20261008-2253-tcp-http-safe-05"
+    },
+    "request_id": "wab-r54-20261008-2253-tcp-http-safe-05",
+    "started_at": "2026-10-08T15:53:24.303Z",
+    "status": "completed"
+  },
+  "id": "wab-r54-20261008-2253-tcp-http-safe-05",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
