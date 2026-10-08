@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,urllib.parse\nb='http://127.0.0.1:17448'\ndef get(p):\n with urllib.request.urlopen(b+p,timeout=5) as f:return json.load(f)\no=get('/api/operator-lifecycle'); w=get('/api/supervisor-watchdog?detect=0')['config']\nif o['queuePaused'] is not True or w['mode']!='off' or w['enabled'] is not False or w['allowAutonomousSend'] is not False:raise RuntimeError('not_paused')\nc=next(x for x in get('/api/supervisor-watchdog/managed-chats?inspect=0')['chats'] if x['name']=='Bridge')\np='/api/supervisor-watchdog/managed-chats/'+urllib.parse.quote(c['id'],safe='')\npre=get(p+'/wake-preview')\nif pre['state']!='READY_FOR_EXPLICIT_TAB_WAKE' or pre['exactTargetCount']!=1 or pre['chatName']!='Bridge':raise RuntimeError('unsafe_target')\nreq=urllib.request.Request(b+p+'/wake',data=json.dumps({'confirm':'WAKE_EXISTING_TAB_ONLY','expectedTargetId':pre['exactTargetId']}).encode(),headers={'Content-Type':'application/json'},method='POST')\nwith urllib.request.urlopen(req,timeout=16) as f:res=json.load(f)\nprint(json.dumps({k:res.get(k) for k in ('state','pageResponds','navigationPerformed','reloadPerformed','tabCreated','tabClosed','promptSent','queueResumed')},ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"state\": \"RESPONSIVE_AFTER_WAKE\", \"pageResponds\": true, \"navigationPerformed\": false, \"reloadPerformed\": false, \"tabCreated\": false, \"tabClosed\": false, \"promptSent\": false, \"queueResumed\": false}\r\n",
+      "stdout_bytes": 199,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T13:37:19.143Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T13:37:18.858Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r53-20261008-wake-bridge-02"
+    },
+    "request_id": "wab-r53-20261008-wake-bridge-02",
+    "started_at": "2026-10-08T13:37:16.417Z",
+    "status": "completed"
+  },
+  "id": "wab-r53-20261008-wake-bridge-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
