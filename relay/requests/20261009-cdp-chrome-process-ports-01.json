@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-cdp-chrome-process-ports-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$r=[ordered]@{};$c=@(Get-CimInstance Win32_Process -Filter \"Name = 'chrome.exe'\" -ErrorAction SilentlyContinue);$r.chromeProcesses=$c.Count;$v=@();foreach($p in $c){if($p.CommandLine -match '--remote-debugging-port=(\\d+)'){$v+=@{pid=$p.ProcessId;port=[int]$Matches[1]}}};$r.debugFlags=$v;$listeners=@(Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue|Where-Object {$_.OwningProcess -in @($c|ForEach-Object{$_.ProcessId})}|Select-Object -Property LocalAddress,LocalPort,OwningProcess);$r.chromeListeners=@($listeners | ForEach-Object{@{port=$_.LocalPort;address=$_.LocalAddress}});$r|ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only Chrome process CDP port inventory; no full command lines, no browser changes."
+}
