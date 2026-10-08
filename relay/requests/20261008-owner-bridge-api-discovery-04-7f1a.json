@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261008-owner-bridge-api-discovery-04-7f1a",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$g='git.exe';$p='E:\\WebAIBridge';$a=[ordered]@{};foreach($q in @('api/managed','api/operator','api/assign','conversationId','conversation_id','dispatchCount','direct-send','managed-agents','assignments','agent-chat')){$m=@(& $g -C $p grep -n -I -m 2 -F $q -- app 2>$null | Select-Object -First 16);$a[$q]=@($m | ForEach-Object{if($_.Length -gt 210){$_.Substring(0,210)}else{$_}})};$a|ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only source code search for Bridge exact-chat delivery APIs, no runtime secret access."
+}
