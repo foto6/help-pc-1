@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r49-20261008-stale-health-readonly-bca6",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json,datetime,subprocess\nbase='http://127.0.0.1:17448'\ndef get(p):\n with urllib.request.urlopen(base+p,timeout=6) as f:return json.load(f)\nout={'time':datetime.datetime.now().isoformat(),'scope':'read_only_operational_components'}\nq=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{})\nif not(q.get('queuePaused') is True and w.get('mode')=='off' and w.get('allowAutonomousSend') is False):raise RuntimeError('NO_SAFE_HOLD')\nfor key,path in [('health','/api/health'),('subsystem','/api/health/subsystems')]:\n try:\n  o=get(path);v=o.get('health',o)\n  out[key]={'state':v.get('state'),'reasons':v.get('reasons'),'components':{name:{k:row.get(k) for k in ('state','reason','ageMs','stale','lastCompletedAt','lastSuccessAt','consecutiveFailures','recoveredFromRestart')} for name,row in v.get('components',{}).items()},'eventLoop':v.get('eventLoop'),'queueSafety':v.get('queueSafety')}\n except Exception as e:out[key]={'error':str(e)[:90]}\nprint(json.dumps(out,ensure_ascii=True)[:14000])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 19000,
+  "note": "Read only local R48 exact reasons and per-component timestamps to diagnose DEGRADED; validate paused and watchdog off, no browser work."
+}
