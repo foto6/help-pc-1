@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r48-20261008-controlled-cutover-6e2c",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,json,subprocess,urllib.request,datetime\nrepo=r'E:\\WebAIBridge'\nsha='8360bed73554011e7d6ff816c6365196c5e483ee'\nbranch='agent/bridge-r48-pause-health-cutover-attest-20261008'\nbackup=r'E:\\WebAIBridge\\app\\data\\backups\\owner-r48-safety-20261008T073651Z'\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'targetSHA':sha,'requestId':'wab-r48-20261008-controlled-cutover-6e2c'}\ndef git(*args,timeout=7):\n return subprocess.run(['git.exe','-C',repo,*args],capture_output=True,text=True,timeout=timeout)\ndef get(path,timeout=5):\n with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=timeout) as r:return json.load(r)\nout['headBefore']=git('rev-parse','HEAD').stdout.strip()\nif out['headBefore']!='4638fd18def71dbfa07227c4b9b1bcbf89bba2a5':raise RuntimeError('production_head_mismatch')\nif git('status','--porcelain=v1','--untracked-files=all').stdout.strip():raise RuntimeError('dirty_worktree')\nif not os.path.isfile(os.path.join(backup,'manifest.json')):raise RuntimeError('owner_backup_missing')\noperator=get('/api/operator-lifecycle')\nw=get('/api/supervisor-watchdog?detect=0').get('config',{})\nif operator.get('queuePaused') is not True or w.get('mode')!='off' or w.get('enabled') is not False or w.get('allowAutonomousSend') is not False or w.get('autoContinueEnabled') is not False:raise RuntimeError('autonomy_not_frozen')\nrows=get('/api/supervisor-watchdog/agent-assignments').get('assignments',[])\nif len(rows)!=68 or any(r.get('state') in ('running','sending','dispatching','preflight_running') for r in rows):raise RuntimeError('queue_in_flight')\nout['preGates']={'cleanWorktree':True,'paused':True,'watchdogOff':True,'assignmentsTotal':len(rows),'inFlight':0}\nreport=os.path.join(backup,'r48-cutover-report.json')\nif os.path.isfile(report):raise RuntimeError('report_already_exists_avoid_duplicate_cutover')\ncommand=['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',os.path.join(repo,'app','r42-cutover.ps1'),'-RepoPath',repo,'-TargetSha',sha,'-TargetBranch',branch,'-ReportPath',report]\ntry:\n p=subprocess.run(command,capture_output=True,text=True,errors='replace',timeout=82)\n out['script']={'exitCode':p.returncode,'stdoutTail':p.stdout[-1100:],'stderrTail':p.stderr[-600:]}\nexcept subprocess.TimeoutExpired:out['script']={'state':'TIMEOUT_UNKNOWN_DO_NOT_REPLAY'}\nexcept Exception as e:out['script']={'error':type(e).__name__}\ntry:out['headAfter']=git('rev-parse','HEAD').stdout.strip()\nexcept Exception as e:out['readbackError']=type(e).__name__\nout['normalReportExists']=os.path.isfile(report)\nprint(json.dumps(out,ensure_ascii=True)[:4300])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 115000,
+  "note": "One exact R48 controlled Node-Bridge-only cutover after Windows+Ubuntu CI green, local exact preflight and verified 8-file backup. Chrome and agents remain paused/off; no replay on UNKNOWN outcome."
+}
