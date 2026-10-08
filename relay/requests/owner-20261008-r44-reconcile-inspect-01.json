@@ -1,0 +1,12 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-r44-reconcile-inspect-01",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "owner-20261008-r44-local-inspect-01",
+    "action": "shell.run",
+    "execution_attempt": 1
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only reconciliation for timed-out R44 local inspection; never replay original request"
+}
