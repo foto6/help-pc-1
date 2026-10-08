@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-r45-20261008-cutover-lookup-fa49",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "bridge-r45-20261008-controlled-cutover-b6e0",
+    "action": "shell.run"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only durable outcome journal reconciliation of one timed-out R45 cutover; no replay or machine mutation."
+}
