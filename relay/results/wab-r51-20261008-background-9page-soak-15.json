@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json,datetime\nscript=\"const canon=require('E:/WebAIBridge/app/data/operator-tools/r50-read-only-chrome-check/releases/814c0e7e328599c85d7927e2a48b3e0f5df1becc/chrome-restart-readiness-r50.js').canonicalChat;\\nconst get=async(url)=>{const r=await fetch(url,{signal:AbortSignal.timeout(2300)});if(!r.ok)throw Error('non200');return r.json()};\\nconst sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));\\nfunction probe(url,timeout=2300){return new Promise(resolve=>{let ws,done=false;const tm=setTimeout(()=>end('TIMEOUT'),timeout);function end(v){if(done)return;done=true;clearTimeout(tm);try{ws?.close()}catch{}resolve(v)}\\ntry{ws=new WebSocket(url);ws.addEventListener('open',()=>ws.send(JSON.stringify({id:1151,method:'Runtime.evaluate',params:{expression:'2+2',returnByValue:true}})));\\nws.addEventListener('message',e=>{try{const a=JSON.parse(e.data);if(a.id===1151)end(a.result?.result?.value===4?'RESPONSIVE':'BAD_RESULT')}catch{end('BAD_JSON')}});ws.addEventListener('error',()=>end('CDP_ERROR'))}catch{end('CONNECT_ERROR')}})}\\n(async()=>{\\nconst base='http://127.0.0.1:17448';\\nconst [o,w,h,c]=await Promise.all([get(base+'/api/operator-lifecycle'),get(base+'/api/supervisor-watchdog?detect=0'),get(base+'/api/health'),get(base+'/api/supervisor-watchdog/managed-chats?inspect=0')]);\\nif(!(o.queuePaused===true&&w.config?.mode==='off'&&w.config?.enabled===false&&w.config?.allowAutonomousSend===false&&w.config?.autoContinueEnabled===false&&h.assignmentQueue?.active===0))throw Error('hold_gate_failed');\\nconst managed=new Map(c.chats.map(x=>[canon(x.url),x.name]));\\nconst t=await get('http://127.0.0.1:17410/json/list');\\nconst rows=t.filter(x=>{try{return x.type==='page'&&['chatgpt.com','www.chatgpt.com'].includes(new URL(x.url).hostname)}catch{return false}}).map((x,i)=>({label:managed.get(canon(x.url))||'Other-'+String(i+1),managed:managed.has(canon(x.url)),id:x.id,ws:x.webSocketDebuggerUrl}));\\nif(rows.length!==9||rows.filter(x=>x.managed).length!==6||new Set(rows.map(x=>x.id)).size!==9)throw Error('identity_inventory_changed');\\nconst rounds=[];\\nfor(let i=0;i<5;i++){\\n const now=Date.now();\\n const results=await Promise.all(rows.map(r=>probe(r.ws,2200)));\\n rounds.push({round:i+1,elapsedMs:Date.now()-now,managedOk:results.filter((x,j)=>x==='RESPONSIVE'&&rows[j].managed).length,otherOk:results.filter((x,j)=>x==='RESPONSIVE'&&!rows[j].managed).length,nonresponsiveNames:results.map((x,j)=>x==='RESPONSIVE'?null:rows[j].label).filter(Boolean)});\\n if(i!==4)await sleep(2400);\\n}\\nconst [q,wd]=await Promise.all([get(base+'/api/operator-lifecycle'),get(base+'/api/supervisor-watchdog?detect=0')]);\\nconsole.log(JSON.stringify({scope:'nine_live_chrome_tabs_readonly_soak',observedAt:new Date().toISOString(),rounds,queueStillPaused:q.queuePaused===true,watchdogStillOff:wd.config?.mode==='off',allNineStable:rounds.every(r=>r.managedOk===6&&r.otherOk===3),browserTouched:false,providerTextNotRead:true,automaticRestartAllowed:false}));\\n})().catch(e=>{console.log(JSON.stringify({state:'BLOCKED',reason:String(e.message).slice(0,110)}));process.exitCode=2});\"\nr=subprocess.run(['node.exe','-e',script],capture_output=True,text=True,timeout=31)\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'exit':r.returncode,'result':r.stdout.strip()[-6800:],'stderrHead':r.stderr[:250]},ensure_ascii=True)[:7600])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T16:02:04\", \"exit\": 0, \"result\": \"{\\\"scope\\\":\\\"nine_live_chrome_tabs_readonly_soak\\\",\\\"observedAt\\\":\\\"2026-10-08T09:02:04.285Z\\\",\\\"rounds\\\":[{\\\"round\\\":1,\\\"elapsedMs\\\":2209,\\\"managedOk\\\":3,\\\"otherOk\\\":3,\\\"nonresponsiveNames\\\":[\\\"QA\\\",\\\"Growth\\\",\\\"Creator\\\"]},{\\\"round\\\":2,\\\"elapsedMs\\\":2210,\\\"managedOk\\\":3,\\\"otherOk\\\":3,\\\"nonresponsiveNames\\\":[\\\"QA\\\",\\\"Growth\\\",\\\"Creator\\\"]},{\\\"round\\\":3,\\\"elapsedMs\\\":2208,\\\"managedOk\\\":3,\\\"otherOk\\\":3,\\\"nonresponsiveNames\\\":[\\\"QA\\\",\\\"Growth\\\",\\\"Creator\\\"]},{\\\"round\\\":4,\\\"elapsedMs\\\":2206,\\\"managedOk\\\":3,\\\"otherOk\\\":3,\\\"nonresponsiveNames\\\":[\\\"QA\\\",\\\"Growth\\\",\\\"Creator\\\"]},{\\\"round\\\":5,\\\"elapsedMs\\\":2204,\\\"managedOk\\\":3,\\\"otherOk\\\":3,\\\"nonresponsiveNames\\\":[\\\"QA\\\",\\\"Growth\\\",\\\"Creator\\\"]}],\\\"queueStillPaused\\\":true,\\\"watchdogStillOff\\\":true,\\\"allNineStable\\\":false,\\\"browserTouched\\\":false,\\\"providerTextNotRead\\\":true,\\\"automaticRestartAllowed\\\":false}\", \"stderrHead\": \"\"}\r\n",
+      "stdout_bytes": 936,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T09:02:04.494Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T09:02:04.322Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r51-20261008-background-9page-soak-15"
+    },
+    "request_id": "wab-r51-20261008-background-9page-soak-15",
+    "started_at": "2026-10-08T09:01:43.001Z",
+    "status": "completed"
+  },
+  "id": "wab-r51-20261008-background-9page-soak-15",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
