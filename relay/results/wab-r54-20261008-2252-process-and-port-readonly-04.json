@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,socket,concurrent.futures,subprocess,datetime,urllib.request\nports=[17448,17410,17447]\ndef tcp(p):\n try:\n  s=socket.create_connection(('127.0.0.1',p),1.5);s.close();return 'CONNECTED'\n except Exception as e:return type(e).__name__\ndef http(args):\n name,url=args\n try:\n  with urllib.request.urlopen(url,timeout=2.5) as r:\n   body=r.read(32768)\n   return {'name':name,'httpStatus':r.status,'bodyBytesFirst32k':len(body)}\n except Exception as e:return {'name':name,'error':type(e).__name__}\nwith concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:\n connects=dict(zip(ports,pool.map(tcp,ports)))\n links=[('health','http://127.0.0.1:17448/api/health'),('operator','http://127.0.0.1:17448/api/operator-lifecycle'),('chrome','http://127.0.0.1:17410/json/version'),('targets','http://127.0.0.1:17410/json/list')]\n tests=list(pool.map(http,links))\nproc=subprocess.run(['powershell.exe','-NoProfile','-Command',\"\"\"$a=Get-CimInstance Win32_Process -Filter \"ProcessId=13436\"; $b=Get-NetTCPConnection -LocalPort 17448,17410 -State Listen -ErrorAction SilentlyContinue; $c=$b|ForEach-Object {[pscustomobject]@{port=$_.LocalPort;pid=$_.OwningProcess}};[pscustomobject]@{originalChromePidAlive=($null -ne $a);listeners=@($c)} | ConvertTo-Json -Compress -Depth 3\"\"\"],capture_output=True,text=True,timeout=11)\ntry:status=json.loads(proc.stdout.strip()) if proc.stdout.strip() else {'noOutput':True}\nexcept:status={'powershellStatus':'INVALID_OR_EMPTY'}\ngit=subprocess.run(['git.exe','-C',r'E:\\WebAIBridge','rev-parse','HEAD'],capture_output=True,text=True,timeout=5)\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'portTCP':connects,'http':tests,'hostStatus':status,'gitHEAD':git.stdout.strip(),'allReadOnly':True},ensure_ascii=True)[:4800])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\r\n  File \"<string>\", line 18, in <module>\r\n    proc=subprocess.run(['powershell.exe','-NoProfile','-Command',\"\"\"$a=Get-CimInstance Win32_Process -Filter \"ProcessId=13436\"; $b=Get-NetTCPConnection -LocalPort 17448,17410 -State Listen -ErrorAction SilentlyContinue; $c=$b|ForEach-Object {[pscustomobject]@{port=$_.LocalPort;pid=$_.OwningProcess}};[pscustomobject]@{originalChromePidAlive=($null -ne $a);listeners=@($c)} | ConvertTo-Json -Compress -Depth 3\"\"\"],capture_output=True,text=True,timeout=11)\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\subprocess.py\", line 556, in run\r\n    stdout, stderr = process.communicate(input, timeout=timeout)\r\n                     ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\subprocess.py\", line 1222, in communicate\r\n    stdout, stderr = self._communicate(input, endtime, timeout)\r\n                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\subprocess.py\", line 1665, in _communicate\r\n    raise TimeoutExpired(self.args, orig_timeout)\r\nsubprocess.TimeoutExpired: Command '['powershell.exe', '-NoProfile', '-Command', '$a=Get-CimInstance Win32_Process -Filter \"ProcessId=13436\"; $b=Get-NetTCPConnection -LocalPort 17448,17410 -State Listen -ErrorAction SilentlyContinue; $c=$b|ForEach-Object {[pscustomobject]@{port=$_.LocalPort;pid=$_.OwningProcess}};[pscustomobject]@{originalChromePidAlive=($null -ne $a);listeners=@($c)} | ConvertTo-Json -Compress -Depth 3']' timed out after 11 seconds\r\n",
+      "stderr_bytes": 1751,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T15:52:41.646Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T15:52:41.195Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r54-20261008-2252-process-and-port-readonly-04"
+    },
+    "request_id": "wab-r54-20261008-2252-process-and-port-readonly-04",
+    "started_at": "2026-10-08T15:52:26.127Z",
+    "status": "completed"
+  },
+  "id": "wab-r54-20261008-2252-process-and-port-readonly-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
