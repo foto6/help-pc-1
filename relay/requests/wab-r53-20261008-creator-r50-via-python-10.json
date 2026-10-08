@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r53-20261008-creator-r50-via-python-10",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,json\npath=r'E:\\WebAIBridge\\app\\data\\operator-tools\\r50-read-only-chrome-check\\releases\\814c0e7e328599c85d7927e2a48b3e0f5df1becc\\r50-restart-readiness-preflight.js'\np=subprocess.run(['node.exe',path],capture_output=True,text=True,timeout=36)\nprint(json.dumps({'exit':p.returncode,'report':p.stdout.strip()[-6500:],'errorType':'node_error' if p.returncode and not p.stdout else None},ensure_ascii=True)[:7600])"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 47000,
+  "note": "Read-only R50 installed six-tab composer/draft/generation check after Creator wake via existing safe Python relay, no Chrome tab mutation or provider Send."
+}
