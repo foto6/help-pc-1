@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,hashlib,datetime,json,os,tempfile,zipfile,io\nrepo=r'E:\\WebAIBridge'; sha='18a286d4522dd73b5a65d88b5823053b71b01569'; branch='agent/bridge-r45-readonly-probe-hardening-20261008'\ndef git(*argv,t=25):return subprocess.run(['git.exe','-C',repo,*argv],capture_output=True,timeout=t)\nout={'at':datetime.datetime.now().isoformat(),'sha':sha,'tests':[]}\nh=git('rev-parse','HEAD'); out['head_before']=h.stdout.decode('ascii','replace').strip()\np=git('status','--porcelain=v1','-z','--untracked-files=all');out['porcelain_before_sha256']=hashlib.sha256(p.stdout).hexdigest()\ntry:\n check=git('cat-file','-t',sha,t=8);out['object_present_before']=check.returncode==0\n if check.returncode!=0:\n  fetch=git('fetch','--no-tags','--no-write-fetch-head','origin','refs/heads/'+branch,t=45)\n  out['fetch_code']=fetch.returncode\n  out['fetch_error_type']='fetch_failed' if fetch.returncode else ''\n  if fetch.returncode:raise RuntimeError('fetch_failed')\n check=git('cat-file','-t',sha,t=8)\n if check.returncode or check.stdout.strip()!=b'commit':raise RuntimeError('target_commit_unavailable')\n archive=git('archive','--format=zip',sha,t=15)\n if archive.returncode:raise RuntimeError('git_archive_failed')\n with tempfile.TemporaryDirectory(prefix='wab-r45-shadow-') as folder:\n  z=zipfile.ZipFile(io.BytesIO(archive.stdout));z.extractall(folder)\n  app=os.path.join(folder,'app')\n  for cmd in (['node.exe','--check','server.js'],['node.exe','--test','managed-chat-inspection-r45.test.js'],['node.exe','--test','operational-health.test.js']):\n   try:\n    res=subprocess.run(cmd,cwd=app,capture_output=True,timeout=17)\n    out['tests'].append({'name':' '.join(cmd[1:]),'returncode':res.returncode,'stdout_tail':res.stdout.decode('utf-8','replace')[-280:],'stderr_tail':res.stderr.decode('utf-8','replace')[-250:]})\n   except Exception as e:out['tests'].append({'name':' '.join(cmd[1:]),'error':type(e).__name__})\nexcept Exception as e:out['failure']=str(e)[:100]\nout['head_after']=git('rev-parse','HEAD').stdout.decode('ascii','replace').strip()\nout['porcelain_after_sha256']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all').stdout).hexdigest()\nout['worktree_unchanged']=out['head_before']==out['head_after'] and out['porcelain_before_sha256']==out['porcelain_after_sha256']\nprint(json.dumps(out,ensure_ascii=True)[:5700])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T13:05:08.201979\", \"sha\": \"18a286d4522dd73b5a65d88b5823053b71b01569\", \"tests\": [{\"name\": \"--check server.js\", \"returncode\": 0, \"stdout_tail\": \"\", \"stderr_tail\": \"\"}, {\"name\": \"--test managed-chat-inspection-r45.test.js\", \"returncode\": 0, \"stdout_tail\": \" closes its target (43.865ms)\\n\\u2714 one failed probe remains explicit and does not conceal other chat results (31.0291ms)\\n\\u2714 successful evaluation cancels its timeout callback (61.5131ms)\\n\\u2139 tests 4\\n\\u2139 suites 0\\n\\u2139 pass 4\\n\\u2139 fail 0\\n\\u2139 cancelled 0\\n\\u2139 skipped 0\\n\\u2139 todo 0\\n\\u2139 duration_ms 316.7816\\n\", \"stderr_tail\": \"\"}, {\"name\": \"--test operational-health.test.js\", \"returncode\": 0, \"stdout_tail\": \")\\n\\u2714 restart converts persisted in-progress health into truthful degraded state (0.4581ms)\\n\\u2714 event-loop drift is surfaced rather than process existence being called healthy (0.3282ms)\\n\\u2139 tests 5\\n\\u2139 suites 0\\n\\u2139 pass 5\\n\\u2139 fail 0\\n\\u2139 cancelled 0\\n\\u2139 skipped 0\\n\\u2139 todo 0\\n\\u2139 duration_ms 283.0406\\n\", \"stderr_tail\": \"\"}], \"head_before\": \"2d5f902a52f875f3385da0a9babe29e2761a0f5b\", \"porcelain_before_sha256\": \"0a0dcf0b565edf5dc653d34ae49eb11c15b268507fd44e7d0171512e10edcab2\", \"object_present_before\": false, \"fetch_code\": 0, \"fetch_error_type\": \"\", \"head_after\": \"2d5f902a52f875f3385da0a9babe29e2761a0f5b\", \"porcelain_after_sha256\": \"0a0dcf0b565edf5dc653d34ae49eb11c15b268507fd44e7d0171512e10edcab2\", \"worktree_unchanged\": true}\r\n",
+      "stdout_bytes": 1488,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:05:13.441Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:05:13.274Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-r45-20261008-shadow-fetch-c37f"
+    },
+    "request_id": "bridge-r45-20261008-shadow-fetch-c37f",
+    "started_at": "2026-10-08T06:05:07.738Z",
+    "status": "completed"
+  },
+  "id": "bridge-r45-20261008-shadow-fetch-c37f",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
