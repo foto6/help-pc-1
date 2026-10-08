@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r44-20261008-quiescence-a2e3",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json,datetime,subprocess\nroot='http://127.0.0.1:17448'\npaths=['/api/operator-lifecycle','/api/projects/control-plane?inspect=0','/api/projects/control-plane/cutover-r42/status','/api/managed-chat-status','/api/projects/managed-assignments','/api/health']\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'endpoints':{}}\nfor path in paths:\n try:\n  with urllib.request.urlopen(root+path,timeout=6) as r:d=json.load(r)\n  if not isinstance(d,dict):out['endpoints'][path]={'type':type(d).__name__};continue\n  z={'keys':list(d.keys())[:35]}\n  if path=='/api/operator-lifecycle':z['fields']={k:d.get(k) for k in ['object','mode','revision','quiesced','queuePaused','quiescence','state','status','resumeRequired']}\n  if path=='/api/projects/control-plane?inspect=0':z['fields']={k:d.get(k) for k in ['object','status','state','ready','blocked','blockers','reason','checkedAt','summary','runtime','readiness']}\n  if path=='/api/projects/control-plane/cutover-r42/status':z['fields']={k:d.get(k) for k in ['object','status','cutoverState','rollbackAvailable']}\n  if path=='/api/projects/managed-assignments':z['fields']={'counts':d.get('counts'),'queue':d.get('queue'),'total':d.get('total'),'assignments_len':len(d.get('assignments',[])) if isinstance(d.get('assignments'),list) else None}\n  if path=='/api/health':z['fields']={k:d.get(k) for k in ['state','ok','reasons','blockers','assignmentQueue']}\n  out['endpoints'][path]=z\n except Exception as e:out['endpoints'][path]={'error':type(e).__name__+': '+str(e)[:90]}\nprint(json.dumps(out,ensure_ascii=True,default=str)[:15000])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 55000,
+  "note": "R44 read-only quiescence and lifecycle gate; no lifecycle change, restarts or sends"
+}
