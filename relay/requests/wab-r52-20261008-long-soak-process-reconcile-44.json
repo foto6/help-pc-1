@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r52-20261008-long-soak-process-reconcile-44",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,json,datetime,urllib.request\np=subprocess.run(['powershell.exe','-NoProfile','-Command',\"\"\"$p=Get-CimInstance Win32_Process | Where-Object { $_.Name -in @('node.exe','python.exe') -and $_.CommandLine -match '(wab.r52.after_site_exemption_background_soak|after-site-exception-nine-tab-soak|r52-readonly-soak-)' }; $p | ForEach-Object { [pscustomobject]@{pid=$_.ProcessId;name=$_.Name} } | ConvertTo-Json -Compress\"\"\"],capture_output=True,text=True,timeout=7)\ntry:active=json.loads(p.stdout) if p.stdout.strip() else []\nexcept:active=[]\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/operator-lifecycle',timeout=4) as f:operator=json.load(f)\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/health',timeout=4) as f:health=json.load(f)\nprint(json.dumps({'time':datetime.datetime.now().isoformat(timespec='seconds'),'possibleSoakProcesses':active if isinstance(active,list) else [active],'queuePaused':operator.get('queuePaused'),'activeAssignments':health.get('assignmentQueue',{}).get('active'),'healthState':health.get('state'),'readOnly':True}))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only reconcile 100s timed out 9tab CDP soak; inspect matching process names only and original Bridge queue pause; do not kill processes or send messages."
+}
