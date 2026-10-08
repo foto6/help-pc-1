@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-1212-open-qa-existing-08",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$b='http://127.0.0.1:17448';$body=@{id='chat-6ac45fb0-9074-83eb-99eb-397265b228e7'}|ConvertTo-Json -Compress;$r=Invoke-RestMethod -Method POST -Uri ($b+'/api/supervisor-watchdog/managed-chats/open') -ContentType 'application/json' -Body $body -TimeoutSec 8;[ordered]@{name=$r.chatName;id=$r.chatId;opened=$r.opened;alreadyOpen=$r.alreadyOpen;profile=$r.profileName;url=$r.url;targetId=$r.targetId}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Owner-requested open known existing QA agent ChatGPT conversation by exact managed ID, never create new conversation or Send."
+}
