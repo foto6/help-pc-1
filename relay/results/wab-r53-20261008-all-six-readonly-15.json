@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess\np=r'E:\\WebAIBridge\\app\\data\\operator-tools\\r50-read-only-chrome-check\\releases\\814c0e7e328599c85d7927e2a48b3e0f5df1becc\\r50-restart-readiness-preflight.js'\nx=subprocess.run(['node.exe',p],capture_output=True,text=True,timeout=36)\nprint(x.stdout[:9000])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"contract\":\"bridge.chrome_restart_readiness.r50.v1\",\"readOnly\":true,\"blockers\":[\"unmanaged_chatgpt_tabs_uninspected\"],\"status\":\"RESTART_BLOCKED\",\"allSixObserved\":true,\"highConfidenceEmptyComposers\":false,\"providerDraftPersistenceProven\":false,\"unknownOtherBrowserTabsSafe\":false,\"automaticRestartAuthorized\":false,\"requiresExplicitSeparateOwnerDecision\":true,\"doesNotModifyChrome\":true,\"doesNotDispatchAgents\":true,\"chromeSwitchesExpectedOnFutureManagedLaunch\":[\"--disable-background-timer-throttling\",\"--disable-renderer-backgrounding\",\"--disable-backgrounding-occluded-windows\"],\"observedAt\":\"2026-10-08T13:44:50.530Z\",\"tabs\":[{\"name\":\"Bridge\",\"exactTargets\":1,\"probeStatus\":\"RESPONSIVE\",\"domIdentityConfirmed\":true,\"composerConfirmed\":true,\"draftPresent\":false,\"generating\":false,\"activeEditableCount\":1},{\"name\":\"Media\",\"exactTargets\":1,\"probeStatus\":\"RESPONSIVE\",\"domIdentityConfirmed\":true,\"composerConfirmed\":true,\"draftPresent\":false,\"generating\":false,\"activeEditableCount\":1},{\"name\":\"Creator\",\"exactTargets\":1,\"probeStatus\":\"RESPONSIVE\",\"domIdentityConfirmed\":true,\"composerConfirmed\":true,\"draftPresent\":false,\"generating\":false,\"activeEditableCount\":1},{\"name\":\"Growth\",\"exactTargets\":1,\"probeStatus\":\"RESPONSIVE\",\"domIdentityConfirmed\":true,\"composerConfirmed\":true,\"draftPresent\":false,\"generating\":false,\"activeEditableCount\":1},{\"name\":\"Native MCP\",\"exactTargets\":1,\"probeStatus\":\"RESPONSIVE\",\"domIdentityConfirmed\":true,\"composerConfirmed\":true,\"draftPresent\":false,\"generating\":false,\"activeEditableCount\":1},{\"name\":\"QA\",\"exactTargets\":1,\"probeStatus\":\"RESPONSIVE\",\"domIdentityConfirmed\":true,\"composerConfirmed\":true,\"draftPresent\":false,\"generating\":false,\"activeEditableCount\":1}],\"browserPageCount\":11,\"unmanagedChatGPTTabCount\":3,\"agentQueueHeldCount\":2}\r\n\r\n",
+      "stdout_bytes": 1784,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T13:44:50.736Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T13:44:50.573Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r53-20261008-all-six-readonly-15"
+    },
+    "request_id": "wab-r53-20261008-all-six-readonly-15",
+    "started_at": "2026-10-08T13:44:49.511Z",
+    "status": "completed"
+  },
+  "id": "wab-r53-20261008-all-six-readonly-15",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
