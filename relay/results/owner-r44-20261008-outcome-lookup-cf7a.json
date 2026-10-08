@@ -1,0 +1,21 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {},
+    "dry_run": false,
+    "error": "outcome.lookup action must be a non-empty string",
+    "error_kind": "policy_blocked",
+    "finished_at": "2026-10-08T05:38:13.579Z",
+    "ok": false,
+    "request_id": "owner-r44-20261008-outcome-lookup-cf7a",
+    "started_at": "2026-10-08T05:38:13.579Z",
+    "status": "blocked"
+  },
+  "id": "owner-r44-20261008-outcome-lookup-cf7a",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
