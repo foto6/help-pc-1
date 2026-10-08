@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,os,subprocess,urllib.request,datetime\nroot=r'E:\\WebAIBridge\\app\\data\\operator-tools\\r51-target-continuity'\nbaseline=os.path.join(root,'baseline.json')\np=subprocess.run(['node.exe','r51-target-continuity.js','--baseline='+baseline],cwd=root,capture_output=True,text=True,timeout=16)\nresult={'at':datetime.datetime.now().isoformat(timespec='seconds'),'source':'read_only_R51_original_baseline','exitCode':p.returncode}\nif p.stdout.strip():\n x=json.loads(p.stdout)\n result.update({k:x.get(k) for k in ('status','stable','managedCount','originalExtraChatGPTCount','currentExtraChatGPTCount','problems','automaticRebindAuthorized','automaticChromeRestartAuthorized')})\nelse:result['error']=p.stderr[-220:]\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/operator-lifecycle',timeout=5) as f:o=json.load(f)\nresult['paused']=o.get('queuePaused') is True\nprint(json.dumps(result,ensure_ascii=True)[:4500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T17:13:56\", \"source\": \"read_only_R51_original_baseline\", \"exitCode\": 2, \"status\": \"RECONCILIATION_REQUIRED\", \"stable\": false, \"managedCount\": 6, \"originalExtraChatGPTCount\": 3, \"currentExtraChatGPTCount\": 3, \"problems\": [\"CDP_TARGET_ID_CHANGED:QA\"], \"automaticRebindAuthorized\": false, \"automaticChromeRestartAuthorized\": false, \"paused\": true}\r\n",
+      "stdout_bytes": 364,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T10:13:56.782Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T10:13:56.617Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r52-20261008-which-targets-churned-37"
+    },
+    "request_id": "wab-r52-20261008-which-targets-churned-37",
+    "started_at": "2026-10-08T10:13:55.723Z",
+    "status": "completed"
+  },
+  "id": "wab-r52-20261008-which-targets-churned-37",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
