@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r49-20261008-controlled-cutover-8f4c",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,subprocess,urllib.request,json,datetime\nrepo=r'E:\\WebAIBridge';target='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03'\nbranch='agent/bridge-r49-dormant-health-20261008'\nbackup=r'E:\\WebAIBridge\\app\\data\\backups\\owner-r49-safety-20261008T082255Z'\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'targetSHA':target,'requestId':'wab-r49-20261008-controlled-cutover-8f4c'}\ndef git(*a):return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,timeout=7)\ndef get(u):\n with urllib.request.urlopen('http://127.0.0.1:17448'+u,timeout=5) as f:return json.load(f)\nhead=git('rev-parse','HEAD').stdout.decode().strip();out['preHEAD']=head\nif head!='8360bed73554011e7d6ff816c6365196c5e483ee':raise RuntimeError('live_HEAD_changed')\nif git('status','--porcelain=v1','-z','--untracked-files=all').stdout:raise RuntimeError('unexpected_dirty_worktree')\nif not os.path.isfile(os.path.join(backup,'manifest.json')):raise RuntimeError('owner_backup_missing')\no=get('/api/operator-lifecycle');c=get('/api/supervisor-watchdog?detect=0').get('config',{});h=get('/api/health')\nif not(o.get('queuePaused') is True and c.get('mode')=='off' and c.get('enabled') is False and c.get('allowAutonomousSend') is False and c.get('autoContinueEnabled') is False):raise RuntimeError('queue_autonomy_not_frozen')\nq=h.get('assignmentQueue',{})\nif q.get('active')!=0 or q.get('queued')!=2 or q.get('total')!=68:raise RuntimeError('unsafe_assignment_inventory')\nreport=os.path.join(backup,'r49-cutover-report.json')\nif os.path.isfile(report):raise RuntimeError('report_already_exists_no_replay')\nargs=['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',os.path.join(repo,'app','r42-cutover.ps1'),'-RepoPath',repo,'-TargetSha',target,'-TargetBranch',branch,'-ReportPath',report]\ntry:\n result=subprocess.run(args,capture_output=True,text=True,errors='replace',timeout=82)\n out['script']={'exit':result.returncode,'stdoutTail':result.stdout[-900:],'stderrTail':result.stderr[-330:]}\nexcept subprocess.TimeoutExpired:out['script']={'state':'TIMEOUT_UNKNOWN_DO_NOT_REPLAY'}\nexcept Exception as e:out['script']={'error':type(e).__name__}\ntry:out['headAfter']=git('rev-parse','HEAD').stdout.decode().strip()\nexcept Exception as e:out['headReadbackError']=type(e).__name__\nout['normalReportExists']=os.path.isfile(report)\nprint(json.dumps(out,ensure_ascii=True)[:4600])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 115000,
+  "note": "ONE safe R49 local Bridge-only cutover after both OS CI PASS, local exact-head preflight and verified backup, paused supervisor/agents and preserved Chrome; unknown result -> never replay."
+}
