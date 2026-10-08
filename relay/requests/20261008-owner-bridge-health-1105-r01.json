@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261008-owner-bridge-health-1105-r01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$r=[ordered]@{};$r.time=(Get-Date).ToString('o');foreach($p in @('/api/operator-lifecycle','/api/supervisor-watchdog/agent-assignments')){try{$u='http://127.0.0.1:17448'+$p;$j=Invoke-RestMethod -Method GET -Uri $u -TimeoutSec 4;if($p -like '*agent-assignments'){$r.assignments=[ordered]@{ok=$true;count=@($j.assignments).Count;states=$j.counts;latest=@($j.assignments|Select-Object -Last 8|ForEach-Object{[ordered]@{id=$_.id;targetChatId=$_.targetChatId;state=$_.state;repo=$_.repository;branch=$_.branch;dispatchCount=$_.dispatchCount}})}}else{$r.operator=[ordered]@{ok=$true;mode=$j.mode;revision=$j.revision;queuePaused=$j.queuePaused}}}catch{$r[($p -replace '/','_')]=[ordered]@{ok=$false;error=$_.Exception.GetType().Name}}};$r|ConvertTo-Json -Compress -Depth 6"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Read-only narrow Bridge operator+agent-assignment API probe. No chat messages or file modifications."
+}
