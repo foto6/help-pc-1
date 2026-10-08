@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r49-20261008-rollback-attest-readonly-e1b2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,subprocess,json,urllib.request,datetime\nroot=r'E:\\WebAIBridge';sha='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03'\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status',timeout=4) as f:c=json.load(f).get('cutoverState',{})\npath=c.get('rollbackManifest','')\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'sourceSHA':sha,'cutover':{k:c.get(k) for k in ('status','holdActive','targetSha','preCutoverHead')},'manifestExists':os.path.isfile(path)}\nif not out['manifestExists'] or c.get('targetSha')!=sha:raise RuntimeError('manifest_or_source_mismatch')\nr=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',os.path.join(root,'app','r42-rollback.ps1'),'-Manifest',path,'-ValidateOnly'],capture_output=True,text=True,timeout=24)\nout['rollbackValidateOnly']={'exit':r.returncode,'passed':'PREFLIGHT_OK' in r.stdout,'stderrTail':r.stderr[-220:]}\nif r.returncode or 'PREFLIGHT_OK' not in r.stdout:raise RuntimeError('rollback_gate_failed')\nr=subprocess.run(['node.exe',os.path.join(root,'app','r48-cutover-attest.js'),'--repo='+root,'--manifest='+path,'--target-sha='+sha],capture_output=True,text=True,timeout=26)\nout['attestorExit']=r.returncode\nif r.stdout.strip():\n o=json.loads(r.stdout)\n out['attestation']={k:o.get(k) for k in ('ok','outcome','targetSHA','preCutoverSHA','originalCutoverState','originalCutoverScriptExitVerified','rollbackBackupFileCount','invalidBackupNames','exactChatTargetCounts','historicalQueueRetained','evidenceSha256')}\nif r.returncode:out['attestorError']=r.stderr[-500:]\nprint(json.dumps(out,ensure_ascii=True)[:5700])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 69000,
+  "note": "Read-only R49 postcutover rollback -ValidateOnly plus native independent R48 attestor of exact six tabs SHA256 rollback and no-send queue; no Chrome restart or provider action."
+}
