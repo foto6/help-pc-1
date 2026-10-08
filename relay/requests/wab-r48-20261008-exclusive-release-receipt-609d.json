@@ -1,0 +1,18 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r48-20261008-exclusive-release-receipt-609d",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "node.exe",
+      "E:\\WebAIBridge\\app\\r48-cutover-attest.js",
+      "--repo=E:\\WebAIBridge",
+      "--manifest=E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261008T073836Z\\rollback-manifest.json",
+      "--target-sha=8360bed73554011e7d6ff816c6365196c5e483ee",
+      "--write-attestation"
+    ],
+    "cwd": "E:\\WebAIBridge"
+  },
+  "timeout_ms": 30000,
+  "note": "Create exclusive independent R48 hold attestation receipt after exact verified local SHA, full rollback integrity, six provider IDs and frozen no-send state. No original cutover-state overwrite, no replay on unknown."
+}
