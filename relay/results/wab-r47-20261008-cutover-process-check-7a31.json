@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,datetime,subprocess\nroot=r'E:\\WebAIBridge\\app\\data\\backups\\owner-r47-safety-20261008T071638Z'\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'processProbe':'r47-detached'}\np=subprocess.run(['powershell.exe','-NoProfile','-Command',\"$p=Get-CimInstance Win32_Process -Filter \\\"ProcessId=27768\\\"; if($p){[pscustomobject]@{ alive=$true; name=$p.Name; pid=$p.ProcessId }|ConvertTo-Json -Compress}else{'{\\\"alive\\\":false}'}\"],capture_output=True,text=True,timeout=6)\ntry:out['cutoverProcess']=json.loads(p.stdout)\nexcept:out['processProbeError']='parse_or_powershell_failed'\nfor n in ('r47-cutover.stdout.log','r47-cutover.stderr.log'):\n path=os.path.join(root,n)\n try:\n  sz=os.path.getsize(path)\n  out[n]={'bytes':sz}\n  if sz and n.endswith('stderr.log'):\n   s=open(path,'r',encoding='utf-8-sig',errors='replace').read()[-1000:]\n   out[n]['type']='PowershellError' if 'Exception' in s or 'Error' in s else 'OtherNonempty'\n except Exception as e:out[n]={'error':type(e).__name__}\nx=subprocess.run(['git.exe','-C',r'E:\\WebAIBridge','rev-parse','HEAD'],capture_output=True,text=True,timeout=6)\nout['head']=x.stdout.strip()\nprint(json.dumps(out,ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T14:18:31\", \"processProbe\": \"r47-detached\", \"cutoverProcess\": {\"alive\": false}, \"r47-cutover.stdout.log\": {\"bytes\": 0}, \"r47-cutover.stderr.log\": {\"bytes\": 0}, \"head\": \"943c0b1d509fb8b73cef2f8bbe566ef957854a47\"}\r\n",
+      "stdout_bytes": 231,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T07:18:31.893Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T07:18:31.735Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r47-20261008-cutover-process-check-7a31"
+    },
+    "request_id": "wab-r47-20261008-cutover-process-check-7a31",
+    "started_at": "2026-10-08T07:18:30.899Z",
+    "status": "completed"
+  },
+  "id": "wab-r47-20261008-cutover-process-check-7a31",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
