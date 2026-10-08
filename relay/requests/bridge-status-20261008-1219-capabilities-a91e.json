@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-status-20261008-1219-capabilities-a91e",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 15000,
+  "note": "Read-only PC Control capability probe before WebAIBridge status check"
+}
