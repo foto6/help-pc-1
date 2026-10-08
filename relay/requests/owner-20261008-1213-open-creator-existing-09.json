@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-1213-open-creator-existing-09",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$body=@{id='chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c'}|ConvertTo-Json -Compress;$r=Invoke-RestMethod -Method POST -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/open' -ContentType 'application/json' -Body $body -TimeoutSec 8;[ordered]@{name=$r.chatName;id=$r.chatId;opened=$r.opened;alreadyOpen=$r.alreadyOpen;profile=$r.profileName;url=$r.url;targetId=$r.targetId}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Owner-requested open original Creator agent ChatGPT tab by exact existing chat URL, without new conversation or Send."
+}
