@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r55-20261008-extra3-fresh-preflight-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,urllib.parse,hashlib,datetime,subprocess,concurrent.futures,socket\nb='http://127.0.0.1:17448'\ndef get(u,t=5):\n with urllib.request.urlopen(u,timeout=t) as r:return json.load(r)\nop=get(b+'/api/operator-lifecycle');w=get(b+'/api/supervisor-watchdog?detect=0').get('config',{});h=get(b+'/api/health').get('assignmentQueue',{});chs=get(b+'/api/supervisor-watchdog/managed-chats?inspect=0').get('chats',[])\nsafe=op.get('queuePaused') is True and w.get('mode')=='off' and w.get('enabled') is False and w.get('allowAutonomousSend') is False and w.get('autoContinueEnabled') is False and h.get('active')==0 and h.get('queued')==2\nif not safe:raise RuntimeError('operator_not_frozen')\nraw=get('http://127.0.0.1:17410/json/list')\ndef canonical(u):\n try:\n  p=urllib.parse.urlparse(u);return p.path.rstrip('/') if p.hostname in ('chatgpt.com','www.chatgpt.com') else ''\n except:return ''\nmanaged={canonical(x.get('url','')) for x in chs}\nallchat=[x for x in raw if x.get('type')=='page' and urllib.parse.urlparse(x.get('url','')).hostname in ('chatgpt.com','www.chatgpt.com')]\nunmanaged=sorted([x for x in allchat if canonical(x.get('url','')) not in managed],key=lambda x:x.get('id',''))\nif len(chs)!=6 or len(allchat)!=9 or len(unmanaged)!=3 or len({x.get('id') for x in raw if x.get('type')=='page'})!=sum(x.get('type')=='page' for x in raw):raise RuntimeError('chrome_inventory_changed')\nif any(sum(1 for t in raw if t.get('type')=='page' and canonical(t.get('url',''))==canonical(c.get('url','')))!=1 for c in chs):raise RuntimeError('managed_uniqueness_failed')\nprint(json.dumps({'checkedAt':datetime.datetime.now().isoformat(timespec='seconds'),'frozenOperator':safe,'pageCount':sum(x.get('type')=='page' for x in raw),'managed6OneToOne':True,'otherChatGPT':len(unmanaged),'other':[{'alias':'extra-'+str(i+1),'targetId':x.get('id'),'fullUrlSha256':hashlib.sha256(x.get('url','').encode()).hexdigest(),'canonicalConversationRoute':bool(canonical(x.get('url',''))),'debuggerPresent':bool(x.get('webSocketDebuggerUrl'))} for i,x in enumerate(unmanaged)],'noUserTextRead':True},ensure_ascii=True)[:3600])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "R55 fresh read-only current exact 3 other ChatGPT Chrome targets by opaque ID and SHA URL, six agent unique + paused gate; no tab focus, read of provider content or browser changes."
+}
