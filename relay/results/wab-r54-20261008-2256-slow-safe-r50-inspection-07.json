@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,subprocess,datetime,time,urllib.request,concurrent.futures\nbase='http://127.0.0.1:17448'\ndef get(item):\n name,path=item;start=time.monotonic()\n try:\n  with urllib.request.urlopen(base+path,timeout=5) as r:x=json.load(r)\n  if name=='operator': data={'queuePaused':x.get('queuePaused'),'mode':x.get('mode')}\n  elif name=='watchdog':\n   w=x.get('config',{})\n   data={'mode':w.get('mode'),'enabled':w.get('enabled'),'autoSend':w.get('allowAutonomousSend'),'autoContinue':w.get('autoContinueEnabled')}\n  else:\n   a=x.get('assignmentQueue',{})\n   data={'healthState':x.get('state'),'active':a.get('active'),'queued':a.get('queued')}\n  return {'name':name,'durationMs':round((time.monotonic()-start)*1000),'state':data}\n except Exception as e:return {'name':name,'durationMs':round((time.monotonic()-start)*1000),'error':type(e).__name__}\nwith concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:\n status=list(pool.map(get,[('operator','/api/operator-lifecycle'),('watchdog','/api/supervisor-watchdog?detect=0'),('health','/api/health')]))\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'api':status,'scope':'R54_CONTENT_FREE_READ_ONLY_R50_INSPECTION'}\nvals={x['name']:x.get('state',{}) for x in status}\nsafe=vals.get('operator',{}).get('queuePaused') is True and vals.get('watchdog',{}).get('mode')=='off' and vals.get('watchdog',{}).get('enabled') is False and vals.get('watchdog',{}).get('autoSend') is False and vals.get('watchdog',{}).get('autoContinue') is False and vals.get('health',{}).get('active')==0\nout['safeToProbe']=safe\nif safe:\n script=r'E:\\WebAIBridge\\app\\data\\operator-tools\\r50-read-only-chrome-check\\releases\\814c0e7e328599c85d7927e2a48b3e0f5df1becc\\r50-restart-readiness-preflight.js'\n r=subprocess.run(['node.exe',script],capture_output=True,text=True,timeout=39)\n out['r50ExitCode']=r.returncode\n try:\n  report=json.loads(r.stdout.strip())\n  out['r50']={'status':report.get('status'),'allSixObserved':report.get('allSixObserved'),'otherChatGPT':report.get('unmanagedChatGPTTabCount'),'tabs':[{k:v.get(k) for k in ('name','probeStatus','domIdentityConfirmed','composerConfirmed','draftPresent','generating')} for v in report.get('tabs',[])],'restartAuthorized':report.get('automaticRestartAuthorized')}\n except:out['r50']={'status':'NO_VALID_JSON','stderrPresent':bool(r.stderr)}\nprint(json.dumps(out,ensure_ascii=True)[:6600])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T22:56:24\", \"api\": [{\"name\": \"operator\", \"durationMs\": 113, \"state\": {\"queuePaused\": true, \"mode\": \"PAUSED_BROWSER\"}}, {\"name\": \"watchdog\", \"durationMs\": 117, \"state\": {\"mode\": \"off\", \"enabled\": false, \"autoSend\": false, \"autoContinue\": false}}, {\"name\": \"health\", \"durationMs\": 111, \"state\": {\"healthState\": \"PAUSED\", \"active\": 0, \"queued\": 2}}], \"scope\": \"R54_CONTENT_FREE_READ_ONLY_R50_INSPECTION\", \"safeToProbe\": true, \"r50ExitCode\": 2, \"r50\": {\"status\": \"RESTART_BLOCKED\", \"allSixObserved\": true, \"otherChatGPT\": 3, \"tabs\": [{\"name\": \"Bridge\", \"probeStatus\": \"RESPONSIVE\", \"domIdentityConfirmed\": true, \"composerConfirmed\": true, \"draftPresent\": false, \"generating\": false}, {\"name\": \"Media\", \"probeStatus\": \"RESPONSIVE\", \"domIdentityConfirmed\": true, \"composerConfirmed\": true, \"draftPresent\": false, \"generating\": false}, {\"name\": \"Creator\", \"probeStatus\": \"RESPONSIVE\", \"domIdentityConfirmed\": true, \"composerConfirmed\": true, \"draftPresent\": false, \"generating\": false}, {\"name\": \"Growth\", \"probeStatus\": \"RESPONSIVE\", \"domIdentityConfirmed\": true, \"composerConfirmed\": true, \"draftPresent\": false, \"generating\": false}, {\"name\": \"Native MCP\", \"probeStatus\": \"RESPONSIVE\", \"domIdentityConfirmed\": true, \"composerConfirmed\": true, \"draftPresent\": false, \"generating\": false}, {\"name\": \"QA\", \"probeStatus\": \"RESPONSIVE\", \"domIdentityConfirmed\": true, \"composerConfirmed\": true, \"draftPresent\": false, \"generating\": false}], \"restartAuthorized\": false}}\r\n",
+      "stdout_bytes": 1479,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T15:56:25.431Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T15:56:25.259Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r54-20261008-2256-slow-safe-r50-inspection-07"
+    },
+    "request_id": "wab-r54-20261008-2256-slow-safe-r50-inspection-07",
+    "started_at": "2026-10-08T15:56:23.877Z",
+    "status": "completed"
+  },
+  "id": "wab-r54-20261008-2256-slow-safe-r50-inspection-07",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
