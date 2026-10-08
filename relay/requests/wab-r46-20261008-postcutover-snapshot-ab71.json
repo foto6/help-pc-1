@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r46-20261008-postcutover-snapshot-ab71",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,json,subprocess,urllib.request,datetime\nr={'at':datetime.datetime.now().isoformat(),'mode':'read_only_post_r46_timeout'}\ntry:\n p=subprocess.run(['git.exe','-C',r'E:\\WebAIBridge','rev-parse','HEAD'],capture_output=True,timeout=3);r['head']=p.stdout.decode('ascii','replace').strip()\nexcept Exception as e:r['head_error']=type(e).__name__\nfor name,path in [('health','/api/health'),('operator','/api/operator-lifecycle'),('watchdog','/api/supervisor-watchdog?detect=0'),('cutover','/api/projects/control-plane/cutover-r42/status')]:\n try:\n  with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=1.5) as f:d=json.load(f)\n  r[name]={k:d.get(k) for k in ('state','ok','blockers','queuePaused','mode','holdActive','serverStartedAt')}\n  if name=='health':r[name]['queue']=d.get('assignmentQueue')\n  if name=='watchdog':r[name]={k:d.get('config',{}).get(k) for k in ('mode','enabled','allowAutonomousSend','autoContinueEnabled')}\n  if name=='cutover':r[name]={'state':d.get('cutoverState',{}).get('status'),'holdActive':d.get('cutoverState',{}).get('holdActive'),'targetSha':d.get('cutoverState',{}).get('targetSha'),'rollbackManifest':bool(d.get('cutoverState',{}).get('rollbackManifest'))}\n except Exception as e:r[name]={'error':type(e).__name__}\nprint(json.dumps(r,ensure_ascii=True)[:4800])"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "Independent bounded read-only R46 cutover readback: local HEAD + health + paused/off/rollback; no Send, restart, or checkout."
+}
