@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json,datetime\nscript=\"const canon=require('E:/WebAIBridge/app/data/operator-tools/r50-read-only-chrome-check/releases/814c0e7e328599c85d7927e2a48b3e0f5df1becc/chrome-restart-readiness-r50.js').canonicalChat;\\nasync function get(url){const r=await fetch(url,{signal:AbortSignal.timeout(2600)});if(!r.ok)throw Error('non_200');return r.json()}\\nfunction probe(url,time=2900){return new Promise(resolve=>{let ws,done=false;const t=setTimeout(()=>finish({status:'TIMEOUT'}),time);function finish(result){if(done)return;done=true;clearTimeout(t);try{ws?.close()}catch{}resolve(result)}\\ntry{ws=new WebSocket(url);ws.addEventListener('open',()=>ws.send(JSON.stringify({id:151,method:'Runtime.evaluate',params:{expression:\\\"({wasDiscarded:document.wasDiscarded===true,discardPropPresent:typeof document.wasDiscarded==='boolean',visibility:document.visibilityState,focused:document.hasFocus(),ready:document.readyState,navigationType:(performance.getEntriesByType('navigation')[0]||{}).type||'unknown'})\\\",returnByValue:true}})));\\nws.addEventListener('message',event=>{try{const p=JSON.parse(event.data);if(p.id===151)finish(p.result?.result?.value?{status:'OK',state:p.result.result.value}:{status:'EVAL_ERROR'})}catch{finish({status:'BAD_REPLY'})}});\\nws.addEventListener('error',()=>finish({status:'SOCKET_ERROR'}))}catch{finish({status:'CONNECT_ERROR'})}})}\\n(async()=>{const b='http://127.0.0.1:17448';\\nconst [o,w,h,chats,pages]=await Promise.all([get(b+'/api/operator-lifecycle'),get(b+'/api/supervisor-watchdog?detect=0'),get(b+'/api/health'),get(b+'/api/supervisor-watchdog/managed-chats?inspect=0'),get('http://127.0.0.1:17410/json/list')]);\\nif(!(o.queuePaused===true&&w.config?.mode==='off'&&w.config?.enabled===false&&w.config?.allowAutonomousSend===false&&w.config?.autoContinueEnabled===false&&h.assignmentQueue?.active===0))throw Error('hold_gate');\\nconst names=new Map(chats.chats.map(c=>[canon(c.url),c.name]));const tabs=pages.filter(t=>{try{return t.type==='page'&&['chatgpt.com','www.chatgpt.com'].includes(new URL(t.url).hostname)}catch{return false}});\\nif(tabs.length!==9||tabs.filter(t=>names.has(canon(t.url))).length!==6)throw Error('nine_chat_inventory_changed');\\nconst rows=await Promise.all(tabs.map(async (tab,i)=>({name:names.get(canon(tab.url))||('Extra-'+(i+1)),managed:names.has(canon(tab.url)),...(await probe(tab.webSocketDebuggerUrl))})));\\nconsole.log(JSON.stringify({scope:'chrome_renderer_lifecycle_readonly',browserPages:pages.filter(t=>t.type==='page').length,rows,providerTextNotRead:true,browserMutations:false,readOnly:true}));\\n})().catch(e=>{console.log(JSON.stringify({status:'INCOMPLETE',reason:String(e.message).slice(0,100)}));process.exitCode=2})\"\np=subprocess.run(['node.exe','-e',script],capture_output=True,text=True,timeout=12)\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'code':p.returncode,'stdout':p.stdout.strip()[-7000:],'stderr':p.stderr[:250]},ensure_ascii=True)[:8000])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T17:05:39\", \"code\": 0, \"stdout\": \"{\\\"scope\\\":\\\"chrome_renderer_lifecycle_readonly\\\",\\\"browserPages\\\":10,\\\"rows\\\":[{\\\"name\\\":\\\"Extra-1\\\",\\\"managed\\\":false,\\\"status\\\":\\\"OK\\\",\\\"state\\\":{\\\"wasDiscarded\\\":false,\\\"discardPropPresent\\\":true,\\\"visibility\\\":\\\"hidden\\\",\\\"focused\\\":false,\\\"ready\\\":\\\"complete\\\",\\\"navigationType\\\":\\\"reload\\\"}},{\\\"name\\\":\\\"QA\\\",\\\"managed\\\":true,\\\"status\\\":\\\"OK\\\",\\\"state\\\":{\\\"wasDiscarded\\\":true,\\\"discardPropPresent\\\":true,\\\"visibility\\\":\\\"hidden\\\",\\\"focused\\\":false,\\\"ready\\\":\\\"complete\\\",\\\"navigationType\\\":\\\"back_forward\\\"}},{\\\"name\\\":\\\"Extra-3\\\",\\\"managed\\\":false,\\\"status\\\":\\\"OK\\\",\\\"state\\\":{\\\"wasDiscarded\\\":true,\\\"discardPropPresent\\\":true,\\\"visibility\\\":\\\"hidden\\\",\\\"focused\\\":false,\\\"ready\\\":\\\"complete\\\",\\\"navigationType\\\":\\\"back_forward\\\"}},{\\\"name\\\":\\\"Extra-4\\\",\\\"managed\\\":false,\\\"status\\\":\\\"OK\\\",\\\"state\\\":{\\\"wasDiscarded\\\":true,\\\"discardPropPresent\\\":true,\\\"visibility\\\":\\\"hidden\\\",\\\"focused\\\":false,\\\"ready\\\":\\\"complete\\\",\\\"navigationType\\\":\\\"back_forward\\\"}},{\\\"name\\\":\\\"Media\\\",\\\"managed\\\":true,\\\"status\\\":\\\"TIMEOUT\\\"},{\\\"name\\\":\\\"Native MCP\\\",\\\"managed\\\":true,\\\"status\\\":\\\"TIMEOUT\\\"},{\\\"name\\\":\\\"Bridge\\\",\\\"managed\\\":true,\\\"status\\\":\\\"TIMEOUT\\\"},{\\\"name\\\":\\\"Growth\\\",\\\"managed\\\":true,\\\"status\\\":\\\"TIMEOUT\\\"},{\\\"name\\\":\\\"Creator\\\",\\\"managed\\\":true,\\\"status\\\":\\\"TIMEOUT\\\"}],\\\"providerTextNotRead\\\":true,\\\"browserMutations\\\":false,\\\"readOnly\\\":true}\", \"stderr\": \"\"}\r\n",
+      "stdout_bytes": 1424,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T10:05:39.309Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T10:05:39.145Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r51-20261008-renderer-lifecycle-readonly-34"
+    },
+    "request_id": "wab-r51-20261008-renderer-lifecycle-readonly-34",
+    "started_at": "2026-10-08T10:05:35.331Z",
+    "status": "completed"
+  },
+  "id": "wab-r51-20261008-renderer-lifecycle-readonly-34",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
