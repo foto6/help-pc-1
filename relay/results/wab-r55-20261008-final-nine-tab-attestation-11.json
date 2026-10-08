@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,subprocess,hashlib,os,ctypes,datetime\nrepo=r'E:\\WebAIBridge';base='http://127.0.0.1:17448'\ndef get(p,t=5):\n with urllib.request.urlopen(base+p,timeout=t) as r:return json.load(r)\ndef git(*a):\n return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,text=True,timeout=5).stdout.strip()\nop=get('/api/operator-lifecycle')\nwd=get('/api/supervisor-watchdog?detect=0').get('config',{})\nhealth=get('/api/health')\nchats=get('/api/supervisor-watchdog/managed-chats?inspect=0')['chats']\npages=json.load(urllib.request.urlopen('http://127.0.0.1:17410/json/list',timeout=5))\nq=health.get('assignmentQueue',{})\nbasefile=os.path.join(repo,'app','data','operator-tools','r51-target-continuity','baseline.json')\nwith open(basefile,'rb') as f:baseline=hashlib.file_digest(f,'sha256').hexdigest()\nhandle=ctypes.windll.kernel32.OpenProcess(0x1000,False,13436)\nchromePidAlive=bool(handle)\nif handle:ctypes.windll.kernel32.CloseHandle(handle)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'productionSHA':git('rev-parse','HEAD'),'sourceClean':not bool(git('status','--porcelain=v1','-z','--untracked-files=all')),'chromeOriginalPID13436Alive':chromePidAlive,'queuePaused':op.get('queuePaused'),'watchdogOff':wd.get('mode')=='off' and wd.get('enabled') is False,'autoSendOff':wd.get('allowAutonomousSend') is False,'autoContinueOff':wd.get('autoContinueEnabled') is False,'queueActive':q.get('active'),'queueHeld':q.get('queued'),'health':health.get('state'),'sixManagedConfigured':len(chats)==6,'chatGPTPageCount':sum(x.get('type')=='page' and x.get('url','').startswith('https://chatgpt.com') for x in pages),'totalChromePages':sum(x.get('type')=='page' for x in pages),'originalR51BaselineIntact':baseline=='bf14616d0207730f63c93b5fcdfdc1a97a0dd7daafcb0b0a0652973c62e6c11b','readOnly':True}\nprint(json.dumps(out,ensure_ascii=True)[:3300])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T23:21:54\", \"productionSHA\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"sourceClean\": true, \"chromeOriginalPID13436Alive\": true, \"queuePaused\": true, \"watchdogOff\": true, \"autoSendOff\": true, \"autoContinueOff\": true, \"queueActive\": 0, \"queueHeld\": 2, \"health\": \"PAUSED\", \"sixManagedConfigured\": true, \"chatGPTPageCount\": 9, \"totalChromePages\": 11, \"originalR51BaselineIntact\": true, \"readOnly\": true}\r\n",
+      "stdout_bytes": 422,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T16:21:54.854Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T16:21:54.536Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r55-20261008-final-nine-tab-attestation-11"
+    },
+    "request_id": "wab-r55-20261008-final-nine-tab-attestation-11",
+    "started_at": "2026-10-08T16:21:53.659Z",
+    "status": "completed"
+  },
+  "id": "wab-r55-20261008-final-nine-tab-attestation-11",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
