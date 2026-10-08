@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,os,tempfile,json,hashlib,urllib.request,datetime\nrepo=r'E:\\WebAIBridge';sha='943c0b1d509fb8b73cef2f8bbe566ef957854a47';branch='agent/bridge-r46-safe-tab-wakeup-20261008'\ndef git(*a,t=10):return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,timeout=t)\ndef get(p):\n with urllib.request.urlopen('http://127.0.0.1:17448'+p,timeout=5) as f:return json.load(f)\nout={'at':datetime.datetime.now().isoformat(),'target':sha}\nout['head']=git('rev-parse','HEAD').stdout.decode().strip()\nout['porcelain_before']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all').stdout).hexdigest()\na=get('/api/operator-lifecycle');c=get('/api/supervisor-watchdog?detect=0').get('config',{})\nout['gate']={'queuePaused':a.get('queuePaused'),'supervisorMode':c.get('mode'),'supervisorEnabled':c.get('enabled'),'allowAutonomousSend':c.get('allowAutonomousSend'),'autoContinueEnabled':c.get('autoContinueEnabled')}\nif out['gate']!={'queuePaused':True,'supervisorMode':'off','supervisorEnabled':False,'allowAutonomousSend':False,'autoContinueEnabled':False}:raise RuntimeError('not_safe_hold')\ndata=git('cat-file','blob',sha+':app/r42-cutover.ps1')\nif data.returncode:raise RuntimeError('target_script_missing')\nwith tempfile.TemporaryDirectory(prefix='r46-preflight-') as d:\n p=os.path.join(d,'r42-cutover.ps1');open(p,'wb').write(data.stdout)\n s=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',p,'-TargetSha',sha,'-TargetBranch',branch,'-RepoPath',repo,'-PreflightOnly'],capture_output=True,text=True,timeout=40)\n out['preflight']={'exitCode':s.returncode,'stdoutTail':s.stdout[-2300:],'stderrTail':s.stderr[-450:]}\nout['porcelain_after']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all').stdout).hexdigest()\nout['worktreeUnchanged']=out['porcelain_before']==out['porcelain_after']\nprint(json.dumps(out,ensure_ascii=True)[:5500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T13:38:43.068215\", \"target\": \"943c0b1d509fb8b73cef2f8bbe566ef957854a47\", \"head\": \"18a286d4522dd73b5a65d88b5823053b71b01569\", \"porcelain_before\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"gate\": {\"queuePaused\": true, \"supervisorMode\": \"off\", \"supervisorEnabled\": false, \"allowAutonomousSend\": false, \"autoContinueEnabled\": false}, \"preflight\": {\"exitCode\": 0, \"stdoutTail\": \"{\\\"object\\\":\\\"bridge.projects_live_control_plane_cutover_preflight.r42.v1\\\",\\\"status\\\":\\\"PREFLIGHT_OK\\\",\\\"repoPath\\\":\\\"E:\\\\\\\\WebAIBridge\\\",\\\"preCutoverHead\\\":\\\"18a286d4522dd73b5a65d88b5823053b71b01569\\\",\\\"preCutoverBranch\\\":\\\"\\\",\\\"targetSha\\\":\\\"943c0b1d509fb8b73cef2f8bbe566ef957854a47\\\",\\\"targetBranch\\\":\\\"agent/bridge-r46-safe-tab-wakeup-20261008\\\",\\\"parentSha\\\":\\\"e4ee875db5ad62b514a8d1edeff85888ef83fb8c\\\",\\\"gitExecutable\\\":\\\"C:\\\\\\\\Program Files\\\\\\\\Git\\\\\\\\cmd\\\\\\\\git.exe\\\",\\\"externalGitResolved\\\":true,\\\"porcelainParserSource\\\":\\\"TARGET_SHA_GIT_BLOB\\\",\\\"porcelainParserBlob\\\":\\\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\\\",\\\"porcelainParserExpectedBlob\\\":\\\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\\\",\\\"porcelainParserProductionFileRequired\\\":false,\\\"callDepthOverflowDetected\\\":false,\\\"liveMutationPerformed\\\":false,\\\"providerMutationPerformed\\\":false}\\n\", \"stderrTail\": \"\"}, \"porcelain_after\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"worktreeUnchanged\": true}\r\n",
+      "stdout_bytes": 1412,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:38:45.826Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:38:45.561Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r46-20261008-preflight-d6fa"
+    },
+    "request_id": "wab-r46-20261008-preflight-d6fa",
+    "started_at": "2026-10-08T06:38:42.471Z",
+    "status": "completed"
+  },
+  "id": "wab-r46-20261008-preflight-d6fa",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
