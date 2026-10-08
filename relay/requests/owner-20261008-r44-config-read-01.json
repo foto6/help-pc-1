@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-r44-config-read-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'\n$j=Get-Content -LiteralPath $p -Raw | ConvertFrom-Json\n$wanted='(?i)(creator|media|growth|native|qa|bridge)'\n$rows=@($j.managedChats|Where-Object {([string]$_.role+' '+[string]$_.name+' '+[string]$_.id) -match $wanted}|ForEach-Object {\n [ordered]@{id=$_.id;name=$_.name;role=$_.role;url=$_.url;repository=$_.repository;branch=$_.branch;profileId=$_.profileId;enabled=$_.enabled}\n})\n[ordered]@{\n object='owner.r44.supervisor_config_read.v1'\n config=[ordered]@{enabled=$j.enabled;mode=$j.mode;profileId=$j.profileId;debugPort=$j.debugPort;allowAutonomousSend=$j.allowAutonomousSend;enforceHighMode=$j.enforceHighMode;highModeStrategy=$j.highModeStrategy;migrationEnabled=$j.migrationEnabled;autoContinueEnabled=$j.autoContinueEnabled;sendProtectedDraftEnabled=$j.sendProtectedDraftEnabled}\n managedChats=$rows\n mutationPerformed=$false\n}|ConvertTo-Json -Depth 12 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "R44 read-only supervisor config for exact managed chat bindings"
+}
