@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261008-owner-exact-chat-inventory-1105-r02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$j=Invoke-RestMethod -Method Get -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats' -TimeoutSec 9;$r=if($null -ne $j.chats){@($j.chats)}elseif($null -ne $j.managedChats){@($j.managedChats)}else{@()};$out=[ordered]@{keys=@($j.PSObject.Properties.Name);count=$r.Count;rows=@($r|ForEach-Object{[ordered]@{id=$_.id;name=$_.name;url=$_.url;repo=$_.repository;branch=$_.branch;head=$_.gitHead;projectId=$_.projectId;enabled=$_.enabled;status=$_.status;openTabs=$_.openTabs;highMode=$_.highMode;draftPresent=$_.draftPresent;activeAssignmentCount=$_.activeAssignmentCount}})};$out|ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15500,
+  "note": "Read-only exact managed ChatGPT conversation IDs and git bindings, no mutation or secrets."
+}
