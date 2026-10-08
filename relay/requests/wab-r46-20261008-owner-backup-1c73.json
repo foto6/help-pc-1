@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r46-20261008-owner-backup-1c73",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,hashlib,json,shutil,datetime,subprocess,urllib.request\nrepo=r'E:\\WebAIBridge';data=os.path.join(repo,'app','data')\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'object':'wab.r46.backup_receipt.v1'}\ngit=subprocess.run(['git.exe','-C',repo,'rev-parse','HEAD'],capture_output=True,text=True,timeout=7)\nout['sourceBefore']=git.stdout.strip()\nif out['sourceBefore']!='18a286d4522dd73b5a65d88b5823053b71b01569':raise RuntimeError('production SHA changed')\ndef get(p):\n with urllib.request.urlopen('http://127.0.0.1:17448'+p,timeout=5) as f:return json.load(f)\no=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{})\nif o.get('queuePaused') is not True or w.get('mode')!='off' or w.get('allowAutonomousSend') is not False:raise RuntimeError('not frozen')\nstamp=datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')\ndest=os.path.join(data,'backups','owner-r46-safety-'+stamp)\nos.makedirs(dest,exist_ok=False)\nfiles=['state.json','supervisor-watchdog.json','supervisor-watchdog-state.json','managed-chat-status.json','managed-project-status.json','managed-project-timeline.json','projects-live-control-plane-cutover-r42.json','projects-live-control-plane-cutover-r42-reconcile.json','projects-operation-ledger-r41.json']\ndetails=[]\nfor name in files:\n src=os.path.join(data,name)\n if os.path.isfile(src):\n  dst=os.path.join(dest,name);shutil.copy2(src,dst)\n  with open(src,'rb') as f:a=hashlib.file_digest(f,'sha256').hexdigest()\n  with open(dst,'rb') as f:b=hashlib.file_digest(f,'sha256').hexdigest()\n  if a!=b:raise RuntimeError('integrity_mismatch_'+name)\n  details.append({'name':name,'sha256':a,'bytes':os.path.getsize(dst)})\nmanifest={'object':'wab.r46.owner_safe_backup.v1','createdAt':stamp,'repoHead':out['sourceBefore'],'protectedAgainstAutomaticResume':True,'files':details,'restoreRequiresExplicitOperatorAction':True}\nwith open(os.path.join(dest,'manifest.json'),'w',encoding='utf-8') as f:json.dump(manifest,f,ensure_ascii=False,indent=2)\nout['backupPath']=dest;out['fileCount']=len(details);out['allVerified']=True\nprint(json.dumps(out,ensure_ascii=True))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 35000,
+  "note": "Backup 9 bounded Bridge runtime state files with SHA256 before R46 source update; no Chrome, agent or provider mutation."
+}
