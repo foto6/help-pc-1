@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,subprocess,urllib.request,json,datetime,glob,hashlib\nr={'at':datetime.datetime.now().isoformat(timespec='seconds'),'request':'readback_cutover_unknown_no_mutation'}\nrepo=r'E:\\WebAIBridge'\ntry:\n p=subprocess.run(['git.exe','-C',repo,'rev-parse','HEAD'],capture_output=True,text=True,timeout=6)\n r['head']={'code':p.returncode,'sha':p.stdout.strip()[:45]}\nexcept Exception as e:r['head']={'error':type(e).__name__}\nfor name,path in [('health','/api/health'),('status','/api/status'),('lifecycle','/api/operator-lifecycle'),('supervisor','/api/supervisor-watchdog?detect=0')]:\n try:\n  with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=3) as f:d=json.load(f)\n  if name=='health':r[name]={k:d.get(k) for k in ('state','ok','reasons','blockers','assignmentQueue','startedAt')}\n  elif name=='status':r[name]={k:d.get(k) for k in ('version','serverStartedAt','ok','controlPlaneResponsive')}\n  elif name=='lifecycle':r[name]={k:d.get(k) for k in ('mode','revision','queuePaused','quiescence')}\n  else:r[name]={k:d.get('config',{}).get(k) for k in ('mode','enabled','allowAutonomousSend','autoContinueEnabled')}\n except Exception as e:r[name]={'error':type(e).__name__}\nbase=r'E:\\WebAIBridge\\app\\data\\backups'\ntry:\n names=sorted((x for x in os.listdir(base) if x.startswith('r42-cutover-')),reverse=True)\n r['rollback_backups']={'count':len(names),'latest':[{'name':n,'manifest':os.path.isfile(os.path.join(base,n,'rollback-manifest.json')),'report':os.path.isfile(os.path.join(base,n,'cutover-report.json'))} for n in names[:2]]}\nexcept Exception as e:r['rollback_backups']={'error':type(e).__name__}\nr['owner_backup_manifest_present']=os.path.isfile(os.path.join(base,'owner-r45-safety-20261008T060653Z','manifest.json'))\nprint(json.dumps(r,ensure_ascii=True)[:7000])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T13:10:44\", \"request\": \"readback_cutover_unknown_no_mutation\", \"head\": {\"code\": 0, \"sha\": \"18a286d4522dd73b5a65d88b5823053b71b01569\"}, \"health\": {\"state\": \"BLOCKED\", \"ok\": false, \"reasons\": [\"git_evidence:health_probe_stale\", \"timeline_io:health_probe_stale\", \"assignment_queue:oldest_queued_over_60s\"], \"blockers\": [\"assignment_queue:oldest_queued_over_60s\"], \"assignmentQueue\": {\"total\": 68, \"active\": 0, \"queued\": 2, \"counts\": {\"cancelled\": 11, \"blocked\": 33, \"failed\": 12, \"completed\": 10, \"queued\": 2}, \"oldestQueuedAgeMs\": 51902280, \"lastProgressAt\": \"2026-10-08T06:10:43.397Z\", \"lastProgressAgeMs\": 1641}, \"startedAt\": \"2026-10-08T06:08:25.442Z\"}, \"status\": {\"version\": 13, \"serverStartedAt\": \"2026-10-08T06:08:25.442Z\", \"ok\": false, \"controlPlaneResponsive\": true}, \"lifecycle\": {\"mode\": \"PAUSED_BROWSER\", \"revision\": 2, \"queuePaused\": true, \"quiescence\": {\"requested\": false, \"completed\": false, \"completedAt\": \"\", \"errors\": []}}, \"supervisor\": {\"mode\": \"off\", \"enabled\": false, \"allowAutonomousSend\": false, \"autoContinueEnabled\": false}, \"rollback_backups\": {\"count\": 4, \"latest\": [{\"name\": \"r42-cutover-20261008T060820Z\", \"manifest\": true, \"report\": false}, {\"name\": \"r42-cutover-20261007T111557Z\", \"manifest\": true, \"report\": false}]}, \"owner_backup_manifest_present\": true}\r\n",
+      "stdout_bytes": 1307,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:10:45.300Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:10:45.143Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-r45-20261008-post-timeout-readback-7ed0"
+    },
+    "request_id": "bridge-r45-20261008-post-timeout-readback-7ed0",
+    "started_at": "2026-10-08T06:10:44.425Z",
+    "status": "completed"
+  },
+  "id": "bridge-r45-20261008-post-timeout-readback-7ed0",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
