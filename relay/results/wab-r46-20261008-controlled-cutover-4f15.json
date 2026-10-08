@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "TimeoutExpired: Command '['powershell.exe', '-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', 'E:\\\\WebAIBridge\\\\app\\\\r42-cutover.ps1', '-RepoPath', 'E:\\\\WebAIBridge', '-TargetSha', '943c0b1d509fb8b73cef2f8bbe566ef957854a47', '-TargetBranch', 'agent/bridge-r46-safe-tab-wakeup-20261008']' timed out after 5 seconds",
+    "error_kind": "executor_failure",
+    "finished_at": "2026-10-08T06:44:06.271Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "unknown",
+      "observed_at": "2026-10-08T06:44:06.031Z",
+      "reason": "executor_failure",
+      "reconciliation_required": true,
+      "reexecution_safe": false,
+      "request_id": "wab-r46-20261008-controlled-cutover-4f15"
+    },
+    "request_id": "wab-r46-20261008-controlled-cutover-4f15",
+    "started_at": "2026-10-08T06:41:45.484Z",
+    "status": "error"
+  },
+  "id": "wab-r46-20261008-controlled-cutover-4f15",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
