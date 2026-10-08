@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,datetime,os\nu='http://127.0.0.1:17448'\ndef get(p,timeout=3):\n with urllib.request.urlopen(u+p,timeout=timeout) as f:return json.load(f)\no=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{})\nif o.get('queuePaused') is not True or w.get('mode')!='off' or w.get('allowAutonomousSend') is not False:raise RuntimeError('must_remain_frozen')\nc=get('/api/supervisor-watchdog/managed-chats?inspect=0')\nch=next(x for x in c.get('chats',[]) if x.get('name')=='Bridge')\nv=get('/api/supervisor-watchdog/managed-chats/'+ch['id']+'/wake-preview')\nz=get('/api/projects/control-plane/cutover-r42/status').get('cutoverState',{})\nout={'at':datetime.datetime.now().isoformat(),'preview':{k:v.get(k) for k in ('object','state','exactTargetCount','promptSent','reloadPerformed','tabCreated','tabClosed','requiredConfirmation','replayAuthorized')},'targetIdPresent':bool(v.get('exactTargetId')),'cutover':{'state':z.get('status'),'hold':z.get('holdActive'),'rollbackManifestPresent':os.path.isfile(z.get('rollbackManifest',''))}}\nprint(json.dumps(out,ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T13:45:31.247329\", \"preview\": {\"object\": \"bridge.safe_tab_wakeup.r46.v1\", \"state\": \"READY_FOR_EXPLICIT_TAB_WAKE\", \"exactTargetCount\": 1, \"promptSent\": false, \"reloadPerformed\": false, \"tabCreated\": false, \"tabClosed\": false, \"requiredConfirmation\": \"WAKE_EXISTING_TAB_ONLY\", \"replayAuthorized\": false}, \"targetIdPresent\": true, \"cutover\": {\"state\": \"CUTOVER_HOLD_PREPARED\", \"hold\": true, \"rollbackManifestPresent\": true}}\r\n",
+      "stdout_bytes": 441,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:45:31.445Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:45:31.264Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r46-20261008-live-wake-preview-13b4"
+    },
+    "request_id": "wab-r46-20261008-live-wake-preview-13b4",
+    "started_at": "2026-10-08T06:45:30.679Z",
+    "status": "completed"
+  },
+  "id": "wab-r46-20261008-live-wake-preview-13b4",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
