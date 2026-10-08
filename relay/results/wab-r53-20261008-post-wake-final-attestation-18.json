@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,subprocess,json,hashlib,os,datetime,urllib.parse\nrepo=r'E:\\WebAIBridge';base='http://127.0.0.1:17448'\ndef get(path):\n with urllib.request.urlopen(base+path,timeout=5) as f:return json.load(f)\ndef git(*args):return subprocess.run(['git.exe','-C',repo,*args],capture_output=True,text=True,timeout=7).stdout.strip()\no=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0')['config'];h=get('/api/health');c=get('/api/supervisor-watchdog/managed-chats?inspect=0')\nq=h['assignmentQueue'];targets=json.load(urllib.request.urlopen('http://127.0.0.1:17410/json/list',timeout=5))\ndef canon(url):\n try:\n  u=urllib.parse.urlparse(url);return u.path.rstrip('/') if u.hostname in ('chatgpt.com','www.chatgpt.com') else ''\n except:return ''\nchecks=[sum(t.get('type')=='page' and canon(t.get('url',''))==canon(x['url']) for t in targets)==1 for x in c['chats']]\ncmd=subprocess.run(['powershell.exe','-NoProfile','-Command',\"$p=Get-CimInstance Win32_Process -Filter 'ProcessId=13436';if($p){'ALIVE'}else{'ABSENT'}\"],capture_output=True,text=True,timeout=8)\np=r'E:\\WebAIBridge\\app\\data\\operator-tools\\r51-target-continuity\\baseline.json'\nwith open(p,'rb') as f:sha=hashlib.file_digest(f,'sha256').hexdigest()\nresult={'checkedAt':datetime.datetime.now().isoformat(timespec='seconds'),'liveSHA':git('rev-parse','HEAD'),'gitClean':not bool(git('status','--porcelain=v1','--untracked-files=all')),'healthState':h.get('state'),'queuePaused':o.get('queuePaused'),'watchdogOff':w.get('mode')=='off' and w.get('enabled') is False,'autoSendDisabled':w.get('allowAutonomousSend') is False,'autoContinueDisabled':w.get('autoContinueEnabled') is False,'assignmentCounts':{k:q.get(k) for k in ('total','active','queued')},'managedChats':len(c['chats']),'allSixUniqueCurrentPages':len(checks)==6 and all(checks),'chatGPTPages':sum(t.get('type')=='page' and urllib.parse.urlparse(t.get('url','')).hostname in ('chatgpt.com','www.chatgpt.com') for t in targets),'allChromePages':sum(t.get('type')=='page' for t in targets),'originalChromePID13436Alive':cmd.stdout.strip()=='ALIVE','originalR51BaselinePreserved':sha=='bf14616d0207730f63c93b5fcdfdc1a97a0dd7daafcb0b0a0652973c62e6c11b','noBrowserMutationsHere':True}\nprint(json.dumps(result,ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"checkedAt\": \"2026-10-08T20:48:07\", \"liveSHA\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"gitClean\": true, \"healthState\": \"PAUSED\", \"queuePaused\": true, \"watchdogOff\": true, \"autoSendDisabled\": true, \"autoContinueDisabled\": true, \"assignmentCounts\": {\"total\": 68, \"active\": 0, \"queued\": 2}, \"managedChats\": 6, \"allSixUniqueCurrentPages\": true, \"chatGPTPages\": 9, \"allChromePages\": 11, \"originalChromePID13436Alive\": true, \"originalR51BaselinePreserved\": true, \"noBrowserMutationsHere\": true}\r\n",
+      "stdout_bytes": 496,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T13:48:07.974Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T13:48:07.800Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r53-20261008-post-wake-final-attestation-18"
+    },
+    "request_id": "wab-r53-20261008-post-wake-final-attestation-18",
+    "started_at": "2026-10-08T13:48:06.113Z",
+    "status": "completed"
+  },
+  "id": "wab-r53-20261008-post-wake-final-attestation-18",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
