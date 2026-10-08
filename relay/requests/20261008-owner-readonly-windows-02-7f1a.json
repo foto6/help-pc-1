@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261008-owner-readonly-windows-02-7f1a",
+  "action": "windows.list",
+  "params": {},
+  "timeout_ms": 15000,
+  "note": "Read-only Windows foreground app inventory for coordinator; no UI mutations, no protected path access."
+}
