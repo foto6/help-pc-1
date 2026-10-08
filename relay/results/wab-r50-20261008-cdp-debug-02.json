@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,tempfile,subprocess,json,datetime,urllib.request\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/operator-lifecycle',timeout=3) as f:o=json.load(f)\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog?detect=0',timeout=3) as f:w=json.load(f).get('config',{})\nif not(o.get('queuePaused') is True and w.get('mode')=='off' and w.get('allowAutonomousSend') is False):raise RuntimeError('unsafe_hold')\njs=\"'use strict';\\nconst http=require('node:http');\\nfunction get(url){return new Promise((resolve,reject)=>{const req=http.get(url,{timeout:1800},r=>{let s='';r.on('data',x=>{s+=x.toString();if(s.length>1_000_000)req.destroy(new Error('body_too_big'))});r.on('end',()=>{try{resolve(JSON.parse(s))}catch(e){reject(e)}})});req.on('error',reject);req.on('timeout',()=>req.destroy(new Error('timeout')));})}\\nfunction canon(u){try{const x=new URL(u);return x.hostname==='chatgpt.com'?x.pathname.replace(/\\\\\\\\/$/,''):''}catch{return ''}}\\nfunction evalTarget(url,ms=2500){return new Promise(done=>{let ws,finished=false;const timer=setTimeout(()=>end({status:'timeout'}),ms);function end(x){if(finished)return;finished=true;clearTimeout(timer);try{ws?.close()}catch{}done(x)}\\ntry{ws=new WebSocket(url);ws.onopen=()=>ws.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:'2+2',returnByValue:true}}));ws.onmessage=e=>{try{const r=JSON.parse(e.data);if(r.id===1)end({status:r.result?.result?.value===4?'responsive':'unexpected_result'})}catch{end({status:'parse_error'})}};ws.onerror=()=>end({status:'socket_error'})}catch{end({status:'connect_error'})}})}\\n(async()=>{const [a,p]=await Promise.all([get('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=0'),get('http://127.0.0.1:17448/api/ai-profiles')]);const ports=[...new Set(p.aiProfiles.filter(x=>x.provider==='chatgpt'&&Number(x.debugPort)>0).map(x=>Number(x.debugPort)))];const pages=(await Promise.all(ports.map(port=>get('http://127.0.0.1:'+port+'/json/list').catch(()=>[])))).flat();const out=[];for(const c of a.chats){const found=pages.filter(x=>x.type==='page'&&canon(x.url)&&canon(x.url)===canon(c.url));out.push({name:c.name,targets:found.length,...(found.length===1?await evalTarget(found[0].webSocketDebuggerUrl):{status:'identity_not_unique'})})}console.log(JSON.stringify({contract:'wab.r50.baseline.nonmutating',rows:out,allResponsive:out.length===6&&out.every(x=>x.status==='responsive'&&x.targets===1)}))})().catch(e=>{console.log(JSON.stringify({error:String(e.message).slice(0,80)}));process.exitCode=1});\\n\"\nwith tempfile.TemporaryDirectory(prefix='wab-r50-cdp-readonly-') as d:\n p=os.path.join(d,'read.js');open(p,'w',encoding='utf-8').write(js)\n r=subprocess.run(['node.exe',p],capture_output=True,text=True,timeout=28)\n print(json.dumps({'time':datetime.datetime.now().isoformat(),'exit':r.returncode,'result':r.stdout.strip()[-3400:],'error':r.stderr[:1200]},ensure_ascii=True)[:5000])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"time\": \"2026-10-08T15:34:14.331220\", \"exit\": 1, \"result\": \"\", \"error\": \"C:\\\\Users\\\\foto6\\\\AppData\\\\Local\\\\Temp\\\\wab-r50-cdp-readonly-ziay_0um\\\\read.js:4\\nfunction canon(u){try{const x=new URL(u);return x.hostname==='chatgpt.com'?x.pathname.replace(/\\\\\\\\/$/,''):''}catch{return ''}}\\n                                                                                              ^\\n\\nSyntaxError: Invalid regular expression flags\\n    at wrapSafe (node:internal/modules/cjs/loader:1804:18)\\n    at Module._compile (node:internal/modules/cjs/loader:1845:20)\\n    at Object..js (node:internal/modules/cjs/loader:2002:10)\\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\\n    at Module._load (node:internal/modules/cjs/loader:1396:12)\\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\\n    at node:internal/main/run_main_module:33:47\\n\\nNode.js v24.18.0\\n\"}\r\n",
+      "stdout_bytes": 974,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T08:34:14.520Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T08:34:14.356Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r50-20261008-cdp-debug-02"
+    },
+    "request_id": "wab-r50-20261008-cdp-debug-02",
+    "started_at": "2026-10-08T08:34:13.709Z",
+    "status": "completed"
+  },
+  "id": "wab-r50-20261008-cdp-debug-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
