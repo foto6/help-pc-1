@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json,datetime\nscript=\"'use strict';\\nconst crypto=require('node:crypto');\\nconst T={\\\"id\\\":\\\"F1B7A8CCFAA2C7EBF4AC1B9AAC48BEE2\\\",\\\"sha\\\":\\\"f9bb5b80e58b379e3e3fd3455e5b00ca104ffc98b44ff462558c27a437fd5002\\\"};\\nconst m=require('E:/WebAIBridge/app/data/operator-tools/r50-read-only-chrome-check/releases/814c0e7e328599c85d7927e2a48b3e0f5df1becc/r50-restart-readiness-preflight.js');\\nconst get=async url=>{const r=await fetch(url,{signal:AbortSignal.timeout(3300)});if(!r.ok)throw Error('HTTP_NOT_OK');return r.json()};\\nfunction evaluate(url){return new Promise(resolve=>{let ws,done=false;const tm=setTimeout(()=>end({status:'TIMEOUT'}),3300);function end(v){if(done)return;done=true;clearTimeout(tm);try{ws?.close()}catch{}resolve(v)}try{ws=new WebSocket(url);ws.addEventListener('open',()=>ws.send(JSON.stringify({id:50,method:'Runtime.evaluate',params:{expression:m.DOM_READ_ONLY_EXPRESSION,returnByValue:true,awaitPromise:false}})));ws.addEventListener('message',e=>{try{const p=JSON.parse(e.data);if(p.id===50)end(p.result?.result?.value?{status:'RESPONSIVE',value:p.result.result.value}:{status:'EVAL_ERROR'})}catch{end({status:'INVALID_REPLY'})}});ws.addEventListener('error',()=>end({status:'SOCKET_ERROR'}))}catch{end({status:'CONNECT_ERROR'})}})}\\n(async()=>{const base='http://127.0.0.1:17448';const [o,w,h,pages]=await Promise.all([get(base+'/api/operator-lifecycle'),get(base+'/api/supervisor-watchdog?detect=0'),get(base+'/api/health'),get('http://127.0.0.1:17410/json/list')]);if(!(o.queuePaused===true&&w.config?.mode==='off'&&w.config?.enabled===false&&w.config?.allowAutonomousSend===false&&h.assignmentQueue?.active===0))throw Error('PAUSE_GATE_FAILED');\\nconst matches=pages.filter(x=>x.type==='page'&&x.id===T.id&&crypto.createHash('sha256').update(x.url).digest('hex')===T.sha);if(matches.length!==1)throw Error('EXACT_TAB_CHANGED');\\nconst expected=new URL(matches[0].url);let readings=[];\\nfor(let i=0;i<3;i++){const p=await evaluate(matches[0].webSocketDebuggerUrl);const x=p.value||{};readings.push({status:p.status,identityConfirmed:!!(x.host===expected.hostname&&x.path===expected.pathname),ready:x.documentReady||'unknown',composerConfirmed:x.composerConfirmed===true,visibleEditors:Number.isInteger(x.activeEditableCount)?x.activeEditableCount:null,draftPresent:typeof x.draftPresent==='boolean'?x.draftPresent:null,generating:typeof x.generating==='boolean'?x.generating:null});if(p.status==='RESPONSIVE'&&x.documentReady==='complete'&&x.composerConfirmed===true)break;if(i<2)await new Promise(r=>setTimeout(r,1150));}\\nconsole.log(JSON.stringify({scope:'extra-3 post-discard load read-only state',readings,firstTargetStillExact:true,providerTextLogged:false,chromeMutated:false,restartAuthorized:false}));})().catch(e=>{console.log(JSON.stringify({state:'INCONCLUSIVE',reason:String(e.message).slice(0,90)}));process.exitCode=2});\"\ncheck=subprocess.run(['node.exe','--check','-'],input=script,text=True,capture_output=True,timeout=5)\nif check.returncode:raise SystemExit('node_syntax_failed')\np=subprocess.run(['node.exe','-e',script],capture_output=True,text=True,timeout=16)\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'exit':p.returncode,'result':p.stdout.strip()[-3300:],'stderrHead':p.stderr[:120]},ensure_ascii=True)[:4200])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T23:18:55\", \"exit\": 0, \"result\": \"{\\\"scope\\\":\\\"extra-3 post-discard load read-only state\\\",\\\"readings\\\":[{\\\"status\\\":\\\"RESPONSIVE\\\",\\\"identityConfirmed\\\":true,\\\"ready\\\":\\\"complete\\\",\\\"composerConfirmed\\\":true,\\\"visibleEditors\\\":1,\\\"draftPresent\\\":false,\\\"generating\\\":false}],\\\"firstTargetStillExact\\\":true,\\\"providerTextLogged\\\":false,\\\"chromeMutated\\\":false,\\\"restartAuthorized\\\":false}\", \"stderrHead\": \"\"}\r\n",
+      "stdout_bytes": 428,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T16:18:55.620Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T16:18:55.450Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r55-20261008-extra3-settled-composer-audit-07"
+    },
+    "request_id": "wab-r55-20261008-extra3-settled-composer-audit-07",
+    "started_at": "2026-10-08T16:18:54.221Z",
+    "status": "completed"
+  },
+  "id": "wab-r55-20261008-extra3-settled-composer-audit-07",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
