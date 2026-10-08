@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r44-20261008-files-triage-f613",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,json,datetime,hashlib,subprocess\napp=r'E:\\WebAIBridge\\app'\ndata=os.path.join(app,'data')\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'files':[],'mentions':[]}\nnames=['supervisor-watchdog.js','server.js','agent-assignment.js','operator-lifecycle-r40.js']\nneed=['agent-assignments','assignmentQueue','managed-chats','timeline_io','oldest_queued_over_60s']\nfor n in names:\n p=os.path.join(app,n)\n if not os.path.isfile(p):continue\n with open(p,'r',encoding='utf-8-sig',errors='replace') as f:\n  for i,s in enumerate(f,1):\n   if any(x.lower() in s.lower() for x in need):\n    out['mentions'].append({'file':n,'line':i,'snippet':s.strip()[:180]})\n    if len(out['mentions'])>=45:break\n if len(out['mentions'])>=45:break\nfor n in ['agent-assignments.json','supervisor-watchdog-state.json','supervisor-watchdog.json','managed-chat-status.json','managed-project-status.json','managed-project-timeline.json','projects-operation-ledger-r41.json','state.json']:\n p=os.path.join(data,n)\n if os.path.isfile(p):\n  st=os.stat(p)\n  v={'name':n,'bytes':st.st_size,'modified':datetime.datetime.fromtimestamp(st.st_mtime).isoformat(timespec='seconds')}\n  if n=='agent-assignments.json' and st.st_size<8000000:\n   try:\n    with open(p,'r',encoding='utf-8-sig') as f:d=json.load(f)\n    v['keys']=list(d)[:22] if isinstance(d,dict) else []\n    if isinstance(d,dict):\n     for key,z in d.items():\n      if isinstance(z,list) and len(z)<2000:v['collections']={**v.get('collections',{}),key:len(z)}\n   except Exception as e:v['json_error']=type(e).__name__\n  out['files'].append(v)\nprint(json.dumps(out,ensure_ascii=True)[:12000])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 23000,
+  "note": "Non-mutating bounded file/stat diagnostics for stale assignment queue and watchdog, no HTTP/chats/no secrets"
+}
