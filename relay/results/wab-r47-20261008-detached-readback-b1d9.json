@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,subprocess,urllib.request,json,datetime,hashlib\nrepo=r'E:\\WebAIBridge';root=r'E:\\WebAIBridge\\app\\data\\backups\\owner-r47-safety-20261008T071638Z'\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'request':'read_only_r47_cutover_attestation'}\ndef get(path,seconds=3):\n with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=seconds) as f:return json.load(f)\np=subprocess.run(['git.exe','-C',repo,'rev-parse','HEAD'],capture_output=True,text=True,timeout=5)\nout['head']=p.stdout.strip()\nfor name,path in [('health','/api/health'),('operator','/api/operator-lifecycle'),('supervisor','/api/supervisor-watchdog?detect=0'),('cutover','/api/projects/control-plane/cutover-r42/status')]:\n try:\n  d=get(path)\n  if name=='health':out[name]={'state':d.get('state'),'ok':d.get('ok'),'reasons':d.get('reasons'),'queue':{k:d.get('assignmentQueue',{}).get(k) for k in ('total','active','queued')}}\n  if name=='operator':out[name]={k:d.get(k) for k in ('mode','queuePaused','revision')}\n  if name=='supervisor':out[name]={k:d.get('config',{}).get(k) for k in ('mode','enabled','allowAutonomousSend','autoContinueEnabled')}\n  if name=='cutover':out[name]={k:d.get('cutoverState',{}).get(k) for k in ('status','holdActive','targetSha','preCutoverHead','rollbackManifest')}\n except Exception as e:out[name]={'error':type(e).__name__}\ntry:\n report=os.path.join(root,'r47-cutover-report.json')\n out['reportExists']=os.path.isfile(report)\n if out['reportExists']:\n  r=json.load(open(report,encoding='utf-8-sig'))\n  out['report']={k:r.get(k) for k in ('status','postCutoverHead','cutoverHoldActive','providerChatDeletionPerformed','localBridgeResponsive')}\n for n in ('r47-cutover.stdout.log','r47-cutover.stderr.log'):\n  p=os.path.join(root,n);out[n+'.bytes']=os.path.getsize(p) if os.path.isfile(p) else -1\nexcept Exception as e:out['reportError']=type(e).__name__\ntry:\n p=subprocess.run(['powershell.exe','-NoProfile','-Command',\"$p=Get-CimInstance Win32_Process -Filter \\\"ProcessId=13436\\\"; if($p){'ALIVE'}else{'ABSENT'}\"],capture_output=True,text=True,timeout=5)\n out['originalChromeAlive']=p.stdout.strip()=='ALIVE'\nexcept Exception as e:out['chromeProbeError']=type(e).__name__\nprint(json.dumps(out,ensure_ascii=True)[:4800])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T14:18:00\", \"request\": \"read_only_r47_cutover_attestation\", \"head\": \"943c0b1d509fb8b73cef2f8bbe566ef957854a47\", \"health\": {\"state\": \"BLOCKED\", \"ok\": false, \"reasons\": [\"git_evidence:health_probe_stale\", \"timeline_io:health_probe_stale\", \"assignment_queue:oldest_queued_over_60s\"], \"queue\": {\"total\": 68, \"active\": 0, \"queued\": 2}}, \"operator\": {\"mode\": \"PAUSED_BROWSER\", \"queuePaused\": true, \"revision\": 3}, \"supervisor\": {\"mode\": \"off\", \"enabled\": false, \"allowAutonomousSend\": false, \"autoContinueEnabled\": false}, \"cutover\": {\"status\": \"CUTOVER_HOLD_PREPARED\", \"holdActive\": true, \"targetSha\": \"943c0b1d509fb8b73cef2f8bbe566ef957854a47\", \"preCutoverHead\": \"18a286d4522dd73b5a65d88b5823053b71b01569\", \"rollbackManifest\": \"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261008T064149Z\\\\rollback-manifest.json\"}, \"reportExists\": false, \"r47-cutover.stdout.log.bytes\": 0, \"r47-cutover.stderr.log.bytes\": 0, \"originalChromeAlive\": true}\r\n",
+      "stdout_bytes": 958,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T07:18:01.438Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T07:18:01.262Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r47-20261008-detached-readback-b1d9"
+    },
+    "request_id": "wab-r47-20261008-detached-readback-b1d9",
+    "started_at": "2026-10-08T07:18:00.190Z",
+    "status": "completed"
+  },
+  "id": "wab-r47-20261008-detached-readback-b1d9",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
