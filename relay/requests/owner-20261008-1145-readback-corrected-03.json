@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-1145-readback-corrected-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$base='http://127.0.0.1:17448';$m=Invoke-RestMethod -Method GET -Uri ($base+'/api/supervisor-watchdog/managed-chats') -TimeoutSec 7;$a=Invoke-RestMethod -Method GET -Uri ($base+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 7;$p=Invoke-RestMethod -Method GET -Uri ($base+'/api/ai-profiles') -TimeoutSec 5;$result=[ordered]@{};$result.at=(Get-Date).ToString('o');$result.chats=@($m.chats|ForEach-Object{[ordered]@{name=$_.name;id=$_.id;status=$_.status;error=$_.error;generating=$_.generating;highMode=$_.highMode;openTabs=$_.openTabs;lastSeenAt=$_.lastSeenAt;lastProgressAt=$_.lastProgressAt;head=$_.gitHead}});$result.assignments=@($a.assignments|Where-Object{$_.createdAt -ge '2026-10-08T04:00:00'}|ForEach-Object{[ordered]@{id=$_.id;chatId=$_.targetChatId;state=$_.state;dispatchCount=$_.dispatchCount;dispatchSubmitAttempted=$_.dispatchSubmitAttempted;lastDiagnostic=$_.lastDiagnostic;lastPreflightReason=$_.lastPreflightReason;currentHead=$_.currentHead;ciConclusion=$_.ciConclusion}});$result.profileKeys=@($p.PSObject.Properties.Name);$result.profiles=@($p.profiles|Where-Object{$_.provider -eq 'chatgpt'}|ForEach-Object{[ordered]@{id=$_.id;name=$_.name;debugPort=$_.debugPort;workerConnected=$_.workerConnected}});$result|ConvertTo-Json -Compress -Depth 8"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 23500,
+  "note": "Read-only exact chat task receipts and debug-port metadata, fixed syntax; no user data or secrets."
+}
