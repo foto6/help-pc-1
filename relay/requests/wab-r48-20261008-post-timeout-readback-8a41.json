@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r48-20261008-post-timeout-readback-8a41",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,json,subprocess,urllib.request,datetime,hashlib\nrepo=r'E:\\WebAIBridge';out={'at':datetime.datetime.now().isoformat(timespec='seconds'),'object':'R48_READONLY_POST_TIMEOUT'}\ndef get(p,t=4):\n with urllib.request.urlopen('http://127.0.0.1:17448'+p,timeout=t) as f:return json.load(f)\np=subprocess.run(['git.exe','-C',repo,'rev-parse','HEAD'],capture_output=True,text=True,timeout=6)\nout['head']=p.stdout.strip()\np=subprocess.run(['git.exe','-C',repo,'status','--porcelain=v1','-z','--untracked-files=all'],capture_output=True,timeout=6)\nout['worktreeClean']=len(p.stdout)==0\nfor k,u in [('health','/api/health'),('operator','/api/operator-lifecycle'),('watchdog','/api/supervisor-watchdog?detect=0'),('cutover','/api/projects/control-plane/cutover-r42/status')]:\n try:\n  d=get(u)\n  if k=='health':out[k]={'state':d.get('state'),'ok':d.get('ok'),'operationalMode':d.get('operationalMode'),'queueSafety':d.get('queueSafety'),'blockers':d.get('blockers'),'notices':d.get('notices'),'queue':{x:d.get('assignmentQueue',{}).get(x) for x in ('total','active','queued')}}\n  if k=='operator':out[k]={'mode':d.get('mode'),'queuePaused':d.get('queuePaused')}\n  if k=='watchdog':out[k]={x:d.get('config',{}).get(x) for x in ('mode','enabled','allowAutonomousSend','autoContinueEnabled')}\n  if k=='cutover':out[k]={x:d.get('cutoverState',{}).get(x) for x in ('status','holdActive','targetSha','preCutoverHead','rollbackManifest')}\n except Exception as e:out[k]={'error':type(e).__name__}\nmanifest=out.get('cutover',{}).get('rollbackManifest','')\nout['rollbackManifestExists']=bool(manifest) and os.path.isfile(manifest)\nout['normalReportExists']=os.path.isfile(r'E:\\WebAIBridge\\app\\data\\backups\\owner-r48-safety-20261008T073651Z\\r48-cutover-report.json')\ntry:\n p=subprocess.run(['powershell.exe','-NoProfile','-Command',\"$p=Get-CimInstance Win32_Process -Filter 'ProcessId=13436'; if($p){'ALIVE'}else{'ABSENT'}\"],capture_output=True,text=True,timeout=6)\n out['originalChromeAlive']=p.stdout.strip()=='ALIVE'\nexcept Exception as e:out['chromeProbeError']=type(e).__name__\nprint(json.dumps(out,ensure_ascii=True)[:6500])"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 34000,
+  "note": "Independent read-only R48 runtime verification: exact HEAD, /api/health queue paused semantics, supervisor off, R42 manifest and original Chrome PID, no send/restart."
+}
