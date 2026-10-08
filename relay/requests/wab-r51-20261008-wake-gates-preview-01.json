@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r51-20261008-wake-gates-preview-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,urllib.parse,subprocess,datetime\nbase='http://127.0.0.1:17448'\ndef get(path,t=4):\n with urllib.request.urlopen(base+path,timeout=t) as r:return json.load(r)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'scope':'R51_EXACT_EXISTING_TAB_PREVIEW_ONLY'}\nhead=subprocess.run(['git.exe','-C',r'E:\\WebAIBridge','rev-parse','HEAD'],capture_output=True,text=True,timeout=5).stdout.strip()\nout['head']=head\nif head!='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03':raise RuntimeError('unexpected_live_sha')\noperator=get('/api/operator-lifecycle');wd=get('/api/supervisor-watchdog?detect=0').get('config',{});health=get('/api/health')\nq=health.get('assignmentQueue',{})\nsafe=(operator.get('queuePaused') is True and wd.get('mode')=='off' and wd.get('enabled') is False and wd.get('allowAutonomousSend') is False and wd.get('autoContinueEnabled') is False and q.get('active')==0 and q.get('queued')==2)\nout['safety']={'passed':safe,'queuePaused':operator.get('queuePaused'),'watchdogMode':wd.get('mode'),'activeAssignments':q.get('active'),'queuedHeld':q.get('queued')}\nif not safe:raise RuntimeError('freeze_gate_failed')\nchats=get('/api/supervisor-watchdog/managed-chats?inspect=0').get('chats',[])\nout['chats']=[]\nfor c in chats:\n row={'name':c.get('name'),'id':c.get('id')}\n if c.get('name') in ('Bridge','Media','Creator','Growth','Native MCP'):\n  path='/api/supervisor-watchdog/managed-chats/'+urllib.parse.quote(c['id'],safe='')+'/wake-preview'\n  try:\n   d=get(path,t=4)\n   row.update({'state':d.get('state'),'targetId':d.get('exactTargetId'),'targetCount':d.get('exactTargetCount'),'requiredConfirmation':d.get('requiredConfirmation'),'focusChange':d.get('foregroundFocusWillChange'),'noNavigation':d.get('navigationPerformed') is False})\n  except Exception as e:row.update({'state':'PREVIEW_FAILED','reason':type(e).__name__})\n out['chats'].append(row)\nprint(json.dumps(out,ensure_ascii=True)[:6500])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 35000,
+  "note": "Read-only preflight GETs for five exact existing managed ChatGPT tabs before any foreground-only wake; never send/reload/Chrome restart/agent dispatch."
+}
