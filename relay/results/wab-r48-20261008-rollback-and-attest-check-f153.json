@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,subprocess,datetime,hashlib\nrepo=r'E:\\WebAIBridge';sha='8360bed73554011e7d6ff816c6365196c5e483ee'\nmanifest=r'E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261008T073836Z\\rollback-manifest.json'\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'sha':sha}\nif not os.path.isfile(manifest):raise RuntimeError('new_r48_manifest_missing')\np=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',os.path.join(repo,'app','r42-rollback.ps1'),'-Manifest',manifest,'-ValidateOnly'],capture_output=True,text=True,timeout=23)\nout['rollbackValidate']={'exitCode':p.returncode,'passed':'PREFLIGHT_OK' in p.stdout,'stderrTail':p.stderr[-400:]}\nif p.returncode or not out['rollbackValidate']['passed']:raise RuntimeError('rollback_validate_failed')\np=subprocess.run(['node.exe',os.path.join(repo,'app','r48-cutover-attest.js'),'--repo='+repo,'--manifest='+manifest,'--target-sha='+sha],capture_output=True,text=True,timeout=22)\nout['attestExitCode']=p.returncode\nif p.stdout.strip():\n d=json.loads(p.stdout)\n out['attestation']={k:d.get(k) for k in ('ok','outcome','targetSHA','preCutoverSHA','originalCutoverState','originalCutoverScriptExitVerified','rollbackBackupFileCount','invalidBackupNames','exactChatTargetCounts','queuePaused','supervisorOff','historicalQueueRetained','evidenceSha256')}\nelse:out['stderr']=p.stderr[-850:]\nout['receiptAlreadyExists']=os.path.isfile(os.path.join(os.path.dirname(manifest),'r48-independent-attestation.json'))\nprint(json.dumps(out,ensure_ascii=True)[:6200])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T14:42:00\", \"sha\": \"8360bed73554011e7d6ff816c6365196c5e483ee\", \"rollbackValidate\": {\"exitCode\": 0, \"passed\": true, \"stderrTail\": \"\"}, \"attestExitCode\": 0, \"attestation\": {\"ok\": true, \"outcome\": \"INDEPENDENT_VERIFIED_HOLD\", \"targetSHA\": \"8360bed73554011e7d6ff816c6365196c5e483ee\", \"preCutoverSHA\": \"4638fd18def71dbfa07227c4b9b1bcbf89bba2a5\", \"originalCutoverState\": \"CUTOVER_HOLD_PREPARED\", \"originalCutoverScriptExitVerified\": false, \"rollbackBackupFileCount\": 9, \"invalidBackupNames\": [], \"exactChatTargetCounts\": [{\"name\": \"Bridge\", \"matches\": 1}, {\"name\": \"Media\", \"matches\": 1}, {\"name\": \"Creator\", \"matches\": 1}, {\"name\": \"Growth\", \"matches\": 1}, {\"name\": \"Native MCP\", \"matches\": 1}, {\"name\": \"QA\", \"matches\": 1}], \"queuePaused\": true, \"supervisorOff\": true, \"historicalQueueRetained\": 2, \"evidenceSha256\": \"b5f497a7bfa67892a4b44aeda46ee333986f5ca2a26b6b547fbf5c21f895b4bb\"}, \"receiptAlreadyExists\": false}\r\n",
+      "stdout_bytes": 932,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T07:42:01.353Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T07:42:01.178Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r48-20261008-rollback-and-attest-check-f153"
+    },
+    "request_id": "wab-r48-20261008-rollback-and-attest-check-f153",
+    "started_at": "2026-10-08T07:41:59.885Z",
+    "status": "completed"
+  },
+  "id": "wab-r48-20261008-rollback-and-attest-check-f153",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
