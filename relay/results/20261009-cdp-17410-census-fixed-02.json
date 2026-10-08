@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$out=[ordered]@{port=17410;ok=$false;target_count=0;type_counts=@{};pages=@()};try{$raw=Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:17410/json/list' -TimeoutSec 5;$a=@(ConvertFrom-Json -InputObject $raw.Content);$out.ok=$true;$out.target_count=$a.Count;foreach($item in $a){$type=[string]$item.type;if(!$out.type_counts.Contains($type)){$out.type_counts[$type]=0};$out.type_counts[$type]++;if($type -eq 'page'){$host='';try{$host=([uri]$item.url).Host}catch{};$out.pages+=@{target_id=$item.id;host=$host}}}}catch{$out.error=$_.Exception.GetType().Name};$out|ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"port\":17410,\"ok\":true,\"target_count\":1,\"type_counts\":{\"page iframe page iframe iframe page iframe page iframe page iframe page iframe page page iframe page iframe browser_ui browser_ui page worker worker worker worker worker worker worker worker worker\":1},\"pages\":[]}\r\n",
+      "stdout_bytes": 272,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T17:15:38.694Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T17:15:38.518Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-cdp-17410-census-fixed-02"
+    },
+    "request_id": "20261009-cdp-17410-census-fixed-02",
+    "started_at": "2026-10-08T17:15:37.830Z",
+    "status": "completed"
+  },
+  "id": "20261009-cdp-17410-census-fixed-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
