@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,subprocess,urllib.request,datetime\nr={'at':datetime.datetime.now().isoformat(),'mode':'read_only_post_r46_timeout'}\ntry:\n p=subprocess.run(['git.exe','-C',r'E:\\WebAIBridge','rev-parse','HEAD'],capture_output=True,timeout=3);r['head']=p.stdout.decode('ascii','replace').strip()\nexcept Exception as e:r['head_error']=type(e).__name__\nfor name,path in [('health','/api/health'),('operator','/api/operator-lifecycle'),('watchdog','/api/supervisor-watchdog?detect=0'),('cutover','/api/projects/control-plane/cutover-r42/status')]:\n try:\n  with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=1.5) as f:d=json.load(f)\n  r[name]={k:d.get(k) for k in ('state','ok','blockers','queuePaused','mode','holdActive','serverStartedAt')}\n  if name=='health':r[name]['queue']=d.get('assignmentQueue')\n  if name=='watchdog':r[name]={k:d.get('config',{}).get(k) for k in ('mode','enabled','allowAutonomousSend','autoContinueEnabled')}\n  if name=='cutover':r[name]={'state':d.get('cutoverState',{}).get('status'),'holdActive':d.get('cutoverState',{}).get('holdActive'),'targetSha':d.get('cutoverState',{}).get('targetSha'),'rollbackManifest':bool(d.get('cutoverState',{}).get('rollbackManifest'))}\n except Exception as e:r[name]={'error':type(e).__name__}\nprint(json.dumps(r,ensure_ascii=True)[:4800])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T13:44:57.440952\", \"mode\": \"read_only_post_r46_timeout\", \"head\": \"943c0b1d509fb8b73cef2f8bbe566ef957854a47\", \"health\": {\"state\": \"BLOCKED\", \"ok\": false, \"blockers\": [\"assignment_queue:oldest_queued_over_60s\"], \"queuePaused\": null, \"mode\": null, \"holdActive\": null, \"serverStartedAt\": null, \"queue\": {\"total\": 68, \"active\": 0, \"queued\": 2, \"counts\": {\"cancelled\": 11, \"blocked\": 33, \"failed\": 12, \"completed\": 10, \"queued\": 2}, \"oldestQueuedAgeMs\": 53954773, \"lastProgressAt\": \"2026-10-08T06:44:56.301Z\", \"lastProgressAgeMs\": 1230}}, \"operator\": {\"state\": null, \"ok\": null, \"blockers\": null, \"queuePaused\": true, \"mode\": \"PAUSED_BROWSER\", \"holdActive\": null, \"serverStartedAt\": null}, \"watchdog\": {\"mode\": \"off\", \"enabled\": false, \"allowAutonomousSend\": false, \"autoContinueEnabled\": false}, \"cutover\": {\"state\": \"CUTOVER_HOLD_PREPARED\", \"holdActive\": true, \"targetSha\": \"943c0b1d509fb8b73cef2f8bbe566ef957854a47\", \"rollbackManifest\": true}}\r\n",
+      "stdout_bytes": 960,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:44:57.779Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:44:57.626Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r46-20261008-postcutover-snapshot-ab71"
+    },
+    "request_id": "wab-r46-20261008-postcutover-snapshot-ab71",
+    "started_at": "2026-10-08T06:44:56.915Z",
+    "status": "completed"
+  },
+  "id": "wab-r46-20261008-postcutover-snapshot-ab71",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
