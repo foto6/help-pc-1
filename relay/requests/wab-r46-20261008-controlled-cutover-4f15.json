@@ -1,0 +1,24 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r46-20261008-controlled-cutover-4f15",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "E:\\WebAIBridge\\app\\r42-cutover.ps1",
+      "-RepoPath",
+      "E:\\WebAIBridge",
+      "-TargetSha",
+      "943c0b1d509fb8b73cef2f8bbe566ef957854a47",
+      "-TargetBranch",
+      "agent/bridge-r46-safe-tab-wakeup-20261008"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 120000,
+  "note": "One R46 production controlled cutover only after dual OS green+local PreflightOnly+verified owner backup; preserve Chrome tabs, no autonomous Send, R42 rollback manifest. If timeout UNKNOWN never replay."
+}
