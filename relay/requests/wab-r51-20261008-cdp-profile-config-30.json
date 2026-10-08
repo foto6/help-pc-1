@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r51-20261008-cdp-profile-config-30",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json,datetime\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/ai-profiles',timeout=5) as r:d=json.load(r)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'chatgptProfiles':[]}\nfor x in d.get('aiProfiles',[]):\n if x.get('provider')!='chatgpt':continue\n out['chatgptProfiles'].append({'debugPort':x.get('debugPort'),'enabled':x.get('enabled'),'mode':x.get('launchMode'),'workerConnected':x.get('workerConnected')})\nprint(json.dumps(out,ensure_ascii=True)[:2000])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only sanitised Chrome ChatGPT profile enabled/debug port availability only; no names, secrets or URLs; diagnose R51 inactive 17447."
+}
