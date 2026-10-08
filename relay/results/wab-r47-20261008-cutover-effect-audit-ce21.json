@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,datetime,subprocess,urllib.request,hashlib\nroot=r'E:\\WebAIBridge';backups=os.path.join(root,'app','data','backups')\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'audit':'detached_cutover_no_replay'}\nx=subprocess.run(['git.exe','-C',root,'rev-parse','HEAD'],capture_output=True,text=True,timeout=5)\nout['head']=x.stdout.strip()\nx=subprocess.run(['git.exe','-C',root,'status','--porcelain=v1','-z','--untracked-files=all'],capture_output=True,timeout=7)\nout['worktreeStatusSha256']=hashlib.sha256(x.stdout).hexdigest()\ntry:\n rows=[n for n in os.listdir(backups) if n.startswith('r42-cutover-') and os.path.isdir(os.path.join(backups,n))]\n out['r42backupCount']=len(rows)\n out['latestR42Backups']=sorted(rows,reverse=True)[:3]\nexcept Exception as e:out['listError']=type(e).__name__\nfor tag,path in [('operator','/api/operator-lifecycle'),('supervisor','/api/supervisor-watchdog?detect=0'),('cutover','/api/projects/control-plane/cutover-r42/status')]:\n try:\n  with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=3) as f:z=json.load(f)\n  if tag=='operator':out[tag]={'paused':z.get('queuePaused'),'mode':z.get('mode')}\n  if tag=='supervisor':out[tag]={k:z.get('config',{}).get(k) for k in ('mode','enabled','allowAutonomousSend')}\n  if tag=='cutover':out[tag]={k:z.get('cutoverState',{}).get(k) for k in ('status','targetSha','holdActive')}\n except Exception as e:out[tag]={'error':type(e).__name__}\nprint(json.dumps(out,ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T14:19:16\", \"audit\": \"detached_cutover_no_replay\", \"head\": \"943c0b1d509fb8b73cef2f8bbe566ef957854a47\", \"worktreeStatusSha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"r42backupCount\": 5, \"latestR42Backups\": [\"r42-cutover-20261008T064149Z\", \"r42-cutover-20261008T060820Z\", \"r42-cutover-20261007T111557Z\"], \"operator\": {\"paused\": true, \"mode\": \"PAUSED_BROWSER\"}, \"supervisor\": {\"mode\": \"off\", \"enabled\": false, \"allowAutonomousSend\": false}, \"cutover\": {\"status\": \"CUTOVER_HOLD_PREPARED\", \"targetSha\": \"943c0b1d509fb8b73cef2f8bbe566ef957854a47\", \"holdActive\": true}}\r\n",
+      "stdout_bytes": 613,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T07:19:16.535Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T07:19:16.371Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r47-20261008-cutover-effect-audit-ce21"
+    },
+    "request_id": "wab-r47-20261008-cutover-effect-audit-ce21",
+    "started_at": "2026-10-08T07:19:15.638Z",
+    "status": "completed"
+  },
+  "id": "wab-r47-20261008-cutover-effect-audit-ce21",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
