@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "executable is not in safe allowlist: node.exe",
+    "error_kind": "policy_blocked",
+    "finished_at": "2026-10-08T13:40:45.809Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": false,
+      "effect_state": "not_started",
+      "observed_at": "2026-10-08T13:40:45.653Z",
+      "reason": "policy_blocked",
+      "reconciliation_required": false,
+      "reexecution_safe": true,
+      "request_id": "wab-r53-20261008-creator-static-r50-readonly-09"
+    },
+    "request_id": "wab-r53-20261008-creator-static-r50-readonly-09",
+    "started_at": "2026-10-08T13:40:45.475Z",
+    "status": "blocked"
+  },
+  "id": "wab-r53-20261008-creator-static-r50-readonly-09",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
