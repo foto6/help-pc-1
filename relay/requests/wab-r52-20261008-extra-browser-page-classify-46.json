@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r52-20261008-extra-browser-page-classify-46",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json,datetime,urllib.parse,collections,subprocess\nwith urllib.request.urlopen('http://127.0.0.1:17410/json/list',timeout=4) as f:targets=json.load(f)\ncounts=collections.Counter()\nfor x in targets:\n if x.get('type')!='page':continue\n try:\n  u=urllib.parse.urlparse(x.get('url',''));scheme=u.scheme;host=u.hostname or ''\n  if host in ('chatgpt.com','www.chatgpt.com'):label='chatgpt'\n  elif host in ('127.0.0.1','localhost'):label='local_bridge'\n  elif scheme=='chrome' and u.path.startswith('//settings'):label='chrome_settings'\n  elif scheme=='chrome' and u.netloc=='settings':label='chrome_settings'\n  elif scheme=='chrome':label='chrome_internal'\n  elif scheme=='chrome-extension':label='extension'\n  else:label='other_page'\n  counts[label]+=1\n except:counts['unclassified']+=1\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'counts':dict(counts),'totalPages':sum(counts.values()),'providerContentRead':False,'urlsLogged':False},ensure_ascii=True))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Read-only Chrome 11 page categories only to distinguish settings tab from target churn, no actual URLs or text, no tab focus/restart."
+}
