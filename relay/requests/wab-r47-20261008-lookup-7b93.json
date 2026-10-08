@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r47-20261008-lookup-7b93",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "wab-r47-20261008-controlled-exec-f0c9",
+    "action": "shell.run"
+  },
+  "timeout_ms": 19000,
+  "note": "Read-only durable outcome lookup of R47 cutover whose executor reported timeout. No reexecution."
+}
