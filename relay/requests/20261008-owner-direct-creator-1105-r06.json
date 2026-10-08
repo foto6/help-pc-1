@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261008-owner-direct-creator-1105-r06",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$b='http://127.0.0.1:17448';$j=Invoke-RestMethod -Method GET -Uri ($b+'/api/supervisor-watchdog/managed-chats') -TimeoutSec 6;$m=@($j.chats|Where-Object{$_.name -eq 'Creator' -and $_.repository -eq 'foto6/video1' -and $_.enabled -eq $true});if($m.Count -ne 1){throw 'exact_managed_chat_not_unique'};if($m[0].url -notmatch '^https://chatgpt.com/'){throw 'provider_url_missing'};$q=@{text='EXECUTE NOW — owner priority is autonomous short-form video editing and Reels. Work ONLY foto6/video1 agent/creator-r40-media-qa-bind-20261007 from inspected exact current HEAD 5235a237d893f6ed322deed952af60980ec19cc4; no reset or force overwrite. Existing source CI 37647880405 SUCCESS and artifact 11495710902 are NOT proof of real local montage or live publish. Independently bind approved Media R27 exact QA certificate 183838a24205c6885b2366ad6ffa394164283d91 / CI 37451069045 / artifact 11406357346; verify current Growth R39 exact SHA 887567bb62a3df0879505d68ac6a2be725b57173 and Bridge R44 current head. Build fail-closed local real input -> 4 distinct rendered candidate videos -> quality review -> at most 2 re-edit rounds -> final export -> release escrow, and transactional idempotent publishing readiness; NO live Send or actual social publish pending human review and Boss R9 GO. Diagnose missed local evidence, make independently testable implementation improvements in your branch, return new SHA, exact-head CI, artifact, actual input/output receipt or minimum blocker. Preserve drafts and worktrees. Log concrete progress, not acknowledgements.';repository='foto6/video1';branch='agent/creator-r40-media-qa-bind-20261007';expectedHead='5235a237d893f6ed322deed952af60980ec19cc4';idempotencyKey='owner-20261008-1105-creator-r40-real-e2e-v1';supervisorVerificationRequired=$true;priority=850;evidenceTimeoutMinutes=120}|ConvertTo-Json -Depth 7 -Compress;$r=Invoke-RestMethod -Method POST -Uri ($b+'/api/supervisor-watchdog/managed-chats/'+[uri]::EscapeDataString($m[0].id)+'/assignments') -ContentType 'application/json' -Body $q -TimeoutSec 9;[ordered]@{agent='Creator';assignmentId=$r.id;state=$r.state;dispatchCount=$r.dispatchCount;repository=$r.repository;branch=$r.branch;expectedHead=$r.expectedHead}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 23000,
+  "note": "Authorized idempotent exact managed chat Creator task; Bridge enforces identity/High/draft controls."
+}
