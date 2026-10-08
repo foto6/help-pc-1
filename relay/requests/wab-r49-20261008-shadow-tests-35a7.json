@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r49-20261008-shadow-tests-35a7",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,subprocess,zipfile,io,tempfile,json,hashlib,datetime\nrepo=r'E:\\WebAIBridge';branch='agent/bridge-r49-dormant-health-20261008';sha='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03'\ndef git(*a,t=20):return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,timeout=t)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'exactSHA':sha,'tests':[]}\nout['headBefore']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['statusBefore']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\ntry:\n p=git('fetch','--no-tags','--no-write-fetch-head','origin','refs/heads/'+branch,t=40)\n if p.returncode:raise RuntimeError('fetch_failed')\n if git('cat-file','-t',sha,t=7).stdout.strip()!=b'commit':raise RuntimeError('missing_commit')\n p=git('archive','--format=zip',sha,t=14)\n if p.returncode:raise RuntimeError('git_archive_failed')\n with tempfile.TemporaryDirectory(prefix='wab-r49-source-') as d:\n  with zipfile.ZipFile(io.BytesIO(p.stdout)) as z:z.extractall(d)\n  app=os.path.join(d,'app')\n  for argv in [['node.exe','--check','server.js'],['node.exe','--test','dormant-operational-health-r49.test.js'],['node.exe','--test','operational-health.test.js','paused-queue-health-r48.test.js']]:\n   z=subprocess.run(argv,cwd=app,capture_output=True,timeout=18)\n   out['tests'].append({'test':' '.join(argv[1:]),'exit':z.returncode,'stdoutTail':z.stdout.decode('utf-8','replace')[-460:],'stderrTail':z.stderr.decode('utf-8','replace')[-300:]})\nexcept Exception as e:out['error']=type(e).__name__+':'+str(e)[:160]\nout['headAfter']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['statusAfter']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\nout['productionUnchanged']=out['headBefore']==out['headAfter'] and out['statusBefore']==out['statusAfter']\nprint(json.dumps(out,ensure_ascii=True)[:6100])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 78000,
+  "note": "Isolated exact R49 local Windows source tests; only Git fetch and disposable archive, preserving R48 installed HEAD, untouched Chrome and paused agents."
+}
