@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r51-20261008-wake-bridge-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,urllib.parse,datetime,subprocess\nbase='http://127.0.0.1:17448'\nchatId='chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982'\nexpected='5AE5AA3239743E1E8A765F7834058A7B'\ndef get(path,t=5):\n with urllib.request.urlopen(base+path,timeout=t) as f:return json.load(f)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'action':'EXACT_EXISTING_BRIDGE_TAB_FOREGROUND_WAKE'}\ns=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{});h=get('/api/health')\nq=h.get('assignmentQueue',{})\nif not(s.get('queuePaused') is True and w.get('mode')=='off' and w.get('enabled') is False and w.get('allowAutonomousSend') is False and w.get('autoContinueEnabled') is False and q.get('active')==0):raise RuntimeError('freeze_gate_failed')\nendpoint='/api/supervisor-watchdog/managed-chats/'+urllib.parse.quote(chatId,safe='')\npr=get(endpoint+'/wake-preview',t=5)\nif not(pr.get('state')=='READY_FOR_EXPLICIT_TAB_WAKE' and pr.get('exactTargetId')==expected and pr.get('exactTargetCount')==1 and pr.get('chatName')=='Bridge'):raise RuntimeError('target_identity_changed')\nbody=json.dumps({'expectedTargetId':expected,'confirm':'WAKE_EXISTING_TAB_ONLY'}).encode()\nreq=urllib.request.Request(base+endpoint+'/wake',data=body,headers={'Content-Type':'application/json'},method='POST')\nwith urllib.request.urlopen(req,timeout=17) as f:response=json.load(f)\nfor key in ('state','pageResponds','navigationPerformed','reloadPerformed','tabCreated','tabClosed','queueResumed','promptSent','foregroundFocusWillChange'):\n out[key]=response.get(key)\nout['targetUnchanged']=response.get('exactTargetId')==expected\nprint(json.dumps(out,ensure_ascii=True))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 33000,
+  "note": "Explicit user-requested one-tab R46 foreground Page.bringToFront on exact existing Bridge tab, immutable expected target ID after new preview, queue frozen, no navigation/reload/Send; never blindly replay if UNKNOWN."
+}
