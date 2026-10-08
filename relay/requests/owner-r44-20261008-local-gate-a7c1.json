@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r44-20261008-local-gate-a7c1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,json,subprocess,urllib.request,datetime,hashlib\np=r'E:\\WebAIBridge'\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'repo_exists':os.path.isdir(p)}\ndef git(*args):\n try:\n  r=subprocess.run(['git.exe','-C',p,*args],capture_output=True,text=True,errors='replace',timeout=15)\n  return {'code':r.returncode,'out':(r.stdout or '').strip()[:240],'error':(r.stderr or '').strip()[:160] if r.returncode else ''}\n except Exception as e:return {'error':type(e).__name__}\nif out['repo_exists']:\n out['git_head']=git('rev-parse','HEAD')\n out['git_branch']=git('branch','--show-current')\n out['git_status_summary']={}\n try:\n  r=subprocess.run(['git.exe','-C',p,'status','--porcelain=v1','-z','--untracked-files=all'],capture_output=True,timeout=15)\n  z=[x for x in r.stdout.split(b'\\0') if x]\n  out['git_status_summary']={'code':r.returncode,'entry_count':len(z),'xy_codes':[x[:2].decode('ascii','replace') for x in z[:30]]}\n except Exception as e:out['git_status_summary']={'error':type(e).__name__}\n out['r44_object']=git('cat-file','-t','9a8898a70355bbae2d465ee49739030aa27e9f4e')\n out['r44_branch']=git('rev-parse','--verify','refs/heads/agent/bridge-r44-hotfix-r43-integration-20261007')\n out['cutover_present']=os.path.isfile(os.path.join(p,'app','r42-cutover.ps1'))\n out['rollback_present']=os.path.isfile(os.path.join(p,'app','r42-rollback.ps1'))\nfor endpoint in ['/api/health','/api/status']:\n try:\n  with urllib.request.urlopen('http://127.0.0.1:17448'+endpoint,timeout=5) as f:\n   d=json.load(f)\n  if endpoint=='/api/health':out['health']={k:d.get(k) for k in ['state','ok','reasons','degraded','blockers','codeReload','assignmentQueue','browserProbe']}\n  else:out['status']={k:d.get(k) for k in ['object','state','status','version']}\n except Exception as e:out[endpoint]={'error':type(e).__name__}\nprint(json.dumps(out,ensure_ascii=True,default=str))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 40000,
+  "note": "R44 read-only local exact-head, dirty-worktree and runtime gate; no restart, checkout, writes or chat send"
+}
