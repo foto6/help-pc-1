@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r50-20261008-isolated-tests-and-live-preview-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,subprocess,zipfile,io,tempfile,json,datetime,hashlib\nrepo=r'E:\\WebAIBridge';sha='16607c6cdd258cc9dcd5d8ef2a7e8c98256c716b';branch='agent/bridge-r50-restart-readiness-20261008'\ndef git(*a,t=20):return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,timeout=t)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'targetSHA':sha,'checks':[]}\nout['headBefore']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['dirtyHashBefore']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\ntry:\n r=git('fetch','--no-tags','--no-write-fetch-head','origin','refs/heads/'+branch,t=39)\n if r.returncode:raise RuntimeError('fetch_failed')\n if git('cat-file','-t',sha,t=7).stdout.strip()!=b'commit':raise RuntimeError('exact_SHA_not_found')\n selected=['app/chrome-restart-readiness-r50.js','app/r50-restart-readiness-preflight.js','app/chrome-restart-readiness-r50.test.js']\n r=git('archive','--format=zip',sha,*selected,t=15)\n if r.returncode:raise RuntimeError('archive_failed')\n with tempfile.TemporaryDirectory(prefix='wab-r50-isolated-') as d:\n  with zipfile.ZipFile(io.BytesIO(r.stdout)) as a:a.extractall(d)\n  app=os.path.join(d,'app')\n  for argv in [['node.exe','--check','r50-restart-readiness-preflight.js'],['node.exe','--test','chrome-restart-readiness-r50.test.js']]:\n   x=subprocess.run(argv,cwd=app,capture_output=True,text=True,errors='replace',timeout=15)\n   out['checks'].append({'test':' '.join(argv[1:]),'exit':x.returncode,'stdoutTail':x.stdout[-550:],'stderrHead':x.stderr[:450]})\n  if all(c['exit']==0 for c in out['checks']):\n   x=subprocess.run(['node.exe','r50-restart-readiness-preflight.js'],cwd=app,capture_output=True,text=True,errors='replace',timeout=39)\n   out['livePreview']={'exit':x.returncode,'stdout':x.stdout.strip()[-4100:],'stderrHead':x.stderr[:450]}\nexcept Exception as e:out['error']=type(e).__name__+':'+str(e)[:130]\nout['headAfter']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['dirtyHashAfter']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\nout['productionUnchanged']=out['headBefore']==out['headAfter'] and out['dirtyHashBefore']==out['dirtyHashAfter']\nprint(json.dumps(out,ensure_ascii=True)[:7100])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 83000,
+  "note": "Exact-head isolated R50 check and read-only six existing ChatGPT tab restart preview. No Chrome focus/navigation/restart, no draft contents output, no send/agents."
+}
