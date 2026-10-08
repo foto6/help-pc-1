@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,os,subprocess,urllib.request,datetime,hashlib\nrepo=r'E:\\WebAIBridge';base='http://127.0.0.1:17448'\ndef get(url,t=4):\n with urllib.request.urlopen(url,timeout=t) as response:return json.load(response)\ndef git(*args):return subprocess.run(['git.exe','-C',repo,*args],capture_output=True,text=True,timeout=6)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'contract':'r54.observation.readonly.v1'}\ntry:\n o=get(base+'/api/operator-lifecycle');wd=get(base+'/api/supervisor-watchdog?detect=0')['config'];h=get(base+'/api/health');c=get(base+'/api/supervisor-watchdog/managed-chats?inspect=0')\n q=h.get('assignmentQueue',{})\n out['operator']={'paused':o.get('queuePaused'),'mode':o.get('mode'),'watchdogOff':wd.get('mode')=='off' and wd.get('enabled') is False,'autoSendOff':wd.get('allowAutonomousSend') is False,'autoContinueOff':wd.get('autoContinueEnabled') is False,'queueActive':q.get('active'),'queueHeld':q.get('queued'),'healthState':h.get('state')}\n out['managedExpected']=len(c.get('chats',[]))\n out['gitHead']=git('rev-parse','HEAD').stdout.strip()\n out['gitClean']=not bool(git('status','--porcelain=v1','-z','--untracked-files=all').stdout)\n out['chromePages']={}\n for port in [17410]:\n  try:\n   pages=get('http://127.0.0.1:'+str(port)+'/json/list',5)\n   items=[x for x in pages if x.get('type')=='page']\n   count=sum(1 for x in items if x.get('url','').startswith('https://chatgpt.com'))\n   out['chromePages']={'total':len(items),'chatGPT':count,'expectedSixDistinct':len(c.get('chats',[]))==6 and all(sum(1 for t in items if t.get('url')==ch.get('url'))==1 for ch in c['chats'])}\n  except Exception as e:out['chromePages']={'errorType':type(e).__name__}\n original=os.path.join(repo,'app','data','operator-tools','r51-target-continuity','baseline.json')\n if os.path.isfile(original):\n  with open(original,'rb') as f:out['r51BaselineSHA256']=hashlib.file_digest(f,'sha256').hexdigest()\n  path=os.path.join(repo,'app','data','operator-tools','r51-target-continuity')\n  p=subprocess.run(['node.exe','r51-target-continuity.js','--baseline='+original],cwd=path,capture_output=True,text=True,timeout=17)\n  out['r51Exit']=p.returncode\n  try:\n   x=json.loads(p.stdout.strip())\n   out['r51']={k:x.get(k) for k in ('status','stable','problems','managedCount','currentExtraChatGPTCount')}\n  except:out['r51']={'parseFailed':True,'errorType':'node_error'}\n except RuntimeError:raise\nexcept Exception as e:out['errorType']=type(e).__name__+':'+str(e)[:100]\nprint(json.dumps(out,ensure_ascii=True)[:6500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "  File \"<string>\", line 32\r\n    except RuntimeError:raise\r\n    ^^^^^^\r\nSyntaxError: invalid syntax\r\n",
+      "stderr_bytes": 100,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T15:50:59.372Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T15:50:59.200Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r54-20261008-2249-independent-status-02"
+    },
+    "request_id": "wab-r54-20261008-2249-independent-status-02",
+    "started_at": "2026-10-08T15:50:58.647Z",
+    "status": "completed"
+  },
+  "id": "wab-r54-20261008-2249-independent-status-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
