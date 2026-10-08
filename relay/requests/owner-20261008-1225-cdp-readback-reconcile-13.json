@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-1225-cdp-readback-reconcile-13",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "owner-20261008-1222-python-cdp-ascii-readback-12",
+    "action": "shell.run"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only durable reconciliation of timed-out CDP inspection, never replay the command."
+}
