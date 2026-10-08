@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,datetime,os\nbase='http://127.0.0.1:17448';out={'at':datetime.datetime.now().isoformat(),'action':'stop_autonomous_watchdog_only_no_chrome'}\nbackup=r'E:\\WebAIBridge\\app\\data\\backups\\owner-r45-safety-20261008T060653Z\\manifest.json'\nif not os.path.isfile(backup):raise RuntimeError('verified_backup_manifest_missing')\ndef req(path,method='GET',data=None,timeout=7):\n b=json.dumps(data).encode('utf-8') if data is not None else None\n with urllib.request.urlopen(urllib.request.Request(base+path,data=b,headers={'Content-Type':'application/json'} if b else {},method=method),timeout=timeout) as f:return json.load(f)\nbefore=req('/api/supervisor-watchdog?detect=0')['config']\nout['before']={k:before.get(k) for k in ('mode','enabled','allowAutonomousSend','autoContinueEnabled')}\nif before.get('allowAutonomousSend') is not False or before.get('autoContinueEnabled') is not False:raise RuntimeError('previous_send_freeze_not_confirmed')\ntry:\n d=req('/api/supervisor-watchdog','PUT',{'mode':'off','allowAutonomousSend':False,'autoContinueEnabled':False,'sendProtectedDraftEnabled':False,'migrationEnabled':False,'openExistingChatIfMissing':False},timeout=15)\n out['write_acknowledged']=True\nexcept Exception as e:out['write_error']=type(e).__name__\ntry:\n after=req('/api/supervisor-watchdog?detect=0')['config'];lifecycle=req('/api/operator-lifecycle')\n out['after']={k:after.get(k) for k in ('mode','enabled','allowAutonomousSend','autoContinueEnabled')}\n out['queuePaused']=lifecycle.get('queuePaused')\n out['frozen']=after.get('mode')=='off' and after.get('enabled') is False and after.get('allowAutonomousSend') is False and after.get('autoContinueEnabled') is False and lifecycle.get('queuePaused') is True\nexcept Exception as e:out['readback_error']=type(e).__name__\nprint(json.dumps(out,ensure_ascii=True)[:2800])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T13:07:28.507763\", \"action\": \"stop_autonomous_watchdog_only_no_chrome\", \"before\": {\"mode\": \"full\", \"enabled\": true, \"allowAutonomousSend\": false, \"autoContinueEnabled\": false}, \"write_acknowledged\": true, \"after\": {\"mode\": \"off\", \"enabled\": false, \"allowAutonomousSend\": false, \"autoContinueEnabled\": false}, \"queuePaused\": true, \"frozen\": true}\r\n",
+      "stdout_bytes": 365,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:07:28.760Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:07:28.597Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-r45-20261008-watchdog-off-73c2"
+    },
+    "request_id": "bridge-r45-20261008-watchdog-off-73c2",
+    "started_at": "2026-10-08T06:07:28.005Z",
+    "status": "completed"
+  },
+  "id": "bridge-r45-20261008-watchdog-off-73c2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
