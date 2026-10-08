@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json,datetime\nscript=\"'use strict';\\nconst crypto=require('node:crypto');\\nconst T={\\\"alias\\\":\\\"extra-1\\\",\\\"id\\\":\\\"16F20C983A306AB7E31D2165E2544898\\\",\\\"sha\\\":\\\"5d9354f7cb0eac0c0506ad03735ee6263a1e4ed75aa107e7852a5e26d49ecd3a\\\"};\\nconst b='http://127.0.0.1:17448';\\nasync function get(url){\\n const r=await fetch(url,{signal:AbortSignal.timeout(3400)});\\n if(!r.ok)throw Error('GET_FAILED');\\n return r.json();\\n}\\nconst hash=x=>crypto.createHash('sha256').update(x).digest('hex');\\nfunction cdpcall(url,method,params={},ms=3800){\\n return new Promise(resolve=>{\\n  let ws,finished=false;\\n  const timer=setTimeout(()=>done({ok:false,why:'TIMEOUT'}),ms);\\n  function done(x){if(finished)return;finished=true;clearTimeout(timer);\\n   try{ws?.close()}catch{}resolve(x)}\\n  try{\\n   ws=new WebSocket(url);\\n   ws.addEventListener('open',()=>{try{ws.send(JSON.stringify({id:753,method,params}))}\\n    catch{done({ok:false,why:'SEND_ERROR'})}});\\n   ws.addEventListener('message',ev=>{try{\\n    const p=JSON.parse(ev.data);if(p.id!==753)return;\\n    done(p.error?{ok:false,why:'CDP_METHOD_ERROR'}:{ok:true,result:p.result});\\n   }catch{done({ok:false,why:'INVALID_CDP_REPLY'})}});\\n   ws.addEventListener('error',()=>done({ok:false,why:'SOCKET_ERROR'}));\\n  }catch{done({ok:false,why:'CONNECT_ERROR'})}\\n });\\n}\\nconst EXPR=String.raw`(() => {\\n const all=[...document.querySelectorAll('[contenteditable=\\\"true\\\"],textarea')];\\n const visible=all.filter(el=>el.getClientRects().length>0);\\n const draft=visible.some(el=>{\\n   const str=el instanceof HTMLTextAreaElement?el.value:el.innerText;\\n   return typeof str==='string'&&str.trim().length>0;\\n });\\n const generating=[...document.querySelectorAll('button')].some(el=>{\\n   const label=(el.getAttribute('aria-label')||'').toLowerCase();\\n   const id=(el.getAttribute('data-testid')||'').toLowerCase();\\n   return id.includes('stop-button')||label.includes('stop generating')\\n     ||label.includes('stop streaming')||label.includes('остановить генерацию');\\n });\\n return {hostValid:location.hostname==='chatgpt.com'||location.hostname==='www.chatgpt.com',\\n  path:location.pathname, ready:document.readyState,\\n  visibleEditorCount:visible.length,draftPresent:draft,generating,\\n  wasDiscarded:document.wasDiscarded===true};\\n})()`;\\n(async()=>{\\n const [op,w,h,managed,pages]=await Promise.all([\\n  get(b+'/api/operator-lifecycle'),get(b+'/api/supervisor-watchdog?detect=0'),\\n  get(b+'/api/health'),get(b+'/api/supervisor-watchdog/managed-chats?inspect=0'),\\n  get('http://127.0.0.1:17410/json/list')]);\\n if(!(op.queuePaused===true&&w.config?.mode==='off'&&w.config?.enabled===false\\n   &&w.config?.allowAutonomousSend===false&&w.config?.autoContinueEnabled===false\\n   &&h.assignmentQueue?.active===0&&h.assignmentQueue?.queued===2))throw Error('PAUSE_GATE_FAILED');\\n const canon=url=>{try{const u=new URL(url);return ['chatgpt.com','www.chatgpt.com'].includes(u.hostname)?u.pathname.replace(/\\\\/$/,''):''}catch{return ''}};\\n const paths=new Set(managed.chats.map(x=>canon(x.url)));\\n const cpages=pages.filter(x=>{try{return x.type==='page'&&['chatgpt.com','www.chatgpt.com'].includes(new URL(x.url).hostname)}catch{return false}});\\n if(managed.chats.length!==6||cpages.length!==9||cpages.filter(x=>paths.has(canon(x.url))).length!==6||cpages.filter(x=>!paths.has(canon(x.url))).length!==3)throw Error('NINE_TAB_INVENTORY_CHANGED');\\n if(managed.chats.some(x=>cpages.filter(p=>canon(p.url)===canon(x.url)).length!==1))throw Error('SIX_MANAGED_URLS_NOT_UNIQUE');\\n const matched=cpages.filter(x=>x.id===T.id&&hash(x.url)===T.sha&&!paths.has(canon(x.url))&&x.webSocketDebuggerUrl);\\n if(matched.length!==1)throw Error('EXACT_PERSONAL_TAB_IDENTITY_MISMATCH');\\n const page=matched[0];\\n const before=await cdpcall(page.webSocketDebuggerUrl,'Runtime.evaluate',{expression:'2+2',returnByValue:true},1900);\\n const already=before.ok&&before.result?.result?.value===4;\\n let focus={ok:false,why:'SKIPPED_ALREADY_RESPONSIVE'};\\n if(!already){\\n   if(before.why!=='TIMEOUT')throw Error('PREWAKE_NOT_EXPECTED_TIMEOUT_'+before.why);\\n   focus=await cdpcall(page.webSocketDebuggerUrl,'Page.bringToFront',{},6700);\\n   if(!focus.ok){\\n     console.log(JSON.stringify({alias:T.alias,state:'WAKE_EFFECT_UNKNOWN',reason:focus.why,exactTargetVerified:true,noReplay:true,providerSend:false}));\\n     process.exitCode=3;return;\\n   }\\n   await new Promise(resolve=>setTimeout(resolve,800));\\n }\\n const state=await cdpcall(page.webSocketDebuggerUrl,'Runtime.evaluate',{expression:EXPR,returnByValue:true,awaitPromise:false},4200);\\n const afterPages=await get('http://127.0.0.1:17410/json/list');\\n const current=afterPages.filter(x=>x.type==='page'&&x.id===T.id&&hash(x.url)===T.sha);\\n const [postOp,postWd,postHealth]=await Promise.all([\\n  get(b+'/api/operator-lifecycle'),get(b+'/api/supervisor-watchdog?detect=0'),get(b+'/api/health')]);\\n const d=state.ok?state.result?.result?.value:null;\\n const expectedPath=new URL(page.url).pathname;\\n const verified=!!(d?.hostValid&&d.path===expectedPath&&current.length===1);\\n console.log(JSON.stringify({alias:T.alias,action:already?'NO_WAKE_NEEDED':'FOREGROUND_EXISTING_TAB_ONLY',\\n  wakeAcknowledged:already?null:focus.ok,\\n  state:state.ok?'RESPONSIVE':'INCONCLUSIVE',\\n  identityStillExact:verified,activeVisibleEditors:d?.visibleEditorCount??null,\\n  oneComposerVisible:d?.visibleEditorCount===1,\\n  draftPresent:d?.draftPresent??null,\\n  generating:d?.generating??null,wasDiscarded:d?.wasDiscarded??null,\\n  pageReady:d?.ready??null,queuePaused:postOp.queuePaused===true,\\n  watchdogOff:postWd.config?.mode==='off',\\n  activeAssignments:postHealth.assignmentQueue?.active??null,\\n  navigationCommand:false,reloadCommand:false,tabCreated:false,tabClosed:false,\\n  providerSend:false,chromeRestart:false,autonomousResume:false,providerTextLogged:false,\\n  restartAuthorized:false}));\\n if(!verified||!state.ok||postOp.queuePaused!==true||postHealth.assignmentQueue?.active!==0)\\n   process.exitCode=2;\\n})().catch(e=>{console.log(JSON.stringify({alias:T.alias,state:'ABORTED',reason:String(e.message).slice(0,130),noAutomaticRetry:true,providerSend:false}));process.exitCode=2});\\n\"\ncheck=subprocess.run(['node.exe','--check','-'],input=script,text=True,capture_output=True,timeout=6)\nif check.returncode:\n print(json.dumps({'state':'BLOCKED_SYNTAX','detail':check.stderr[:140]}));raise SystemExit(3)\np=subprocess.run(['node.exe','-e',script],capture_output=True,text=True,timeout=29)\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'exit':p.returncode,'result':p.stdout.strip()[-3100:],'stderrHead':p.stderr[:160]},ensure_ascii=True)[:4000])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T23:16:45\", \"exit\": 0, \"result\": \"{\\\"alias\\\":\\\"extra-1\\\",\\\"action\\\":\\\"FOREGROUND_EXISTING_TAB_ONLY\\\",\\\"wakeAcknowledged\\\":true,\\\"state\\\":\\\"RESPONSIVE\\\",\\\"identityStillExact\\\":true,\\\"activeVisibleEditors\\\":0,\\\"oneComposerVisible\\\":false,\\\"draftPresent\\\":false,\\\"generating\\\":false,\\\"wasDiscarded\\\":true,\\\"pageReady\\\":\\\"loading\\\",\\\"queuePaused\\\":true,\\\"watchdogOff\\\":true,\\\"activeAssignments\\\":0,\\\"navigationCommand\\\":false,\\\"reloadCommand\\\":false,\\\"tabCreated\\\":false,\\\"tabClosed\\\":false,\\\"providerSend\\\":false,\\\"chromeRestart\\\":false,\\\"autonomousResume\\\":false,\\\"providerTextLogged\\\":false,\\\"restartAuthorized\\\":false}\", \"stderrHead\": \"\"}\r\n",
+      "stdout_bytes": 658,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T16:16:46.305Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T16:16:45.981Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r55-20261008-wake-extra1-fixed-syntax-04"
+    },
+    "request_id": "wab-r55-20261008-wake-extra1-fixed-syntax-04",
+    "started_at": "2026-10-08T16:16:39.743Z",
+    "status": "completed"
+  },
+  "id": "wab-r55-20261008-wake-extra1-fixed-syntax-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
