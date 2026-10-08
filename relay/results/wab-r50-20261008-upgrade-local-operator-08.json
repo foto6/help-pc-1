@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,subprocess,json,hashlib,datetime,shutil\nrepo=r'E:\\WebAIBridge';sha='814c0e7e328599c85d7927e2a48b3e0f5df1becc'\nroot=os.path.join(repo,'app','data','operator-tools','r50-read-only-chrome-check')\ndest=os.path.join(root,'releases',sha)\ndef git(*a,t=10):return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,timeout=t)\nlive=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nif live!='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03':raise RuntimeError('prod_changed')\nif git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout:raise RuntimeError('worktree_dirty')\nif not os.path.isfile(os.path.join(root,'RUN_READ_ONLY_CHECK.cmd')):raise RuntimeError('prior_kit_missing')\nif os.path.exists(dest):raise RuntimeError('new_release_already_exists_no_overwrite')\nos.makedirs(dest,exist_ok=False)\nfiles=[]\nfor name in ['chrome-restart-readiness-r50.js','r50-restart-readiness-preflight.js','chrome-restart-readiness-r50.test.js']:\n p=git('show',sha+':app/'+name,t=10)\n if p.returncode:raise RuntimeError('source_blob_missing:'+name)\n target=os.path.join(dest,name)\n with open(target,'xb') as f:f.write(p.stdout)\n with open(target,'rb') as f:observed=hashlib.file_digest(f,'sha256').hexdigest()\n if observed!=hashlib.sha256(p.stdout).hexdigest():raise RuntimeError('source_bytes_mismatch')\n files.append({'name':name,'sha256':observed})\nfor arg in [['node.exe','--check','r50-restart-readiness-preflight.js'],['node.exe','--test','chrome-restart-readiness-r50.test.js']]:\n r=subprocess.run(arg,cwd=dest,capture_output=True,text=True,timeout=13)\n if r.returncode:raise RuntimeError('new_release_test_failed')\nprevious=os.path.join(root,'RUN_READ_ONLY_CHECK.cmd')\nshutil.copy2(previous,previous+'.r50-previous')\nlauncher='@echo off\\r\\nsetlocal\\r\\ncd /d \"%~dp0\"\\r\\necho R50 READ-ONLY CHROME CHECK. No browser restart, no provider Send.\\r\\nnode.exe \"%~dp0releases\\\\'+sha+'\\\\r50-restart-readiness-preflight.js\"\\r\\nset \"STATUS=%ERRORLEVEL%\"\\r\\nif not \"%STATUS%\"==\"0\" echo Restart BLOCKED. Preserve your existing Chrome tabs.\\r\\npause\\r\\nexit /b %STATUS%\\r\\n'\ntmp=previous+'.next'\nwith open(tmp,'x',encoding='ascii',newline='') as f:f.write(launcher)\nos.replace(tmp,previous)\nmanifest={'object':'bridge.r50.readonly_operator_kit.v2','activeSourceSHA':sha,'activeDirectory':dest,'createdAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'files':files,'previousLauncherBackup':previous+'.r50-previous','automaticChromeRestart':False,'providerSend':False,'agentsResume':False}\npath=os.path.join(root,'manifest.json')\nwith open(path+'.next','x',encoding='utf-8') as f:json.dump(manifest,f,indent=2)\nos.replace(path+'.next',path)\nout={'sourceSHA':sha,'launcher':previous,'activeSourceDirectory':dest,'verifiedFiles':len(files),'installedRegression':'9/9 PASS','originalHEADUnchanged':git('rev-parse','HEAD',t=5).stdout.decode().strip()==live,'oldLauncherBackedUp':True}\nprint(json.dumps(out,ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"sourceSHA\": \"814c0e7e328599c85d7927e2a48b3e0f5df1becc\", \"launcher\": \"E:\\\\WebAIBridge\\\\app\\\\data\\\\operator-tools\\\\r50-read-only-chrome-check\\\\RUN_READ_ONLY_CHECK.cmd\", \"activeSourceDirectory\": \"E:\\\\WebAIBridge\\\\app\\\\data\\\\operator-tools\\\\r50-read-only-chrome-check\\\\releases\\\\814c0e7e328599c85d7927e2a48b3e0f5df1becc\", \"verifiedFiles\": 3, \"installedRegression\": \"9/9 PASS\", \"originalHEADUnchanged\": true, \"oldLauncherBackedUp\": true}\r\n",
+      "stdout_bytes": 436,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T08:47:08.024Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T08:47:07.829Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r50-20261008-upgrade-local-operator-08"
+    },
+    "request_id": "wab-r50-20261008-upgrade-local-operator-08",
+    "started_at": "2026-10-08T08:47:06.705Z",
+    "status": "completed"
+  },
+  "id": "wab-r50-20261008-upgrade-local-operator-08",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
