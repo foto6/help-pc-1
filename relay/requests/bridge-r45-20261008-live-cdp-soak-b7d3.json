@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-r45-20261008-live-cdp-soak-b7d3",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,datetime,time\nbase='http://127.0.0.1:17448'\nout={'at':datetime.datetime.now().isoformat(),'target':'R45','kind':'read_only_cdp_live_soak','samples':[]}\ndef get(path,timeout=5):\n with urllib.request.urlopen(base+path,timeout=timeout) as r:return json.load(r)\nbefore=get('/api/operator-lifecycle',4)\nwatchdog=get('/api/supervisor-watchdog?detect=0',4).get('config',{})\nif before.get('queuePaused') is not True or watchdog.get('mode')!='off' or watchdog.get('allowAutonomousSend') is not False:raise RuntimeError('not frozen')\nfor i in range(2):\n started=time.perf_counter()\n try:\n  x=get('/api/supervisor-watchdog/managed-chats?inspect=1',timeout=28)\n  out['samples'].append({'sample':i,'ms':round((time.perf_counter()-started)*1000),'count':len(x.get('chats',[])),'inspected':x.get('inspected'),'chats':[{k:z.get(k) for k in ('name','status','highMode','openTabs','error') if k in z} for z in x.get('chats',[])[:9]]})\n except Exception as e:out['samples'].append({'sample':i,'ms':round((time.perf_counter()-started)*1000),'error':type(e).__name__})\nx=get('/api/operator-lifecycle',4);w=get('/api/supervisor-watchdog?detect=0',4).get('config',{})\nout['holdAfter']={'queuePaused':x.get('queuePaused'),'mode':w.get('mode'),'allowAutonomousSend':w.get('allowAutonomousSend')}\nout['no_autonomy_resume']=out['holdAfter']=={'queuePaused':True,'mode':'off','allowAutonomousSend':False}\nprint(json.dumps(out,ensure_ascii=True)[:9200])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 90000,
+  "note": "R45 real CDP two read-only inspections on existing six chat tabs, frozen autonomy throughout, no navigation or Send."
+}
