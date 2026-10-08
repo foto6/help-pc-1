@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-08T06:41:45.657Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "wab-r46-20261008-controlled-cutover-4f15"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:c13a548ef2dfe97682d802a320fd8bb060cf0cf7da5ca8eb5c3b6dbda032a996",
+            "journal_sequence": 2385,
+            "previous_record_sha256": "7e9a65ce0fb2938a551c812d82f9bab7cf1033c43ed3cd2362e171bab8789e4b",
+            "record_sha256": "49b0451b1dd1fbf475fe13d0b79e640c04c32baba3a744842f750db92190a0a3",
+            "recorded_at": "2026-10-08T06:41:45.803Z",
+            "request_id": "wab-r46-20261008-controlled-cutover-4f15",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-08T06:44:06.031Z",
+              "reason": "executor_failure",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "wab-r46-20261008-controlled-cutover-4f15"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:c13a548ef2dfe97682d802a320fd8bb060cf0cf7da5ca8eb5c3b6dbda032a996",
+            "journal_sequence": 2386,
+            "previous_record_sha256": "49b0451b1dd1fbf475fe13d0b79e640c04c32baba3a744842f750db92190a0a3",
+            "record_sha256": "066fea715f32ef4454d49c034afb5b6d180f1df61600a03ed19903bf31c7723f",
+            "recorded_at": "2026-10-08T06:44:06.268Z",
+            "request_id": "wab-r46-20261008-controlled-cutover-4f15",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-08T06:44:06.031Z",
+          "reason": "executor_failure",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "wab-r46-20261008-controlled-cutover-4f15"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-08T06:44:06.031Z",
+            "reason": "executor_failure",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "wab-r46-20261008-controlled-cutover-4f15"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:c13a548ef2dfe97682d802a320fd8bb060cf0cf7da5ca8eb5c3b6dbda032a996",
+          "journal_sequence": 2386,
+          "previous_record_sha256": "49b0451b1dd1fbf475fe13d0b79e640c04c32baba3a744842f750db92190a0a3",
+          "record_sha256": "066fea715f32ef4454d49c034afb5b6d180f1df61600a03ed19903bf31c7723f",
+          "recorded_at": "2026-10-08T06:44:06.268Z",
+          "request_id": "wab-r46-20261008-controlled-cutover-4f15",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "5d22fd08b8cc75ca78cb07cde07766dca4440244b495675f6b9dd309e75f9472",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 2386
+        },
+        "reason": "executor_failure",
+        "replay_authorized": false,
+        "requestId": "wab-r46-20261008-controlled-cutover-4f15",
+        "request_id": "wab-r46-20261008-controlled-cutover-4f15",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:44:45.563Z",
+    "ok": true,
+    "request_id": "wab-r46-20261008-cutover-outcome-b41c",
+    "started_at": "2026-10-08T06:44:45.407Z",
+    "status": "completed"
+  },
+  "id": "wab-r46-20261008-cutover-outcome-b41c",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
