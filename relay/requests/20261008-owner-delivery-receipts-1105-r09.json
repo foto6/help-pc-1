@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261008-owner-delivery-receipts-1105-r09",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$ids=@('e27a8cf2-fcb4-45f0-8134-3ca5632c9611','f1bc42fe-ecd8-408a-9d70-84ec2bb4a3ab','b14cb551-8b8e-4e7b-a9a3-7b8264e4e17d','5333f6a6-e562-4c5e-873b-b8b626468a32','eff91a96-514b-4cc7-93b6-19e1f19c5741','dfcf8cae-1ea4-4d79-9690-a3df9064cd48');$j=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -Method GET -TimeoutSec 8;$out=[ordered]@{counts=$j.counts;assignments=@($j.assignments|Where-Object{$ids -contains $_.id}|ForEach-Object{[ordered]@{id=$_.id;state=$_.state;dispatchCount=$_.dispatchCount;dispatchSubmitAttempted=$_.dispatchSubmitAttempted;lastPreflightReason=$_.lastPreflightReason;lastDiagnostic=$_.lastDiagnostic;dispatchFailureCode=$_.dispatchFailureCode;lastDispatchAt=$_.lastDispatchAt;baselineVerified=$_.baselineVerified;baselineError=$_.baselineError}})};$out|ConvertTo-Json -Compress -Depth 6"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18500,
+  "note": "Read-only exact six assignment dispatch receipts (new+previous), no messages or secrets."
+}
