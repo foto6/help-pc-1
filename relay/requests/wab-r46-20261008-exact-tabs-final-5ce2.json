@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r46-20261008-exact-tabs-final-5ce2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,urllib.parse,subprocess,datetime\nbase='http://127.0.0.1:17448'\ndef get(u,timeout=3):\n with urllib.request.urlopen(u,timeout=timeout) as r:return json.load(r)\ndef norm(u):\n try:\n  z=urllib.parse.urlparse(u)\n  return z.path.rstrip('/') if z.hostname in ('chatgpt.com','www.chatgpt.com') else ''\n except:return ''\nc=get(base+'/api/supervisor-watchdog/managed-chats?inspect=0')['chats']\nt=get('http://127.0.0.1:17410/json/list')\nrows=[{'chat':x.get('name'),'exactTabCount':len([y for y in t if norm(y.get('url',''))==norm(x.get('url','')) and y.get('type')=='page']),'errorStatus':x.get('status')} for x in c]\np=subprocess.run(['git.exe','-C',r'E:\\WebAIBridge','rev-parse','HEAD'],capture_output=True,timeout=4)\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'head':p.stdout.decode().strip(),'rows':rows,'tabsUnchangedAndUnique':len(rows)==6 and all(x['exactTabCount']==1 for x in rows)},ensure_ascii=True))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only final proof six exact existing ChatGPT tab identities survived R46 cutover and wake, source pinned; no introspection or Send."
+}
