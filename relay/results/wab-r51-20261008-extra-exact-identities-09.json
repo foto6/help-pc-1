@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,urllib.parse,json,hashlib,collections,datetime\nbase='http://127.0.0.1:17448'\ndef get(u,t=4):\n with urllib.request.urlopen(u,timeout=t) as f:return json.load(f)\no=get(base+'/api/operator-lifecycle');w=get(base+'/api/supervisor-watchdog?detect=0').get('config',{})\nif not(o.get('queuePaused') is True and w.get('mode')=='off' and w.get('allowAutonomousSend') is False):raise RuntimeError('hold_gate_failed')\nchats=get(base+'/api/supervisor-watchdog/managed-chats?inspect=0')['chats']\nallpages=get('http://127.0.0.1:17410/json/list')\ndef canon(u):\n try:\n  z=urllib.parse.urlparse(u)\n  return z.path.rstrip('/') if z.hostname in ('chatgpt.com','www.chatgpt.com') else ''\n except:return ''\nmanaged={canon(c.get('url','')) for c in chats}\nother=[p for p in allpages if p.get('type')=='page' and urllib.parse.urlparse(p.get('url','')).hostname in ('chatgpt.com','www.chatgpt.com') and canon(p.get('url','')) not in managed]\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'otherChatGPTCount':len(other),'managedMatchCount':len([p for p in allpages if p.get('type')=='page' and canon(p.get('url','')) in managed]),'other':[]}\nfor i,p in enumerate(sorted(other,key=lambda x:x.get('id',''))):\n url=p.get('url','');path=canon(url)\n out['other'].append({'alias':'extra-'+str(i+1),'targetId':p.get('id'),'urlSha256':hashlib.sha256(url.encode('utf-8')).hexdigest(),'sameFullUrlCount':sum(q.get('url')==url and q.get('type')=='page' for q in allpages),'canonicalPathIsConversation':path.startswith('/c/') or ('/c/' in path),'hasWebSocket':bool(p.get('webSocketDebuggerUrl'))})\nprint(json.dumps(out,ensure_ascii=True)[:3500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T15:56:13\", \"otherChatGPTCount\": 3, \"managedMatchCount\": 6, \"other\": [{\"alias\": \"extra-1\", \"targetId\": \"26F93091439AEEBB8DB6788AD17BFA02\", \"urlSha256\": \"f9bb5b80e58b379e3e3fd3455e5b00ca104ffc98b44ff462558c27a437fd5002\", \"sameFullUrlCount\": 1, \"canonicalPathIsConversation\": true, \"hasWebSocket\": true}, {\"alias\": \"extra-2\", \"targetId\": \"68D17114431457A201D7F164508E4318\", \"urlSha256\": \"81e83f517574a2aa3054fdd85738b1bcb69d363ed0778173b521b36b5505458a\", \"sameFullUrlCount\": 1, \"canonicalPathIsConversation\": true, \"hasWebSocket\": true}, {\"alias\": \"extra-3\", \"targetId\": \"6BBACA4F54475A91307D471FFBB8E0E5\", \"urlSha256\": \"5d9354f7cb0eac0c0506ad03735ee6263a1e4ed75aa107e7852a5e26d49ecd3a\", \"sameFullUrlCount\": 1, \"canonicalPathIsConversation\": false, \"hasWebSocket\": true}]}\r\n",
+      "stdout_bytes": 790,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T08:56:13.512Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T08:56:13.338Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r51-20261008-extra-exact-identities-09"
+    },
+    "request_id": "wab-r51-20261008-extra-exact-identities-09",
+    "started_at": "2026-10-08T08:56:12.592Z",
+    "status": "completed"
+  },
+  "id": "wab-r51-20261008-extra-exact-identities-09",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
