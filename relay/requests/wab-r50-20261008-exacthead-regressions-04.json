@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r50-20261008-exacthead-regressions-04",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,zipfile,io,subprocess,tempfile,json,datetime,hashlib\nrepo=r'E:\\WebAIBridge';branch='agent/bridge-r50-restart-readiness-20261008';sha='04d7361eefdad64fbe9a73244ac8c413ce5a37df'\ndef git(*a,t=20):return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,timeout=t)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'targetSHA':sha}\nout['headBefore']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['statusHashBefore']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\ntry:\n r=git('fetch','--no-tags','--no-write-fetch-head','origin','refs/heads/'+branch,t=40)\n if r.returncode:raise RuntimeError('fetch_failed')\n if git('cat-file','-t',sha,t=7).stdout.strip()!=b'commit':raise RuntimeError('missing_commit')\n r=git('archive','--format=zip',sha,'app/chrome-restart-readiness-r50.js','app/r50-restart-readiness-preflight.js','app/chrome-restart-readiness-r50.test.js',t=12)\n if r.returncode:raise RuntimeError('archive_failed')\n with tempfile.TemporaryDirectory(prefix='wab-r50-final-unit-') as d:\n  with zipfile.ZipFile(io.BytesIO(r.stdout)) as z:z.extractall(d)\n  app=os.path.join(d,'app')\n  for k,cmd in [('syntax',['node.exe','--check','r50-restart-readiness-preflight.js']),('tests',['node.exe','--test','chrome-restart-readiness-r50.test.js'])]:\n   p=subprocess.run(cmd,cwd=app,capture_output=True,text=True,timeout=10)\n   out[k]={'exit':p.returncode,'stdoutTail':p.stdout[-470:],'stderrHead':p.stderr[:700]}\nexcept Exception as e:out['error']=type(e).__name__+':'+str(e)[:150]\nout['headAfter']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['statusHashAfter']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\nout['productionUnchanged']=out['headAfter']==out['headBefore'] and out['statusHashAfter']==out['statusHashBefore']\nprint(json.dumps(out,ensure_ascii=True)[:5700])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 70000,
+  "note": "R50 final SHA pure CDP mocked safety tests on isolated archive only, production unchanged; no actual Chrome interactions."
+}
