@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r46-20261008-shadow-test-70b6",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,subprocess,hashlib,tempfile,zipfile,io,json,datetime\nrepo=r'E:\\WebAIBridge';sha='943c0b1d509fb8b73cef2f8bbe566ef957854a47';branch='agent/bridge-r46-safe-tab-wakeup-20261008'\ndef git(*args,t=15):return subprocess.run(['git.exe','-C',repo,*args],capture_output=True,timeout=t)\nout={'at':datetime.datetime.now().isoformat(),'sourceSHA':sha,'tests':[]}\nout['head_before']=git('rev-parse','HEAD').stdout.decode('ascii','replace').strip()\nout['porcelain_before']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all').stdout).hexdigest()\ntry:\n f=git('fetch','--no-tags','--no-write-fetch-head','origin','refs/heads/'+branch,t=35)\n out['fetchCode']=f.returncode\n if f.returncode:raise RuntimeError('fetch_failed')\n if git('cat-file','-t',sha).stdout.strip()!=b'commit':raise RuntimeError('SHA_not_available')\n z=git('archive','--format=zip',sha,t=12)\n if z.returncode:raise RuntimeError('archive_failed')\n with tempfile.TemporaryDirectory(prefix='wab-r46-shadow-') as d:\n  with zipfile.ZipFile(io.BytesIO(z.stdout)) as arc:arc.extractall(d)\n  app=os.path.join(d,'app')\n  for args in (['node.exe','--check','server.js'],['node.exe','--test','safe-tab-wakeup-r46.test.js'],['node.exe','--test','managed-chat-inspection-r45.test.js']):\n   p=subprocess.run(args,cwd=app,capture_output=True,timeout=15)\n   out['tests'].append({'cmd':' '.join(args[1:]),'status':p.returncode,'stdoutTail':p.stdout.decode('utf-8','replace')[-420:],'stderrTail':p.stderr.decode('utf-8','replace')[-350:]})\nexcept Exception as e:out['error']=str(e)[:130]\nout['head_after']=git('rev-parse','HEAD').stdout.decode('ascii','replace').strip()\nout['porcelain_after']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all').stdout).hexdigest()\nout['productionUntouched']=out['head_before']==out['head_after'] and out['porcelain_before']==out['porcelain_after']\nprint(json.dumps(out,ensure_ascii=True)[:6000])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 90000,
+  "note": "Read-only local R46 exact SHA staging+tests; no production checkout or browser/agent mutation."
+}
