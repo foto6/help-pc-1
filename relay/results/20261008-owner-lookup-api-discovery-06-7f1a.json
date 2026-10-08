@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-08T03:19:32.573Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261008-owner-bridge-api-discovery-04-7f1a"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:242c654cd0182c0ad40310c0c174d5893ac11e99c54d8dc2bb3e3a1b2d306f8f",
+            "journal_sequence": 2268,
+            "previous_record_sha256": "49224ff17f99e5fa76ba5788d31e1460ee2827b364ab10dcbfb8a5b8d23569f9",
+            "record_sha256": "421065eed1efb1aaefab299bd2471411a49c3a4e6f66ac9c19743e92910c6e4e",
+            "recorded_at": "2026-10-08T03:19:32.725Z",
+            "request_id": "20261008-owner-bridge-api-discovery-04-7f1a",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-08T03:19:53.049Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261008-owner-bridge-api-discovery-04-7f1a"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:242c654cd0182c0ad40310c0c174d5893ac11e99c54d8dc2bb3e3a1b2d306f8f",
+            "journal_sequence": 2269,
+            "previous_record_sha256": "421065eed1efb1aaefab299bd2471411a49c3a4e6f66ac9c19743e92910c6e4e",
+            "record_sha256": "46a2e798caf0f9ce8fa0c9998b9970ce4b8b7cd4b83eaee84336c34b72b330ed",
+            "recorded_at": "2026-10-08T03:19:53.254Z",
+            "request_id": "20261008-owner-bridge-api-discovery-04-7f1a",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-08T03:19:53.049Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "20261008-owner-bridge-api-discovery-04-7f1a"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-08T03:19:53.049Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "20261008-owner-bridge-api-discovery-04-7f1a"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:242c654cd0182c0ad40310c0c174d5893ac11e99c54d8dc2bb3e3a1b2d306f8f",
+          "journal_sequence": 2269,
+          "previous_record_sha256": "421065eed1efb1aaefab299bd2471411a49c3a4e6f66ac9c19743e92910c6e4e",
+          "record_sha256": "46a2e798caf0f9ce8fa0c9998b9970ce4b8b7cd4b83eaee84336c34b72b330ed",
+          "recorded_at": "2026-10-08T03:19:53.254Z",
+          "request_id": "20261008-owner-bridge-api-discovery-04-7f1a",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "e3bfeeca27f964457f9075fcf6f0b992ecaaeaff8f315771dc2f3fa6586fd3dc",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 2269
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "20261008-owner-bridge-api-discovery-04-7f1a",
+        "request_id": "20261008-owner-bridge-api-discovery-04-7f1a",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T03:20:47.347Z",
+    "ok": true,
+    "request_id": "20261008-owner-lookup-api-discovery-06-7f1a",
+    "started_at": "2026-10-08T03:20:47.185Z",
+    "status": "completed"
+  },
+  "id": "20261008-owner-lookup-api-discovery-06-7f1a",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
