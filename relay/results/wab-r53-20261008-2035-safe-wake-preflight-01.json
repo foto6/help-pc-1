@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,urllib.parse,json,subprocess,datetime,os\nrepo=r'E:\\WebAIBridge';b='http://127.0.0.1:17448'\ndef get(p,t=5):\n with urllib.request.urlopen(b+p,timeout=t) as f:return json.load(f)\ns=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{});h=get('/api/health');c=get('/api/supervisor-watchdog/managed-chats?inspect=0')\nhead=subprocess.run(['git.exe','-C',repo,'rev-parse','HEAD'],capture_output=True,text=True,timeout=5).stdout.strip()\npages=json.load(urllib.request.urlopen('http://127.0.0.1:17410/json/list',timeout=5))\ndef canonical(url):\n try:\n  z=urllib.parse.urlparse(url);return z.path.rstrip('/') if z.hostname in ('chatgpt.com','www.chatgpt.com') else ''\n except:return ''\nrows=[]\nfor item in c.get('chats',[]):\n endpoint='/api/supervisor-watchdog/managed-chats/'+urllib.parse.quote(item['id'],safe='')+'/wake-preview'\n try:\n  d=get(endpoint)\n  found=[x for x in pages if x.get('type')=='page' and canonical(x.get('url','')) and canonical(x.get('url',''))==canonical(item.get('url',''))]\n  rows.append({'name':item.get('name'),'state':d.get('state'),'targetCount':d.get('exactTargetCount'),'previewMatch':len(found)==1 and d.get('exactTargetId')==found[0].get('id'),'confirmation':d.get('requiredConfirmation'),'currentCdpId':d.get('exactTargetId')})\n except Exception as e:rows.append({'name':item.get('name'),'state':'PREVIEW_ERROR','errorType':type(e).__name__})\nnames={'Bridge','Media','Creator','Growth','Native MCP','QA'}\nq=h.get('assignmentQueue',{})\nsafe=(head=='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03' and s.get('queuePaused') is True and w.get('mode')=='off' and w.get('enabled') is False and w.get('allowAutonomousSend') is False and w.get('autoContinueEnabled') is False and q.get('active')==0 and q.get('queued')==2 and len(rows)==6 and {x['name'] for x in rows}==names and all(x.get('state')=='READY_FOR_EXPLICIT_TAB_WAKE' and x.get('targetCount')==1 and x.get('previewMatch') is True and x.get('confirmation')=='WAKE_EXISTING_TAB_ONLY' for x in rows))\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'gatePassed':safe,'liveSHA':head,'queuePaused':s.get('queuePaused'),'watchdogOff':w.get('mode')=='off','autoSend':w.get('allowAutonomousSend'),'active':q.get('active'),'held':q.get('queued'),'totalPages':sum(x.get('type')=='page' for x in pages),'chatGPTPages':sum(x.get('type')=='page' and urllib.parse.urlparse(x.get('url','')).hostname in ('chatgpt.com','www.chatgpt.com') for x in pages),'rows':rows},ensure_ascii=True)[:6300])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T20:36:12\", \"gatePassed\": true, \"liveSHA\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"queuePaused\": true, \"watchdogOff\": true, \"autoSend\": false, \"active\": 0, \"held\": 2, \"totalPages\": 11, \"chatGPTPages\": 9, \"rows\": [{\"name\": \"Bridge\", \"state\": \"READY_FOR_EXPLICIT_TAB_WAKE\", \"targetCount\": 1, \"previewMatch\": true, \"confirmation\": \"WAKE_EXISTING_TAB_ONLY\", \"currentCdpId\": \"934AE2CE0F8D91AA9451D4CB4F7BF3B5\"}, {\"name\": \"Media\", \"state\": \"READY_FOR_EXPLICIT_TAB_WAKE\", \"targetCount\": 1, \"previewMatch\": true, \"confirmation\": \"WAKE_EXISTING_TAB_ONLY\", \"currentCdpId\": \"CAB0E8584E7BCB714C4333213550436D\"}, {\"name\": \"Creator\", \"state\": \"READY_FOR_EXPLICIT_TAB_WAKE\", \"targetCount\": 1, \"previewMatch\": true, \"confirmation\": \"WAKE_EXISTING_TAB_ONLY\", \"currentCdpId\": \"A214BD2EC72EC96CA926523C52A72AA5\"}, {\"name\": \"Growth\", \"state\": \"READY_FOR_EXPLICIT_TAB_WAKE\", \"targetCount\": 1, \"previewMatch\": true, \"confirmation\": \"WAKE_EXISTING_TAB_ONLY\", \"currentCdpId\": \"3284C524AE2A0C7DD29A8EA573D81E2B\"}, {\"name\": \"Native MCP\", \"state\": \"READY_FOR_EXPLICIT_TAB_WAKE\", \"targetCount\": 1, \"previewMatch\": true, \"confirmation\": \"WAKE_EXISTING_TAB_ONLY\", \"currentCdpId\": \"AF61076A9CBAB6D776D23155638488EB\"}, {\"name\": \"QA\", \"state\": \"READY_FOR_EXPLICIT_TAB_WAKE\", \"targetCount\": 1, \"previewMatch\": true, \"confirmation\": \"WAKE_EXISTING_TAB_ONLY\", \"currentCdpId\": \"0CF14EF878F0DC14B79384750863D408\"}]}\r\n",
+      "stdout_bytes": 1402,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T13:36:12.615Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T13:36:12.433Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r53-20261008-2035-safe-wake-preflight-01"
+    },
+    "request_id": "wab-r53-20261008-2035-safe-wake-preflight-01",
+    "started_at": "2026-10-08T13:36:11.493Z",
+    "status": "completed"
+  },
+  "id": "wab-r53-20261008-2035-safe-wake-preflight-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
