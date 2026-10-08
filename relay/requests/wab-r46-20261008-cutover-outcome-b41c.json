@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r46-20261008-cutover-outcome-b41c",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "wab-r46-20261008-controlled-cutover-4f15",
+    "action": "shell.run"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only reconcile original R46 cutover timeout; never retry."
+}
