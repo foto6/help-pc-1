@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,subprocess,urllib.request,datetime,hashlib\nrepo=r'E:\\WebAIBridge'\nout={'at':datetime.datetime.now().isoformat(),'mode':'read_only_verify_r45_postcutover'}\ndef api(path,seconds=4):\n with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=seconds) as f:return json.load(f)\ntry:\n x=api('/api/projects/control-plane/cutover-r42/status')\n out['cutover']={'object':x.get('object'),'holdActive':x.get('cutoverState',{}).get('holdActive'),'stateStatus':x.get('cutoverState',{}).get('status'),'targetSha':x.get('cutoverState',{}).get('targetSha'),'rollbackManifest':x.get('cutoverState',{}).get('rollbackManifest')}\nexcept Exception as e:out['cutover']={'error':type(e).__name__}\nroot=r'E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261008T060820Z'\nmanifest=os.path.join(root,'rollback-manifest.json')\nout['manifestExists']=os.path.isfile(manifest)\nif out['manifestExists']:\n try:\n  with open(manifest,'rb') as f:raw=f.read()\n  x=json.loads(raw.decode('utf-8-sig'))\n  out['manifest']={'object':x.get('object'),'preCutoverHead':x.get('preCutoverHead'),'targetSha':x.get('targetSha'),'backups':len(x.get('backups',[])),'sha256':hashlib.sha256(raw).hexdigest(),'missingRequiredBackupFiles':[a.get('name') for a in x.get('backups',[]) if a.get('existed') and not os.path.isfile(a.get('backup',''))]}\n except Exception as e:out['manifest']={'error':type(e).__name__}\n try:\n  p=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',os.path.join(repo,'app','r42-rollback.ps1'),'-Manifest',manifest,'-ValidateOnly'],capture_output=True,text=True,timeout=24)\n  out['rollbackValidateOnly']={'exit':p.returncode,'stdout':p.stdout.strip()[-1700:],'stderr':p.stderr.strip()[-650:]}\n except Exception as e:out['rollbackValidateOnly']={'error':type(e).__name__}\ntry:\n x=api('/api/supervisor-watchdog/agent-assignments')\n rows=x.get('assignments',[])\n out['assignments']={'total':len(rows),'dispatchingOrRunning':sum(a.get('state') in ('dispatching','running') for a in rows),'queuedUnsent':sum(a.get('state')=='queued' and a.get('dispatchSubmitAttempted') is False for a in rows),'awaitingEvidence':sum(a.get('state')=='awaiting_evidence' for a in rows),'blocked':sum(a.get('state')=='blocked' for a in rows)}\nexcept Exception as e:out['assignments']={'error':type(e).__name__}\nprint(json.dumps(out,ensure_ascii=True)[:7700])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T13:11:16.946948\", \"mode\": \"read_only_verify_r45_postcutover\", \"cutover\": {\"object\": \"bridge.projects_live_control_plane_cutover.r42.v1\", \"holdActive\": true, \"stateStatus\": \"CUTOVER_HOLD_PREPARED\", \"targetSha\": \"18a286d4522dd73b5a65d88b5823053b71b01569\", \"rollbackManifest\": \"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261008T060820Z\\\\rollback-manifest.json\"}, \"manifestExists\": true, \"manifest\": {\"object\": \"bridge.projects_live_control_plane_rollback.r42.v1\", \"preCutoverHead\": \"2d5f902a52f875f3385da0a9babe29e2761a0f5b\", \"targetSha\": \"18a286d4522dd73b5a65d88b5823053b71b01569\", \"backups\": 11, \"sha256\": \"07d9819770c5f404ed25c4bc7a71beab19cff8be7572c8aabd2030223ab771f6\", \"missingRequiredBackupFiles\": []}, \"rollbackValidateOnly\": {\"exit\": 0, \"stdout\": \"{\\\"object\\\":\\\"bridge.projects_live_control_plane_rollback_preflight.r42.v1\\\",\\\"status\\\":\\\"PREFLIGHT_OK\\\",\\\"repoPath\\\":\\\"E:\\\\\\\\WebAIBridge\\\",\\\"preCutoverHead\\\":\\\"2d5f902a52f875f3385da0a9babe29e2761a0f5b\\\",\\\"gitExecutable\\\":\\\"C:\\\\\\\\Program Files\\\\\\\\Git\\\\\\\\cmd\\\\\\\\git.exe\\\",\\\"externalGitResolved\\\":true,\\\"callDepthOverflowDetected\\\":false,\\\"liveMutationPerformed\\\":false,\\\"providerMutationPerformed\\\":false}\", \"stderr\": \"\"}, \"assignments\": {\"total\": 68, \"dispatchingOrRunning\": 0, \"queuedUnsent\": 2, \"awaitingEvidence\": 0, \"blocked\": 33}}\r\n",
+      "stdout_bytes": 1319,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:11:17.886Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:11:17.645Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-r45-20261008-rollback-validate-548b"
+    },
+    "request_id": "bridge-r45-20261008-rollback-validate-548b",
+    "started_at": "2026-10-08T06:11:16.481Z",
+    "status": "completed"
+  },
+  "id": "bridge-r45-20261008-rollback-validate-548b",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
