@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-r45-20261008-rollback-validate-548b",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,json,subprocess,urllib.request,datetime,hashlib\nrepo=r'E:\\WebAIBridge'\nout={'at':datetime.datetime.now().isoformat(),'mode':'read_only_verify_r45_postcutover'}\ndef api(path,seconds=4):\n with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=seconds) as f:return json.load(f)\ntry:\n x=api('/api/projects/control-plane/cutover-r42/status')\n out['cutover']={'object':x.get('object'),'holdActive':x.get('cutoverState',{}).get('holdActive'),'stateStatus':x.get('cutoverState',{}).get('status'),'targetSha':x.get('cutoverState',{}).get('targetSha'),'rollbackManifest':x.get('cutoverState',{}).get('rollbackManifest')}\nexcept Exception as e:out['cutover']={'error':type(e).__name__}\nroot=r'E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261008T060820Z'\nmanifest=os.path.join(root,'rollback-manifest.json')\nout['manifestExists']=os.path.isfile(manifest)\nif out['manifestExists']:\n try:\n  with open(manifest,'rb') as f:raw=f.read()\n  x=json.loads(raw.decode('utf-8-sig'))\n  out['manifest']={'object':x.get('object'),'preCutoverHead':x.get('preCutoverHead'),'targetSha':x.get('targetSha'),'backups':len(x.get('backups',[])),'sha256':hashlib.sha256(raw).hexdigest(),'missingRequiredBackupFiles':[a.get('name') for a in x.get('backups',[]) if a.get('existed') and not os.path.isfile(a.get('backup',''))]}\n except Exception as e:out['manifest']={'error':type(e).__name__}\n try:\n  p=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',os.path.join(repo,'app','r42-rollback.ps1'),'-Manifest',manifest,'-ValidateOnly'],capture_output=True,text=True,timeout=24)\n  out['rollbackValidateOnly']={'exit':p.returncode,'stdout':p.stdout.strip()[-1700:],'stderr':p.stderr.strip()[-650:]}\n except Exception as e:out['rollbackValidateOnly']={'error':type(e).__name__}\ntry:\n x=api('/api/supervisor-watchdog/agent-assignments')\n rows=x.get('assignments',[])\n out['assignments']={'total':len(rows),'dispatchingOrRunning':sum(a.get('state') in ('dispatching','running') for a in rows),'queuedUnsent':sum(a.get('state')=='queued' and a.get('dispatchSubmitAttempted') is False for a in rows),'awaitingEvidence':sum(a.get('state')=='awaiting_evidence' for a in rows),'blocked':sum(a.get('state')=='blocked' for a in rows)}\nexcept Exception as e:out['assignments']={'error':type(e).__name__}\nprint(json.dumps(out,ensure_ascii=True)[:7700])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 63000,
+  "note": "R45 post-timeout read-only cutover state + rollback -ValidateOnly and pending task status, never actually rollback or send"
+}
