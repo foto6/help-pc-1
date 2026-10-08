@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-cdp-safe-visual-roundtrip-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';\nAdd-Type -AssemblyName System.Drawing;\n$src='C:\\Users\\foto6\\AppData\\Local\\Temp\\pc-cdp-diagnostic-XIsTyG\\capture.png';\nif(!(Test-Path -LiteralPath $src -PathType Leaf)){throw 'private_capture_missing'};\n$source=[System.Drawing.Bitmap]::FromFile($src);\ntry{\n  $small=New-Object System.Drawing.Bitmap(40,20);\n  try{\n    $g=[System.Drawing.Graphics]::FromImage($small);\n    try{$g.DrawImage($source,0,0,40,20)}finally{$g.Dispose()};\n    $large=New-Object System.Drawing.Bitmap(800,400);\n    try{\n      $out=[System.Drawing.Graphics]::FromImage($large);\n      try{$out.InterpolationMode=[System.Drawing.Drawing2D.InterpolationMode]::NearestNeighbor;$out.DrawImage($small,0,0,800,400)}finally{$out.Dispose()};\n      $stream=New-Object System.IO.MemoryStream;\n      try{$large.Save($stream,[System.Drawing.Imaging.ImageFormat]::Png);$bytes=$stream.ToArray();if($bytes.Length -gt 150000){throw 'preview_too_large'};Write-Output ('SAFE_CDP_PREVIEW_BASE64='+[Convert]::ToBase64String($bytes))}finally{$stream.Dispose()}\n    }finally{$large.Dispose()}\n  }finally{$small.Dispose()}\n}finally{$source.Dispose()}"
+    ],
+    "cwd": "E:\\",
+    "output_limit_bytes": 250000
+  },
+  "timeout_ms": 15000,
+  "note": "Read an existing verified Chrome screenshot locally and produce a severely pixelated (40x20) image for testing GitHub relay-to-ChatGPT visual transport. No readable browser content. No raw screenshot uploads, no Chrome interaction."
+}
