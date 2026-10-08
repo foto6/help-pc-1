@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,subprocess,urllib.request,datetime,hashlib\nrepo=r'E:\\WebAIBridge';out={'at':datetime.datetime.now().isoformat(timespec='seconds'),'object':'R48_READONLY_POST_TIMEOUT'}\ndef get(p,t=4):\n with urllib.request.urlopen('http://127.0.0.1:17448'+p,timeout=t) as f:return json.load(f)\np=subprocess.run(['git.exe','-C',repo,'rev-parse','HEAD'],capture_output=True,text=True,timeout=6)\nout['head']=p.stdout.strip()\np=subprocess.run(['git.exe','-C',repo,'status','--porcelain=v1','-z','--untracked-files=all'],capture_output=True,timeout=6)\nout['worktreeClean']=len(p.stdout)==0\nfor k,u in [('health','/api/health'),('operator','/api/operator-lifecycle'),('watchdog','/api/supervisor-watchdog?detect=0'),('cutover','/api/projects/control-plane/cutover-r42/status')]:\n try:\n  d=get(u)\n  if k=='health':out[k]={'state':d.get('state'),'ok':d.get('ok'),'operationalMode':d.get('operationalMode'),'queueSafety':d.get('queueSafety'),'blockers':d.get('blockers'),'notices':d.get('notices'),'queue':{x:d.get('assignmentQueue',{}).get(x) for x in ('total','active','queued')}}\n  if k=='operator':out[k]={'mode':d.get('mode'),'queuePaused':d.get('queuePaused')}\n  if k=='watchdog':out[k]={x:d.get('config',{}).get(x) for x in ('mode','enabled','allowAutonomousSend','autoContinueEnabled')}\n  if k=='cutover':out[k]={x:d.get('cutoverState',{}).get(x) for x in ('status','holdActive','targetSha','preCutoverHead','rollbackManifest')}\n except Exception as e:out[k]={'error':type(e).__name__}\nmanifest=out.get('cutover',{}).get('rollbackManifest','')\nout['rollbackManifestExists']=bool(manifest) and os.path.isfile(manifest)\nout['normalReportExists']=os.path.isfile(r'E:\\WebAIBridge\\app\\data\\backups\\owner-r48-safety-20261008T073651Z\\r48-cutover-report.json')\ntry:\n p=subprocess.run(['powershell.exe','-NoProfile','-Command',\"$p=Get-CimInstance Win32_Process -Filter 'ProcessId=13436'; if($p){'ALIVE'}else{'ABSENT'}\"],capture_output=True,text=True,timeout=6)\n out['originalChromeAlive']=p.stdout.strip()=='ALIVE'\nexcept Exception as e:out['chromeProbeError']=type(e).__name__\nprint(json.dumps(out,ensure_ascii=True)[:6500])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T14:41:17\", \"object\": \"R48_READONLY_POST_TIMEOUT\", \"head\": \"8360bed73554011e7d6ff816c6365196c5e483ee\", \"worktreeClean\": true, \"health\": {\"state\": \"DEGRADED\", \"ok\": false, \"operationalMode\": \"PAUSED\", \"queueSafety\": {\"contract\": \"bridge.paused_queue_operational_health.r48.v1\", \"queueDisposition\": \"PAUSED_HOLD\", \"intentionalPause\": true, \"historicQueuedPreserved\": 2, \"active\": 0, \"blockers\": [], \"notices\": [\"assignment_queue:historic_queued_held_no_replay\", \"assignment_queue:oldest_queued_over_60s_held\"], \"mayAutoDispatch\": false}, \"blockers\": [], \"notices\": [\"assignment_queue:historic_queued_held_no_replay\", \"assignment_queue:oldest_queued_over_60s_held\"], \"queue\": {\"total\": 68, \"active\": 0, \"queued\": 2}}, \"operator\": {\"mode\": \"PAUSED_BROWSER\", \"queuePaused\": true}, \"watchdog\": {\"mode\": \"off\", \"enabled\": false, \"allowAutonomousSend\": false, \"autoContinueEnabled\": false}, \"cutover\": {\"status\": \"CUTOVER_HOLD_PREPARED\", \"holdActive\": true, \"targetSha\": \"8360bed73554011e7d6ff816c6365196c5e483ee\", \"preCutoverHead\": \"4638fd18def71dbfa07227c4b9b1bcbf89bba2a5\", \"rollbackManifest\": \"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261008T073836Z\\\\rollback-manifest.json\"}, \"rollbackManifestExists\": true, \"normalReportExists\": false, \"originalChromeAlive\": true}\r\n",
+      "stdout_bytes": 1292,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T07:41:18.369Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T07:41:18.210Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r48-20261008-post-timeout-readback-8a41"
+    },
+    "request_id": "wab-r48-20261008-post-timeout-readback-8a41",
+    "started_at": "2026-10-08T07:41:17.009Z",
+    "status": "completed"
+  },
+  "id": "wab-r48-20261008-post-timeout-readback-8a41",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
