@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$base='http://127.0.0.1:17448';$out=[ordered]@{at=(Get-Date).ToString('o')};$a=Invoke-RestMethod -Method GET -Uri ($base+'/api/supervisor-watchdog/managed-chats') -TimeoutSec 6;$out.agents=@($a.chats|ForEach-Object{[ordered]@{name=$_.name;id=$_.id;url=$_.url;repo=$_.repository;branch=$_.branch;expectedHead=$_.gitHead;status=$_.status;error=$_.error;lastSeenAt=$_.lastSeenAt;lastProgressAt=$_.lastProgressAt;generating=$_.generating;highMode=$_.highMode;draftPresent=$_.draftPresent;openTabs=$_.openTabs;activeAssignments=$_.activeAssignmentCount}});$j=Invoke-RestMethod -Method GET -Uri ($base+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6;$out.recentAssignments=@($j.assignments|Where-Object{$_.createdAt -ge '2026-10-08T04:00:00'}|ForEach-Object{[ordered]@{id=$_.id;chatId=$_.targetChatId;repo=$_.repository;state=$_.state;createdAt=$_.createdAt;dispatchCount=$_.dispatchCount;dispatchSubmitAttempted=$_.dispatchSubmitAttempted;lastDiagnostic=$_.lastDiagnostic;lastPreflightReason=$_.lastPreflightReason;currentHead=$_.currentHead;exactCommitSha=$_.exactCommitSha;ciConclusion=$_.ciConclusion}});try{$p=Invoke-RestMethod -Uri ($base+'/api/ai-profiles') -TimeoutSec 4;$out.profileKeys=@($p.PSObject.Properties.Name);$rows=if($p.profiles){$p.profiles}else{if($p -is [array]){$p}else{@()}};$out.profiles=@($rows|Where-Object{$_.provider -eq 'chatgpt'}|ForEach-Object{[ordered]@{id=$_.id;name=$_.name;debugPort=$_.debugPort;enabled=$_.enabled;connected=$_.workerConnected}})} }catch{$out.profilesError=$_.Exception.GetType().Name};$out|ConvertTo-Json -Compress -Depth 7"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "At line:1 char:1520\r\n+ ... debugPort;enabled=$_.enabled;connected=$_.workerConnected}})} }catch{ ...\r\n+                                                                  ~\r\nThe Try statement is missing its Catch or Finally block.\r\nAt line:1 char:1521\r\n+ ... bugPort;enabled=$_.enabled;connected=$_.workerConnected}})} }catch{$o ...\r\n+                                                                 ~\r\nUnexpected token '}' in expression or statement.\r\n    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : MissingCatchOrFinally\r\n \r\n",
+      "stderr_bytes": 594,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T05:01:19.488Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T05:01:19.162Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-20261008-1142-chat-inventory-02"
+    },
+    "request_id": "owner-20261008-1142-chat-inventory-02",
+    "started_at": "2026-10-08T05:01:18.231Z",
+    "status": "completed"
+  },
+  "id": "owner-20261008-1142-chat-inventory-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
