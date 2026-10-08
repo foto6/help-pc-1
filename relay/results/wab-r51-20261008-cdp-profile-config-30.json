@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json,datetime\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/ai-profiles',timeout=5) as r:d=json.load(r)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'chatgptProfiles':[]}\nfor x in d.get('aiProfiles',[]):\n if x.get('provider')!='chatgpt':continue\n out['chatgptProfiles'].append({'debugPort':x.get('debugPort'),'enabled':x.get('enabled'),'mode':x.get('launchMode'),'workerConnected':x.get('workerConnected')})\nprint(json.dumps(out,ensure_ascii=True)[:2000])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T16:18:08\", \"chatgptProfiles\": [{\"debugPort\": 17447, \"enabled\": false, \"mode\": null, \"workerConnected\": false}, {\"debugPort\": 17410, \"enabled\": true, \"mode\": null, \"workerConnected\": false}]}\r\n",
+      "stdout_bytes": 211,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T09:18:08.868Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T09:18:08.710Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r51-20261008-cdp-profile-config-30"
+    },
+    "request_id": "wab-r51-20261008-cdp-profile-config-30",
+    "started_at": "2026-10-08T09:18:08.129Z",
+    "status": "completed"
+  },
+  "id": "wab-r51-20261008-cdp-profile-config-30",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
