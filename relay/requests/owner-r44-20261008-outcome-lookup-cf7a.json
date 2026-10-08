@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r44-20261008-outcome-lookup-cf7a",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "owner-r44-20261008-assignment-reconcile-d4c8"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only reconcile original timed-out diagnostic request; never reexecute"
+}
