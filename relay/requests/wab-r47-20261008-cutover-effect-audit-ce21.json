@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r47-20261008-cutover-effect-audit-ce21",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,json,datetime,subprocess,urllib.request,hashlib\nroot=r'E:\\WebAIBridge';backups=os.path.join(root,'app','data','backups')\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'audit':'detached_cutover_no_replay'}\nx=subprocess.run(['git.exe','-C',root,'rev-parse','HEAD'],capture_output=True,text=True,timeout=5)\nout['head']=x.stdout.strip()\nx=subprocess.run(['git.exe','-C',root,'status','--porcelain=v1','-z','--untracked-files=all'],capture_output=True,timeout=7)\nout['worktreeStatusSha256']=hashlib.sha256(x.stdout).hexdigest()\ntry:\n rows=[n for n in os.listdir(backups) if n.startswith('r42-cutover-') and os.path.isdir(os.path.join(backups,n))]\n out['r42backupCount']=len(rows)\n out['latestR42Backups']=sorted(rows,reverse=True)[:3]\nexcept Exception as e:out['listError']=type(e).__name__\nfor tag,path in [('operator','/api/operator-lifecycle'),('supervisor','/api/supervisor-watchdog?detect=0'),('cutover','/api/projects/control-plane/cutover-r42/status')]:\n try:\n  with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=3) as f:z=json.load(f)\n  if tag=='operator':out[tag]={'paused':z.get('queuePaused'),'mode':z.get('mode')}\n  if tag=='supervisor':out[tag]={k:z.get('config',{}).get(k) for k in ('mode','enabled','allowAutonomousSend')}\n  if tag=='cutover':out[tag]={k:z.get('cutoverState',{}).get(k) for k in ('status','targetSha','holdActive')}\n except Exception as e:out[tag]={'error':type(e).__name__}\nprint(json.dumps(out,ensure_ascii=True))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "Read-only audit aborted R47 detached cutover changes: latest backup timestamp, Git head/status, lifecycle and no-send freeze."
+}
