@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$d=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/discover' -TimeoutSec 9;$c=@($d.candidates);$out=[ordered]@{count=$c.Count;registered=@($c|Where-Object{$_.registered}|ForEach-Object{@{name=$_.suggestedName;url=$_.url;openTabs=$_.openTabs;profileCount=@($_.profiles).Count}});unregistered=@($c|Where-Object{-not $_.registered}|ForEach-Object{@{name=$_.suggestedName;url=$_.url;openTabs=$_.openTabs;profileCount=@($_.profiles).Count}});profileErrors=$d.profileErrors};$out|ConvertTo-Json -Compress -Depth 6"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"count\":5,\"registered\":[{\"profileCount\":1,\"url\":\"https://chatgpt.com/c/6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"name\":\"Агент моста\",\"openTabs\":1},{\"profileCount\":1,\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"name\":\"Implement Live Review Ingest\",\"openTabs\":1},{\"profileCount\":1,\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\"name\":\"Implement Local Windows Render Gate\",\"openTabs\":1},{\"profileCount\":1,\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"name\":\"Native Connector Implementation\",\"openTabs\":1}],\"unregistered\":[{\"profileCount\":1,\"url\":\"https://chatgpt.com/c/6ac7068e-883c-83ed-9081-cb94557e61bd\",\"name\":\"Управление проектами\",\"openTabs\":1}],\"profileErrors\":[]}\r\n",
+      "stdout_bytes": 889,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T05:04:44.890Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T05:04:44.608Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-20261008-1210-visible-chat-discovery-07"
+    },
+    "request_id": "owner-20261008-1210-visible-chat-discovery-07",
+    "started_at": "2026-10-08T05:04:43.861Z",
+    "status": "completed"
+  },
+  "id": "owner-20261008-1210-visible-chat-discovery-07",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
