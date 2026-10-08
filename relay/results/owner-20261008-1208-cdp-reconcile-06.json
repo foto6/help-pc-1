@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-08T05:03:20.905Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "owner-20261008-1206-cdp-bridge-one-05"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:44ad5ba4b14e4d39f8f2369b7469d118558ba819688c891f5e6a8c5a9530d7dd",
+            "journal_sequence": 2311,
+            "previous_record_sha256": "2521c99f041012377c828eb2cc9683e6a71628194f3cefe758e11ccc92ac798f",
+            "record_sha256": "fafa694a02c45511c3c8ffe134e202636cc8da3a9508524abcb66dea1a714d52",
+            "recorded_at": "2026-10-08T05:03:21.077Z",
+            "request_id": "owner-20261008-1206-cdp-bridge-one-05",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-08T05:03:40.280Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "owner-20261008-1206-cdp-bridge-one-05"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:44ad5ba4b14e4d39f8f2369b7469d118558ba819688c891f5e6a8c5a9530d7dd",
+            "journal_sequence": 2312,
+            "previous_record_sha256": "fafa694a02c45511c3c8ffe134e202636cc8da3a9508524abcb66dea1a714d52",
+            "record_sha256": "bfdad489290985017c56de0fc7149c3bb6fa00add5dc8d58b8cf9a5cc10521ff",
+            "recorded_at": "2026-10-08T05:03:40.442Z",
+            "request_id": "owner-20261008-1206-cdp-bridge-one-05",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-08T05:03:40.280Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "owner-20261008-1206-cdp-bridge-one-05"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-08T05:03:40.280Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "owner-20261008-1206-cdp-bridge-one-05"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:44ad5ba4b14e4d39f8f2369b7469d118558ba819688c891f5e6a8c5a9530d7dd",
+          "journal_sequence": 2312,
+          "previous_record_sha256": "fafa694a02c45511c3c8ffe134e202636cc8da3a9508524abcb66dea1a714d52",
+          "record_sha256": "bfdad489290985017c56de0fc7149c3bb6fa00add5dc8d58b8cf9a5cc10521ff",
+          "recorded_at": "2026-10-08T05:03:40.442Z",
+          "request_id": "owner-20261008-1206-cdp-bridge-one-05",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "80dcfb31efd40d89e2b8dd3847b950a67600c4ef6111ba56844cfddc321b8394",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 2312
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "owner-20261008-1206-cdp-bridge-one-05",
+        "request_id": "owner-20261008-1206-cdp-bridge-one-05",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T05:04:04.677Z",
+    "ok": true,
+    "request_id": "owner-20261008-1208-cdp-reconcile-06",
+    "started_at": "2026-10-08T05:04:04.517Z",
+    "status": "completed"
+  },
+  "id": "owner-20261008-1208-cdp-reconcile-06",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
