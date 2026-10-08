@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $r=[ordered]@{}; $r.node=((node.exe --version 2>$null) -join ''); $r.git=((git.exe --version 2>$null) -join ''); $p='E:\\WebAIBridge';$r.repoExists=Test-Path -LiteralPath $p -PathType Container; if($r.repoExists){$r.branch=((& git.exe -C $p branch --show-current 2>$null)-join '');$r.head=((& git.exe -C $p rev-parse HEAD 2>$null)-join '');$s=@(& git.exe -C $p status --porcelain=v1 -uno 2>$null);$r.dirtyCount=@($s).Count};$r.cdp=@();foreach($port in @(17447,17347,9222,17449,17500)){try{$t=Invoke-RestMethod -Uri ('http://127.0.0.1:'+ $port +'/json/list') -Method GET -TimeoutSec 2;$pages=@($t|Where-Object{$_.type -eq 'page'});$hosts=@($pages|ForEach-Object{try{([uri]$_.url).Host}catch{'invalid'}}|Sort-Object -Unique);$r.cdp+=@{port=$port;pages=@($pages).Count;hosts=$hosts}}catch{}};$r|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"node\":\"v24.18.0\",\"git\":\"git version 2.55.0.windows.5\",\"repoExists\":true,\"branch\":\"\",\"head\":\"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\",\"dirtyCount\":0,\"cdp\":[]}\r\n",
+      "stdout_bytes": 162,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T17:13:51.971Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T17:13:51.803Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-cdp-host-readonly-preflight-01"
+    },
+    "request_id": "20261009-cdp-host-readonly-preflight-01",
+    "started_at": "2026-10-08T17:13:42.231Z",
+    "status": "completed"
+  },
+  "id": "20261009-cdp-host-readonly-preflight-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
