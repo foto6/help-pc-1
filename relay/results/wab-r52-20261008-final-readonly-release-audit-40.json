@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,hashlib,subprocess,datetime,urllib.request\nrepo=r'E:\\WebAIBridge';kit=os.path.join(repo,'app','data','operator-tools','r52-discard-audit')\ndef get(p):\n with urllib.request.urlopen('http://127.0.0.1:17448'+p,timeout=4) as f:return json.load(f)\ndef git(*args):return subprocess.run(['git.exe','-C',repo,*args],capture_output=True,text=True,timeout=7)\nout={'time':datetime.datetime.now().isoformat(timespec='seconds'),'contract':'r52.final.release.readonly.verify.v1'}\nout['liveHead']=git('rev-parse','HEAD').stdout.strip()\nout['worktreeClean']=not bool(git('status','--porcelain=v1','--untracked-files=all').stdout.strip())\no=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{});h=get('/api/health')\nout['operator']={'mode':o.get('mode'),'queuePaused':o.get('queuePaused'),'watchdogMode':w.get('mode'),'watchdogEnabled':w.get('enabled'),'autoSend':w.get('allowAutonomousSend'),'autoContinue':w.get('autoContinueEnabled'),'queue':{k:h.get('assignmentQueue',{}).get(k) for k in ('total','active','queued')},'healthState':h.get('state')}\nman=get('/api/supervisor-watchdog/managed-chats?inspect=0')\nout['configuredChatCount']=len(man.get('chats',[]))\nmanifest=os.path.join(kit,'manifest.json')\nwith open(manifest,'r',encoding='utf-8') as f:m=json.load(f)\nout['R52Kit']={'sourceSHA':m.get('activeSourceSHA'),'expected':m.get('activeSourceSHA')=='e7c8181fc0550830b527dc909004d9df9fb73f83','originalLaunchBackupExists':os.path.isfile(os.path.join(kit,'RUN_READ_ONLY_CHECK.cmd.r52-previous')),'sourceReleaseExists':os.path.isdir(m.get('activeSourcePath',''))}\nbase=os.path.join(repo,'app','data','operator-tools','r51-target-continuity','baseline.json')\nwith open(base,'rb') as f:b=hashlib.file_digest(f,'sha256').hexdigest()\nout['originalR51BaselineUnchanged']=b=='bf14616d0207730f63c93b5fcdfdc1a97a0dd7daafcb0b0a0652973c62e6c11b'\np=subprocess.run(['powershell.exe','-NoProfile','-Command',\"$p=Get-CimInstance Win32_Process -Filter 'ProcessId=13436';if($p){'ALIVE'}else{'ABSENT'}\"],capture_output=True,text=True,timeout=7)\nout['originalChromePIDAlive']=p.stdout.strip()=='ALIVE'\nout['anyAgentEnabled']=w.get('enabled') is not False or w.get('allowAutonomousSend') is not False\nprint(json.dumps(out,ensure_ascii=True)[:4500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"time\": \"2026-10-08T17:17:37\", \"contract\": \"r52.final.release.readonly.verify.v1\", \"liveHead\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"worktreeClean\": true, \"operator\": {\"mode\": \"PAUSED_BROWSER\", \"queuePaused\": true, \"watchdogMode\": \"off\", \"watchdogEnabled\": false, \"autoSend\": false, \"autoContinue\": false, \"queue\": {\"total\": 68, \"active\": 0, \"queued\": 2}, \"healthState\": \"PAUSED\"}, \"configuredChatCount\": 6, \"R52Kit\": {\"sourceSHA\": \"e7c8181fc0550830b527dc909004d9df9fb73f83\", \"expected\": true, \"originalLaunchBackupExists\": true, \"sourceReleaseExists\": true}, \"originalR51BaselineUnchanged\": true, \"originalChromePIDAlive\": true, \"anyAgentEnabled\": false}\r\n",
+      "stdout_bytes": 665,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T10:17:38.718Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T10:17:38.478Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r52-20261008-final-readonly-release-audit-40"
+    },
+    "request_id": "wab-r52-20261008-final-readonly-release-audit-40",
+    "started_at": "2026-10-08T10:17:36.308Z",
+    "status": "completed"
+  },
+  "id": "wab-r52-20261008-final-readonly-release-audit-40",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
