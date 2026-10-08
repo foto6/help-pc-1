@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r46-20261008-renderer-metrics-4b92",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import tempfile,os,subprocess,json\ns=\"'use strict';\\nconst get=async(u)=>{let r=await fetch(u,{signal:AbortSignal.timeout(5000)});if(!r.ok)throw Error('http_'+r.status);return r.json()};\\nfunction rpc(url,method,params={},limit=2200){return new Promise(resolve=>{\\n  let ws,done=false;const t=setTimeout(()=>end({ok:false,reason:'timeout'}),limit);\\n  const end=x=>{if(done)return;done=true;clearTimeout(t);try{ws?.close()}catch{}resolve(x)};\\n  try{ws=new WebSocket(url);ws.addEventListener('open',()=>{ws.send(JSON.stringify({id:1,method,params}))});ws.addEventListener('message',e=>{try{let a=JSON.parse(e.data);if(a.id===1)end(a.error?{ok:false,reason:a.error.message}:{ok:true,result:a.result})}catch{end({ok:false,reason:'json'})}});ws.addEventListener('error',()=>end({ok:false,reason:'ws'}))}catch{end({ok:false,reason:'construct'})}\\n})}\\nasync function main(){\\n const x=await get('http://127.0.0.1:17410/json/version');\\n const url=x.webSocketDebuggerUrl;\\n let a=await rpc(url,'SystemInfo.getProcessInfo'),b={};\\n if(a.ok){await new Promise(r=>setTimeout(r,1400));b=await rpc(url,'SystemInfo.getProcessInfo')}\\n const xRows=(a.result?.processInfo||[]),yRows=(b.result?.processInfo||[]);\\n let ymap=new Map(yRows.map(z=>[z.id,z]));\\n let all=xRows.map(z=>({id:z.id,type:z.type,cpuTime:z.cpuTime,cpuTimeDelta:ymap.has(z.id)?Number((ymap.get(z.id).cpuTime-z.cpuTime).toFixed(3)):null}));all.sort((p,q)=>(q.cpuTimeDelta||0)-(p.cpuTimeDelta||0));\\n console.log(JSON.stringify({at:new Date().toISOString(),version:x.Browser,wsReadOnly:a.ok,reason:a.reason,total:all.length,renderers:all.filter(x=>x.type==='renderer').length,top:all.slice(0,18),busyRenderers:all.filter(z=>z.type==='renderer'&&z.cpuTimeDelta>0.45).length}));\\n}\\nmain().catch(e=>console.log(JSON.stringify({error:e.message})));\\n\"\nwith tempfile.TemporaryDirectory(prefix='wab-r46-process-') as d:\n p=os.path.join(d,'p.js');open(p,'w',encoding='utf-8').write(s)\n try:\n  r=subprocess.run(['node.exe',p],capture_output=True,text=True,timeout=13)\n  print(r.stdout[-7200:])\n except Exception as e:print(type(e).__name__)\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only browser-scoped CDP SystemInfo process utilization; no target mutations"
+}
