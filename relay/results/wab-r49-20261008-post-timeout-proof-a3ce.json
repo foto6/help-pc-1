@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json,urllib.request,datetime,os\nrepo=r'E:\\WebAIBridge';data=r'E:\\WebAIBridge\\app\\data\\backups\\owner-r49-safety-20261008T082255Z'\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'object':'R49_READONLY_POST_TIMEOUT'}\np=subprocess.run(['git.exe','-C',repo,'rev-parse','HEAD'],capture_output=True,text=True,timeout=5);out['head']=p.stdout.strip()\np=subprocess.run(['git.exe','-C',repo,'status','--porcelain=v1','-z','--untracked-files=all'],capture_output=True,timeout=5);out['worktreeClean']=not bool(p.stdout)\ndef get(path,timeout=4):\n with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=timeout) as f:return json.load(f)\nfor n,u in [('health','/api/health'),('operator','/api/operator-lifecycle'),('watchdog','/api/supervisor-watchdog?detect=0'),('cutover','/api/projects/control-plane/cutover-r42/status')]:\n try:\n  d=get(u)\n  if n=='health':out[n]={'state':d.get('state'),'ok':d.get('ok'),'operationalMode':d.get('operationalMode'),'reasons':d.get('reasons'),'blockers':d.get('blockers'),'notices':d.get('notices'),'dormant':d.get('dormantComponents'),'queueSafety':d.get('queueSafety'),'components':{k:{'state':v.get('state'),'reason':v.get('reason'),'stale':v.get('stale')} for k,v in d.get('components',{}).items()},'queue':{k:d.get('assignmentQueue',{}).get(k) for k in ('total','active','queued')}}\n  if n=='operator':out[n]={'queuePaused':d.get('queuePaused'),'mode':d.get('mode')}\n  if n=='watchdog':out[n]={k:d.get('config',{}).get(k) for k in ('mode','enabled','allowAutonomousSend','autoContinueEnabled')}\n  if n=='cutover':out[n]={k:d.get('cutoverState',{}).get(k) for k in ('status','holdActive','targetSha','preCutoverHead','rollbackManifest')}\n except Exception as e:out[n]={'error':type(e).__name__}\nout['manifestExists']=os.path.isfile(out.get('cutover',{}).get('rollbackManifest',''))\nout['normalReportExists']=os.path.isfile(os.path.join(data,'r49-cutover-report.json'))\np=subprocess.run(['powershell.exe','-NoProfile','-Command',\"$p=Get-CimInstance Win32_Process -Filter 'ProcessId=13436';if($p){'ALIVE'}else{'ABSENT'}\"],capture_output=True,text=True,timeout=5)\nout['originalChromeAlive']=p.stdout.strip()=='ALIVE'\nprint(json.dumps(out,ensure_ascii=True)[:7600])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T15:27:05\", \"object\": \"R49_READONLY_POST_TIMEOUT\", \"head\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"worktreeClean\": true, \"health\": {\"state\": \"PAUSED\", \"ok\": false, \"operationalMode\": \"PAUSED\", \"reasons\": [], \"blockers\": [], \"notices\": [\"assignment_queue:historic_queued_held_no_replay\", \"assignment_queue:oldest_queued_over_60s_held\", \"operational_component:git_evidence:dormant_due_to_pause\", \"operational_component:timeline_io:dormant_due_to_pause\"], \"dormant\": [\"git_evidence\", \"timeline_io\"], \"queueSafety\": {\"contract\": \"bridge.paused_queue_operational_health.r48.v1\", \"queueDisposition\": \"PAUSED_HOLD\", \"intentionalPause\": true, \"historicQueuedPreserved\": 2, \"active\": 0, \"blockers\": [], \"notices\": [\"assignment_queue:historic_queued_held_no_replay\", \"assignment_queue:oldest_queued_over_60s_held\"], \"mayAutoDispatch\": false}, \"components\": {\"supervisor_config_io\": {\"state\": \"healthy\", \"reason\": \"\", \"stale\": false}, \"local_filesystem\": {\"state\": \"healthy\", \"reason\": \"\", \"stale\": false}, \"maintenance\": {\"state\": \"healthy\", \"reason\": \"\", \"stale\": false}, \"assignment_maintenance\": {\"state\": \"healthy\", \"reason\": \"\", \"stale\": false}, \"browser_cdp\": {\"state\": \"healthy\", \"reason\": \"\", \"stale\": false}, \"git_evidence\": {\"state\": \"dormant\", \"reason\": \"expected_idle_during_operator_pause\", \"stale\": true}, \"git_baseline\": {\"state\": \"healthy\", \"reason\": \"\", \"stale\": false}, \"timeline_io\": {\"state\": \"dormant\", \"reason\": \"expected_idle_during_operator_pause\", \"stale\": true}}, \"queue\": {\"total\": 68, \"active\": 0, \"queued\": 2}}, \"operator\": {\"queuePaused\": true, \"mode\": \"PAUSED_BROWSER\"}, \"watchdog\": {\"mode\": \"off\", \"enabled\": false, \"allowAutonomousSend\": false, \"autoContinueEnabled\": false}, \"cutover\": {\"status\": \"CUTOVER_HOLD_PREPARED\", \"holdActive\": true, \"targetSha\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"preCutoverHead\": \"8360bed73554011e7d6ff816c6365196c5e483ee\", \"rollbackManifest\": \"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261008T082426Z\\\\rollback-manifest.json\"}, \"manifestExists\": true, \"normalReportExists\": false, \"originalChromeAlive\": true}\r\n",
+      "stdout_bytes": 2105,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T08:27:06.261Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T08:27:06.098Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r49-20261008-post-timeout-proof-a3ce"
+    },
+    "request_id": "wab-r49-20261008-post-timeout-proof-a3ce",
+    "started_at": "2026-10-08T08:27:05.068Z",
+    "status": "completed"
+  },
+  "id": "wab-r49-20261008-post-timeout-proof-a3ce",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
