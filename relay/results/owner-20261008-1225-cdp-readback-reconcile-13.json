@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-08T05:08:10.437Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "owner-20261008-1222-python-cdp-ascii-readback-12"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:9bc22234464b8a911a09404e879c9b14696a9ae767efb7d1aab178a34b74e40d",
+            "journal_sequence": 2323,
+            "previous_record_sha256": "b0916bb160f0d3ae350326cc0844c83619b09706a6c8101aafa9e07b4f08beea",
+            "record_sha256": "0f1b4e13883839decc61e55eaadb37a48c7397a711d2d308f8f5489dfd2421aa",
+            "recorded_at": "2026-10-08T05:08:10.613Z",
+            "request_id": "owner-20261008-1222-python-cdp-ascii-readback-12",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-08T05:08:44.867Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "owner-20261008-1222-python-cdp-ascii-readback-12"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:9bc22234464b8a911a09404e879c9b14696a9ae767efb7d1aab178a34b74e40d",
+            "journal_sequence": 2324,
+            "previous_record_sha256": "0f1b4e13883839decc61e55eaadb37a48c7397a711d2d308f8f5489dfd2421aa",
+            "record_sha256": "2de16fbb93841cfb54408c22234244947ff810ff05c199aa8a28f474db56e674",
+            "recorded_at": "2026-10-08T05:08:45.083Z",
+            "request_id": "owner-20261008-1222-python-cdp-ascii-readback-12",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-08T05:08:44.867Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "owner-20261008-1222-python-cdp-ascii-readback-12"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-08T05:08:44.867Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "owner-20261008-1222-python-cdp-ascii-readback-12"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:9bc22234464b8a911a09404e879c9b14696a9ae767efb7d1aab178a34b74e40d",
+          "journal_sequence": 2324,
+          "previous_record_sha256": "0f1b4e13883839decc61e55eaadb37a48c7397a711d2d308f8f5489dfd2421aa",
+          "record_sha256": "2de16fbb93841cfb54408c22234244947ff810ff05c199aa8a28f474db56e674",
+          "recorded_at": "2026-10-08T05:08:45.083Z",
+          "request_id": "owner-20261008-1222-python-cdp-ascii-readback-12",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "e503dfadbaf78f05bd322fb4bff7fcce37be9c3cad696fb39d61d32e6c5eafc3",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 2324
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "owner-20261008-1222-python-cdp-ascii-readback-12",
+        "request_id": "owner-20261008-1222-python-cdp-ascii-readback-12",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T05:09:32.790Z",
+    "ok": true,
+    "request_id": "owner-20261008-1225-cdp-readback-reconcile-13",
+    "started_at": "2026-10-08T05:09:32.627Z",
+    "status": "completed"
+  },
+  "id": "owner-20261008-1225-cdp-readback-reconcile-13",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
