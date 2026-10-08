@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,zipfile,io,tempfile,os,json,datetime,hashlib\nrepo=r'E:\\WebAIBridge';sha='e7c8181fc0550830b527dc909004d9df9fb73f83';branch='agent/bridge-r52-discard-evidence-20261008'\nbaseline=r'E:\\WebAIBridge\\app\\data\\operator-tools\\r51-target-continuity\\baseline.json'\ndef git(*a,t=17):return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,timeout=t)\nout={'exactSHA':sha,'at':datetime.datetime.now().isoformat(timespec='seconds')}\nout['prodHeadBefore']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['porcelainBefore']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\ntry:\n p=git('fetch','--no-tags','--no-write-fetch-head','origin','refs/heads/'+branch,t=39)\n if p.returncode:raise RuntimeError('fetch_failed')\n if git('cat-file','-t',sha,t=7).stdout.strip()!=b'commit':raise RuntimeError('commit_missing')\n names=['chrome-discard-evidence-r52.js','r52-chrome-discard-audit.js','chrome-discard-evidence-r52.test.js','r51-target-continuity.js','chrome-target-continuity-r51.js','chrome-restart-readiness-r50.js','chrome-target-continuity-r51.test.js']\n p=git('archive','--format=zip',sha,*('app/'+n for n in names),t=15)\n if p.returncode:raise RuntimeError('archive_failed')\n with tempfile.TemporaryDirectory(prefix='wab-r52b-local-') as d:\n  with zipfile.ZipFile(io.BytesIO(p.stdout)) as z:z.extractall(d)\n  app=os.path.join(d,'app')\n  out['tests']=[]\n  for cmd in [['node.exe','--check','r52-chrome-discard-audit.js'],['node.exe','--test','chrome-discard-evidence-r52.test.js','chrome-target-continuity-r51.test.js']]:\n   r=subprocess.run(cmd,cwd=app,capture_output=True,text=True,timeout=20)\n   out['tests'].append({'command':' '.join(cmd[1:]),'exit':r.returncode,'stdoutTail':r.stdout[-420:],'stderrHead':r.stderr[:180]})\n  if all(x['exit']==0 for x in out['tests']):\n   p=subprocess.run(['node.exe','r52-chrome-discard-audit.js','--baseline='+baseline],cwd=app,capture_output=True,text=True,timeout=29)\n   out['auditCode']=p.returncode\n   if p.stdout.strip():\n    x=json.loads(p.stdout)\n    out['audit']={k:x.get(k) for k in ('status','reasons','responsive','previousDiscardEvidenceCount','unknownDiscardStateCount','noAutomaticChromeRestart')}\n   else:out['errorTail']=p.stderr[-160:]\nexcept Exception as e:out['error']=type(e).__name__+':'+str(e)[:150]\nout['prodHeadAfter']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['porcelainAfter']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\nout['productionUnchanged']=out['prodHeadBefore']==out['prodHeadAfter'] and out['porcelainBefore']==out['porcelainAfter']\nprint(json.dumps(out,ensure_ascii=True)[:5500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"exactSHA\": \"e7c8181fc0550830b527dc909004d9df9fb73f83\", \"at\": \"2026-10-08T17:15:13\", \"prodHeadBefore\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"porcelainBefore\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"tests\": [{\"command\": \"--check r52-chrome-discard-audit.js\", \"exit\": 0, \"stdoutTail\": \"\", \"stderrHead\": \"\"}, {\"command\": \"--test chrome-discard-evidence-r52.test.js chrome-target-continuity-r51.test.js\", \"exit\": 0, \"stdoutTail\": \"(1.0832ms)\\n\\u0432\\u045a\\u201d frozen queue and disabled autonomous dispatch are required (1.0728ms)\\n\\u0432\\u045a\\u201d extra pages and renamed canonical chat are reconciled (1.0706ms)\\n\\u0432\\u045a\\u201d bad stored baseline is never silently promoted to green (0.7375ms)\\n\\u0432\\u045a\\u201d only enabled ChatGPT profiles contribute expected live CDP ports (2.1087ms)\\n\\u0432\\u201e\\u2116 tests 19\\n\\u0432\\u201e\\u2116 suites 0\\n\\u0432\\u201e\\u2116 pass 19\\n\\u0432\\u201e\\u2116 fail 0\\n\\u0432\\u201e\\u2116 cancelled 0\\n\\u0432\\u201e\\u2116 skipped 0\\n\\u0432\\u201e\\u2116 todo 0\\n\\u0432\\u201e\\u2116 duration_ms 209.2031\\n\", \"stderrHead\": \"\"}], \"auditCode\": 2, \"audit\": {\"status\": \"RECONCILIATION_REQUIRED\", \"reasons\": [\"cdp_target_identity_not_stable\", \"CDP_TARGET_ID_CHANGED:QA\"], \"responsive\": 0, \"previousDiscardEvidenceCount\": 0, \"unknownDiscardStateCount\": 0, \"noAutomaticChromeRestart\": true}, \"prodHeadAfter\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"porcelainAfter\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"productionUnchanged\": true}\r\n",
+      "stdout_bytes": 1534,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T10:15:18.024Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T10:15:17.851Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r52-20261008-exact-qa-drift-regression-38"
+    },
+    "request_id": "wab-r52-20261008-exact-qa-drift-regression-38",
+    "started_at": "2026-10-08T10:15:13.048Z",
+    "status": "completed"
+  },
+  "id": "wab-r52-20261008-exact-qa-drift-regression-38",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
