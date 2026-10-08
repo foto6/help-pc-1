@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-r45-20261008-livegate-d48e",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,subprocess,datetime\nr={'at':datetime.datetime.now().isoformat(timespec='seconds')}\nfor path in ('/api/health','/api/operator-lifecycle','/api/supervisor-watchdog/managed-chats?inspect=0'):\n try:\n  with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=3) as f:d=json.load(f)\n  if path=='/api/health':r['health']={k:d.get(k) for k in ('state','ok','reasons','blockers','assignmentQueue','codeReload','startedAt')}\n  elif path=='/api/operator-lifecycle':r['lifecycle']={k:d.get(k) for k in ('mode','revision','queuePaused','quiescence')}\n  else:r['chats']={'n':len(d.get('chats',[])),'status':[{k:z.get(k) for k in ('name','status','highMode','generating','openTabs')} for z in d.get('chats',[])[:12]]}\n except Exception as e:r[path]={'error':type(e).__name__}\ntry:\n g=subprocess.run(['git.exe','-C',r'E:\\WebAIBridge','rev-parse','HEAD'],capture_output=True,text=True,timeout=4)\n r['head']=g.stdout.strip() if g.returncode==0 else 'git_error'\nexcept Exception as e:r['head']='exception:'+type(e).__name__\nprint(json.dumps(r,ensure_ascii=True,separators=(',',':'))[:8500])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only bounded local Bridge R45 gate; never send, mutate, restart, or inspect secrets"
+}
