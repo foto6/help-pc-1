@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json,datetime\nscript=\"const http=require('node:http');\\nconst m=require('E:/WebAIBridge/app/data/operator-tools/r50-read-only-chrome-check/releases/814c0e7e328599c85d7927e2a48b3e0f5df1becc/r50-restart-readiness-preflight.js');\\nasync function get(u){const r=await fetch(u,{signal:AbortSignal.timeout(2400)});if(!r.ok)throw Error('non_200');return r.json()}\\n(async()=>{\\nconst [o,w,h,c,t]=await Promise.all([\\n get('http://127.0.0.1:17448/api/operator-lifecycle'),\\n get('http://127.0.0.1:17448/api/supervisor-watchdog?detect=0'),\\n get('http://127.0.0.1:17448/api/health'),\\n get('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=0'),\\n get('http://127.0.0.1:17410/json/list')]);\\nif(o.queuePaused!==true||w.config?.mode!=='off'||w.config?.allowAutonomousSend!==false||h.assignmentQueue?.active!==0)throw Error('freeze_gate_failed');\\nconst chat=c.chats.find(x=>x.name==='Bridge');\\nconst target=t.filter(x=>x.id==='5AE5AA3239743E1E8A765F7834058A7B'&&x.type==='page');\\nif(target.length!==1||!chat)throw Error('exact_identity_missing');\\nconst u=new URL(chat.url);\\nconst x=await m.inspectTarget(target[0].webSocketDebuggerUrl,u.pathname.replace(/\\\\/$/,''),4300);\\nconsole.log(JSON.stringify({chat:'Bridge',expectedTargetExact:target.length===1,probeStatus:x.probeStatus,domIdentityConfirmed:x.domIdentityConfirmed,composerConfirmed:x.composerConfirmed,draftPresent:x.draftPresent,generating:x.generating,activeEditableCount:x.activeEditableCount,providerTextNotReturned:true}));\\n})().catch(e=>{console.log(JSON.stringify({chat:'Bridge',state:'INSPECT_UNKNOWN',error:e.message.slice(0,90)}));process.exitCode=2});\"\np=subprocess.run(['node.exe','-e',script],capture_output=True,text=True,timeout=13)\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'exit':p.returncode,'result':p.stdout.strip()[-2000:],'stderr':p.stderr[:250]},ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T15:52:08\", \"exit\": 0, \"result\": \"{\\\"chat\\\":\\\"Bridge\\\",\\\"expectedTargetExact\\\":true,\\\"probeStatus\\\":\\\"RESPONSIVE\\\",\\\"domIdentityConfirmed\\\":true,\\\"composerConfirmed\\\":true,\\\"draftPresent\\\":false,\\\"generating\\\":false,\\\"activeEditableCount\\\":1,\\\"providerTextNotReturned\\\":true}\", \"stderr\": \"\"}\r\n",
+      "stdout_bytes": 311,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T08:52:08.303Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T08:52:08.090Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r51-20261008-check-bridge-draft-03"
+    },
+    "request_id": "wab-r51-20261008-check-bridge-draft-03",
+    "started_at": "2026-10-08T08:52:06.727Z",
+    "status": "completed"
+  },
+  "id": "wab-r51-20261008-check-bridge-draft-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
