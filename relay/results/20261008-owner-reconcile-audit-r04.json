@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-08T04:06:24.787Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261008-owner-assignment-audit-1105-r03"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:d9be91f0ba25ad923868a6f1041393bff49387534fab3522521f7b150f4a9548",
+            "journal_sequence": 2276,
+            "previous_record_sha256": "7a0f5c461950e4fe0b4ded88db736191779b06c015f6e451bad1472db095cda5",
+            "record_sha256": "4a2976e4e8cff28d8b8b324a5cdd5fc86de838ae710aaa939fa236254a55db49",
+            "recorded_at": "2026-10-08T04:06:24.927Z",
+            "request_id": "20261008-owner-assignment-audit-1105-r03",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-08T04:06:40.071Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261008-owner-assignment-audit-1105-r03"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:d9be91f0ba25ad923868a6f1041393bff49387534fab3522521f7b150f4a9548",
+            "journal_sequence": 2277,
+            "previous_record_sha256": "4a2976e4e8cff28d8b8b324a5cdd5fc86de838ae710aaa939fa236254a55db49",
+            "record_sha256": "19e56ca63d41b485be673602b692bcd2394287ecd6ebc6e0a86f48016198ba6f",
+            "recorded_at": "2026-10-08T04:06:40.211Z",
+            "request_id": "20261008-owner-assignment-audit-1105-r03",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-08T04:06:40.071Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "20261008-owner-assignment-audit-1105-r03"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-08T04:06:40.071Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "20261008-owner-assignment-audit-1105-r03"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:d9be91f0ba25ad923868a6f1041393bff49387534fab3522521f7b150f4a9548",
+          "journal_sequence": 2277,
+          "previous_record_sha256": "4a2976e4e8cff28d8b8b324a5cdd5fc86de838ae710aaa939fa236254a55db49",
+          "record_sha256": "19e56ca63d41b485be673602b692bcd2394287ecd6ebc6e0a86f48016198ba6f",
+          "recorded_at": "2026-10-08T04:06:40.211Z",
+          "request_id": "20261008-owner-assignment-audit-1105-r03",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "76ef0e92bd193c44f88d8122828fe342266ba0cc6fbc53c2162486d0d2c855b7",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 2277
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "20261008-owner-assignment-audit-1105-r03",
+        "request_id": "20261008-owner-assignment-audit-1105-r03",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T04:07:05.949Z",
+    "ok": true,
+    "request_id": "20261008-owner-reconcile-audit-r04",
+    "started_at": "2026-10-08T04:07:05.807Z",
+    "status": "completed"
+  },
+  "id": "20261008-owner-reconcile-audit-r04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
