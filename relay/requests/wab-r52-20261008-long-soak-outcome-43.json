@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r52-20261008-long-soak-outcome-43",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "wab-r52-20261008-after-site-exception-nine-tab-soak-42",
+    "action": "shell.run"
+  },
+  "timeout_ms": 13000,
+  "note": "Read-only durable outcome inspection of timed-out nine-tab soak; never replay unknown."
+}
