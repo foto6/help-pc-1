@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,tempfile,subprocess,zipfile,io,json,datetime\nrepo=r'E:\\WebAIBridge';source='8360bed73554011e7d6ff816c6365196c5e483ee';live='4638fd18def71dbfa07227c4b9b1bcbf89bba2a5'\nmanifest=r'E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261008T072021Z\\rollback-manifest.json'\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'scriptSource':source,'expectedLiveHead':live,'readonly':True}\np=subprocess.run(['git.exe','-C',repo,'rev-parse','HEAD'],capture_output=True,text=True,timeout=5)\nif p.stdout.strip()!=live:raise RuntimeError('production_changed')\narchive=subprocess.run(['git.exe','-C',repo,'archive','--format=zip',source,'app/r48-cutover-attest.js','app/independent-cutover-attestation-r48.js'],capture_output=True,timeout=10)\nif archive.returncode:raise RuntimeError('archive_fail')\nwith tempfile.TemporaryDirectory(prefix='wab-r48-attest-readonly-') as d:\n with zipfile.ZipFile(io.BytesIO(archive.stdout)) as z:z.extractall(d)\n cmd=['node.exe',os.path.join(d,'app','r48-cutover-attest.js'),'--repo='+repo,'--manifest='+manifest,'--target-sha='+live]\n try:\n  result=subprocess.run(cmd,capture_output=True,text=True,timeout=24)\n  out['exitCode']=result.returncode;out['stdoutTail']=result.stdout[-5800:];out['stderrTail']=result.stderr[-1000:]\n except Exception as e:out['error']=type(e).__name__\nout['sidecarWritten']=os.path.isfile(os.path.join(os.path.dirname(manifest),'r48-independent-attestation.json'))\nprint(json.dumps(out,ensure_ascii=True)[:7200])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T14:34:49\", \"scriptSource\": \"8360bed73554011e7d6ff816c6365196c5e483ee\", \"expectedLiveHead\": \"4638fd18def71dbfa07227c4b9b1bcbf89bba2a5\", \"readonly\": true, \"exitCode\": 0, \"stdoutTail\": \"{\\\"contract\\\":\\\"bridge.independent_cutover_attestation.r48.v1\\\",\\\"outcome\\\":\\\"INDEPENDENT_VERIFIED_HOLD\\\",\\\"ok\\\":true,\\\"problems\\\":[],\\\"targetSHA\\\":\\\"4638fd18def71dbfa07227c4b9b1bcbf89bba2a5\\\",\\\"preCutoverSHA\\\":\\\"943c0b1d509fb8b73cef2f8bbe566ef957854a47\\\",\\\"originalCutoverState\\\":\\\"CUTOVER_HOLD_PREPARED\\\",\\\"originalCutoverScriptExitVerified\\\":false,\\\"automaticReplayAuthorized\\\":false,\\\"autonomousAgentsResumed\\\":false,\\\"providerSendPerformed\\\":false,\\\"browserRestartPerformed\\\":false,\\\"writesOriginalCutoverState\\\":false,\\\"provesBackgroundChromeStability\\\":false,\\\"historicalQueueRetained\\\":2,\\\"observedAt\\\":\\\"2026-10-08T07:34:49.663Z\\\",\\\"repository\\\":\\\"E:\\\\\\\\WebAIBridge\\\",\\\"manifestPath\\\":\\\"E:\\\\\\\\WebAIBridge\\\\\\\\app\\\\\\\\data\\\\\\\\backups\\\\\\\\r42-cutover-20261008T072021Z\\\\\\\\rollback-manifest.json\\\",\\\"rollbackManifestSha256\\\":\\\"bf1c93e3cc081d1efae4694b499af6043b4034489102ef733aa09ae22183af5e\\\",\\\"rollbackBackupFileCount\\\":9,\\\"invalidBackupNames\\\":[],\\\"exactChatTargetCounts\\\":[{\\\"name\\\":\\\"Bridge\\\",\\\"matches\\\":1},{\\\"name\\\":\\\"Media\\\",\\\"matches\\\":1},{\\\"name\\\":\\\"Creator\\\",\\\"matches\\\":1},{\\\"name\\\":\\\"Growth\\\",\\\"matches\\\":1},{\\\"name\\\":\\\"Native MCP\\\",\\\"matches\\\":1},{\\\"name\\\":\\\"QA\\\",\\\"matches\\\":1}],\\\"queuePaused\\\":true,\\\"supervisorOff\\\":true,\\\"originalScriptExitResult\\\":\\\"NOT_ATTESTED\\\",\\\"evidenceSha256\\\":\\\"046c8217535699bc6dc55bcb1a0c2fbff3f4f8259ff10e41c1456849b397916d\\\"}\\n\", \"stderrTail\": \"\", \"sidecarWritten\": false}\r\n",
+      "stdout_bytes": 1625,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T07:34:49.856Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T07:34:49.697Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r48-20261008-readonly-live-attest-72de"
+    },
+    "request_id": "wab-r48-20261008-readonly-live-attest-72de",
+    "started_at": "2026-10-08T07:34:48.793Z",
+    "status": "completed"
+  },
+  "id": "wab-r48-20261008-readonly-live-attest-72de",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
