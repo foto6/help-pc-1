@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,subprocess,json,datetime\nrepo=r'E:\\WebAIBridge'\nmanifest=r'E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261008T073836Z\\rollback-manifest.json'\nreceipt=os.path.join(os.path.dirname(manifest),'r48-independent-attestation.json')\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'requestId':'wab-r48-20261008-write-receipt-approved-lane-991e'}\nif os.path.isfile(receipt):raise RuntimeError('receipt_already_exists_no_replay')\ncmd=['node.exe',os.path.join(repo,'app','r48-cutover-attest.js'),'--repo='+repo,'--manifest='+manifest,'--target-sha=8360bed73554011e7d6ff816c6365196c5e483ee','--write-attestation']\np=subprocess.run(cmd,capture_output=True,text=True,timeout=22)\nout['exitCode']=p.returncode\nif p.stdout.strip():\n x=json.loads(p.stdout)\n out['evidence']={k:x.get(k) for k in ('ok','outcome','targetSHA','originalCutoverState','originalCutoverScriptExitVerified','rollbackBackupFileCount','evidenceSha256','writtenTo')}\nelse:out['stderrTail']=p.stderr[-400:]\nout['receiptExists']=os.path.isfile(receipt)\nprint(json.dumps(out,ensure_ascii=True)[:3000])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T14:42:47\", \"requestId\": \"wab-r48-20261008-write-receipt-approved-lane-991e\", \"exitCode\": 0, \"evidence\": {\"ok\": true, \"outcome\": \"INDEPENDENT_VERIFIED_HOLD\", \"targetSHA\": \"8360bed73554011e7d6ff816c6365196c5e483ee\", \"originalCutoverState\": \"CUTOVER_HOLD_PREPARED\", \"originalCutoverScriptExitVerified\": false, \"rollbackBackupFileCount\": 9, \"evidenceSha256\": \"5da7ce3aad356f55e3a0525020a4d00baa7b32ab19554beacf43eb63d36d4e07\", \"writtenTo\": \"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261008T073836Z\\\\r48-independent-attestation.json\"}, \"receiptExists\": true}\r\n",
+      "stdout_bytes": 583,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T07:42:48.380Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T07:42:48.202Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r48-20261008-write-receipt-approved-lane-991e"
+    },
+    "request_id": "wab-r48-20261008-write-receipt-approved-lane-991e",
+    "started_at": "2026-10-08T07:42:47.530Z",
+    "status": "completed"
+  },
+  "id": "wab-r48-20261008-write-receipt-approved-lane-991e",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
