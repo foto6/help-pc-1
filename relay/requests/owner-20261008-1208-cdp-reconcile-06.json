@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-1208-cdp-reconcile-06",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "owner-20261008-1206-cdp-bridge-one-05",
+    "action": "shell.run"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only durable outcome lookup for timed out Bridge CDP read. Do not reexecute."
+}
