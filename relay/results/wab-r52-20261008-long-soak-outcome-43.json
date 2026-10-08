@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-08T12:33:15.480Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "wab-r52-20261008-after-site-exception-nine-tab-soak-42"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:cae57e75ea71c427f60f6114da84944664c7014157159859211c2b74a6fc9615",
+            "journal_sequence": 2554,
+            "previous_record_sha256": "a5c2e90aab7c2ee7d95b396e281805c66625062ad152c885d9139470a6188c6a",
+            "record_sha256": "ca91f885363f3686f828b4c59983f713f37bc30fc5775d0c2b704528e7eaa5c2",
+            "recorded_at": "2026-10-08T12:33:15.629Z",
+            "request_id": "wab-r52-20261008-after-site-exception-nine-tab-soak-42",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-08T12:34:55.926Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "wab-r52-20261008-after-site-exception-nine-tab-soak-42"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:cae57e75ea71c427f60f6114da84944664c7014157159859211c2b74a6fc9615",
+            "journal_sequence": 2555,
+            "previous_record_sha256": "ca91f885363f3686f828b4c59983f713f37bc30fc5775d0c2b704528e7eaa5c2",
+            "record_sha256": "14cf53b4ab06bdd64254cb74684768a32b56f74a12669c0b9eaa3dd034ffe5a2",
+            "recorded_at": "2026-10-08T12:34:56.153Z",
+            "request_id": "wab-r52-20261008-after-site-exception-nine-tab-soak-42",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-08T12:34:55.926Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "wab-r52-20261008-after-site-exception-nine-tab-soak-42"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-08T12:34:55.926Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "wab-r52-20261008-after-site-exception-nine-tab-soak-42"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:cae57e75ea71c427f60f6114da84944664c7014157159859211c2b74a6fc9615",
+          "journal_sequence": 2555,
+          "previous_record_sha256": "ca91f885363f3686f828b4c59983f713f37bc30fc5775d0c2b704528e7eaa5c2",
+          "record_sha256": "14cf53b4ab06bdd64254cb74684768a32b56f74a12669c0b9eaa3dd034ffe5a2",
+          "recorded_at": "2026-10-08T12:34:56.153Z",
+          "request_id": "wab-r52-20261008-after-site-exception-nine-tab-soak-42",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "ceffaaea5459e41eed99eee8a4a14c2a16106a5bfe491e64de1c51f896e0b3ac",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 2555
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "wab-r52-20261008-after-site-exception-nine-tab-soak-42",
+        "request_id": "wab-r52-20261008-after-site-exception-nine-tab-soak-42",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T12:35:27.607Z",
+    "ok": true,
+    "request_id": "wab-r52-20261008-long-soak-outcome-43",
+    "started_at": "2026-10-08T12:35:27.448Z",
+    "status": "completed"
+  },
+  "id": "wab-r52-20261008-long-soak-outcome-43",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
