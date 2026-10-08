@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r46-20261008-rollback-audit-226d",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,json,subprocess,urllib.request,datetime,hashlib\nroot=r'E:\\WebAIBridge';api='http://127.0.0.1:17448'\ndef get(path,timeout=4):\n with urllib.request.urlopen(api+path,timeout=timeout) as f:return json.load(f)\nout={'at':datetime.datetime.now().isoformat(),'operation':'read_only_r46_attestation'}\nc=get('/api/projects/control-plane/cutover-r42/status').get('cutoverState',{})\npath=c.get('rollbackManifest','')\nout['cutoverState']={k:c.get(k) for k in ('status','holdActive','targetSha','preCutoverHead')}\nout['rollbackManifestExists']=os.path.isfile(path)\nif out['rollbackManifestExists']:\n with open(path,'rb') as f:buf=f.read()\n m=json.loads(buf.decode('utf-8-sig'))\n backups=m.get('backups',[])\n out['manifest']={'targetSha':m.get('targetSha'),'originalSha':m.get('preCutoverHead'),'backupCount':len(backups),'missingFiles':sum(bool(x.get('existed')) and not os.path.isfile(x.get('backup','')) for x in backups),'sha256':hashlib.sha256(buf).hexdigest(),'path':path}\ntry:\n p=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',os.path.join(root,'app','r42-rollback.ps1'),'-Manifest',path,'-ValidateOnly'],capture_output=True,text=True,timeout=19)\n out['rollbackPreflight']={'exitCode':p.returncode,'ok':'PREFLIGHT_OK' in p.stdout,'stderrTail':p.stderr[-350:]}\nexcept Exception as e:out['rollbackPreflight']={'error':type(e).__name__}\nh=get('/api/health');o=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{})\nout['runtime']={'state':h.get('state'),'queued':h.get('assignmentQueue',{}).get('queued'),'active':h.get('assignmentQueue',{}).get('active'),'queuePaused':o.get('queuePaused'),'watchdogMode':w.get('mode'),'allowAutonomousSend':w.get('allowAutonomousSend')}\nprint(json.dumps(out,ensure_ascii=True)[:5400])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 40000,
+  "note": "Read-only final R46 rollback ValidateOnly + current hold/queue attestation. Do not execute rollback or resume autonomy."
+}
