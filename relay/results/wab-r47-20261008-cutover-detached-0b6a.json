@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,os,json,datetime,urllib.request,hashlib\nrepo=r'E:\\WebAIBridge'\nbackup=r'E:\\WebAIBridge\\app\\data\\backups\\owner-r47-safety-20261008T071638Z'\nsha='4638fd18def71dbfa07227c4b9b1bcbf89bba2a5';branch='agent/bridge-r47-background-tab-reliability-20261008'\nif not os.path.isfile(os.path.join(backup,'manifest.json')):raise RuntimeError('owner_backup_missing')\ndef get(p,timeout=4):\n with urllib.request.urlopen('http://127.0.0.1:17448'+p,timeout=timeout) as f:return json.load(f)\ndef git(*args):\n return subprocess.run(['git.exe','-C',repo,*args],capture_output=True,timeout=5)\nhead=git('rev-parse','HEAD').stdout.decode().strip()\nif head!='943c0b1d509fb8b73cef2f8bbe566ef957854a47':raise RuntimeError('production_head_changed')\nstatus=git('status','--porcelain=v1','-z','--untracked-files=all').stdout\nif status:raise RuntimeError('production_worktree_not_clean')\nq=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{})\nif q.get('queuePaused') is not True or w.get('mode')!='off' or w.get('enabled') is not False or w.get('allowAutonomousSend') is not False or w.get('autoContinueEnabled') is not False:raise RuntimeError('freeze_gate_failed')\nqueue=get('/api/supervisor-watchdog/agent-assignments').get('assignments',[])\nif len(queue)!=68 or any(a.get('state') in ('running','sending','dispatching','preflight_running') for a in queue):raise RuntimeError('unsafe_queued_state')\nreport=os.path.join(backup,'r47-cutover-report.json')\nreceipt=os.path.join(backup,'r47-cutover-invocation.json')\nif os.path.exists(report) or os.path.exists(receipt):raise RuntimeError('cutover_idempotency_duplicate')\nargs=['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',os.path.join(repo,'app','r42-cutover.ps1'),'-TargetSha',sha,'-TargetBranch',branch,'-RepoPath',repo,'-ReportPath',report]\nstdout=os.path.join(backup,'r47-cutover.stdout.log');stderr=os.path.join(backup,'r47-cutover.stderr.log')\nwith open(stdout,'wb') as so,open(stderr,'wb') as se:\n p=subprocess.Popen(args,cwd=repo,stdin=subprocess.DEVNULL,stdout=so,stderr=se,close_fds=True,creationflags=getattr(subprocess,'DETACHED_PROCESS',0)|getattr(subprocess,'CREATE_NEW_PROCESS_GROUP',0))\nreceiptData={'object':'bridge.r47.cutover_invocation.v1','requestId':'wab-r47-20261008-cutover-detached-0b6a','pid':p.pid,'preHead':head,'targetSHA':sha,'targetBranch':branch,'reportPath':report,'stdoutLog':stdout,'stderrLog':stderr,'startedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'queuePausedAtDispatch':True,'agentsNotStarted':True,'noChromeRestartRequested':True}\nwith open(receipt,'w',encoding='utf-8') as f:json.dump(receiptData,f,indent=2)\nprint(json.dumps({'started':True,'pid':p.pid,'receipt':receipt,'targetSHA':sha,'noWaitForCutover':True,'noChromeRestartRequested':True},ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"started\": true, \"pid\": 27768, \"receipt\": \"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\owner-r47-safety-20261008T071638Z\\\\r47-cutover-invocation.json\", \"targetSHA\": \"4638fd18def71dbfa07227c4b9b1bcbf89bba2a5\", \"noWaitForCutover\": true, \"noChromeRestartRequested\": true}\r\n",
+      "stdout_bytes": 264,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T07:17:30.836Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T07:17:30.668Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r47-20261008-cutover-detached-0b6a"
+    },
+    "request_id": "wab-r47-20261008-cutover-detached-0b6a",
+    "started_at": "2026-10-08T07:17:29.930Z",
+    "status": "completed"
+  },
+  "id": "wab-r47-20261008-cutover-detached-0b6a",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
