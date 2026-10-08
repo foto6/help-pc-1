@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-1229-final-agent-status-14",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,datetime\nbase='http://127.0.0.1:17448'\ndef get(p):\n with urllib.request.urlopen(base+p,timeout=5) as h:return json.load(h)\nc=get('/api/supervisor-watchdog/managed-chats')['chats'];a=get('/api/supervisor-watchdog/agent-assignments')['assignments']\nids={'e27a8cf2-fcb4-45f0-8134-3ca5632c9611','f1bc42fe-ecd8-408a-9d70-84ec2bb4a3ab','b14cb551-8b8e-4e7b-a9a3-7b8264e4e17d','5333f6a6-e562-4c5e-873b-b8b626468a32','eff91a96-514b-4cc7-93b6-19e1f19c5741','dfcf8cae-1ea4-4d79-9690-a3df9064cd48'}\nx={'checkedAt':datetime.datetime.now().isoformat(),'chats':[{k:v.get(k) for k in ('id','name','status','error','highMode','draftPresent','generating','openTabs','lastSeenAt')} for v in c],'assignments':[{k:v.get(k) for k in ('id','targetChatId','state','dispatchCount','dispatchSubmitAttempted','lastDiagnostic','lastPreflightReason','currentHead','ciConclusion')} for v in a if v.get('id') in ids]};print(json.dumps(x,ensure_ascii=True,separators=(',',':')))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Last read-only Bridge six-chat and exact assignment state after opening QA+Creator, no CDP, no user secrets."
+}
