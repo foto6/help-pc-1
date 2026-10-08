@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$repo='E:\\WebAIBridge'\n$target='9a8898a70355bbae2d465ee49739030aa27e9f4e'\n$targetBranch='agent/bridge-r44-hotfix-r43-integration-20261007'\n$expectedBlob='ca53b0e3a8e1e11ca48e162b72be4ca983e378a3'\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path\nfunction G([string[]]$a){\n $prev=$ErrorActionPreference\n try{$ErrorActionPreference='Continue';$o=& $git -C $repo @a 2>&1;$c=$LASTEXITCODE}\n finally{$ErrorActionPreference=$prev}\n if($c -ne 0){throw \"git $($a -join ' ') failed ($c): $o\"}\n if($null -eq $o){return ''}\n return ([string]($o -join [Environment]::NewLine)).Trim()\n}\n$preHead=G @('rev-parse','HEAD')\n$preBranch=G @('branch','--show-current')\n$null=G @('fetch','--quiet','origin',$targetBranch)\n$resolved=G @('rev-parse',$target)\nif($resolved.ToLowerInvariant() -ne $target){throw \"target resolve mismatch: $resolved\"}\n$blob=G @('rev-parse',($target+':app/r42-cutover.ps1'))\nif($blob.ToLowerInvariant() -ne $expectedBlob){throw \"cutover blob mismatch: $blob\"}\n$tmp=Join-Path ([IO.Path]::GetTempPath()) ('r44-preflight-owner-20261008-r44-preflight-04-'+[guid]::NewGuid().ToString('N')+'.ps1')\ntry{\n $psi=New-Object System.Diagnostics.ProcessStartInfo\n $psi.FileName=$git;$psi.WorkingDirectory=$repo;$psi.UseShellExecute=$false\n $psi.RedirectStandardOutput=$true;$psi.RedirectStandardError=$true;$psi.CreateNoWindow=$true\n $psi.Arguments='cat-file blob '+$blob\n $p=New-Object System.Diagnostics.Process;$p.StartInfo=$psi\n if(-not $p.Start()){throw 'git cat-file start failed'}\n $fs=[IO.File]::Open($tmp,[IO.FileMode]::Create,[IO.FileAccess]::Write,[IO.FileShare]::None)\n try{$p.StandardOutput.BaseStream.CopyTo($fs)}finally{$fs.Dispose()}\n $err=$p.StandardError.ReadToEnd();$p.WaitForExit()\n if($p.ExitCode -ne 0){throw \"cat-file failed: $err\"}\n $tmpHash=G @('hash-object','--no-filters','--',$tmp)\n if($tmpHash.ToLowerInvariant() -ne $blob.ToLowerInvariant()){throw \"temp bundle hash mismatch: $tmpHash\"}\n $prev=$ErrorActionPreference\n try{$ErrorActionPreference='Continue';$out=@(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $tmp -TargetSha $target -TargetBranch $targetBranch -RepoPath $repo -PreflightOnly 2>&1);$exit=$LASTEXITCODE}\n finally{$ErrorActionPreference=$prev}\n $text=[string]($out -join [Environment]::NewLine)\n $last=$null\n for($i=$out.Count-1;$i -ge 0;$i--){$line=[string]$out[$i];if($line.Trim().StartsWith('{')){try{$last=$line|ConvertFrom-Json;break}catch{}}}\n $postHead=G @('rev-parse','HEAD')\n $postBranch=G @('branch','--show-current')\n [ordered]@{\n  object='owner.r44.local_preflight.v1'\n  operationId='owner-20261008-r44-preflight-04'\n  sourceTarget=$target\n  cutoverBlob=$blob\n  preHead=$preHead\n  preBranch=$preBranch\n  postHead=$postHead\n  postBranch=$postBranch\n  exitCode=$exit\n  preflight=$last\n  output=$text\n  productionSwitchPerformed=($postHead.ToLowerInvariant() -ne $preHead.ToLowerInvariant())\n  providerMutationPerformed=$false\n }|ConvertTo-Json -Depth 30 -Compress\n}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"object\":\"owner.r44.local_preflight.v1\",\"operationId\":\"owner-20261008-r44-preflight-04\",\"sourceTarget\":\"9a8898a70355bbae2d465ee49739030aa27e9f4e\",\"cutoverBlob\":\"ca53b0e3a8e1e11ca48e162b72be4ca983e378a3\",\"preHead\":\"2d5f902a52f875f3385da0a9babe29e2761a0f5b\",\"preBranch\":\"\",\"postHead\":\"2d5f902a52f875f3385da0a9babe29e2761a0f5b\",\"postBranch\":\"\",\"exitCode\":0,\"preflight\":{\"object\":\"bridge.projects_live_control_plane_cutover_preflight.r42.v1\",\"status\":\"PREFLIGHT_OK\",\"repoPath\":\"E:\\\\WebAIBridge\",\"preCutoverHead\":\"2d5f902a52f875f3385da0a9babe29e2761a0f5b\",\"preCutoverBranch\":\"\",\"targetSha\":\"9a8898a70355bbae2d465ee49739030aa27e9f4e\",\"targetBranch\":\"agent/bridge-r44-hotfix-r43-integration-20261007\",\"parentSha\":\"e4ee875db5ad62b514a8d1edeff85888ef83fb8c\",\"gitExecutable\":\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\",\"externalGitResolved\":true,\"porcelainParserSource\":\"TARGET_SHA_GIT_BLOB\",\"porcelainParserBlob\":\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\",\"porcelainParserExpectedBlob\":\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\",\"porcelainParserProductionFileRequired\":false,\"callDepthOverflowDetected\":false,\"liveMutationPerformed\":false,\"providerMutationPerformed\":false},\"output\":\"{\\\"object\\\":\\\"bridge.projects_live_control_plane_cutover_preflight.r42.v1\\\",\\\"status\\\":\\\"PREFLIGHT_OK\\\",\\\"repoPath\\\":\\\"E:\\\\\\\\WebAIBridge\\\",\\\"preCutoverHead\\\":\\\"2d5f902a52f875f3385da0a9babe29e2761a0f5b\\\",\\\"preCutoverBranch\\\":\\\"\\\",\\\"targetSha\\\":\\\"9a8898a70355bbae2d465ee49739030aa27e9f4e\\\",\\\"targetBranch\\\":\\\"agent/bridge-r44-hotfix-r43-integration-20261007\\\",\\\"parentSha\\\":\\\"e4ee875db5ad62b514a8d1edeff85888ef83fb8c\\\",\\\"gitExecutable\\\":\\\"C:\\\\\\\\Program Files\\\\\\\\Git\\\\\\\\cmd\\\\\\\\git.exe\\\",\\\"externalGitResolved\\\":true,\\\"porcelainParserSource\\\":\\\"TARGET_SHA_GIT_BLOB\\\",\\\"porcelainParserBlob\\\":\\\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\\\",\\\"porcelainParserExpectedBlob\\\":\\\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\\\",\\\"porcelainParserProductionFileRequired\\\":false,\\\"callDepthOverflowDetected\\\":false,\\\"liveMutationPerformed\\\":false,\\\"providerMutationPerformed\\\":false}\",\"productionSwitchPerformed\":false,\"providerMutationPerformed\":false}\r\n",
+      "stdout_bytes": 2104,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T04:24:56.462Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T04:24:56.271Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-20261008-r44-preflight-04"
+    },
+    "request_id": "owner-20261008-r44-preflight-04",
+    "started_at": "2026-10-08T04:24:50.879Z",
+    "status": "completed"
+  },
+  "id": "owner-20261008-r44-preflight-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
