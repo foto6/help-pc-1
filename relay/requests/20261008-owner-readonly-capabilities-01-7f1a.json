@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261008-owner-readonly-capabilities-01-7f1a",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Owner coordination 2026-10-08 read-only PC Control liveness/capability probe. No host mutations."
+}
