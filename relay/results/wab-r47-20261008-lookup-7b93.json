@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-08T07:20:17.903Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "wab-r47-20261008-controlled-exec-f0c9"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:5f35c9ddc9cbb13812f0ff85b41820ba769ae2794e25911f4e25406d1c70fd63",
+            "journal_sequence": 2417,
+            "previous_record_sha256": "c2d993a7967bdefb7f3af297ea4861183d626df680ed9f49da878c985d46aff2",
+            "record_sha256": "0b4dfacc8a6a958b908afcb4ca508304e37da82ec4dbaff8b30eb3b956eb9a0c",
+            "recorded_at": "2026-10-08T07:20:18.048Z",
+            "request_id": "wab-r47-20261008-controlled-exec-f0c9",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-08T07:22:13.309Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "wab-r47-20261008-controlled-exec-f0c9"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:5f35c9ddc9cbb13812f0ff85b41820ba769ae2794e25911f4e25406d1c70fd63",
+            "journal_sequence": 2418,
+            "previous_record_sha256": "0b4dfacc8a6a958b908afcb4ca508304e37da82ec4dbaff8b30eb3b956eb9a0c",
+            "record_sha256": "77fb328726c54d7d49bdadd60650aa0b2569da1c3c11fcce28d9fcad5ad83d1c",
+            "recorded_at": "2026-10-08T07:22:13.515Z",
+            "request_id": "wab-r47-20261008-controlled-exec-f0c9",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-08T07:22:13.309Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "wab-r47-20261008-controlled-exec-f0c9"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-08T07:22:13.309Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "wab-r47-20261008-controlled-exec-f0c9"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:5f35c9ddc9cbb13812f0ff85b41820ba769ae2794e25911f4e25406d1c70fd63",
+          "journal_sequence": 2418,
+          "previous_record_sha256": "0b4dfacc8a6a958b908afcb4ca508304e37da82ec4dbaff8b30eb3b956eb9a0c",
+          "record_sha256": "77fb328726c54d7d49bdadd60650aa0b2569da1c3c11fcce28d9fcad5ad83d1c",
+          "recorded_at": "2026-10-08T07:22:13.515Z",
+          "request_id": "wab-r47-20261008-controlled-exec-f0c9",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "f5e16cdc05ba91a01c72df5efbcfcc7aabccf5b0bad890bba23b541f096c2ff2",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 2418
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "wab-r47-20261008-controlled-exec-f0c9",
+        "request_id": "wab-r47-20261008-controlled-exec-f0c9",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T07:22:39.511Z",
+    "ok": true,
+    "request_id": "wab-r47-20261008-lookup-7b93",
+    "started_at": "2026-10-08T07:22:39.327Z",
+    "status": "completed"
+  },
+  "id": "wab-r47-20261008-lookup-7b93",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
