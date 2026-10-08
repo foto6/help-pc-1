@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r51-20261008-extra-exact-identities-09",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,urllib.parse,json,hashlib,collections,datetime\nbase='http://127.0.0.1:17448'\ndef get(u,t=4):\n with urllib.request.urlopen(u,timeout=t) as f:return json.load(f)\no=get(base+'/api/operator-lifecycle');w=get(base+'/api/supervisor-watchdog?detect=0').get('config',{})\nif not(o.get('queuePaused') is True and w.get('mode')=='off' and w.get('allowAutonomousSend') is False):raise RuntimeError('hold_gate_failed')\nchats=get(base+'/api/supervisor-watchdog/managed-chats?inspect=0')['chats']\nallpages=get('http://127.0.0.1:17410/json/list')\ndef canon(u):\n try:\n  z=urllib.parse.urlparse(u)\n  return z.path.rstrip('/') if z.hostname in ('chatgpt.com','www.chatgpt.com') else ''\n except:return ''\nmanaged={canon(c.get('url','')) for c in chats}\nother=[p for p in allpages if p.get('type')=='page' and urllib.parse.urlparse(p.get('url','')).hostname in ('chatgpt.com','www.chatgpt.com') and canon(p.get('url','')) not in managed]\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'otherChatGPTCount':len(other),'managedMatchCount':len([p for p in allpages if p.get('type')=='page' and canon(p.get('url','')) in managed]),'other':[]}\nfor i,p in enumerate(sorted(other,key=lambda x:x.get('id',''))):\n url=p.get('url','');path=canon(url)\n out['other'].append({'alias':'extra-'+str(i+1),'targetId':p.get('id'),'urlSha256':hashlib.sha256(url.encode('utf-8')).hexdigest(),'sameFullUrlCount':sum(q.get('url')==url and q.get('type')=='page' for q in allpages),'canonicalPathIsConversation':path.startswith('/c/') or ('/c/' in path),'hasWebSocket':bool(p.get('webSocketDebuggerUrl'))})\nprint(json.dumps(out,ensure_ascii=True)[:3500])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only identity of 3 external ChatGPT page targets: exact target IDs and hashed URL only, no draft or URL/title disclosure; safeguards checked."
+}
