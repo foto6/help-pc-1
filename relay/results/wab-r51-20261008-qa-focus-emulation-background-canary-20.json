@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json,datetime\np=subprocess.run(['node.exe','-e',\"const crypto=require('node:crypto');\\nconst m=require('E:/WebAIBridge/app/data/operator-tools/r50-read-only-chrome-check/releases/814c0e7e328599c85d7927e2a48b3e0f5df1becc/r50-restart-readiness-preflight.js');\\nconst canon=require('E:/WebAIBridge/app/data/operator-tools/r50-read-only-chrome-check/releases/814c0e7e328599c85d7927e2a48b3e0f5df1becc/chrome-restart-readiness-r50.js').canonicalChat;\\nconst get=async u=>{const r=await fetch(u,{signal:AbortSignal.timeout(2900)});if(!r.ok)throw Error('non200');return r.json()};\\nconst sleep=ms=>new Promise(r=>setTimeout(r,ms));\\nfunction attach(url){return new Promise((resolve,reject)=>{const ws=new WebSocket(url),timer=setTimeout(()=>reject(Error('open_timeout')),3500);ws.addEventListener('open',()=>{clearTimeout(timer);let id=0;resolve({call(method,params={},ms=2500){return new Promise(done=>{const xid=++id;const tm=setTimeout(()=>finish({ok:false,reason:'timeout'}),ms);function finish(result){clearTimeout(tm);ws.removeEventListener('message',handler);done(result)}function handler(e){try{const p=JSON.parse(e.data);if(p.id===xid)finish(p.error?{ok:false,reason:'cdp_error'}:{ok:true,value:p.result})}catch{}}ws.addEventListener('message',handler);ws.send(JSON.stringify({id:xid,method,params}))})},close(){try{ws.close()}catch{}}})},{once:true});ws.addEventListener('error',()=>{clearTimeout(timer);reject(Error('open_error'))},{once:true})})}\\n(async()=>{\\nconst base='http://127.0.0.1:17448';\\nconst [o,w,h,c,t]=await Promise.all([get(base+'/api/operator-lifecycle'),get(base+'/api/supervisor-watchdog?detect=0'),get(base+'/api/health'),get(base+'/api/supervisor-watchdog/managed-chats?inspect=0'),get('http://127.0.0.1:17410/json/list')]);\\nif(!(o.queuePaused===true&&w.config?.mode==='off'&&w.config?.enabled===false&&w.config?.allowAutonomousSend===false&&w.config?.autoContinueEnabled===false&&h.assignmentQueue?.active===0&&h.assignmentQueue?.queued===2))throw Error('hold_gate');\\nconst qa=c.chats.find(x=>x.name==='QA'),q=t.filter(x=>x.type==='page'&&canon(x.url)===canon(qa.url));\\nconst back=t.filter(x=>x.type==='page'&&x.id==='6BBACA4F54475A91307D471FFBB8E0E5'&&crypto.createHash('sha256').update(x.url).digest('hex')==='5d9354f7cb0eac0c0506ad03735ee6263a1e4ed75aa107e7852a5e26d49ecd3a');\\nif(q.length!==1||back.length!==1)throw Error('identities_changed');\\nconst before=await m.inspectTarget(q[0].webSocketDebuggerUrl,canon(qa.url),2500);\\nif(!(before.probeStatus==='RESPONSIVE'&&before.domIdentityConfirmed===true&&before.composerConfirmed===true&&before.draftPresent===false&&before.generating===false))throw Error('qa_composer_unknown');\\nconst s=await attach(q[0].webSocketDebuggerUrl);\\nlet enabled=null,disabled=null,focusBack=null,samples=[],visBefore,visAfter,focusEmulated;\\ntry{\\n const check=await s.call('Runtime.evaluate',{expression:'({visible:document.visibilityState,focused:document.hasFocus()})',returnByValue:true},2500);\\n if(!check.ok||check.value?.result?.value?.visible!=='visible')throw Error('qa_no_longer_foreground');\\n visBefore=check.value.result.value.visible;\\n try{\\n  enabled=await s.call('Emulation.setFocusEmulationEnabled',{enabled:true},2800);\\n  if(!enabled.ok)throw Error('emulation_enable_unacknowledged');\\n  const b=await attach(back[0].webSocketDebuggerUrl);\\n  try{focusBack=await b.call('Page.bringToFront',{},3500)}finally{b.close()}\\n  if(!focusBack.ok)throw Error('restore_foreground_failed');\\n  for(let i=0;i<4;i++){\\n   const v=await s.call('Runtime.evaluate',{expression:'({x:2+2,focused:document.hasFocus(),visible:document.visibilityState})',returnByValue:true},1900);\\n   samples.push({round:i+1,responds:v.ok&&v.value?.result?.value?.x===4,documentHasFocus:v.ok?v.value?.result?.value?.focused:null,documentVisible:v.ok?v.value?.result?.value?.visible:null});\\n   if(i<3)await sleep(2050);\\n  }\\n }finally{\\n  if(enabled!==null)disabled=await s.call('Emulation.setFocusEmulationEnabled',{enabled:false},3200);\\n }\\n const after=await s.call('Runtime.evaluate',{expression:'document.hasFocus()',returnByValue:true},2200);\\n focusEmulated=after.ok?after.value?.result?.value:null;\\n}finally{s.close()}\\nconst end=await get(base+'/api/operator-lifecycle');\\nconsole.log(JSON.stringify({object:'QA_focus_emulation_while_background_bounded',qaStartedEmpty:true,qaInitiallyVisible:visBefore,enableAcknowledged:enabled?.ok===true,otherExactExistingTabFocused:focusBack?.ok===true,samples,disableAcknowledged:disabled?.ok===true,focusedAfterDisable:focusEmulated,queueStillPaused:end.queuePaused===true,noSend:true,noNavigation:true,noReload:true,noChromeRestart:true,autoPersistentFocusEnabled:false}));\\n})().catch(e=>{console.log(JSON.stringify({object:'QA_focus_emulation_while_background_bounded',state:'ABORTED_OR_UNKNOWN',reason:String(e.message).slice(0,120),replayAllowed:false}));process.exitCode=2});\"],capture_output=True,text=True,timeout=46)\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'exit':p.returncode,'result':p.stdout.strip()[-4200:],'stderrHead':p.stderr[:190]},ensure_ascii=True)[:5500])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T16:07:10\", \"exit\": 2, \"result\": \"{\\\"object\\\":\\\"QA_focus_emulation_while_background_bounded\\\",\\\"state\\\":\\\"ABORTED_OR_UNKNOWN\\\",\\\"reason\\\":\\\"qa_no_longer_foreground\\\",\\\"replayAllowed\\\":false}\", \"stderrHead\": \"\"}\r\n",
+      "stdout_bytes": 230,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T09:07:10.832Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T09:07:10.660Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r51-20261008-qa-focus-emulation-background-canary-20"
+    },
+    "request_id": "wab-r51-20261008-qa-focus-emulation-background-canary-20",
+    "started_at": "2026-10-08T09:07:09.902Z",
+    "status": "completed"
+  },
+  "id": "wab-r51-20261008-qa-focus-emulation-background-canary-20",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
