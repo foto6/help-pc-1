@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "shell execution timed out",
+    "error_kind": "timeout",
+    "finished_at": "2026-10-08T05:37:24.102Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "unknown",
+      "observed_at": "2026-10-08T05:37:23.929Z",
+      "reason": "timeout",
+      "reconciliation_required": true,
+      "reexecution_safe": false,
+      "request_id": "owner-r44-20261008-assignment-reconcile-d4c8"
+    },
+    "request_id": "owner-r44-20261008-assignment-reconcile-d4c8",
+    "started_at": "2026-10-08T05:36:33.415Z",
+    "status": "timeout"
+  },
+  "id": "owner-r44-20261008-assignment-reconcile-d4c8",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
