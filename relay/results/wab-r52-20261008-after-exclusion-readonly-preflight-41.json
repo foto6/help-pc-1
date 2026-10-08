@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,os,re,urllib.request,subprocess,datetime,hashlib\nrepo=r'E:\\WebAIBridge';root=r'E:\\WebAIBridge\\app\\data\\operator-tools';base='http://127.0.0.1:17448'\ndef get(p,t=4):\n with urllib.request.urlopen(base+p,timeout=t) as f:return json.load(f)\ndef git(*a):return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,text=True,timeout=6)\nout={'scope':'READ_ONLY_CHROME_EXCLUSION_GATE','at':datetime.datetime.now().isoformat(timespec='seconds')}\nout['sourceHead']=git('rev-parse','HEAD').stdout.strip()\nout['sourceClean']=not bool(git('status','--porcelain=v1','--untracked-files=all').stdout.strip())\nop=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{});h=get('/api/health')\nq=h.get('assignmentQueue',{})\nout['safety']={'queuePaused':op.get('queuePaused'),'mode':w.get('mode'),'enabled':w.get('enabled'),'allowAutonomousSend':w.get('allowAutonomousSend'),'autoContinue':w.get('autoContinueEnabled'),'total':q.get('total'),'active':q.get('active'),'queued':q.get('queued'),'health':h.get('state')}\nsafe=(op.get('queuePaused') is True and w.get('mode')=='off' and w.get('enabled') is False and w.get('allowAutonomousSend') is False and w.get('autoContinueEnabled') is False and q.get('active')==0)\nif not safe:raise RuntimeError('USER_PAUSED_GATE_FAILED')\nps=\"(Get-CimInstance Win32_Process -Filter 'ProcessId=13436').CommandLine\"\np=subprocess.run(['powershell.exe','-NoProfile','-Command',ps],capture_output=True,text=True,timeout=9)\ncmd=p.stdout.strip()\nout['originalChromePIDAlive']=p.returncode==0 and 'chrome.exe' in cmd.lower()\nm=re.search(r'--user-data-dir=(?:\\\"([^\\\"]+)\\\"|([^\\s\\\"]+))',cmd)\nout['configuredChromeProfileFound']=bool(m)\nif m:\n profile=(m.group(1) or m.group(2))\n for sub in ('Default','Profile 1','Profile 2'):\n  pref=os.path.join(profile,sub,'Preferences')\n  if not os.path.isfile(pref):continue\n  try:\n   with open(pref,encoding='utf-8-sig') as f:setting=json.load(f)\n   perf=setting.get('performance_tuning',{})\n   result={'profile':sub,'performanceSectionPresent':isinstance(perf,dict),'containsChatGPTException':False,'paths':[]}\n   def walk(x,path,depth):\n    if depth>8:return\n    if isinstance(x,dict):\n     for k,v in x.items():\n      if 'chatgpt.com' in str(k).lower():result['containsChatGPTException']=True;result['paths'].append(path+'.'+str(k)[:60])\n      walk(v,path+'.'+str(k)[:60],depth+1)\n    elif isinstance(x,list):\n     for i,v in enumerate(x[:100]):walk(v,path+'['+str(i)+']',depth+1)\n    elif isinstance(x,str) and 'chatgpt.com' in x.lower():\n     result['containsChatGPTException']=True;result['paths'].append(path+'[value_matches_chatgpt]')\n   if isinstance(perf,dict):\n    result['performanceKeys']=sorted(perf.keys())[:35]\n    walk(perf,'performance_tuning',0)\n   out['chromePerformancePref']=result\n  except Exception as e:out['chromePerformancePref']={'readError':type(e).__name__}\n  break\nbasefile=os.path.join(root,'r51-target-continuity','baseline.json')\nwith open(basefile,'rb') as f:out['R51BaselineSha256']=hashlib.file_digest(f,'sha256').hexdigest()\nkit=os.path.join(root,'r51-target-continuity')\np=subprocess.run(['node.exe','r51-target-continuity.js','--baseline='+basefile],cwd=kit,capture_output=True,text=True,timeout=15)\nout['continuityExit']=p.returncode\ntry:\n c=json.loads(p.stdout.strip());out['continuity']={k:c.get(k) for k in ('status','stable','problems','managedCount','currentExtraChatGPTCount','automaticRebindAuthorized','automaticChromeRestartAuthorized')}\nexcept:out['continuity']={'parseError':True,'stderrType':'node_error'}\nprint(json.dumps(out,ensure_ascii=True)[:6200])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"scope\": \"READ_ONLY_CHROME_EXCLUSION_GATE\", \"at\": \"2026-10-08T19:32:19\", \"sourceHead\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"sourceClean\": true, \"safety\": {\"queuePaused\": true, \"mode\": \"off\", \"enabled\": false, \"allowAutonomousSend\": false, \"autoContinue\": false, \"total\": 68, \"active\": 0, \"queued\": 2, \"health\": \"PAUSED\"}, \"originalChromePIDAlive\": true, \"configuredChromeProfileFound\": true, \"chromePerformancePref\": {\"profile\": \"Default\", \"performanceSectionPresent\": true, \"containsChatGPTException\": true, \"paths\": [\"performance_tuning.tab_discarding.exceptions_with_time.chatgpt.com\"], \"performanceKeys\": [\"tab_discarding\"]}, \"R51BaselineSha256\": \"bf14616d0207730f63c93b5fcdfdc1a97a0dd7daafcb0b0a0652973c62e6c11b\", \"continuityExit\": 2, \"continuity\": {\"status\": \"RECONCILIATION_REQUIRED\", \"stable\": false, \"problems\": [\"CDP_TARGET_ID_CHANGED:QA\", \"BROWSER_PAGE_COUNT_CHANGED\"], \"managedCount\": 6, \"currentExtraChatGPTCount\": 3, \"automaticRebindAuthorized\": false, \"automaticChromeRestartAuthorized\": false}}\r\n",
+      "stdout_bytes": 1021,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T12:32:21.327Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T12:32:21.158Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r52-20261008-after-exclusion-readonly-preflight-41"
+    },
+    "request_id": "wab-r52-20261008-after-exclusion-readonly-preflight-41",
+    "started_at": "2026-10-08T12:32:18.791Z",
+    "status": "completed"
+  },
+  "id": "wab-r52-20261008-after-exclusion-readonly-preflight-41",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
