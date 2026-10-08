@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r48-20261008-r47-independent-receipt-44a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,zipfile,io,tempfile,subprocess,json,datetime\nrepo=r'E:\\WebAIBridge';src='8360bed73554011e7d6ff816c6365196c5e483ee';live='4638fd18def71dbfa07227c4b9b1bcbf89bba2a5'\nmanifest=r'E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261008T072021Z\\rollback-manifest.json'\nreceipt=os.path.join(os.path.dirname(manifest),'r48-independent-attestation.json')\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'operation':'independent_r47_receipt_one_time'}\nif os.path.isfile(receipt):raise RuntimeError('attestation_receipt_already_exists_no_overwrite')\np=subprocess.run(['git.exe','-C',repo,'rev-parse','HEAD'],capture_output=True,text=True,timeout=5)\nif p.stdout.strip()!=live:raise RuntimeError('live_sha_changed')\nz=subprocess.run(['git.exe','-C',repo,'archive','--format=zip',src,'app/r48-cutover-attest.js','app/independent-cutover-attestation-r48.js'],capture_output=True,timeout=10)\nif z.returncode:raise RuntimeError('source_archive_missing')\nwith tempfile.TemporaryDirectory(prefix='wab-r48-receipt-') as d:\n with zipfile.ZipFile(io.BytesIO(z.stdout)) as arc:arc.extractall(d)\n cmd=['node.exe',os.path.join(d,'app','r48-cutover-attest.js'),'--repo='+repo,'--manifest='+manifest,'--target-sha='+live,'--write-attestation']\n result=subprocess.run(cmd,capture_output=True,text=True,timeout=22)\n out['exitCode']=result.returncode\n out['stderrTail']=result.stderr[-350:]\n if result.stdout.strip():\n  x=json.loads(result.stdout)\n  out['evidence']={k:x.get(k) for k in ('ok','outcome','targetSHA','originalCutoverState','originalCutoverScriptExitVerified','rollbackBackupFileCount','evidenceSha256','writtenTo')}\nout['receiptExists']=os.path.isfile(receipt)\nprint(json.dumps(out,ensure_ascii=True)[:4800])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 34000,
+  "note": "Record one exclusive R48 independent attestation sidecar for live R47 source, never overwrite original cutover status, no provider/queue/browser effects; do not replay on unknown."
+}
