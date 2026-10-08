@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r49-20261008-write-exact-attestation-17ea",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,os,datetime,subprocess,urllib.request\nrepo=r'E:\\WebAIBridge';sha='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03'\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status',timeout=4) as f:d=json.load(f).get('cutoverState',{})\nmanifest=d.get('rollbackManifest','')\npath=os.path.join(os.path.dirname(manifest),'r48-independent-attestation.json')\nif d.get('targetSha')!=sha or not os.path.isfile(manifest):raise RuntimeError('wrong_live_cutover_manifest')\nif os.path.exists(path):raise RuntimeError('attestation_already_exists_no_replay')\nargs=['node.exe',os.path.join(repo,'app','r48-cutover-attest.js'),'--repo='+repo,'--manifest='+manifest,'--target-sha='+sha,'--write-attestation']\nr=subprocess.run(args,capture_output=True,text=True,timeout=24)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'exit':r.returncode,'receiptExists':os.path.isfile(path)}\nif r.stdout.strip():\n x=json.loads(r.stdout)\n out['result']={k:x.get(k) for k in ('ok','outcome','targetSHA','originalCutoverState','originalCutoverScriptExitVerified','rollbackBackupFileCount','evidenceSha256','writtenTo')}\nif r.returncode:out['error']=r.stderr[-450:]\nprint(json.dumps(out,ensure_ascii=True)[:3400])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 39000,
+  "note": "One exclusive independent R49 state proof sidecar via native R48 attestor after read-only verified hold/rollback/6 unique tabs, never mark original script success or replay sends."
+}
