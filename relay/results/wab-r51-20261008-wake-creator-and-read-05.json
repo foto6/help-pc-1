@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,urllib.parse,subprocess,datetime\nbase='http://127.0.0.1:17448';chat=\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\";expected=\"EB09521CCA0E12E9BD8102BDF70C2128\"\ndef get(path):\n with urllib.request.urlopen(base+path,timeout=5) as f:return json.load(f)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'chat':\"Creator\"}\ns=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{});h=get('/api/health').get('assignmentQueue',{})\nif not(s.get('queuePaused') is True and w.get('mode')=='off' and w.get('enabled') is False and w.get('allowAutonomousSend') is False and w.get('autoContinueEnabled') is False and h.get('active')==0):raise RuntimeError('hold_gate_failed')\npath='/api/supervisor-watchdog/managed-chats/'+urllib.parse.quote(chat,safe='')\npr=get(path+'/wake-preview')\nif not(pr.get('state')=='READY_FOR_EXPLICIT_TAB_WAKE' and pr.get('exactTargetId')==expected and pr.get('exactTargetCount')==1 and pr.get('chatName')==\"Creator\"):raise RuntimeError('target_changed')\nreq=urllib.request.Request(base+path+'/wake',data=json.dumps({'expectedTargetId':expected,'confirm':'WAKE_EXISTING_TAB_ONLY'}).encode(),headers={'Content-Type':'application/json'},method='POST')\nwith urllib.request.urlopen(req,timeout=17) as f:d=json.load(f)\nout['wake']={k:d.get(k) for k in ('state','pageResponds','navigationPerformed','reloadPerformed','tabCreated','tabClosed','queueResumed','promptSent')}\nif not(d.get('state')=='RESPONSIVE_AFTER_WAKE' and d.get('exactTargetId')==expected):raise RuntimeError('wake_not_confirmed')\nscript=\"const m=require('E:/WebAIBridge/app/data/operator-tools/r50-read-only-chrome-check/releases/814c0e7e328599c85d7927e2a48b3e0f5df1becc/r50-restart-readiness-preflight.js');\\n(async()=>{const a=await fetch('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=0').then(r=>r.json());const chat=a.chats.find(x=>x.name===\\\"Creator\\\");const targets=await fetch('http://127.0.0.1:17410/json/list',{signal:AbortSignal.timeout(3000)}).then(r=>r.json());const t=targets.filter(x=>x.type==='page'&&x.id===\\\"EB09521CCA0E12E9BD8102BDF70C2128\\\");if(!chat||t.length!==1)throw Error('target_changed');const x=await m.inspectTarget(t[0].webSocketDebuggerUrl,new URL(chat.url).pathname.replace(/\\\\/$/,''),4500);console.log(JSON.stringify({probeStatus:x.probeStatus,domIdentityConfirmed:x.domIdentityConfirmed,composerConfirmed:x.composerConfirmed,draftPresent:x.draftPresent,generating:x.generating,contentNotLogged:true}));})().catch(e=>{console.log(JSON.stringify({probeStatus:'UNKNOWN',error:String(e.message).slice(0,80)}));process.exitCode=2});\"\np=subprocess.run(['node.exe','-e',script],capture_output=True,text=True,timeout=11)\nout['probeExit']=p.returncode\ntry:out['probe']=json.loads(p.stdout.strip())\nexcept:out['probe']={'state':'NO_VALID_RESULT','stderrType':'script_error'}\nprint(json.dumps(out,ensure_ascii=True)[:2200])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T15:53:23\", \"chat\": \"Creator\", \"wake\": {\"state\": \"RESPONSIVE_AFTER_WAKE\", \"pageResponds\": true, \"navigationPerformed\": false, \"reloadPerformed\": false, \"tabCreated\": false, \"tabClosed\": false, \"queueResumed\": false, \"promptSent\": false}, \"probeExit\": 0, \"probe\": {\"probeStatus\": \"RESPONSIVE\", \"domIdentityConfirmed\": true, \"composerConfirmed\": true, \"draftPresent\": false, \"generating\": false, \"contentNotLogged\": true}}\r\n",
+      "stdout_bytes": 440,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T08:53:25.436Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T08:53:25.127Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r51-20261008-wake-creator-and-read-05"
+    },
+    "request_id": "wab-r51-20261008-wake-creator-and-read-05",
+    "started_at": "2026-10-08T08:53:22.490Z",
+    "status": "completed"
+  },
+  "id": "wab-r51-20261008-wake-creator-and-read-05",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
