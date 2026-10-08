@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json,datetime\ns=\"const m=require('E:/WebAIBridge/app/data/operator-tools/r50-read-only-chrome-check/releases/814c0e7e328599c85d7927e2a48b3e0f5df1becc/r50-restart-readiness-preflight.js');\\nconst policy=require('E:/WebAIBridge/app/data/operator-tools/r50-read-only-chrome-check/releases/814c0e7e328599c85d7927e2a48b3e0f5df1becc/chrome-restart-readiness-r50.js');\\n(async()=>{\\nconst base='http://127.0.0.1:17448';\\nconst get=async u=>{const r=await fetch(u,{signal:AbortSignal.timeout(2600)});if(!r.ok)throw Error('http_'+r.status);return r.json()};\\nconst [o,w,h,managed,t]=await Promise.all([get(base+'/api/operator-lifecycle'),get(base+'/api/supervisor-watchdog?detect=0'),get(base+'/api/health'),get(base+'/api/supervisor-watchdog/managed-chats?inspect=0'),get('http://127.0.0.1:17410/json/list')]);\\nconst frozen=o.queuePaused===true&&w.config?.mode==='off'&&w.config?.enabled===false&&w.config?.allowAutonomousSend===false&&w.config?.autoContinueEnabled===false&&h.assignmentQueue?.active===0;\\nif(!frozen)throw Error('pause_gate_not_satisfied');\\nconst paths=new Map(managed.chats.map(x=>[policy.canonicalChat(x.url),x.name]));\\nconst chromeChats=t.filter(x=>{try{const u=new URL(x.url);return x.type==='page'&&['chatgpt.com','www.chatgpt.com'].includes(u.hostname)}catch{return false}});\\nconst result=await Promise.all(chromeChats.map(async (target,index)=>{\\n const canonical=policy.canonicalChat(target.url);\\n const name=paths.get(canonical)||'Unmanaged '+(index+1);\\n const same=t.filter(x=>x.type==='page'&&policy.canonicalChat(x.url)===canonical);\\n let probe={probeStatus:'NOT_UNIQUE'};\\n if(same.length===1&&target.webSocketDebuggerUrl)probe=await m.inspectTarget(target.webSocketDebuggerUrl,canonical,3400);\\n return {name,managed:paths.has(canonical),exactMatchCount:same.length,probeStatus:probe.probeStatus,domIdentityConfirmed:probe.domIdentityConfirmed,composerConfirmed:probe.composerConfirmed,draftPresent:probe.draftPresent,generating:probe.generating};\\n}));\\nconsole.log(JSON.stringify({object:'wab.r51.nine_chat_background_audit',observedAt:new Date().toISOString(),managedExpected:6,managedSeen:result.filter(r=>r.managed).length,otherChatGPTSeen:result.filter(r=>!r.managed).length,otherChromePages:t.filter(x=>x.type==='page').length-result.length,rows:result,autoRestartAuthorized:false,providerTextNotLogged:true}));\\n})().catch(e=>{console.log(JSON.stringify({object:'wab.r51.nine_chat_background_audit',status:'BLOCKED',reason:String(e.message).slice(0,90)}));process.exitCode=2});\"\np=subprocess.run(['node.exe','-e',s],capture_output=True,text=True,timeout=17)\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'exit':p.returncode,'result':p.stdout.strip()[-6500:],'stderrType':'node_error' if p.returncode and not p.stdout.strip() else ''},ensure_ascii=True)[:7600])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T15:55:24\", \"exit\": 0, \"result\": \"{\\\"object\\\":\\\"wab.r51.nine_chat_background_audit\\\",\\\"observedAt\\\":\\\"2026-10-08T08:55:24.938Z\\\",\\\"managedExpected\\\":6,\\\"managedSeen\\\":6,\\\"otherChatGPTSeen\\\":3,\\\"otherChromePages\\\":1,\\\"rows\\\":[{\\\"name\\\":\\\"Unmanaged 1\\\",\\\"managed\\\":false,\\\"exactMatchCount\\\":1,\\\"probeStatus\\\":\\\"RESPONSIVE\\\",\\\"domIdentityConfirmed\\\":true,\\\"composerConfirmed\\\":true,\\\"draftPresent\\\":false,\\\"generating\\\":false},{\\\"name\\\":\\\"Media\\\",\\\"managed\\\":true,\\\"exactMatchCount\\\":1,\\\"probeStatus\\\":\\\"RESPONSIVE\\\",\\\"domIdentityConfirmed\\\":true,\\\"composerConfirmed\\\":true,\\\"draftPresent\\\":false,\\\"generating\\\":false},{\\\"name\\\":\\\"Native MCP\\\",\\\"managed\\\":true,\\\"exactMatchCount\\\":1,\\\"probeStatus\\\":\\\"RESPONSIVE\\\",\\\"domIdentityConfirmed\\\":true,\\\"composerConfirmed\\\":true,\\\"draftPresent\\\":false,\\\"generating\\\":false},{\\\"name\\\":\\\"Bridge\\\",\\\"managed\\\":true,\\\"exactMatchCount\\\":1,\\\"probeStatus\\\":\\\"RESPONSIVE\\\",\\\"domIdentityConfirmed\\\":true,\\\"composerConfirmed\\\":true,\\\"draftPresent\\\":false,\\\"generating\\\":false},{\\\"name\\\":\\\"QA\\\",\\\"managed\\\":true,\\\"exactMatchCount\\\":1,\\\"probeStatus\\\":\\\"TIMEOUT\\\"},{\\\"name\\\":\\\"Growth\\\",\\\"managed\\\":true,\\\"exactMatchCount\\\":1,\\\"probeStatus\\\":\\\"TIMEOUT\\\"},{\\\"name\\\":\\\"Creator\\\",\\\"managed\\\":true,\\\"exactMatchCount\\\":1,\\\"probeStatus\\\":\\\"TIMEOUT\\\"},{\\\"name\\\":\\\"Unmanaged 8\\\",\\\"managed\\\":false,\\\"exactMatchCount\\\":1,\\\"probeStatus\\\":\\\"TIMEOUT\\\"},{\\\"name\\\":\\\"Unmanaged 9\\\",\\\"managed\\\":false,\\\"exactMatchCount\\\":2,\\\"probeStatus\\\":\\\"NOT_UNIQUE\\\"}],\\\"autoRestartAuthorized\\\":false,\\\"providerTextNotLogged\\\":true}\", \"stderrType\": \"\"}\r\n",
+      "stdout_bytes": 1567,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T08:55:25.150Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T08:55:24.982Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r51-20261008-nine-chat-background-audit-08"
+    },
+    "request_id": "wab-r51-20261008-nine-chat-background-audit-08",
+    "started_at": "2026-10-08T08:55:20.407Z",
+    "status": "completed"
+  },
+  "id": "wab-r51-20261008-nine-chat-background-audit-08",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
