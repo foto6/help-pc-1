@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,urllib.request,urllib.parse,subprocess,datetime,hashlib\nroot=r'E:\\WebAIBridge';base='http://127.0.0.1:17448'\ndef get(p,t=4):\n with urllib.request.urlopen(base+p,timeout=t) as r:return json.load(r)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'contract':'wab.r47.readonly_post_cutover_attestation.v1'}\nc=get('/api/projects/control-plane/cutover-r42/status').get('cutoverState',{})\npath=c.get('rollbackManifest','');out['cutoverState']=c.get('status')\nout['rollbackManifestExists']=os.path.isfile(path)\nif out['rollbackManifestExists']:\n raw=open(path,'rb').read();m=json.loads(raw.decode('utf-8-sig'));entries=m.get('backups',[])\n out['manifest']={'originalSHA':m.get('preCutoverHead'),'targetSHA':m.get('targetSha'),'files':len(entries),'missing':sum(bool(e.get('existed')) and not os.path.isfile(e.get('backup','')) for e in entries),'sha256':hashlib.sha256(raw).hexdigest(),'path':path}\n p=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',os.path.join(root,'app','r42-rollback.ps1'),'-Manifest',path,'-ValidateOnly'],capture_output=True,text=True,timeout=22)\n out['rollbackValidateOnly']={'code':p.returncode,'ok':'PREFLIGHT_OK' in p.stdout}\ndef canon(url):\n try:\n  z=urllib.parse.urlparse(url)\n  return z.path.rstrip('/') if z.hostname in ('chatgpt.com','www.chatgpt.com') else ''\n except:return ''\ntry:\n chats=get('/api/supervisor-watchdog/managed-chats?inspect=0')['chats']\n with urllib.request.urlopen('http://127.0.0.1:17410/json/list',timeout=4) as f:targets=json.load(f)\n out['tabs']={'mapped':len(chats),'exactTargetCounts':[{'name':c.get('name'),'matches':sum(t.get('type')=='page' and canon(t.get('url',''))==canon(c.get('url','')) for t in targets)} for c in chats]}\n out['tabs']['allUnique']=len(chats)==6 and all(x['matches']==1 for x in out['tabs']['exactTargetCounts'])\nexcept Exception as e:out['tabs']={'error':type(e).__name__}\no=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{})\nout['safety']={'paused':o.get('queuePaused'),'supervisorMode':w.get('mode'),'autoSend':w.get('allowAutonomousSend'),'autoContinue':w.get('autoContinueEnabled')}\nhead=subprocess.run(['git.exe','-C',root,'rev-parse','HEAD'],capture_output=True,text=True,timeout=6)\nout['head']=head.stdout.strip()\nprint(json.dumps(out,ensure_ascii=True)[:6100])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T14:23:31\", \"contract\": \"wab.r47.readonly_post_cutover_attestation.v1\", \"cutoverState\": \"CUTOVER_HOLD_PREPARED\", \"rollbackManifestExists\": true, \"manifest\": {\"originalSHA\": \"943c0b1d509fb8b73cef2f8bbe566ef957854a47\", \"targetSHA\": \"4638fd18def71dbfa07227c4b9b1bcbf89bba2a5\", \"files\": 11, \"missing\": 0, \"sha256\": \"bf1c93e3cc081d1efae4694b499af6043b4034489102ef733aa09ae22183af5e\", \"path\": \"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\r42-cutover-20261008T072021Z\\\\rollback-manifest.json\"}, \"rollbackValidateOnly\": {\"code\": 0, \"ok\": true}, \"tabs\": {\"mapped\": 6, \"exactTargetCounts\": [{\"name\": \"Bridge\", \"matches\": 1}, {\"name\": \"Media\", \"matches\": 1}, {\"name\": \"Creator\", \"matches\": 1}, {\"name\": \"Growth\", \"matches\": 1}, {\"name\": \"Native MCP\", \"matches\": 1}, {\"name\": \"QA\", \"matches\": 1}], \"allUnique\": true}, \"safety\": {\"paused\": true, \"supervisorMode\": \"off\", \"autoSend\": false, \"autoContinue\": false}, \"head\": \"4638fd18def71dbfa07227c4b9b1bcbf89bba2a5\"}\r\n",
+      "stdout_bytes": 965,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T07:23:31.895Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T07:23:31.739Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r47-20261008-final-release-audit-925d"
+    },
+    "request_id": "wab-r47-20261008-final-release-audit-925d",
+    "started_at": "2026-10-08T07:23:30.544Z",
+    "status": "completed"
+  },
+  "id": "wab-r47-20261008-final-release-audit-925d",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
