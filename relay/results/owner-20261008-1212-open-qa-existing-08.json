@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$b='http://127.0.0.1:17448';$body=@{id='chat-6ac45fb0-9074-83eb-99eb-397265b228e7'}|ConvertTo-Json -Compress;$r=Invoke-RestMethod -Method POST -Uri ($b+'/api/supervisor-watchdog/managed-chats/open') -ContentType 'application/json' -Body $body -TimeoutSec 8;[ordered]@{name=$r.chatName;id=$r.chatId;opened=$r.opened;alreadyOpen=$r.alreadyOpen;profile=$r.profileName;url=$r.url;targetId=$r.targetId}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"name\":\"QA\",\"id\":\"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\",\"opened\":true,\"alreadyOpen\":false,\"profile\":\"ChatGPT профиль 2\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45fb0-9074-83eb-99eb-397265b228e7\",\"targetId\":\"B0D3410095256DBD6F15F1ED06614CCC\"}\r\n",
+      "stdout_bytes": 290,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T05:05:10.559Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T05:05:10.383Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-20261008-1212-open-qa-existing-08"
+    },
+    "request_id": "owner-20261008-1212-open-qa-existing-08",
+    "started_at": "2026-10-08T05:05:09.545Z",
+    "status": "completed"
+  },
+  "id": "owner-20261008-1212-open-qa-existing-08",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
