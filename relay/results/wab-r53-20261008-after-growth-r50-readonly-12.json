@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json\np=r'E:\\WebAIBridge\\app\\data\\operator-tools\\r50-read-only-chrome-check\\releases\\814c0e7e328599c85d7927e2a48b3e0f5df1becc\\r50-restart-readiness-preflight.js'\nx=subprocess.run(['node.exe',p],capture_output=True,text=True,timeout=36)\nr=json.loads(x.stdout.strip()) if x.stdout.strip() else {}\nprint(json.dumps({'exit':x.returncode,'tabs':[{k:y.get(k) for k in ('name','probeStatus','domIdentityConfirmed','composerConfirmed','draftPresent','generating')} for y in r.get('tabs',[])],'managed6':r.get('allSixObserved'),'blocked':r.get('status')},ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"exit\": 2, \"tabs\": [{\"name\": \"Bridge\", \"probeStatus\": \"RESPONSIVE\", \"domIdentityConfirmed\": true, \"composerConfirmed\": true, \"draftPresent\": false, \"generating\": false}, {\"name\": \"Media\", \"probeStatus\": \"RESPONSIVE\", \"domIdentityConfirmed\": true, \"composerConfirmed\": true, \"draftPresent\": false, \"generating\": false}, {\"name\": \"Creator\", \"probeStatus\": \"RESPONSIVE\", \"domIdentityConfirmed\": true, \"composerConfirmed\": true, \"draftPresent\": false, \"generating\": false}, {\"name\": \"Growth\", \"probeStatus\": \"RESPONSIVE\", \"domIdentityConfirmed\": true, \"composerConfirmed\": true, \"draftPresent\": false, \"generating\": false}, {\"name\": \"Native MCP\", \"probeStatus\": \"TIMEOUT\", \"domIdentityConfirmed\": null, \"composerConfirmed\": null, \"draftPresent\": null, \"generating\": null}, {\"name\": \"QA\", \"probeStatus\": \"TIMEOUT\", \"domIdentityConfirmed\": null, \"composerConfirmed\": null, \"draftPresent\": null, \"generating\": null}], \"managed6\": true, \"blocked\": \"RESTART_BLOCKED\"}\r\n",
+      "stdout_bytes": 961,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T13:43:01.530Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T13:43:01.265Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r53-20261008-after-growth-r50-readonly-12"
+    },
+    "request_id": "wab-r53-20261008-after-growth-r50-readonly-12",
+    "started_at": "2026-10-08T13:42:53.453Z",
+    "status": "completed"
+  },
+  "id": "wab-r53-20261008-after-growth-r50-readonly-12",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
