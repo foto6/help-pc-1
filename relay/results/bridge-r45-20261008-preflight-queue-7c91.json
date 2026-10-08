@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,subprocess,tempfile,urllib.request,datetime,hashlib\nrepo=r'E:\\WebAIBridge';sha='18a286d4522dd73b5a65d88b5823053b71b01569';branch='agent/bridge-r45-readonly-probe-hardening-20261008'\nout={'at':datetime.datetime.now().isoformat(),'target':sha}\np=subprocess.run(['git.exe','-C',repo,'status','--porcelain=v1','-z','--untracked-files=all'],capture_output=True,timeout=7)\nout['dirty_digest_before']=hashlib.sha256(p.stdout).hexdigest()\nfetch=subprocess.run(['git.exe','-C',repo,'cat-file','blob',sha+':app/r42-cutover.ps1'],capture_output=True,timeout=10)\nif fetch.returncode!=0:out['preflight']={'error':'target_blob_unavailable'}\nelse:\n with tempfile.TemporaryDirectory(prefix='r45-preflight-') as d:\n  fp=os.path.join(d,'preflight.ps1')\n  open(fp,'wb').write(fetch.stdout)\n  try:\n   p=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',fp,'-TargetSha',sha,'-TargetBranch',branch,'-RepoPath',repo,'-PreflightOnly'],capture_output=True,text=True,timeout=23)\n   out['preflight']={'returncode':p.returncode,'stdout_tail':p.stdout.strip()[-2600:],'stderr_tail':p.stderr.strip()[-800:]}\n  except Exception as e:out['preflight']={'error':type(e).__name__}\nfor path in ('/api/supervisor-watchdog/agent-assignments','/api/supervisor-watchdog?detect=0'):\n try:\n  with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=4) as r:x=json.load(r)\n  if 'agent-assignments' in path:\n   rows=x.get('assignments',[])\n   keep=('id','state','dispatchCount','dispatchSubmitAttempted','lastDiagnostic','lastPreflightReason','ciConclusion')\n   out['assignments']={'count':len(rows),'pending':[{k:v.get(k) for k in keep if k in v} for v in rows if v.get('state') in ('queued','awaiting_evidence','dispatching','running')][:15]}\n  else:\n   out['watchdog']={'keys':list(x.keys())[:20],'allowAutonomousSend':x.get('config',{}).get('allowAutonomousSend'),'enabled':x.get('config',{}).get('enabled'),'autoContinueEnabled':x.get('config',{}).get('autoContinueEnabled')}\n except Exception as e:out[path]={'error':type(e).__name__}\np=subprocess.run(['git.exe','-C',repo,'status','--porcelain=v1','-z','--untracked-files=all'],capture_output=True,timeout=7)\nout['dirty_digest_after']=hashlib.sha256(p.stdout).hexdigest()\nout['dirty_unchanged']=out['dirty_digest_before']==out['dirty_digest_after']\nprint(json.dumps(out,ensure_ascii=True)[:7800])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T13:05:48.829759\", \"target\": \"18a286d4522dd73b5a65d88b5823053b71b01569\", \"dirty_digest_before\": \"0a0dcf0b565edf5dc653d34ae49eb11c15b268507fd44e7d0171512e10edcab2\", \"preflight\": {\"returncode\": 0, \"stdout_tail\": \"{\\\"object\\\":\\\"bridge.projects_live_control_plane_cutover_preflight.r42.v1\\\",\\\"status\\\":\\\"PREFLIGHT_OK\\\",\\\"repoPath\\\":\\\"E:\\\\\\\\WebAIBridge\\\",\\\"preCutoverHead\\\":\\\"2d5f902a52f875f3385da0a9babe29e2761a0f5b\\\",\\\"preCutoverBranch\\\":\\\"\\\",\\\"targetSha\\\":\\\"18a286d4522dd73b5a65d88b5823053b71b01569\\\",\\\"targetBranch\\\":\\\"agent/bridge-r45-readonly-probe-hardening-20261008\\\",\\\"parentSha\\\":\\\"e4ee875db5ad62b514a8d1edeff85888ef83fb8c\\\",\\\"gitExecutable\\\":\\\"C:\\\\\\\\Program Files\\\\\\\\Git\\\\\\\\cmd\\\\\\\\git.exe\\\",\\\"externalGitResolved\\\":true,\\\"porcelainParserSource\\\":\\\"TARGET_SHA_GIT_BLOB\\\",\\\"porcelainParserBlob\\\":\\\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\\\",\\\"porcelainParserExpectedBlob\\\":\\\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\\\",\\\"porcelainParserProductionFileRequired\\\":false,\\\"callDepthOverflowDetected\\\":false,\\\"liveMutationPerformed\\\":false,\\\"providerMutationPerformed\\\":false}\", \"stderr_tail\": \"\"}, \"assignments\": {\"count\": 68, \"pending\": [{\"id\": \"eff91a96-514b-4cc7-93b6-19e1f19c5741\", \"state\": \"queued\", \"dispatchCount\": 0, \"dispatchSubmitAttempted\": false, \"lastDiagnostic\": \"git_baseline_verified\", \"lastPreflightReason\": \"target_inspection_failed\", \"ciConclusion\": \"\"}, {\"id\": \"dfcf8cae-1ea4-4d79-9690-a3df9064cd48\", \"state\": \"queued\", \"dispatchCount\": 0, \"dispatchSubmitAttempted\": false, \"lastDiagnostic\": \"git_baseline_verified\", \"lastPreflightReason\": \"target_inspection_failed\", \"ciConclusion\": \"\"}, {\"id\": \"f1bc42fe-ecd8-408a-9d70-84ec2bb4a3ab\", \"state\": \"awaiting_evidence\", \"dispatchCount\": 1, \"dispatchSubmitAttempted\": true, \"lastDiagnostic\": \"supervisor_verification_missing\", \"lastPreflightReason\": \"ready\", \"ciConclusion\": \"success\"}]}, \"watchdog\": {\"keys\": [\"config\", \"capabilities\", \"runtime\", \"detection\"], \"allowAutonomousSend\": true, \"enabled\": true, \"autoContinueEnabled\": true}, \"dirty_digest_after\": \"0a0dcf0b565edf5dc653d34ae49eb11c15b268507fd44e7d0171512e10edcab2\", \"dirty_unchanged\": true}\r\n",
+      "stdout_bytes": 2136,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:05:51.232Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:05:51.075Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-r45-20261008-preflight-queue-7c91"
+    },
+    "request_id": "bridge-r45-20261008-preflight-queue-7c91",
+    "started_at": "2026-10-08T06:05:48.359Z",
+    "status": "completed"
+  },
+  "id": "bridge-r45-20261008-preflight-queue-7c91",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
