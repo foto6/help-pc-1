@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-cdp-host-readonly-preflight-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $r=[ordered]@{}; $r.node=((node.exe --version 2>$null) -join ''); $r.git=((git.exe --version 2>$null) -join ''); $p='E:\\WebAIBridge';$r.repoExists=Test-Path -LiteralPath $p -PathType Container; if($r.repoExists){$r.branch=((& git.exe -C $p branch --show-current 2>$null)-join '');$r.head=((& git.exe -C $p rev-parse HEAD 2>$null)-join '');$s=@(& git.exe -C $p status --porcelain=v1 -uno 2>$null);$r.dirtyCount=@($s).Count};$r.cdp=@();foreach($port in @(17447,17347,9222,17449,17500)){try{$t=Invoke-RestMethod -Uri ('http://127.0.0.1:'+ $port +'/json/list') -Method GET -TimeoutSec 2;$pages=@($t|Where-Object{$_.type -eq 'page'});$hosts=@($pages|ForEach-Object{try{([uri]$_.url).Host}catch{'invalid'}}|Sort-Object -Unique);$r.cdp+=@{port=$port;pages=@($pages).Count;hosts=$hosts}}catch{}};$r|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only Windows preflight for tab screenshot; sanitized hosts only, no tab activation, no file mutations."
+}
