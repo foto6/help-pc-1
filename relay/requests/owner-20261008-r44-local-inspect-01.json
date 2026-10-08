@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-r44-local-inspect-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$repo='E:\\WebAIBridge'\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path\nfunction G([string[]]$a){\n  $o=& $git -C $repo @a 2>&1\n  $c=$LASTEXITCODE\n  if($c -ne 0){throw \"git $($a -join ' ') failed ($c): $o\"}\n  if($null -eq $o){return ''}\n  return ([string]($o -join [Environment]::NewLine)).Trim()\n}\n$head=G @('rev-parse','HEAD')\n$branch=G @('branch','--show-current')\n$origin=G @('remote','get-url','origin')\n$status=G @('status','--porcelain=v1','--untracked-files=all')\nfunction J([string]$u){try{return Invoke-RestMethod -Uri $u -Method Get -TimeoutSec 4}catch{return [pscustomobject]@{error=$_.Exception.Message}}}\n$s=J 'http://127.0.0.1:17448/api/status'\n$l=J 'http://127.0.0.1:17448/api/operator-lifecycle'\n$c=J 'http://127.0.0.1:17448/api/projects/control-plane?inspect=0'\n$r=[ordered]@{\n  object='owner.r44.local_inspect.v1'\n  repo=$repo\n  head=$head\n  branch=$branch\n  detached=[string]::IsNullOrEmpty($branch)\n  origin=$origin\n  porcelain=$status\n  status=$s\n  lifecycle=$l\n  control=$c\n  mutationPerformed=$false\n}\n$r|ConvertTo-Json -Depth 30 -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "R44 read-only local authority inspection after exact-green source; no E:\\manhwa access"
+}
