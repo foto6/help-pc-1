@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261008-owner-bridge-readonly-inventory-03-7f1a",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$a=[ordered]@{};$a.now=(Get-Date).ToString('o');$a.bridgePathExists=Test-Path -LiteralPath 'E:\\WebAIBridge';if($a.bridgePathExists){$repo='E:\\WebAIBridge';$g=Get-Command git.exe -ErrorAction SilentlyContinue;if($g){$a.gitVersion=(& $g.Source --version | Select-Object -First 1);$b=@(& $g.Source -C $repo branch --show-current 2>$null);$a.branch=($b -join ' ').Trim();$a.head=((& $g.Source -C $repo rev-parse HEAD 2>$null) -join '').Trim();$a.statusCount=@(& $g.Source -C $repo status --porcelain=v1 -uno 2>$null).Count}else{$a.gitInstalled=$false}};foreach($path in @('/v1/bridge/health','/api/operator-lifecycle')){try{$j=Invoke-RestMethod -Uri ('http://127.0.0.1:17448'+$path) -Method GET -TimeoutSec 5;$a[($path -replace '/','_')]=@{ok=$true;mode=$j.mode;revision=$j.revision;state=$j.state;status=$j.status;health=$j.health;version=$j.version;keys=@($j.PSObject.Properties.Name | Select-Object -First 15)}}catch{$a[($path -replace '/','_')]=@{ok=$false;error=$_.Exception.GetType().Name}}};$a.processes=@(Get-CimInstance Win32_Process -Filter \"name='node.exe' or name='chrome.exe' or name='powershell.exe'\" | Where-Object {($_.CommandLine -match 'WebAIBridge|chrome-debugging-port=174|bridge') -and ($_.CommandLine -notmatch 'manhwa')} | Select-Object -First 15 | ForEach-Object {[ordered]@{pid=$_.ProcessId;name=$_.Name}});$a|ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "Read-only WebAIBridge local version/health/operational metadata. No secrets or protected paths."
+}
