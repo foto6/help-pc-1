@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$a=[ordered]@{};$a.now=(Get-Date).ToString('o');$a.bridgePathExists=Test-Path -LiteralPath 'E:\\WebAIBridge';if($a.bridgePathExists){$repo='E:\\WebAIBridge';$g=Get-Command git.exe -ErrorAction SilentlyContinue;if($g){$a.gitVersion=(& $g.Source --version | Select-Object -First 1);$b=@(& $g.Source -C $repo branch --show-current 2>$null);$a.branch=($b -join ' ').Trim();$a.head=((& $g.Source -C $repo rev-parse HEAD 2>$null) -join '').Trim();$a.statusCount=@(& $g.Source -C $repo status --porcelain=v1 -uno 2>$null).Count}else{$a.gitInstalled=$false}};foreach($path in @('/v1/bridge/health','/api/operator-lifecycle')){try{$j=Invoke-RestMethod -Uri ('http://127.0.0.1:17448'+$path) -Method GET -TimeoutSec 5;$a[($path -replace '/','_')]=@{ok=$true;mode=$j.mode;revision=$j.revision;state=$j.state;status=$j.status;health=$j.health;version=$j.version;keys=@($j.PSObject.Properties.Name | Select-Object -First 15)}}catch{$a[($path -replace '/','_')]=@{ok=$false;error=$_.Exception.GetType().Name}}};$a.processes=@(Get-CimInstance Win32_Process -Filter \"name='node.exe' or name='chrome.exe' or name='powershell.exe'\" | Where-Object {($_.CommandLine -match 'WebAIBridge|chrome-debugging-port=174|bridge') -and ($_.CommandLine -notmatch 'manhwa')} | Select-Object -First 15 | ForEach-Object {[ordered]@{pid=$_.ProcessId;name=$_.Name}});$a|ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"now\":\"2026-10-08T10:19:02.3366144+07:00\",\"bridgePathExists\":true,\"gitVersion\":\"git version 2.55.0.windows.5\",\"branch\":\"\",\"head\":\"2d5f902a52f875f3385da0a9babe29e2761a0f5b\",\"statusCount\":5,\"_v1_bridge_health\":{\"error\":\"WebException\",\"ok\":false},\"_api_operator-lifecycle\":{\"version\":null,\"state\":null,\"keys\":[\"contract\",\"mode\",\"revision\",\"changedAt\",\"changedBy\",\"reason\",\"previousMode\",\"queuePausedBeforeAll\",\"quiescence\",\"startup\",\"queuePaused\",\"profiles\"],\"revision\":1,\"ok\":true,\"health\":null,\"status\":null,\"mode\":\"RUNNING_MANAGED\"},\"processes\":[{\"pid\":4040,\"name\":\"node.exe\"},{\"pid\":23080,\"name\":\"node.exe\"},{\"pid\":13436,\"name\":\"chrome.exe\"},{\"pid\":22336,\"name\":\"chrome.exe\"},{\"pid\":16412,\"name\":\"chrome.exe\"},{\"pid\":5180,\"name\":\"chrome.exe\"},{\"pid\":13948,\"name\":\"chrome.exe\"},{\"pid\":6036,\"name\":\"chrome.exe\"},{\"pid\":10568,\"name\":\"node.exe\"},{\"pid\":4656,\"name\":\"chrome.exe\"},{\"pid\":5880,\"name\":\"chrome.exe\"},{\"pid\":25288,\"name\":\"chrome.exe\"},{\"pid\":24632,\"name\":\"chrome.exe\"},{\"pid\":27492,\"name\":\"chrome.exe\"},{\"pid\":22324,\"name\":\"node.exe\"}]}\r\n",
+      "stdout_bytes": 1047,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T03:19:03.546Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T03:19:03.316Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261008-owner-bridge-readonly-inventory-03-7f1a"
+    },
+    "request_id": "20261008-owner-bridge-readonly-inventory-03-7f1a",
+    "started_at": "2026-10-08T03:19:00.819Z",
+    "status": "completed"
+  },
+  "id": "20261008-owner-bridge-readonly-inventory-03-7f1a",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
