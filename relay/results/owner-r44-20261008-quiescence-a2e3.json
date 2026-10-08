@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json,datetime,subprocess\nroot='http://127.0.0.1:17448'\npaths=['/api/operator-lifecycle','/api/projects/control-plane?inspect=0','/api/projects/control-plane/cutover-r42/status','/api/managed-chat-status','/api/projects/managed-assignments','/api/health']\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'endpoints':{}}\nfor path in paths:\n try:\n  with urllib.request.urlopen(root+path,timeout=6) as r:d=json.load(r)\n  if not isinstance(d,dict):out['endpoints'][path]={'type':type(d).__name__};continue\n  z={'keys':list(d.keys())[:35]}\n  if path=='/api/operator-lifecycle':z['fields']={k:d.get(k) for k in ['object','mode','revision','quiesced','queuePaused','quiescence','state','status','resumeRequired']}\n  if path=='/api/projects/control-plane?inspect=0':z['fields']={k:d.get(k) for k in ['object','status','state','ready','blocked','blockers','reason','checkedAt','summary','runtime','readiness']}\n  if path=='/api/projects/control-plane/cutover-r42/status':z['fields']={k:d.get(k) for k in ['object','status','cutoverState','rollbackAvailable']}\n  if path=='/api/projects/managed-assignments':z['fields']={'counts':d.get('counts'),'queue':d.get('queue'),'total':d.get('total'),'assignments_len':len(d.get('assignments',[])) if isinstance(d.get('assignments'),list) else None}\n  if path=='/api/health':z['fields']={k:d.get(k) for k in ['state','ok','reasons','blockers','assignmentQueue']}\n  out['endpoints'][path]=z\n except Exception as e:out['endpoints'][path]={'error':type(e).__name__+': '+str(e)[:90]}\nprint(json.dumps(out,ensure_ascii=True,default=str)[:15000])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T12:36:00\", \"endpoints\": {\"/api/operator-lifecycle\": {\"keys\": [\"contract\", \"mode\", \"revision\", \"changedAt\", \"changedBy\", \"reason\", \"previousMode\", \"queuePausedBeforeAll\", \"quiescence\", \"startup\", \"queuePaused\", \"profiles\"], \"fields\": {\"object\": null, \"mode\": \"RUNNING_MANAGED\", \"revision\": 1, \"quiesced\": null, \"queuePaused\": false, \"quiescence\": {\"requested\": false, \"completed\": false, \"completedAt\": \"\", \"errors\": []}, \"state\": null, \"status\": null, \"resumeRequired\": null}}, \"/api/projects/control-plane?inspect=0\": {\"keys\": [\"contract\", \"checkedAt\", \"applied\", \"agents\", \"ledger\", \"diffs\", \"conflicts\", \"unmanagedDiscovered\", \"counters\", \"object\", \"views\", \"source\"], \"fields\": {\"object\": \"bridge.projects_live_control_plane.r41.v1\", \"status\": null, \"state\": null, \"ready\": null, \"blocked\": null, \"blockers\": null, \"reason\": null, \"checkedAt\": \"2026-10-08T05:36:00.316Z\", \"summary\": null, \"runtime\": null, \"readiness\": null}}, \"/api/projects/control-plane/cutover-r42/status\": {\"keys\": [\"object\", \"rollbackContract\", \"currentBridgeConversationAuthority\", \"parent\", \"autonomy\", \"cutoverState\", \"providerChatDeletionAutomatic\"], \"fields\": {\"object\": \"bridge.projects_live_control_plane_cutover.r42.v1\", \"status\": null, \"cutoverState\": {\"object\": \"bridge.projects_live_control_plane_cutover.r42.v1\", \"updatedAt\": \"\", \"events\": []}, \"rollbackAvailable\": null}}, \"/api/managed-chat-status\": {\"error\": \"HTTPError: HTTP Error 404: Not Found\"}, \"/api/projects/managed-assignments\": {\"error\": \"HTTPError: HTTP Error 404: Not Found\"}, \"/api/health\": {\"keys\": [\"version\", \"checkedAt\", \"startedAt\", \"state\", \"ok\", \"reasons\", \"eventLoop\", \"components\", \"componentStaleAfterMs\", \"maintenance\", \"assignmentQueue\", \"browserProbe\", \"supervisorConfig\", \"codeReload\", \"degraded\", \"blockers\"], \"fields\": {\"state\": \"BLOCKED\", \"ok\": false, \"reasons\": [\"timeline_io:health_probe_stale\", \"assignment_queue:oldest_queued_over_60s\"], \"blockers\": [\"assignment_queue:oldest_queued_over_60s\"], \"assignmentQueue\": {\"total\": 68, \"active\": 1, \"queued\": 2, \"counts\": {\"cancelled\": 11, \"blocked\": 32, \"failed\": 12, \"completed\": 10, \"queued\": 2, \"awaiting_evidence\": 1}, \"oldestQueuedAgeMs\": 49817621, \"lastProgressAt\": \"2026-10-08T05:35:59.521Z\", \"lastProgressAgeMs\": 858}}}}}\r\n",
+      "stdout_bytes": 2267,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T05:36:00.575Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T05:36:00.409Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r44-20261008-quiescence-a2e3"
+    },
+    "request_id": "owner-r44-20261008-quiescence-a2e3",
+    "started_at": "2026-10-08T05:35:59.668Z",
+    "status": "completed"
+  },
+  "id": "owner-r44-20261008-quiescence-a2e3",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
