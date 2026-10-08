@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,tempfile,subprocess\ns=\"\\n'use strict';\\nconst local='http://127.0.0.1:17448';\\nconst fetchJson=async(u)=>{const r=await fetch(u,{signal:AbortSignal.timeout(4000)});if(!r.ok)throw Error('http_'+r.status);return r.json()};\\nconst exact=p=>{try{const u=new URL(p);return /(^|\\\\.)chatgpt\\\\.com$/.test(u.hostname)?u.pathname.replace(/\\\\/$/,''):''}catch{return ''}};\\nfunction cdp(url,method,params={},limit=1800){\\n return new Promise(resolve=>{\\n  let done=false,ws,open=false;const st=performance.now();\\n  const end=(ok,reason)=>{if(done)return;done=true;clearTimeout(t);try{ws?.close()}catch{}resolve({method,ms:Math.round(performance.now()-st),open,ok,reason})};\\n  const t=setTimeout(()=>end(false,'timeout'),limit);\\n  try{\\n   ws=new WebSocket(url);\\n   ws.addEventListener('open',()=>{open=true;try{ws.send(JSON.stringify({id:991,method,params}))}catch{end(false,'send_error')}});\\n   ws.addEventListener('message',e=>{try{let x=JSON.parse(e.data);if(x.id===991)end(!x.error,x.error?String(x.error.code||'CDP_ERROR'):'ok')}catch{end(false,'invalid_reply')}});\\n   ws.addEventListener('error',()=>end(false,'ws_error'));\\n  }catch{end(false,'ws_error')}\\n })\\n}\\nasync function main(){\\n const [p,m,o]=await Promise.all([fetchJson(local+'/api/ai-profiles'),fetchJson(local+'/api/supervisor-watchdog/managed-chats?inspect=0'),fetchJson(local+'/api/operator-lifecycle')]);\\n const cfg=await fetchJson(local+'/api/supervisor-watchdog?detect=0');\\n if(o.queuePaused!==true||cfg.config?.mode!=='off'||cfg.config?.allowAutonomousSend!==false)throw Error('bridge_not_frozen');\\n const ports=[...new Set((p.aiProfiles||[]).filter(x=>x.provider==='chatgpt'&&x.debugPort).map(x=>Number(x.debugPort)))].slice(0,8);\\n const targetLists=await Promise.all(ports.map(async port=>{try{return {port,targets:await fetchJson('http://127.0.0.1:'+port+'/json/list')}}catch(e){return {port,targets:[],error:e.message}}}));\\n const chats=(m.chats||[]).slice(0,8);\\n const rows=[];\\n for(const chat of chats){\\n  const t=targetLists.flatMap(x=>(x.targets||[]).filter(z=>exact(z.url)===exact(chat.url)&&z.webSocketDebuggerUrl).map(z=>({port:x.port,t:z})))[0];\\n  if(!t){rows.push({name:chat.name,missing:true});continue}\\n  const methods=['Browser.getVersion','Target.getTargetInfo','Page.getFrameTree','Runtime.evaluate'];\\n  const responses=[];\\n  for(const method of methods){\\n   const params=method==='Runtime.evaluate'?{expression:'2+2',awaitPromise:false,returnByValue:true}:{};\\n   responses.push(await cdp(t.t.webSocketDebuggerUrl,method,params,1400));\\n  }\\n  rows.push({name:chat.name,port:t.port,type:t.t.type,methods:responses});\\n }\\n console.log(JSON.stringify({at:new Date().toISOString(),head:'R45',ports:targetLists.map(x=>({port:x.port,targets:x.targets.length,error:x.error||''})),rows}));\\n}\\nmain().catch(e=>{console.log(JSON.stringify({error:e.message}));process.exitCode=1});\\n\"\nwith tempfile.TemporaryDirectory(prefix='r46-cdp-plane-') as d:\n f=os.path.join(d,'probe.js');open(f,'w',encoding='utf-8').write(s)\n try:\n  p=subprocess.run(['node.exe',f],capture_output=True,text=True,timeout=54)\n  print(p.stdout[-16000:]);print('exit='+str(p.returncode))\n except Exception as e: print(type(e).__name__)\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\":\"2026-10-08T06:30:30.160Z\",\"head\":\"R45\",\"ports\":[{\"port\":17447,\"targets\":0,\"error\":\"fetch failed\"},{\"port\":17410,\"targets\":18,\"error\":\"\"}],\"rows\":[{\"name\":\"Bridge\",\"port\":17410,\"type\":\"page\",\"methods\":[{\"method\":\"Browser.getVersion\",\"ms\":12,\"open\":true,\"ok\":true,\"reason\":\"ok\"},{\"method\":\"Target.getTargetInfo\",\"ms\":5,\"open\":true,\"ok\":true,\"reason\":\"ok\"},{\"method\":\"Page.getFrameTree\",\"ms\":1412,\"open\":true,\"ok\":false,\"reason\":\"timeout\"},{\"method\":\"Runtime.evaluate\",\"ms\":1402,\"open\":true,\"ok\":false,\"reason\":\"timeout\"}]},{\"name\":\"Media\",\"port\":17410,\"type\":\"page\",\"methods\":[{\"method\":\"Browser.getVersion\",\"ms\":4,\"open\":true,\"ok\":true,\"reason\":\"ok\"},{\"method\":\"Target.getTargetInfo\",\"ms\":4,\"open\":true,\"ok\":true,\"reason\":\"ok\"},{\"method\":\"Page.getFrameTree\",\"ms\":1407,\"open\":true,\"ok\":false,\"reason\":\"timeout\"},{\"method\":\"Runtime.evaluate\",\"ms\":1403,\"open\":true,\"ok\":false,\"reason\":\"timeout\"}]},{\"name\":\"Creator\",\"port\":17410,\"type\":\"page\",\"methods\":[{\"method\":\"Browser.getVersion\",\"ms\":3,\"open\":true,\"ok\":true,\"reason\":\"ok\"},{\"method\":\"Target.getTargetInfo\",\"ms\":2,\"open\":true,\"ok\":true,\"reason\":\"ok\"},{\"method\":\"Page.getFrameTree\",\"ms\":1408,\"open\":true,\"ok\":false,\"reason\":\"timeout\"},{\"method\":\"Runtime.evaluate\",\"ms\":1416,\"open\":true,\"ok\":false,\"reason\":\"timeout\"}]},{\"name\":\"Growth\",\"port\":17410,\"type\":\"page\",\"methods\":[{\"method\":\"Browser.getVersion\",\"ms\":2,\"open\":true,\"ok\":true,\"reason\":\"ok\"},{\"method\":\"Target.getTargetInfo\",\"ms\":2,\"open\":true,\"ok\":true,\"reason\":\"ok\"},{\"method\":\"Page.getFrameTree\",\"ms\":1414,\"open\":true,\"ok\":false,\"reason\":\"timeout\"},{\"method\":\"Runtime.evaluate\",\"ms\":1415,\"open\":true,\"ok\":false,\"reason\":\"timeout\"}]},{\"name\":\"Native MCP\",\"port\":17410,\"type\":\"page\",\"methods\":[{\"method\":\"Browser.getVersion\",\"ms\":3,\"open\":true,\"ok\":true,\"reason\":\"ok\"},{\"method\":\"Target.getTargetInfo\",\"ms\":2,\"open\":true,\"ok\":true,\"reason\":\"ok\"},{\"method\":\"Page.getFrameTree\",\"ms\":1409,\"open\":true,\"ok\":false,\"reason\":\"timeout\"},{\"method\":\"Runtime.evaluate\",\"ms\":1413,\"open\":true,\"ok\":false,\"reason\":\"timeout\"}]},{\"name\":\"QA\",\"port\":17410,\"type\":\"page\",\"methods\":[{\"method\":\"Browser.getVersion\",\"ms\":3,\"open\":true,\"ok\":true,\"reason\":\"ok\"},{\"method\":\"Target.getTargetInfo\",\"ms\":3,\"open\":true,\"ok\":true,\"reason\":\"ok\"},{\"method\":\"Page.getFrameTree\",\"ms\":5,\"open\":true,\"ok\":true,\"reason\":\"ok\"},{\"method\":\"Runtime.evaluate\",\"ms\":4,\"open\":true,\"ok\":true,\"reason\":\"ok\"}]}]}\r\n\r\nexit=0\r\n",
+      "stdout_bytes": 2393,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:30:30.348Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:30:30.185Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r46-20261008-cdp-plane-diagnosis-31a9"
+    },
+    "request_id": "wab-r46-20261008-cdp-plane-diagnosis-31a9",
+    "started_at": "2026-10-08T06:30:15.417Z",
+    "status": "completed"
+  },
+  "id": "wab-r46-20261008-cdp-plane-diagnosis-31a9",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
