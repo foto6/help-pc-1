@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$body=@{id='chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c'}|ConvertTo-Json -Compress;$r=Invoke-RestMethod -Method POST -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/open' -ContentType 'application/json' -Body $body -TimeoutSec 8;[ordered]@{name=$r.chatName;id=$r.chatId;opened=$r.opened;alreadyOpen=$r.alreadyOpen;profile=$r.profileName;url=$r.url;targetId=$r.targetId}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"name\":\"Creator\",\"id\":\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"opened\":true,\"alreadyOpen\":false,\"profile\":\"ChatGPT профиль 2\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"targetId\":\"501F1FB16C24DBB73015955C3E2CCB94\"}\r\n",
+      "stdout_bytes": 295,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T05:05:29.093Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T05:05:28.869Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-20261008-1213-open-creator-existing-09"
+    },
+    "request_id": "owner-20261008-1213-open-creator-existing-09",
+    "started_at": "2026-10-08T05:05:27.319Z",
+    "status": "completed"
+  },
+  "id": "owner-20261008-1213-open-creator-existing-09",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
