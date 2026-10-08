@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,subprocess,zipfile,io,tempfile,hashlib,datetime\nrepo=r'E:\\WebAIBridge';sha='b9ba6ac16490e79dc6ed6147ef0bc1d46d57cba9'\ndef git(*a,t=15):return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,timeout=t)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'exactSHA':sha}\npre=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nif pre!='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03':raise RuntimeError('production_changed')\nf=git('fetch','--no-tags','--no-write-fetch-head','origin','refs/heads/agent/bridge-r51-target-continuity-20261008',t=38)\nif f.returncode:raise RuntimeError('fresh_r51_branch_fetch_failed')\na=git('archive','--format=zip',sha,'app/chrome-target-continuity-r51.js','app/r51-target-continuity.js','app/chrome-restart-readiness-r50.js',t=13)\nif a.returncode:raise RuntimeError('archive_failed')\nwith tempfile.TemporaryDirectory(prefix='wab-r51-live-preview-') as d:\n with zipfile.ZipFile(io.BytesIO(a.stdout)) as z:z.extractall(d)\n app=os.path.join(d,'app')\n baseline=os.path.join(d,'one_time_baseline.json')\n cmd=['node.exe','r51-target-continuity.js','--baseline='+baseline]\n x=subprocess.run(cmd+['--create-baseline'],cwd=app,capture_output=True,text=True,timeout=17)\n out['createExit']=x.returncode\n if x.stdout.strip():\n  z=json.loads(x.stdout);out['create']={k:z.get(k) for k in ('status','managedCount','otherChatGPTPages','automaticRestartAuthorized')}\n if x.returncode:out['createError']=x.stderr[-250:]\n if x.returncode==0:\n  raw=open(baseline,'rb').read()\n  out['baselineBytes']=len(raw);out['containsLiteralChatURL']=b'chatgpt.com' in raw\n  y=subprocess.run(cmd,cwd=app,capture_output=True,text=True,timeout=17)\n  out['compareExit']=y.returncode\n  if y.stdout.strip():\n   z=json.loads(y.stdout);out['compare']={k:z.get(k) for k in ('status','stable','managedCount','originalExtraChatGPTCount','currentExtraChatGPTCount','automaticChromeRestartAuthorized','automaticRebindAuthorized')}\n  if y.returncode:out['compareError']=y.stderr[-250:]\nout['liveHEADUnchanged']=git('rev-parse','HEAD',t=5).stdout.decode().strip()==pre\nprint(json.dumps(out,ensure_ascii=True)[:4600])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T16:19:23\", \"exactSHA\": \"b9ba6ac16490e79dc6ed6147ef0bc1d46d57cba9\", \"createExit\": 0, \"create\": {\"status\": \"BASELINE_CREATED_ONCE\", \"managedCount\": 6, \"otherChatGPTPages\": 3, \"automaticRestartAuthorized\": false}, \"baselineBytes\": 1945, \"containsLiteralChatURL\": false, \"compareExit\": 0, \"compare\": {\"status\": \"IDENTITIES_STABLE_WHILE_PAUSED\", \"stable\": true, \"managedCount\": 6, \"originalExtraChatGPTCount\": 3, \"currentExtraChatGPTCount\": 3, \"automaticChromeRestartAuthorized\": false, \"automaticRebindAuthorized\": false}, \"liveHEADUnchanged\": true}\r\n",
+      "stdout_bytes": 566,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T09:19:27.030Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T09:19:26.849Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r51-20261008-live-preview-after-profile-fix-31"
+    },
+    "request_id": "wab-r51-20261008-live-preview-after-profile-fix-31",
+    "started_at": "2026-10-08T09:19:23.005Z",
+    "status": "completed"
+  },
+  "id": "wab-r51-20261008-live-preview-after-profile-fix-31",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
