@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$b='http://127.0.0.1:17448';$j=Invoke-RestMethod -Method GET -Uri ($b+'/api/supervisor-watchdog/managed-chats') -TimeoutSec 6;$m=@($j.chats|Where-Object{$_.name -eq 'Bridge' -and $_.repository -eq 'foto6/WebAIBridge' -and $_.enabled -eq $true});if($m.Count -ne 1){throw 'exact_managed_chat_not_unique'};if($m[0].url -notmatch '^https://chatgpt.com/'){throw 'provider_url_missing'};$q=@{text='EXECUTE NOW — Owner coordination 2026-10-08. PRIORITY: restore reliable Bridge for our autonomous video creator agents. Work ONLY on foto6/WebAIBridge agent/bridge-r44-hotfix-r43-integration-20261007, current remote SHA 004bca97fe0db5c3cbba9d086f5000345af4e843; inspect actual HEAD first, never reset/overwrite user edits. R44 source exact-head Win/Ubuntu CI 37647792789 SUCCESS; real preflight attempts 20261007T2245-r44-preflight-01 and -02 FAIL with null Git branch .Trim() under PowerShell. Independently diagnose detached checkout, git invocation, preserve BOM-less hotfix, raw porcelain, rollback and existing production instance. Implement safe isolated fix & regression tests; exact-head Win/Ubuntu CI; NEW read-only PreflightOnly; controlled reversible cutover ONLY if all gates green, with rollback manifest, exact chat identities and High-mode. Reconcile old delivery/unknown effects; no blind replay, chat deletion, production relay replacement, social publish or E:\\manhwa access. Coordinate current Creator R40, Media R27, Growth R39, Native R40 and QA R9; return actual SHA/CI/local evidence, confirmed existing chat IDs and blocker list. Record work in your repo and boss gate. ACT, don''t just acknowledge.';repository='foto6/WebAIBridge';branch='agent/bridge-r44-hotfix-r43-integration-20261007';expectedHead='004bca97fe0db5c3cbba9d086f5000345af4e843';idempotencyKey='owner-20261008-1105-bridge-r44-recovery-v1';supervisorVerificationRequired=$true;priority=950;evidenceTimeoutMinutes=120}|ConvertTo-Json -Depth 7 -Compress;$r=Invoke-RestMethod -Method POST -Uri ($b+'/api/supervisor-watchdog/managed-chats/'+[uri]::EscapeDataString($m[0].id)+'/assignments') -ContentType 'application/json' -Body $q -TimeoutSec 9;[ordered]@{agent='Bridge';assignmentId=$r.id;state=$r.state;dispatchCount=$r.dispatchCount;repository=$r.repository;branch=$r.branch;expectedHead=$r.expectedHead}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"agent\":\"Bridge\",\"assignmentId\":\"e27a8cf2-fcb4-45f0-8134-3ca5632c9611\",\"state\":\"queued\",\"dispatchCount\":0,\"repository\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-r44-hotfix-r43-integration-20261007\",\"expectedHead\":\"004bca97fe0db5c3cbba9d086f5000345af4e843\"}\r\n",
+      "stdout_bytes": 260,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T04:07:43.724Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T04:07:43.578Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261008-owner-direct-bridge-1105-r05"
+    },
+    "request_id": "20261008-owner-direct-bridge-1105-r05",
+    "started_at": "2026-10-08T04:07:42.844Z",
+    "status": "completed"
+  },
+  "id": "20261008-owner-direct-bridge-1105-r05",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
