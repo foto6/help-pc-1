@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r46-20261008-live-wake-canary-e804",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,datetime\nu='http://127.0.0.1:17448'\ndef req(path,method='GET',body=None,timeout=6):\n b=json.dumps(body).encode('utf-8') if body is not None else None\n with urllib.request.urlopen(urllib.request.Request(u+path,data=b,headers={'Content-Type':'application/json'} if b else {},method=method),timeout=timeout) as f:return json.load(f)\no=req('/api/operator-lifecycle',timeout=3);w=req('/api/supervisor-watchdog?detect=0',timeout=3).get('config',{})\nif o.get('queuePaused') is not True or w.get('mode')!='off' or w.get('allowAutonomousSend') is not False:raise RuntimeError('not frozen')\nch=next(x for x in req('/api/supervisor-watchdog/managed-chats?inspect=0',timeout=3)['chats'] if x.get('name')=='Bridge')\npath='/api/supervisor-watchdog/managed-chats/'+ch['id']\npreview=req(path+'/wake-preview',timeout=3)\nif preview.get('state')!='READY_FOR_EXPLICIT_TAB_WAKE' or preview.get('exactTargetCount')!=1:raise RuntimeError('R46_preview_rejected')\nresponse=req(path+'/wake','POST',{'expectedTargetId':preview['exactTargetId'],'confirm':'WAKE_EXISTING_TAB_ONLY'},timeout=10)\nafter=req('/api/operator-lifecycle',timeout=3)\nout={'at':datetime.datetime.now().isoformat(),'wake':{k:response.get(k) for k in ('object','state','pageResponds','reloadPerformed','navigationPerformed','tabCreated','tabClosed','promptSent','assignmentDispatched','queueResumed','replayAuthorized','reason')},'queuePausedAfter':after.get('queuePaused')}\nprint(json.dumps(out,ensure_ascii=True)[:3500])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 35000,
+  "note": "One explicit R46 loopback exact-tab wake canary for existing Bridge chat after preview and no-send safety readback; never repeat unknown, no reload/Send/rotation."
+}
