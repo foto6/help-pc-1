@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import tempfile,subprocess,os\njs=\"\\n'use strict';\\nconst local='http://127.0.0.1:17448',get=async url=>{let r=await fetch(url,{signal:AbortSignal.timeout(5000)});if(!r.ok)throw Error('http'+r.status);return r.json()};\\nconst key=u=>{try{let x=new URL(u);return /(^|\\\\.)chatgpt\\\\.com$/.test(x.hostname)?x.pathname.replace(/\\\\/$/,''):''}catch{return ''}};\\nfunction rpc(url,method,params={},max=2300) {return new Promise(resolve=>{\\n let ws,done=false;const st=performance.now(),timer=setTimeout(()=>end({ok:false,reason:'timeout'}),max);\\n function end(z){if(done)return;done=true;clearTimeout(timer);try{ws?.close()}catch{}resolve({ok:z.ok,reason:z.reason,elapsedMs:Math.round(performance.now()-st)})}\\n try{ws=new WebSocket(url);ws.addEventListener('open',()=>ws.send(JSON.stringify({id:17,method,params})));ws.addEventListener('message',e=>{try{let a=JSON.parse(e.data);if(a.id===17)end({ok:!a.error,reason:a.error?String(a.error.message).slice(0,80):'ack'})}catch{end({ok:false,reason:'parse'})}});ws.addEventListener('error',()=>end({ok:false,reason:'socket'}))}catch{end({ok:false,reason:'construct'})}\\n })}\\nasync function main(){\\n const [state,cfg,ch]=await Promise.all([get(local+'/api/operator-lifecycle'),get(local+'/api/supervisor-watchdog?detect=0'),get(local+'/api/supervisor-watchdog/managed-chats?inspect=0')]);\\n if(state.queuePaused!==true||cfg.config?.mode!=='off'||cfg.config?.allowAutonomousSend!==false)throw Error('autonomy_not_frozen');\\n const names=['Media','Creator','Growth','Native MCP'];\\n const rows=ch.chats||[];let tabs=await get('http://127.0.0.1:17410/json/list');\\n const find=(name)=>{let row=rows.find(x=>x.name===name);if(!row)throw Error('unmapped_'+name);let same=tabs.filter(t=>t.webSocketDebuggerUrl&&key(t.url)===key(row.url)&&key(row.url));if(same.length!==1)throw Error('not_unique_'+name);return same[0]};\\n const answer={at:new Date().toISOString(),actions:[],postProbe:[],automaticSending:false};\\n for(const name of names){\\n  const target=find(name),u=target.webSocketDebuggerUrl;\\n  const before=await rpc(u,'Runtime.evaluate',{expression:'2+2',returnByValue:true,awaitPromise:false},850);\\n  const focus=await rpc(u,'Page.bringToFront',{},3600);\\n  await new Promise(r=>setTimeout(r,350));\\n  const after=await rpc(u,'Runtime.evaluate',{expression:'2+2',returnByValue:true,awaitPromise:false},2200);\\n  answer.actions.push({name,before,focus,after});\\n }\\n const checknames=['Bridge',...names,'QA'];\\n for(const name of checknames){let u=find(name).webSocketDebuggerUrl;const state=await rpc(u,'Runtime.evaluate',{expression:'2+2',returnByValue:true,awaitPromise:false},1200);answer.postProbe.push({name,...state})}\\n const qa=find('QA');\\n answer.returnToQa=await rpc(qa.webSocketDebuggerUrl,'Page.bringToFront',{},3300);\\n const stateAfter=await get(local+'/api/operator-lifecycle');\\n answer.queuePausedAfter=stateAfter.queuePaused;\\n const afterList=await get('http://127.0.0.1:17410/json/list');\\n answer.originalExactTabsPresent=checknames.every(name=>{const old=find(name);return afterList.some(x=>x.id===old.id && key(x.url)===key(old.url))});\\n console.log(JSON.stringify(answer));\\n}\\nmain().catch(e=>{console.log(JSON.stringify({error:String(e.message).slice(0,150)}));process.exitCode=1});\\n\"\nwith tempfile.TemporaryDirectory(prefix='wab-r46-wake-') as d:\n p=os.path.join(d,'wake.js');open(p,'w',encoding='utf-8').write(js)\n try:\n  x=subprocess.run(['node.exe',p],capture_output=True,text=True,timeout=50)\n  print(x.stdout[-14000:]);print('EXIT:'+str(x.returncode))\n except Exception as e:print('ERROR:'+type(e).__name__)\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\":\"2026-10-08T06:33:17.033Z\",\"actions\":[{\"name\":\"Media\",\"before\":{\"ok\":false,\"reason\":\"timeout\",\"elapsedMs\":863},\"focus\":{\"ok\":true,\"reason\":\"ack\",\"elapsedMs\":66},\"after\":{\"ok\":true,\"reason\":\"ack\",\"elapsedMs\":150}},{\"name\":\"Creator\",\"before\":{\"ok\":false,\"reason\":\"timeout\",\"elapsedMs\":863},\"focus\":{\"ok\":true,\"reason\":\"ack\",\"elapsedMs\":27},\"after\":{\"ok\":true,\"reason\":\"ack\",\"elapsedMs\":127}},{\"name\":\"Growth\",\"before\":{\"ok\":false,\"reason\":\"timeout\",\"elapsedMs\":855},\"focus\":{\"ok\":true,\"reason\":\"ack\",\"elapsedMs\":29},\"after\":{\"ok\":true,\"reason\":\"ack\",\"elapsedMs\":620}},{\"name\":\"Native MCP\",\"before\":{\"ok\":false,\"reason\":\"timeout\",\"elapsedMs\":857},\"focus\":{\"ok\":true,\"reason\":\"ack\",\"elapsedMs\":29},\"after\":{\"ok\":true,\"reason\":\"ack\",\"elapsedMs\":1366}}],\"postProbe\":[{\"name\":\"Bridge\",\"ok\":true,\"reason\":\"ack\",\"elapsedMs\":16},{\"name\":\"Media\",\"ok\":false,\"reason\":\"timeout\",\"elapsedMs\":1215},{\"name\":\"Creator\",\"ok\":true,\"reason\":\"ack\",\"elapsedMs\":140},{\"name\":\"Growth\",\"ok\":true,\"reason\":\"ack\",\"elapsedMs\":372},{\"name\":\"Native MCP\",\"ok\":true,\"reason\":\"ack\",\"elapsedMs\":50},{\"name\":\"QA\",\"ok\":true,\"reason\":\"ack\",\"elapsedMs\":9}],\"automaticSending\":false,\"returnToQa\":{\"ok\":true,\"reason\":\"ack\",\"elapsedMs\":71},\"queuePausedAfter\":true,\"originalExactTabsPresent\":false}\r\n\r\nEXIT:0\r\n",
+      "stdout_bytes": 1273,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:33:27.127Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:33:26.788Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r46-20261008-four-tab-wakeup-cc84"
+    },
+    "request_id": "wab-r46-20261008-four-tab-wakeup-cc84",
+    "started_at": "2026-10-08T06:33:16.198Z",
+    "status": "completed"
+  },
+  "id": "wab-r46-20261008-four-tab-wakeup-cc84",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
