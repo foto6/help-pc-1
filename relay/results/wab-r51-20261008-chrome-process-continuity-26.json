@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json,urllib.request,datetime,hashlib,urllib.parse\nps=r'''$p=Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\" | Where-Object { $_.CommandLine -match '--remote-debugging-port=17410' -and $_.CommandLine -notmatch '--type=' }; $p | ForEach-Object { [pscustomobject]@{pid=$_.ProcessId;parent=$_.ParentProcessId;created=[string]$_.CreationDate;flagThrottle=($_.CommandLine -like '*--disable-background-timer-throttling*');flagRenderer=($_.CommandLine -like '*--disable-renderer-backgrounding*');flagOcclusion=($_.CommandLine -like '*--disable-backgrounding-occluded-windows*')} } | ConvertTo-Json -Compress'''\np=subprocess.run(['powershell.exe','-NoProfile','-Command',ps],capture_output=True,text=True,timeout=8)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'processLookupExit':p.returncode}\ntry:\n raw=json.loads(p.stdout) if p.stdout.strip() else []\n out['ChromeMainProcesses']=[raw] if isinstance(raw,dict) else raw\nexcept:out['processLookupError']='no_parsed_main_process'\nps2=\"Get-CimInstance Win32_Process -Filter 'ProcessId=13436' | ForEach-Object { [pscustomobject]@{ pid=$_.ProcessId; name=$_.Name; created=[string]$_.CreationDate } } | ConvertTo-Json -Compress\"\np=subprocess.run(['powershell.exe','-NoProfile','-Command',ps2],capture_output=True,text=True,timeout=8)\ntry:out['oldChromePIDStillAlive']=json.loads(p.stdout) if p.stdout.strip() else None\nexcept:out['oldChromePIDStillAlive']='QUERY_FAILED'\nwith urllib.request.urlopen('http://127.0.0.1:17410/json/list',timeout=3) as r:pages=json.load(r)\nextras={'26F93091439AEEBB8DB6788AD17BFA02':'extra-1','68D17114431457A201D7F164508E4318':'extra-2','6BBACA4F54475A91307D471FFBB8E0E5':'extra-3'}\nout['previousExtraTargetsStillPresent']={alias:any(t.get('type')=='page' and t.get('id')==id for t in pages) for id,alias in extras.items()}\nwith urllib.request.urlopen('http://127.0.0.1:17410/json/version',timeout=3) as r:version=json.load(r)\nout['chromeVersion']=version.get('Browser')\nout['currentPageCount']=len([t for t in pages if t.get('type')=='page'])\nprint(json.dumps(out,ensure_ascii=True)[:3700])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T16:12:08\", \"processLookupExit\": 0, \"ChromeMainProcesses\": [{\"pid\": 13436, \"parent\": 4040, \"created\": \"10/07/2026 21:21:40\", \"flagThrottle\": false, \"flagRenderer\": false, \"flagOcclusion\": false}], \"oldChromePIDStillAlive\": {\"pid\": 13436, \"name\": \"chrome.exe\", \"created\": \"10/07/2026 21:21:40\"}, \"previousExtraTargetsStillPresent\": {\"extra-1\": true, \"extra-2\": true, \"extra-3\": true}, \"chromeVersion\": \"Chrome/154.0.8037.98\", \"currentPageCount\": 10}\r\n",
+      "stdout_bytes": 468,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T09:12:09.048Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T09:12:08.852Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r51-20261008-chrome-process-continuity-26"
+    },
+    "request_id": "wab-r51-20261008-chrome-process-continuity-26",
+    "started_at": "2026-10-08T09:12:07.278Z",
+    "status": "completed"
+  },
+  "id": "wab-r51-20261008-chrome-process-continuity-26",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
