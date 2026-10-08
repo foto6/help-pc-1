@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r52-20261008-which-targets-churned-37",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,os,subprocess,urllib.request,datetime\nroot=r'E:\\WebAIBridge\\app\\data\\operator-tools\\r51-target-continuity'\nbaseline=os.path.join(root,'baseline.json')\np=subprocess.run(['node.exe','r51-target-continuity.js','--baseline='+baseline],cwd=root,capture_output=True,text=True,timeout=16)\nresult={'at':datetime.datetime.now().isoformat(timespec='seconds'),'source':'read_only_R51_original_baseline','exitCode':p.returncode}\nif p.stdout.strip():\n x=json.loads(p.stdout)\n result.update({k:x.get(k) for k in ('status','stable','managedCount','originalExtraChatGPTCount','currentExtraChatGPTCount','problems','automaticRebindAuthorized','automaticChromeRestartAuthorized')})\nelse:result['error']=p.stderr[-220:]\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/operator-lifecycle',timeout=5) as f:o=json.load(f)\nresult['paused']=o.get('queuePaused') is True\nprint(json.dumps(result,ensure_ascii=True)[:4500])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 26000,
+  "note": "Read-only exact R51 original baseline diff to identify changed managed ChatGPT names after R52 release blocked on target drift; never overwrite baseline, no browser action."
+}
