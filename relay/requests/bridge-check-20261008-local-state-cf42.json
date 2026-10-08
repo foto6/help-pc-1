@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-check-20261008-local-state-cf42",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,datetime,socket\nbase='http://127.0.0.1:17448'\ndef get(path):\n try:\n  with urllib.request.urlopen(base+path,timeout=7) as r:\n   return {'http':r.status,'body':json.load(r)}\n except Exception as e:\n  return {'error':type(e).__name__+': '+str(e)[:130]}\nch=get('/api/supervisor-watchdog/managed-chats')\nass=get('/api/supervisor-watchdog/agent-assignments')\nchecks={}\nfor p in ['/api/health','/api/supervisor-watchdog/status']:\n x=get(p)\n checks[p]={'http':x.get('http'),'error':x.get('error'),'keys':list(x.get('body',{}).keys())[:20] if isinstance(x.get('body'),dict) else []}\ncs=ch.get('body',{}).get('chats',[]) if isinstance(ch.get('body'),dict) else []\naa=ass.get('body',{}).get('assignments',[]) if isinstance(ass.get('body'),dict) else []\nbr=[a for a in aa if a.get('targetChatId')=='chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982']\nout={'checkedAt':datetime.datetime.now().isoformat(),'tcp_port_17448':None,'endpoints':checks,'chats':[{k:v.get(k) for k in ('name','status','error','highMode','generating','openTabs','lastSeenAt')} for v in cs],'bridgeAssignments':[{k:v.get(k) for k in ('id','state','dispatchCount','dispatchSubmitAttempted','lastDiagnostic','lastPreflightReason','currentHead','ciConclusion')} for v in br[-8:]],'apiErrors':{'chats':ch.get('error'),'assignments':ass.get('error')}}\ns=socket.socket();s.settimeout(2)\ntry:s.connect(('127.0.0.1',17448));out['tcp_port_17448']='listening'\nexcept Exception as e:out['tcp_port_17448']=type(e).__name__\nfinally:s.close()\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 35000,
+  "note": "Read-only inspection of local WebAIBridge endpoints and agent statuses; no edits/sends/restarts"
+}
