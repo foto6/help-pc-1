@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,datetime,socket\nbase='http://127.0.0.1:17448'\ndef get(path):\n try:\n  with urllib.request.urlopen(base+path,timeout=7) as r:\n   return {'http':r.status,'body':json.load(r)}\n except Exception as e:\n  return {'error':type(e).__name__+': '+str(e)[:130]}\nch=get('/api/supervisor-watchdog/managed-chats')\nass=get('/api/supervisor-watchdog/agent-assignments')\nchecks={}\nfor p in ['/api/health','/api/supervisor-watchdog/status']:\n x=get(p)\n checks[p]={'http':x.get('http'),'error':x.get('error'),'keys':list(x.get('body',{}).keys())[:20] if isinstance(x.get('body'),dict) else []}\ncs=ch.get('body',{}).get('chats',[]) if isinstance(ch.get('body'),dict) else []\naa=ass.get('body',{}).get('assignments',[]) if isinstance(ass.get('body'),dict) else []\nbr=[a for a in aa if a.get('targetChatId')=='chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982']\nout={'checkedAt':datetime.datetime.now().isoformat(),'tcp_port_17448':None,'endpoints':checks,'chats':[{k:v.get(k) for k in ('name','status','error','highMode','generating','openTabs','lastSeenAt')} for v in cs],'bridgeAssignments':[{k:v.get(k) for k in ('id','state','dispatchCount','dispatchSubmitAttempted','lastDiagnostic','lastPreflightReason','currentHead','ciConclusion')} for v in br[-8:]],'apiErrors':{'chats':ch.get('error'),'assignments':ass.get('error')}}\ns=socket.socket();s.settimeout(2)\ntry:s.connect(('127.0.0.1',17448));out['tcp_port_17448']='listening'\nexcept Exception as e:out['tcp_port_17448']=type(e).__name__\nfinally:s.close()\nprint(json.dumps(out,ensure_ascii=True,separators=(',',':')))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"checkedAt\":\"2026-10-08T12:23:26.695169\",\"tcp_port_17448\":\"listening\",\"endpoints\":{\"/api/health\":{\"http\":200,\"error\":null,\"keys\":[\"version\",\"checkedAt\",\"startedAt\",\"state\",\"ok\",\"reasons\",\"eventLoop\",\"components\",\"componentStaleAfterMs\",\"maintenance\",\"assignmentQueue\",\"browserProbe\",\"supervisorConfig\",\"codeReload\",\"degraded\",\"blockers\"]},\"/api/supervisor-watchdog/status\":{\"http\":null,\"error\":\"HTTPError: HTTP Error 404: Not Found\",\"keys\":[]}},\"chats\":[{\"name\":\"Bridge\",\"status\":\"inspect_error\",\"error\":\"Runtime.evaluate timed out\",\"highMode\":false,\"generating\":false,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:07:12.897Z\"},{\"name\":\"Media\",\"status\":\"inspect_error\",\"error\":\"Runtime.evaluate timed out\",\"highMode\":false,\"generating\":false,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:06:42.775Z\"},{\"name\":\"Creator\",\"status\":\"idle\",\"error\":\"\",\"highMode\":false,\"generating\":false,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:22:52.260Z\"},{\"name\":\"Growth\",\"status\":\"inspect_error\",\"error\":\"Runtime.evaluate timed out\",\"highMode\":false,\"generating\":true,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:06:03.519Z\"},{\"name\":\"Native MCP\",\"status\":\"inspect_error\",\"error\":\"Runtime.evaluate timed out\",\"highMode\":false,\"generating\":true,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:06:03.550Z\"},{\"name\":\"QA\",\"status\":\"idle\",\"error\":\"\",\"highMode\":false,\"generating\":false,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:23:22.301Z\"}],\"bridgeAssignments\":[{\"id\":\"f3799077-0fd5-4668-8fef-4402fcb43671\",\"state\":\"blocked\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"lastDiagnostic\":\"ci_failed\",\"lastPreflightReason\":\"ready\",\"currentHead\":\"c9915d539f2a3666bc85f88ca0f7376308e17460\",\"ciConclusion\":\"failure\"},{\"id\":\"4e67b543-7d83-42df-9389-0707659dd36a\",\"state\":\"completed\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"lastDiagnostic\":\"evidence_verified\",\"lastPreflightReason\":\"ready\",\"currentHead\":\"6f4d3b976a9a61fc17ff1ca38b798d79f4532bba\",\"ciConclusion\":\"success\"},{\"id\":\"169f3052-133a-4ca0-bfb3-b886443897c1\",\"state\":\"completed\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"lastDiagnostic\":\"evidence_verified\",\"lastPreflightReason\":\"ready\",\"currentHead\":\"545412513f09c396fe0e3f6f7ba04ca609b9a195\",\"ciConclusion\":\"success\"},{\"id\":\"e908ffdf-f5b0-4537-b290-5ecfd3dfa966\",\"state\":\"blocked\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"lastDiagnostic\":\"evidence_timeout\",\"lastPreflightReason\":\"ready\",\"currentHead\":\"004bca97fe0db5c3cbba9d086f5000345af4e843\",\"ciConclusion\":\"success\"},{\"id\":\"e27a8cf2-fcb4-45f0-8134-3ca5632c9611\",\"state\":\"blocked\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"lastDiagnostic\":\"ci_failed\",\"lastPreflightReason\":\"ready\",\"currentHead\":\"0419ebb15c7ea228bec5e0c5008ac42123e41a65\",\"ciConclusion\":\"failure\"}],\"apiErrors\":{\"chats\":null,\"assignments\":null}}\r\n",
+      "stdout_bytes": 2765,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T05:23:26.903Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T05:23:26.731Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-check-20261008-local-state-cf42"
+    },
+    "request_id": "bridge-check-20261008-local-state-cf42",
+    "started_at": "2026-10-08T05:23:26.024Z",
+    "status": "completed"
+  },
+  "id": "bridge-check-20261008-local-state-cf42",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
