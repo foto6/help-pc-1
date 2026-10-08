@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,tempfile,subprocess\ns=\"'use strict';\\nconst get=async u=>{let r=await fetch(u,{signal:AbortSignal.timeout(4000)});return r.json()},norm=u=>{try{let x=new URL(u);return /^((www\\\\.)?chatgpt\\\\.com)$/.test(x.hostname)?x.pathname.replace(/\\\\/$/,''):''}catch{return ''}};\\nconst hash=x=>require('node:crypto').createHash('sha256').update(String(x)).digest('hex').slice(0,12);\\nasync function main(){\\n let [m,targets,o,w]=await Promise.all([get('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=0'),get('http://127.0.0.1:17410/json/list'),get('http://127.0.0.1:17448/api/operator-lifecycle'),get('http://127.0.0.1:17448/api/supervisor-watchdog?detect=0')]);\\n let rows=(m.chats||[]).map(z=>{\\n let expected=norm(z.url),match=targets.filter(t=>norm(t.url)===expected);\\n let byConversation=targets.filter(t=>{const path=norm(t.url),id=expected.split('/').pop();return id&&path.endsWith('/'+id)});\\n return {name:z.name,exact:match.length,byConversation:byConversation.length,targetKinds:match.map(t=>({idHash:hash(t.id),type:t.type,route:t.url.includes('/g/')?'project': 'direct'})),sameConversationOtherRoute:byConversation.length>match.length};\\n });\\n console.log(JSON.stringify({at:new Date().toISOString(),targets:targets.length,rows,paused:o.queuePaused,watchdogOff:w.config?.mode==='off',hasDuplicateTargets:rows.some(x=>x.byConversation>1)}))\\n}main().catch(e=>console.log(JSON.stringify({error:e.message})))\"\nwith tempfile.TemporaryDirectory(prefix='wab-r46-readback-') as d:\n p=os.path.join(d,'check.js');open(p,'w',encoding='utf-8').write(s)\n x=subprocess.run(['node.exe',p],capture_output=True,text=True,timeout=17)\n print(x.stdout[-5700:]);print('exit='+str(x.returncode))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\":\"2026-10-08T06:34:18.191Z\",\"targets\":26,\"rows\":[{\"name\":\"Bridge\",\"exact\":1,\"byConversation\":1,\"targetKinds\":[{\"idHash\":\"922948814f75\",\"type\":\"page\",\"route\":\"direct\"}],\"sameConversationOtherRoute\":false},{\"name\":\"Media\",\"exact\":1,\"byConversation\":1,\"targetKinds\":[{\"idHash\":\"c0b5e30f9232\",\"type\":\"page\",\"route\":\"project\"}],\"sameConversationOtherRoute\":false},{\"name\":\"Creator\",\"exact\":1,\"byConversation\":1,\"targetKinds\":[{\"idHash\":\"490dd57df1ba\",\"type\":\"page\",\"route\":\"project\"}],\"sameConversationOtherRoute\":false},{\"name\":\"Growth\",\"exact\":1,\"byConversation\":1,\"targetKinds\":[{\"idHash\":\"040226a16fb6\",\"type\":\"page\",\"route\":\"project\"}],\"sameConversationOtherRoute\":false},{\"name\":\"Native MCP\",\"exact\":1,\"byConversation\":1,\"targetKinds\":[{\"idHash\":\"403d2548e75e\",\"type\":\"page\",\"route\":\"project\"}],\"sameConversationOtherRoute\":false},{\"name\":\"QA\",\"exact\":1,\"byConversation\":1,\"targetKinds\":[{\"idHash\":\"c1adc832a52a\",\"type\":\"page\",\"route\":\"project\"}],\"sameConversationOtherRoute\":false}],\"paused\":true,\"watchdogOff\":true,\"hasDuplicateTargets\":false}\r\n\r\nexit=0\r\n",
+      "stdout_bytes": 1063,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:34:18.450Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:34:18.288Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r46-20261008-postwake-inventory-f32c"
+    },
+    "request_id": "wab-r46-20261008-postwake-inventory-f32c",
+    "started_at": "2026-10-08T06:34:17.259Z",
+    "status": "completed"
+  },
+  "id": "wab-r46-20261008-postwake-inventory-f32c",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
