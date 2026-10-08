@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r53-20261008-all-six-readonly-15",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess\np=r'E:\\WebAIBridge\\app\\data\\operator-tools\\r50-read-only-chrome-check\\releases\\814c0e7e328599c85d7927e2a48b3e0f5df1becc\\r50-restart-readiness-preflight.js'\nx=subprocess.run(['node.exe',p],capture_output=True,text=True,timeout=36)\nprint(x.stdout[:9000])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 49000,
+  "note": "After user-approved all six tab wakes, run existing read-only R50 six-chat draft flag diagnostic, no browser or agent side effects."
+}
