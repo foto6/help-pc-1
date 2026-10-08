@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-cdp-live-foreground-preserving-capture-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public static class CdpFG { [DllImport(\"user32.dll\")] public static extern IntPtr GetForegroundWindow(); }';$before=[CdpFG]::GetForegroundWindow().ToInt64();$script='E:\\PC-Control\\CDP_TabCapture_20261009\\browser-tab-capture.js';$line=& node.exe $script '--target-id=FEE472581AE3C19E2018E04D8EE45831' '--port=17410';if($LASTEXITCODE -ne 0){throw 'capture_failed'};$capture=$line|ConvertFrom-Json;$after=[CdpFG]::GetForegroundWindow().ToInt64();$actual=(Get-FileHash -LiteralPath $capture.image_path -Algorithm SHA256).Hash.ToLowerInvariant();if($actual -ne $capture.sha256){throw 'sha256_mismatch'};$r=[ordered]@{success=$true;width=$capture.width;height=$capture.height;bytes=$capture.byte_length;sha256=$capture.sha256;mime=$capture.mime_type;image_path=$capture.image_path;foreground_before=$before;foreground_after=$after;foreground_unchanged=($before -eq $after);capture_activated_tab=$capture.activated_tab};$r|ConvertTo-Json -Compress -Depth 4"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Authorized background CDP capture of localhost tab, check PNG hash and foreground HWND; no mouse/keyboard/tab activation. Image stays in private OS temp, no pixels copied into GitHub."
+}
