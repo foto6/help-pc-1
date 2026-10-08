@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$ids=@('e27a8cf2-fcb4-45f0-8134-3ca5632c9611','f1bc42fe-ecd8-408a-9d70-84ec2bb4a3ab','b14cb551-8b8e-4e7b-a9a3-7b8264e4e17d','5333f6a6-e562-4c5e-873b-b8b626468a32','eff91a96-514b-4cc7-93b6-19e1f19c5741','dfcf8cae-1ea4-4d79-9690-a3df9064cd48');$j=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -Method GET -TimeoutSec 8;$out=[ordered]@{counts=$j.counts;assignments=@($j.assignments|Where-Object{$ids -contains $_.id}|ForEach-Object{[ordered]@{id=$_.id;state=$_.state;dispatchCount=$_.dispatchCount;dispatchSubmitAttempted=$_.dispatchSubmitAttempted;lastPreflightReason=$_.lastPreflightReason;lastDiagnostic=$_.lastDiagnostic;dispatchFailureCode=$_.dispatchFailureCode;lastDispatchAt=$_.lastDispatchAt;baselineVerified=$_.baselineVerified;baselineError=$_.baselineError}})};$out|ConvertTo-Json -Compress -Depth 6"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"counts\":{\"cancelled\":11,\"blocked\":30,\"failed\":12,\"completed\":10,\"queued\":3,\"awaiting_evidence\":2},\"assignments\":[{\"id\":\"eff91a96-514b-4cc7-93b6-19e1f19c5741\",\"state\":\"queued\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"lastPreflightReason\":\"target_inspection_failed\",\"lastDiagnostic\":\"target_inspection_failed\",\"dispatchFailureCode\":\"\",\"lastDispatchAt\":\"\",\"baselineVerified\":true,\"baselineError\":\"\"},{\"id\":\"dfcf8cae-1ea4-4d79-9690-a3df9064cd48\",\"state\":\"queued\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"lastPreflightReason\":\"target_inspection_failed\",\"lastDiagnostic\":\"target_inspection_failed\",\"dispatchFailureCode\":\"\",\"lastDispatchAt\":\"\",\"baselineVerified\":true,\"baselineError\":\"\"},{\"id\":\"e27a8cf2-fcb4-45f0-8134-3ca5632c9611\",\"state\":\"awaiting_evidence\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"lastPreflightReason\":\"ready\",\"lastDiagnostic\":\"git_head_unchanged\",\"dispatchFailureCode\":\"\",\"lastDispatchAt\":\"2026-10-08T04:07:55.837Z\",\"baselineVerified\":true,\"baselineError\":\"\"},{\"id\":\"f1bc42fe-ecd8-408a-9d70-84ec2bb4a3ab\",\"state\":\"awaiting_evidence\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"lastPreflightReason\":\"ready\",\"lastDiagnostic\":\"git_head_unchanged\",\"dispatchFailureCode\":\"\",\"lastDispatchAt\":\"2026-10-08T04:08:24.038Z\",\"baselineVerified\":true,\"baselineError\":\"\"},{\"id\":\"b14cb551-8b8e-4e7b-a9a3-7b8264e4e17d\",\"state\":\"queued\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"lastPreflightReason\":\"target_inspection_failed\",\"lastDiagnostic\":\"target_inspection_failed\",\"dispatchFailureCode\":\"\",\"lastDispatchAt\":\"\",\"baselineVerified\":true,\"baselineError\":\"\"},{\"id\":\"5333f6a6-e562-4c5e-873b-b8b626468a32\",\"state\":\"failed\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"lastPreflightReason\":\"ready\",\"lastDiagnostic\":\"R41 unified High gate blocked managed assignment: high_select_failed\",\"dispatchFailureCode\":\"managed_assignment_r41_high_gate_failed\",\"lastDispatchAt\":\"\",\"baselineVerified\":true,\"baselineError\":\"\"}]}\r\n",
+      "stdout_bytes": 1964,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T04:08:53.897Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T04:08:53.741Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261008-owner-delivery-receipts-1105-r09"
+    },
+    "request_id": "20261008-owner-delivery-receipts-1105-r09",
+    "started_at": "2026-10-08T04:08:52.999Z",
+    "status": "completed"
+  },
+  "id": "20261008-owner-delivery-receipts-1105-r09",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
