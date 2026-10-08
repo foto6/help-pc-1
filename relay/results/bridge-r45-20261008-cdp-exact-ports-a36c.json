@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,tempfile,subprocess\nscript=\"const root='http://127.0.0.1:17448';\\nasync function json(u){let x=await fetch(u,{signal:AbortSignal.timeout(5000)});if(!x.ok)throw Error('http_'+x.status);return x.json()}\\nfunction norm(u){try{let x=new URL(String(u));return x.hostname.replace(/^www\\\\./,'')==='chatgpt.com'?x.pathname.replace(/\\\\/$/,''):''}catch{return ''}}\\nasync function basic(target){\\n return new Promise(resolve=>{\\n  const t0=performance.now();let ws,opened=false,done=false;\\n  const finish=(x)=>{if(done)return;done=true;clearTimeout(timer);try{ws?.close()}catch{}resolve({...x,opened,ms:Math.round(performance.now()-t0)})};\\n  const timer=setTimeout(()=>finish({ok:false,reason:'basic_cdp_timeout'}),3800);\\n  try{\\n   ws=new WebSocket(target);\\n   ws.addEventListener('open',()=>{opened=true;ws.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:'2+2',awaitPromise:false,returnByValue:true}}))});\\n   ws.addEventListener('message',e=>{try{let o=JSON.parse(e.data);if(o.id===1)finish(o.result?.result?.value===4?{ok:true}:{ok:false,reason:o.error?'cdp_error':'wrong_value'})}catch{finish({ok:false,reason:'bad_json'})}});\\n   ws.addEventListener('error',()=>finish({ok:false,reason:'ws_error'}));\\n  }catch{finish({ok:false,reason:'ws_construct'})}\\n })\\n}\\nasync function main(){\\n let [ps,cfg,ch]=await Promise.all([json(root+'/api/ai-profiles'),json(root+'/api/supervisor-watchdog?detect=0'),json(root+'/api/supervisor-watchdog/managed-chats?inspect=0')]);\\n let ports=[...new Set((ps.aiProfiles||[]).filter(z=>z.provider==='chatgpt' && z.debugPort).map(z=>Number(z.debugPort)))].slice(0,12);\\n let all=await Promise.all(ports.map(async port=>{try{return {port,list:await json('http://127.0.0.1:'+port+'/json/list')}}catch{return {port,list:[]}}}));\\n let rows=await Promise.all((ch.chats||[]).map(async z=>{\\n  let want=norm(z.url),matches=all.flatMap(x=>(x.list||[]).filter(t=>norm(t.url)===want&&t.webSocketDebuggerUrl).map(t=>({port:x.port,t})));\\n  return {name:z.name,matches:matches.length,ports:matches.map(m=>m.port),basic:matches[0]?await basic(matches[0].t.webSocketDebuggerUrl):null};\\n }));\\n console.log(JSON.stringify({at:new Date().toISOString(),profiles:ports.length,debugTargetCounts:all.map(x=>x.list.length),rows}));\\n}\\nmain().catch(e=>{console.log(JSON.stringify({error:String(e.message).slice(0,120)}));process.exitCode=1})\"\nwith tempfile.TemporaryDirectory(prefix='bridge-r45-cdp-exact-') as folder:\n p=os.path.join(folder,'probe.js')\n with open(p,'w',encoding='utf-8') as f:f.write(script)\n try:\n  z=subprocess.run(['node.exe',p],capture_output=True,text=True,timeout=45)\n  print(z.stdout[-9000:])\n  print('EXIT:'+str(z.returncode))\n except Exception as e:print('ERROR:'+type(e).__name__)\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\":\"2026-10-08T06:14:18.423Z\",\"profiles\":2,\"debugTargetCounts\":[0,18],\"rows\":[{\"name\":\"Bridge\",\"matches\":1,\"ports\":[17410],\"basic\":{\"ok\":false,\"reason\":\"basic_cdp_timeout\",\"opened\":true,\"ms\":3812}},{\"name\":\"Media\",\"matches\":1,\"ports\":[17410],\"basic\":{\"ok\":false,\"reason\":\"basic_cdp_timeout\",\"opened\":true,\"ms\":3811}},{\"name\":\"Creator\",\"matches\":1,\"ports\":[17410],\"basic\":{\"ok\":false,\"reason\":\"basic_cdp_timeout\",\"opened\":true,\"ms\":3810}},{\"name\":\"Growth\",\"matches\":1,\"ports\":[17410],\"basic\":{\"ok\":false,\"reason\":\"basic_cdp_timeout\",\"opened\":true,\"ms\":3810}},{\"name\":\"Native MCP\",\"matches\":1,\"ports\":[17410],\"basic\":{\"ok\":false,\"reason\":\"basic_cdp_timeout\",\"opened\":true,\"ms\":3809}},{\"name\":\"QA\",\"matches\":1,\"ports\":[17410],\"basic\":{\"ok\":true,\"opened\":true,\"ms\":13}}]}\r\n\r\nEXIT:0\r\n",
+      "stdout_bytes": 782,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:14:18.605Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:14:18.450Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-r45-20261008-cdp-exact-ports-a36c"
+    },
+    "request_id": "bridge-r45-20261008-cdp-exact-ports-a36c",
+    "started_at": "2026-10-08T06:14:13.960Z",
+    "status": "completed"
+  },
+  "id": "bridge-r45-20261008-cdp-exact-ports-a36c",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
