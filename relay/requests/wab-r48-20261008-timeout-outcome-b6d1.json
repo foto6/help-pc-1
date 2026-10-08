@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r48-20261008-timeout-outcome-b6d1",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "wab-r48-20261008-controlled-cutover-6e2c",
+    "action": "shell.run"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only durable outcome lookup original timed out R48 cutover, no replay."
+}
