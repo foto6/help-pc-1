@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261008-owner-target-errors-r10",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$j=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats' -Method Get -TimeoutSec 8;$o=@($j.chats|ForEach-Object{[ordered]@{name=$_.name;status=$_.status;error=$_.error;lastSeenAt=$_.lastSeenAt;generating=$_.generating;highMode=$_.highMode;draftPresent=$_.draftPresent;openTabs=$_.openTabs;workerConnected=$_.profileWorkerConnected;workerState=$_.profileWorkerRegistrationState}});$o|ConvertTo-Json -Compress -Depth 4"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Read-only managed-chat last error/worker snapshot, no exact URL or message content disclosure."
+}
