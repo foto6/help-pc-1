@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r44-20261008-outcome-lookup-action-2db9",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "owner-r44-20261008-assignment-reconcile-d4c8",
+    "action": "shell.run"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only lookup of timeout journal by original request id and action; no reexecution"
+}
