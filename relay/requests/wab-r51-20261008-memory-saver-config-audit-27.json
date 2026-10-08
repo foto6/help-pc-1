@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r51-20261008-memory-saver-config-audit-27",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,os,re,json,datetime\ncommand=\"(Get-CimInstance Win32_Process -Filter 'ProcessId=13436').CommandLine\"\np=subprocess.run(['powershell.exe','-NoProfile','-Command',command],capture_output=True,text=True,timeout=7)\ncmd=p.stdout.strip()\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'purpose':'read_only_whitelisted_Chrome_memory_saver_preferences'}\nif p.returncode or '--remote-debugging-port=17410' not in cmd:raise RuntimeError('live_chrome_pid_mismatch')\nm=re.search(r'--user-data-dir=(?:\"([^\"]+)\"|([^\\s\"]+))',cmd)\nif not m:out['userDataDirConfigured']=False\nelse:\n root=m.group(1) or m.group(2)\n out['userDataDirConfigured']=True\n out['profilesChecked']=[]\n for sub in ('Default','Profile 1','Profile 2'):\n  path=os.path.join(root,sub,'Preferences')\n  if not os.path.isfile(path):continue\n  try:\n   with open(path,'r',encoding='utf-8-sig') as f:z=json.load(f)\n   pt=z.get('performance_tuning',{}) if isinstance(z.get('performance_tuning'),dict) else {}\n   mem=pt.get('high_efficiency_mode',{}) if isinstance(pt.get('high_efficiency_mode'),dict) else {}\n   discard=pt.get('tab_discarding',{}) if isinstance(pt.get('tab_discarding'),dict) else {}\n   exceptions=discard.get('exceptions',[])\n   out['profilesChecked'].append({'profile':sub,'memorySaverPrefPresent':'state' in mem,'memorySaverState':mem.get('state') if isinstance(mem.get('state'),int) else None,'timerMinutes':mem.get('time_before_discard_in_minutes') if isinstance(mem.get('time_before_discard_in_minutes'),int) else None,'exceptionRuleCount':len(exceptions) if isinstance(exceptions,list) else None,'chatgptExceptionExists':any('chatgpt.com' in str(x).lower() for x in exceptions) if isinstance(exceptions,list) else None})\n  except Exception as e:out['profilesChecked'].append({'profile':sub,'error':type(e).__name__})\nprint(json.dumps(out,ensure_ascii=True)[:2800])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22000,
+  "note": "Read-only whitelisted Chrome Memory Saver state/timer/exception boolean from running debug profile, no profile path, cookies, secrets, tab URLs, or preferences rewrite."
+}
