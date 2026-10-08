@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$b='http://127.0.0.1:17448';$j=Invoke-RestMethod -Method GET -Uri ($b+'/api/supervisor-watchdog/managed-chats') -TimeoutSec 6;$m=@($j.chats|Where-Object{$_.name -eq 'QA' -and $_.repository -eq 'foto6/boss' -and $_.enabled -eq $true});if($m.Count -ne 1){throw 'exact_managed_chat_not_unique'};if($m[0].url -notmatch '^https://chatgpt.com/'){throw 'provider_url_missing'};$q=@{text='EXECUTE NOW — independent QA/Boss R9 project coordinator gate, user has prioritized autonomous Reels and reliable chat-agent Bridge. Work ONLY foto6/boss agent/integration-r9-current-stack-refresh-20261007 from exact current head 9f439b41c2b11640451a803cee8b8d6198ddd04b; never modify producer repos or main. Inspect durable coordination https://github.com/foto6/boss/issues/8 and LOG/2026-10-08-owner-coordination-handoff.md. Verify exact Bridge R44 004bca97fe0db5c3cbba9d086f5000345af4e843, source CI 37647792789 green BUT local preflight shell .Trim() errors; Native MCP R40 b6e0cbf326138a81ded36f6c18dbb5efee4965cd local staged canary absent; certified Media R27 183838a24205c6885b2366ad6ffa394164283d91 / 37451069045 / 11406357346; Creator R40 5235a237d893f6ed322deed952af60980ec19cc4 / CI 37647880405; Growth R39 887567bb62a3df0879505d68ac6a2be725b57173 / CI 37645554562. Preserve R1-R8 adversarial anti-fake/unknown-effect gates, verify human editorial real ratings and provenance, demand real local input render evidence, release escrow and no duplicate publishes. Emit LOCAL_PC_REHEARSAL_GO or BLOCKED with exact minimal fix list and exact command order Media→Growth→Creator only if fully accepted. Do not perform heavy render, production cutover, provider chat deletion or social publish. Commit report SHA and exact-head CI with independent matrix.';repository='foto6/boss';branch='agent/integration-r9-current-stack-refresh-20261007';expectedHead='9f439b41c2b11640451a803cee8b8d6198ddd04b';idempotencyKey='owner-20261008-1105-boss-r9-independent-gate-v1';supervisorVerificationRequired=$true;priority=850;evidenceTimeoutMinutes=120}|ConvertTo-Json -Depth 7 -Compress;$r=Invoke-RestMethod -Method POST -Uri ($b+'/api/supervisor-watchdog/managed-chats/'+[uri]::EscapeDataString($m[0].id)+'/assignments') -ContentType 'application/json' -Body $q -TimeoutSec 9;[ordered]@{agent='QA';assignmentId=$r.id;state=$r.state;dispatchCount=$r.dispatchCount;repository=$r.repository;branch=$r.branch;expectedHead=$r.expectedHead}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"agent\":\"QA\",\"assignmentId\":\"5333f6a6-e562-4c5e-873b-b8b626468a32\",\"state\":\"queued\",\"dispatchCount\":0,\"repository\":\"foto6/boss\",\"branch\":\"agent/integration-r9-current-stack-refresh-20261007\",\"expectedHead\":\"9f439b41c2b11640451a803cee8b8d6198ddd04b\"}\r\n",
+      "stdout_bytes": 252,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T04:08:33.266Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T04:08:33.095Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261008-owner-direct-qa-1105-r08"
+    },
+    "request_id": "20261008-owner-direct-qa-1105-r08",
+    "started_at": "2026-10-08T04:08:32.320Z",
+    "status": "completed"
+  },
+  "id": "20261008-owner-direct-qa-1105-r08",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
