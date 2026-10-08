@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-check-20261008-health-ca63",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json,datetime\nu='http://127.0.0.1:17448/api/health'\nwith urllib.request.urlopen(u,timeout=8) as r:d=json.load(r)\nout={k:d.get(k) for k in ('version','checkedAt','startedAt','state','ok','reasons','maintenance','degraded','blockers','codeReload','browserProbe','supervisorConfig','assignmentQueue')}\nout['components']={k:({'ok':v.get('ok'),'state':v.get('state'),'status':v.get('status'),'reasons':v.get('reasons'),'error':v.get('error'),'details':v.get('details')} if isinstance(v,dict) else v) for k,v in d.get('components',{}).items()} if isinstance(d.get('components'),dict) else str(type(d.get('components')))\nout['eventLoop']=d.get('eventLoop')\nprint(json.dumps(out,ensure_ascii=True,default=str,separators=(',',':'))[:14000])"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 23000,
+  "note": "Read-only bridge internal health and deployment blockers summary"
+}
