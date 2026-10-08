@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-cdp-live-tabs-nofocus-probe-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public static class TabCapFG { [DllImport(\"user32.dll\")] public static extern IntPtr GetForegroundWindow(); }';$before=[TabCapFG]::GetForegroundWindow().ToInt64();$script='E:\\PC-Control\\CDP_TabCapture_20261009\\browser-tab-capture.js';$ids=@('16F20C983A306AB7E31D2165E2544898','68D17114431457A201D7F164508E4318','F1B7A8CCFAA2C7EBF4AC1B9AAC48BEE2');$results=@();foreach($id in $ids){$tmpErr=Join-Path $env:TEMP ('cdp-probe-'+$id+'.err');$out=& node.exe $script ('--target-id='+$id) '--port=17410' 2>$tmpErr;$code=$LASTEXITCODE;$err='';if(Test-Path $tmpErr){$err=((Get-Content $tmpErr -Raw) -replace '[\\r\\n]',' ').Trim();Remove-Item -LiteralPath $tmpErr -Force -ErrorAction SilentlyContinue};if($code -eq 0){$capture=$out|ConvertFrom-Json;$hash=(Get-FileHash -LiteralPath $capture.image_path -Algorithm SHA256).Hash.ToLowerInvariant();$results+=@{id=$id;ok=($hash -eq $capture.sha256);width=$capture.width;height=$capture.height;bytes=$capture.byte_length;hash_valid=($hash -eq $capture.sha256);local_image_path=$capture.image_path}}else{$results+=@{id=$id;ok=$false;error_category=if($err -match 'cdp_capture_failed'){'cdp_capture_failed'}elseif($err -match 'cdp_target_endpoint_rejected'){'endpoint_rejected'}else{'other'}}}};$after=[TabCapFG]::GetForegroundWindow().ToInt64();[ordered]@{foreground_unchanged=($before -eq $after);results=$results}|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 45000,
+  "note": "Read-only CDP screenshot probe of three exact previously inventoried Chrome tabs. Only pixel metadata returned, screenshot stays in Windows private tmp. Foreground HWND checked; no activation or input."
+}
