@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json,datetime,urllib.request\np=subprocess.run(['powershell.exe','-NoProfile','-Command',\"\"\"$p=Get-CimInstance Win32_Process | Where-Object { $_.Name -in @('node.exe','python.exe') -and $_.CommandLine -match '(wab.r52.after_site_exemption_background_soak|after-site-exception-nine-tab-soak|r52-readonly-soak-)' }; $p | ForEach-Object { [pscustomobject]@{pid=$_.ProcessId;name=$_.Name} } | ConvertTo-Json -Compress\"\"\"],capture_output=True,text=True,timeout=7)\ntry:active=json.loads(p.stdout) if p.stdout.strip() else []\nexcept:active=[]\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/operator-lifecycle',timeout=4) as f:operator=json.load(f)\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/health',timeout=4) as f:health=json.load(f)\nprint(json.dumps({'time':datetime.datetime.now().isoformat(timespec='seconds'),'possibleSoakProcesses':active if isinstance(active,list) else [active],'queuePaused':operator.get('queuePaused'),'activeAssignments':health.get('assignmentQueue',{}).get('active'),'healthState':health.get('state'),'readOnly':True}))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"time\": \"2026-10-08T19:35:41\", \"possibleSoakProcesses\": [{\"pid\": 26732, \"name\": \"python.exe\"}], \"queuePaused\": true, \"activeAssignments\": 0, \"healthState\": \"PAUSED\", \"readOnly\": true}\r\n",
+      "stdout_bytes": 186,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T12:35:41.718Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T12:35:41.545Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r52-20261008-long-soak-process-reconcile-44"
+    },
+    "request_id": "wab-r52-20261008-long-soak-process-reconcile-44",
+    "started_at": "2026-10-08T12:35:40.027Z",
+    "status": "completed"
+  },
+  "id": "wab-r52-20261008-long-soak-process-reconcile-44",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
