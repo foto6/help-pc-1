@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r47-20261008-shadow-tests-43fa",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,datetime,tempfile,zipfile,io,os,json,hashlib\nrepo=r'E:\\WebAIBridge';branch='agent/bridge-r47-background-tab-reliability-20261008';sha='4638fd18def71dbfa07227c4b9b1bcbf89bba2a5'\ndef git(*args,t=35):return subprocess.run(['git.exe','-C',repo,*args],capture_output=True,timeout=t)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'branch':branch,'sha':sha,'tests':[]}\nout['head_before']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['dirty_before']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\ntry:\n r=git('fetch','--no-write-fetch-head','--no-tags','origin','refs/heads/'+branch,t=45)\n out['fetchCode']=r.returncode\n if r.returncode:raise RuntimeError('git_fetch_failed')\n obj=git('cat-file','-t',sha,t=7)\n if obj.stdout.strip()!=b'commit':raise RuntimeError('wrong_object')\n data=git('archive','--format=zip',sha,t=14)\n if data.returncode:raise RuntimeError('archive_failed')\n with tempfile.TemporaryDirectory(prefix='wab-r47-isolated-') as d:\n  with zipfile.ZipFile(io.BytesIO(data.stdout)) as z:z.extractall(d)\n  app=os.path.join(d,'app')\n  tests=[['node.exe','--check','server.js'],['node.exe','--test','chrome-background-policy-r47.test.js'],['node.exe','--test','safe-tab-wakeup-r46.test.js'],['node.exe','--test','managed-chat-inspection-r45.test.js']]\n  for x in tests:\n   p=subprocess.run(x,cwd=app,capture_output=True,timeout=16)\n   out['tests'].append({'test':' '.join(x[1:]),'code':p.returncode,'tail':p.stdout.decode('utf-8','replace')[-350:],'stderr':p.stderr.decode('utf-8','replace')[-200:]})\n  p=subprocess.run(['powershell.exe','-NoProfile','-Command',\"$e=$null;$t=$null;[System.Management.Automation.Language.Parser]::ParseFile('\"+os.path.join(app,'start.ps1').replace('\\\\','/')+\"',[ref]$t,[ref]$e)|Out-Null; if($e.Count -gt 0){$e|ForEach-Object {$_.Message};exit 1};Write-Output AST_OK\"],capture_output=True,text=True,timeout=15)\n  out['tests'].append({'test':'parse start.ps1','code':p.returncode,'tail':p.stdout[-200:],'stderr':p.stderr[-150:]})\nexcept Exception as e:out['error']=type(e).__name__+':'+str(e)[:100]\nout['head_after']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['dirty_after']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\nout['productionUnchanged']=out['head_before']==out['head_after'] and out['dirty_before']==out['dirty_after']\nprint(json.dumps(out,ensure_ascii=True)[:5500])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 104000,
+  "note": "Local isolated exact SHA R47 syntax/Node tests and PS parse; only Git fetch object and disposable temp folder, no production restart or provider sends."
+}
