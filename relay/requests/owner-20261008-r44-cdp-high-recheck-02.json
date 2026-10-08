@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-r44-cdp-high-recheck-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$OutputEncoding=[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false)\n$code=@'\nconst expected={\"Bridge\":\"11BA7397D7F79CB3D796A6692DA54176\",\"Creator\":\"BD87F3CFC538B04B68AF511E33D9E654\",\"Media\":\"8D45FE3758B7F86CD5092FD854A09285\",\"Growth\":\"0D6BFEDBBD1AB00FCE7AC3E461CD2D5A\",\"Native\":\"CDBAB6FE641F8D4D2E8C4B40156BAEEE\",\"QA\":\"06D6ACA5C45C0B30B4D463CD5AD17E93\"};\nconst tabs=await(await fetch('http://127.0.0.1:17410/json/list')).json();\nconst expr=String.raw`JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect(),s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!=='none'&&s.visibility!=='hidden'};const b=[...document.querySelectorAll('button,[role=\"button\"]')].filter(vis);const high=b.some(e=>/^(Высокий|High)$/iu.test((e.innerText||'').trim()));const generating=b.some(e=>/stop-button/i.test(e.getAttribute('data-testid')||'')||/остановить|stop generating|stop response/iu.test(((e.innerText||'')+' '+(e.getAttribute('aria-label')||''))));const c=[document.querySelector('#prompt-textarea'),document.querySelector('[contenteditable=\"true\"][data-lexical-editor=\"true\"]'),document.querySelector('.ProseMirror[contenteditable=\"true\"]')].find(vis)||null;const draft=c?((('value'in c?c.value:(c.innerText||c.textContent||''))||'').trim()):'';return {href:location.href,highMode:high,generating,composerFound:!!c,draftLength:draft.length,ready:document.readyState}})())`;\nasync function one(role,id){const tab=tabs.find(t=>t.id===id);if(!tab)return {role,targetId:id,error:'target_missing'};const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{const t=setTimeout(()=>j(new Error('open_timeout')),8000);ws.onopen=()=>{clearTimeout(t);r()};ws.onerror=()=>{clearTimeout(t);j(new Error('open_error'))}});let seq=1;const p=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&p.has(m.id)){p.get(m.id)(m);p.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const i=seq++,t=setTimeout(()=>{p.delete(i);j(new Error('eval_timeout'))},12000);p.set(i,m=>{clearTimeout(t);m.error?j(new Error(JSON.stringify(m.error))):r(m.result)});ws.send(JSON.stringify({id:i,method,params}))});try{const rr=await call('Runtime.evaluate',{expression:expr,returnByValue:true});return {role,targetId:id,...JSON.parse(rr.result.value)}}catch(e){return {role,targetId:id,error:String(e)}}finally{ws.close()}}\nconst rows=await Promise.all(Object.entries(expected).map(([r,id])=>one(r,id)));\nprocess.stdout.write(JSON.stringify({object:'owner.r44.cdp_high_recheck.v1',checkedAt:new Date().toISOString(),providerMutationPerformed:false,rows}));\n'@\n$code | node --input-type=module"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 40000,
+  "note": "R44 read-only exact target High/generation recheck; no UI mutation"
+}
