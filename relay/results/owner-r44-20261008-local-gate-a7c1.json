@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,subprocess,urllib.request,datetime,hashlib\np=r'E:\\WebAIBridge'\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'repo_exists':os.path.isdir(p)}\ndef git(*args):\n try:\n  r=subprocess.run(['git.exe','-C',p,*args],capture_output=True,text=True,errors='replace',timeout=15)\n  return {'code':r.returncode,'out':(r.stdout or '').strip()[:240],'error':(r.stderr or '').strip()[:160] if r.returncode else ''}\n except Exception as e:return {'error':type(e).__name__}\nif out['repo_exists']:\n out['git_head']=git('rev-parse','HEAD')\n out['git_branch']=git('branch','--show-current')\n out['git_status_summary']={}\n try:\n  r=subprocess.run(['git.exe','-C',p,'status','--porcelain=v1','-z','--untracked-files=all'],capture_output=True,timeout=15)\n  z=[x for x in r.stdout.split(b'\\0') if x]\n  out['git_status_summary']={'code':r.returncode,'entry_count':len(z),'xy_codes':[x[:2].decode('ascii','replace') for x in z[:30]]}\n except Exception as e:out['git_status_summary']={'error':type(e).__name__}\n out['r44_object']=git('cat-file','-t','9a8898a70355bbae2d465ee49739030aa27e9f4e')\n out['r44_branch']=git('rev-parse','--verify','refs/heads/agent/bridge-r44-hotfix-r43-integration-20261007')\n out['cutover_present']=os.path.isfile(os.path.join(p,'app','r42-cutover.ps1'))\n out['rollback_present']=os.path.isfile(os.path.join(p,'app','r42-rollback.ps1'))\nfor endpoint in ['/api/health','/api/status']:\n try:\n  with urllib.request.urlopen('http://127.0.0.1:17448'+endpoint,timeout=5) as f:\n   d=json.load(f)\n  if endpoint=='/api/health':out['health']={k:d.get(k) for k in ['state','ok','reasons','degraded','blockers','codeReload','assignmentQueue','browserProbe']}\n  else:out['status']={k:d.get(k) for k in ['object','state','status','version']}\n except Exception as e:out[endpoint]={'error':type(e).__name__}\nprint(json.dumps(out,ensure_ascii=True,default=str))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T12:34:41\", \"repo_exists\": true, \"git_head\": {\"code\": 0, \"out\": \"2d5f902a52f875f3385da0a9babe29e2761a0f5b\", \"error\": \"\"}, \"git_branch\": {\"code\": 0, \"out\": \"\", \"error\": \"\"}, \"git_status_summary\": {\"code\": 0, \"entry_count\": 5, \"xy_codes\": [\" M\", \" M\", \" M\", \" M\", \" M\"]}, \"r44_object\": {\"code\": 0, \"out\": \"commit\", \"error\": \"\"}, \"r44_branch\": {\"code\": 128, \"out\": \"\", \"error\": \"fatal: Needed a single revision\"}, \"cutover_present\": true, \"rollback_present\": true, \"health\": {\"state\": \"BLOCKED\", \"ok\": false, \"reasons\": [\"timeline_io:health_probe_stale\", \"assignment_queue:oldest_queued_over_60s\"], \"degraded\": [\"timeline_io:health_probe_stale\"], \"blockers\": [\"assignment_queue:oldest_queued_over_60s\"], \"codeReload\": {\"required\": false, \"reason\": \"server_source_matches_boot_observation\", \"observedAt\": \"2026-10-08T05:34:38.691Z\"}, \"assignmentQueue\": {\"total\": 68, \"active\": 1, \"queued\": 2, \"counts\": {\"cancelled\": 11, \"blocked\": 32, \"failed\": 12, \"completed\": 10, \"queued\": 2, \"awaiting_evidence\": 1}, \"oldestQueuedAgeMs\": 49739270, \"lastProgressAt\": \"2026-10-08T05:34:30.471Z\", \"lastProgressAgeMs\": 11557}, \"browserProbe\": {\"lastSeenAt\": \"2026-10-08T05:26:51.921Z\", \"connected\": true, \"component\": {\"state\": \"healthy\", \"inFlight\": false, \"lastStartedAt\": \"2026-10-08T05:34:30.519Z\", \"lastCompletedAt\": \"2026-10-08T05:34:30.521Z\", \"lastSuccessAt\": \"2026-10-08T05:34:30.521Z\", \"lastFailureAt\": \"2026-10-08T03:22:36.048Z\", \"lastDurationMs\": 2, \"consecutiveFailures\": 0, \"timeouts\": 1, \"failures\": 22, \"successes\": 23256, \"reason\": \"\", \"recoveredFromRestart\": false}}}, \"status\": {\"object\": null, \"state\": null, \"status\": null, \"version\": 13}}\r\n",
+      "stdout_bytes": 1659,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T05:34:42.255Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T05:34:42.097Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r44-20261008-local-gate-a7c1"
+    },
+    "request_id": "owner-r44-20261008-local-gate-a7c1",
+    "started_at": "2026-10-08T05:34:41.161Z",
+    "status": "completed"
+  },
+  "id": "owner-r44-20261008-local-gate-a7c1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
