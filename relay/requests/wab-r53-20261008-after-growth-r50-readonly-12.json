@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r53-20261008-after-growth-r50-readonly-12",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,json\np=r'E:\\WebAIBridge\\app\\data\\operator-tools\\r50-read-only-chrome-check\\releases\\814c0e7e328599c85d7927e2a48b3e0f5df1becc\\r50-restart-readiness-preflight.js'\nx=subprocess.run(['node.exe',p],capture_output=True,text=True,timeout=36)\nr=json.loads(x.stdout.strip()) if x.stdout.strip() else {}\nprint(json.dumps({'exit':x.returncode,'tabs':[{k:y.get(k) for k in ('name','probeStatus','domIdentityConfirmed','composerConfirmed','draftPresent','generating')} for y in r.get('tabs',[])],'managed6':r.get('allSixObserved'),'blocked':r.get('status')},ensure_ascii=True))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 49000,
+  "note": "Read-only original exact six ChatGPT pages draft and generation Bool after Growth foreground recovery. No changes."
+}
