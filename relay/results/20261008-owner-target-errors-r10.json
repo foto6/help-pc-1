@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$j=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats' -Method Get -TimeoutSec 8;$o=@($j.chats|ForEach-Object{[ordered]@{name=$_.name;status=$_.status;error=$_.error;lastSeenAt=$_.lastSeenAt;generating=$_.generating;highMode=$_.highMode;draftPresent=$_.draftPresent;openTabs=$_.openTabs;workerConnected=$_.profileWorkerConnected;workerState=$_.profileWorkerRegistrationState}});$o|ConvertTo-Json -Compress -Depth 4"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"name\":\"Bridge\",\"status\":\"working\",\"error\":\"\",\"lastSeenAt\":\"2026-10-08T04:08:42.941Z\",\"generating\":true,\"highMode\":true,\"draftPresent\":false,\"openTabs\":1,\"workerConnected\":true,\"workerState\":\"registered\"},{\"name\":\"Media\",\"status\":\"inspect_error\",\"error\":\"Runtime.evaluate timed out\",\"lastSeenAt\":\"2026-10-08T02:12:49.369Z\",\"generating\":false,\"highMode\":true,\"draftPresent\":false,\"openTabs\":1,\"workerConnected\":true,\"workerState\":\"registered\"},{\"name\":\"Creator\",\"status\":\"working\",\"error\":\"\",\"lastSeenAt\":\"2026-10-08T04:08:57.959Z\",\"generating\":true,\"highMode\":true,\"draftPresent\":false,\"openTabs\":1,\"workerConnected\":true,\"workerState\":\"registered\"},{\"name\":\"Growth\",\"status\":\"inspect_error\",\"error\":\"Runtime.evaluate timed out\",\"lastSeenAt\":\"2026-10-08T00:42:47.910Z\",\"generating\":true,\"highMode\":true,\"draftPresent\":false,\"openTabs\":1,\"workerConnected\":true,\"workerState\":\"registered\"},{\"name\":\"Native MCP\",\"status\":\"inspect_error\",\"error\":\"Runtime.evaluate timed out\",\"lastSeenAt\":\"2026-10-07T23:01:16.931Z\",\"generating\":true,\"highMode\":true,\"draftPresent\":false,\"openTabs\":1,\"workerConnected\":true,\"workerState\":\"registered\"},{\"name\":\"QA\",\"status\":\"idle\",\"error\":\"\",\"lastSeenAt\":\"2026-10-08T04:09:27.984Z\",\"generating\":false,\"highMode\":false,\"draftPresent\":false,\"openTabs\":1,\"workerConnected\":true,\"workerState\":\"registered\"}]\r\n",
+      "stdout_bytes": 1335,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T04:09:36.100Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T04:09:35.914Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261008-owner-target-errors-r10"
+    },
+    "request_id": "20261008-owner-target-errors-r10",
+    "started_at": "2026-10-08T04:09:35.256Z",
+    "status": "completed"
+  },
+  "id": "20261008-owner-target-errors-r10",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
