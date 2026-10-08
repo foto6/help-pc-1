@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-cdp-safe-visual-roundtrip-python-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$file='E:\\PC-Control\\CDP_TabCapture_20261009\\safe-preview-20261009.py';if(Test-Path -LiteralPath $file){throw 'preview_exists'};$py=@'\nimport base64, io\nfrom PIL import Image\nsource=r'C:\\Users\\foto6\\AppData\\Local\\Temp\\pc-cdp-diagnostic-XIsTyG\\capture.png'\nwith Image.open(source) as original:\n    # Deliberate 40x20 pixel mosaic: no legible screenshot text leaves the PC.\n    mosaic=original.convert('RGB').resize((40,20),resample=Image.Resampling.BOX)\n    mosaic=mosaic.resize((800,400),resample=Image.Resampling.NEAREST)\n    buf=io.BytesIO()\n    mosaic.save(buf,format='PNG')\n    data=buf.getvalue()\n    if len(data)>150000: raise RuntimeError('preview_too_large')\n    print('SAFE_CDP_PREVIEW_BASE64='+base64.b64encode(data).decode('ascii'))\n\n'@;[System.IO.File]::WriteAllText($file,$py,(New-Object System.Text.UTF8Encoding($false)));& python.exe $file;exit $LASTEXITCODE"
+    ],
+    "cwd": "E:\\",
+    "output_limit_bytes": 100000
+  },
+  "timeout_ms": 40000,
+  "note": "Privacy-safe visual media roundtrip: extreme 40x20 mosaic from existing local capture only. No readable text/chats in GitHub; no Chrome changes."
+}
