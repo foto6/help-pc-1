@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,urllib.parse,hashlib,datetime,subprocess\nbase='http://127.0.0.1:17448'\ndef get(u,t=4):\n with urllib.request.urlopen(u,timeout=t) as f:return json.load(f)\no=get(base+'/api/operator-lifecycle');w=get(base+'/api/supervisor-watchdog?detect=0').get('config',{});h=get(base+'/api/health')\nif not(o.get('queuePaused') is True and w.get('mode')=='off' and w.get('enabled') is False and w.get('allowAutonomousSend') is False and h.get('assignmentQueue',{}).get('active')==0):raise RuntimeError('safety_gate')\nchats=get(base+'/api/supervisor-watchdog/managed-chats?inspect=0')['chats'];targets=get('http://127.0.0.1:17410/json/list')\nold={\"Bridge\":\"5AE5AA3239743E1E8A765F7834058A7B\",\"Media\":\"591D559FB52E45508FFE33D3557D5A18\",\"Creator\":\"EB09521CCA0E12E9BD8102BDF70C2128\",\"Growth\":\"3F795CD9D23CDD56EF5075ADCB9CEB43\",\"Native MCP\":\"107CE228A48A7D97852455FF0C3FF623\"}\ndef canonical(u):\n try:\n  z=urllib.parse.urlparse(u)\n  return z.path.rstrip('/') if z.hostname in ('chatgpt.com','www.chatgpt.com') else ''\n except:return ''\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'scope':'read_only_exact_target_continuity','mapped':[]}\nfor x in chats:\n matches=[p for p in targets if p.get('type')=='page' and canonical(p.get('url','')) and canonical(p.get('url',''))==canonical(x.get('url',''))]\n id=matches[0].get('id') if len(matches)==1 else None\n out['mapped'].append({'name':x.get('name'),'targetCount':len(matches),'targetId':id,'matchesPrevious':id==old[x['name']] if x.get('name') in old and id else None})\nout['pageCount']=len([x for x in targets if x.get('type')=='page'])\nout['urlCountUniqueFor6']=len(out['mapped'])==6 and all(x['targetCount']==1 for x in out['mapped'])\nout['queuePaused']=o.get('queuePaused');out['watchdogMode']=w.get('mode');out['activeAssignments']=h.get('assignmentQueue',{}).get('active')\np=subprocess.run(['git.exe','-C',r'E:\\WebAIBridge','rev-parse','HEAD'],capture_output=True,text=True,timeout=5)\nout['liveSourceSHA']=p.stdout.strip()\nprint(json.dumps(out,ensure_ascii=True)[:5100])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T16:11:14\", \"scope\": \"read_only_exact_target_continuity\", \"mapped\": [{\"name\": \"Bridge\", \"targetCount\": 1, \"targetId\": \"934AE2CE0F8D91AA9451D4CB4F7BF3B5\", \"matchesPrevious\": false}, {\"name\": \"Media\", \"targetCount\": 1, \"targetId\": \"CAB0E8584E7BCB714C4333213550436D\", \"matchesPrevious\": false}, {\"name\": \"Creator\", \"targetCount\": 1, \"targetId\": \"A214BD2EC72EC96CA926523C52A72AA5\", \"matchesPrevious\": false}, {\"name\": \"Growth\", \"targetCount\": 1, \"targetId\": \"3284C524AE2A0C7DD29A8EA573D81E2B\", \"matchesPrevious\": false}, {\"name\": \"Native MCP\", \"targetCount\": 1, \"targetId\": \"AF61076A9CBAB6D776D23155638488EB\", \"matchesPrevious\": false}, {\"name\": \"QA\", \"targetCount\": 1, \"targetId\": \"522B8803C0F800672A3EB5C6B3E2CEF2\", \"matchesPrevious\": null}], \"pageCount\": 10, \"urlCountUniqueFor6\": true, \"queuePaused\": true, \"watchdogMode\": \"off\", \"activeAssignments\": 0, \"liveSourceSHA\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\"}\r\n",
+      "stdout_bytes": 934,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T09:11:15.219Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T09:11:15.057Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r51-20261008-identity-continuity-final-25"
+    },
+    "request_id": "wab-r51-20261008-identity-continuity-final-25",
+    "started_at": "2026-10-08T09:11:14.346Z",
+    "status": "completed"
+  },
+  "id": "wab-r51-20261008-identity-continuity-final-25",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
