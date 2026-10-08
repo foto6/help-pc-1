@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r44-20261008-assignment-reconcile-d4c8",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,datetime,hashlib\nbase='http://127.0.0.1:17448'\ndef get(path):\n try:\n  with urllib.request.urlopen(base+path,timeout=8) as f:return json.load(f)\n except Exception as e:return {'probe_error':type(e).__name__}\na=get('/api/supervisor-watchdog/agent-assignments')\nc=get('/api/supervisor-watchdog/managed-chats')\np=get('/api/projects/control-plane?inspect=0')\nass=a.get('assignments',[]) if isinstance(a.get('assignments'),list) else []\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'assignment_probe_error':a.get('probe_error'),'chat_probe_error':c.get('probe_error'),'total':len(ass),'active_or_pending':[],'recent':[],'chats':[],'control_plane':{'object':p.get('object'),'agent_count':len(p.get('agents',[])) if isinstance(p.get('agents'),list) else None,'conflict_count':len(p.get('conflicts',[])) if isinstance(p.get('conflicts'),list) else None,'counters':p.get('counters')}}\nkeys=('id','state','targetChatId','dispatchCount','dispatchSubmitAttempted','lastDiagnostic','lastPreflightReason','ciConclusion','createdAt','updatedAt','nextAttemptAt','lastProgressAt','providerMessageId')\nfor v in ass:\n x={k:v.get(k) for k in keys if k in v}\n if v.get('state') in ('queued','active','running','awaiting_evidence','dispatching','in_progress'):out['active_or_pending'].append(x)\nout['recent']=[{k:v.get(k) for k in keys if k in v} for v in ass[-12:]]\nfor v in c.get('chats',[]) if isinstance(c.get('chats'),list) else []:out['chats'].append({k:v.get(k) for k in ('name','status','error','highMode','generating','openTabs','lastSeenAt','chatId') if k in v})\nprint(json.dumps(out,ensure_ascii=True,default=str)[:19000])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 50000,
+  "note": "R44 read-only active/unknown assignment reconciliation and exact chat state before possible cutover; no sends"
+}
