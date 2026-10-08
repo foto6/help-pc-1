@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r47-20261008-runtime-flags-d45c",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,json,re,datetime,urllib.request\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'scope':'read_only_minimal_chrome_launch_flags'}\ndef get(path,timeout=3):\n with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=timeout) as f:return json.load(f)\ntry:\n x=get('/api/operator-lifecycle')\n w=get('/api/supervisor-watchdog?detect=0').get('config',{})\n out['safety']={'queuePaused':x.get('queuePaused'),'lifecycle':x.get('mode'),'supervisorMode':w.get('mode'),'allowAutonomousSend':w.get('allowAutonomousSend')}\nexcept Exception as e:out['safety']={'error':type(e).__name__}\np=subprocess.run(['powershell.exe','-NoProfile','-Command',\"$p=Get-CimInstance Win32_Process -Filter \\\"Name='chrome.exe'\\\" | Where-Object { $_.CommandLine -match 'remote-debugging-port=17410' }; $p | ForEach-Object { [pscustomobject]@{ Id=$_.ProcessId; ParentId=$_.ParentProcessId; Cmd=$_.CommandLine } } | ConvertTo-Json -Compress\"],capture_output=True,text=True,timeout=8)\nif p.returncode:\n out['processError']='ps_process_query_failed'\nelse:\n try:\n  raw=json.loads(p.stdout) if p.stdout.strip() else []\n  if isinstance(raw,dict):raw=[raw]\n  keep=('--disable-background-timer-throttling','--disable-renderer-backgrounding','--disable-backgrounding-occluded-windows','--disable-features','--process-per-site','--renderer-process-limit')\n  out['chrome']=[{'pid':z.get('Id'),'parent':z.get('ParentId'),'flags':{q:(q+'=') in str(z.get('Cmd')) or q in str(z.get('Cmd')).split() for q in keep},'hasMainBrowserNoType':'--type=' not in str(z.get('Cmd'))} for z in raw[:9]]\n except Exception as e:out['processError']=type(e).__name__\nprint(json.dumps(out,ensure_ascii=True)[:4700])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only current Chrome backgrounding switches filtered to boolean; never output raw commandline, proxies, paths, or secrets."
+}
