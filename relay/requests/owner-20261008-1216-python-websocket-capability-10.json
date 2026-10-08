@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-1216-python-websocket-capability-10",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import importlib.util,sys,json; print(json.dumps({'python':sys.version.split()[0],'websocket_client':bool(importlib.util.find_spec('websocket')),'websockets':bool(importlib.util.find_spec('websockets'))}))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only check of permitted Python CDP WebSocket library availability for inspecting exact existing agent chats."
+}
