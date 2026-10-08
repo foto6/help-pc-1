@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,urllib.parse,socket,hashlib,base64,os,struct,re,concurrent.futures,time\ndef getjson(url,timeout=3.5):\n with urllib.request.urlopen(url,timeout=timeout) as f:return json.load(f)\nBASE=\"http://127.0.0.1:17448\"\nmc=getjson(BASE+\"/api/supervisor-watchdog/managed-chats\")\nap=getjson(BASE+\"/api/ai-profiles\")\nprofs=ap.get(\"aiProfiles\",[])\nports=set(int(p.get(\"debugPort\") or 0) for p in profs if p.get(\"provider\")==\"chatgpt\")\ntabs={}\nfor port in ports:\n if port>0:\n  try:tabs[port]=getjson(\"http://127.0.0.1:%d/json/list\"%port)\n  except Exception as e:tabs[port]=[]\nclass W:\n def __init__(self,s,extra):self.s=s;self.extra=extra\n def read(self,n):\n  a=self.extra[:n];self.extra=self.extra[len(a):]\n  while len(a)<n:\n   b=self.s.recv(n-len(a))\n   if not b:raise OSError(\"ws_closed\")\n   a+=b\n  return a\ndef inspect(tab):\n u=urllib.parse.urlsplit(tab[\"webSocketDebuggerUrl\"])\n if u.scheme!=\"ws\" or u.hostname not in (\"127.0.0.1\",\"localhost\"):return {\"error\":\"not_local_websocket\"}\n sock=socket.create_connection((u.hostname,u.port or 80),timeout=3.8);sock.settimeout(3.8)\n try:\n  key=base64.b64encode(os.urandom(16)).decode()\n  path=u.path+(\"?\" + u.query if u.query else \"\")\n  hdr=\"GET %s HTTP/1.1\\r\\nHost: %s:%d\\r\\nUpgrade: websocket\\r\\nConnection: Upgrade\\r\\nSec-WebSocket-Key: %s\\r\\nSec-WebSocket-Version: 13\\r\\n\\r\\n\"%(path,u.hostname,u.port or 80,key)\n  sock.sendall(hdr.encode(\"ascii\"))\n  buff=b\"\"\n  while b\"\\r\\n\\r\\n\" not in buff and len(buff)<10000:buff+=sock.recv(4096)\n  head,rest=buff.split(b\"\\r\\n\\r\\n\",1)\n  if b\" 101 \" not in head.split(b\"\\r\\n\",1)[0]:return {\"error\":\"websocket_upgrade_rejected\",\"status\":head.split(b\"\\r\\n\",1)[0].decode(\"latin1\")[:80]}\n  w=W(sock,rest)\n  expr=r'''(()=>{const t=[...document.querySelectorAll(\"[data-turn-key]\")];const a=t.slice(-4).map(e=>({role:e.getAttribute(\"data-message-author-role\")||e.querySelector(\"[data-message-author-role]\")?.getAttribute(\"data-message-author-role\")||\"\",text:(e.innerText||e.textContent||\"\").replace(/\\s+/g,\" \").trim().slice(-1600)}));const b=[...document.querySelectorAll(\"button,[role=button]\")];const high=b.some(e=>/^(Высокий|High)$/iu.test((e.innerText||\"\").trim()));const stop=b.some(e=>/stop-button/i.test(e.getAttribute(\"data-testid\")||\"\")||/остановить|stop generating|stop response/iu.test((e.innerText||\"\")+\" \"+(e.getAttribute(\"aria-label\")||\"\")));const alerts=[...document.querySelectorAll(\"[role=alert]\")].filter(e=>!e.closest(\"[data-turn-key]\")).map(e=>(e.innerText||\"\").replace(/\\s+/g,\" \").trim().slice(0,250)).filter(Boolean).slice(-4);return{url:location.href,title:document.title,ready:document.readyState,turnCount:t.length,lastTurns:a,high,stop,alerts,composerPresent:!!document.querySelector(\"#prompt-textarea\")}})()'''\n  command={\"id\":1,\"method\":\"Runtime.evaluate\",\"params\":{\"expression\":expr,\"returnByValue\":True,\"awaitPromise\":False}}\n  raw=json.dumps(command,separators=(\",\",\":\"),ensure_ascii=False).encode(\"utf-8\")\n  n=len(raw);header=b\"\\x81\"\n  if n<126:header+=bytes([0x80|n])\n  elif n<65536:header+=b\"\\xfe\"+struct.pack(\"!H\",n)\n  else:header+=b\"\\xff\"+struct.pack(\"!Q\",n)\n  mask=os.urandom(4);wire=bytes(b ^ mask[i%4] for i,b in enumerate(raw))\n  sock.sendall(header+mask+wire)\n  for k in range(8):\n   b1,b2=w.read(2);length=b2 & 0x7f\n   if length==126:length=struct.unpack(\"!H\",w.read(2))[0]\n   elif length==127:length=struct.unpack(\"!Q\",w.read(8))[0]\n   if b2 & 0x80:\n    m=w.read(4)\n   else:m=None\n   if length>1000000:return {\"error\":\"frame_too_large\"}\n   msg=w.read(length)\n   if m:msg=bytes(b^m[i%4] for i,b in enumerate(msg))\n   if (b1&0x0f)!=1:continue\n   reply=json.loads(msg)\n   if reply.get(\"id\")!=1:continue\n   if reply.get(\"error\"):return {\"error\":\"cdp_\"+str(reply[\"error\"])[:140]}\n   rr=reply.get(\"result\") or {}\n   if rr.get(\"exceptionDetails\"):return {\"error\":\"cdp_exception_\"+str(rr[\"exceptionDetails\"].get(\"text\"))}\n   return rr.get(\"result\",{}).get(\"value\",{\"error\":\"no_value\"})\n  return {\"error\":\"no_matching_reply\"}\n finally:sock.close()\ndef scan(c):\n pid=re.search(r\"/c/([a-f0-9-]{20,})\",c.get(\"url\",\"\"),re.I)\n profile=next((p for p in profs if p.get(\"id\")==c.get(\"profileId\")),None)\n if not profile:return {\"agent\":c.get(\"name\"),\"error\":\"profile_not_found\"}\n port=int(profile.get(\"debugPort\") or 0)\n exact=[t for t in tabs.get(port,[]) if t.get(\"type\")==\"page\" and t.get(\"webSocketDebuggerUrl\") and re.search(r\"/c/\"+(pid.group(1) if pid else \"no-id\")+r\"(?:$|[?#])\",t.get(\"url\",\"\"),re.I)]\n r={\"agent\":c.get(\"name\"),\"id\":c.get(\"id\"),\"exactTabs\":len(exact)}\n if len(exact)!=1:r[\"error\"]=\"missing_or_duplicate_exact_tab\";return r\n try:r[\"snapshot\"]=inspect(exact[0])\n except Exception as e:r[\"error\"]=type(e).__name__+\":\"+str(e)[:150]\n return r\nwith concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:\n results=list(pool.map(scan,mc.get(\"chats\",[])))\nprint(json.dumps({\"checkedAt\":time.strftime(\"%Y-%m-%dT%H:%M:%SZ\",time.gmtime()),\"count\":len(results),\"rows\":results},ensure_ascii=False,separators=(\",\",\":\")))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\r\n  File \"<string>\", line 78, in <module>\r\n    print(json.dumps({\"checkedAt\":time.strftime(\"%Y-%m-%dT%H:%M:%SZ\",time.gmtime()),\"count\":len(results),\"rows\":results},ensure_ascii=False,separators=(\",\",\":\")))\r\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\encodings\\cp1251.py\", line 19, in encode\r\n    return codecs.charmap_encode(input,self.errors,encoding_table)[0]\r\n           ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nUnicodeEncodeError: 'charmap' codec can't encode character '\\u2194' in position 8304: character maps to <undefined>\r\n",
+      "stderr_bytes": 812,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T05:07:39.568Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T05:07:39.350Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-20261008-1220-python-cdp-all-chats-11"
+    },
+    "request_id": "owner-20261008-1220-python-cdp-all-chats-11",
+    "started_at": "2026-10-08T05:07:28.869Z",
+    "status": "completed"
+  },
+  "id": "owner-20261008-1220-python-cdp-all-chats-11",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
