@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,subprocess,zipfile,io,tempfile,json,hashlib,datetime\nrepo=r'E:\\WebAIBridge';branch='agent/bridge-r49-dormant-health-20261008';sha='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03'\ndef git(*a,t=20):return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,timeout=t)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'exactSHA':sha,'tests':[]}\nout['headBefore']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['statusBefore']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\ntry:\n p=git('fetch','--no-tags','--no-write-fetch-head','origin','refs/heads/'+branch,t=40)\n if p.returncode:raise RuntimeError('fetch_failed')\n if git('cat-file','-t',sha,t=7).stdout.strip()!=b'commit':raise RuntimeError('missing_commit')\n p=git('archive','--format=zip',sha,t=14)\n if p.returncode:raise RuntimeError('git_archive_failed')\n with tempfile.TemporaryDirectory(prefix='wab-r49-source-') as d:\n  with zipfile.ZipFile(io.BytesIO(p.stdout)) as z:z.extractall(d)\n  app=os.path.join(d,'app')\n  for argv in [['node.exe','--check','server.js'],['node.exe','--test','dormant-operational-health-r49.test.js'],['node.exe','--test','operational-health.test.js','paused-queue-health-r48.test.js']]:\n   z=subprocess.run(argv,cwd=app,capture_output=True,timeout=18)\n   out['tests'].append({'test':' '.join(argv[1:]),'exit':z.returncode,'stdoutTail':z.stdout.decode('utf-8','replace')[-460:],'stderrTail':z.stderr.decode('utf-8','replace')[-300:]})\nexcept Exception as e:out['error']=type(e).__name__+':'+str(e)[:160]\nout['headAfter']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['statusAfter']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\nout['productionUnchanged']=out['headBefore']==out['headAfter'] and out['statusBefore']==out['statusAfter']\nprint(json.dumps(out,ensure_ascii=True)[:6100])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T15:21:28\", \"exactSHA\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"tests\": [{\"test\": \"--check server.js\", \"exit\": 0, \"stdoutTail\": \"\", \"stderrTail\": \"\"}, {\"test\": \"--test dormant-operational-health-r49.test.js\", \"exit\": 0, \"stdoutTail\": \"ed even when name is declared dormant (0.3845ms)\\n\\u2714 circuit breaker / blocked failure NEVER becomes dormant (0.2593ms)\\n\\u2714 inflight probe may not be converted to dormant (1.6228ms)\\n\\u2714 CDP and filesystem staleness cannot be hidden by on-demand classification (0.3571ms)\\n\\u2714 safe pause scope requires zero active assignment and all autonomous send switches off (0.3669ms)\\n\\u2139 tests 7\\n\\u2139 suites 0\\n\\u2139 pass 7\\n\\u2139 fail 0\\n\\u2139 cancelled 0\\n\\u2139 skipped 0\\n\\u2139 todo 0\\n\\u2139 duration_ms 149.045\\n\", \"stderrTail\": \"\"}, {\"test\": \"--test operational-health.test.js paused-queue-health-r48.test.js\", \"exit\": 0, \"stdoutTail\": \"preserved and named, not falsely blocked (2.2123ms)\\n\\u2714 stale queue is a real blocker whenever not intentionally paused (0.7975ms)\\n\\u2714 paused but auto-send still enabled must be BLOCKED (0.2241ms)\\n\\u2714 paused but in-flight dispatch must be blocked, cannot become green (0.2503ms)\\n\\u2714 empty safe paused queue remains held with no warning; invalid age not stale (0.4375ms)\\n\\u2139 tests 10\\n\\u2139 suites 0\\n\\u2139 pass 10\\n\\u2139 fail 0\\n\\u2139 cancelled 0\\n\\u2139 skipped 0\\n\\u2139 todo 0\\n\\u2139 duration_ms 380.725\\n\", \"stderrTail\": \"\"}], \"headBefore\": \"8360bed73554011e7d6ff816c6365196c5e483ee\", \"statusBefore\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"headAfter\": \"8360bed73554011e7d6ff816c6365196c5e483ee\", \"statusAfter\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"productionUnchanged\": true}\r\n",
+      "stdout_bytes": 1785,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T08:21:34.136Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T08:21:33.961Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r49-20261008-shadow-tests-35a7"
+    },
+    "request_id": "wab-r49-20261008-shadow-tests-35a7",
+    "started_at": "2026-10-08T08:21:28.152Z",
+    "status": "completed"
+  },
+  "id": "wab-r49-20261008-shadow-tests-35a7",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
