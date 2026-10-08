@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261008-owner-lookup-api-discovery-06-7f1a",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "20261008-owner-bridge-api-discovery-04-7f1a",
+    "action": "shell.run"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only outcome.lookup with exact original request ID/action; never replay timed-out shell command."
+}
