@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,subprocess,tempfile,zipfile,io,datetime,hashlib\nrepo=r'E:\\WebAIBridge';sha='8360bed73554011e7d6ff816c6365196c5e483ee';branch='agent/bridge-r48-pause-health-cutover-attest-20261008'\ndef git(*args,t=13):return subprocess.run(['git.exe','-C',repo,*args],capture_output=True,timeout=t)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'sha':sha,'tests':[]}\nout['headBefore']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['porcelainBeforeSHA256']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\ntry:\n f=git('fetch','--no-tags','--no-write-fetch-head','origin','refs/heads/'+branch,t=36)\n if f.returncode:raise RuntimeError('fetch_failed')\n if git('cat-file','-t',sha,t=7).stdout.strip()!=b'commit':raise RuntimeError('sha_missing')\n arch=git('archive','--format=zip',sha,t=17)\n if arch.returncode:raise RuntimeError('archive_failed')\n with tempfile.TemporaryDirectory(prefix='wab-r48-isolated-') as d:\n  with zipfile.ZipFile(io.BytesIO(arch.stdout)) as z:z.extractall(d)\n  app=os.path.join(d,'app')\n  cmdlist=[\n   ['node.exe','--check','server.js'],\n   ['node.exe','--check','r48-cutover-attest.js'],\n   ['node.exe','--test','paused-queue-health-r48.test.js','independent-cutover-attestation-r48.test.js'],\n   ['node.exe','--test','chrome-background-policy-r47.test.js','safe-tab-wakeup-r46.test.js','managed-chat-inspection-r45.test.js'],\n  ]\n  for cmd in cmdlist:\n   p=subprocess.run(cmd,cwd=app,capture_output=True,timeout=18)\n   out['tests'].append({'cmd':' '.join(cmd[1:]),'exit':p.returncode,'stdoutTail':p.stdout.decode('utf-8','replace')[-470:],'stderrTail':p.stderr.decode('utf-8','replace')[-390:]})\nexcept Exception as e:out['error']=type(e).__name__+':'+str(e)[:140]\nout['headAfter']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['porcelainAfterSHA256']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\nout['productionUnchanged']=out['headBefore']==out['headAfter'] and out['porcelainBeforeSHA256']==out['porcelainAfterSHA256']\nprint(json.dumps(out,ensure_ascii=True)[:7500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T14:34:12\", \"sha\": \"8360bed73554011e7d6ff816c6365196c5e483ee\", \"tests\": [{\"cmd\": \"--check server.js\", \"exit\": 0, \"stdoutTail\": \"\", \"stderrTail\": \"\"}, {\"cmd\": \"--check r48-cutover-attest.js\", \"exit\": 0, \"stdoutTail\": \"\", \"stderrTail\": \"\"}, {\"cmd\": \"--test paused-queue-health-r48.test.js independent-cutover-attestation-r48.test.js\", \"exit\": 0, \"stdoutTail\": \" remains preserved and named, not falsely blocked (1.7663ms)\\n\\u2714 stale queue is a real blocker whenever not intentionally paused (0.3234ms)\\n\\u2714 paused but auto-send still enabled must be BLOCKED (0.1813ms)\\n\\u2714 paused but in-flight dispatch must be blocked, cannot become green (0.1484ms)\\n\\u2714 empty safe paused queue remains held with no warning; invalid age not stale (0.2763ms)\\n\\u2139 tests 10\\n\\u2139 suites 0\\n\\u2139 pass 10\\n\\u2139 fail 0\\n\\u2139 cancelled 0\\n\\u2139 skipped 0\\n\\u2139 todo 0\\n\\u2139 duration_ms 124.0125\\n\", \"stderrTail\": \"\"}, {\"cmd\": \"--test chrome-background-policy-r47.test.js safe-tab-wakeup-r46.test.js managed-chat-inspection-r45.test.js\", \"exit\": 0, \"stdoutTail\": \".1282ms)\\n\\u2714 single frozen exact existing tab is wake-eligible without Send/navigation/reload (0.8898ms)\\n\\u2714 queue and autonomous watchdog must both be frozen (0.1822ms)\\n\\u2714 missing, ambiguous, or changed tab identity is blocked (0.1425ms)\\n\\u2714 preview is only advisory and cannot waive execution confirmation (0.1251ms)\\n\\u2714 only an existing CDP page target can be woken (0.2068ms)\\n\\u2139 tests 14\\n\\u2139 suites 0\\n\\u2139 pass 14\\n\\u2139 fail 0\\n\\u2139 cancelled 0\\n\\u2139 skipped 0\\n\\u2139 todo 0\\n\\u2139 duration_ms 270.4022\\n\", \"stderrTail\": \"\"}], \"headBefore\": \"4638fd18def71dbfa07227c4b9b1bcbf89bba2a5\", \"porcelainBeforeSHA256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"headAfter\": \"4638fd18def71dbfa07227c4b9b1bcbf89bba2a5\", \"porcelainAfterSHA256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"productionUnchanged\": true}\r\n",
+      "stdout_bytes": 1989,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T07:34:16.972Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T07:34:16.810Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r48-20261008-isolated-validation-49f3"
+    },
+    "request_id": "wab-r48-20261008-isolated-validation-49f3",
+    "started_at": "2026-10-08T07:34:11.619Z",
+    "status": "completed"
+  },
+  "id": "wab-r48-20261008-isolated-validation-49f3",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
