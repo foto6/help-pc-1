@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-r45-20261008-shadow-fetch-c37f",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,hashlib,datetime,json,os,tempfile,zipfile,io\nrepo=r'E:\\WebAIBridge'; sha='18a286d4522dd73b5a65d88b5823053b71b01569'; branch='agent/bridge-r45-readonly-probe-hardening-20261008'\ndef git(*argv,t=25):return subprocess.run(['git.exe','-C',repo,*argv],capture_output=True,timeout=t)\nout={'at':datetime.datetime.now().isoformat(),'sha':sha,'tests':[]}\nh=git('rev-parse','HEAD'); out['head_before']=h.stdout.decode('ascii','replace').strip()\np=git('status','--porcelain=v1','-z','--untracked-files=all');out['porcelain_before_sha256']=hashlib.sha256(p.stdout).hexdigest()\ntry:\n check=git('cat-file','-t',sha,t=8);out['object_present_before']=check.returncode==0\n if check.returncode!=0:\n  fetch=git('fetch','--no-tags','--no-write-fetch-head','origin','refs/heads/'+branch,t=45)\n  out['fetch_code']=fetch.returncode\n  out['fetch_error_type']='fetch_failed' if fetch.returncode else ''\n  if fetch.returncode:raise RuntimeError('fetch_failed')\n check=git('cat-file','-t',sha,t=8)\n if check.returncode or check.stdout.strip()!=b'commit':raise RuntimeError('target_commit_unavailable')\n archive=git('archive','--format=zip',sha,t=15)\n if archive.returncode:raise RuntimeError('git_archive_failed')\n with tempfile.TemporaryDirectory(prefix='wab-r45-shadow-') as folder:\n  z=zipfile.ZipFile(io.BytesIO(archive.stdout));z.extractall(folder)\n  app=os.path.join(folder,'app')\n  for cmd in (['node.exe','--check','server.js'],['node.exe','--test','managed-chat-inspection-r45.test.js'],['node.exe','--test','operational-health.test.js']):\n   try:\n    res=subprocess.run(cmd,cwd=app,capture_output=True,timeout=17)\n    out['tests'].append({'name':' '.join(cmd[1:]),'returncode':res.returncode,'stdout_tail':res.stdout.decode('utf-8','replace')[-280:],'stderr_tail':res.stderr.decode('utf-8','replace')[-250:]})\n   except Exception as e:out['tests'].append({'name':' '.join(cmd[1:]),'error':type(e).__name__})\nexcept Exception as e:out['failure']=str(e)[:100]\nout['head_after']=git('rev-parse','HEAD').stdout.decode('ascii','replace').strip()\nout['porcelain_after_sha256']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all').stdout).hexdigest()\nout['worktree_unchanged']=out['head_before']==out['head_after'] and out['porcelain_before_sha256']==out['porcelain_after_sha256']\nprint(json.dumps(out,ensure_ascii=True)[:5700])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 115000,
+  "note": "Fetch only remote Git metadata for exact R45 branch, verify SHA and run isolated scratch tests; no worktree or provider mutation, agents off"
+}
