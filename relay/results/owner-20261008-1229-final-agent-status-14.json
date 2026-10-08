@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,datetime\nbase='http://127.0.0.1:17448'\ndef get(p):\n with urllib.request.urlopen(base+p,timeout=5) as h:return json.load(h)\nc=get('/api/supervisor-watchdog/managed-chats')['chats'];a=get('/api/supervisor-watchdog/agent-assignments')['assignments']\nids={'e27a8cf2-fcb4-45f0-8134-3ca5632c9611','f1bc42fe-ecd8-408a-9d70-84ec2bb4a3ab','b14cb551-8b8e-4e7b-a9a3-7b8264e4e17d','5333f6a6-e562-4c5e-873b-b8b626468a32','eff91a96-514b-4cc7-93b6-19e1f19c5741','dfcf8cae-1ea4-4d79-9690-a3df9064cd48'}\nx={'checkedAt':datetime.datetime.now().isoformat(),'chats':[{k:v.get(k) for k in ('id','name','status','error','highMode','draftPresent','generating','openTabs','lastSeenAt')} for v in c],'assignments':[{k:v.get(k) for k in ('id','targetChatId','state','dispatchCount','dispatchSubmitAttempted','lastDiagnostic','lastPreflightReason','currentHead','ciConclusion')} for v in a if v.get('id') in ids]};print(json.dumps(x,ensure_ascii=True,separators=(',',':')))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"checkedAt\":\"2026-10-08T12:10:27.418683\",\"chats\":[{\"id\":\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"name\":\"Bridge\",\"status\":\"inspect_error\",\"error\":\"Runtime.evaluate timed out\",\"highMode\":false,\"draftPresent\":false,\"generating\":false,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:07:12.897Z\"},{\"id\":\"agent-media\",\"name\":\"Media\",\"status\":\"inspect_error\",\"error\":\"Runtime.evaluate timed out\",\"highMode\":false,\"draftPresent\":false,\"generating\":false,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:06:42.775Z\"},{\"id\":\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"name\":\"Creator\",\"status\":\"idle\",\"error\":\"\",\"highMode\":false,\"draftPresent\":false,\"generating\":false,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:09:40.174Z\"},{\"id\":\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"name\":\"Growth\",\"status\":\"inspect_error\",\"error\":\"Runtime.evaluate timed out\",\"highMode\":false,\"draftPresent\":false,\"generating\":true,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:06:03.519Z\"},{\"id\":\"agent-pc-control\",\"name\":\"Native MCP\",\"status\":\"inspect_error\",\"error\":\"Runtime.evaluate timed out\",\"highMode\":false,\"draftPresent\":false,\"generating\":true,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:06:03.550Z\"},{\"id\":\"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\",\"name\":\"QA\",\"status\":\"idle\",\"error\":\"\",\"highMode\":false,\"draftPresent\":false,\"generating\":false,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:10:10.206Z\"}],\"assignments\":[{\"id\":\"eff91a96-514b-4cc7-93b6-19e1f19c5741\",\"targetChatId\":\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"state\":\"queued\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"lastDiagnostic\":\"git_baseline_verified\",\"lastPreflightReason\":\"target_inspection_failed\",\"currentHead\":\"887567bb62a3df0879505d68ac6a2be725b57173\",\"ciConclusion\":\"\"},{\"id\":\"dfcf8cae-1ea4-4d79-9690-a3df9064cd48\",\"targetChatId\":\"agent-pc-control\",\"state\":\"queued\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"lastDiagnostic\":\"git_baseline_verified\",\"lastPreflightReason\":\"target_inspection_failed\",\"currentHead\":\"b6e0cbf326138a81ded36f6c18dbb5efee4965cd\",\"ciConclusion\":\"\"},{\"id\":\"e27a8cf2-fcb4-45f0-8134-3ca5632c9611\",\"targetChatId\":\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"state\":\"blocked\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"lastDiagnostic\":\"ci_failed\",\"lastPreflightReason\":\"ready\",\"currentHead\":\"0419ebb15c7ea228bec5e0c5008ac42123e41a65\",\"ciConclusion\":\"failure\"},{\"id\":\"f1bc42fe-ecd8-408a-9d70-84ec2bb4a3ab\",\"targetChatId\":\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"state\":\"awaiting_evidence\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"lastDiagnostic\":\"supervisor_verification_missing\",\"lastPreflightReason\":\"ready\",\"currentHead\":\"e1ac861826662eb1e7155db455970f5902ea49b8\",\"ciConclusion\":\"success\"},{\"id\":\"b14cb551-8b8e-4e7b-a9a3-7b8264e4e17d\",\"targetChatId\":\"agent-media\",\"state\":\"blocked\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"lastDiagnostic\":\"replacement_failed:Project DOM is not compatible: not_project_url, project_id_missing, project_name_missing, project_composer_missing, chat_tab_missing, sources_tab_missing\",\"lastPreflightReason\":\"target_chat_unavailable\",\"currentHead\":\"183838a24205c6885b2366ad6ffa394164283d91\",\"ciConclusion\":\"\"},{\"id\":\"5333f6a6-e562-4c5e-873b-b8b626468a32\",\"targetChatId\":\"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\",\"state\":\"failed\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"lastDiagnostic\":\"R41 unified High gate blocked managed assignment: high_select_failed\",\"lastPreflightReason\":\"ready\",\"currentHead\":\"9f439b41c2b11640451a803cee8b8d6198ddd04b\",\"ciConclusion\":\"\"}]}\r\n",
+      "stdout_bytes": 3507,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T05:10:27.638Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T05:10:27.438Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-20261008-1229-final-agent-status-14"
+    },
+    "request_id": "owner-20261008-1229-final-agent-status-14",
+    "started_at": "2026-10-08T05:10:26.026Z",
+    "status": "completed"
+  },
+  "id": "owner-20261008-1229-final-agent-status-14",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
