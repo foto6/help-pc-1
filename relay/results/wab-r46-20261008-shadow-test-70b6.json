@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,subprocess,hashlib,tempfile,zipfile,io,json,datetime\nrepo=r'E:\\WebAIBridge';sha='943c0b1d509fb8b73cef2f8bbe566ef957854a47';branch='agent/bridge-r46-safe-tab-wakeup-20261008'\ndef git(*args,t=15):return subprocess.run(['git.exe','-C',repo,*args],capture_output=True,timeout=t)\nout={'at':datetime.datetime.now().isoformat(),'sourceSHA':sha,'tests':[]}\nout['head_before']=git('rev-parse','HEAD').stdout.decode('ascii','replace').strip()\nout['porcelain_before']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all').stdout).hexdigest()\ntry:\n f=git('fetch','--no-tags','--no-write-fetch-head','origin','refs/heads/'+branch,t=35)\n out['fetchCode']=f.returncode\n if f.returncode:raise RuntimeError('fetch_failed')\n if git('cat-file','-t',sha).stdout.strip()!=b'commit':raise RuntimeError('SHA_not_available')\n z=git('archive','--format=zip',sha,t=12)\n if z.returncode:raise RuntimeError('archive_failed')\n with tempfile.TemporaryDirectory(prefix='wab-r46-shadow-') as d:\n  with zipfile.ZipFile(io.BytesIO(z.stdout)) as arc:arc.extractall(d)\n  app=os.path.join(d,'app')\n  for args in (['node.exe','--check','server.js'],['node.exe','--test','safe-tab-wakeup-r46.test.js'],['node.exe','--test','managed-chat-inspection-r45.test.js']):\n   p=subprocess.run(args,cwd=app,capture_output=True,timeout=15)\n   out['tests'].append({'cmd':' '.join(args[1:]),'status':p.returncode,'stdoutTail':p.stdout.decode('utf-8','replace')[-420:],'stderrTail':p.stderr.decode('utf-8','replace')[-350:]})\nexcept Exception as e:out['error']=str(e)[:130]\nout['head_after']=git('rev-parse','HEAD').stdout.decode('ascii','replace').strip()\nout['porcelain_after']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all').stdout).hexdigest()\nout['productionUntouched']=out['head_before']==out['head_after'] and out['porcelain_before']==out['porcelain_after']\nprint(json.dumps(out,ensure_ascii=True)[:6000])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T13:37:45.010725\", \"sourceSHA\": \"943c0b1d509fb8b73cef2f8bbe566ef957854a47\", \"tests\": [{\"cmd\": \"--check server.js\", \"status\": 0, \"stdoutTail\": \"\", \"stderrTail\": \"\"}, {\"cmd\": \"--test safe-tab-wakeup-r46.test.js\", \"status\": 0, \"stdoutTail\": \"wake-eligible without Send/navigation/reload (1.1576ms)\\n\\u2714 queue and autonomous watchdog must both be frozen (0.2278ms)\\n\\u2714 missing, ambiguous, or changed tab identity is blocked (0.159ms)\\n\\u2714 preview is only advisory and cannot waive execution confirmation (0.1347ms)\\n\\u2714 only an existing CDP page target can be woken (0.1904ms)\\n\\u2139 tests 5\\n\\u2139 suites 0\\n\\u2139 pass 5\\n\\u2139 fail 0\\n\\u2139 cancelled 0\\n\\u2139 skipped 0\\n\\u2139 todo 0\\n\\u2139 duration_ms 164.8632\\n\", \"stderrTail\": \"\"}, {\"cmd\": \"--test managed-chat-inspection-r45.test.js\", \"status\": 0, \"stdoutTail\": \"\\u2714 boundedMap preserves configured chat order and caps parallel probes (62.8836ms)\\n\\u2714 a hung read-only CDP evaluation times out and closes its target (29.1608ms)\\n\\u2714 one failed probe remains explicit and does not conceal other chat results (30.3398ms)\\n\\u2714 successful evaluation cancels its timeout callback (63.026ms)\\n\\u2139 tests 4\\n\\u2139 suites 0\\n\\u2139 pass 4\\n\\u2139 fail 0\\n\\u2139 cancelled 0\\n\\u2139 skipped 0\\n\\u2139 todo 0\\n\\u2139 duration_ms 286.9566\\n\", \"stderrTail\": \"\"}], \"head_before\": \"18a286d4522dd73b5a65d88b5823053b71b01569\", \"porcelain_before\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"fetchCode\": 0, \"head_after\": \"18a286d4522dd73b5a65d88b5823053b71b01569\", \"porcelain_after\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"productionUntouched\": true}\r\n",
+      "stdout_bytes": 1696,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:37:51.884Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:37:51.636Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r46-20261008-shadow-test-70b6"
+    },
+    "request_id": "wab-r46-20261008-shadow-test-70b6",
+    "started_at": "2026-10-08T06:37:44.499Z",
+    "status": "completed"
+  },
+  "id": "wab-r46-20261008-shadow-test-70b6",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
