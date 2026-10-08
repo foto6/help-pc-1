@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r50-20261008-final-live-gate-07",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,subprocess,zipfile,io,tempfile,json,hashlib,datetime\nrepo=r'E:\\WebAIBridge';sha='814c0e7e328599c85d7927e2a48b3e0f5df1becc';branch='agent/bridge-r50-restart-readiness-20261008'\ndef git(*a,t=20):return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,timeout=t)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'exactSourceSHA':sha,'tests':[]}\nout['beforeHEAD']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['beforeStatusHash']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\ntry:\n f=git('fetch','--no-tags','--no-write-fetch-head','origin','refs/heads/'+branch,t=36)\n if f.returncode:raise RuntimeError('fetch_error')\n if git('cat-file','-t',sha,t=7).stdout.strip()!=b'commit':raise RuntimeError('commit_not_found')\n p=git('archive','--format=zip',sha,'app/chrome-restart-readiness-r50.js','app/r50-restart-readiness-preflight.js','app/chrome-restart-readiness-r50.test.js',t=12)\n if p.returncode:raise RuntimeError('archive_error')\n with tempfile.TemporaryDirectory(prefix='wab-r50-last-') as d:\n  with zipfile.ZipFile(io.BytesIO(p.stdout)) as z:z.extractall(d)\n  app=os.path.join(d,'app')\n  for argv in [['node.exe','--check','r50-restart-readiness-preflight.js'],['node.exe','--test','chrome-restart-readiness-r50.test.js']]:\n   t=subprocess.run(argv,cwd=app,capture_output=True,text=True,timeout=14)\n   out['tests'].append({'name':' '.join(argv[1:]),'exit':t.returncode,'tail':t.stdout[-430:],'error':t.stderr[:250]})\n  if all(x['exit']==0 for x in out['tests']):\n   t=subprocess.run(['node.exe','r50-restart-readiness-preflight.js'],cwd=app,capture_output=True,text=True,timeout=37)\n   if t.stdout.strip():\n    x=json.loads(t.stdout)\n    out['live']={'code':t.returncode,'state':x.get('status'),'automaticRestartAuthorized':x.get('automaticRestartAuthorized'),'managedSixIdentified':x.get('allSixObserved'),'extraChatGPTTabs':x.get('unmanagedChatGPTTabCount'),'tabs':[{'name':row.get('name'),'status':row.get('probeStatus'),'targets':row.get('exactTargets'),'draftObserved':row.get('draftPresent')} for row in x.get('tabs',[])], 'blockerCount':len(x.get('blockers',[]))}\n   else:out['live']={'code':t.returncode,'error':t.stderr[-350:]}\nexcept Exception as e:out['error']=type(e).__name__+':'+str(e)[:150]\nout['afterHEAD']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['afterStatusHash']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\nout['prodUnchanged']=out['beforeHEAD']==out['afterHEAD'] and out['beforeStatusHash']==out['afterStatusHash']\nprint(json.dumps(out,ensure_ascii=True)[:6200])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 79000,
+  "note": "R50 exact source final: isolated Node syntax/tests and bounded read-only live six managed & three additional ChatGPT count, no text content or browser mutation."
+}
