@@ -1,0 +1,14 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r53-20261008-creator-static-r50-readonly-09",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "node.exe",
+      "E:\\WebAIBridge\\app\\data\\operator-tools\\r50-read-only-chrome-check\\releases\\814c0e7e328599c85d7927e2a48b3e0f5df1becc\\r50-restart-readiness-preflight.js"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 47000,
+  "note": "Read-only installed R50 six-chat composer/draft/renderer inspector, user requested; no browser focus, changes, Chrome restart, or agent Send."
+}
