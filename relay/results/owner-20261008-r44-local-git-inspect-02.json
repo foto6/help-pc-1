@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$repo='E:\\WebAIBridge'\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path\nfunction G([string[]]$a){\n $o=& $git -C $repo @a 2>&1;$c=$LASTEXITCODE\n if($c -ne 0){throw \"git $($a -join ' ') failed ($c): $o\"}\n if($null -eq $o){return ''}\n return ([string]($o -join [Environment]::NewLine)).Trim()\n}\n[ordered]@{\n object='owner.r44.local_git_inspect.v1'\n head=(G @('rev-parse','HEAD'))\n branch=(G @('branch','--show-current'))\n origin=(G @('remote','get-url','origin'))\n mutationPerformed=$false\n}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"object\":\"owner.r44.local_git_inspect.v1\",\"head\":\"2d5f902a52f875f3385da0a9babe29e2761a0f5b\",\"branch\":\"\",\"origin\":\"https://github.com/foto6/WebAIBridge.git\",\"mutationPerformed\":false}\r\n",
+      "stdout_bytes": 185,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T04:22:27.393Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T04:22:27.240Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-20261008-r44-local-git-inspect-02"
+    },
+    "request_id": "owner-20261008-r44-local-git-inspect-02",
+    "started_at": "2026-10-08T04:22:26.488Z",
+    "status": "completed"
+  },
+  "id": "owner-20261008-r44-local-git-inspect-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
