@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r49-20261008-fast-health-d6ce",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/health',timeout=2) as f:d=json.load(f)\nprint(json.dumps({'state':d.get('state'),'reasons':d.get('reasons'),'components':{k:{'state':v.get('state'),'reason':v.get('reason'),'stale':v.get('stale'),'ageMs':v.get('ageMs')} for k,v in d.get('components',{}).items()},'mode':d.get('operationalMode')},ensure_ascii=True)[:7000])"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "2-second GET-only /api/health component stale reasons, no mutation, Chrome or agents."
+}
