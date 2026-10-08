@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-1210-visible-chat-discovery-07",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$d=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/discover' -TimeoutSec 9;$c=@($d.candidates);$out=[ordered]@{count=$c.Count;registered=@($c|Where-Object{$_.registered}|ForEach-Object{@{name=$_.suggestedName;url=$_.url;openTabs=$_.openTabs;profileCount=@($_.profiles).Count}});unregistered=@($c|Where-Object{-not $_.registered}|ForEach-Object{@{name=$_.suggestedName;url=$_.url;openTabs=$_.openTabs;profileCount=@($_.profiles).Count}});profileErrors=$d.profileErrors};$out|ConvertTo-Json -Compress -Depth 6"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only Bridge discovery of existing ChatGPT tabs to identify unregistered agents; no new tabs, no messages."
+}
