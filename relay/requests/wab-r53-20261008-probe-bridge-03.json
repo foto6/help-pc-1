@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r53-20261008-probe-bridge-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,json\np=subprocess.run(['node.exe','-e',\"const m=require('E:/WebAIBridge/app/data/operator-tools/r50-read-only-chrome-check/releases/814c0e7e328599c85d7927e2a48b3e0f5df1becc/r50-restart-readiness-preflight.js');(async()=>{const a=await fetch('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=0').then(r=>r.json());const c=a.chats.find(x=>x.name==='Bridge');const p=await fetch('http://127.0.0.1:17410/json/list').then(r=>r.json());const t=p.filter(x=>x.type==='page'&&x.url===c.url);if(t.length!==1)throw Error('IDENTITY');const x=await m.inspectTarget(t[0].webSocketDebuggerUrl,new URL(c.url).pathname.replace(/\\\\/$/,''),3500);console.log(JSON.stringify({status:x.probeStatus,identity:x.domIdentityConfirmed,composer:x.composerConfirmed,draft:x.draftPresent,generating:x.generating}));})().catch(e=>{console.log(JSON.stringify({status:'UNKNOWN',reason:e.message}));process.exitCode=2});\"],capture_output=True,text=True,timeout=9)\nprint(json.dumps({'exit':p.returncode,'result':p.stdout.strip(),'error':bool(p.stderr)}))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Read-only R50 exact awakened Bridge content-free composer and generation boolean inspection; no browser effects."
+}
