@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-r45-20261008-preflight-queue-7c91",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,json,subprocess,tempfile,urllib.request,datetime,hashlib\nrepo=r'E:\\WebAIBridge';sha='18a286d4522dd73b5a65d88b5823053b71b01569';branch='agent/bridge-r45-readonly-probe-hardening-20261008'\nout={'at':datetime.datetime.now().isoformat(),'target':sha}\np=subprocess.run(['git.exe','-C',repo,'status','--porcelain=v1','-z','--untracked-files=all'],capture_output=True,timeout=7)\nout['dirty_digest_before']=hashlib.sha256(p.stdout).hexdigest()\nfetch=subprocess.run(['git.exe','-C',repo,'cat-file','blob',sha+':app/r42-cutover.ps1'],capture_output=True,timeout=10)\nif fetch.returncode!=0:out['preflight']={'error':'target_blob_unavailable'}\nelse:\n with tempfile.TemporaryDirectory(prefix='r45-preflight-') as d:\n  fp=os.path.join(d,'preflight.ps1')\n  open(fp,'wb').write(fetch.stdout)\n  try:\n   p=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',fp,'-TargetSha',sha,'-TargetBranch',branch,'-RepoPath',repo,'-PreflightOnly'],capture_output=True,text=True,timeout=23)\n   out['preflight']={'returncode':p.returncode,'stdout_tail':p.stdout.strip()[-2600:],'stderr_tail':p.stderr.strip()[-800:]}\n  except Exception as e:out['preflight']={'error':type(e).__name__}\nfor path in ('/api/supervisor-watchdog/agent-assignments','/api/supervisor-watchdog?detect=0'):\n try:\n  with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=4) as r:x=json.load(r)\n  if 'agent-assignments' in path:\n   rows=x.get('assignments',[])\n   keep=('id','state','dispatchCount','dispatchSubmitAttempted','lastDiagnostic','lastPreflightReason','ciConclusion')\n   out['assignments']={'count':len(rows),'pending':[{k:v.get(k) for k in keep if k in v} for v in rows if v.get('state') in ('queued','awaiting_evidence','dispatching','running')][:15]}\n  else:\n   out['watchdog']={'keys':list(x.keys())[:20],'allowAutonomousSend':x.get('config',{}).get('allowAutonomousSend'),'enabled':x.get('config',{}).get('enabled'),'autoContinueEnabled':x.get('config',{}).get('autoContinueEnabled')}\n except Exception as e:out[path]={'error':type(e).__name__}\np=subprocess.run(['git.exe','-C',repo,'status','--porcelain=v1','-z','--untracked-files=all'],capture_output=True,timeout=7)\nout['dirty_digest_after']=hashlib.sha256(p.stdout).hexdigest()\nout['dirty_unchanged']=out['dirty_digest_before']==out['dirty_digest_after']\nprint(json.dumps(out,ensure_ascii=True)[:7800])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 70000,
+  "note": "R45 exact-head staged PreflightOnly + bounded read-only queue and watchdog safety state; no sending/restart/checkout"
+}
