@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$OutputEncoding=[Console]::OutputEncoding=[Text.UTF8Encoding]::new($false)\n$code=@'\nconst expected={\"Bridge\":\"6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"Creator\":\"6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"Media\":\"6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\"Growth\":\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"Native\":\"6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"QA\":\"6ac45fb0-9074-83eb-99eb-397265b228e7\"};\nconst tabs=await(await fetch('http://127.0.0.1:17410/json/list')).json();\nconst convId=u=>{const m=String(u||'').match(/\\/c\\/([0-9a-f-]{20,})/i);return m?m[1].toLowerCase():''};\nconst expr=String.raw`JSON.stringify((()=>{const vis=e=>{if(!e)return false;const r=e.getBoundingClientRect(),s=getComputedStyle(e);return r.width>0&&r.height>0&&s.display!=='none'&&s.visibility!=='hidden'};const buttons=[...document.querySelectorAll('button,[role=\"button\"]')].filter(vis).map(e=>({text:(e.innerText||'').trim(),aria:e.getAttribute('aria-label')||'',testid:e.getAttribute('data-testid')||''}));const composer=[document.querySelector('#prompt-textarea'),document.querySelector('[contenteditable=\"true\"][data-lexical-editor=\"true\"]'),document.querySelector('.ProseMirror[contenteditable=\"true\"]')].find(vis)||null;const draft=composer?((('value'in composer?composer.value:(composer.innerText||composer.textContent||''))||'').trim()):'';const generating=buttons.some(x=>/stop-button/i.test(x.testid)||/остановить|stop generating|stop response/i.test(x.text+' '+x.aria+' '+x.testid));const high=buttons.some(x=>/^(Высокий|High)$/iu.test(x.text));const texts=[...document.querySelectorAll('[role=\"alert\"],[role=\"status\"],[data-testid*=\"error\"],[data-testid*=\"banner\"],[data-testid*=\"toast\"],main div,main section')].filter(vis).map(e=>(e.innerText||e.textContent||'').replace(/\\s+/g,' ').trim()).filter(t=>t&&t.length<=600);const contextLimit=texts.some(t=>/maximum context|conversation.{0,80}(?:limit|too long)|start a new chat|начните новый чат|создайте новый чат|достиг.{0,80}лимит/iu.test(t));return {href:location.href,ready:document.readyState,high,composerFound:!!composer,draftLength:draft.length,generating,contextLimit}})())`;\nasync function inspect(tab){const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{const t=setTimeout(()=>j(new Error('ws_open_timeout')),4000);ws.onopen=()=>{clearTimeout(t);r()};ws.onerror=e=>{clearTimeout(t);j(new Error('ws_open_error'))}});let seq=1;const pending=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id&&pending.has(m.id)){pending.get(m.id)(m);pending.delete(m.id)}};const call=(method,params={})=>new Promise((r,j)=>{const id=seq++;const t=setTimeout(()=>{pending.delete(id);j(new Error('cdp_timeout'))},5000);pending.set(id,m=>{clearTimeout(t);m.error?j(new Error(JSON.stringify(m.error))):r(m.result)});ws.send(JSON.stringify({id,method,params}))});try{const rr=await call('Runtime.evaluate',{expression:expr,returnByValue:true,awaitPromise:true});return JSON.parse(rr.result.value)}finally{ws.close()}}\nconst out={object:'owner.r44.cdp_exact_high.v1',checkedAt:new Date().toISOString(),providerMutationPerformed:false,rows:[]};\nfor(const [role,id0] of Object.entries(expected)){const id=id0.toLowerCase();const matches=tabs.filter(t=>t.type==='page'&&convId(t.url)===id);const row={role,expectedConversationId:id0,exactTargetCount:matches.length,targets:[],identityState:matches.length===1?'EXACT_ID_VERIFIED':matches.length===0?'NOT_OPEN':'DUPLICATE_EXACT_ID_TABS'};for(const t of matches.slice(0,3)){try{const s=await inspect(t);row.targets.push({targetId:t.id,canonicalUrl:s.href,highMode:s.high,composerFound:s.composerFound,draftLength:s.draftLength,generating:s.generating,contextLimit:s.contextLimit,ready:s.ready})}catch(e){row.targets.push({targetId:t.id,error:String(e)})}}out.rows.push(row)}\nprocess.stdout.write(JSON.stringify(out));\n'@\n$code | node --input-type=module"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"object\":\"owner.r44.cdp_exact_high.v1\",\"checkedAt\":\"2026-10-08T04:28:48.546Z\",\"providerMutationPerformed\":false,\"rows\":[{\"role\":\"Bridge\",\"expectedConversationId\":\"6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"exactTargetCount\":1,\"targets\":[{\"targetId\":\"11BA7397D7F79CB3D796A6692DA54176\",\"canonicalUrl\":\"https://chatgpt.com/c/6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"highMode\":true,\"composerFound\":true,\"draftLength\":0,\"generating\":true,\"contextLimit\":false,\"ready\":\"complete\"}],\"identityState\":\"EXACT_ID_VERIFIED\"},{\"role\":\"Creator\",\"expectedConversationId\":\"6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"exactTargetCount\":1,\"targets\":[{\"targetId\":\"BD87F3CFC538B04B68AF511E33D9E654\",\"canonicalUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"highMode\":true,\"composerFound\":true,\"draftLength\":0,\"generating\":true,\"contextLimit\":false,\"ready\":\"complete\"}],\"identityState\":\"EXACT_ID_VERIFIED\"},{\"role\":\"Media\",\"expectedConversationId\":\"6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\"exactTargetCount\":1,\"targets\":[{\"targetId\":\"8D45FE3758B7F86CD5092FD854A09285\",\"error\":\"Error: cdp_timeout\"}],\"identityState\":\"EXACT_ID_VERIFIED\"},{\"role\":\"Growth\",\"expectedConversationId\":\"6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"exactTargetCount\":1,\"targets\":[{\"targetId\":\"0D6BFEDBBD1AB00FCE7AC3E461CD2D5A\",\"error\":\"Error: cdp_timeout\"}],\"identityState\":\"EXACT_ID_VERIFIED\"},{\"role\":\"Native\",\"expectedConversationId\":\"6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"exactTargetCount\":1,\"targets\":[{\"targetId\":\"CDBAB6FE641F8D4D2E8C4B40156BAEEE\",\"error\":\"Error: cdp_timeout\"}],\"identityState\":\"EXACT_ID_VERIFIED\"},{\"role\":\"QA\",\"expectedConversationId\":\"6ac45fb0-9074-83eb-99eb-397265b228e7\",\"exactTargetCount\":1,\"targets\":[{\"targetId\":\"06D6ACA5C45C0B30B4D463CD5AD17E93\",\"canonicalUrl\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45fb0-9074-83eb-99eb-397265b228e7\",\"highMode\":false,\"composerFound\":true,\"draftLength\":0,\"generating\":false,\"contextLimit\":false,\"ready\":\"complete\"}],\"identityState\":\"EXACT_ID_VERIFIED\"}]}",
+      "stdout_bytes": 2046,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T04:29:03.848Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T04:29:03.702Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-20261008-r44-cdp-exact-high-01"
+    },
+    "request_id": "owner-20261008-r44-cdp-exact-high-01",
+    "started_at": "2026-10-08T04:28:47.853Z",
+    "status": "completed"
+  },
+  "id": "owner-20261008-r44-cdp-exact-high-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
