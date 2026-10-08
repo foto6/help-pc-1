@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json\npath=r'E:\\WebAIBridge\\app\\data\\operator-tools\\r50-read-only-chrome-check\\releases\\814c0e7e328599c85d7927e2a48b3e0f5df1becc\\r50-restart-readiness-preflight.js'\np=subprocess.run(['node.exe',path],capture_output=True,text=True,timeout=36)\nprint(json.dumps({'exit':p.returncode,'report':p.stdout.strip()[-6500:],'errorType':'node_error' if p.returncode and not p.stdout else None},ensure_ascii=True)[:7600])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"exit\": 2, \"report\": \"{\\\"contract\\\":\\\"bridge.chrome_restart_readiness.r50.v1\\\",\\\"readOnly\\\":true,\\\"blockers\\\":[\\\"unmanaged_chatgpt_tabs_uninspected\\\",\\\"tab_probe_inconclusive:Growth\\\",\\\"dom_chat_identity_unconfirmed:Growth\\\",\\\"composer_state_unknown:Growth\\\",\\\"draft_present_or_unknown:Growth\\\",\\\"generation_present_or_unknown:Growth\\\",\\\"tab_probe_inconclusive:Native_MCP\\\",\\\"dom_chat_identity_unconfirmed:Native_MCP\\\",\\\"composer_state_unknown:Native_MCP\\\",\\\"draft_present_or_unknown:Native_MCP\\\",\\\"generation_present_or_unknown:Native_MCP\\\",\\\"tab_probe_inconclusive:QA\\\",\\\"dom_chat_identity_unconfirmed:QA\\\",\\\"composer_state_unknown:QA\\\",\\\"draft_present_or_unknown:QA\\\",\\\"generation_present_or_unknown:QA\\\"],\\\"status\\\":\\\"RESTART_BLOCKED\\\",\\\"allSixObserved\\\":true,\\\"highConfidenceEmptyComposers\\\":false,\\\"providerDraftPersistenceProven\\\":false,\\\"unknownOtherBrowserTabsSafe\\\":false,\\\"automaticRestartAuthorized\\\":false,\\\"requiresExplicitSeparateOwnerDecision\\\":true,\\\"doesNotModifyChrome\\\":true,\\\"doesNotDispatchAgents\\\":true,\\\"chromeSwitchesExpectedOnFutureManagedLaunch\\\":[\\\"--disable-background-timer-throttling\\\",\\\"--disable-renderer-backgrounding\\\",\\\"--disable-backgrounding-occluded-windows\\\"],\\\"observedAt\\\":\\\"2026-10-08T13:41:24.517Z\\\",\\\"tabs\\\":[{\\\"name\\\":\\\"Bridge\\\",\\\"exactTargets\\\":1,\\\"probeStatus\\\":\\\"RESPONSIVE\\\",\\\"domIdentityConfirmed\\\":true,\\\"composerConfirmed\\\":true,\\\"draftPresent\\\":false,\\\"generating\\\":false,\\\"activeEditableCount\\\":1},{\\\"name\\\":\\\"Media\\\",\\\"exactTargets\\\":1,\\\"probeStatus\\\":\\\"RESPONSIVE\\\",\\\"domIdentityConfirmed\\\":true,\\\"composerConfirmed\\\":true,\\\"draftPresent\\\":false,\\\"generating\\\":false,\\\"activeEditableCount\\\":1},{\\\"name\\\":\\\"Creator\\\",\\\"exactTargets\\\":1,\\\"probeStatus\\\":\\\"RESPONSIVE\\\",\\\"domIdentityConfirmed\\\":true,\\\"composerConfirmed\\\":true,\\\"draftPresent\\\":false,\\\"generating\\\":false,\\\"activeEditableCount\\\":1},{\\\"name\\\":\\\"Growth\\\",\\\"exactTargets\\\":1,\\\"probeStatus\\\":\\\"TIMEOUT\\\"},{\\\"name\\\":\\\"Native MCP\\\",\\\"exactTargets\\\":1,\\\"probeStatus\\\":\\\"TIMEOUT\\\"},{\\\"name\\\":\\\"QA\\\",\\\"exactTargets\\\":1,\\\"probeStatus\\\":\\\"TIMEOUT\\\"}],\\\"browserPageCount\\\":11,\\\"unmanagedChatGPTTabCount\\\":3,\\\"agentQueueHeldCount\\\":2}\", \"errorType\": null}\r\n",
+      "stdout_bytes": 2164,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T13:41:24.731Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T13:41:24.557Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r53-20261008-creator-r50-via-python-10"
+    },
+    "request_id": "wab-r53-20261008-creator-r50-via-python-10",
+    "started_at": "2026-10-08T13:41:13.249Z",
+    "status": "completed"
+  },
+  "id": "wab-r53-20261008-creator-r50-via-python-10",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
