@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r54-20261008-2252-process-and-port-readonly-04",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,socket,concurrent.futures,subprocess,datetime,urllib.request\nports=[17448,17410,17447]\ndef tcp(p):\n try:\n  s=socket.create_connection(('127.0.0.1',p),1.5);s.close();return 'CONNECTED'\n except Exception as e:return type(e).__name__\ndef http(args):\n name,url=args\n try:\n  with urllib.request.urlopen(url,timeout=2.5) as r:\n   body=r.read(32768)\n   return {'name':name,'httpStatus':r.status,'bodyBytesFirst32k':len(body)}\n except Exception as e:return {'name':name,'error':type(e).__name__}\nwith concurrent.futures.ThreadPoolExecutor(max_workers=8) as pool:\n connects=dict(zip(ports,pool.map(tcp,ports)))\n links=[('health','http://127.0.0.1:17448/api/health'),('operator','http://127.0.0.1:17448/api/operator-lifecycle'),('chrome','http://127.0.0.1:17410/json/version'),('targets','http://127.0.0.1:17410/json/list')]\n tests=list(pool.map(http,links))\nproc=subprocess.run(['powershell.exe','-NoProfile','-Command',\"\"\"$a=Get-CimInstance Win32_Process -Filter \"ProcessId=13436\"; $b=Get-NetTCPConnection -LocalPort 17448,17410 -State Listen -ErrorAction SilentlyContinue; $c=$b|ForEach-Object {[pscustomobject]@{port=$_.LocalPort;pid=$_.OwningProcess}};[pscustomobject]@{originalChromePidAlive=($null -ne $a);listeners=@($c)} | ConvertTo-Json -Compress -Depth 3\"\"\"],capture_output=True,text=True,timeout=11)\ntry:status=json.loads(proc.stdout.strip()) if proc.stdout.strip() else {'noOutput':True}\nexcept:status={'powershellStatus':'INVALID_OR_EMPTY'}\ngit=subprocess.run(['git.exe','-C',r'E:\\WebAIBridge','rev-parse','HEAD'],capture_output=True,text=True,timeout=5)\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'portTCP':connects,'http':tests,'hostStatus':status,'gitHEAD':git.stdout.strip(),'allReadOnly':True},ensure_ascii=True)[:4800])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 34000,
+  "note": "R54 read-only independent local TCP/API Chrome PID/listener diagnosis after Bridge API timeout; no browser, provider or agent modifications."
+}
