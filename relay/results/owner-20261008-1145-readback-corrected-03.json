@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$base='http://127.0.0.1:17448';$m=Invoke-RestMethod -Method GET -Uri ($base+'/api/supervisor-watchdog/managed-chats') -TimeoutSec 7;$a=Invoke-RestMethod -Method GET -Uri ($base+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 7;$p=Invoke-RestMethod -Method GET -Uri ($base+'/api/ai-profiles') -TimeoutSec 5;$result=[ordered]@{};$result.at=(Get-Date).ToString('o');$result.chats=@($m.chats|ForEach-Object{[ordered]@{name=$_.name;id=$_.id;status=$_.status;error=$_.error;generating=$_.generating;highMode=$_.highMode;openTabs=$_.openTabs;lastSeenAt=$_.lastSeenAt;lastProgressAt=$_.lastProgressAt;head=$_.gitHead}});$result.assignments=@($a.assignments|Where-Object{$_.createdAt -ge '2026-10-08T04:00:00'}|ForEach-Object{[ordered]@{id=$_.id;chatId=$_.targetChatId;state=$_.state;dispatchCount=$_.dispatchCount;dispatchSubmitAttempted=$_.dispatchSubmitAttempted;lastDiagnostic=$_.lastDiagnostic;lastPreflightReason=$_.lastPreflightReason;currentHead=$_.currentHead;ciConclusion=$_.ciConclusion}});$result.profileKeys=@($p.PSObject.Properties.Name);$result.profiles=@($p.profiles|Where-Object{$_.provider -eq 'chatgpt'}|ForEach-Object{[ordered]@{id=$_.id;name=$_.name;debugPort=$_.debugPort;workerConnected=$_.workerConnected}});$result|ConvertTo-Json -Compress -Depth 8"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\":\"2026-10-08T12:01:48.5452907+07:00\",\"chats\":[{\"name\":\"Bridge\",\"id\":\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"status\":\"idle\",\"error\":\"\",\"generating\":false,\"highMode\":false,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:01:18.725Z\",\"lastProgressAt\":\"2026-10-08T04:56:47.761Z\",\"head\":\"edbf94a8760139b2f8259746c344a54410420465\"},{\"name\":\"Media\",\"id\":\"agent-media\",\"status\":\"idle\",\"error\":\"\",\"generating\":false,\"highMode\":false,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:01:18.740Z\",\"lastProgressAt\":\"2026-10-08T04:56:42.457Z\",\"head\":\"183838a24205c6885b2366ad6ffa394164283d91\"},{\"name\":\"Creator\",\"id\":\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"status\":\"closed\",\"error\":\"\",\"generating\":false,\"highMode\":true,\"openTabs\":0,\"lastSeenAt\":\"2026-10-08T04:56:17.099Z\",\"lastProgressAt\":\"2026-10-08T04:55:40.407Z\",\"head\":\"6a21591b84a1654efd91c425eabfe6a5c2ae1619\"},{\"name\":\"Growth\",\"id\":\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"status\":\"working\",\"error\":\"\",\"generating\":true,\"highMode\":false,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:01:18.763Z\",\"lastProgressAt\":\"2026-10-08T04:56:48.429Z\",\"head\":\"887567bb62a3df0879505d68ac6a2be725b57173\"},{\"name\":\"Native MCP\",\"id\":\"agent-pc-control\",\"status\":\"working\",\"error\":\"\",\"generating\":true,\"highMode\":false,\"openTabs\":1,\"lastSeenAt\":\"2026-10-08T05:01:18.797Z\",\"lastProgressAt\":\"2026-10-08T04:56:48.209Z\",\"head\":\"b6e0cbf326138a81ded36f6c18dbb5efee4965cd\"},{\"name\":\"QA\",\"id\":\"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\",\"status\":\"closed\",\"error\":\"\",\"generating\":false,\"highMode\":false,\"openTabs\":0,\"lastSeenAt\":\"2026-10-08T04:56:17.824Z\",\"lastProgressAt\":\"2026-10-08T03:23:45.737Z\",\"head\":\"06ade2b1e8d40c4ab6559f3ffe1d69b0ee36fd78\"}],\"assignments\":[{\"id\":\"e27a8cf2-fcb4-45f0-8134-3ca5632c9611\",\"chatId\":\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"state\":\"blocked\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"lastDiagnostic\":\"ci_failed\",\"lastPreflightReason\":\"ready\",\"currentHead\":\"0419ebb15c7ea228bec5e0c5008ac42123e41a65\",\"ciConclusion\":\"failure\"},{\"id\":\"f1bc42fe-ecd8-408a-9d70-84ec2bb4a3ab\",\"chatId\":\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"state\":\"awaiting_evidence\",\"dispatchCount\":1,\"dispatchSubmitAttempted\":true,\"lastDiagnostic\":\"supervisor_verification_missing\",\"lastPreflightReason\":\"ready\",\"currentHead\":\"e1ac861826662eb1e7155db455970f5902ea49b8\",\"ciConclusion\":\"success\"},{\"id\":\"b14cb551-8b8e-4e7b-a9a3-7b8264e4e17d\",\"chatId\":\"agent-media\",\"state\":\"blocked\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"lastDiagnostic\":\"replacement_failed:Project DOM is not compatible: not_project_url, project_id_missing, project_name_missing, project_composer_missing, chat_tab_missing, sources_tab_missing\",\"lastPreflightReason\":\"target_chat_unavailable\",\"currentHead\":\"183838a24205c6885b2366ad6ffa394164283d91\",\"ciConclusion\":\"\"},{\"id\":\"5333f6a6-e562-4c5e-873b-b8b626468a32\",\"chatId\":\"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\",\"state\":\"failed\",\"dispatchCount\":0,\"dispatchSubmitAttempted\":false,\"lastDiagnostic\":\"R41 unified High gate blocked managed assignment: high_select_failed\",\"lastPreflightReason\":\"ready\",\"currentHead\":\"9f439b41c2b11640451a803cee8b8d6198ddd04b\",\"ciConclusion\":\"\"}],\"profileKeys\":[\"settings\",\"aiProfiles\",\"system\"],\"profiles\":[]}\r\n",
+      "stdout_bytes": 3204,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T05:01:48.877Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T05:01:48.722Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-20261008-1145-readback-corrected-03"
+    },
+    "request_id": "owner-20261008-1145-readback-corrected-03",
+    "started_at": "2026-10-08T05:01:47.575Z",
+    "status": "completed"
+  },
+  "id": "owner-20261008-1145-readback-corrected-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
