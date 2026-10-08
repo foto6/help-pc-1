@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,subprocess,datetime\nr={'at':datetime.datetime.now().isoformat(timespec='seconds')}\nfor path in ('/api/health','/api/operator-lifecycle','/api/supervisor-watchdog/managed-chats?inspect=0'):\n try:\n  with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=3) as f:d=json.load(f)\n  if path=='/api/health':r['health']={k:d.get(k) for k in ('state','ok','reasons','blockers','assignmentQueue','codeReload','startedAt')}\n  elif path=='/api/operator-lifecycle':r['lifecycle']={k:d.get(k) for k in ('mode','revision','queuePaused','quiescence')}\n  else:r['chats']={'n':len(d.get('chats',[])),'status':[{k:z.get(k) for k in ('name','status','highMode','generating','openTabs')} for z in d.get('chats',[])[:12]]}\n except Exception as e:r[path]={'error':type(e).__name__}\ntry:\n g=subprocess.run(['git.exe','-C',r'E:\\WebAIBridge','rev-parse','HEAD'],capture_output=True,text=True,timeout=4)\n r['head']=g.stdout.strip() if g.returncode==0 else 'git_error'\nexcept Exception as e:r['head']='exception:'+type(e).__name__\nprint(json.dumps(r,ensure_ascii=True,separators=(',',':'))[:8500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\":\"2026-10-08T13:03:32\",\"health\":{\"state\":\"BLOCKED\",\"ok\":false,\"reasons\":[\"timeline_io:health_probe_stale\",\"assignment_queue:oldest_queued_over_60s\"],\"blockers\":[\"assignment_queue:oldest_queued_over_60s\"],\"assignmentQueue\":{\"total\":68,\"active\":1,\"queued\":2,\"counts\":{\"cancelled\":11,\"blocked\":32,\"failed\":12,\"completed\":10,\"queued\":2,\"awaiting_evidence\":1},\"oldestQueuedAgeMs\":51470213,\"lastProgressAt\":\"2026-10-08T06:03:19.102Z\",\"lastProgressAgeMs\":13869},\"codeReload\":{\"required\":false,\"reason\":\"server_source_matches_boot_observation\",\"observedAt\":\"2026-10-08T06:03:31.338Z\"},\"startedAt\":\"2026-10-07T14:21:39.753Z\"},\"lifecycle\":{\"mode\":\"RUNNING_MANAGED\",\"revision\":1,\"queuePaused\":false,\"quiescence\":{\"requested\":false,\"completed\":false,\"completedAt\":\"\",\"errors\":[]}},\"chats\":{\"n\":6,\"status\":[{\"name\":\"Bridge\",\"status\":\"inspect_error\",\"highMode\":false,\"generating\":false,\"openTabs\":1},{\"name\":\"Media\",\"status\":\"inspect_error\",\"highMode\":false,\"generating\":false,\"openTabs\":1},{\"name\":\"Creator\",\"status\":\"idle\",\"highMode\":false,\"generating\":false,\"openTabs\":1},{\"name\":\"Growth\",\"status\":\"inspect_error\",\"highMode\":false,\"generating\":true,\"openTabs\":1},{\"name\":\"Native MCP\",\"status\":\"inspect_error\",\"highMode\":false,\"generating\":true,\"openTabs\":1},{\"name\":\"QA\",\"status\":\"idle\",\"highMode\":false,\"generating\":false,\"openTabs\":1}]},\"head\":\"2d5f902a52f875f3385da0a9babe29e2761a0f5b\"}\r\n",
+      "stdout_bytes": 1385,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:03:33.251Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:03:33.096Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-r45-20261008-livegate-d48e"
+    },
+    "request_id": "bridge-r45-20261008-livegate-d48e",
+    "started_at": "2026-10-08T06:03:32.258Z",
+    "status": "completed"
+  },
+  "id": "bridge-r45-20261008-livegate-d48e",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
