@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,subprocess,urllib.request,datetime,hashlib,shutil,tempfile\nrepo=r'E:\\WebAIBridge';data=os.path.join(repo,'app','data');sha='8360bed73554011e7d6ff816c6365196c5e483ee';branch='agent/bridge-r48-pause-health-cutover-attest-20261008'\ndef git(*a,t=8):return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,timeout=t)\ndef get(path):\n with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=4) as f:return json.load(f)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'targetSHA':sha}\nold=git('rev-parse','HEAD').stdout.decode().strip();out['headBefore']=old\nif old!='4638fd18def71dbfa07227c4b9b1bcbf89bba2a5':raise RuntimeError('unexpected_runtime_sha')\nclean=git('status','--porcelain=v1','-z','--untracked-files=all').stdout\nif clean:raise RuntimeError('dirty_source')\nq=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{})\nif q.get('queuePaused') is not True or w.get('mode')!='off' or w.get('enabled') is not False or w.get('allowAutonomousSend') is not False or w.get('autoContinueEnabled') is not False:raise RuntimeError('autonomy_gate_failed')\na=get('/api/supervisor-watchdog/agent-assignments').get('assignments',[])\nif len(a)!=68 or any(x.get('state') in ('running','dispatching','sending','preflight_running') for x in a):raise RuntimeError('assignments_in_flight')\nwith tempfile.TemporaryDirectory(prefix='wab-r48-preflight-') as d:\n blob=git('cat-file','blob',sha+':app/r42-cutover.ps1',t=10)\n if blob.returncode:raise RuntimeError('missing_target_blob')\n source=os.path.join(d,'preflight.ps1')\n open(source,'wb').write(blob.stdout)\n p=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',source,'-RepoPath',repo,'-TargetSha',sha,'-TargetBranch',branch,'-PreflightOnly'],capture_output=True,text=True,timeout=30)\n out['preflight']={'exitCode':p.returncode,'ok':'PREFLIGHT_OK' in p.stdout,'stderrTail':p.stderr[-220:]}\n if p.returncode or not out['preflight']['ok']:raise RuntimeError('preflight_not_green')\nstamp=datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')\ndest=os.path.join(data,'backups','owner-r48-safety-'+stamp)\nos.makedirs(dest,exist_ok=False)\nrows=[]\nfor name in ['state.json','supervisor-watchdog.json','supervisor-watchdog-state.json','managed-chat-status.json','managed-project-status.json','managed-project-timeline.json','projects-live-control-plane-cutover-r42.json','projects-live-control-plane-cutover-r42-reconcile.json','projects-operation-ledger-r41.json']:\n src=os.path.join(data,name)\n if not os.path.isfile(src):continue\n dst=os.path.join(dest,name)\n shutil.copy2(src,dst)\n with open(src,'rb') as f:h=hashlib.file_digest(f,'sha256').hexdigest()\n with open(dst,'rb') as f:t=hashlib.file_digest(f,'sha256').hexdigest()\n if h!=t:raise RuntimeError('copy_hash_mismatch')\n rows.append({'name':name,'sha256':h,'bytes':os.path.getsize(src)})\nwith open(os.path.join(dest,'manifest.json'),'w',encoding='utf-8') as f:json.dump({'object':'wab.r48.owner_safety.v1','createdAt':stamp,'fromSHA':old,'targetSHA':sha,'files':rows,'operatorMustAuthorizeRollback':True},f,indent=2)\nout['ownerBackup']={'path':dest,'verifiedCount':len(rows),'allHashesMatch':True}\nout['queue']={'total':len(a),'queued':sum(z.get('state')=='queued' for z in a),'unsafe':0}\nout['worktreeStillClean']=not bool(git('status','--porcelain=v1','-z','--untracked-files=all').stdout)\nprint(json.dumps(out,ensure_ascii=True)[:3900])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T14:36:49\", \"targetSHA\": \"8360bed73554011e7d6ff816c6365196c5e483ee\", \"headBefore\": \"4638fd18def71dbfa07227c4b9b1bcbf89bba2a5\", \"preflight\": {\"exitCode\": 0, \"ok\": true, \"stderrTail\": \"\"}, \"ownerBackup\": {\"path\": \"E:\\\\WebAIBridge\\\\app\\\\data\\\\backups\\\\owner-r48-safety-20261008T073651Z\", \"verifiedCount\": 8, \"allHashesMatch\": true}, \"queue\": {\"total\": 68, \"queued\": 2, \"unsafe\": 0}, \"worktreeStillClean\": true}\r\n",
+      "stdout_bytes": 427,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T07:36:51.886Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T07:36:51.727Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r48-20261008-preflight-backup-90ed"
+    },
+    "request_id": "wab-r48-20261008-preflight-backup-90ed",
+    "started_at": "2026-10-08T07:36:49.320Z",
+    "status": "completed"
+  },
+  "id": "wab-r48-20261008-preflight-backup-90ed",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
