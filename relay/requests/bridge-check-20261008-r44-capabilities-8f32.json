@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-check-20261008-r44-capabilities-8f32",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 15000,
+  "note": "Harmless read-only PC Control relay probe before current WebAIBridge status check"
+}
