@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,datetime,tempfile,zipfile,io,os,json,hashlib\nrepo=r'E:\\WebAIBridge';branch='agent/bridge-r47-background-tab-reliability-20261008';sha='4638fd18def71dbfa07227c4b9b1bcbf89bba2a5'\ndef git(*args,t=35):return subprocess.run(['git.exe','-C',repo,*args],capture_output=True,timeout=t)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'branch':branch,'sha':sha,'tests':[]}\nout['head_before']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['dirty_before']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\ntry:\n r=git('fetch','--no-write-fetch-head','--no-tags','origin','refs/heads/'+branch,t=45)\n out['fetchCode']=r.returncode\n if r.returncode:raise RuntimeError('git_fetch_failed')\n obj=git('cat-file','-t',sha,t=7)\n if obj.stdout.strip()!=b'commit':raise RuntimeError('wrong_object')\n data=git('archive','--format=zip',sha,t=14)\n if data.returncode:raise RuntimeError('archive_failed')\n with tempfile.TemporaryDirectory(prefix='wab-r47-isolated-') as d:\n  with zipfile.ZipFile(io.BytesIO(data.stdout)) as z:z.extractall(d)\n  app=os.path.join(d,'app')\n  tests=[['node.exe','--check','server.js'],['node.exe','--test','chrome-background-policy-r47.test.js'],['node.exe','--test','safe-tab-wakeup-r46.test.js'],['node.exe','--test','managed-chat-inspection-r45.test.js']]\n  for x in tests:\n   p=subprocess.run(x,cwd=app,capture_output=True,timeout=16)\n   out['tests'].append({'test':' '.join(x[1:]),'code':p.returncode,'tail':p.stdout.decode('utf-8','replace')[-350:],'stderr':p.stderr.decode('utf-8','replace')[-200:]})\n  p=subprocess.run(['powershell.exe','-NoProfile','-Command',\"$e=$null;$t=$null;[System.Management.Automation.Language.Parser]::ParseFile('\"+os.path.join(app,'start.ps1').replace('\\\\','/')+\"',[ref]$t,[ref]$e)|Out-Null; if($e.Count -gt 0){$e|ForEach-Object {$_.Message};exit 1};Write-Output AST_OK\"],capture_output=True,text=True,timeout=15)\n  out['tests'].append({'test':'parse start.ps1','code':p.returncode,'tail':p.stdout[-200:],'stderr':p.stderr[-150:]})\nexcept Exception as e:out['error']=type(e).__name__+':'+str(e)[:100]\nout['head_after']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['dirty_after']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\nout['productionUnchanged']=out['head_before']==out['head_after'] and out['dirty_before']==out['dirty_after']\nprint(json.dumps(out,ensure_ascii=True)[:5500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T14:12:13\", \"branch\": \"agent/bridge-r47-background-tab-reliability-20261008\", \"sha\": \"4638fd18def71dbfa07227c4b9b1bcbf89bba2a5\", \"tests\": [{\"test\": \"--check server.js\", \"code\": 0, \"tail\": \"\", \"stderr\": \"\"}, {\"test\": \"--test chrome-background-policy-r47.test.js\", \"code\": 0, \"tail\": \"me (0.1648ms)\\n\\u2714 operator may disable managed stability flags explicitly (0.2095ms)\\n\\u2714 append switches exactly once ahead of --new-window without changing URL or proxy (0.2344ms)\\n\\u2714 opt out and attach retain exact argument list without mutation (0.1398ms)\\n\\u2139 tests 5\\n\\u2139 suites 0\\n\\u2139 pass 5\\n\\u2139 fail 0\\n\\u2139 cancelled 0\\n\\u2139 skipped 0\\n\\u2139 todo 0\\n\\u2139 duration_ms 115.0433\\n\", \"stderr\": \"\"}, {\"test\": \"--test safe-tab-wakeup-r46.test.js\", \"code\": 0, \"tail\": \"onomous watchdog must both be frozen (0.1925ms)\\n\\u2714 missing, ambiguous, or changed tab identity is blocked (0.1438ms)\\n\\u2714 preview is only advisory and cannot waive execution confirmation (0.1285ms)\\n\\u2714 only an existing CDP page target can be woken (0.1994ms)\\n\\u2139 tests 5\\n\\u2139 suites 0\\n\\u2139 pass 5\\n\\u2139 fail 0\\n\\u2139 cancelled 0\\n\\u2139 skipped 0\\n\\u2139 todo 0\\n\\u2139 duration_ms 102.8482\\n\", \"stderr\": \"\"}, {\"test\": \"--test managed-chat-inspection-r45.test.js\", \"code\": 0, \"tail\": \"el probes (59.2489ms)\\n\\u2714 a hung read-only CDP evaluation times out and closes its target (29.5062ms)\\n\\u2714 one failed probe remains explicit and does not conceal other chat results (31.0774ms)\\n\\u2714 successful evaluation cancels its timeout callback (60.7998ms)\\n\\u2139 tests 4\\n\\u2139 suites 0\\n\\u2139 pass 4\\n\\u2139 fail 0\\n\\u2139 cancelled 0\\n\\u2139 skipped 0\\n\\u2139 todo 0\\n\\u2139 duration_ms 286.4298\\n\", \"stderr\": \"\"}, {\"test\": \"parse start.ps1\", \"code\": 0, \"tail\": \"AST_OK\\n\", \"stderr\": \"\"}], \"head_before\": \"943c0b1d509fb8b73cef2f8bbe566ef957854a47\", \"dirty_before\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"fetchCode\": 0, \"head_after\": \"943c0b1d509fb8b73cef2f8bbe566ef957854a47\", \"dirty_after\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"productionUnchanged\": true}\r\n",
+      "stdout_bytes": 2153,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T07:12:19.035Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T07:12:18.853Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r47-20261008-shadow-tests-43fa"
+    },
+    "request_id": "wab-r47-20261008-shadow-tests-43fa",
+    "started_at": "2026-10-08T07:12:13.092Z",
+    "status": "completed"
+  },
+  "id": "wab-r47-20261008-shadow-tests-43fa",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
