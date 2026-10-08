@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,subprocess,time,datetime,urllib.request\nrepo=r'E:\\WebAIBridge'\nkit=os.path.join(repo,'app','data','operator-tools','r51-target-continuity')\nbaseline=os.path.join(kit,'baseline.json')\ndef get(u):\n with urllib.request.urlopen('http://127.0.0.1:17448'+u,timeout=4) as f:return json.load(f)\nout={'scope':'R51_SEPARATE_TIME_SNAPSHOT','start':datetime.datetime.now().isoformat(timespec='seconds'),'comparisons':[]}\nfor i in range(5):\n o=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{})\n if o.get('queuePaused') is not True or w.get('mode')!='off' or w.get('allowAutonomousSend') is not False:\n  out['abortedAtSample']=i+1;break\n p=subprocess.run(['node.exe','r51-target-continuity.js','--baseline='+baseline],cwd=kit,capture_output=True,text=True,timeout=11)\n try:\n  d=json.loads(p.stdout.strip())\n except:d={'status':'ERROR','problems':['INVALID_MONITOR_JSON']}\n out['comparisons'].append({'sample':i+1,'time':datetime.datetime.now().isoformat(timespec='seconds'),'returnCode':p.returncode,'status':d.get('status'),'stable':d.get('stable'),'problems':d.get('problems',[]),'managedCount':d.get('managedCount'),'otherCount':d.get('currentExtraChatGPTCount'),'wouldAutoRebind':d.get('automaticRebindAuthorized'),'wouldRestart':d.get('automaticChromeRestartAuthorized')})\n if i!=4:time.sleep(4)\nout['allSamplesStable']=len(out['comparisons'])==5 and all(x['stable'] is True for x in out['comparisons'])\nout['noBrowserMutation']=True\nout['noProviderDataLogged']=True\nprint(json.dumps(out,ensure_ascii=True)[:5900])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"scope\": \"R51_SEPARATE_TIME_SNAPSHOT\", \"start\": \"2026-10-08T17:04:25\", \"comparisons\": [{\"sample\": 1, \"time\": \"2026-10-08T17:04:25\", \"returnCode\": 0, \"status\": \"IDENTITIES_STABLE_WHILE_PAUSED\", \"stable\": true, \"problems\": [], \"managedCount\": 6, \"otherCount\": 3, \"wouldAutoRebind\": false, \"wouldRestart\": false}, {\"sample\": 2, \"time\": \"2026-10-08T17:04:29\", \"returnCode\": 0, \"status\": \"IDENTITIES_STABLE_WHILE_PAUSED\", \"stable\": true, \"problems\": [], \"managedCount\": 6, \"otherCount\": 3, \"wouldAutoRebind\": false, \"wouldRestart\": false}, {\"sample\": 3, \"time\": \"2026-10-08T17:04:33\", \"returnCode\": 0, \"status\": \"IDENTITIES_STABLE_WHILE_PAUSED\", \"stable\": true, \"problems\": [], \"managedCount\": 6, \"otherCount\": 3, \"wouldAutoRebind\": false, \"wouldRestart\": false}, {\"sample\": 4, \"time\": \"2026-10-08T17:04:38\", \"returnCode\": 0, \"status\": \"IDENTITIES_STABLE_WHILE_PAUSED\", \"stable\": true, \"problems\": [], \"managedCount\": 6, \"otherCount\": 3, \"wouldAutoRebind\": false, \"wouldRestart\": false}, {\"sample\": 5, \"time\": \"2026-10-08T17:04:42\", \"returnCode\": 0, \"status\": \"IDENTITIES_STABLE_WHILE_PAUSED\", \"stable\": true, \"problems\": [], \"managedCount\": 6, \"otherCount\": 3, \"wouldAutoRebind\": false, \"wouldRestart\": false}], \"allSamplesStable\": true, \"noBrowserMutation\": true, \"noProviderDataLogged\": true}\r\n",
+      "stdout_bytes": 1293,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T10:04:42.409Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T10:04:42.225Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r51-20261008-temporal-5checks-33"
+    },
+    "request_id": "wab-r51-20261008-temporal-5checks-33",
+    "started_at": "2026-10-08T10:04:24.502Z",
+    "status": "completed"
+  },
+  "id": "wab-r51-20261008-temporal-5checks-33",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
