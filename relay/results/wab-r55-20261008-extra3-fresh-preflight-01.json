@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,urllib.parse,hashlib,datetime,subprocess,concurrent.futures,socket\nb='http://127.0.0.1:17448'\ndef get(u,t=5):\n with urllib.request.urlopen(u,timeout=t) as r:return json.load(r)\nop=get(b+'/api/operator-lifecycle');w=get(b+'/api/supervisor-watchdog?detect=0').get('config',{});h=get(b+'/api/health').get('assignmentQueue',{});chs=get(b+'/api/supervisor-watchdog/managed-chats?inspect=0').get('chats',[])\nsafe=op.get('queuePaused') is True and w.get('mode')=='off' and w.get('enabled') is False and w.get('allowAutonomousSend') is False and w.get('autoContinueEnabled') is False and h.get('active')==0 and h.get('queued')==2\nif not safe:raise RuntimeError('operator_not_frozen')\nraw=get('http://127.0.0.1:17410/json/list')\ndef canonical(u):\n try:\n  p=urllib.parse.urlparse(u);return p.path.rstrip('/') if p.hostname in ('chatgpt.com','www.chatgpt.com') else ''\n except:return ''\nmanaged={canonical(x.get('url','')) for x in chs}\nallchat=[x for x in raw if x.get('type')=='page' and urllib.parse.urlparse(x.get('url','')).hostname in ('chatgpt.com','www.chatgpt.com')]\nunmanaged=sorted([x for x in allchat if canonical(x.get('url','')) not in managed],key=lambda x:x.get('id',''))\nif len(chs)!=6 or len(allchat)!=9 or len(unmanaged)!=3 or len({x.get('id') for x in raw if x.get('type')=='page'})!=sum(x.get('type')=='page' for x in raw):raise RuntimeError('chrome_inventory_changed')\nif any(sum(1 for t in raw if t.get('type')=='page' and canonical(t.get('url',''))==canonical(c.get('url','')))!=1 for c in chs):raise RuntimeError('managed_uniqueness_failed')\nprint(json.dumps({'checkedAt':datetime.datetime.now().isoformat(timespec='seconds'),'frozenOperator':safe,'pageCount':sum(x.get('type')=='page' for x in raw),'managed6OneToOne':True,'otherChatGPT':len(unmanaged),'other':[{'alias':'extra-'+str(i+1),'targetId':x.get('id'),'fullUrlSha256':hashlib.sha256(x.get('url','').encode()).hexdigest(),'canonicalConversationRoute':bool(canonical(x.get('url',''))),'debuggerPresent':bool(x.get('webSocketDebuggerUrl'))} for i,x in enumerate(unmanaged)],'noUserTextRead':True},ensure_ascii=True)[:3600])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"checkedAt\": \"2026-10-08T23:13:25\", \"frozenOperator\": true, \"pageCount\": 11, \"managed6OneToOne\": true, \"otherChatGPT\": 3, \"other\": [{\"alias\": \"extra-1\", \"targetId\": \"16F20C983A306AB7E31D2165E2544898\", \"fullUrlSha256\": \"5d9354f7cb0eac0c0506ad03735ee6263a1e4ed75aa107e7852a5e26d49ecd3a\", \"canonicalConversationRoute\": false, \"debuggerPresent\": true}, {\"alias\": \"extra-2\", \"targetId\": \"68D17114431457A201D7F164508E4318\", \"fullUrlSha256\": \"81e83f517574a2aa3054fdd85738b1bcb69d363ed0778173b521b36b5505458a\", \"canonicalConversationRoute\": true, \"debuggerPresent\": true}, {\"alias\": \"extra-3\", \"targetId\": \"F1B7A8CCFAA2C7EBF4AC1B9AAC48BEE2\", \"fullUrlSha256\": \"f9bb5b80e58b379e3e3fd3455e5b00ca104ffc98b44ff462558c27a437fd5002\", \"canonicalConversationRoute\": true, \"debuggerPresent\": true}], \"noUserTextRead\": true}\r\n",
+      "stdout_bytes": 808,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T16:13:25.731Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T16:13:25.509Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r55-20261008-extra3-fresh-preflight-01"
+    },
+    "request_id": "wab-r55-20261008-extra3-fresh-preflight-01",
+    "started_at": "2026-10-08T16:13:24.746Z",
+    "status": "completed"
+  },
+  "id": "wab-r55-20261008-extra3-fresh-preflight-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
