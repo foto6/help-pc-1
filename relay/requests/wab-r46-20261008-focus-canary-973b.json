@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r46-20261008-focus-canary-973b",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,tempfile,subprocess\ns=\"\\n'use strict';\\nconst base='http://127.0.0.1:17448',get=async u=>{let r=await fetch(u,{signal:AbortSignal.timeout(4500)});if(!r.ok)throw Error('HTTP'+r.status);return r.json()};\\nconst exact=u=>{try{let x=new URL(u);return x.hostname.replace(/^www\\\\./,'')==='chatgpt.com'?x.pathname.replace(/\\\\/$/,''):''}catch{return ''}};\\nconst rpc=(url,method,params={},t=2100)=>new Promise(resolve=>{\\n let ws,done=false;const start=performance.now(),timer=setTimeout(()=>finish({ok:false,detail:'timeout'}),t);\\n function finish(x){if(done)return;done=true;clearTimeout(timer);try{ws?.close()}catch{}resolve({method,ms:Math.round(performance.now()-start),...x})}\\n try{ws=new WebSocket(url);ws.addEventListener('open',()=>ws.send(JSON.stringify({id:11,method,params})));ws.addEventListener('message',e=>{try{let x=JSON.parse(e.data);if(x.id===11)finish({ok:!x.error,detail:x.error?String(x.error.message).slice(0,110):'ACK'})}catch{finish({ok:false,detail:'json'})}});ws.addEventListener('error',()=>finish({ok:false,detail:'ws'}))}catch{finish({ok:false,detail:'construct'})}\\n});\\nasync function main(){\\n let [q,w,ch]=await Promise.all([get(base+'/api/operator-lifecycle'),get(base+'/api/supervisor-watchdog?detect=0'),get(base+'/api/supervisor-watchdog/managed-chats?inspect=0')]);\\n if(q.queuePaused!==true||w.config?.mode!=='off'||w.config?.allowAutonomousSend!==false)throw Error('not_frozen');\\n let target=ch.chats.find(x=>x.name==='Bridge'),targets=await get('http://127.0.0.1:17410/json/list');\\n let tab=targets.filter(x=>exact(x.url)===exact(target.url)&&x.webSocketDebuggerUrl);\\n if(tab.length!==1)throw Error('not_exact_one');\\n let u=tab[0].webSocketDebuggerUrl;\\n let before=await rpc(u,'Runtime.evaluate',{expression:'2+2',returnByValue:true,awaitPromise:false},1100);\\n let focus=await rpc(u,'Page.bringToFront',{},3200);\\n await new Promise(r=>setTimeout(r,1900));\\n let after=await rpc(u,'Runtime.evaluate',{expression:'2+2',returnByValue:true,awaitPromise:false},3100);\\n console.log(JSON.stringify({at:new Date().toISOString(),chat:'Bridge',before,focus,after,tabUnchanged:true,noReload:true,noNavigation:true,noChatSend:true}));\\n}\\nmain().catch(e=>{console.log(JSON.stringify({error:String(e.message).slice(0,100)}));process.exitCode=1});\\n\"\nwith tempfile.TemporaryDirectory(prefix='r46-focus-canary-') as d:\n p=os.path.join(d,'canary.js');open(p,'w',encoding='utf-8').write(s)\n try:\n  r=subprocess.run(['node.exe',p],capture_output=True,text=True,timeout=25)\n  print(r.stdout[-4400:]);print('exit='+str(r.returncode))\n except Exception as e:print(type(e).__name__)\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 40000,
+  "note": "Controlled single-tab Chrome foreground canary to unfreeze renderer; no navigation/reload/close/Send. Verify frozen bridge."
+}
