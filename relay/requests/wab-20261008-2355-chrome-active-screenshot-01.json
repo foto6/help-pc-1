@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-20261008-2355-chrome-active-screenshot-01",
+  "action": "screenshot.capture",
+  "params": {},
+  "timeout_ms": 14000,
+  "note": "User explicitly asks whether ChatGPT can capture and visually inspect current Chrome. One screenshot only, do not switch tabs, click, send, read passwords or restart browser. Store screenshot only in private PC relay outcome."
+}
