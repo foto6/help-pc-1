@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json,datetime\nscript=\"'use strict';\\nconst m=require('E:/WebAIBridge/app/data/operator-tools/r50-read-only-chrome-check/releases/814c0e7e328599c85d7927e2a48b3e0f5df1becc/r50-restart-readiness-preflight.js');\\nconst b='http://127.0.0.1:17448';\\nconst get=async url=>{const r=await fetch(url,{signal:AbortSignal.timeout(4000)});if(!r.ok)throw Error('LOOPBACK_GET_FAILED');return r.json()};\\nfunction ping(url,expr,ms=3200){return new Promise(resolve=>{let ws,done=false;const tm=setTimeout(()=>end({status:'TIMEOUT'}),ms);function end(v){if(done)return;done=true;clearTimeout(tm);try{ws?.close()}catch{}resolve(v)}try{ws=new WebSocket(url);ws.addEventListener('open',()=>ws.send(JSON.stringify({id:155,method:'Runtime.evaluate',params:{expression:expr,returnByValue:true,awaitPromise:false}})));ws.addEventListener('message',e=>{try{const p=JSON.parse(e.data);if(p.id===155)end(p.result?.result?.value?{status:'RESPONSIVE',value:p.result.result.value}:{status:'EVAL_ERROR'})}catch{end({status:'BAD_RESPONSE'})}});ws.addEventListener('error',()=>end({status:'CDP_SOCKET_ERROR'}))}catch{end({status:'CDP_CONNECT_ERROR'})}})}\\nconst canon=u=>{try{const x=new URL(u);return ['chatgpt.com','www.chatgpt.com'].includes(x.hostname)?x.pathname.replace(/\\\\/$/,''):''}catch{return ''}};\\n(async()=>{\\n const [o,w,h,mng,pages]=await Promise.all([get(b+'/api/operator-lifecycle'),get(b+'/api/supervisor-watchdog?detect=0'),get(b+'/api/health'),get(b+'/api/supervisor-watchdog/managed-chats?inspect=0'),get('http://127.0.0.1:17410/json/list')]);\\n if(!(o.queuePaused===true&&w.config?.mode==='off'&&w.config?.enabled===false&&w.config?.allowAutonomousSend===false&&w.config?.autoContinueEnabled===false&&h.assignmentQueue?.active===0&&h.assignmentQueue?.queued===2))throw Error('HOLD_GATE');\\n const managed=new Map(mng.chats.map(x=>[canon(x.url),x.name]));\\n const candidates=pages.filter(x=>{try{return x.type==='page'&&['chatgpt.com','www.chatgpt.com'].includes(new URL(x.url).hostname)}catch{return false}});\\n if(candidates.length!==9||managed.size!==6||candidates.filter(x=>managed.has(canon(x.url))).length!==6||new Set(candidates.map(x=>x.id)).size!==9)throw Error('NINE_UNIQUE_TARGETS_NOT_VERIFIED');\\n const sortedExtras=candidates.filter(x=>!managed.has(canon(x.url))).sort((x,y)=>x.id.localeCompare(y.id));\\n const extraNames=new Map(sortedExtras.map((x,i)=>[x.id,'Extra-'+(i+1)]));\\n const rows=await Promise.all(candidates.map(async x=>{\\n  const result=await ping(x.webSocketDebuggerUrl,m.DOM_READ_ONLY_EXPRESSION,3400);\\n  const v=result.value||{};\\n  const url=new URL(x.url);\\n  return {name:managed.get(canon(x.url))||extraNames.get(x.id),managed:managed.has(canon(x.url)),id:x.id,url:x.url,ws:x.webSocketDebuggerUrl,report:{\\n   probeStatus:result.status,identityConfirmed:result.status==='RESPONSIVE'&&v.host===url.hostname&&v.path===url.pathname,\\n   composerConfirmed:v.composerConfirmed===true,visibleEditors:v.activeEditableCount??null,\\n   draftPresent:typeof v.draftPresent==='boolean'?v.draftPresent:null,\\n   generating:typeof v.generating==='boolean'?v.generating:null,ready:v.documentReady??null}});\\n }));\\n const [o2,w2,h2,after]=await Promise.all([get(b+'/api/operator-lifecycle'),get(b+'/api/supervisor-watchdog?detect=0'),get(b+'/api/health'),get('http://127.0.0.1:17410/json/list')]);\\n const continuity=rows.every(row=>after.some(x=>x.type==='page'&&x.id===row.id&&x.url===row.url));\\n const safeHold=o2.queuePaused===true&&w2.config?.mode==='off'&&w2.config?.enabled===false&&w2.config?.allowAutonomousSend===false&&h2.assignmentQueue?.active===0;\\n const summary=rows.map(x=>({name:x.name,managed:x.managed,...x.report}));\\n console.log(JSON.stringify({object:'r55.all_nine_privacy_preserving_post_wake_audit',observedAt:new Date().toISOString(),managedResponsive:summary.filter(x=>x.managed&&x.probeStatus==='RESPONSIVE').length,otherResponsive:summary.filter(x=>!x.managed&&x.probeStatus==='RESPONSIVE').length,allNineEditorEmpty:summary.every(x=>x.identityConfirmed&&x.composerConfirmed&&x.draftPresent===false&&x.generating===false),allNineTargetsStable:continuity,queueStillPaused:safeHold,originalPageCount:pages.filter(x=>x.type==='page').length,rows:summary,providerTextNeverReturned:true,noBrowserTabAction:true,automaticRestartAuthorized:false,agentResumeAuthorized:false}));\\n if(!continuity||!safeHold)process.exitCode=2;\\n})().catch(e=>{console.log(JSON.stringify({status:'AUDIT_BLOCKED',reason:String(e.message).slice(0,130),browserMutation:false}));process.exitCode=2});\"\npre=subprocess.run(['node.exe','--check','-'],input=script,capture_output=True,text=True,timeout=6)\nif pre.returncode:raise SystemExit('INVALID_SCRIPT')\nr=subprocess.run(['node.exe','-e',script],capture_output=True,text=True,timeout=21)\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'exit':r.returncode,'result':r.stdout.strip()[-7900:],'stderrHead':r.stderr[:130]},ensure_ascii=True)[:9400])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "INVALID_SCRIPT\r\n",
+      "stderr_bytes": 16,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T16:19:54.679Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T16:19:54.513Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r55-20261008-all-nine-post-wake-safety-audit-08"
+    },
+    "request_id": "wab-r55-20261008-all-nine-post-wake-safety-audit-08",
+    "started_at": "2026-10-08T16:19:53.786Z",
+    "status": "completed"
+  },
+  "id": "wab-r55-20261008-all-nine-post-wake-safety-audit-08",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
