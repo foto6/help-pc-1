@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r53-20261008-wake-qa-14",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,urllib.parse,json\nb='http://127.0.0.1:17448'\ndef get(path):\n with urllib.request.urlopen(b+path,timeout=5) as f:return json.load(f)\no=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0')['config'];q=get('/api/health')['assignmentQueue']\nif not(o['queuePaused'] is True and w['mode']=='off' and w['enabled'] is False and w['allowAutonomousSend'] is False and w['autoContinueEnabled'] is False and q['active']==0 and q['queued']==2):raise RuntimeError('freeze_gate')\nchat=next(c for c in get('/api/supervisor-watchdog/managed-chats?inspect=0')['chats'] if c['name']=='QA')\nendpoint='/api/supervisor-watchdog/managed-chats/'+urllib.parse.quote(chat['id'],safe='')\np=get(endpoint+'/wake-preview')\nif p['state']!='READY_FOR_EXPLICIT_TAB_WAKE' or p['exactTargetCount']!=1 or p['chatName']!='QA':raise RuntimeError('QA_target_changed')\nrequest=urllib.request.Request(b+endpoint+'/wake',data=json.dumps({'expectedTargetId':p['exactTargetId'],'confirm':'WAKE_EXISTING_TAB_ONLY'}).encode(),headers={'Content-Type':'application/json'},method='POST')\nwith urllib.request.urlopen(request,timeout=16) as f:r=json.load(f)\nprint(json.dumps({k:r.get(k) for k in ('state','pageResponds','navigationPerformed','reloadPerformed','tabCreated','tabClosed','promptSent','queueResumed')}))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 32000,
+  "note": "Owner-approved guarded single existing QA ChatGPT tab foreground wake after Native MCP, require frozen agents and exact 1:1 preview. No send, reload, restart or rebind."
+}
