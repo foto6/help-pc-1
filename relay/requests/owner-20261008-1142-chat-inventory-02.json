@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-1142-chat-inventory-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$base='http://127.0.0.1:17448';$out=[ordered]@{at=(Get-Date).ToString('o')};$a=Invoke-RestMethod -Method GET -Uri ($base+'/api/supervisor-watchdog/managed-chats') -TimeoutSec 6;$out.agents=@($a.chats|ForEach-Object{[ordered]@{name=$_.name;id=$_.id;url=$_.url;repo=$_.repository;branch=$_.branch;expectedHead=$_.gitHead;status=$_.status;error=$_.error;lastSeenAt=$_.lastSeenAt;lastProgressAt=$_.lastProgressAt;generating=$_.generating;highMode=$_.highMode;draftPresent=$_.draftPresent;openTabs=$_.openTabs;activeAssignments=$_.activeAssignmentCount}});$j=Invoke-RestMethod -Method GET -Uri ($base+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6;$out.recentAssignments=@($j.assignments|Where-Object{$_.createdAt -ge '2026-10-08T04:00:00'}|ForEach-Object{[ordered]@{id=$_.id;chatId=$_.targetChatId;repo=$_.repository;state=$_.state;createdAt=$_.createdAt;dispatchCount=$_.dispatchCount;dispatchSubmitAttempted=$_.dispatchSubmitAttempted;lastDiagnostic=$_.lastDiagnostic;lastPreflightReason=$_.lastPreflightReason;currentHead=$_.currentHead;exactCommitSha=$_.exactCommitSha;ciConclusion=$_.ciConclusion}});try{$p=Invoke-RestMethod -Uri ($base+'/api/ai-profiles') -TimeoutSec 4;$out.profileKeys=@($p.PSObject.Properties.Name);$rows=if($p.profiles){$p.profiles}else{if($p -is [array]){$p}else{@()}};$out.profiles=@($rows|Where-Object{$_.provider -eq 'chatgpt'}|ForEach-Object{[ordered]@{id=$_.id;name=$_.name;debugPort=$_.debugPort;enabled=$_.enabled;connected=$_.workerConnected}})} }catch{$out.profilesError=$_.Exception.GetType().Name};$out|ConvertTo-Json -Compress -Depth 7"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 26000,
+  "note": "Read-only exact six Bridge agent statuses, task receipts, safe profile debug ports. No secrets."
+}
