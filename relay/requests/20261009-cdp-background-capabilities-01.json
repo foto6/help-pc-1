@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-cdp-background-capabilities-01",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read-only check for background Chrome screenshot integration; no host mutation or browser focus."
+}
