@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$r=[ordered]@{};$r.time=(Get-Date).ToString('o');foreach($p in @('/api/operator-lifecycle','/api/supervisor-watchdog/agent-assignments')){try{$u='http://127.0.0.1:17448'+$p;$j=Invoke-RestMethod -Method GET -Uri $u -TimeoutSec 4;if($p -like '*agent-assignments'){$r.assignments=[ordered]@{ok=$true;count=@($j.assignments).Count;states=$j.counts;latest=@($j.assignments|Select-Object -Last 8|ForEach-Object{[ordered]@{id=$_.id;targetChatId=$_.targetChatId;state=$_.state;repo=$_.repository;branch=$_.branch;dispatchCount=$_.dispatchCount}})}}else{$r.operator=[ordered]@{ok=$true;mode=$j.mode;revision=$j.revision;queuePaused=$j.queuePaused}}}catch{$r[($p -replace '/','_')]=[ordered]@{ok=$false;error=$_.Exception.GetType().Name}}};$r|ConvertTo-Json -Compress -Depth 6"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"time\":\"2026-10-08T11:05:38.8055914+07:00\",\"operator\":{\"ok\":true,\"mode\":\"RUNNING_MANAGED\",\"revision\":1,\"queuePaused\":false},\"assignments\":{\"ok\":true,\"count\":64,\"states\":{\"cancelled\":11,\"blocked\":30,\"failed\":11,\"completed\":10,\"queued\":2},\"latest\":[{\"id\":\"4e67b543-7d83-42df-9389-0707659dd36a\",\"targetChatId\":\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"state\":\"completed\",\"repo\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-r43-porcelain-cutover-fix-20261006\",\"dispatchCount\":1},{\"id\":\"5dc21cfa-6bad-4df8-a493-99d0ece5a248\",\"targetChatId\":\"agent-pc-control\",\"state\":\"cancelled\",\"repo\":\"foto6/help-pc-2\",\"branch\":\"agent/native-mcp-r39-local-canary-20261006\",\"dispatchCount\":0},{\"id\":\"49bac301-f296-4501-a478-05a9b7de5456\",\"targetChatId\":\"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\",\"state\":\"completed\",\"repo\":\"foto6/boss\",\"branch\":\"agent/integration-r8-final-local-stack-20261006\",\"dispatchCount\":1},{\"id\":\"169f3052-133a-4ca0-bfb3-b886443897c1\",\"targetChatId\":\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"state\":\"completed\",\"repo\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-r43-porcelain-cutover-fix-20261006\",\"dispatchCount\":1},{\"id\":\"e908ffdf-f5b0-4537-b290-5ecfd3dfa966\",\"targetChatId\":\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"state\":\"blocked\",\"repo\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-r44-hotfix-r43-integration-20261007\",\"dispatchCount\":1},{\"id\":\"c1df9edf-6da6-4388-a39a-7fe773728013\",\"targetChatId\":\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"state\":\"blocked\",\"repo\":\"foto6/video1\",\"branch\":\"agent/creator-r40-media-qa-bind-20261007\",\"dispatchCount\":1},{\"id\":\"eff91a96-514b-4cc7-93b6-19e1f19c5741\",\"targetChatId\":\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"state\":\"queued\",\"repo\":\"foto6/video3\",\"branch\":\"agent/growth-r39-media-qa-bind-20261007\",\"dispatchCount\":0},{\"id\":\"dfcf8cae-1ea4-4d79-9690-a3df9064cd48\",\"targetChatId\":\"agent-pc-control\",\"state\":\"queued\",\"repo\":\"foto6/help-pc-2\",\"branch\":\"agent/native-mcp-r40-staged-local-canary-20261007\",\"dispatchCount\":0}]}}\r\n",
+      "stdout_bytes": 1986,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T04:05:39.162Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T04:05:39.010Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261008-owner-bridge-health-1105-r01"
+    },
+    "request_id": "20261008-owner-bridge-health-1105-r01",
+    "started_at": "2026-10-08T04:05:38.265Z",
+    "status": "completed"
+  },
+  "id": "20261008-owner-bridge-health-1105-r01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
