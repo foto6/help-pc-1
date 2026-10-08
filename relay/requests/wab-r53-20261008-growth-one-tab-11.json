@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r53-20261008-growth-one-tab-11",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,urllib.parse\nbase='http://127.0.0.1:17448'\ndef get(path):\n with urllib.request.urlopen(base+path,timeout=5) as f:return json.load(f)\nop=get('/api/operator-lifecycle')\nwd=get('/api/supervisor-watchdog?detect=0')['config']\nif op['queuePaused'] is not True or wd['mode']!='off' or wd['enabled'] is not False or wd['allowAutonomousSend'] is not False:raise RuntimeError('unsafe_dispatch')\nchat=next(x for x in get('/api/supervisor-watchdog/managed-chats?inspect=0')['chats'] if x['name']=='Growth')\nendpoint='/api/supervisor-watchdog/managed-chats/'+urllib.parse.quote(chat['id'],safe='')\npreview=get(endpoint+'/wake-preview')\nif preview['state']!='READY_FOR_EXPLICIT_TAB_WAKE' or preview['exactTargetCount']!=1 or preview['chatName']!='Growth':raise RuntimeError('not_unique')\nreq=urllib.request.Request(base+endpoint+'/wake',data=json.dumps({'confirm':'WAKE_EXISTING_TAB_ONLY','expectedTargetId':preview['exactTargetId']}).encode(),headers={'Content-Type':'application/json'},method='POST')\nwith urllib.request.urlopen(req,timeout=16) as f:res=json.load(f)\nprint(json.dumps({k:res.get(k) for k in ('state','pageResponds','navigationPerformed','reloadPerformed','tabCreated','tabClosed','promptSent','queueResumed')}))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Owner requested existing Growth ChatGPT tab foreground wake with fresh verified single target, no reload, send, or agent resume."
+}
