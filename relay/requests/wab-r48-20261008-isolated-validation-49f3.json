@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r48-20261008-isolated-validation-49f3",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,json,subprocess,tempfile,zipfile,io,datetime,hashlib\nrepo=r'E:\\WebAIBridge';sha='8360bed73554011e7d6ff816c6365196c5e483ee';branch='agent/bridge-r48-pause-health-cutover-attest-20261008'\ndef git(*args,t=13):return subprocess.run(['git.exe','-C',repo,*args],capture_output=True,timeout=t)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'sha':sha,'tests':[]}\nout['headBefore']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['porcelainBeforeSHA256']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\ntry:\n f=git('fetch','--no-tags','--no-write-fetch-head','origin','refs/heads/'+branch,t=36)\n if f.returncode:raise RuntimeError('fetch_failed')\n if git('cat-file','-t',sha,t=7).stdout.strip()!=b'commit':raise RuntimeError('sha_missing')\n arch=git('archive','--format=zip',sha,t=17)\n if arch.returncode:raise RuntimeError('archive_failed')\n with tempfile.TemporaryDirectory(prefix='wab-r48-isolated-') as d:\n  with zipfile.ZipFile(io.BytesIO(arch.stdout)) as z:z.extractall(d)\n  app=os.path.join(d,'app')\n  cmdlist=[\n   ['node.exe','--check','server.js'],\n   ['node.exe','--check','r48-cutover-attest.js'],\n   ['node.exe','--test','paused-queue-health-r48.test.js','independent-cutover-attestation-r48.test.js'],\n   ['node.exe','--test','chrome-background-policy-r47.test.js','safe-tab-wakeup-r46.test.js','managed-chat-inspection-r45.test.js'],\n  ]\n  for cmd in cmdlist:\n   p=subprocess.run(cmd,cwd=app,capture_output=True,timeout=18)\n   out['tests'].append({'cmd':' '.join(cmd[1:]),'exit':p.returncode,'stdoutTail':p.stdout.decode('utf-8','replace')[-470:],'stderrTail':p.stderr.decode('utf-8','replace')[-390:]})\nexcept Exception as e:out['error']=type(e).__name__+':'+str(e)[:140]\nout['headAfter']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['porcelainAfterSHA256']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\nout['productionUnchanged']=out['headBefore']==out['headAfter'] and out['porcelainBeforeSHA256']==out['porcelainAfterSHA256']\nprint(json.dumps(out,ensure_ascii=True)[:7500])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 82000,
+  "note": "Read-only source staging: fetch R48 commit objects and disposable git archive, node syntax and tests, verify original R47 HEAD and worktree unchanged. No browser or agents touched."
+}
