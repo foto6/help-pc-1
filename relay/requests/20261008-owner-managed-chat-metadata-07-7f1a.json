@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261008-owner-managed-chat-metadata-07-7f1a",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$d=[ordered]@{};foreach($spec in @(@('chats','/api/supervisor-watchdog/managed-chats'),@('assignments','/api/supervisor-watchdog/agent-assignments'))){$k=$spec[0];$uri='http://127.0.0.1:17448'+$spec[1];try{$j=Invoke-RestMethod -Method Get -Uri $uri -TimeoutSec 6;$d[$k+'Keys']=@($j.PSObject.Properties.Name);if($k -eq 'chats'){$rows=if($j.chats){$j.chats}else{if($j.managedChats){$j.managedChats}else{@()}};$d.chats=@($rows|ForEach-Object{[ordered]@{id=$_.id;name=$_.name;url=$_.url;repository=$_.repository;branch=$_.branch;head=$_.gitHead;projectId=$_.projectId;enabled=$_.enabled;status=$_.status;openTabs=$_.openTabs;highMode=$_.highMode;draftPresent=$_.draftPresent;activeAssignments=$_.activeAssignmentCount;profileWorkerConnected=$_.profileWorkerConnected}})}else{$d.counts=$j.counts;$d.assignments=@($j.assignments|Select-Object -Last 65|ForEach-Object{[ordered]@{id=$_.id;targetChatId=$_.targetChatId;state=$_.state;repository=$_.repository;branch=$_.branch;expectedHead=$_.expectedHead;createdAt=$_.createdAt;dispatchCount=$_.dispatchCount;dispatchSubmitAttempted=$_.dispatchSubmitAttempted;lastPreflightReason=$_.lastPreflightReason;lastDiagnostic=$_.lastDiagnostic}})}}catch{$d[$k+'Error']=$_.Exception.Message.Substring(0,[Math]::Min(130,$_.Exception.Message.Length))}};$d|ConvertTo-Json -Depth 7 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22000,
+  "note": "Read-only localhost Bridge managed-chat exact identities and assignment metadata, no chat content or secrets."
+}
