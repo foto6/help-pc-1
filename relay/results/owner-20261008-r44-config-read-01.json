@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$p='E:\\WebAIBridge\\app\\data\\supervisor-watchdog.json'\n$j=Get-Content -LiteralPath $p -Raw | ConvertFrom-Json\n$wanted='(?i)(creator|media|growth|native|qa|bridge)'\n$rows=@($j.managedChats|Where-Object {([string]$_.role+' '+[string]$_.name+' '+[string]$_.id) -match $wanted}|ForEach-Object {\n [ordered]@{id=$_.id;name=$_.name;role=$_.role;url=$_.url;repository=$_.repository;branch=$_.branch;profileId=$_.profileId;enabled=$_.enabled}\n})\n[ordered]@{\n object='owner.r44.supervisor_config_read.v1'\n config=[ordered]@{enabled=$j.enabled;mode=$j.mode;profileId=$j.profileId;debugPort=$j.debugPort;allowAutonomousSend=$j.allowAutonomousSend;enforceHighMode=$j.enforceHighMode;highModeStrategy=$j.highModeStrategy;migrationEnabled=$j.migrationEnabled;autoContinueEnabled=$j.autoContinueEnabled;sendProtectedDraftEnabled=$j.sendProtectedDraftEnabled}\n managedChats=$rows\n mutationPerformed=$false\n}|ConvertTo-Json -Depth 12 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"object\":\"owner.r44.supervisor_config_read.v1\",\"config\":{\"enabled\":true,\"mode\":\"full\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"debugPort\":17410,\"allowAutonomousSend\":true,\"enforceHighMode\":true,\"highModeStrategy\":\"verify_only\",\"migrationEnabled\":true,\"autoContinueEnabled\":true,\"sendProtectedDraftEnabled\":true},\"managedChats\":[{\"id\":\"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"name\":\"Bridge\",\"role\":\"bridge\",\"url\":\"https://chatgpt.com/c/6ac45836-87a0-83ed-bea4-0ad0f99c8982\",\"repository\":\"foto6/WebAIBridge\",\"branch\":\"agent/bridge-r44-hotfix-r43-integration-20261007\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"enabled\":true},{\"id\":\"agent-media\",\"name\":\"Media\",\"role\":\"media\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\",\"repository\":\"foto6/video2\",\"branch\":\"agent/media-r27-real-input-local-rehearsal-20261006\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"enabled\":true},{\"id\":\"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"name\":\"Creator\",\"role\":\"creator\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac455e9-bea0-83eb-aa94-fd3dde516c0c\",\"repository\":\"foto6/video1\",\"branch\":\"agent/creator-r40-media-qa-bind-20261007\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"enabled\":true},{\"id\":\"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"name\":\"Growth\",\"role\":\"growth\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\",\"repository\":\"foto6/video3\",\"branch\":\"agent/growth-r39-media-qa-bind-20261007\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"enabled\":true},{\"id\":\"agent-pc-control\",\"name\":\"Native MCP\",\"role\":\"native-mcp\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\",\"repository\":\"foto6/help-pc-2\",\"branch\":\"agent/native-mcp-r40-staged-local-canary-20261007\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"enabled\":true},{\"id\":\"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\",\"name\":\"QA\",\"role\":\"qa\",\"url\":\"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45fb0-9074-83eb-99eb-397265b228e7\",\"repository\":\"foto6/boss\",\"branch\":\"agent/integration-r8-final-local-stack-20261006\",\"profileId\":\"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\",\"enabled\":true}],\"mutationPerformed\":false}\r\n",
+      "stdout_bytes": 2340,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T04:27:57.952Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T04:27:57.808Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-20261008-r44-config-read-01"
+    },
+    "request_id": "owner-20261008-r44-config-read-01",
+    "started_at": "2026-10-08T04:27:57.172Z",
+    "status": "completed"
+  },
+  "id": "owner-20261008-r44-config-read-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
