@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r53-20261008-wake-creator-07",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,urllib.parse\nb='http://127.0.0.1:17448'\ndef get(p):\n with urllib.request.urlopen(b+p,timeout=5) as f:return json.load(f)\no=get('/api/operator-lifecycle'); w=get('/api/supervisor-watchdog?detect=0')['config']\nif o['queuePaused'] is not True or w['mode']!='off' or w['enabled'] is not False or w['allowAutonomousSend'] is not False:raise RuntimeError('not_paused')\nc=next(x for x in get('/api/supervisor-watchdog/managed-chats?inspect=0')['chats'] if x['name']=='Creator')\np='/api/supervisor-watchdog/managed-chats/'+urllib.parse.quote(c['id'],safe='')\npre=get(p+'/wake-preview')\nif pre['state']!='READY_FOR_EXPLICIT_TAB_WAKE' or pre['exactTargetCount']!=1 or pre['chatName']!='Creator':raise RuntimeError('unsafe_target')\nreq=urllib.request.Request(b+p+'/wake',data=json.dumps({'confirm':'WAKE_EXISTING_TAB_ONLY','expectedTargetId':pre['exactTargetId']}).encode(),headers={'Content-Type':'application/json'},method='POST')\nwith urllib.request.urlopen(req,timeout=16) as f:res=json.load(f)\nprint(json.dumps({k:res.get(k) for k in ('state','pageResponds','navigationPerformed','reloadPerformed','tabCreated','tabClosed','promptSent','queueResumed')},ensure_ascii=True))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "User-requested one existing Creator chat foreground wake; fresh R46 preview exact target, only with operator paused, no provider Send, Chrome reload or queue resume."
+}
