@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/health',timeout=2) as f:d=json.load(f)\nprint(json.dumps({'state':d.get('state'),'reasons':d.get('reasons'),'components':{k:{'state':v.get('state'),'reason':v.get('reason'),'stale':v.get('stale'),'ageMs':v.get('ageMs')} for k,v in d.get('components',{}).items()},'mode':d.get('operationalMode')},ensure_ascii=True)[:7000])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"state\": \"DEGRADED\", \"reasons\": [\"git_evidence:health_probe_stale\", \"timeline_io:health_probe_stale\"], \"components\": {\"supervisor_config_io\": {\"state\": \"healthy\", \"reason\": \"\", \"stale\": false, \"ageMs\": 837}, \"local_filesystem\": {\"state\": \"healthy\", \"reason\": \"\", \"stale\": false, \"ageMs\": 838}, \"maintenance\": {\"state\": \"healthy\", \"reason\": \"\", \"stale\": false, \"ageMs\": 1319}, \"assignment_maintenance\": {\"state\": \"running\", \"reason\": \"\", \"stale\": false, \"ageMs\": 4429}, \"browser_cdp\": {\"state\": \"healthy\", \"reason\": \"\", \"stale\": false, \"ageMs\": 1117}, \"git_evidence\": {\"state\": \"degraded\", \"reason\": \"health_probe_stale\", \"stale\": true, \"ageMs\": 7852110}, \"git_baseline\": {\"state\": \"running\", \"reason\": \"\", \"stale\": false, \"ageMs\": 4644}, \"timeline_io\": {\"state\": \"degraded\", \"reason\": \"health_probe_stale\", \"stale\": true, \"ageMs\": 15036156}}, \"mode\": \"PAUSED\"}\r\n",
+      "stdout_bytes": 863,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T08:19:26.308Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T08:19:26.146Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r49-20261008-fast-health-d6ce"
+    },
+    "request_id": "wab-r49-20261008-fast-health-d6ce",
+    "started_at": "2026-10-08T08:19:25.534Z",
+    "status": "completed"
+  },
+  "id": "wab-r49-20261008-fast-health-d6ce",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
