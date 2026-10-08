@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,subprocess,tempfile,zipfile,io,json,hashlib,datetime,shutil\nrepo=r'E:\\WebAIBridge'\nsha='18a286d4522dd73b5a65d88b5823053b71b01569'\nreport={'at':datetime.datetime.now().isoformat(timespec='seconds'),'target':sha,'production_head_before':'','production_head_after':'','shadow_only':True,'tests':[]}\ndef git(*args,timeout=9):\n return subprocess.run(['git.exe','-C',repo,*args],capture_output=True,timeout=timeout)\np=git('rev-parse','HEAD')\nreport['production_head_before']=p.stdout.decode(errors='replace').strip()\noriginal=git('status','--porcelain=v1','-z','--untracked-files=all')\nreport['porcelain_before_sha256']=hashlib.sha256(original.stdout).hexdigest()\nwith tempfile.TemporaryDirectory(prefix='wab-r45-shadow-') as folder:\n archive=git('archive','--format=zip',sha,timeout=18)\n report['archive_code']=archive.returncode\n if archive.returncode==0:\n  with zipfile.ZipFile(io.BytesIO(archive.stdout)) as z:z.extractall(folder)\n  app=os.path.join(folder,'app')\n  for argv in (['node.exe','--check','server.js'],['node.exe','--test','managed-chat-inspection-r45.test.js'],['node.exe','--test','operational-health.test.js']):\n   try:\n    p=subprocess.run(argv,cwd=app,capture_output=True,timeout=15)\n    report['tests'].append({'argv':argv,'code':p.returncode,'stdoutTail':p.stdout.decode('utf-8','replace')[-500:],'stderrTail':p.stderr.decode('utf-8','replace')[-350:]})\n   except Exception as e:report['tests'].append({'argv':argv,'error':type(e).__name__})\nreport['production_head_after']=git('rev-parse','HEAD').stdout.decode(errors='replace').strip()\nreport['porcelain_after_sha256']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all').stdout).hexdigest()\nreport['production_unchanged']=report['production_head_before']==report['production_head_after'] and report['porcelain_before_sha256']==report['porcelain_after_sha256']\nprint(json.dumps(report,ensure_ascii=True)[:7200])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T13:04:34\", \"target\": \"18a286d4522dd73b5a65d88b5823053b71b01569\", \"production_head_before\": \"2d5f902a52f875f3385da0a9babe29e2761a0f5b\", \"production_head_after\": \"2d5f902a52f875f3385da0a9babe29e2761a0f5b\", \"shadow_only\": true, \"tests\": [], \"porcelain_before_sha256\": \"0a0dcf0b565edf5dc653d34ae49eb11c15b268507fd44e7d0171512e10edcab2\", \"archive_code\": 128, \"porcelain_after_sha256\": \"0a0dcf0b565edf5dc653d34ae49eb11c15b268507fd44e7d0171512e10edcab2\", \"production_unchanged\": true}\r\n",
+      "stdout_bytes": 498,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T06:04:34.647Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T06:04:34.481Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-r45-20261008-shadow-tests-a51f"
+    },
+    "request_id": "bridge-r45-20261008-shadow-tests-a51f",
+    "started_at": "2026-10-08T06:04:33.551Z",
+    "status": "completed"
+  },
+  "id": "bridge-r45-20261008-shadow-tests-a51f",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
