@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,urllib.parse,datetime\nbase='http://127.0.0.1:17448'\ndef get(u):\n with urllib.request.urlopen(u,timeout=4) as f:return json.load(f)\no=get(base+'/api/operator-lifecycle');w=get(base+'/api/supervisor-watchdog?detect=0').get('config',{})\nif not(o.get('queuePaused') is True and w.get('mode')=='off' and w.get('allowAutonomousSend') is False):raise RuntimeError('hold_gate_failed')\nc=get(base+'/api/supervisor-watchdog/managed-chats?inspect=0')\nrows=[]\nfor x in c.get('chats',[]):\n if x.get('name')!='Media':continue\n try:\n  p=get(base+'/api/supervisor-watchdog/managed-chats/'+urllib.parse.quote(x['id'],safe='')+'/wake-preview')\n  rows.append({'name':x.get('name'),'state':p.get('state'),'targetCount':p.get('exactTargetCount'),'targetId':p.get('exactTargetId'),'matchesOldId':p.get('exactTargetId')=='591D559FB52E45508FFE33D3557D5A18','chatName':p.get('chatName'),'requiredConfirm':p.get('requiredConfirmation')})\n except Exception as e:rows.append({'name':'Media','state':'PREVIEW_ERROR','errorType':type(e).__name__})\nprint(json.dumps({'at':datetime.datetime.now().isoformat(timespec='seconds'),'readOnly':True,'media':rows},ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T16:10:35\", \"readOnly\": true, \"media\": [{\"name\": \"Media\", \"state\": \"READY_FOR_EXPLICIT_TAB_WAKE\", \"targetCount\": 1, \"targetId\": \"CAB0E8584E7BCB714C4333213550436D\", \"matchesOldId\": false, \"chatName\": \"Media\", \"requiredConfirm\": \"WAKE_EXISTING_TAB_ONLY\"}]}\r\n",
+      "stdout_bytes": 274,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T09:10:35.555Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T09:10:35.391Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r51-20261008-media-wake-preview-reconcile-24"
+    },
+    "request_id": "wab-r51-20261008-media-wake-preview-reconcile-24",
+    "started_at": "2026-10-08T09:10:34.739Z",
+    "status": "completed"
+  },
+  "id": "wab-r51-20261008-media-wake-preview-reconcile-24",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
