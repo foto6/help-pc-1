@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r46-20261008-live-wake-preview-13b4",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,datetime,os\nu='http://127.0.0.1:17448'\ndef get(p,timeout=3):\n with urllib.request.urlopen(u+p,timeout=timeout) as f:return json.load(f)\no=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{})\nif o.get('queuePaused') is not True or w.get('mode')!='off' or w.get('allowAutonomousSend') is not False:raise RuntimeError('must_remain_frozen')\nc=get('/api/supervisor-watchdog/managed-chats?inspect=0')\nch=next(x for x in c.get('chats',[]) if x.get('name')=='Bridge')\nv=get('/api/supervisor-watchdog/managed-chats/'+ch['id']+'/wake-preview')\nz=get('/api/projects/control-plane/cutover-r42/status').get('cutoverState',{})\nout={'at':datetime.datetime.now().isoformat(),'preview':{k:v.get(k) for k in ('object','state','exactTargetCount','promptSent','reloadPerformed','tabCreated','tabClosed','requiredConfirmation','replayAuthorized')},'targetIdPresent':bool(v.get('exactTargetId')),'cutover':{'state':z.get('status'),'hold':z.get('holdActive'),'rollbackManifestPresent':os.path.isfile(z.get('rollbackManifest',''))}}\nprint(json.dumps(out,ensure_ascii=True))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Read-only R46 exact Bridge managed-tab wake preview, verify paused+watchdog off, rollback manifest exists; no foreground mutation or Send."
+}
