@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261008-owner-reconcile-audit-r04",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "20261008-owner-assignment-audit-1105-r03",
+    "action": "shell.run"
+  },
+  "timeout_ms": 10000,
+  "note": "Reconcile timed-out read-only assignment audit by exact original request/action. No replay."
+}
