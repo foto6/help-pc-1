@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-r44-local-git-inspect-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$repo='E:\\WebAIBridge'\n$git=(Get-Command git.exe -CommandType Application -ErrorAction Stop | Select-Object -First 1).Path\nfunction G([string[]]$a){\n $o=& $git -C $repo @a 2>&1;$c=$LASTEXITCODE\n if($c -ne 0){throw \"git $($a -join ' ') failed ($c): $o\"}\n if($null -eq $o){return ''}\n return ([string]($o -join [Environment]::NewLine)).Trim()\n}\n[ordered]@{\n object='owner.r44.local_git_inspect.v1'\n head=(G @('rev-parse','HEAD'))\n branch=(G @('branch','--show-current'))\n origin=(G @('remote','get-url','origin'))\n mutationPerformed=$false\n}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "C:\\"
+  },
+  "timeout_ms": 8000,
+  "note": "New logical read-only R44 Git identity reconciliation; not replay of timed-out inspect"
+}
