@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r46-20261008-preflight-d6fa",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,os,tempfile,json,hashlib,urllib.request,datetime\nrepo=r'E:\\WebAIBridge';sha='943c0b1d509fb8b73cef2f8bbe566ef957854a47';branch='agent/bridge-r46-safe-tab-wakeup-20261008'\ndef git(*a,t=10):return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,timeout=t)\ndef get(p):\n with urllib.request.urlopen('http://127.0.0.1:17448'+p,timeout=5) as f:return json.load(f)\nout={'at':datetime.datetime.now().isoformat(),'target':sha}\nout['head']=git('rev-parse','HEAD').stdout.decode().strip()\nout['porcelain_before']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all').stdout).hexdigest()\na=get('/api/operator-lifecycle');c=get('/api/supervisor-watchdog?detect=0').get('config',{})\nout['gate']={'queuePaused':a.get('queuePaused'),'supervisorMode':c.get('mode'),'supervisorEnabled':c.get('enabled'),'allowAutonomousSend':c.get('allowAutonomousSend'),'autoContinueEnabled':c.get('autoContinueEnabled')}\nif out['gate']!={'queuePaused':True,'supervisorMode':'off','supervisorEnabled':False,'allowAutonomousSend':False,'autoContinueEnabled':False}:raise RuntimeError('not_safe_hold')\ndata=git('cat-file','blob',sha+':app/r42-cutover.ps1')\nif data.returncode:raise RuntimeError('target_script_missing')\nwith tempfile.TemporaryDirectory(prefix='r46-preflight-') as d:\n p=os.path.join(d,'r42-cutover.ps1');open(p,'wb').write(data.stdout)\n s=subprocess.run(['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',p,'-TargetSha',sha,'-TargetBranch',branch,'-RepoPath',repo,'-PreflightOnly'],capture_output=True,text=True,timeout=40)\n out['preflight']={'exitCode':s.returncode,'stdoutTail':s.stdout[-2300:],'stderrTail':s.stderr[-450:]}\nout['porcelain_after']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all').stdout).hexdigest()\nout['worktreeUnchanged']=out['porcelain_before']==out['porcelain_after']\nprint(json.dumps(out,ensure_ascii=True)[:5500])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 63000,
+  "note": "Read-only staged R46 exact-sha cutover preflight, verify frozen no-send runtime and unchanged worktree; no release/Send."
+}
