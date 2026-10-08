@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public static class TabCapFG { [DllImport(\"user32.dll\")] public static extern IntPtr GetForegroundWindow(); }';$before=[TabCapFG]::GetForegroundWindow().ToInt64();$script='E:\\PC-Control\\CDP_TabCapture_20261009\\browser-tab-capture.js';$ids=@('16F20C983A306AB7E31D2165E2544898','68D17114431457A201D7F164508E4318','F1B7A8CCFAA2C7EBF4AC1B9AAC48BEE2');$results=@();foreach($id in $ids){$tmpErr=Join-Path $env:TEMP ('cdp-probe-'+$id+'.err');$out=& node.exe $script ('--target-id='+$id) '--port=17410' 2>$tmpErr;$code=$LASTEXITCODE;$err='';if(Test-Path $tmpErr){$err=((Get-Content $tmpErr -Raw) -replace '[\\r\\n]',' ').Trim();Remove-Item -LiteralPath $tmpErr -Force -ErrorAction SilentlyContinue};if($code -eq 0){$capture=$out|ConvertFrom-Json;$hash=(Get-FileHash -LiteralPath $capture.image_path -Algorithm SHA256).Hash.ToLowerInvariant();$results+=@{id=$id;ok=($hash -eq $capture.sha256);width=$capture.width;height=$capture.height;bytes=$capture.byte_length;hash_valid=($hash -eq $capture.sha256);local_image_path=$capture.image_path}}else{$results+=@{id=$id;ok=$false;error_category=if($err -match 'cdp_capture_failed'){'cdp_capture_failed'}elseif($err -match 'cdp_target_endpoint_rejected'){'endpoint_rejected'}else{'other'}}}};$after=[TabCapFG]::GetForegroundWindow().ToInt64();[ordered]@{foreground_unchanged=($before -eq $after);results=$results}|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Method invocation failed because [System.Object[]] does not contain a method named 'Trim'.\r\nAt line:1 char:662\r\n+ ... th $tmpErr){$err=((Get-Content $tmpErr -Raw) -replace '[\\r\\n]',' ').T ...\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : MethodNotFound\r\n \r\n",
+      "stderr_bytes": 411,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T17:18:41.875Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T17:18:41.706Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-cdp-live-tabs-nofocus-probe-02"
+    },
+    "request_id": "20261009-cdp-live-tabs-nofocus-probe-02",
+    "started_at": "2026-10-08T17:18:40.674Z",
+    "status": "completed"
+  },
+  "id": "20261009-cdp-live-tabs-nofocus-probe-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
