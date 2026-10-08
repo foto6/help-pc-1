@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "bridge-r45-20261008-capabilities-8d53",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 12000,
+  "note": "Harmless PC-Control executor capability attestation before R45 local checks"
+}
