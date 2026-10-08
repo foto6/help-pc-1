@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json,datetime\nu='http://127.0.0.1:17448/api/health'\nwith urllib.request.urlopen(u,timeout=8) as r:d=json.load(r)\nout={k:d.get(k) for k in ('version','checkedAt','startedAt','state','ok','reasons','maintenance','degraded','blockers','codeReload','browserProbe','supervisorConfig','assignmentQueue')}\nout['components']={k:({'ok':v.get('ok'),'state':v.get('state'),'status':v.get('status'),'reasons':v.get('reasons'),'error':v.get('error'),'details':v.get('details')} if isinstance(v,dict) else v) for k,v in d.get('components',{}).items()} if isinstance(d.get('components'),dict) else str(type(d.get('components')))\nout['eventLoop']=d.get('eventLoop')\nprint(json.dumps(out,ensure_ascii=True,default=str,separators=(',',':'))[:14000])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"version\":1,\"checkedAt\":\"2026-10-08T05:23:43.623Z\",\"startedAt\":\"2026-10-07T14:21:39.753Z\",\"state\":\"BLOCKED\",\"ok\":false,\"reasons\":[\"timeline_io:health_probe_stale\",\"assignment_queue:oldest_queued_over_60s\"],\"maintenance\":{\"generic\":{\"state\":\"healthy\",\"inFlight\":false,\"lastStartedAt\":\"2026-10-08T05:23:42.517Z\",\"lastCompletedAt\":\"2026-10-08T05:23:42.517Z\",\"lastSuccessAt\":\"2026-10-08T05:23:42.517Z\",\"lastFailureAt\":\"\",\"lastDurationMs\":0,\"consecutiveFailures\":0,\"timeouts\":0,\"failures\":0,\"successes\":15640,\"reason\":\"\",\"recoveredFromRestart\":false},\"assignments\":{\"state\":\"healthy\",\"inFlight\":false,\"lastStartedAt\":\"2026-10-08T05:23:38.993Z\",\"lastCompletedAt\":\"2026-10-08T05:23:38.993Z\",\"lastSuccessAt\":\"2026-10-08T05:23:38.993Z\",\"lastFailureAt\":\"2026-10-08T05:23:33.968Z\",\"lastDurationMs\":0,\"consecutiveFailures\":0,\"timeouts\":1199,\"failures\":1199,\"successes\":14449,\"reason\":\"\",\"recoveredFromRestart\":false}},\"degraded\":[\"timeline_io:health_probe_stale\"],\"blockers\":[\"assignment_queue:oldest_queued_over_60s\"],\"codeReload\":{\"required\":false,\"reason\":\"server_source_matches_boot_observation\",\"observedAt\":\"2026-10-08T05:23:42.517Z\"},\"browserProbe\":{\"lastSeenAt\":\"2026-10-08T05:23:41.611Z\",\"connected\":true,\"component\":{\"state\":\"healthy\",\"inFlight\":false,\"lastStartedAt\":\"2026-10-08T05:23:28.941Z\",\"lastCompletedAt\":\"2026-10-08T05:23:28.944Z\",\"lastSuccessAt\":\"2026-10-08T05:23:28.944Z\",\"lastFailureAt\":\"2026-10-08T03:22:36.048Z\",\"lastDurationMs\":3,\"consecutiveFailures\":0,\"timeouts\":1,\"failures\":22,\"successes\":23198,\"reason\":\"\",\"recoveredFromRestart\":false}},\"supervisorConfig\":{\"cached\":true,\"cachedAt\":\"2026-10-08T05:23:42.518Z\",\"component\":{\"state\":\"healthy\",\"inFlight\":false,\"lastStartedAt\":\"2026-10-08T05:23:42.517Z\",\"lastCompletedAt\":\"2026-10-08T05:23:42.518Z\",\"lastSuccessAt\":\"2026-10-08T05:23:42.518Z\",\"lastFailureAt\":\"2026-10-08T04:57:56.799Z\",\"lastDurationMs\":1,\"consecutiveFailures\":0,\"timeouts\":2,\"failures\":329,\"successes\":14645,\"reason\":\"\",\"recoveredFromRestart\":false}},\"assignmentQueue\":{\"total\":68,\"active\":1,\"queued\":2,\"counts\":{\"cancelled\":11,\"blocked\":32,\"failed\":12,\"completed\":10,\"queued\":2,\"awaiting_evidence\":1},\"oldestQueuedAgeMs\":49080865,\"lastProgressAt\":\"2026-10-08T05:23:28.894Z\",\"lastProgressAgeMs\":14729},\"components\":{\"supervisor_config_io\":{\"ok\":null,\"state\":\"healthy\",\"status\":null,\"reasons\":null,\"error\":null,\"details\":null},\"local_filesystem\":{\"ok\":null,\"state\":\"healthy\",\"status\":null,\"reasons\":null,\"error\":null,\"details\":null},\"maintenance\":{\"ok\":null,\"state\":\"healthy\",\"status\":null,\"reasons\":null,\"error\":null,\"details\":null},\"assignment_maintenance\":{\"ok\":null,\"state\":\"healthy\",\"status\":null,\"reasons\":null,\"error\":null,\"details\":null},\"browser_cdp\":{\"ok\":null,\"state\":\"healthy\",\"status\":null,\"reasons\":null,\"error\":null,\"details\":null},\"git_evidence\":{\"ok\":null,\"state\":\"healthy\",\"status\":null,\"reasons\":null,\"error\":null,\"details\":null},\"git_baseline\":{\"ok\":null,\"state\":\"healthy\",\"status\":null,\"reasons\":null,\"error\":null,\"details\":null},\"timeline_io\":{\"ok\":null,\"state\":\"degraded\",\"status\":null,\"reasons\":null,\"error\":null,\"details\":null}},\"eventLoop\":{\"intervalMs\":250,\"lastTickAt\":\"2026-10-08T05:23:43.500Z\",\"lastDriftMs\":1,\"maxRecentDriftMs\":12.96,\"degradedThresholdMs\":750,\"ageMs\":123,\"state\":\"healthy\"}}\r\n",
+      "stdout_bytes": 3254,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T05:23:43.821Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T05:23:43.649Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "bridge-check-20261008-health-ca63"
+    },
+    "request_id": "bridge-check-20261008-health-ca63",
+    "started_at": "2026-10-08T05:23:43.114Z",
+    "status": "completed"
+  },
+  "id": "bridge-check-20261008-health-ca63",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
