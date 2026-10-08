@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "wab-r47-20261008-controlled-exec-f0c9",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,urllib.request,json,os,datetime\nrepo=r'E:\\WebAIBridge';sha='4638fd18def71dbfa07227c4b9b1bcbf89bba2a5';branch='agent/bridge-r47-background-tab-reliability-20261008'\nowner=r'E:\\WebAIBridge\\app\\data\\backups\\owner-r47-safety-20261008T071638Z'\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'target':sha,'mode':'one_controlled_cutover_with_local_timeout'}\ndef git(*a):return subprocess.run(['git.exe','-C',repo,*a],capture_output=True,timeout=6)\ndef get(path,timeout=4):\n with urllib.request.urlopen('http://127.0.0.1:17448'+path,timeout=timeout) as f:return json.load(f)\nhead=git('rev-parse','HEAD').stdout.decode().strip();out['headBefore']=head\nif head!='943c0b1d509fb8b73cef2f8bbe566ef957854a47':raise RuntimeError('head_changed')\nif git('status','--porcelain=v1','-z','--untracked-files=all').stdout:raise RuntimeError('worktree_dirty')\nif not os.path.isfile(os.path.join(owner,'manifest.json')):raise RuntimeError('owner_backup_missing')\nq=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{})\nif q.get('queuePaused') is not True or w.get('mode')!='off' or w.get('allowAutonomousSend') is not False:raise RuntimeError('freeze_gate_not_met')\nargs=['powershell.exe','-NoProfile','-ExecutionPolicy','Bypass','-File',os.path.join(repo,'app','r42-cutover.ps1'),'-TargetSha',sha,'-TargetBranch',branch,'-RepoPath',repo,'-ReportPath',os.path.join(owner,'r47-cutover-controlled-report.json')]\ntry:\n proc=subprocess.run(args,capture_output=True,text=True,errors='replace',timeout=83)\n out['cutover']={'code':proc.returncode,'stdoutTail':proc.stdout[-1000:],'stderrTail':proc.stderr[-700:]}\nexcept subprocess.TimeoutExpired:\n out['cutover']={'state':'TIMEOUT_UNKNOWN','processStoppedAtLocalTimeout':True}\nexcept Exception as e:out['cutover']={'error':type(e).__name__}\ntry:out['headAfter']=git('rev-parse','HEAD').stdout.decode().strip()\nexcept Exception as e:out['headAfterError']=type(e).__name__\ntry:\n z=get('/api/operator-lifecycle');c=get('/api/supervisor-watchdog?detect=0').get('config',{})\n out['holdReadback']={'paused':z.get('queuePaused'),'supervisorMode':c.get('mode'),'allowAutonomousSend':c.get('allowAutonomousSend')}\nexcept Exception as e:out['holdReadbackError']=type(e).__name__\nout['reportExists']=os.path.isfile(os.path.join(owner,'r47-cutover-controlled-report.json'))\nprint(json.dumps(out,ensure_ascii=True)[:5000])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 115000,
+  "note": "One controlled R47 cutover after CI, local preflight and owner SHA256 backup, prior detached launch conclusively no-effect; keep Chrome sessions/paused agents, do not retry UNKNOWN."
+}
