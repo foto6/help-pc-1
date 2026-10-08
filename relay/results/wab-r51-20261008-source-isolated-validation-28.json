@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,subprocess,zipfile,io,tempfile,datetime,json,hashlib\nrepo=r'E:\\WebAIBridge';sha='89b832244591c577220cd618c8eaacc9767f7300';branch='agent/bridge-r51-target-continuity-20261008'\ndef git(*args,t=15):return subprocess.run(['git.exe','-C',repo,*args],capture_output=True,timeout=t)\nout={'at':datetime.datetime.now().isoformat(timespec='seconds'),'exactSHA':sha,'checks':[]}\nout['headBefore']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['statusHashBefore']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\ntry:\n p=git('fetch','--no-tags','--no-write-fetch-head','origin','refs/heads/'+branch,t=40)\n if p.returncode:raise RuntimeError('git_fetch_failed')\n if git('cat-file','-t',sha,t=7).stdout.strip()!=b'commit':raise RuntimeError('target_not_fetched')\n p=git('archive','--format=zip',sha,'app/chrome-target-continuity-r51.js','app/r51-target-continuity.js','app/chrome-target-continuity-r51.test.js','app/chrome-restart-readiness-r50.js',t=15)\n if p.returncode:raise RuntimeError('archive_failed')\n with tempfile.TemporaryDirectory(prefix='wab-r51-isolated-') as d:\n  with zipfile.ZipFile(io.BytesIO(p.stdout)) as z:z.extractall(d)\n  app=os.path.join(d,'app')\n  for argv in [['node.exe','--check','chrome-target-continuity-r51.js'],['node.exe','--check','r51-target-continuity.js'],['node.exe','--test','chrome-target-continuity-r51.test.js']]:\n   r=subprocess.run(argv,cwd=app,capture_output=True,text=True,timeout=14)\n   out['checks'].append({'cmd':' '.join(argv[1:]),'exit':r.returncode,'stdoutTail':r.stdout[-510:],'stderrHead':r.stderr[:380]})\nexcept Exception as e:out['error']=type(e).__name__+':'+str(e)[:160]\nout['headAfter']=git('rev-parse','HEAD',t=5).stdout.decode().strip()\nout['statusHashAfter']=hashlib.sha256(git('status','--porcelain=v1','-z','--untracked-files=all',t=5).stdout).hexdigest()\nout['productionUnchanged']=out['headBefore']==out['headAfter'] and out['statusHashBefore']==out['statusHashAfter']\nprint(json.dumps(out,ensure_ascii=True)[:5900])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\": \"2026-10-08T16:16:51\", \"exactSHA\": \"89b832244591c577220cd618c8eaacc9767f7300\", \"checks\": [{\"cmd\": \"--check chrome-target-continuity-r51.js\", \"exit\": 0, \"stdoutTail\": \"\", \"stderrHead\": \"\"}, {\"cmd\": \"--check r51-target-continuity.js\", \"exit\": 0, \"stdoutTail\": \"\", \"stderrHead\": \"\"}, {\"cmd\": \"--test chrome-target-continuity-r51.test.js\", \"exit\": 0, \"stdoutTail\": \" with identical canonical URL is detected (1.2544ms)\\n\\u0432\\u045a\\u201d missing or duplicate target cannot pass as stable (1.4587ms)\\n\\u0432\\u045a\\u201d foreign or duplicate configured chats fail closed (0.5645ms)\\n\\u0432\\u045a\\u201d frozen queue and disabled autonomous dispatch are required (0.9596ms)\\n\\u0432\\u045a\\u201d extra pages and renamed canonical chat are reconciled (0.6988ms)\\n\\u0432\\u045a\\u201d bad stored baseline is never silently promoted to green (0.3185ms)\\n\\u0432\\u201e\\u2116 tests 8\\n\\u0432\\u201e\\u2116 suites 0\\n\\u0432\\u201e\\u2116 pass 8\\n\\u0432\\u201e\\u2116 fail 0\\n\\u0432\\u201e\\u2116 cancelled 0\\n\\u0432\\u201e\\u2116 skipped 0\\n\\u0432\\u201e\\u2116 todo 0\\n\\u0432\\u201e\\u2116 duration_ms 125.3259\\n\", \"stderrHead\": \"\"}], \"headBefore\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"statusHashBefore\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"headAfter\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"statusHashAfter\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\", \"productionUnchanged\": true}\r\n",
+      "stdout_bytes": 1431,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-08T09:16:55.670Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-08T09:16:55.502Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "wab-r51-20261008-source-isolated-validation-28"
+    },
+    "request_id": "wab-r51-20261008-source-isolated-validation-28",
+    "started_at": "2026-10-08T09:16:51.290Z",
+    "status": "completed"
+  },
+  "id": "wab-r51-20261008-source-isolated-validation-28",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
