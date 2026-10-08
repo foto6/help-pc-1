@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-20261008-1206-cdp-bridge-one-05",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$j=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats' -TimeoutSec 5;$p=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/ai-profiles' -TimeoutSec 5;$c=@($j.chats|Where-Object{$_.name -eq 'Bridge'})[0];$prof=@($p.aiProfiles|Where-Object{$_.id -eq $c.profileId})[0];$port=[int]$prof.debugPort;$o=[ordered]@{agent=$c.name;profileFound=($null -ne $prof);port=$port;node='unused'};if($port -gt 0){$tabs=Invoke-RestMethod -Uri ('http://127.0.0.1:'+$port+'/json/list') -TimeoutSec 4;$cid=([regex]::Match($c.url,'/c/([^/?#]+)')).Groups[1].Value;$t=@($tabs|Where-Object{$_.type -eq 'page' -and $_.url -like ('*/c/'+$cid) -and $_.webSocketDebuggerUrl});$o.tabCount=$t.Count;if($t.Count -eq 1){$ws=New-Object System.Net.WebSockets.ClientWebSocket;$ct=New-Object System.Threading.CancellationTokenSource 3800;try{$ws.ConnectAsync([uri]$t[0].webSocketDebuggerUrl,$ct.Token).GetAwaiter().GetResult();$expr='(()=>({title:document.title,turns:Array.from(document.querySelectorAll(\"[data-turn-key]\")).slice(-3).map(e=>(e.innerText||e.textContent||\"\").replace(/\\s+/g,\" \").slice(-1300)),alerts:Array.from(document.querySelectorAll(\"[role=alert]\")).map(e=>(e.innerText||\"\").slice(0,100)).slice(-2)}))()';$obj=@{id=1;method='Runtime.evaluate';params=@{expression=$expr;returnByValue=$true}};$buf=[Text.Encoding]::UTF8.GetBytes((ConvertTo-Json $obj -Compress -Depth 7));$ws.SendAsync([ArraySegment[byte]]::new($buf),[System.Net.WebSockets.WebSocketMessageType]::Text,$true,$ct.Token).GetAwaiter().GetResult();$receive=New-Object byte[] 40000;$ans=$ws.ReceiveAsync([ArraySegment[byte]]::new($receive),$ct.Token).GetAwaiter().GetResult();$data=([Text.Encoding]::UTF8.GetString($receive,0,$ans.Count)|ConvertFrom-Json);$o.snapshot=$data.result.result.value;$o.cdpError=$data.error.message}catch{$o.error=$_.Exception.GetType().Name+':'+$_.Exception.Message.Substring(0,[Math]::Min(140,$_.Exception.Message.Length))}finally{$ws.Dispose();$ct.Dispose()}}};$o|ConvertTo-Json -Compress -Depth 8"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 19000,
+  "note": "Read-only Chrome DevTools Runtime.evaluate latest three messages of exact existing Bridge agent tab, no typing or UI mutations."
+}
