@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-chrome-tunnel-init-forwardslashes-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$bin='E:\\PC-Control\\TunnelChrome-20261009\\full\\tunnel-client.exe'\n$entry='E:\\PC-Control\\BrowserTabMCP-Canary-20261009\\bin\\pc-browser-tab-mcp-stdio.js'\nif(!(Test-Path $entry -PathType Leaf)){throw 'MCP_entry_missing'}\n$env:PC_CONTROL_ENABLE_BROWSER_TAB_CAPTURE='1'\n$env:PC_CONTROL_BROWSER_CDP_ALLOWED_PORTS='17410,17447'\nSet-Location 'E:\\PC-Control\\TunnelChrome-20261009'\n$out=& $bin init --sample sample_mcp_stdio_local --profile pc-chrome-20261009 --tunnel-id tunnel_6ac88c3d680c8191a475065208874b7c --mcp-command 'node.exe E:/PC-Control/BrowserTabMCP-Canary-20261009/bin/pc-browser-tab-mcp-stdio.js' 2>&1\n$code=$LASTEXITCODE\n[ordered]@{exitCode=$code;message=@($out|Select-Object -Last 25)}|ConvertTo-Json -Depth 4 -Compress\nexit $code"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Initialize existing owner tunnel via official CLI, path uses forward slashes to preserve Windows filename under shellword parsing. No API key and no browser changes."
+}
