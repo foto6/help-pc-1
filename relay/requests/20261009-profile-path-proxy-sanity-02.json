@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-profile-path-proxy-sanity-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$profiles=(Invoke-RestMethod 'http://127.0.0.1:17448/api/ai-profiles' -TimeoutSec 4).aiProfiles;$rows=@();foreach($id in @('gemini-personal-attach','ef72920c-cfe7-4824-a79b-7a0e0943ce7e')){$p=$profiles|Where-Object{$_.id -eq $id}|Select-Object -First 1;if($p){$dir=[string]$p.chromeProfilePath;$cp=[string]$p.chromePath;$rows+=@{id=$id;profilePathExists=($dir.Length -gt 0 -and (Test-Path -LiteralPath $dir -PathType Container));pathLength=$dir.Length;pathNonAsciiCount=@($dir.ToCharArray()|Where-Object{[int]$_ -gt 127}).Count;debugPort=$p.debugPort;chromeMode=$p.chromeLaunchMode;proxyMode=$p.proxyMode;customChromePathExists=($cp.Length -gt 0 -and (Test-Path -LiteralPath $cp -PathType Leaf))}}};$port=@(Get-NetTCPConnection -LocalPort 17449 -State Listen -ErrorAction SilentlyContinue);[ordered]@{profiles=$rows;proxy17449Listening=$port.Count -gt 0;chromeBinaryExists=Test-Path 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'}|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only fixed Chrome profile-path sanity, no path disclosure."
+}
