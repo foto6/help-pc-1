@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-chrome-profile-candidate-inventory-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=(Invoke-RestMethod 'http://127.0.0.1:17448/api/ai-profiles' -TimeoutSec 4).aiProfiles;$v=$p|Where-Object{$_.id -eq 'ef72920c-cfe7-4824-a79b-7a0e0943ce7e'}|Select-Object -First 1;$roots=@('E:\\WebAIBridge\\chrome-profiles','E:\\WebAIBridge\\chrome-profile-web-bridge','C:\\Users\\foto6\\OneDrive');$rows=@();foreach($root in $roots){$exists=Test-Path -LiteralPath $root -PathType Container;$x=[ordered]@{root=$root;exists=$exists;chromeCandidates=@()};if($exists){$items=@(Get-ChildItem -LiteralPath $root -Directory -ErrorAction SilentlyContinue|Select-Object -First 150);$x.firstLevelDirectories=$items.Count;$x.chromeCandidates=@($items|Where-Object{$_.Name -match '(?i)bridge|gemini|chrome|webai'}|Select-Object -First 30|ForEach-Object{@{name=$_.Name.Substring(0,[math]::Min(100,$_.Name.Length));modified=$_.LastWriteTime.ToString('o');hasLocalState=(Test-Path -LiteralPath (Join-Path $_.FullName 'Local State'))}})};$rows+=$x};[ordered]@{knownChatGptDirParent=(Split-Path -Parent ([string]$v.chromeProfilePath));knownChatGptDirName=(Split-Path -Leaf ([string]$v.chromeProfilePath));roots=$rows}|ConvertTo-Json -Depth 6 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Bounded read-only browser profile directory metadata; no file contents, credentials or E:\\manhwa."
+}
