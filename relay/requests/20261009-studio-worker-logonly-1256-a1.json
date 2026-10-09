@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-studio-worker-logonly-1256-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p='E:\\WebAIBridge\\app\\worker-gemini-personal-attach-error.log';if(!(Test-Path -LiteralPath $p -PathType Leaf)){Write-Output 'LOG_MISSING';exit 0};$f=Get-Item -LiteralPath $p;Write-Output ('LOG_MODIFIED='+$f.LastWriteTime.ToString('o'));Write-Output ('LOG_SIZE='+$f.Length);$lines=Get-Content -LiteralPath $p -Tail 45;foreach($line in $lines){$s=[string]$line;$s=[regex]::Replace($s,'(?i)(token|password|authorization|api.?key|cookie|secret|bearer)\\s*[:=]\\s*[^\\s,;]+','$1=[REDACTED]');$s=[regex]::Replace($s,'(?i)https?://[^\\s]+','[URL]');if($s.Length -gt 420){$s=$s.Substring(0,420)};Write-Output $s}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "New minimal READ-ONLY log inspection; does not retry timed-out command or access E:\\manhwa; redacts URL and credential-like values."
+}
