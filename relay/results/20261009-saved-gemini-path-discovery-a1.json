@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$r=[ordered]@{};$roots=@('E:\\WebAIBridge\\chrome-profile-web-bridge','E:\\WebAIBridge\\chrome-profiles');$r.roots=@();foreach($root in $roots){$exists=Test-Path -LiteralPath $root -PathType Container;$r.roots+=@{root=$root;exists=$exists;hasLocalState=($exists -and (Test-Path -LiteralPath (Join-Path $root 'Local State')));hasDefaultPrefs=($exists -and (Test-Path -LiteralPath (Join-Path $root 'Default\\Preferences')))}};$top='C:\\Users\\foto6\\OneDrive';$candidates=@();if(Test-Path -LiteralPath $top){$levels=@((Get-Item -LiteralPath $top));for($d=0;$d -lt 3;$d++){$next=@();foreach($folder in $levels){$items=@(Get-ChildItem -LiteralPath $folder.FullName -Directory -ErrorAction SilentlyContinue | Select-Object -First 90);foreach($item in $items){if($item.Name -like '*WebAIBridge*' -or $item.Name -like '*Gemini*' -or $item.Name -like '*chrome-profiles*'){$candidates+=@{depth=$d+1;name=([regex]::Replace($item.Name,'[^a-zA-Z0-9_.-]','_')).Substring(0,[Math]::Min(70,$item.Name.Length));hasLocalState=Test-Path -LiteralPath (Join-Path $item.FullName 'Local State');hasGemini=Test-Path -LiteralPath (Join-Path $item.FullName 'chrome-profiles\\gemini-Gemini_2-d03bac7f')}};$next+=$item}};$levels=$next;if($levels.Count -gt 300){break}}};$r.candidates=$candidates|Select-Object -First 20;$r|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"roots\":[{\"root\":\"E:\\\\WebAIBridge\\\\chrome-profile-web-bridge\",\"hasLocalState\":false,\"hasDefaultPrefs\":false,\"exists\":true},{\"root\":\"E:\\\\WebAIBridge\\\\chrome-profiles\",\"hasLocalState\":false,\"hasDefaultPrefs\":false,\"exists\":true}],\"candidates\":null}\r\n",
+      "stdout_bytes": 249,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:03:11.859Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:03:11.695Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-saved-gemini-path-discovery-a1"
+    },
+    "request_id": "20261009-saved-gemini-path-discovery-a1",
+    "started_at": "2026-10-09T06:03:10.915Z",
+    "status": "completed"
+  },
+  "id": "20261009-saved-gemini-path-discovery-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
