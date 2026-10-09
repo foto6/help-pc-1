@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$bin='E:\\PC-Control\\TunnelChrome-20261009\\app\\tunnel-client-runtime.exe';if(!(Test-Path $bin -PathType Leaf)){throw 'client_missing'};$v=& $bin --version 2>&1;$info=& $bin help quickstart 2>&1;[ordered]@{version=($v -join ' ');quickstart=($info|Select-Object -First 42);exitCode=$LASTEXITCODE}|ConvertTo-Json -Compress -Depth 4"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "tunnel-client-runtime.exe : unknown command \"help\" for \"tunnel-client-runtime\"\r\n��ப�:1 ����:196\r\n+ ... '};$v=& $bin --version 2>&1;$info=& $bin help quickstart 2>&1;[ordere ...\r\n+                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (unknown command...client-runtime\":String) [], RemoteException\r\n    + FullyQualifiedErrorId : NativeCommandError\r\n \r\n",
+      "stderr_bytes": 410,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:42:56.497Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:42:56.333Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-chrome-tunnel-client-help-01"
+    },
+    "request_id": "20261009-chrome-tunnel-client-help-01",
+    "started_at": "2026-10-09T06:42:54.969Z",
+    "status": "completed"
+  },
+  "id": "20261009-chrome-tunnel-client-help-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
