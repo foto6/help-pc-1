@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$bin='E:\\PC-Control\\TunnelChrome-20261009\\full\\tunnel-client.exe'\n$entry='E:\\PC-Control\\BrowserTabMCP-Canary-20261009\\bin\\pc-browser-tab-mcp-stdio.js'\nif(!(Test-Path $entry -PathType Leaf)){throw 'MCP_entry_missing'}\n$env:PC_CONTROL_ENABLE_BROWSER_TAB_CAPTURE='1'\n$env:PC_CONTROL_BROWSER_CDP_ALLOWED_PORTS='17410,17447'\nSet-Location 'E:\\PC-Control\\TunnelChrome-20261009'\n$out=& $bin init --sample sample_mcp_stdio_local --profile pc-chrome-20261009 --tunnel-id tunnel_6ac88c3d680c8191a475065208874b7c --mcp-command 'node.exe E:/PC-Control/BrowserTabMCP-Canary-20261009/bin/pc-browser-tab-mcp-stdio.js' 2>&1\n$code=$LASTEXITCODE\n[ordered]@{exitCode=$code;message=@($out|Select-Object -Last 25)}|ConvertTo-Json -Depth 4 -Compress\nexit $code"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"exitCode\":0,\"message\":[\"Created profile pc-chrome-20261009 at C:\\\\Users\\\\foto6\\\\AppData\\\\Roaming\\\\tunnel-client\\\\pc-chrome-20261009.yaml\",\"Sample: sample_mcp_stdio_local\",\"Next:\",\"  tunnel-client doctor --profile pc-chrome-20261009\",\"  tunnel-client run --profile pc-chrome-20261009\",\"Canonical setup URLs:\",\"  Tunnels management: https://platform.openai.com/settings/organization/tunnels\",\"  Runtime API keys: https://platform.openai.com/settings/organization/api-keys\",\"  Admin API keys: https://platform.openai.com/settings/organization/admin-keys\",\"  ChatGPT connector settings: https://chatgpt.com/#settings/Connectors\",\"Connector runtime note:\",\"  Create or verify the connector in https://chatgpt.com/#settings/Connectors only while `tunnel-client run --profile pc-chrome-20261009` is running. Keep the daemon up for connector discovery and every MCP call from ChatGPT.\"]}\r\n",
+      "stdout_bytes": 883,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:44:48.376Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:44:48.211Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-chrome-tunnel-init-forwardslashes-02"
+    },
+    "request_id": "20261009-chrome-tunnel-init-forwardslashes-02",
+    "started_at": "2026-10-09T06:44:47.537Z",
+    "status": "completed"
+  },
+  "id": "20261009-chrome-tunnel-init-forwardslashes-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
