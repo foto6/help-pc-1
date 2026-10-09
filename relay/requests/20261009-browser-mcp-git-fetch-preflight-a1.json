@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-browser-mcp-git-fetch-preflight-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$env:GIT_TERMINAL_PROMPT='0';$env:GCM_INTERACTIVE='Never';$lines=@(& git.exe ls-remote --exit-code 'https://github.com/foto6/help-pc-2.git' 'refs/heads/agent/native-mcp-browser-tab-image-20261009' 2>$null);$ok=$LASTEXITCODE -eq 0;$value=if($ok -and $lines.Count -gt 0){($lines[0] -split \"\\s+\")[0]}else{''};[ordered]@{remoteAvailable=$ok;remoteSha=$value}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only noninteractive Git authentication probe before optional isolated sidecar checkout."
+}
