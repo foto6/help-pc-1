@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-studio-worker-lockcheck-1258-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$r=[ordered]@{};$p='E:\\WebAIBridge\\app\\data\\worker-gemini-personal-attach.lock';$r.lock_exists=Test-Path -LiteralPath $p -PathType Leaf;if($r.lock_exists){$r.lock_pid=(Get-Content -LiteralPath $p -Raw).Trim();$r.lock_mtime=(Get-Item -LiteralPath $p).LastWriteTime.ToString('o');$proc=Get-Process -Id ([int]$r.lock_pid) -ErrorAction SilentlyContinue;if($proc){$r.lock_process=@{pid=$proc.Id;name=$proc.ProcessName;start=$proc.StartTime.ToString('o')}}else{$r.lock_process='NOT_RUNNING'}}; $r.node_pids=@(Get-Process -Name node -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id);$r.log_files=@(Get-ChildItem -LiteralPath 'E:\\WebAIBridge\\app' -File -Filter '*gemini-personal-attach*.log' -ErrorAction SilentlyContinue|ForEach-Object{@{name=$_.Name;bytes=$_.Length;modified=$_.LastWriteTime.ToString('o')}});$r|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only saved worker lock PID and log metadata; no cleanup, no E:\\manhwa access."
+}
