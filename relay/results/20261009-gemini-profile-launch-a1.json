@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "node.exe -e \"(async()=>{const b='http://127.0.0.1:17448';const life=await (await fetch(b+'/api/operator-lifecycle',{signal:AbortSignal.timeout(4000)})).json();if(life.mode!=='RUNNING_MANAGED'||life.queuePaused!==true)throw Error('lifecycle_guard');const p=(await(await fetch(b+'/api/ai-profiles',{signal:AbortSignal.timeout(4000)})).json()).aiProfiles.find(x=>x.id==='gemini-personal-attach');if(!p||p.online||p.debugPort!==17447||!String(p.chromeProfilePath).includes('gemini-Gemini_2-d03bac7f-recovery-20261009'))throw Error('profile_guard');const res=await fetch(b+'/api/ai-profiles/gemini-personal-attach/launch',{method:'POST',headers:{'content-type':'application/json'},body:'{}',signal:AbortSignal.timeout(13000)});let obj=await res.json();console.log(JSON.stringify({http:res.status,chromePid:obj.launch?.chromePid||0,workerPid:obj.launch?.workerPid||0,chromeReused:obj.launch?.chromeReused,workerReused:obj.launch?.workerReused,errorCode:obj.code||null}));if(!res.ok)process.exitCode=2})().catch(e=>{console.log(JSON.stringify({ok:false,error:e.name||'Error'}));process.exitCode=1})\""
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"http\":200,\"chromePid\":29360,\"workerPid\":10436,\"chromeReused\":false,\"workerReused\":false,\"errorCode\":null}\n",
+      "stdout_bytes": 108,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:05:28.027Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:05:27.592Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-gemini-profile-launch-a1"
+    },
+    "request_id": "20261009-gemini-profile-launch-a1",
+    "started_at": "2026-10-09T06:05:26.284Z",
+    "status": "completed"
+  },
+  "id": "20261009-gemini-profile-launch-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
