@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-browser-mcp-isolated-dir-readonly-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$d='E:\\PC-Control\\BrowserTabMCP-20261009';$e=Test-Path -LiteralPath $d -PathType Container;$head='';$git=$false;$hasSource=$false;if($e){$git=Test-Path -LiteralPath (Join-Path $d '.git');$hasSource=Test-Path -LiteralPath (Join-Path $d 'src\\browser-tab-mcp-sidecar.js');if($hasSource){$head=((& git.exe -C $d rev-parse HEAD 2>$null)-join '')}};[ordered]@{exists=$e;hasGit=$git;hasSidecarSource=$hasSource;head=$head}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 11000,
+  "note": "Read-only aftermath of timed-out clone, no retries/deletes."
+}
