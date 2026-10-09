@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-browser-mcp-real-stdio-roundtrip-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public static class StdioCaptureFG { [DllImport(\"user32.dll\")] public static extern IntPtr GetForegroundWindow(); }';$before=[StdioCaptureFG]::GetForegroundWindow().ToInt64();$code=@'\nimport {Client} from \"@modelcontextprotocol/client\";\nimport {StdioClientTransport} from \"@modelcontextprotocol/client/stdio\";\nimport {createHash} from \"node:crypto\";\nimport {join} from \"node:path\";\nconst cwd=process.cwd();\nconst transport=new StdioClientTransport({command:process.execPath,args:[join(cwd,\"bin\",\"pc-browser-tab-mcp-stdio.js\")],cwd,env:{...process.env,PC_CONTROL_ENABLE_BROWSER_TAB_CAPTURE:\"1\",PC_CONTROL_BROWSER_CDP_ALLOWED_PORTS:\"17410,17447\"},stderr:\"pipe\"});\nconst client=new Client({name:\"local-browser-cdp-canary\",version:\"1.0.0\"});\nconst results=[];\ntry{\n await client.connect(transport);\n const advertised=await client.listTools();\n const names=advertised.tools.map(t=>t.name).sort();\n if(JSON.stringify(names)!==JSON.stringify([\"browser.tab.capture\",\"browser.tab.list\"]))throw Error(\"unexpected_tools\");\n for(const port of [17410,17447]){\n const listed=await client.callTool({name:\"browser.tab.list\",arguments:{port}});\n if(listed.isError)throw Error(\"listing_failure\");\n const tabs=JSON.parse(listed.content.find(x=>x.type===\"text\").text).tabs;\n const target=tabs.find(x=>new URL(x.url).hostname===\"127.0.0.1\");\n if(!target)throw Error(\"no_local_dashboard\");\n const capture=await client.callTool({name:\"browser.tab.capture\",arguments:{port,target_id:target.target_id,expected_url:target.url}});\n if(capture.isError)throw Error(\"capture_failed\");\n const img=capture.content.find(x=>x.type===\"image\");\n const m=JSON.parse(capture.content.find(x=>x.type===\"text\").text);\n if(!img||img.mimeType!==\"image/png\")throw Error(\"no_mcp_png_image\");\n const bytes=Buffer.from(img.data,\"base64\");\n const sha=createHash(\"sha256\").update(bytes).digest(\"hex\");\n if(sha!==m.sha256||!bytes.subarray(0,8).equals(Buffer.from(\"89504e470d0a1a0a\",\"hex\")))throw Error(\"png_sha_invalid\");\n results.push({port,imageType:img.type,mime:img.mimeType,shaVerified:true,width:m.width,height:m.height,bytes:bytes.length,textPixelsLeaked:capture.content.find(x=>x.type===\"text\").text.includes(img.data)});\n }\n console.log(JSON.stringify({connected:true,toolNames:names,results}));\n}catch(e){console.log(JSON.stringify({connected:false,errorCode:e.code||e.name||\"Error\"}));process.exitCode=1}finally{await client.close().catch(()=>{});}\n'@;Set-Location 'E:\\PC-Control\\BrowserTabMCP-Canary-20261009';& node.exe --input-type=module -e $code;$ec=$LASTEXITCODE;$after=[StdioCaptureFG]::GetForegroundWindow().ToInt64();Write-Output ('FOREGROUND_UNCHANGED='+($before -eq $after));exit $ec"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 33000,
+  "note": "Real local stdio MCP SDK client/server roundtrip: list exact Chrome page targets and capture image/png from both localhost dashboards, verify hashes/HWND without sending screenshot pixels to GitHub."
+}
