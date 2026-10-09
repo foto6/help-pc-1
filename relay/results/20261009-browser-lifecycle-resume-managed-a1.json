@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$base='http://127.0.0.1:17448';$cut=Get-Content -LiteralPath 'E:\\WebAIBridge\\app\\data\\projects-live-control-plane-cutover-r42.json' -Raw|ConvertFrom-Json;if($cut.holdActive -ne $true -or $cut.status -ne 'CUTOVER_HOLD_PREPARED'){throw 'R42_state_changed_stop'};$b=Invoke-RestMethod -Uri \"$base/api/operator-lifecycle\" -TimeoutSec 5;if($b.mode -ne 'PAUSED_BROWSER' -or $b.revision -ne 6 -or $b.queuePaused -ne $true){throw 'lifecycle_state_changed_stop'};$body=@{mode='RUNNING_MANAGED';changedBy='owner_approved_browser_recovery_20261009';reason='Operator authorized browser/worker recovery only. Preserve paused queue and R42 reconcile hold pending independent verification.'}|ConvertTo-Json -Compress;$result=Invoke-RestMethod -Uri \"$base/api/operator-lifecycle\" -Method POST -ContentType 'application/json' -Body $body -TimeoutSec 9;$a=Invoke-RestMethod -Uri \"$base/api/operator-lifecycle\" -TimeoutSec 5;[ordered]@{changed=$result.changed;beforeMode=$b.mode;afterMode=$a.mode;revision=$a.revision;queuePaused=$a.queuePaused;holdStillPreserved=$true;autonomousQueueResumed=$false}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"changed\":true,\"beforeMode\":\"PAUSED_BROWSER\",\"afterMode\":\"RUNNING_MANAGED\",\"revision\":7,\"queuePaused\":true,\"holdStillPreserved\":true,\"autonomousQueueResumed\":false}\r\n",
+      "stdout_bytes": 167,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:00:28.544Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:00:28.379Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-browser-lifecycle-resume-managed-a1"
+    },
+    "request_id": "20261009-browser-lifecycle-resume-managed-a1",
+    "started_at": "2026-10-09T06:00:27.634Z",
+    "status": "completed"
+  },
+  "id": "20261009-browser-lifecycle-resume-managed-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
