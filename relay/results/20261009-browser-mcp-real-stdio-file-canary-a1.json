@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$d='E:\\PC-Control\\BrowserTabMCP-Canary-20261009';$f=Join-Path $d 'stdio-roundtrip-canary-20261009.mjs';if(Test-Path -LiteralPath $f){throw 'canary_exists'};$code=@'\nimport { Client } from \"@modelcontextprotocol/client\";\nimport { StdioClientTransport } from \"@modelcontextprotocol/client/stdio\";\nimport { createHash } from \"node:crypto\";\nimport { join } from \"node:path\";\nconst cwd=process.cwd();\nconst transport=new StdioClientTransport({command:process.execPath,args:[join(cwd,\"bin\",\"pc-browser-tab-mcp-stdio.js\")],cwd,env:{...process.env,PC_CONTROL_ENABLE_BROWSER_TAB_CAPTURE:\"1\",PC_CONTROL_BROWSER_CDP_ALLOWED_PORTS:\"17410,17447\"},stderr:\"pipe\"});\nconst client=new Client({name:\"local-browser-cdp-canary\",version:\"1.0.0\"});\ntry {\n await client.connect(transport);\n const names=(await client.listTools()).tools.map(t=>t.name).sort();\n if(JSON.stringify(names)!==JSON.stringify([\"browser.tab.capture\",\"browser.tab.list\"]))throw Error(\"unexpected_tools\");\n const results=[];\n for(const port of [17410,17447]){\n   const listing=await client.callTool({name:\"browser.tab.list\",arguments:{port}});\n   if(listing.isError)throw Error(\"list_error\");\n   const tabs=JSON.parse(listing.content.find(x=>x.type===\"text\").text).tabs;\n   const t=tabs.find(x=>new URL(x.url).hostname===\"127.0.0.1\");\n   if(!t)throw Error(\"no_local_tab_\"+port);\n   const response=await client.callTool({name:\"browser.tab.capture\",arguments:{port,target_id:t.target_id,expected_url:t.url}});\n   if(response.isError)throw Error(\"capture_error_\"+port);\n   const media=response.content.find(x=>x.type===\"image\");\n   const metadata=JSON.parse(response.content.find(x=>x.type===\"text\").text);\n   if(media?.mimeType!==\"image/png\")throw Error(\"no_png_media\");\n   const bytes=Buffer.from(media.data,\"base64\");\n   const digest=createHash(\"sha256\").update(bytes).digest(\"hex\");\n   if(digest!==metadata.sha256)throw Error(\"hash_mismatch\");\n   results.push({port,image:true,width:metadata.width,height:metadata.height,bytes:bytes.length,shaVerified:true,pixelsInText:response.content.find(x=>x.type===\"text\").text.includes(media.data)});\n }\n console.log(JSON.stringify({ok:true,tools:names,results}));\n} catch(e) {console.log(JSON.stringify({ok:false,error:e.code||e.message||\"unknown\"}));process.exitCode=1;}\nfinally {await client.close().catch(()=>{});}\n'@;[System.IO.File]::WriteAllText($f,$code,(New-Object System.Text.UTF8Encoding($false)));Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public static class NativeMediaFG {[DllImport(\"user32.dll\")] public static extern IntPtr GetForegroundWindow();}';$before=[NativeMediaFG]::GetForegroundWindow().ToInt64();Set-Location $d;& node.exe $f;$status=$LASTEXITCODE;$after=[NativeMediaFG]::GetForegroundWindow().ToInt64();Write-Output ('FOREGROUND_UNCHANGED='+($before -eq $after));exit $status"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"tools\":[\"browser.tab.capture\",\"browser.tab.list\"],\"results\":[{\"port\":17410,\"image\":true,\"width\":1920,\"height\":945,\"bytes\":476791,\"shaVerified\":true,\"pixelsInText\":false},{\"port\":17447,\"image\":true,\"width\":929,\"height\":917,\"bytes\":194051,\"shaVerified\":true,\"pixelsInText\":false}]}\nFOREGROUND_UNCHANGED=True\r\n",
+      "stdout_bytes": 319,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:24:03.628Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:24:03.442Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-browser-mcp-real-stdio-file-canary-a1"
+    },
+    "request_id": "20261009-browser-mcp-real-stdio-file-canary-a1",
+    "started_at": "2026-10-09T06:23:59.098Z",
+    "status": "completed"
+  },
+  "id": "20261009-browser-mcp-real-stdio-file-canary-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
