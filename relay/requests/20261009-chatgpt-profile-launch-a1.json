@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-chatgpt-profile-launch-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "node.exe -e \"const fs=require('fs');const p='E:\\\\\\\\WebAIBridge\\\\\\\\app\\\\\\\\data\\\\\\\\projects-live-control-plane-cutover-r42.json';const cut=JSON.parse(fs.readFileSync(p,'utf8'));(async()=>{const base='http://127.0.0.1:17448';const opts={signal:AbortSignal.timeout(6000)};const life=await (await fetch(base+'/api/operator-lifecycle',opts)).json();if(life.mode!=='RUNNING_MANAGED'||!life.queuePaused||life.revision!==7||!cut.holdActive)throw Error('guard_failed');const response=await fetch(base+'/api/ai-profiles/ef72920c-cfe7-4824-a79b-7a0e0943ce7e/launch',{method:'POST',headers:{'content-type':'application/json'},body:'{}',signal:AbortSignal.timeout(14000)});const a=await response.json();console.log(JSON.stringify({http:response.status,chromePid:a.launch?.chromePid||0,workerPid:a.launch?.workerPid||0,chromeReused:a.launch?.chromeReused,workerReused:a.launch?.workerReused,mode:a.launch?.chromeLaunchMode,error_code:a.code||a.error?.code||null}));if(!response.ok)process.exitCode=2})().catch(e=>{console.log(JSON.stringify({ok:false,error:String(e.name||'error')}));process.exitCode=1})\""
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 19000,
+  "note": "Owner-approved exact ChatGPT saved-profile launch via Bridge API after guard: RUNNING_MANAGED queue paused R42 hold true. No user conversation send, no raw data disclosure."
+}
