@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$src='E:\\WebAIBridge\\app\\data';$dst='E:\\PC-Control\\Backup-WebAIBridge-20261009-browser-recovery';if(Test-Path -LiteralPath $dst){throw 'backup_destination_already_exists'};New-Item -ItemType Directory -Path $dst|Out-Null;$names=@('state.json','projects-live-control-plane-cutover-r42.json','managed-project-rotation-state.json','projects-live-control-plane-cutover-r42-reconcile.json','supervisor-watchdog.json');$out=@();foreach($name in $names){$p=Join-Path $src $name;if(Test-Path -LiteralPath $p -PathType Leaf){$new=Join-Path $dst $name;Copy-Item -LiteralPath $p -Destination $new -ErrorAction Stop;$a=(Get-FileHash -LiteralPath $p -Algorithm SHA256).Hash;$b=(Get-FileHash -LiteralPath $new -Algorithm SHA256).Hash;if($a -ne $b){throw \"backup_hash_mismatch\"};$out+=@{name=$name;sha256=$a;bytes=(Get-Item -LiteralPath $new).Length}}};[ordered]@{backup=$dst;files=$out;count=$out.Count;hashesVerified=$true}|ConvertTo-Json -Compress -Depth 6"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"backup\":\"E:\\\\PC-Control\\\\Backup-WebAIBridge-20261009-browser-recovery\",\"files\":[{\"sha256\":\"6EDDD5B71784E326359877F3556A5E5AEB846D3A50E7457AADB33F3738CB61C3\",\"name\":\"state.json\",\"bytes\":12431447},{\"sha256\":\"94576CAA1DDC1D6F528C8E555357736BB6F47B7693D3ADB29E37437AECDDF80C\",\"name\":\"projects-live-control-plane-cutover-r42.json\",\"bytes\":1886},{\"sha256\":\"8010C79A2FE94B58C3916C76A068A9B7E85EC3B1D7F96298F0CBFFD487142F65\",\"name\":\"managed-project-rotation-state.json\",\"bytes\":63},{\"sha256\":\"128914DD0F54B0369FB91206B7DA900F01C5B02D454725598FF52AD0F2B82774\",\"name\":\"supervisor-watchdog.json\",\"bytes\":20415}],\"count\":4,\"hashesVerified\":true}\r\n",
+      "stdout_bytes": 637,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T05:59:58.294Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T05:59:58.135Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-studio-state-backup-01"
+    },
+    "request_id": "20261009-studio-state-backup-01",
+    "started_at": "2026-10-09T05:59:57.187Z",
+    "status": "completed"
+  },
+  "id": "20261009-studio-state-backup-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
