@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-studio-lifecycle-cause-1303-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$r=[ordered]@{};try{$l=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/operator-lifecycle' -TimeoutSec 3;$r.lifecycle=@{mode=$l.mode;revision=$l.revision;changedAt=$l.changedAt;changedBy=$l.changedBy;reason=$l.reason;previousMode=$l.previousMode;queuePaused=$l.queuePaused;quiescence=$l.quiescence}}catch{$r.lifecycle_error=$_.Exception.GetType().Name};foreach($port in @(17447,17410)) {try{$response=Invoke-WebRequest -UseBasicParsing -Uri ('http://127.0.0.1:'+ $port +'/json/version') -TimeoutSec 2;$r[('cdp'+$port)]='listening'}catch{$r[('cdp'+$port)]='unavailable'}};$r|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only reason for persisted lifecycle PAUSED_BROWSER and whether ports 17447/17410 listen. Do not resume."
+}
