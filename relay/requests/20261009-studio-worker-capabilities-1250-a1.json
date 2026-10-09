@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-studio-worker-capabilities-1250-a1",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 12000,
+  "note": "Read-only check of PC Control before diagnosing WebAIBridge worker error; no access to protected directories."
+}
