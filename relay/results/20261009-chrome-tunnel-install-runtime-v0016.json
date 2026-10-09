@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$dir='E:\\PC-Control\\TunnelChrome-20261009'\nif(Test-Path -LiteralPath $dir){throw 'destination_already_exists'}\nNew-Item -ItemType Directory -Path $dir | Out-Null\n$base='https://github.com/openai/tunnel-client/releases/download/v0.0.16/'\n$asset='tunnel-client-runtime-v0.0.16-windows-amd64.zip'\n$zip=Join-Path $dir $asset\n$checks=Join-Path $dir 'SHA256SUMS.txt'\n[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12\nInvoke-WebRequest -Uri ($base+'SHA256SUMS.txt') -OutFile $checks -UseBasicParsing -TimeoutSec 20\n$line=@(Get-Content -LiteralPath $checks|Where-Object {$_ -like ('*'+$asset)})|Select-Object -First 1\nif(!$line){throw 'asset_sha_not_found'}\n$expected=($line.Trim() -split '\\s+')[0].ToLowerInvariant()\nif($expected -notmatch '^[a-f0-9]{64}$'){throw 'invalid_expected_sha'}\nInvoke-WebRequest -Uri ($base+$asset) -OutFile $zip -UseBasicParsing -TimeoutSec 45\n$actual=(Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant()\nif($actual -ne $expected){throw 'download_sha256_mismatch'}\n$expanded=Join-Path $dir 'app'\nExpand-Archive -LiteralPath $zip -DestinationPath $expanded\n$binary=@(Get-ChildItem -LiteralPath $expanded -Recurse -File -Filter 'tunnel-client.exe'|Select-Object -First 1)\nif($binary.Count -ne 1){throw 'executable_not_found'}\n$version=& $binary[0].FullName --version\n[ordered]@{installed=$true;verified=$true;path=$binary[0].FullName;version=($version -join '');archiveSize=(Get-Item -LiteralPath $zip).Length}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "executable_not_found\r\n��ப�:21 ����:25\r\n+ if($binary.Count -ne 1){throw 'executable_not_found'}\r\n+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (executable_not_found:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : executable_not_found\r\n \r\n",
+      "stderr_bytes": 309,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:42:20.054Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:42:19.877Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-chrome-tunnel-install-runtime-v0016"
+    },
+    "request_id": "20261009-chrome-tunnel-install-runtime-v0016",
+    "started_at": "2026-10-09T06:42:12.974Z",
+    "status": "completed"
+  },
+  "id": "20261009-chrome-tunnel-install-runtime-v0016",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
