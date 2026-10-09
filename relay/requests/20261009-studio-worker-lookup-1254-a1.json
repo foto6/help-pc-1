@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-studio-worker-lookup-1254-a1",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "20261009-studio-worker-diagnostics-1251-a1",
+    "action": "shell.run"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only reconciliation for timed-out diagnostic shell request; do not replay."
+}
