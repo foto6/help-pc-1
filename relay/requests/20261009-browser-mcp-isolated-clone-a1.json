@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-browser-mcp-isolated-clone-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$dir='E:\\PC-Control\\BrowserTabMCP-20261009';if(Test-Path -LiteralPath $dir){throw 'isolated_directory_already_exists'};$env:GIT_TERMINAL_PROMPT='0';$env:GCM_INTERACTIVE='Never';& git.exe clone --quiet --depth 1 --single-branch --branch 'agent/native-mcp-browser-tab-image-20261009' 'https://github.com/foto6/help-pc-2.git' $dir;if($LASTEXITCODE -ne 0){throw 'git_clone_failed'};$sha=((& git.exe -C $dir rev-parse HEAD)-join '');if($sha -ne '733a308e18e84838aa476cb5c115e5e10a1195b2'){throw 'exact_sha_mismatch'};[ordered]@{cloneVerified=$true;dir=$dir;sha=$sha;statusCount=@(& git.exe -C $dir status --porcelain=v1).Count}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "Safe isolated Git clone of browser MCP feature into NEW E:\\PC-Control folder; exact SHA checked; no production files or E:\\manhwa touched."
+}
