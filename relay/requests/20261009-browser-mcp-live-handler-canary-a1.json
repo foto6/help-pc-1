@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-browser-mcp-live-handler-canary-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public static class MCPWinFG { [DllImport(\"user32.dll\")] public static extern IntPtr GetForegroundWindow(); }';$before=[MCPWinFG]::GetForegroundWindow().ToInt64();$code=@'\nimport { registerBrowserTabTools } from './src/browser-tab-mcp-sidecar.js';\nconst tools = new Map();\nconst server = { registerTool(name, config, handler) { tools.set(name, handler); } };\nregisterBrowserTabTools(server, { enabled: true });\nconst results = [];\nfor (const port of [17410, 17447]) {\n  const inventory = await tools.get('browser.tab.list')({ port });\n  const tabs = JSON.parse(inventory.content[0].text).tabs || [];\n  const local = tabs.find(tab => new URL(tab.url).hostname === '127.0.0.1');\n  if (!local) { results.push({ port, ok: false, reason: 'local_target_missing' }); continue; }\n  const media = await tools.get('browser.tab.capture')({\n    port, target_id: local.target_id, expected_url: local.url,\n  });\n  if (media.isError) { results.push({ port, ok: false, code: JSON.parse(media.content[0].text).code }); continue; }\n  const meta = JSON.parse(media.content[1].text);\n  const bytes = Buffer.from(media.content[0].data, 'base64');\n  const sig = bytes.subarray(0, 8).toString('hex');\n  results.push({\n    port, ok: media.content[0].type === 'image' &&\n      media.content[0].mimeType === 'image/png' &&\n      sig === '89504e470d0a1a0a', width: meta.width, height: meta.height,\n    size: bytes.length, sha256: meta.sha256, contentIsImage: media.content[0].type,\n    pixelBytesInText: media.content[1].text.includes(media.content[0].data),\n  });\n}\nconsole.log(JSON.stringify({ enabled: tools.size === 2, results }));\n'@;Set-Location 'E:\\PC-Control\\BrowserTabMCP-Canary-20261009';$env:PC_CONTROL_ENABLE_BROWSER_TAB_CAPTURE='1';& node.exe --input-type=module -e $code;if($LASTEXITCODE -ne 0){throw 'mcp_canary_failed'};$after=[MCPWinFG]::GetForegroundWindow().ToInt64();Write-Output ('FOREGROUND_UNCHANGED='+($before -eq $after))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 21000,
+  "note": "Read-only actual MCP handlers test through fake registration and real CDP on two localhost tabs. Verify returned image/png media and desktop HWND unchanged; do not transfer private pixels to GitHub."
+}
