@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-chatgpt-launch-postcheck-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$base='http://127.0.0.1:17448';$profiles=(Invoke-RestMethod \"$base/api/ai-profiles\" -TimeoutSec 5).aiProfiles;$p=$profiles|Where-Object{$_.id -eq 'ef72920c-cfe7-4824-a79b-7a0e0943ce7e'}|Select-Object -First 1;$cdp=$false;$pageCount=0;try{$v=Invoke-RestMethod 'http://127.0.0.1:17410/json/list' -TimeoutSec 3;$cdp=$true;$pageCount=@($v|Where-Object{$_.type -eq 'page'}).Count}catch{};$r=[ordered]@{cdp=$cdp;pageCount=$pageCount;profileOnline=$p.online;profileLastError=$p.lastError;profileLastLaunch=$p.lastLaunchAt;workerPid=$p.workerPid;queuePaused=((Invoke-RestMethod \"$base/api/operator-lifecycle\" -TimeoutSec 3).queuePaused)};$r|ConvertTo-Json -Compress -Depth 4"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13000,
+  "note": "Read only verification that exact saved ChatGPT Chrome and worker are online and queue stays paused."
+}
