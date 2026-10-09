@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$file='E:\\PC-Control\\CDP_TabCapture_20261009\\browser-tab-capture.js';$r=@();foreach($port in @(17410,17447)){$raw=& node.exe $file '--list' \"--port=$port\";if($LASTEXITCODE -ne 0){$r+=@{port=$port;error='list_failed'};continue};$json=$raw|ConvertFrom-Json;$r+=@{port=$port;tabCount=@($json.tabs).Count;tabs=@($json.tabs|Select-Object -First 12|ForEach-Object{@{id=$_.target_id;host=([uri]$_.url).Host;safePath=if(([uri]$_.url).Host -eq '127.0.0.1'){'localhost'}else{'redacted'}}})}};$r|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"port\":17410,\"tabCount\":12,\"tabs\":[{\"safePath\":\"redacted\",\"host\":\"chatgpt.com\",\"id\":\"30ECAC26D18A44DE7369527D65CB0570\"},{\"safePath\":\"localhost\",\"host\":\"127.0.0.1\",\"id\":\"E4700E759EB1FE13CD12240EB1F641DB\"},{\"safePath\":\"redacted\",\"host\":\"chatgpt.com\",\"id\":\"68C37FA7381EBCECA1B8213EFBB52988\"},{\"safePath\":\"redacted\",\"host\":\"chatgpt.com\",\"id\":\"F14DEDB7506D50150E15C9C32727E6F5\"},{\"safePath\":\"redacted\",\"host\":\"chatgpt.com\",\"id\":\"D40D05F5E51CA1EE22BFE5534CBFAAAE\"},{\"safePath\":\"redacted\",\"host\":\"chatgpt.com\",\"id\":\"044C662224A36AE40380BFE975D1298A\"},{\"safePath\":\"redacted\",\"host\":\"chatgpt.com\",\"id\":\"857B431534429E87776D37CFE5E23B21\"},{\"safePath\":\"redacted\",\"host\":\"chatgpt.com\",\"id\":\"570DFCC77D432E981CC73DC017826A0C\"},{\"safePath\":\"redacted\",\"host\":\"chatgpt.com\",\"id\":\"4DACEA54A6104DC7F59E24EB694FB3F6\"},{\"safePath\":\"redacted\",\"host\":\"chatgpt.com\",\"id\":\"25F6B48CEF531DC3AB87B16E8AFEB45A\"},{\"safePath\":\"redacted\",\"host\":\"chatgpt.com\",\"id\":\"947ECDD3655E9C4EB38E324E1F25355C\"},{\"safePath\":\"localhost\",\"host\":\"127.0.0.1\",\"id\":\"239EEF2F2627CBB4EBA04B1CE369EB07\"}]},{\"port\":17447,\"tabCount\":3,\"tabs\":[{\"safePath\":\"redacted\",\"host\":\"gemini.google.com\",\"id\":\"0C29EAB36239D7B4ED4220FD9972B080\"},{\"safePath\":\"localhost\",\"host\":\"127.0.0.1\",\"id\":\"B8A0AADB4B2DA7675A4A2747088FB68C\"},{\"safePath\":\"redacted\",\"host\":\"gemini.google.com\",\"id\":\"B4D1BB47955E2B6D73848EA0877D297D\"}]}]\r\n",
+      "stdout_bytes": 1362,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:06:25.787Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:06:25.591Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-screenshot-tab-targets-a1"
+    },
+    "request_id": "20261009-screenshot-tab-targets-a1",
+    "started_at": "2026-10-09T06:06:24.667Z",
+    "status": "completed"
+  },
+  "id": "20261009-screenshot-tab-targets-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
