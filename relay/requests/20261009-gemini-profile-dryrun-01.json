@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-gemini-profile-dryrun-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$uri='http://127.0.0.1:17448/api/ai-profiles/gemini-personal-attach/launch';try{$r=Invoke-RestMethod -Uri $uri -Method POST -ContentType 'application/json' -Body '{\"dryRun\":true}' -TimeoutSec 6;[ordered]@{ok=$true;dryRun=$r.dryRun;launch=$r.launch;status=$r.status;code=$r.code;message=$r.error}|ConvertTo-Json -Compress -Depth 6}catch{[ordered]@{ok=$false;error=$_.Exception.GetType().Name;message=$_.Exception.Message.Substring(0,[Math]::Min(250,$_.Exception.Message.Length))}|ConvertTo-Json -Compress}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 11000,
+  "note": "Dry-run only launch assessment for Gemini profile; must not start Chrome or worker."
+}
