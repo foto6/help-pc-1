@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public static class BgrCaptureFG { [DllImport(\"user32.dll\")] public static extern IntPtr GetForegroundWindow(); }';$fg=[BgrCaptureFG]::GetForegroundWindow().ToInt64();$src='E:\\PC-Control\\CDP_TabCapture_20261009\\browser-tab-capture.js';$targets=@(@{port=17410;id='E4700E759EB1FE13CD12240EB1F641DB'},@{port=17447;id='B8A0AADB4B2DA7675A4A2747088FB68C'});$out=@();foreach($t in $targets){$data=& node.exe $src ('--target-id='+$t.id) ('--port='+$t.port) 2>$null;if($LASTEXITCODE -eq 0){$cap=$data|ConvertFrom-Json;$verified=((Get-FileHash -LiteralPath $cap.image_path -Algorithm SHA256).Hash.ToLowerInvariant() -eq $cap.sha256);$out+=@{port=$t.port;ok=$verified;width=$cap.width;height=$cap.height;bytes=$cap.byte_length;mime=$cap.mime_type;sha256=$cap.sha256;file=$cap.image_path}}else{$out+=@{port=$t.port;ok=$false;reason='capture_failed'}}};$end=[BgrCaptureFG]::GetForegroundWindow().ToInt64();[ordered]@{foregroundUnchanged=($fg -eq $end);captures=$out}|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"foregroundUnchanged\":true,\"captures\":[{\"width\":1920,\"file\":\"C:\\\\Users\\\\foto6\\\\AppData\\\\Local\\\\Temp\\\\webbridge-cdp-Zbjsv4\\\\tab.png\",\"ok\":true,\"height\":945,\"port\":17410,\"bytes\":476791,\"mime\":\"image/png\",\"sha256\":\"a362136064ec8682a97aa28d7e2861c9f34a0595a82c183b1e6b347d694e1f2c\"},{\"width\":929,\"file\":\"C:\\\\Users\\\\foto6\\\\AppData\\\\Local\\\\Temp\\\\webbridge-cdp-SEOsPs\\\\tab.png\",\"ok\":true,\"height\":917,\"port\":17447,\"bytes\":194023,\"mime\":\"image/png\",\"sha256\":\"3a61f1de813d76c887af41a2f16ff78c99f223052d4303e3b4ac44502f5c9576\"}]}\r\n",
+      "stdout_bytes": 522,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:06:53.572Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:06:53.400Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-screenshot-live-two-profiles-a1"
+    },
+    "request_id": "20261009-screenshot-live-two-profiles-a1",
+    "started_at": "2026-10-09T06:06:47.782Z",
+    "status": "completed"
+  },
+  "id": "20261009-screenshot-live-two-profiles-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
