@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-gemini-postlaunch-health-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$base='http://127.0.0.1:17448';$a=(Invoke-RestMethod \"$base/api/ai-profiles\" -TimeoutSec 4).aiProfiles;$p=$a|Where-Object{$_.id -eq 'gemini-personal-attach'}|Select-Object -First 1;$g=$false;$count=0;try{$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 3;$g=$true;$count=@($tabs|Where-Object{$_.type -eq 'page'}).Count}catch{};[ordered]@{geminiProfileOnline=$p.online;workerLastSeenAt=$p.workerLastSeenAt;workerConnected=$p.workerConnected;sessionStatus=$p.sessionStatus;lastError=$p.lastError;cdp17447=$g;pageCount=$count;queuePaused=((Invoke-RestMethod \"$base/api/operator-lifecycle\" -TimeoutSec 4).queuePaused)}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Verify Gemini profile session and Chrome CDP after official restart; no browser action or token."
+}
