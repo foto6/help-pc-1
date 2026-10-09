@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-saved-gemini-path-discovery-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$r=[ordered]@{};$roots=@('E:\\WebAIBridge\\chrome-profile-web-bridge','E:\\WebAIBridge\\chrome-profiles');$r.roots=@();foreach($root in $roots){$exists=Test-Path -LiteralPath $root -PathType Container;$r.roots+=@{root=$root;exists=$exists;hasLocalState=($exists -and (Test-Path -LiteralPath (Join-Path $root 'Local State')));hasDefaultPrefs=($exists -and (Test-Path -LiteralPath (Join-Path $root 'Default\\Preferences')))}};$top='C:\\Users\\foto6\\OneDrive';$candidates=@();if(Test-Path -LiteralPath $top){$levels=@((Get-Item -LiteralPath $top));for($d=0;$d -lt 3;$d++){$next=@();foreach($folder in $levels){$items=@(Get-ChildItem -LiteralPath $folder.FullName -Directory -ErrorAction SilentlyContinue | Select-Object -First 90);foreach($item in $items){if($item.Name -like '*WebAIBridge*' -or $item.Name -like '*Gemini*' -or $item.Name -like '*chrome-profiles*'){$candidates+=@{depth=$d+1;name=([regex]::Replace($item.Name,'[^a-zA-Z0-9_.-]','_')).Substring(0,[Math]::Min(70,$item.Name.Length));hasLocalState=Test-Path -LiteralPath (Join-Path $item.FullName 'Local State');hasGemini=Test-Path -LiteralPath (Join-Path $item.FullName 'chrome-profiles\\gemini-Gemini_2-d03bac7f')}};$next+=$item}};$levels=$next;if($levels.Count -gt 300){break}}};$r.candidates=$candidates|Select-Object -First 20;$r|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Bounded read-only search for known Chrome profile structure, no contents and no E:\\manhwa."
+}
