@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-09T05:51:09.199Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261009-studio-worker-diagnostics-1251-a1"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:60126357e79c04d9f3d132393c51f5f66a5c6a7973e439e20f87bd3cb3a34013",
+            "journal_sequence": 2655,
+            "previous_record_sha256": "5a9bcf9b0a7d75458e918b80b6870d16c1ee190fa9565d269edd67e3c6f253df",
+            "record_sha256": "951714c042fde2fdf31876bf58450b12147dc9a4bdabf5afd479fb876fac7365",
+            "recorded_at": "2026-10-09T05:51:09.349Z",
+            "request_id": "20261009-studio-worker-diagnostics-1251-a1",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-09T05:51:34.598Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "20261009-studio-worker-diagnostics-1251-a1"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:60126357e79c04d9f3d132393c51f5f66a5c6a7973e439e20f87bd3cb3a34013",
+            "journal_sequence": 2656,
+            "previous_record_sha256": "951714c042fde2fdf31876bf58450b12147dc9a4bdabf5afd479fb876fac7365",
+            "record_sha256": "6c482d2b44c1e778fdd4df054bd3ad0dfb4f365138d049f1c3f4146454fd81dd",
+            "recorded_at": "2026-10-09T05:51:34.759Z",
+            "request_id": "20261009-studio-worker-diagnostics-1251-a1",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-09T05:51:34.598Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "20261009-studio-worker-diagnostics-1251-a1"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-09T05:51:34.598Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "20261009-studio-worker-diagnostics-1251-a1"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:60126357e79c04d9f3d132393c51f5f66a5c6a7973e439e20f87bd3cb3a34013",
+          "journal_sequence": 2656,
+          "previous_record_sha256": "951714c042fde2fdf31876bf58450b12147dc9a4bdabf5afd479fb876fac7365",
+          "record_sha256": "6c482d2b44c1e778fdd4df054bd3ad0dfb4f365138d049f1c3f4146454fd81dd",
+          "recorded_at": "2026-10-09T05:51:34.759Z",
+          "request_id": "20261009-studio-worker-diagnostics-1251-a1",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "9aafb17455769526d4a84d194595ce6711ee106d6effb34995b776153f175bb5",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 2656
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "20261009-studio-worker-diagnostics-1251-a1",
+        "request_id": "20261009-studio-worker-diagnostics-1251-a1",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T05:52:08.877Z",
+    "ok": true,
+    "request_id": "20261009-studio-worker-lookup-1254-a1",
+    "started_at": "2026-10-09T05:52:08.718Z",
+    "status": "completed"
+  },
+  "id": "20261009-studio-worker-lookup-1254-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
