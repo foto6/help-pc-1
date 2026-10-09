@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-gemini-profile-launch-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "node.exe -e \"(async()=>{const b='http://127.0.0.1:17448';const life=await (await fetch(b+'/api/operator-lifecycle',{signal:AbortSignal.timeout(4000)})).json();if(life.mode!=='RUNNING_MANAGED'||life.queuePaused!==true)throw Error('lifecycle_guard');const p=(await(await fetch(b+'/api/ai-profiles',{signal:AbortSignal.timeout(4000)})).json()).aiProfiles.find(x=>x.id==='gemini-personal-attach');if(!p||p.online||p.debugPort!==17447||!String(p.chromeProfilePath).includes('gemini-Gemini_2-d03bac7f-recovery-20261009'))throw Error('profile_guard');const res=await fetch(b+'/api/ai-profiles/gemini-personal-attach/launch',{method:'POST',headers:{'content-type':'application/json'},body:'{}',signal:AbortSignal.timeout(13000)});let obj=await res.json();console.log(JSON.stringify({http:res.status,chromePid:obj.launch?.chromePid||0,workerPid:obj.launch?.workerPid||0,chromeReused:obj.launch?.chromeReused,workerReused:obj.launch?.workerReused,errorCode:obj.code||null}));if(!res.ok)process.exitCode=2})().catch(e=>{console.log(JSON.stringify({ok:false,error:e.name||'Error'}));process.exitCode=1})\""
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "One-time owner-approved Gemini attach profile Chrome+worker launch via Bridge API with revision/queue guard after saved path repair. No messages sent or browser profile overwritten."
+}
