@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-gemini-path-repair-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "node.exe -e \"const fs=require('fs');(async()=>{const b='http://127.0.0.1:17448';const life=await (await fetch(b+'/api/operator-lifecycle',{signal:AbortSignal.timeout(4000)})).json();if(life.mode!=='RUNNING_MANAGED'||life.queuePaused!==true||life.revision!==7)throw Error('lifecycle_guard');const profiles=(await (await fetch(b+'/api/ai-profiles',{signal:AbortSignal.timeout(4000)})).json()).aiProfiles;const item=profiles.find(x=>x.id==='gemini-personal-attach');if(!item||item.online||item.debugPort!==17447||!item.chromeProfilePath||item.chromeProfilePath.length<1000||fs.existsSync(item.chromeProfilePath))throw Error('profile_guard');const to='E:\\\\\\\\WebAIBridge\\\\\\\\chrome-profiles\\\\\\\\gemini-Gemini_2-d03bac7f-recovery-20261009';if(fs.existsSync(to))throw Error('destination_exists');const response=await fetch(b+'/api/ai-profiles/gemini-personal-attach',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({chromeProfilePath:to}),signal:AbortSignal.timeout(8000)});if(!response.ok)throw Error('profile_put_'+response.status);const z=await response.json();if(z.chromeProfilePath!==to||z.debugPort!==17447)throw Error('readback_mismatch');console.log(JSON.stringify({updated:true,id:z.id,debugPort:z.debugPort,oldInvalidPathLength:item.chromeProfilePath.length,newPath:to,newPathExistedBefore:false,chromeMode:z.chromeLaunchMode}));})().catch(e=>{console.log(JSON.stringify({updated:false,error:e.message}));process.exitCode=1})\""
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Owner-authorized atomic profile setting repair: stale corrupted 1448-character nonexistent Gemini Chrome user-data path to fresh isolated E:\\WebAIBridge\\chrome-profiles, preserve existing profile ID/settings/cookies elsewhere. Guard no running worker and paused task queue; no deletions."
+}
