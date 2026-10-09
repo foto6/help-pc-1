@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-browser-mcp-install-inventory-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$paths=@('E:\\help-pc-2','E:\\PC-Control','E:\\PC-Control\\help-pc-2','E:\\pc-control-plane','E:\\pc-control','E:\\pc-github-relay');$result=@();foreach($p in $paths){$e=Test-Path -LiteralPath $p -PathType Container;$result+=@{path=$p;exists=$e;hasPackage=($e -and (Test-Path -LiteralPath (Join-Path $p 'package.json')));hasNodeModules=($e -and (Test-Path -LiteralPath (Join-Path $p 'node_modules\\ws')))}};[ordered]@{paths=$result;nodeVersion=((node.exe --version 2>$null) -join '')}|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only local Node PC Control repository/dependencies discovery for isolated MCP media smoke; no writes and no protected paths."
+}
