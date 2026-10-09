@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$uri='http://127.0.0.1:17448/api/ai-profiles/gemini-personal-attach/launch';try{$r=Invoke-RestMethod -Uri $uri -Method POST -ContentType 'application/json' -Body '{\"dryRun\":true}' -TimeoutSec 6;[ordered]@{ok=$true;dryRun=$r.dryRun;launch=$r.launch;status=$r.status;code=$r.code;message=$r.error}|ConvertTo-Json -Compress -Depth 6}catch{[ordered]@{ok=$false;error=$_.Exception.GetType().Name;message=$_.Exception.Message.Substring(0,[Math]::Min(250,$_.Exception.Message.Length))}|ConvertTo-Json -Compress}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"dryRun\":null,\"launch\":{\"dryRun\":true,\"chrome\":{\"file\":\"C:\\\\Program Files\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe\",\"args\":[\"--user-data-dir=C:\\\\Users\\\\foto6\\\\OneDrive\\\\1240626202052-1240626201026-�����'�����?T�'�������?�'�\"����?T�'�������'�����?T�'�������?�'�\"����?T�'�������'�����?T�'�������?�'�\"����?T�'�+�����'�����?T�'���������<���Ő��??���>�����'���������?��������?������?�'�T�������?������'�����?T�'���������<���Ő��??�'�?�����'�����?T�'���������?����Ő��??���?���Ő��??�?�'�? �����'���������?������'�����?�?�'�?�����'���������?��������?������?�'�T���?�?�??�?�����'�����?T�'���������<���Ő��??���>�����'�����?T�'�������?�'�\"����?T�'�>\\\\�����'�����?T�'�������?�'�\"����?T�'�������'�����?T�'�������?�'�\"����?T�'�������'�����?T�'�������?�'�\"����?T�'�+�����'�����?T�'���������<���Ő��??���>�����'���������?��������?������?�'�T�������?������'�����?T�'���������<���Ő��??�'�?�����'�����?T�'���������?����Ő��??���?���Ő��??�?�'�? �����'���������?������'�����?�?�'�?�����'���������?��������?������?�'�T���?�?�??�?�����'�����?T�'���������<���Ő��??���>�����'�����?T�'�������?�'�\"����?T�'�>\\\\�����'�����?T�'�������?�'�\"����?T�'�������'�����?T�'�������?�'�\"����?T�'�������'�����?T�'�������?�'�\"����?T�'�+�����'�����?T�'���������<���Ő��??���>�����'���������?��������?������?�'�T�������?������'�����?T�'���������<���Ő��??�'�?�����'�����?T�'���������?����Ő��??���?���Ő��??�?�'�? �����'���������?������'�����?�?�'�?�����'���������?��������?������?�'�T���?�?�??�?�����'�����?T�'���������<���Ő��??���>�����'�����?T�'�������?�'�\"����?T�'�>\\\\WebAIBridge-0.2.0\\\\chrome-profiles\\\\gemini-Gemini_2-d03bac7f\",\"--disable-extensions-except=E:\\\\WebAIBridge\\\\extension\",\"--load-extension=E:\\\\WebAIBridge\\\\extension\",\"--no-first-run\",\"--no-default-browser-check\",\"--disable-sync\",\"--lang=ru-RU\",\"--remote-debugging-port=17447\",\"--disable-quic\",\"--force-webrtc-ip-handling-policy=disable_non_proxied_udp\",\"--proxy-server=http://127.0.0.1:17449\",\"--proxy-bypass-list=127.0.0.1;localhost;::1;\\u003clocal\\u003e\",\"--new-window\",\"http://127.0.0.1:17448\",\"https://gemini.google.com/app\"]},\"worker\":{\"file\":\"C:\\\\Program Files\\\\nodejs\\\\node.exe\",\"args\":[\"E:\\\\WebAIBridge\\\\app\\\\worker.js\",\"--profile=gemini-personal-attach\",\"--provider=gemini\",\"--debug=http://127.0.0.1:17447\",\"--bridge=http://127.0.0.1:17448\",\"--client=ai-web-worker-gemini-personal-attach\"],\"env\":{\"WEB_AI_BRIDGE_TIMEZONE\":\"America/Los_Angeles\"}},\"operatorLifecycle\":{\"contract\":\"bridge.operator_lifecycle.r40.v1\",\"lifecycleMode\":\"RUNNING_MANAGED\",\"configuredLaunchMode\":\"attach\",\"configuredAttachAutoStart\":true,\"effectiveLaunchMode\":\"attach\",\"effectiveAttachAutoStart\":true,\"chromeOnline\":false,\"workerOnline\":false,\"chromeAutoStartAllowed\":true,\"workerAutoStartAllowed\":true,\"browserWillStartIfLaunchRequested\":true,\"workerWillStartIfLaunchRequested\":true,\"launchBlocked\":false,\"reason\":\"attach profile may start its configured browser because attachAutoStart=true\"}},\"status\":null,\"code\":null,\"message\":null}\r\n",
+      "stdout_bytes": 2970,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:01:01.097Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:01:00.933Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-gemini-profile-dryrun-01"
+    },
+    "request_id": "20261009-gemini-profile-dryrun-01",
+    "started_at": "2026-10-09T06:01:00.207Z",
+    "status": "completed"
+  },
+  "id": "20261009-gemini-profile-dryrun-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
