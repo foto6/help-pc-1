@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';Add-Type -TypeDefinition 'using System;using System.Runtime.InteropServices;public static class FocusOwner {[DllImport(\"user32.dll\")] public static extern IntPtr GetForegroundWindow();[DllImport(\"user32.dll\")] public static extern uint GetWindowThreadProcessId(IntPtr hwnd, out uint pid);}';$hwnd=[FocusOwner]::GetForegroundWindow();$pidValue=[uint32]0;[void][FocusOwner]::GetWindowThreadProcessId($hwnd,[ref]$pidValue);$name='unknown';if($pidValue -gt 0){$p=Get-Process -Id $pidValue -ErrorAction SilentlyContinue;if($p){$name=$p.ProcessName}};$src='E:\\PC-Control\\CDP_TabCapture_20261009\\browser-tab-capture.js';$list=& node.exe $src --list --port=17447;if($LASTEXITCODE -ne 0){throw 'list_failed'};$tabs=($list|ConvertFrom-Json).tabs;$tab=$tabs|Where-Object{$_.url -match '^http://127.0.0.1:17448'}|Select-Object -First 1;if(!$tab){throw 'local_target_missing'};$cap=& node.exe $src ('--target-id='+$tab.target_id) --port=17447;if($LASTEXITCODE -ne 0){throw 'capture_failed'};$info=$cap|ConvertFrom-Json;$after=[FocusOwner]::GetForegroundWindow();[ordered]@{foregroundProcess=$name;foregroundHwndUnchanged=($hwnd -eq $after);chromeWasNotForeground=($name -notmatch '^(chrome)$');captureBytes=$info.byte_length;pngShaVerified=((Get-FileHash -LiteralPath $info.image_path -Algorithm SHA256).Hash.ToLower() -eq $info.sha256)}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"foregroundProcess\":\"firefox\",\"foregroundHwndUnchanged\":true,\"chromeWasNotForeground\":true,\"captureBytes\":194051,\"pngShaVerified\":true}\r\n",
+      "stdout_bytes": 138,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:26:38.711Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:26:38.530Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-browser-occluded-foreground-readonly-a1"
+    },
+    "request_id": "20261009-browser-occluded-foreground-readonly-a1",
+    "started_at": "2026-10-09T06:26:36.825Z",
+    "status": "completed"
+  },
+  "id": "20261009-browser-occluded-foreground-readonly-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
