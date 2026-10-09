@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-studio-state-backup-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$src='E:\\WebAIBridge\\app\\data';$dst='E:\\PC-Control\\Backup-WebAIBridge-20261009-browser-recovery';if(Test-Path -LiteralPath $dst){throw 'backup_destination_already_exists'};New-Item -ItemType Directory -Path $dst|Out-Null;$names=@('state.json','projects-live-control-plane-cutover-r42.json','managed-project-rotation-state.json','projects-live-control-plane-cutover-r42-reconcile.json','supervisor-watchdog.json');$out=@();foreach($name in $names){$p=Join-Path $src $name;if(Test-Path -LiteralPath $p -PathType Leaf){$new=Join-Path $dst $name;Copy-Item -LiteralPath $p -Destination $new -ErrorAction Stop;$a=(Get-FileHash -LiteralPath $p -Algorithm SHA256).Hash;$b=(Get-FileHash -LiteralPath $new -Algorithm SHA256).Hash;if($a -ne $b){throw \"backup_hash_mismatch\"};$out+=@{name=$name;sha256=$a;bytes=(Get-Item -LiteralPath $new).Length}}};[ordered]@{backup=$dst;files=$out;count=$out.Count;hashesVerified=$true}|ConvertTo-Json -Compress -Depth 6"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Authorized one-time local backup of exact WebAIBridge state for reversible browser recovery; SHA256 verify; never touch E:\\manhwa."
+}
