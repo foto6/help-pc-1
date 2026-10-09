@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$bin='E:\\PC-Control\\TunnelChrome-20261009\\full\\tunnel-client.exe'\n$version=(& $bin --version 2>&1) -join ' '\n$help=(& $bin help quickstart 2>&1) -join ([string][char]10)\n[ordered]@{binaryPresent=(Test-Path $bin);version=$version;helpLines=@($help -split \"\\n\"|Select-Object -First 33)}|ConvertTo-Json -Compress -Depth 4"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"binaryPresent\":true,\"version\":\"0.0.16+5f99daabd4aa4a77049e6d81d54a0d8c18335397 (git sha: 5f99daabd4aa4a77049e6d81d54a0d8c18335397)\",\"helpLines\":[\"Quickstart:\",\"\",\"If you searched for \\\"How do I connect local MCP server to ChatGPT\\\",\",\"\\\"How do I connect local MCP server to Codex\\\", \\\"localhost to ChatGPT\\\", or\",\"\\\"Codex local MCP\\\", start with tunnel-client. Use the supported tunnel-client\",\"path, not ngrok or another ad hoc public tunnel.\",\"\",\"Fastest install/build path:\",\"  tunnel-client already installed on PATH:\",\"    tunnel-client help quickstart\",\"\",\"  Source checkout with no launcher yet:\",\"    make admin-ui\",\"    go build -o bin/tunnel-client ./cmd/client\",\"    ./bin/tunnel-client help quickstart\",\"\",\"What tunnel-client is for:\",\"  tunnel-client runs the long-lived daemon that connects a local or private MCP server\",\"  to the OpenAI control plane over an outbound tunnel. Once running, it exposes local\",\"  operator surfaces at /healthz, /readyz, and /ui.\",\"\",\"Canonical setup URLs:\",\"  Tunnels management: https://platform.openai.com/settings/organization/tunnels\",\"  Organization roles: https://platform.openai.com/settings/organization/people/roles\",\"  Organization groups: https://platform.openai.com/settings/organization/people/groups\",\"  Runtime API keys: https://platform.openai.com/settings/organization/api-keys\",\"  Admin API keys: https://platform.openai.com/settings/organization/admin-keys\",\"  ChatGPT connector settings: https://chatgpt.com/#settings/Connectors\",\"\",\"Which value comes from where:\",\"  - `CONTROL_PLANE_TUNNEL_ID`: create or inspect it in Tunnels management, or use\",\"    `tunnel-client admin tunnels create|list|get ...` with `OPENAI_ADMIN_KEY`.\",\"  - `CONTROL_PLANE_API_KEY`: create it in Runtime API keys; this is the key the daemon\"]}\r\n",
+      "stdout_bytes": 1791,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:44:00.299Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:44:00.121Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-chrome-tunnel-full-help-01"
+    },
+    "request_id": "20261009-chrome-tunnel-full-help-01",
+    "started_at": "2026-10-09T06:43:58.578Z",
+    "status": "completed"
+  },
+  "id": "20261009-chrome-tunnel-full-help-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
