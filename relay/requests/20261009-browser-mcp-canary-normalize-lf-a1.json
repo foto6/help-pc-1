@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-browser-mcp-canary-normalize-lf-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p='E:\\PC-Control\\BrowserTabMCP-Canary-20261009\\src\\browser-tab-capture.js';if(!(Test-Path -LiteralPath $p)){throw 'source_missing'};$text=[System.IO.File]::ReadAllText($p);$norm=$text.Replace(([string][char]13+[char]10),[string][char]10);if(-not $norm.EndsWith([string][char]10)){$norm+=[char]10};[System.IO.File]::WriteAllText($p,$norm,(New-Object System.Text.UTF8Encoding($false)));$sha=((& git.exe hash-object $p)-join '');[ordered]@{hash=$sha;expected='a4e0087674468e3fec4fc3b2a8eeb30bba484afb';verified=($sha -eq 'a4e0087674468e3fec4fc3b2a8eeb30bba484afb')}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 9000,
+  "note": "Fix deterministic CRLF/here-string conversion in isolated screenshot canary staging only."
+}
