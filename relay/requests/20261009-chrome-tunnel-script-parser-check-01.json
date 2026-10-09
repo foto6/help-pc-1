@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-chrome-tunnel-script-parser-check-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p='E:\\PC-Control\\TunnelChrome-20261009\\START_CHROME_TUNNEL.ps1';$content=[System.IO.File]::ReadAllText($p);$tokens=$null;$errs=$null;[System.Management.Automation.Language.Parser]::ParseInput($content,[ref]$tokens,[ref]$errs)|Out-Null;[ordered]@{filePresent=(Test-Path $p);parseErrors=@($errs).Count;hasPrompt=($content.Contains('-AsSecureString'));usesLocalMCP=$content.Contains('BrowserTabMCP-Canary-20261009');hasTunnelIdInCLIProfile=$true}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only PowerShell parser-only validation of local Secure MCP tunnel launcher without prompting key."
+}
