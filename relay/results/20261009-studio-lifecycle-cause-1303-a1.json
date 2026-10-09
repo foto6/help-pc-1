@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$r=[ordered]@{};try{$l=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/operator-lifecycle' -TimeoutSec 3;$r.lifecycle=@{mode=$l.mode;revision=$l.revision;changedAt=$l.changedAt;changedBy=$l.changedBy;reason=$l.reason;previousMode=$l.previousMode;queuePaused=$l.queuePaused;quiescence=$l.quiescence}}catch{$r.lifecycle_error=$_.Exception.GetType().Name};foreach($port in @(17447,17410)) {try{$response=Invoke-WebRequest -UseBasicParsing -Uri ('http://127.0.0.1:'+ $port +'/json/version') -TimeoutSec 2;$r[('cdp'+$port)]='listening'}catch{$r[('cdp'+$port)]='unavailable'}};$r|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"lifecycle\":{\"changedAt\":\"2026-10-08T08:24:28.0133193Z\",\"queuePaused\":true,\"revision\":6,\"previousMode\":\"PAUSED_BROWSER\",\"reason\":\"controlled R42 cutover: no autonomous dispatch before live reconcile\",\"quiescence\":{\"requested\":false,\"completed\":false,\"completedAt\":\"\",\"errors\":[]},\"mode\":\"PAUSED_BROWSER\",\"changedBy\":\"r42_cutover_hold\"},\"cdp17447\":\"unavailable\",\"cdp17410\":\"unavailable\"}\r\n",
+      "stdout_bytes": 389,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T05:54:50.354Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T05:54:50.175Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-studio-lifecycle-cause-1303-a1"
+    },
+    "request_id": "20261009-studio-lifecycle-cause-1303-a1",
+    "started_at": "2026-10-09T05:54:45.494Z",
+    "status": "completed"
+  },
+  "id": "20261009-studio-lifecycle-cause-1303-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
