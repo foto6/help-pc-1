@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-screenshot-tab-targets-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$file='E:\\PC-Control\\CDP_TabCapture_20261009\\browser-tab-capture.js';$r=@();foreach($port in @(17410,17447)){$raw=& node.exe $file '--list' \"--port=$port\";if($LASTEXITCODE -ne 0){$r+=@{port=$port;error='list_failed'};continue};$json=$raw|ConvertFrom-Json;$r+=@{port=$port;tabCount=@($json.tabs).Count;tabs=@($json.tabs|Select-Object -First 12|ForEach-Object{@{id=$_.target_id;host=([uri]$_.url).Host;safePath=if(([uri]$_.url).Host -eq '127.0.0.1'){'localhost'}else{'redacted'}}})}};$r|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only browser tab inventory for both restored Chrome CDP ports; no private URLs or titles stored in GitHub."
+}
