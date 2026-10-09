@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$d='E:\\PC-Control\\BrowserTabMCP-20261009';$e=Test-Path -LiteralPath $d -PathType Container;$head='';$git=$false;$hasSource=$false;if($e){$git=Test-Path -LiteralPath (Join-Path $d '.git');$hasSource=Test-Path -LiteralPath (Join-Path $d 'src\\browser-tab-mcp-sidecar.js');if($hasSource){$head=((& git.exe -C $d rev-parse HEAD 2>$null)-join '')}};[ordered]@{exists=$e;hasGit=$git;hasSidecarSource=$hasSource;head=$head}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"exists\":true,\"hasGit\":true,\"hasSidecarSource\":false,\"head\":\"\"}\r\n",
+      "stdout_bytes": 66,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:17:19.501Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:17:19.330Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-browser-mcp-isolated-dir-readonly-a1"
+    },
+    "request_id": "20261009-browser-mcp-isolated-dir-readonly-a1",
+    "started_at": "2026-10-09T06:17:18.617Z",
+    "status": "completed"
+  },
+  "id": "20261009-browser-mcp-isolated-dir-readonly-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
