@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-browser-lifecycle-resume-managed-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$base='http://127.0.0.1:17448';$cut=Get-Content -LiteralPath 'E:\\WebAIBridge\\app\\data\\projects-live-control-plane-cutover-r42.json' -Raw|ConvertFrom-Json;if($cut.holdActive -ne $true -or $cut.status -ne 'CUTOVER_HOLD_PREPARED'){throw 'R42_state_changed_stop'};$b=Invoke-RestMethod -Uri \"$base/api/operator-lifecycle\" -TimeoutSec 5;if($b.mode -ne 'PAUSED_BROWSER' -or $b.revision -ne 6 -or $b.queuePaused -ne $true){throw 'lifecycle_state_changed_stop'};$body=@{mode='RUNNING_MANAGED';changedBy='owner_approved_browser_recovery_20261009';reason='Operator authorized browser/worker recovery only. Preserve paused queue and R42 reconcile hold pending independent verification.'}|ConvertTo-Json -Compress;$result=Invoke-RestMethod -Uri \"$base/api/operator-lifecycle\" -Method POST -ContentType 'application/json' -Body $body -TimeoutSec 9;$a=Invoke-RestMethod -Uri \"$base/api/operator-lifecycle\" -TimeoutSec 5;[ordered]@{changed=$result.changed;beforeMode=$b.mode;afterMode=$a.mode;revision=$a.revision;queuePaused=$a.queuePaused;holdStillPreserved=$true;autonomousQueueResumed=$false}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Explicit owner-approved R40 browser-only lifecycle resume with strict revision and persisted R42 hold checks, R42 hold and queue pause preserved. No bypass of unknown send reconciliation."
+}
