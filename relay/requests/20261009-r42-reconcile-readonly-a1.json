@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-r42-reconcile-readonly-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue'\n$base='http://127.0.0.1:17448';$out=[ordered]@{}\nforeach($part in @('api/projects/control-plane/cutover-r42/status','api/health','api/supervisor-watchdog/agent-assignments','api/operator-lifecycle')){\n $key=($part -split '/')[-1];try{$z=Invoke-RestMethod -Method GET -Uri \"$base/$part\" -TimeoutSec 4;\n switch($key){\n 'status'{$c=$z.cutoverState;$a=$z.autonomy;$out.r42=[ordered]@{cutover_status=$c.status;holdActive=$c.holdActive;rollbackManifest=$c.rollbackManifest;originalQueuePaused=$c.originalQueuePaused;appliedSha=$c.appliedSha;keys=@($c.PSObject.Properties.Name);autonomy_keys=@($a.PSObject.Properties.Name);autonomy=$a}}\n 'health'{$out.health=[ordered]@{status=$z.status;ok=$z.ok;healthy=$z.healthy;queuePaused=$z.paused;keys=@($z.PSObject.Properties.Name);errors=@($z.errors|Select-Object -First 6)}}\n 'agent-assignments'{$out.assignments=[ordered]@{counts=$z.counts;pending=@($z.assignments|Where-Object{$_.state -in @('queued','running','blocked','failed','in_progress') }|Select-Object -Last 10|ForEach-Object{@{id=$_.id;state=$_.state;dispatchCount=$_.dispatchCount}})}}\n 'operator-lifecycle'{$out.lifecycle=[ordered]@{mode=$z.mode;revision=$z.revision;changedAt=$z.changedAt;changedBy=$z.changedBy;reason=$z.reason;queuePaused=$z.queuePaused}}\n }\n }catch{$out[$key+'_error']=$_.Exception.GetType().Name}\n}\n$out|ConvertTo-Json -Depth 7 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read only R42 hold, live queue and assignment status. No mutations, no secrets, no browser windows."
+}
