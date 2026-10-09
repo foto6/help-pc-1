@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-studio-worker-lifecycle-1300-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$r=[ordered]@{};foreach($item in @(@('life','http://127.0.0.1:17448/api/operator-lifecycle'),@('profiles','http://127.0.0.1:17448/api/ai-profiles'))){$name=$item[0];try{$raw=Invoke-RestMethod -Uri $item[1] -TimeoutSec 3;if($name -eq 'life'){$r.life=@{mode=[string]$raw.mode;revision=$raw.revision;queuePaused=$raw.queuePaused}}else{$r.profiles=@($raw.aiProfiles|ForEach-Object{@{id=$_.id;provider=$_.provider;enabled=$_.enabled;debugPort=$_.debugPort;chromeLaunchMode=$_.chromeLaunchMode;attachAutoStart=$_.attachAutoStart;online=$_.online;status=$_.status;workerStatus=$_.workerStatus;lastError=([string]$_.lastError).Substring(0,[Math]::Min(160,([string]$_.lastError).Length))}})}}catch{$r[('error_'+$name)]=$_.Exception.GetType().Name}};$r|ConvertTo-Json -Compress -Depth 6"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only WebAIBridge lifecycle and profiles, safe whitelisted fields only; no token, paths, or E:\\manhwa data."
+}
