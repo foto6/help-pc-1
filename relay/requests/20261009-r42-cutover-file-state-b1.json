@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-r42-cutover-file-state-b1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$root='E:\\WebAIBridge\\app\\data';$names=@('projects-live-control-plane-cutover-r42.json','projects-live-control-plane-cutover-r42-reconcile.json','managed-project-rotation-state.json','operator-lifecycle-r40.json','supervisor-watchdog.json');$rows=@();foreach($name in $names){$p=Join-Path $root $name;$o=[ordered]@{name=$name;exists=(Test-Path -LiteralPath $p -PathType Leaf)};if($o.exists){$f=Get-Item -LiteralPath $p;$o.lastWrite=$f.LastWriteTime.ToString('o');$o.length=$f.Length;try{$v=Get-Content -LiteralPath $p -Raw|ConvertFrom-Json;$o.status=$v.status;$o.holdActive=$v.holdActive;$o.originalQueuePaused=$v.originalQueuePaused;$o.originalOperatorLifecycleMode=$v.originalOperatorLifecycleMode;$o.lastReadOnlyReconcileAt=$v.lastReadOnlyReconcileAt;$o.lastReadOnlyReconcileDiffCount=$v.lastReadOnlyReconcileDiffCount;$o.pendingCount=@($v.pending.PSObject.Properties).Count;$o.mode=$v.mode;$o.enforceHighMode=$v.enforceHighMode;$o.allowAutonomousSend=$v.allowAutonomousSend;$o.changedBy=$v.changedBy;}catch{$o.parse_error=$_.Exception.GetType().Name}};$rows+=$o};$rows|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read only exact cutover, rotation and operator config metadata; no secrets/paths outside WebAIBridge and no mutation."
+}
