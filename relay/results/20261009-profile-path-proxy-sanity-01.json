@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$profiles=(Invoke-RestMethod 'http://127.0.0.1:17448/api/ai-profiles' -TimeoutSec 4).aiProfiles;$rows=@();foreach($id in @('gemini-personal-attach','ef72920c-cfe7-4824-a79b-7a0e0943ce7e')){$p=$profiles|Where-Object{$_.id -eq $id}|Select-Object -First 1;if($p){$dir=[string]$p.chromeProfilePath;$rows+=@{id=$id;profilePathExists=Test-Path -LiteralPath $dir -PathType Container;pathLength=$dir.Length;pathNonAsciiCount=@($dir.ToCharArray()|Where-Object{[int]$_ -gt 127}).Count;debugPort=$p.debugPort;chromeMode=$p.chromeLaunchMode;proxyMode=$p.proxyMode;chromePathExists=Test-Path -LiteralPath ([string]$p.chromePath) -PathType Leaf}}};$port=@(Get-NetTCPConnection -LocalPort 17449 -State Listen -ErrorAction SilentlyContinue);[ordered]@{profiles=$rows;proxy17449Listening=$port.Count -gt 0;chromeBinaryExists=Test-Path 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'}|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Test-Path : �� 㤠���� �ਢ易�� ��㬥�� � ��ࠬ���� \"LiteralPath\", ⠪ ��� �� �।�⠢��� ᮡ�� ������ ��ப�.\r\n��ப�:1 ����:623\r\n+ ... romePathExists=Test-Path -LiteralPath ([string]$p.chromePath) -PathTy ...\r\n+                                           ~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidData: (:) [Test-Path], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : ParameterArgumentValidationErrorEmptyStringNotAllowed,Microsoft.PowerShell.Commands.Test \r\n   PathCommand\r\n \r\n",
+      "stderr_bytes": 520,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:01:28.202Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:01:28.025Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-profile-path-proxy-sanity-01"
+    },
+    "request_id": "20261009-profile-path-proxy-sanity-01",
+    "started_at": "2026-10-09T06:01:27.139Z",
+    "status": "completed"
+  },
+  "id": "20261009-profile-path-proxy-sanity-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
