@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-chrome-tunnel-client-help-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$bin='E:\\PC-Control\\TunnelChrome-20261009\\app\\tunnel-client-runtime.exe';if(!(Test-Path $bin -PathType Leaf)){throw 'client_missing'};$v=& $bin --version 2>&1;$info=& $bin help quickstart 2>&1;[ordered]@{version=($v -join ' ');quickstart=($info|Select-Object -First 42);exitCode=$LASTEXITCODE}|ConvertTo-Json -Compress -Depth 4"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Run version/help only for SHA256-verified official OpenAI tunnel-client-runtime binary, no auth tokens."
+}
