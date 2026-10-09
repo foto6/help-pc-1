@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "node.exe -e \"const fs=require('fs');(async()=>{const b='http://127.0.0.1:17448';const life=await (await fetch(b+'/api/operator-lifecycle',{signal:AbortSignal.timeout(4000)})).json();if(life.mode!=='RUNNING_MANAGED'||life.queuePaused!==true||life.revision!==7)throw Error('lifecycle_guard');const profiles=(await (await fetch(b+'/api/ai-profiles',{signal:AbortSignal.timeout(4000)})).json()).aiProfiles;const item=profiles.find(x=>x.id==='gemini-personal-attach');if(!item||item.online||item.debugPort!==17447||!item.chromeProfilePath||item.chromeProfilePath.length<1000||fs.existsSync(item.chromeProfilePath))throw Error('profile_guard');const to='E:\\\\\\\\WebAIBridge\\\\\\\\chrome-profiles\\\\\\\\gemini-Gemini_2-d03bac7f-recovery-20261009';if(fs.existsSync(to))throw Error('destination_exists');const response=await fetch(b+'/api/ai-profiles/gemini-personal-attach',{method:'PUT',headers:{'content-type':'application/json'},body:JSON.stringify({chromeProfilePath:to}),signal:AbortSignal.timeout(8000)});if(!response.ok)throw Error('profile_put_'+response.status);const z=await response.json();if(z.chromeProfilePath!==to||z.debugPort!==17447)throw Error('readback_mismatch');console.log(JSON.stringify({updated:true,id:z.id,debugPort:z.debugPort,oldInvalidPathLength:item.chromeProfilePath.length,newPath:to,newPathExistedBefore:false,chromeMode:z.chromeLaunchMode}));})().catch(e=>{console.log(JSON.stringify({updated:false,error:e.message}));process.exitCode=1})\""
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"updated\":true,\"id\":\"gemini-personal-attach\",\"debugPort\":17447,\"oldInvalidPathLength\":1448,\"newPath\":\"E:\\\\\\\\WebAIBridge\\\\\\\\chrome-profiles\\\\\\\\gemini-Gemini_2-d03bac7f-recovery-20261009\",\"newPathExistedBefore\":false,\"chromeMode\":\"attach\"}\n",
+      "stdout_bytes": 239,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:04:56.704Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:04:56.542Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-gemini-path-repair-a1"
+    },
+    "request_id": "20261009-gemini-path-repair-a1",
+    "started_at": "2026-10-09T06:04:55.669Z",
+    "status": "completed"
+  },
+  "id": "20261009-gemini-path-repair-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
