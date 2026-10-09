@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$dir='E:\\PC-Control\\TunnelChrome-20261009';$enc=New-Object System.Text.UTF8Encoding($false);if(!(Test-Path -LiteralPath $dir -PathType Container)){throw 'destination_missing'};$p=Join-Path $dir 'START_CHROME_TUNNEL.ps1';if(Test-Path -LiteralPath $p){throw 'script_exists'};$c=@'\n$ErrorActionPreference = 'Stop'\n$binary = 'E:\\PC-Control\\TunnelChrome-20261009\\full\\tunnel-client.exe'\n$profile = 'pc-chrome-20261009'\n$mcpPath = 'E:\\PC-Control\\BrowserTabMCP-Canary-20261009\\bin\\pc-browser-tab-mcp-stdio.js'\n\nif (!(Test-Path -LiteralPath $binary -PathType Leaf)) { throw 'tunnel-client.exe not found' }\nif (!(Test-Path -LiteralPath $mcpPath -PathType Leaf)) { throw 'Chrome MCP script not found' }\n\nWrite-Host ''\nWrite-Host 'PC-Control Chrome - Secure MCP Tunnel' -ForegroundColor Cyan\nWrite-Host 'Paste your OpenAI Platform runtime API key in this window.'\nWrite-Host 'The entry is hidden. Do NOT paste the key in ChatGPT or GitHub.'\nWrite-Host ''\n$secure = Read-Host 'Platform runtime API key (hidden)' -AsSecureString\n$ptr = [IntPtr]::Zero\ntry {\n    $ptr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)\n    $secret = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($ptr)\n    if ([string]::IsNullOrWhiteSpace($secret)) { throw 'API key was empty' }\n    $env:CONTROL_PLANE_API_KEY = $secret\n    Remove-Variable secret -ErrorAction SilentlyContinue\n} finally {\n    if ($ptr -ne [IntPtr]::Zero) { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr) }\n    Remove-Variable secure -ErrorAction SilentlyContinue\n}\n$env:PC_CONTROL_ENABLE_BROWSER_TAB_CAPTURE = '1'\n$env:PC_CONTROL_BROWSER_CDP_ALLOWED_PORTS = '17410,17447'\ntry {\n    Write-Host ''\n    Write-Host 'Running read-only connection diagnostics ...' -ForegroundColor Cyan\n    & $binary doctor --profile $profile --explain\n    if ($LASTEXITCODE -ne 0) {\n        Write-Host 'Doctor found a problem. No tunnel was started.' -ForegroundColor Yellow\n        exit 1\n    }\n    Write-Host 'Diagnostics passed. Starting tunnel (keep this window open).' -ForegroundColor Green\n    Write-Host 'Press Ctrl+C when you want to disconnect.'\n    & $binary run --profile $profile\n} finally {\n    Remove-Item Env:\\CONTROL_PLANE_API_KEY -ErrorAction SilentlyContinue\n    Remove-Item Env:\\PC_CONTROL_ENABLE_BROWSER_TAB_CAPTURE -ErrorAction SilentlyContinue\n    Remove-Item Env:\\PC_CONTROL_BROWSER_CDP_ALLOWED_PORTS -ErrorAction SilentlyContinue\n}\n\n'@;[System.IO.File]::WriteAllText($p,$c,$enc);$p2=Join-Path $dir 'START_CHROME_TUNNEL.cmd';if(Test-Path -LiteralPath $p2){throw 'launcher_exists'};$cmd=@'\n@echo off\ntitle PC Control Chrome - Secure MCP Tunnel\npowershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -File \"%~dp0START_CHROME_TUNNEL.ps1\"\necho.\necho Secure tunnel session ended. Review messages above.\npause\n\n'@;[System.IO.File]::WriteAllText($p2,$cmd,$enc);[ordered]@{launcher=$p2;script=$p;storedCredentials=$false;profile='pc-chrome-20261009'}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"launcher\":\"E:\\\\PC-Control\\\\TunnelChrome-20261009\\\\START_CHROME_TUNNEL.cmd\",\"script\":\"E:\\\\PC-Control\\\\TunnelChrome-20261009\\\\START_CHROME_TUNNEL.ps1\",\"storedCredentials\":false,\"profile\":\"pc-chrome-20261009\"}\r\n",
+      "stdout_bytes": 210,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:45:35.446Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:45:35.259Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-chrome-tunnel-create-private-start-01"
+    },
+    "request_id": "20261009-chrome-tunnel-create-private-start-01",
+    "started_at": "2026-10-09T06:45:34.620Z",
+    "status": "completed"
+  },
+  "id": "20261009-chrome-tunnel-create-private-start-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
