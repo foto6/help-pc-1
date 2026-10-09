@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-chrome-tunnel-full-help-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$bin='E:\\PC-Control\\TunnelChrome-20261009\\full\\tunnel-client.exe'\n$version=(& $bin --version 2>&1) -join ' '\n$help=(& $bin help quickstart 2>&1) -join ([string][char]10)\n[ordered]@{binaryPresent=(Test-Path $bin);version=$version;helpLines=@($help -split \"\\n\"|Select-Object -First 33)}|ConvertTo-Json -Compress -Depth 4"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only official full tunnel-client CLI help for Windows, no credentials."
+}
