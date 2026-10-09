@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$r=[ordered]@{};$p='E:\\WebAIBridge\\app\\data\\worker-gemini-personal-attach.lock';$r.lock_exists=Test-Path -LiteralPath $p -PathType Leaf;if($r.lock_exists){$r.lock_pid=(Get-Content -LiteralPath $p -Raw).Trim();$r.lock_mtime=(Get-Item -LiteralPath $p).LastWriteTime.ToString('o');$proc=Get-Process -Id ([int]$r.lock_pid) -ErrorAction SilentlyContinue;if($proc){$r.lock_process=@{pid=$proc.Id;name=$proc.ProcessName;start=$proc.StartTime.ToString('o')}}else{$r.lock_process='NOT_RUNNING'}}; $r.node_pids=@(Get-Process -Name node -ErrorAction SilentlyContinue|Select-Object -ExpandProperty Id);$r.log_files=@(Get-ChildItem -LiteralPath 'E:\\WebAIBridge\\app' -File -Filter '*gemini-personal-attach*.log' -ErrorAction SilentlyContinue|ForEach-Object{@{name=$_.Name;bytes=$_.Length;modified=$_.LastWriteTime.ToString('o')}});$r|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"lock_exists\":true,\"lock_pid\":\"23080\",\"lock_mtime\":\"2026-10-07T21:21:40.9326816+07:00\",\"lock_process\":\"NOT_RUNNING\",\"node_pids\":[13408],\"log_files\":[{\"name\":\"worker-gemini-personal-attach-error.log\",\"bytes\":509368,\"modified\":\"2026-10-06T18:06:08.8623896+07:00\"},{\"name\":\"worker-gemini-personal-attach.log\",\"bytes\":0,\"modified\":\"2026-09-01T05:32:20.2923066+07:00\"}]}\r\n",
+      "stdout_bytes": 368,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T05:53:08.521Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T05:53:08.359Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-studio-worker-lockcheck-1258-a1"
+    },
+    "request_id": "20261009-studio-worker-lockcheck-1258-a1",
+    "started_at": "2026-10-09T05:53:07.710Z",
+    "status": "completed"
+  },
+  "id": "20261009-studio-worker-lockcheck-1258-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
