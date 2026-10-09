@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-browser-mcp-canary-deps-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$d='E:\\PC-Control\\BrowserTabMCP-Canary-20261009';if(!(Test-Path -LiteralPath (Join-Path $d 'src\\browser-tab-mcp-sidecar.js'))){throw 'module_missing'};& npm.cmd install --ignore-scripts --no-audit --no-fund --prefer-offline --fetch-timeout=12000 --fetch-retries=0 --prefix $d;if($LASTEXITCODE -ne 0){throw 'npm_install_failed'};[ordered]@{installed=(Test-Path -LiteralPath (Join-Path $d 'node_modules\\@modelcontextprotocol\\server'));ws=(Test-Path -LiteralPath (Join-Path $d 'node_modules\\ws'));zod=(Test-Path -LiteralPath (Join-Path $d 'node_modules\\zod'))}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 26000,
+  "note": "Install public audited-source dependencies only into isolated screenshot MCP canary. No install scripts, no production Native MCP, no Chrome changes."
+}
