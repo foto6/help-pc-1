@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-chrome-tunnel-install-full-v0016",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$dir='E:\\PC-Control\\TunnelChrome-20261009'\n$asset='tunnel-client-v0.0.16-windows-amd64.zip'\n$zip=Join-Path $dir $asset\n$checks=Join-Path $dir 'SHA256SUMS.txt'\nif(!(Test-Path $checks -PathType Leaf)){throw 'missing_verified_manifest'}\nif(Test-Path $zip){throw 'full_zip_already_exists'}\n$line=@(Get-Content -LiteralPath $checks|Where-Object {$_ -like ('*'+$asset)})|Select-Object -First 1\nif(!$line){throw 'sha_not_found'}\n$expected=($line.Trim() -split '\\s+')[0].ToLowerInvariant()\nif($expected -notmatch '^[a-f0-9]{64}$'){throw 'invalid_sha'}\n$base='https://github.com/openai/tunnel-client/releases/download/v0.0.16/'\nInvoke-WebRequest -Uri ($base+$asset) -OutFile $zip -UseBasicParsing -TimeoutSec 50\n$actual=(Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant()\nif($actual -ne $expected){throw 'archive_sha_mismatch'}\n$dst=Join-Path $dir 'full'\nExpand-Archive -LiteralPath $zip -DestinationPath $dst\n$bin=@(Get-ChildItem -LiteralPath $dst -Filter 'tunnel-client.exe' -Recurse -File|Select-Object -First 1)\nif($bin.Count -ne 1){$names=@(Get-ChildItem -LiteralPath $dst -Filter '*.exe' -Recurse -File|Select-Object -ExpandProperty Name);throw ('full_binary_not_found: '+($names -join ','))}\n[ordered]@{ready=$true;shaVerified=$true;binary=$bin[0].FullName;bytes=(Get-Item $zip).Length}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 60000,
+  "note": "User-approved download of full official OpenAI tunnel-client CLI v0.0.16 Windows amd64, SHA-256 verification, into existing isolated folder. No auth secrets or changes to Chrome."
+}
