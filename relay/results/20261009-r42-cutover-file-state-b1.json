@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$root='E:\\WebAIBridge\\app\\data';$names=@('projects-live-control-plane-cutover-r42.json','projects-live-control-plane-cutover-r42-reconcile.json','managed-project-rotation-state.json','operator-lifecycle-r40.json','supervisor-watchdog.json');$rows=@();foreach($name in $names){$p=Join-Path $root $name;$o=[ordered]@{name=$name;exists=(Test-Path -LiteralPath $p -PathType Leaf)};if($o.exists){$f=Get-Item -LiteralPath $p;$o.lastWrite=$f.LastWriteTime.ToString('o');$o.length=$f.Length;try{$v=Get-Content -LiteralPath $p -Raw|ConvertFrom-Json;$o.status=$v.status;$o.holdActive=$v.holdActive;$o.originalQueuePaused=$v.originalQueuePaused;$o.originalOperatorLifecycleMode=$v.originalOperatorLifecycleMode;$o.lastReadOnlyReconcileAt=$v.lastReadOnlyReconcileAt;$o.lastReadOnlyReconcileDiffCount=$v.lastReadOnlyReconcileDiffCount;$o.pendingCount=@($v.pending.PSObject.Properties).Count;$o.mode=$v.mode;$o.enforceHighMode=$v.enforceHighMode;$o.allowAutonomousSend=$v.allowAutonomousSend;$o.changedBy=$v.changedBy;}catch{$o.parse_error=$_.Exception.GetType().Name}};$rows+=$o};$rows|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"name\":\"projects-live-control-plane-cutover-r42.json\",\"exists\":true,\"lastWrite\":\"2026-10-08T15:24:28.4876694+07:00\",\"length\":1886,\"status\":\"CUTOVER_HOLD_PREPARED\",\"holdActive\":true,\"originalQueuePaused\":true,\"originalOperatorLifecycleMode\":\"PAUSED_BROWSER\",\"lastReadOnlyReconcileAt\":null,\"lastReadOnlyReconcileDiffCount\":null,\"pendingCount\":1,\"mode\":null,\"enforceHighMode\":null,\"allowAutonomousSend\":null,\"changedBy\":null},{\"name\":\"projects-live-control-plane-cutover-r42-reconcile.json\",\"exists\":false},{\"name\":\"managed-project-rotation-state.json\",\"exists\":true,\"lastWrite\":\"2026-10-08T11:56:42.4651845+07:00\",\"length\":63,\"status\":null,\"holdActive\":null,\"originalQueuePaused\":null,\"originalOperatorLifecycleMode\":null,\"lastReadOnlyReconcileAt\":null,\"lastReadOnlyReconcileDiffCount\":null,\"pendingCount\":0,\"mode\":null,\"enforceHighMode\":null,\"allowAutonomousSend\":null,\"changedBy\":null},{\"name\":\"operator-lifecycle-r40.json\",\"exists\":false},{\"name\":\"supervisor-watchdog.json\",\"exists\":true,\"lastWrite\":\"2026-10-08T15:24:27.9998156+07:00\",\"length\":20415,\"status\":null,\"holdActive\":null,\"originalQueuePaused\":null,\"originalOperatorLifecycleMode\":null,\"lastReadOnlyReconcileAt\":null,\"lastReadOnlyReconcileDiffCount\":null,\"pendingCount\":1,\"mode\":\"off\",\"enforceHighMode\":true,\"allowAutonomousSend\":false,\"changedBy\":null}]\r\n",
+      "stdout_bytes": 1320,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T05:59:05.074Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T05:59:04.918Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-r42-cutover-file-state-b1"
+    },
+    "request_id": "20261009-r42-cutover-file-state-b1",
+    "started_at": "2026-10-09T05:59:04.111Z",
+    "status": "completed"
+  },
+  "id": "20261009-r42-cutover-file-state-b1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
