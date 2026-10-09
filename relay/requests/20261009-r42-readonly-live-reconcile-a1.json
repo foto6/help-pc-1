@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-r42-readonly-live-reconcile-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "node.exe -e \"(async()=>{const b='http://127.0.0.1:17448';const state=await(await fetch(b+'/api/projects/control-plane/cutover-r42/status',{signal:AbortSignal.timeout(4000)})).json();if(state.cutoverState?.holdActive!==true)throw Error('no_cutover_hold');const life=await(await fetch(b+'/api/operator-lifecycle',{signal:AbortSignal.timeout(4000)})).json();if(life.mode!=='RUNNING_MANAGED'||!life.queuePaused)throw Error('unsafe_lifecycle');const response=await fetch(b+'/api/projects/control-plane/cutover-r42/reconcile-live',{method:'POST',signal:AbortSignal.timeout(28000)});const payload=await response.json();const summary={http:response.status,object:payload.object,checkedAt:payload.checkedAt,diffCount:payload.diff?.count,unmanagedCount:payload.unmanagedDiscovered?.length,conflictsCount:payload.conflicts?.length,providerMutationPerformed:payload.providerMutationPerformed,errorCode:payload.code||null};console.log(JSON.stringify(summary));if(!response.ok)process.exitCode=2})().catch(e=>{console.log(JSON.stringify({error:e.name||'Error'}));process.exitCode=1})\""
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 33000,
+  "note": "Owner-approved source-defined read-only live reconciliation of R42, writes only evidence, never sends provider messages or activates cutover; queue must remain paused."
+}
