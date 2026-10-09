@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$p='E:\\PC-Control\\BrowserTabMCP-Canary-20261009\\src\\browser-tab-capture.js';if(!(Test-Path -LiteralPath $p)){throw 'source_missing'};$text=[System.IO.File]::ReadAllText($p);$norm=$text.Replace(([string][char]13+[char]10),[string][char]10);if(-not $norm.EndsWith([string][char]10)){$norm+=[char]10};[System.IO.File]::WriteAllText($p,$norm,(New-Object System.Text.UTF8Encoding($false)));$sha=((& git.exe hash-object $p)-join '');[ordered]@{hash=$sha;expected='a4e0087674468e3fec4fc3b2a8eeb30bba484afb';verified=($sha -eq 'a4e0087674468e3fec4fc3b2a8eeb30bba484afb')}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"hash\":\"a4e0087674468e3fec4fc3b2a8eeb30bba484afb\",\"expected\":\"a4e0087674468e3fec4fc3b2a8eeb30bba484afb\",\"verified\":true}\r\n",
+      "stdout_bytes": 123,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:18:51.971Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:18:51.805Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-browser-mcp-canary-normalize-lf-a1"
+    },
+    "request_id": "20261009-browser-mcp-canary-normalize-lf-a1",
+    "started_at": "2026-10-09T06:18:51.052Z",
+    "status": "completed"
+  },
+  "id": "20261009-browser-mcp-canary-normalize-lf-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
