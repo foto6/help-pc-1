@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "node.exe -e \"(async()=>{const b='http://127.0.0.1:17448';const state=await(await fetch(b+'/api/projects/control-plane/cutover-r42/status',{signal:AbortSignal.timeout(4000)})).json();if(state.cutoverState?.holdActive!==true)throw Error('no_cutover_hold');const life=await(await fetch(b+'/api/operator-lifecycle',{signal:AbortSignal.timeout(4000)})).json();if(life.mode!=='RUNNING_MANAGED'||!life.queuePaused)throw Error('unsafe_lifecycle');const response=await fetch(b+'/api/projects/control-plane/cutover-r42/reconcile-live',{method:'POST',signal:AbortSignal.timeout(28000)});const payload=await response.json();const summary={http:response.status,object:payload.object,checkedAt:payload.checkedAt,diffCount:payload.diff?.count,unmanagedCount:payload.unmanagedDiscovered?.length,conflictsCount:payload.conflicts?.length,providerMutationPerformed:payload.providerMutationPerformed,errorCode:payload.code||null};console.log(JSON.stringify(summary));if(!response.ok)process.exitCode=2})().catch(e=>{console.log(JSON.stringify({error:e.name||'Error'}));process.exitCode=1})\""
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"http\":200,\"object\":\"bridge.projects_live_control_plane_live_reconcile.r42.v1\",\"checkedAt\":\"2026-10-09T06:08:32.816Z\",\"diffCount\":6,\"unmanagedCount\":0,\"conflictsCount\":0,\"providerMutationPerformed\":false,\"errorCode\":null}\n",
+      "stdout_bytes": 223,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:08:33.078Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:08:32.854Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-r42-readonly-live-reconcile-a1"
+    },
+    "request_id": "20261009-r42-readonly-live-reconcile-a1",
+    "started_at": "2026-10-09T06:08:24.570Z",
+    "status": "completed"
+  },
+  "id": "20261009-r42-readonly-live-reconcile-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
