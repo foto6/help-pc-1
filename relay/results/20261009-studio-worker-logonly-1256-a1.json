@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$p='E:\\WebAIBridge\\app\\worker-gemini-personal-attach-error.log';if(!(Test-Path -LiteralPath $p -PathType Leaf)){Write-Output 'LOG_MISSING';exit 0};$f=Get-Item -LiteralPath $p;Write-Output ('LOG_MODIFIED='+$f.LastWriteTime.ToString('o'));Write-Output ('LOG_SIZE='+$f.Length);$lines=Get-Content -LiteralPath $p -Tail 45;foreach($line in $lines){$s=[string]$line;$s=[regex]::Replace($s,'(?i)(token|password|authorization|api.?key|cookie|secret|bearer)\\s*[:=]\\s*[^\\s,;]+','$1=[REDACTED]');$s=[regex]::Replace($s,'(?i)https?://[^\\s]+','[URL]');if($s.Length -gt 420){$s=$s.Substring(0,420)};Write-Output $s}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "LOG_MODIFIED=2026-10-06T18:06:08.8623896+07:00\r\nLOG_SIZE=509368\r\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\r\n    at node:internal/main/run_main_module:33:47\r\n\r\nNode.js v24.18.0\r\n2026-10-05T00:41:48.389Z fetch failed\r\n2026-10-06T11:05:39.159Z fetch failed\r\n2026-10-06T11:05:40.364Z fetch failed\r\n2026-10-06T11:05:41.576Z fetch failed\r\n2026-10-06T11:05:42.786Z fetch failed\r\n2026-10-06T11:05:44.000Z fetch failed\r\n2026-10-06T11:05:45.224Z fetch failed\r\n2026-10-06T11:05:46.440Z fetch failed\r\n2026-10-06T11:05:47.651Z fetch failed\r\n2026-10-06T11:05:48.866Z fetch failed\r\n2026-10-06T11:05:50.078Z fetch failed\r\n2026-10-06T11:05:51.280Z fetch failed\r\n2026-10-06T11:05:52.492Z fetch failed\r\n2026-10-06T11:05:53.706Z fetch failed\r\n2026-10-06T11:05:54.916Z fetch failed\r\n2026-10-06T11:05:56.132Z fetch failed\r\n2026-10-06T11:05:57.346Z fetch failed\r\n2026-10-06T11:05:58.563Z fetch failed\r\n2026-10-06T11:05:59.765Z fetch failed\r\n2026-10-06T11:06:01.024Z fetch failed\r\n2026-10-06T11:06:02.226Z fetch failed\r\n2026-10-06T11:06:03.440Z fetch failed\r\n2026-10-06T11:06:04.654Z fetch failed\r\n2026-10-06T11:06:05.867Z fetch failed\r\n2026-10-06T11:06:07.081Z fetch failed\r\nE:\\WebAIBridge\\app\\worker.js:110\r\n        throw new Error(`AI Web worker �?�\u0014�� �������?�%��? �? PID ${existing}`);\r\n        ^\r\n\r\nError: AI Web worker �?�\u0014�� �������?�%��? �? PID 25488\r\n    at acquireWorkerLock (E:\\WebAIBridge\\app\\worker.js:110:15)\r\n    at Object.<anonymous> (E:\\WebAIBridge\\app\\worker.js:118:1)\r\n    at Module._compile (node:internal/modules/cjs/loader:1871:14)\r\n    at Object..js (node:internal/modules/cjs/loader:2002:10)\r\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\r\n    at Module._load (node:internal/modules/cjs/loader:1396:12)\r\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\r\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)\r\n    at node:internal/main/run_main_module:33:47\r\n\r\nNode.js v24.18.0\r\n",
+      "stdout_bytes": 1993,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T05:52:30.919Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T05:52:30.759Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-studio-worker-logonly-1256-a1"
+    },
+    "request_id": "20261009-studio-worker-logonly-1256-a1",
+    "started_at": "2026-10-09T05:52:30.172Z",
+    "status": "completed"
+  },
+  "id": "20261009-studio-worker-logonly-1256-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
