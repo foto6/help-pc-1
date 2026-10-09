@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-chrome-tunnel-runtime-contents-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$dir='E:\\PC-Control\\TunnelChrome-20261009';$zip=Join-Path $dir 'tunnel-client-runtime-v0.0.16-windows-amd64.zip';$files=@(Get-ChildItem -LiteralPath (Join-Path $dir 'app') -Recurse -File|Select-Object -First 25|ForEach-Object{@{name=$_.Name;length=$_.Length}});$hash=(Get-FileHash $zip -Algorithm SHA256).Hash.ToLowerInvariant();$sumLine=@(Get-Content -LiteralPath (Join-Path $dir 'SHA256SUMS.txt')|Where-Object{$_ -like '*tunnel-client-runtime-v0.0.16-windows-amd64.zip'})|Select-Object -First 1;$expect=($sumLine.Trim() -split '\\s+')[0].ToLowerInvariant();[ordered]@{shaValid=($hash -eq $expect);files=$files}|ConvertTo-Json -Compress -Depth 4"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 11000,
+  "note": "Read-only inventory of verified OpenAI tunnel client runtime archive; no browser actions."
+}
