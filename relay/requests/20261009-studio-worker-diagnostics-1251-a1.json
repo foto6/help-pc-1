@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261009-studio-worker-diagnostics-1251-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue'\n$r=[ordered]@{}\n$r.clock=(Get-Date).ToString('o')\n$path='E:\\WebAIBridge\\app\\worker-gemini-personal-attach-error.log'\n$r.workerLogExists=Test-Path -LiteralPath $path -PathType Leaf\nif($r.workerLogExists){\n $f=Get-Item -LiteralPath $path\n $r.workerLogInfo=@{length=$f.Length;modified=$f.LastWriteTime.ToString('o')}\n $lines=@(Get-Content -LiteralPath $path -Tail 95 -ErrorAction SilentlyContinue)\n $r.workerLog=@($lines|ForEach-Object{\n  $s=[string]$_\n  $s=[regex]::Replace($s,'(?i)(authorization|bearer|token|api.?key|password|cookie|secret|proxy.?user|session.?id)\\s*[:=]\\s*[\"'']?[^,;\\s\"''}]+','$1=[REDACTED]')\n  $s=[regex]::Replace($s,'(?i)(https?://[^/\\s]+)[^\\s]*','$1/[PATH_REDACTED]')\n  if($s.Length -gt 420){$s.Substring(0,420)}else{$s}\n })\n}\n$r.bridgeRepoPresent=Test-Path -LiteralPath 'E:\\WebAIBridge\\.git'\nif($r.bridgeRepoPresent){$r.bridgeHead=((& git.exe -C 'E:\\WebAIBridge' rev-parse --short HEAD 2>$null)-join '');$r.bridgePorcelainCount=@(& git.exe -C 'E:\\WebAIBridge' status --porcelain=v1 -uno 2>$null).Count}\n$p=@(Get-CimInstance Win32_Process -ErrorAction SilentlyContinue|Where-Object{$_.Name -match '^(node|chrome|powershell)\\.exe$'})\n$r.processCounts=@{chrome=@($p|Where-Object{$_.Name -eq 'chrome.exe'}).Count;node=@($p|Where-Object{$_.Name -eq 'node.exe'}).Count;powershell=@($p|Where-Object{$_.Name -eq 'powershell.exe'}).Count}\n$r.bridgeRelatedProcesses=@($p|Where-Object{$_.Name -eq 'node.exe' -and $_.CommandLine -match 'WebAIBridge'}|Select-Object -First 25|ForEach-Object{@{pid=$_.ProcessId;kind=if($_.CommandLine -match 'worker'){'worker'}else{'node-server'};port=if($_.CommandLine -match 'debugging-port[= ](\\d+)'){$Matches[1]}else{''}}})\n$r.cdpFlags=@($p|Where-Object{$_.Name -eq 'chrome.exe' -and $_.CommandLine -match 'remote-debugging-port=(\\d+)'}|ForEach-Object{$Matches[1]}|Select-Object -Unique)\n$r.ports=@(Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue|Where-Object{$_.LocalPort -in @(17448,17447,17410,17449,9222)}|ForEach-Object{@{port=$_.LocalPort;owner=$_.OwningProcess;address=$_.LocalAddress}})\nforeach($u in @('http://127.0.0.1:17448/api/health','http://127.0.0.1:17448/v1/bridge/health')){\n try{$res=Invoke-WebRequest -Uri $u -UseBasicParsing -TimeoutSec 3;$r[('http'+(($u -split '/')[4] -replace '[^a-z0-9]',''))]=@{status=[int]$res.StatusCode;bodyLength=$res.Content.Length}}catch{$r[('err'+(($u -split '/')[4] -replace '[^a-z0-9]',''))]=$_.Exception.GetType().Name}\n}\n$r|ConvertTo-Json -Compress -Depth 7"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "Read-only and redacted diagnostic of saved Chrome worker startup log and process/port state; no access to E:\\manhwa."
+}
