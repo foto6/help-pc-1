@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$p=(Invoke-RestMethod 'http://127.0.0.1:17448/api/ai-profiles' -TimeoutSec 4).aiProfiles;$v=$p|Where-Object{$_.id -eq 'ef72920c-cfe7-4824-a79b-7a0e0943ce7e'}|Select-Object -First 1;$roots=@('E:\\WebAIBridge\\chrome-profiles','E:\\WebAIBridge\\chrome-profile-web-bridge','C:\\Users\\foto6\\OneDrive');$rows=@();foreach($root in $roots){$exists=Test-Path -LiteralPath $root -PathType Container;$x=[ordered]@{root=$root;exists=$exists;chromeCandidates=@()};if($exists){$items=@(Get-ChildItem -LiteralPath $root -Directory -ErrorAction SilentlyContinue|Select-Object -First 150);$x.firstLevelDirectories=$items.Count;$x.chromeCandidates=@($items|Where-Object{$_.Name -match '(?i)bridge|gemini|chrome|webai'}|Select-Object -First 30|ForEach-Object{@{name=$_.Name.Substring(0,[math]::Min(100,$_.Name.Length));modified=$_.LastWriteTime.ToString('o');hasLocalState=(Test-Path -LiteralPath (Join-Path $_.FullName 'Local State'))}})};$rows+=$x};[ordered]@{knownChatGptDirParent=(Split-Path -Parent ([string]$v.chromeProfilePath));knownChatGptDirName=(Split-Path -Leaf ([string]$v.chromeProfilePath));roots=$rows}|ConvertTo-Json -Depth 6 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"knownChatGptDirParent\":\"E:\\\\WebAIBridge\\\\chrome-profiles\",\"knownChatGptDirName\":\"chatgpt-ChatGPT_2-ef72920c\",\"roots\":[{\"root\":\"E:\\\\WebAIBridge\\\\chrome-profiles\",\"exists\":true,\"chromeCandidates\":[],\"firstLevelDirectories\":1},{\"root\":\"E:\\\\WebAIBridge\\\\chrome-profile-web-bridge\",\"exists\":true,\"chromeCandidates\":[{\"hasLocalState\":false,\"name\":\"web-ai-bridge-helper-extension\",\"modified\":\"2026-10-07T18:23:10.6876558+07:00\"}],\"firstLevelDirectories\":1},{\"root\":\"C:\\\\Users\\\\foto6\\\\OneDrive\",\"exists\":true,\"chromeCandidates\":[],\"firstLevelDirectories\":7}]}\r\n",
+      "stdout_bytes": 555,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-09T06:02:23.857Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-09T06:02:23.691Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261009-chrome-profile-candidate-inventory-01"
+    },
+    "request_id": "20261009-chrome-profile-candidate-inventory-01",
+    "started_at": "2026-10-09T06:02:22.951Z",
+    "status": "completed"
+  },
+  "id": "20261009-chrome-profile-candidate-inventory-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
