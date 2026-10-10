@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261010-chrome-tunnel-new-key-check-c1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue'\n$o=[ordered]@{at=(Get-Date).ToUniversalTime().ToString('o')}\n$procs=@(Get-CimInstance Win32_Process -Filter \"Name = 'tunnel-client.exe'\" -ErrorAction SilentlyContinue)\n$o.clientRunning=($procs.Count -gt 0)\n$o.clientCount=$procs.Count\n$o.clientPids=@($procs|Select-Object -ExpandProperty ProcessId)\ntry {\n $s=Invoke-RestMethod 'http://127.0.0.1:8080/api/status' -TimeoutSec 4\n $msg=[string]$s.tunnel_metadata_error\n $m=[regex]::Match($msg,'(?<!\\d)(400|401|403|404|409|424|429|500|502|503)(?!\\d)')\n $o.tunnelId=$s.control_plane_tunnel_id\n $o.metadataErrorPresent=($msg.Length -gt 0)\n $o.metadataHttpCode=if($m.Success){$m.Value}else{'none_or_unclassified'}\n $o.routeKind=$s.control_plane_route.kind\n $o.uptimeSeconds=$s.uptime_seconds\n} catch {$o.status='unavailable'}\ntry {$r=Invoke-WebRequest 'http://127.0.0.1:8080/readyz' -UseBasicParsing -TimeoutSec 3;$o.localReady=($r.StatusCode -eq 200)} catch {$o.localReady=$false}\ntry {\n $metrics=(Invoke-WebRequest 'http://127.0.0.1:8080/metrics' -UseBasicParsing -TimeoutSec 3).Content\n $o.poll=@($metrics -split [char]10 | Where-Object {$_ -match '^(commands_poll_(cycles_total|errors_total|last_successful_timestamp_seconds))(\\{[^}]*\\})?\\s+[-+0-9.eE]+'} | Select-Object -First 18 | ForEach-Object {[regex]::Replace($_,'\\{[^}]*\\}','{LABELS_REDACTED}')})\n}catch{$o.poll=@('unavailable')}\n$o|ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Read-only verification of tunnel after user restarted with refreshed runtime key. Report only HTTP error category, process presence and numeric polling metrics. Do not reveal secrets or raw logs."
+}
