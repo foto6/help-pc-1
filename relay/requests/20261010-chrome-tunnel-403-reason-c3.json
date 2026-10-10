@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261010-chrome-tunnel-403-reason-c3",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$o=[ordered]@{};try{$s=Invoke-RestMethod 'http://127.0.0.1:8080/api/status' -TimeoutSec 3;$e=[string]$s.tunnel_metadata_error;$terms=[ordered]@{'not_enabled'='not enabled';'not_entitled'='not entitled';'unsupported'='unsupported';'not_available'='not available';'not_active'='not active';'org'='organization';'workspace'='workspace';'permission'='permission';'feature'='feature';'token'='token';'forbidden'='forbidden';'subscription'='subscription';'workspace_access'='workspace access';'user'='user';'project'='project';'disabled'='disabled';'not_authorized'='not authorized';'not_found'='not found';'tunnel'='tunnel'};$o.matches=@($terms.Keys|Where-Object{$e.IndexOf($terms[$_],[System.StringComparison]::OrdinalIgnoreCase) -ge 0});$q=[regex]::Match($e,'(?i)\"code\"\\s*:\\s*\"([a-z0-9_]+)\"');$o.errorCode=if($q.Success){$q.Groups[1].Value}else{'not_explicit'};$q2=[regex]::Match($e,'(?i)\"type\"\\s*:\\s*\"([a-z0-9_]+)\"');$o.errorType=if($q2.Success){$q2.Groups[1].Value}else{'not_explicit'}}catch{$o.error='status_unavailable'};$o|ConvertTo-Json -Compress -Depth 4"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only specific predefined lexical flags from tunnel metadata HTTP 403, no raw error, no secrets."
+}
