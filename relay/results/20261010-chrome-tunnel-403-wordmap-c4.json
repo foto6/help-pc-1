@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$o=[ordered]@{};try{$s=Invoke-RestMethod 'http://127.0.0.1:8080/api/status' -TimeoutSec 3;$err=[string]$s.tunnel_metadata_error;$allowed='unsupported','connection','endpoint','route','upstream','metadata','account','organization','platform','tunnel','tunnels','api','key','body','returned','status','code','response','forbidden','by','worker','not','available','disabled','feature','permission','access','scope','user','tenant','proxy','cloudflare','http','failed','error','fetch','invalid','unknown','authentication','authorization','supported','type','resource','read','poll','runtime','client','was','environment','server','path','gateway','request','method','is','the','for','cannot','provided','current','operation','get','on','with','and','this','accepted','only','your','workspace','project','unauthorized','token','does','have','allow','system','unsupported','from','version','openai','can','be','recognized','service';$a=@($err -split '[^a-zA-Z]+'|Where-Object{$_ -and ($allowed -contains $_.ToLower())}|ForEach-Object{$_.ToLower()});$o.allowedErrorWords=$a;$o.length=$err.Length}catch{$o.failure='unavailable'};$o|ConvertTo-Json -Depth 3 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"allowedErrorWords\":[\"client\",\"metadata\",\"status\",\"unsupported\",\"not\",\"supported\"],\"length\":134}\r\n",
+      "stdout_bytes": 99,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-10T02:48:56.894Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-10T02:48:56.725Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261010-chrome-tunnel-403-wordmap-c4"
+    },
+    "request_id": "20261010-chrome-tunnel-403-wordmap-c4",
+    "started_at": "2026-10-10T02:48:56.035Z",
+    "status": "completed"
+  },
+  "id": "20261010-chrome-tunnel-403-wordmap-c4",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
