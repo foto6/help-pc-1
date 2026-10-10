@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261010-tunnel-routing-rootcause-04",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$o=[ordered]@{};try{$s=Invoke-RestMethod 'http://127.0.0.1:8080/api/status' -TimeoutSec 3;$route=$s.control_plane_route;$err=$s.tunnel_metadata_error;$o.status=@{tunnel_id=$s.control_plane_tunnel_id;route_type=if($null -eq $route){'null'}else{$route.GetType().Name};route_keys=if($route){@($route.PSObject.Properties.Name)}else{@()};route_mode=$route.mode;route_status=$route.status;route_state=$route.state;route_auth_status=$route.auth_status;route_connected=$route.connected;route_polling=$route.polling;metadata_error_present=($null -ne $err);metadata_error_type=if($err){$err.GetType().Name}else{'none'};metadata_error_keys=if($err -is [string]){@()}elseif($err){@($err.PSObject.Properties.Name)}else{@()};metadata_error_code=$err.code;metadata_error_status=$err.status;metadata_error_http_status=$err.http_status;channels=@($s.channels.PSObject.Properties.Name);mcp_route_count=@($s.mcp_routes).Count;main_channel_probe_status=$s.main_channel_probe_status}}catch{$o.error='status_unavailable'};try{$m=(Invoke-WebRequest 'http://127.0.0.1:8080/metrics' -UseBasicParsing -TimeoutSec 3).Content;$o.metrics=@($m -split [char]10|Where-Object{$_ -match '^[a-zA-Z_]*(poll|auth|error|failure|request|command)[a-zA-Z_]*'}|ForEach-Object{($_ -split '[\\{ ]')[0]}|Sort-Object -Unique|Select-Object -First 70)}catch{};$o|ConvertTo-Json -Compress -Depth 6"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only local tunnel status route, metadata error CODE ONLY and metric names; no API key, no logs, no raw error strings."
+}
