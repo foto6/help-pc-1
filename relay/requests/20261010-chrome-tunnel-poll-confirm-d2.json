@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261010-chrome-tunnel-poll-confirm-d2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue'\n$o=[ordered]@{at=(Get-Date).ToUniversalTime().ToString('o')}\ntry {$s=Invoke-RestMethod 'http://127.0.0.1:8080/api/status' -TimeoutSec 5;$e=[string]$s.tunnel_metadata_error;$o.metadataErrorPresent=($e.Length -gt 0);$o.regionBlocked=($e -match 'unsupported_country_region_territory|country, region, or territory not supported');$o.httpStatus=if($e -match '(?<!\\d)(400|401|403|404|409|424|429|500|502|503)(?!\\d)'){$Matches[1]}else{'none'};$o.uptimeSeconds=$s.uptime_seconds;$o.routeCount=@($s.mcp_routes).Count} catch {$o.operatorError='unavailable'}\ntry {$m=(Invoke-WebRequest 'http://127.0.0.1:8080/metrics' -UseBasicParsing -TimeoutSec 4).Content;$o.poll=@($m -split [char]10 | Where-Object {$_ -match '^(commands_poll_(cycles_total|errors_total|last_successful_timestamp_seconds))(\\{[^}]*\\})?\\s+[-+0-9.eE]+'} | Select-Object -First 20 | ForEach-Object {[regex]::Replace($_,'\\{[^}]*\\}','{LABELS_REDACTED}')})} catch {$o.metricsError='unavailable'}\n$o|ConvertTo-Json -Compress -Depth 4"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only follow-up tunnel poll counters and categorized error status; no secret material."
+}
