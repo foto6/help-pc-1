@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261010-chrome-tunnel-readiness-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$r=[ordered]@{};$r.utc=(Get-Date).ToUniversalTime().ToString('o');$r.tunnel_id='tunnel_6ac88c3d680c8191a475065208874b7c';$r.launcherExists=Test-Path 'E:\\PC-Control\\TunnelChrome-20261009\\START_CHROME_TUNNEL.cmd' -PathType Leaf;$r.mcpServerExists=Test-Path 'E:\\PC-Control\\BrowserTabMCP-Canary-20261009\\bin\\pc-browser-tab-mcp-stdio.js' -PathType Leaf;$procs=@(Get-CimInstance Win32_Process -Filter \"Name = 'tunnel-client.exe'\" -ErrorAction SilentlyContinue);$r.clientProcessCount=$procs.Count;$r.clientPids=@($procs|ForEach-Object{$_.ProcessId});$r.chromeCdp=@();foreach($port in @(17410,17447)){try{$q=Invoke-WebRequest -UseBasicParsing -Uri (\"http://127.0.0.1:\"+$port+\"/json/version\") -TimeoutSec 2;$r.chromeCdp+=@{port=$port;reachable=($q.StatusCode -eq 200)}}catch{$r.chromeCdp+=@{port=$port;reachable=$false}}};$cfg='C:\\Users\\foto6\\AppData\\Roaming\\tunnel-client\\pc-chrome-20261009.yaml';$r.profileFileExists=Test-Path -LiteralPath $cfg -PathType Leaf;[ordered]@{readiness=$r}|ConvertTo-Json -Compress -Depth 6"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only tunnel process and CDP readiness check, never read API key, process commandlines, environment contents, screenshot pixels, or protected paths."
+}
