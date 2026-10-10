@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261010-chrome-tunnel-live-health-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$r=[ordered]@{};$bin='E:\\PC-Control\\TunnelChrome-20261009\\full\\tunnel-client.exe';$help=(& $bin --help 2>&1) -join ' ';$r.helpLines=@(($help -split [char]10)|Select-Object -First 26|ForEach-Object{([string]$_).Trim()});$ids=@(Get-CimInstance Win32_Process -Filter \"Name = 'tunnel-client.exe'\" -ErrorAction SilentlyContinue|Select-Object -ExpandProperty ProcessId);$r.listenPorts=@(Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue|Where-Object{$ids -contains $_.OwningProcess}|ForEach-Object{$_.LocalPort}|Sort-Object -Unique);foreach($port in $r.listenPorts){foreach($endpoint in @('readyz','healthz')){try{$resp=Invoke-WebRequest -Uri ('http://127.0.0.1:'+ $port+'/'+$endpoint) -UseBasicParsing -TimeoutSec 2;$r['url_'+$port+'_'+$endpoint]=@{status=[int]$resp.StatusCode;body=if($resp.Content.Length -lt 1200){$resp.Content}else{'too_long'}}}catch{$r['url_'+$port+'_'+$endpoint]='unreachable'}}};$r|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only localhost tunnel readiness/health and CLI help, never prints credentials or command line."
+}
