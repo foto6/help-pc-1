@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue'\n$o=[ordered]@{}\n$proc=@(Get-CimInstance Win32_Process -Filter \"Name = 'tunnel-client.exe'\" -ErrorAction SilentlyContinue)\n$o.clientRunning=($proc.Count -gt 0)\n$o.clientProcessCount=$proc.Count\ntry{\n $s=Invoke-RestMethod 'http://127.0.0.1:8080/api/status' -TimeoutSec 4\n $msg=[string]$s.tunnel_metadata_error\n $m=[regex]::Match($msg,'(?<!\\d)(400|401|403|404|409|424|429|500|502|503)(?!\\d)')\n $o.tunnelId=$s.control_plane_tunnel_id\n $o.metadataErrorPresent=($msg.Length -gt 0)\n $o.metadataHttpCode=if($m.Success){$m.Value}else{'none_or_unclassified'}\n $o.routeKind=$s.control_plane_route.kind\n}catch{$o.operatorStatus='unavailable'}\ntry{\n $ready=Invoke-WebRequest -Uri 'http://127.0.0.1:8080/readyz' -UseBasicParsing -TimeoutSec 3\n $o.localReady=($ready.StatusCode -eq 200)\n}catch{$o.localReady=$false}\ntry{\n $metrics=(Invoke-WebRequest 'http://127.0.0.1:8080/metrics' -UseBasicParsing -TimeoutSec 3).Content\n $o.poll=@($metrics -split [char]10 | Where-Object {$_ -match '^(commands_poll_(cycles_total|errors_total|last_successful_timestamp_seconds))(\\{[^}]*\\})?\\s+[-+0-9.eE]+'} | Select-Object -First 20 | ForEach-Object {[regex]::Replace($_,'\\{[^}]*\\}','{LABELS_REDACTED}')})\n}catch{$o.poll=@('unavailable')}\n$o|ConvertTo-Json -Depth 4 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"clientRunning\":true,\"clientProcessCount\":1,\"tunnelId\":\"tunnel_6ac88c3d680c8191a475065208874b7c\",\"metadataErrorPresent\":true,\"metadataHttpCode\":\"403\",\"routeKind\":\"control_plane\",\"localReady\":true,\"poll\":[\"commands_poll_cycles_total{LABELS_REDACTED} 83\",\"commands_poll_errors_total{LABELS_REDACTED} 83\",\"commands_poll_last_successful_timestamp_seconds{LABELS_REDACTED} 0\"]}\r\n",
+      "stdout_bytes": 375,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-10T01:48:07.768Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-10T01:48:07.596Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261010-chrome-tunnel-after-role-grant-a1"
+    },
+    "request_id": "20261010-chrome-tunnel-after-role-grant-a1",
+    "started_at": "2026-10-10T01:48:06.449Z",
+    "status": "completed"
+  },
+  "id": "20261010-chrome-tunnel-after-role-grant-a1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
