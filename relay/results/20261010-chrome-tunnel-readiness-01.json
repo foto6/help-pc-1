@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$r=[ordered]@{};$r.utc=(Get-Date).ToUniversalTime().ToString('o');$r.tunnel_id='tunnel_6ac88c3d680c8191a475065208874b7c';$r.launcherExists=Test-Path 'E:\\PC-Control\\TunnelChrome-20261009\\START_CHROME_TUNNEL.cmd' -PathType Leaf;$r.mcpServerExists=Test-Path 'E:\\PC-Control\\BrowserTabMCP-Canary-20261009\\bin\\pc-browser-tab-mcp-stdio.js' -PathType Leaf;$procs=@(Get-CimInstance Win32_Process -Filter \"Name = 'tunnel-client.exe'\" -ErrorAction SilentlyContinue);$r.clientProcessCount=$procs.Count;$r.clientPids=@($procs|ForEach-Object{$_.ProcessId});$r.chromeCdp=@();foreach($port in @(17410,17447)){try{$q=Invoke-WebRequest -UseBasicParsing -Uri (\"http://127.0.0.1:\"+$port+\"/json/version\") -TimeoutSec 2;$r.chromeCdp+=@{port=$port;reachable=($q.StatusCode -eq 200)}}catch{$r.chromeCdp+=@{port=$port;reachable=$false}}};$cfg='C:\\Users\\foto6\\AppData\\Roaming\\tunnel-client\\pc-chrome-20261009.yaml';$r.profileFileExists=Test-Path -LiteralPath $cfg -PathType Leaf;[ordered]@{readiness=$r}|ConvertTo-Json -Compress -Depth 6"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"readiness\":{\"utc\":\"2026-10-10T01:36:02.5025063Z\",\"tunnel_id\":\"tunnel_6ac88c3d680c8191a475065208874b7c\",\"launcherExists\":true,\"mcpServerExists\":true,\"clientProcessCount\":1,\"clientPids\":[17208],\"chromeCdp\":[{\"reachable\":true,\"port\":17410},{\"reachable\":false,\"port\":17447}],\"profileFileExists\":true}}\r\n",
+      "stdout_bytes": 301,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-10T01:36:05.590Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-10T01:36:05.320Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261010-chrome-tunnel-readiness-01"
+    },
+    "request_id": "20261010-chrome-tunnel-readiness-01",
+    "started_at": "2026-10-10T01:36:01.578Z",
+    "status": "completed"
+  },
+  "id": "20261010-chrome-tunnel-readiness-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
