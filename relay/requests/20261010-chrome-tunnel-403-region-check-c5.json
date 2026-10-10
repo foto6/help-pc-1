@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261010-chrome-tunnel-403-region-check-c5",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$o=[ordered]@{};try{$s=Invoke-RestMethod 'http://127.0.0.1:8080/api/status' -TimeoutSec 3;$e=[string]$s.tunnel_metadata_error;$terms=[ordered]@{'unsupported_country_region_territory'='unsupported_country_region_territory';'country'='country';'region'='region';'territory'='territory';'country_region_message'='Country, region, or territory not supported';'not_supported'='not supported';'unsupported_endpoint'='unsupported endpoint';'unsupported_client'='unsupported client';'unsupported_feature'='unsupported feature';'model_not_supported'='model not supported';'geo'='geolocation';'location'='location';'request_forbidden'='request_forbidden';'account_disabled'='account disabled'};$o.matches=@($terms.Keys|Where-Object{$e.IndexOf($terms[$_],[System.StringComparison]::OrdinalIgnoreCase) -ge 0});$o.length=$e.Length}catch{$o.error='status_unavailable'};$o|ConvertTo-Json -Depth 3 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only phrase matches to determine region-supported account error; do not copy raw error, keys, or IPs."
+}
