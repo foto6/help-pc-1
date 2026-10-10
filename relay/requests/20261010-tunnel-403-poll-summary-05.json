@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261010-tunnel-403-poll-summary-05",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$o=[ordered]@{};try{$s=Invoke-RestMethod 'http://127.0.0.1:8080/api/status' -TimeoutSec 3;$e=[string]$s.tunnel_metadata_error;$o.metadataErrorPresent=($e.Length -gt 0);$match=[regex]::Match($e,'(?<!\\d)(400|401|403|404|409|424|429|500|502|503)(?!\\d)');$o.metadataHttpStatus=if($match.Success){$match.Value}else{'unknown'};$names=@('unauthorized','forbidden','tunnel_use','permission','organization','workspace','not_found','invalid_api_key','remote','timeout','access_denied','not_associated');$o.errorFlags=@($names|Where-Object{$e.ToLower().Contains($_)});$o.mainRouteMode=$s.control_plane_route.route_mode;$o.mainRouteKind=$s.control_plane_route.kind;$o.mainRouteTargetType=if([string]::IsNullOrEmpty([string]$s.control_plane_route.target)){'absent'}else{'present'}}catch{$o.statusError='unavailable'};try{$m=(Invoke-WebRequest 'http://127.0.0.1:8080/metrics' -UseBasicParsing -TimeoutSec 3).Content;$o.metricSamples=@($m -split [char]10|Where-Object{$_ -match '^(commands_poll_(cycles_total|errors_total|last_successful_timestamp_seconds))(\\{[^}]*\\})?\\s+[-+0-9.eE]+'}|Select-Object -First 22|ForEach-Object{[regex]::Replace($_,'\\{[^}]*\\}','{LABELS_REDACTED}')})}catch{$o.metricsError='unavailable'};$o|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Read-only sanitized HTTP status and keyword flags for tunnel metadata error, safe poll metrics with stripped labels. NEVER output raw API key, profile, logging or error body."
+}
