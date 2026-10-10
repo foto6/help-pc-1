@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$r=[ordered]@{};$bin='E:\\PC-Control\\TunnelChrome-20261009\\full\\tunnel-client.exe';$help=(& $bin --help 2>&1) -join ' ';$r.helpLines=@(($help -split [char]10)|Select-Object -First 26|ForEach-Object{([string]$_).Trim()});$ids=@(Get-CimInstance Win32_Process -Filter \"Name = 'tunnel-client.exe'\" -ErrorAction SilentlyContinue|Select-Object -ExpandProperty ProcessId);$r.listenPorts=@(Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue|Where-Object{$ids -contains $_.OwningProcess}|ForEach-Object{$_.LocalPort}|Sort-Object -Unique);foreach($port in $r.listenPorts){foreach($endpoint in @('readyz','healthz')){try{$resp=Invoke-WebRequest -Uri ('http://127.0.0.1:'+ $port+'/'+$endpoint) -UseBasicParsing -TimeoutSec 2;$r['url_'+$port+'_'+$endpoint]=@{status=[int]$resp.StatusCode;body=if($resp.Content.Length -lt 1200){$resp.Content}else{'too_long'}}}catch{$r['url_'+$port+'_'+$endpoint]='unreachable'}}};$r|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"helpLines\":[\"Tunnel client for the OpenAI MCP control plane. Use it to connect a local or private MCP server to the OpenAI control plane over an outbound tunnel. When it starts, it runs the long-lived tunnel daemon and exposes local operator surfaces at /healthz, /readyz, and /ui. Fastest Codex terminal path: tunnel-client codex assistant \\\"Summarize what tunnel-client is doing in this checkout.\\\"  Canonical setup URLs:   Tunnels management: https://platform.openai.com/settings/organization/tunnels   Runtime API keys: https://platform.openai.com/settings/organization/api-keys   Admin API keys: https://platform.openai.com/settings/organization/admin-keys   ChatGPT connector settings: https://chatgpt.com/#settings/Connectors  Agent-first help topics:   tunnel-client help doctor   tunnel-client help oauth   tunnel-client help plugin   tunnel-client help quickstart   tunnel-client help samples   tunnel-client help troubleshooting  Usage:   tunnel-client [command]  Available Commands:   admin          Administrative operations for the tunnel control plane   admin-profiles Manage tunnel-client admin profiles used by runtimes commands   cloudflared    Inspect the bundled Cloudflare Tunnel companion   codex          Use the Codex assistant surface and inspect CLI/app-server/plugin wiring   completion     Generate the autocompletion script for the specified shell   dev            Developer helpers for local tunnel-client validation   doctor         Validate tunnel-client configuration before starting the daemon   health         Probe tunnel-client /healthz and /readyz for a live daemon   help           Show help for an agent-first topic or subcommand   init           Create a runnable first-use tunnel-client profile   profiles       Manage tunnel-client YAML profiles   run            Run the tunnel client poller   runtimes       Manage native tunnel-client runtimes  Flags:   -h, --help      help for tunnel-client   -v, --version   version for tunnel-client  Use \\\"tunnel-client [command] --help\\\" for more information about a command.\"],\"listenPorts\":[8080],\"url_8080_readyz\":{\"body\":\"ready\",\"status\":200},\"url_8080_healthz\":{\"body\":\"live\",\"status\":200}}\r\n",
+      "stdout_bytes": 2183,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-10T01:36:38.754Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-10T01:36:38.526Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261010-chrome-tunnel-live-health-02"
+    },
+    "request_id": "20261010-chrome-tunnel-live-health-02",
+    "started_at": "2026-10-10T01:36:35.562Z",
+    "status": "completed"
+  },
+  "id": "20261010-chrome-tunnel-live-health-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
