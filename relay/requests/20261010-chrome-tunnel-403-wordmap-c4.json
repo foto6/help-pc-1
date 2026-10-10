@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261010-chrome-tunnel-403-wordmap-c4",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$o=[ordered]@{};try{$s=Invoke-RestMethod 'http://127.0.0.1:8080/api/status' -TimeoutSec 3;$err=[string]$s.tunnel_metadata_error;$allowed='unsupported','connection','endpoint','route','upstream','metadata','account','organization','platform','tunnel','tunnels','api','key','body','returned','status','code','response','forbidden','by','worker','not','available','disabled','feature','permission','access','scope','user','tenant','proxy','cloudflare','http','failed','error','fetch','invalid','unknown','authentication','authorization','supported','type','resource','read','poll','runtime','client','was','environment','server','path','gateway','request','method','is','the','for','cannot','provided','current','operation','get','on','with','and','this','accepted','only','your','workspace','project','unauthorized','token','does','have','allow','system','unsupported','from','version','openai','can','be','recognized','service';$a=@($err -split '[^a-zA-Z]+'|Where-Object{$_ -and ($allowed -contains $_.ToLower())}|ForEach-Object{$_.ToLower()});$o.allowedErrorWords=$a;$o.length=$err.Length}catch{$o.failure='unavailable'};$o|ConvertTo-Json -Depth 3 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only known non-sensitive dictionary words from local 403 error, discarding all unknown words; no raw error or secrets."
+}
