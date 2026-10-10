@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$o=[ordered]@{};try{$s=Invoke-RestMethod 'http://127.0.0.1:8080/api/status' -TimeoutSec 3;$route=$s.control_plane_route;$err=$s.tunnel_metadata_error;$o.status=@{tunnel_id=$s.control_plane_tunnel_id;route_type=if($null -eq $route){'null'}else{$route.GetType().Name};route_keys=if($route){@($route.PSObject.Properties.Name)}else{@()};route_mode=$route.mode;route_status=$route.status;route_state=$route.state;route_auth_status=$route.auth_status;route_connected=$route.connected;route_polling=$route.polling;metadata_error_present=($null -ne $err);metadata_error_type=if($err){$err.GetType().Name}else{'none'};metadata_error_keys=if($err -is [string]){@()}elseif($err){@($err.PSObject.Properties.Name)}else{@()};metadata_error_code=$err.code;metadata_error_status=$err.status;metadata_error_http_status=$err.http_status;channels=@($s.channels.PSObject.Properties.Name);mcp_route_count=@($s.mcp_routes).Count;main_channel_probe_status=$s.main_channel_probe_status}}catch{$o.error='status_unavailable'};try{$m=(Invoke-WebRequest 'http://127.0.0.1:8080/metrics' -UseBasicParsing -TimeoutSec 3).Content;$o.metrics=@($m -split [char]10|Where-Object{$_ -match '^[a-zA-Z_]*(poll|auth|error|failure|request|command)[a-zA-Z_]*'}|ForEach-Object{($_ -split '[\\{ ]')[0]}|Sort-Object -Unique|Select-Object -First 70)}catch{};$o|ConvertTo-Json -Compress -Depth 6"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"status\":{\"route_polling\":null,\"route_auth_status\":null,\"tunnel_id\":\"tunnel_6ac88c3d680c8191a475065208874b7c\",\"metadata_error_status\":null,\"route_status\":null,\"route_state\":null,\"main_channel_probe_status\":null,\"metadata_error_keys\":{},\"route_connected\":null,\"route_mode\":null,\"route_keys\":[\"kind\",\"name\",\"target\",\"route_mode\",\"proxy_source\"],\"channels\":[\"Count\",\"Length\",\"LongLength\",\"Rank\",\"SyncRoot\",\"IsReadOnly\",\"IsFixedSize\",\"IsSynchronized\"],\"mcp_route_count\":1,\"metadata_error_http_status\":null,\"metadata_error_present\":true,\"metadata_error_code\":null,\"route_type\":\"PSCustomObject\",\"metadata_error_type\":\"String\"},\"metrics\":[\"commands_poll_cycles_total\",\"commands_poll_errors_total\",\"commands_poll_last_successful_timestamp_seconds\",\"commands_poll_latency_seconds_bucket\",\"commands_poll_latency_seconds_count\",\"commands_poll_latency_seconds_sum\",\"commands_queue_capacity\",\"commands_queue_length\",\"http_client_request_body_size_bytes_bucket\",\"http_client_request_body_size_bytes_count\",\"http_client_request_body_size_bytes_sum\",\"http_client_request_duration_seconds_bucket\",\"http_client_request_duration_seconds_count\",\"http_client_request_duration_seconds_sum\",\"promhttp_metric_handler_requests_in_flight\",\"promhttp_metric_handler_requests_total\"]}\r\n",
+      "stdout_bytes": 1258,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-10T01:39:17.321Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-10T01:39:17.094Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261010-tunnel-routing-rootcause-04"
+    },
+    "request_id": "20261010-tunnel-routing-rootcause-04",
+    "started_at": "2026-10-10T01:39:16.142Z",
+    "status": "completed"
+  },
+  "id": "20261010-tunnel-routing-rootcause-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
