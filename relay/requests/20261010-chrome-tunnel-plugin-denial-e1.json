@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261010-chrome-tunnel-plugin-denial-e1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue'\n$o=[ordered]@{at=(Get-Date).ToUniversalTime().ToString('o')}\n$o.daemonCount=@(Get-CimInstance Win32_Process -Filter \"Name = 'tunnel-client.exe'\" -ErrorAction SilentlyContinue).Count\ntry{$s=Invoke-RestMethod 'http://127.0.0.1:8080/api/status' -TimeoutSec 4\n$e=[string]$s.tunnel_metadata_error\n$o.metadataErrorPresent=($e.Length -gt 0)\n$o.metadataHttpCode=if($e -match '(?<!\\d)(400|401|403|404|409|424|429|500|502|503)(?!\\d)'){$Matches[1]}else{'none'}\n$o.regionBlocked=($e -match 'unsupported_country_region_territory')\n$o.uptimeSeconds=$s.uptime_seconds\n$o.routeCount=@($s.mcp_routes).Count\n$o.tunnelIdMatches=($s.control_plane_tunnel_id -eq 'tunnel_6ac88c3d680c8191a475065208874b7c')\n}catch{$o.statusError='operator_unavailable'}\ntry{$r=Invoke-WebRequest -Uri 'http://127.0.0.1:8080/readyz' -UseBasicParsing -TimeoutSec 3;$o.localReady=($r.StatusCode -eq 200)}catch{$o.localReady=$false}\ntry{$m=(Invoke-WebRequest 'http://127.0.0.1:8080/metrics' -UseBasicParsing -TimeoutSec 3).Content\n$o.poll=@($m -split [char]10 | Where-Object {$_ -match '^(commands_poll_(cycles_total|errors_total|last_successful_timestamp_seconds))(\\{[^}]*\\})?\\s+[-+0-9.eE]+'}|Select-Object -First 14 |ForEach-Object{[regex]::Replace($_,'\\{[^}]*\\}','{LABELS_REDACTED}')})\n}catch{$o.metricsError='unavailable'}\n$o|ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only Chrome tunnel status after ChatGPT add MCP access denied. Sanitize error category and metrics, no keys, raw body or user-data screenshots."
+}
