@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$out=[ordered]@{source='127.0.0.1:8080'};foreach($ep in @('api/status','api/system','api/oauth')){try{$x=Invoke-RestMethod -Uri ('http://127.0.0.1:8080/'+$ep) -TimeoutSec 3;$key=($ep -split '/')[-1];$keys=@($x.PSObject.Properties.Name);$out[$key]=[ordered]@{keys=$keys;status=$x.status;state=$x.state;connected=$x.connected;ready=$x.ready;tunnel_id=$x.tunnel_id;transport_status=$x.transport_status;control_plane_status=$x.control_plane_status;last_error_code=$x.last_error_code;last_error_status=$x.last_error_status;polling_status=$x.polling_status;oauth_enabled=$x.enabled}}catch{$out[$ep+'_error']=$_.Exception.GetType().Name}}\ntry{$t=Invoke-WebRequest -Uri 'http://127.0.0.1:8080/metrics' -UseBasicParsing -TimeoutSec 3;$lines=@($t.Content -split [char]10 |Where-Object{$_ -notmatch '^\\s*#' -and $_ -match '^(commands_polled_total|commands_poll_last_successful_timestamp_seconds|tunnel_client_(?:poll|command|request|upstream|auth|connector)[A-Za-z0-9_]*)(\\{[^}]*\\})?\\s+[-+0-9.eE]+'}|Select-Object -First 30);$out.metrics=@($lines|ForEach-Object{[regex]::Replace($_,'\\{[^}]*\\}','{LABELS_REDACTED}')})}catch{$out.metrics_error=$_.Exception.GetType().Name};$out|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"source\":\"127.0.0.1:8080\",\"status\":{\"keys\":[\"version\",\"client_instance_id\",\"started_at\",\"uptime_seconds\",\"health_listen_addr\",\"control_plane_base_url\",\"control_plane_tunnel_id\",\"control_plane_max_inflight\",\"control_plane_poll_timeout\",\"control_plane_poll_deadline_guardrail\",\"channels\",\"control_plane_route\",\"mcp_routes\",\"raw_http_logging_enabled\",\"tunnel_metadata_error\"],\"status\":null,\"state\":null,\"connected\":null,\"ready\":null,\"tunnel_id\":null,\"transport_status\":null,\"control_plane_status\":null,\"last_error_code\":null,\"last_error_status\":null,\"polling_status\":null,\"oauth_enabled\":null},\"system\":{\"keys\":[\"tls\",\"proxy_health\",\"main_channel_probe_status\"],\"status\":null,\"state\":null,\"connected\":null,\"ready\":null,\"tunnel_id\":null,\"transport_status\":null,\"control_plane_status\":null,\"last_error_code\":null,\"last_error_status\":null,\"polling_status\":null,\"oauth_enabled\":null},\"oauth\":{\"keys\":[\"metadata_source\",\"auth_server_metadata_mode\",\"authorization_server_count\"],\"status\":null,\"state\":null,\"connected\":null,\"ready\":null,\"tunnel_id\":null,\"transport_status\":null,\"control_plane_status\":null,\"last_error_code\":null,\"last_error_status\":null,\"polling_status\":null,\"oauth_enabled\":null},\"metrics\":[\"commands_poll_last_successful_timestamp_seconds{LABELS_REDACTED} 0\"]}\r\n",
+      "stdout_bytes": 1272,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-10T01:38:44.580Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-10T01:38:44.415Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261010-tunnel-auth-triage-03"
+    },
+    "request_id": "20261010-tunnel-auth-triage-03",
+    "started_at": "2026-10-10T01:38:43.506Z",
+    "status": "completed"
+  },
+  "id": "20261010-tunnel-auth-triage-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
