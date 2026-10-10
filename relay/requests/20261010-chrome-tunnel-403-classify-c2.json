@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261010-chrome-tunnel-403-classify-c2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue'\n$o=[ordered]@{}\ntry {\n $s=Invoke-RestMethod 'http://127.0.0.1:8080/api/status' -TimeoutSec 4\n $err=[string]$s.tunnel_metadata_error\n $patterns=[ordered]@{\n   missingUse='(?i)(tunnel[\\. _\\-]?use|api\\.organization\\.tunnel\\.use|missing[^\\r\\n]{0,60}permission)'\n   noTunnel='(?i)(tunnel[^\\r\\n]{0,60}(not found|not exist|unknown))'\n   orgDenied='(?i)(organization[^\\r\\n]{0,80}(denied|mismatch|not found|unauthorized|forbidden))'\n   workspaceDenied='(?i)(workspace[^\\r\\n]{0,80}(denied|mismatch|not found|unauthorized|forbidden|access))'\n   accessDenied='(?i)(access denied|not authorized|forbidden|permission denied|does not have permission)'\n   expired='(?i)(expired|expiration)'\n   blocked='(?i)(not enabled|not entitled|unsupported|not available)'\n   project='(?i)(project)'\n   scope='(?i)(scope)'\n   platformResponse='(?i)(HTTP 403|status.?code.?403)'\n }\n $o.errorPatternMatches=@($patterns.Keys|Where-Object { $err -match $patterns[$_] })\n $o.errorLength=$err.Length\n $o.metadataErrorKind=if($err -match '(?i)metadata'){'metadata'}else{'unspecified'}\n $o.channelsCount=@($s.channels).Count\n $o.routesCount=@($s.mcp_routes).Count\n $o.tunnelIdMatches=($s.control_plane_tunnel_id -eq 'tunnel_6ac88c3d680c8191a475065208874b7c')\n}catch{$o.status='unavailable'}\ntry {\n $m=(Invoke-WebRequest 'http://127.0.0.1:8080/metrics' -UseBasicParsing -TimeoutSec 3).Content\n $lines=@($m -split [char]10|Where-Object{$_ -match '^commands_poll_(errors_total|cycles_total)\\{'}|Select-Object -First 15)\n $o.pollErrCategories=@($lines|ForEach-Object{\n   $z=[regex]::Match($_,'(?:code|status|reason|error|kind)=\"([^\"]{1,80})\"')\n   if($z.Success){[regex]::Replace($z.Groups[1].Value,'[^a-zA-Z0-9_-]','_')}else{'unlabelled'}\n }|Sort-Object -Unique)\n}catch{$o.metricStatus='unavailable'}\n$o|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Read only tunnel error keyword category report; no raw error strings, URLs, headers, auth tokens, logs, profile or secrets."
+}
