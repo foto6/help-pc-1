@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261010-tunnel-auth-triage-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$out=[ordered]@{source='127.0.0.1:8080'};foreach($ep in @('api/status','api/system','api/oauth')){try{$x=Invoke-RestMethod -Uri ('http://127.0.0.1:8080/'+$ep) -TimeoutSec 3;$key=($ep -split '/')[-1];$keys=@($x.PSObject.Properties.Name);$out[$key]=[ordered]@{keys=$keys;status=$x.status;state=$x.state;connected=$x.connected;ready=$x.ready;tunnel_id=$x.tunnel_id;transport_status=$x.transport_status;control_plane_status=$x.control_plane_status;last_error_code=$x.last_error_code;last_error_status=$x.last_error_status;polling_status=$x.polling_status;oauth_enabled=$x.enabled}}catch{$out[$ep+'_error']=$_.Exception.GetType().Name}}\ntry{$t=Invoke-WebRequest -Uri 'http://127.0.0.1:8080/metrics' -UseBasicParsing -TimeoutSec 3;$lines=@($t.Content -split [char]10 |Where-Object{$_ -notmatch '^\\s*#' -and $_ -match '^(commands_polled_total|commands_poll_last_successful_timestamp_seconds|tunnel_client_(?:poll|command|request|upstream|auth|connector)[A-Za-z0-9_]*)(\\{[^}]*\\})?\\s+[-+0-9.eE]+'}|Select-Object -First 30);$out.metrics=@($lines|ForEach-Object{[regex]::Replace($_,'\\{[^}]*\\}','{LABELS_REDACTED}')})}catch{$out.metrics_error=$_.Exception.GetType().Name};$out|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only tunnel local operator status, non-sensitive whitelisted fields and polling counters; never output raw logs, secrets, URL paths or headers."
+}
