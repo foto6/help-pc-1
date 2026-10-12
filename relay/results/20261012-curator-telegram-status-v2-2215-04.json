@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nbase='http://127.0.0.1:17448'\ndef get(p):\n try:\n  with urllib.request.urlopen(base+p,timeout=4) as r:return json.load(r)\n except Exception as e:return {'error':type(e).__name__}\nx=get('/api/status');y=get('/api/ai-profiles');s=x.get('settings') if isinstance(x,dict) else None\nif not isinstance(s,dict):s={}\nq={'statusKeys':list(x.keys())[:15] if isinstance(x,dict) else [],'telegram':{'notificationEnabled':s.get('telegramNotifyEnabled'),'tokenConfigured':s.get('telegramBotTokenConfigured'),'chatConfigured':bool(s.get('telegramChatId'))},'profiles':[{'name':p.get('name'),'port':p.get('debugPort'),'workerConnected':p.get('workerConnected')} for p in y.get('aiProfiles',[]) if p.get('provider')=='chatgpt'] if isinstance(y,dict) else []}\nprint(json.dumps(q,ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"statusKeys\": [\"ok\", \"controlPlaneResponsive\", \"version\", \"serverStartedAt\", \"generatedAt\", \"operational\", \"system\", \"agentControlHealth\", \"operatorLifecycle\", \"browser\", \"queue\", \"counts\", \"paths\", \"health\", \"settings\"], \"telegram\": {\"notificationEnabled\": false, \"tokenConfigured\": false, \"chatConfigured\": false}, \"profiles\": [{\"name\": \"ChatGPT \\u043e\\u0441\\u043d\\u043e\\u0432\\u043d\\u043e\\u0439\", \"port\": 17447, \"workerConnected\": false}, {\"name\": \"ChatGPT \\u043f\\u0440\\u043e\\u0444\\u0438\\u043b\\u044c 2\", \"port\": 17410, \"workerConnected\": true}]}\r\n",
+      "stdout_bytes": 550,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T15:31:23.402Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T15:31:23.204Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-curator-telegram-status-v2-2215-04"
+    },
+    "request_id": "20261012-curator-telegram-status-v2-2215-04",
+    "started_at": "2026-10-12T15:31:21.933Z",
+    "status": "completed"
+  },
+  "id": "20261012-curator-telegram-status-v2-2215-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
