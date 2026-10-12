@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$o=[ordered]@{stage='start'};$w=$null;try{$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 5;$t=@($tabs|Where-Object{$_.id -eq '8DDA0F28801FB19AAC67C5C8DA2D0038'})[0];$w=[Net.WebSockets.ClientWebSocket]::new();$ct=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(6));$null=$w.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$ct.Token).GetAwaiter().GetResult();$m=@{id=611;method='Runtime.evaluate';params=@{expression='(()=>{window.scrollTo(0,1300);return window.scrollY})()';returnByValue=$true}}|ConvertTo-Json -Compress -Depth 5;$b=[Text.Encoding]::UTF8.GetBytes($m);$null=$w.SendAsync([ArraySegment[byte]]::new($b),[Net.WebSockets.WebSocketMessageType]::Text,$true,$ct.Token).GetAwaiter().GetResult();$rc=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(7));$buf=New-Object byte[] 16384;for($k=0;$k -lt 12;$k++){$r=$w.ReceiveAsync([ArraySegment[byte]]::new($buf),$rc.Token).GetAwaiter().GetResult();$j=([Text.Encoding]::UTF8.GetString($buf,0,$r.Count)|ConvertFrom-Json);if($j.id -eq 611){$o.stage='done';$o.scrollY=$j.result.result.value;break}}}catch{$o.error=$_.Exception.Message}finally{if($w){$w.Dispose()}};$o|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"stage\":\"done\",\"scrollY\":1300}\r\n",
+      "stdout_bytes": 33,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:41:28.248Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:41:28.053Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-home-350-rules-a02"
+    },
+    "request_id": "20261012-avito-home-350-rules-a02",
+    "started_at": "2026-10-12T16:41:27.150Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-home-350-rules-a02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
