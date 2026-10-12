@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-activate-16pm-n1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-active-16pm-n1.mjs'\ntry{\n[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},6000);\ntry{const v=await(await fetch('http://127.0.0.1:17447/json/version')).json();const ws=new WebSocket(v.webSocketDebuggerUrl);\nws.addEventListener('open',()=>ws.send(JSON.stringify({id:1,method:'Target.activateTarget',params:{targetId:'B025E9E07C7426B014912EF6ABB37AB5'}})),{once:true});\nws.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===1){console.log(JSON.stringify({activated:!!z.result,error:z.error?.message||null}));process.exit(0)}});\nws.addEventListener('error',()=>{console.log('{\"error\":\"WS\"}');process.exit(0)},{once:true});\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,90)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Activate only own background 16 Pro Max public Avito search to inspect screenshot. No user account/network/purchase actions."
+}
