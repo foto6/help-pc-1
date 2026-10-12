@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-16pm-top3-v1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-16pm-top3-v1.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},10500);\ntry{const v=await(await fetch('http://127.0.0.1:17447/json/version')).json();const w=new WebSocket(v.webSocketDebuggerUrl);\nawait new Promise((ok,no)=>{w.addEventListener('open',ok,{once:true});w.addEventListener('error',no,{once:true})});\nlet seq=0,p=new Map();w.addEventListener('message',e=>{const z=JSON.parse(e.data);if(p.has(z.id)){p.get(z.id)(z);p.delete(z.id)}});\nconst send=(method,params)=>Promise.race([new Promise(ok=>{const id=++seq;p.set(id,ok);w.send(JSON.stringify({id,method,params}))}),new Promise(ok=>setTimeout(()=>ok({error:{message:'cdp_timeout'}}),3000))]);\nconst data=[];for(const url of [\"https://www.avito.ru/krasnoyarsk/telefony/iphone_16_pro_max_512_gb_sim_esim_8146547600\",\"https://www.avito.ru/krasnoyarsk/telefony/iphone_16_pro_max_256_gb_1_sim_8252995103\",\"https://www.avito.ru/krasnoyarsk/telefony/iphone_16_pro_max_256_gb_8493206633\"]){const z=await send('Target.createTarget',{url,background:true,newWindow:false});data.push({target_id:z.result?.targetId||null,url,error:z.error?.message||null})}\nconst z=data[0]?.target_id?await send('Target.activateTarget',{targetId:data[0].target_id}):null;\nconsole.log(JSON.stringify({data,firstActivated:!!z?.result}));process.exit(0)\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Open public details for exactly three potentially resellable 16 Pro Max offers found via s=1 sorted Avito, activate only first; no seller contact, purchases or system changes."
+}
