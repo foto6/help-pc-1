@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-15pm-13mini-search-a.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"hard_timeout\"}');process.exit(0)},16000);\ntry {\nconst v=await(await fetch('http://127.0.0.1:17447/json/version')).json();const w=new WebSocket(v.webSocketDebuggerUrl);\nawait new Promise((yes,no)=>{w.addEventListener('open',yes,{once:true});w.addEventListener('error',no,{once:true})});\nlet serial=100,p=new Map();w.addEventListener('message',e=>{const z=JSON.parse(e.data);if(p.has(z.id)){p.get(z.id)(z);p.delete(z.id)}});\nconst call=(method,params)=>Promise.race([new Promise(ok=>{const id=++serial;p.set(id,ok);w.send(JSON.stringify({id,method,params}))}),new Promise(ok=>setTimeout(()=>ok({error:{message:'timeout'}}),2700))]);\nlet out=[];\nfor(const entry of [[\"15pm_p3\",\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_15_pro_max-ASgBAgICA0SywA3Woe0RtMANzqs5sMENiPw3?user=1&s=104&p=3\"],[\"15pm_p7\",\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_15_pro_max-ASgBAgICA0SywA3Woe0RtMANzqs5sMENiPw3?user=1&s=104&p=7\"],[\"13mini_p3\",\"https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2013%20mini%20256&user=1&s=104&p=3\"],[\"13mini_p7\",\"https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2013%20mini%20512&user=1&s=104&p=7\"]]){let z=await call('Target.createTarget',{url:entry[1],background:true,newWindow:false});out.push({tag:entry[0],id:z.result?.targetId||null,error:z.error?.message||null})}\nconsole.log(JSON.stringify({created:out}));process.exit(0)\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,160)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"created\":[{\"tag\":\"15pm_p3\",\"id\":\"FCD1272A7DC4E4537390D862FE735F52\",\"error\":null},{\"tag\":\"15pm_p7\",\"id\":\"CFAAFB47E6DBFE61AC764790DA0ED1FC\",\"error\":null},{\"tag\":\"13mini_p3\",\"id\":\"51CA747F671F07D8283AC97184C115E1\",\"error\":null},{\"tag\":\"13mini_p7\",\"id\":\"F9A039FF8FC47CA80EE23987A4C49B38\",\"error\":null}]}\n",
+      "stdout_bytes": 302,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T15:38:08.273Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T15:38:07.928Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-15pm-13mini-search-batch-a"
+    },
+    "request_id": "20261012-15pm-13mini-search-batch-a",
+    "started_at": "2026-10-12T15:38:06.501Z",
+    "status": "completed"
+  },
+  "id": "20261012-15pm-13mini-search-batch-a",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
