@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$u=[Uri]::EscapeDataString('https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_80_m_4216003763?guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D&checkIn=2026-11-03&checkOut=2026-11-04');$t=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17447/json/new?'+$u) -TimeoutSec 8;@{id=$t.id;url=$t.url}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"id\":\"611B5DCA603F5FFA3E0D5B0E387AFC39\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_80_m_4216003763?guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D\\u0026checkIn=2026-11-03\\u0026checkOut=2026-11-04\"}\r\n",
+      "stdout_bytes": 293,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:09:56.322Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:09:56.022Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-avito-home-80b-ten-price-r10"
+    },
+    "request_id": "20261013-avito-home-80b-ten-price-r10",
+    "started_at": "2026-10-12T17:09:55.002Z",
+    "status": "completed"
+  },
+  "id": "20261013-avito-home-80b-ten-price-r10",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
