@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-avito-cards-c1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-avito-cards-c1.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nconst port=17447,target=\"5BE7D591DA96F1CAFD3416FF88E7DE17\";\nlet ws;\ntry{\n const tabs=await(await fetch(\"http://127.0.0.1:\"+port+\"/json/list\")).json();\n const tab=tabs.find(x=>x.id===target&&x.type===\"page\"&&x.url.startsWith(\"https://www.avito.ru/krasnoyarsk/telefony/\"));\n if(!tab)throw Error(\"TARGET_NOT_FOUND_OR_WRONG_URL\");\n ws=new WebSocket(tab.webSocketDebuggerUrl);\n const data=await Promise.race([new Promise((resolve,reject)=>{\n ws.addEventListener(\"open\",()=>ws.send(JSON.stringify({id:42,method:\"Runtime.evaluate\",params:{expression:\"(() => {\\n const cards=[...document.querySelectorAll('[data-marker=\\\"item\\\"]')].slice(0,45);\\n return {url:location.href,title:document.title,bodyLength:document.body?.innerText?.length||0,count:cards.length,cards:cards.map((el,i)=>{\\n const h=el.querySelector('h3,[itemprop=\\\"name\\\"]');\\n const a=h?.closest('a[href]')||el.querySelector('a[href*=\\\"/krasnoyarsk/telefony/\\\"]')||el.querySelector('a[href]');\\n const p=el.querySelector('[data-marker=\\\"item-price\\\"],[itemprop=\\\"price\\\"]');\\n const raw=el.innerText||'';\\n return {i,name:h?.innerText?.trim().slice(0,125)||'',price:p?.innerText?.trim().slice(0,65)||'',text:raw.replace(/\\\\s+/g,' ').slice(0,260),url:a?.href||''};\\n })};\\n})()\",returnByValue:true}})),{once:true});\n ws.addEventListener(\"message\",event=>{let v=JSON.parse(event.data);if(v.id===42)resolve(v.result?.result?.value||{error:v.error?.message||v.result?.exceptionDetails?.text||\"UNKNOWN\"})});\n ws.addEventListener(\"error\",reject,{once:true});\n }),new Promise((_,reject)=>setTimeout(()=>reject(Error(\"CDP_TIMEOUT\")),9000))]);\n console.log(JSON.stringify(data));\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,150)}))}\nfinally{if(ws)ws.close()}\nprocess.exit(0);\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only public DOM extraction from exact user-approved isolated Chrome Avito phones tab 17447; no tab navigation, private info, screenshots, focus changes, credentials or purchases."
+}
