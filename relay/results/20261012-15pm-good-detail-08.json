@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'pa15detail08.mjs';try{[IO.File]::WriteAllText($p,@'\nsetTimeout(()=>process.exit(2),7500);\nconst a=await(await fetch('http://127.0.0.1:17447/json/list')).json();\nconst t=a.find(x=>x.id==='0DC913FEE1093BE0EBB996D90627B02A');\nif(!t)process.exit(3);\nconst w=new WebSocket(t.webSocketDebuggerUrl);\nw.onopen=()=>w.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:'window.scrollTo(0,700); location.pathname',returnByValue:true}}));\nw.onmessage=e=>{let r=JSON.parse(e.data);if(r.id===1){console.log(JSON.stringify({path:r.result?.result?.value,error:r.error}));process.exit(0)}};\n\n'@);& node $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"path\":\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8399084915\"}\n",
+      "stdout_bytes": 78,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T15:59:38.669Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T15:59:38.479Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-15pm-good-detail-08"
+    },
+    "request_id": "20261012-15pm-good-detail-08",
+    "started_at": "2026-10-12T15:59:37.751Z",
+    "status": "completed"
+  },
+  "id": "20261012-15pm-good-detail-08",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
