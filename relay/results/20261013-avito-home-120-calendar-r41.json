@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 4;$t=@($tabs|Where-Object{$_.id -eq 'F6789E1F2FBBA22807E8FD964FF1DBDD'})[0];$w=[Net.WebSockets.ClientWebSocket]::new();try{$ct=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(5));$null=$w.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$ct.Token).GetAwaiter().GetResult();$i=410;foreach($ty in @('mousePressed','mouseReleased')){$cmd=@{id=$i;method='Input.dispatchMouseEvent';params=@{type=$ty;x=862;y=410;button='left';clickCount=1}}|ConvertTo-Json -Compress -Depth 5;$b=[Text.Encoding]::UTF8.GetBytes($cmd);$null=$w.SendAsync([ArraySegment[byte]]::new($b),[Net.WebSockets.WebSocketMessageType]::Text,$true,$ct.Token).GetAwaiter().GetResult();$i++};@{sent=$true;target='F6789E1F2FBBA22807E8FD964FF1DBDD'}|ConvertTo-Json -Compress}finally{$w.Dispose()}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"sent\":true,\"target\":\"F6789E1F2FBBA22807E8FD964FF1DBDD\"}\r\n",
+      "stdout_bytes": 59,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:57:41.062Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:57:40.794Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-avito-home-120-calendar-r41"
+    },
+    "request_id": "20261013-avito-home-120-calendar-r41",
+    "started_at": "2026-10-12T17:57:38.969Z",
+    "status": "completed"
+  },
+  "id": "20261013-avito-home-120-calendar-r41",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
