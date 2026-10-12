@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261013-avito-home-activate-80a-r07",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$r=Invoke-WebRequest 'http://127.0.0.1:17447/json/activate/880E8B55185A80D858A4C2656586CDB3' -UseBasicParsing -TimeoutSec 6;@{activated=($r.StatusCode -eq 200)}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13000,
+  "note": "Activate specific public Avito house 80m tab for visual research; no booking."
+}
