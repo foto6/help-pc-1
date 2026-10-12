@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-batch25-compact-f1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-f1-compact.mjs';try{[System.IO.File]::WriteAllText($p, @'\nlet ws;try{const v=await(await fetch(\"http://127.0.0.1:17447/json/list\")).json();let t=v.find(x=>x.url.includes(\"posutochno-ASgBAgI\"));if(!t)throw Error(\"not found\");ws=new WebSocket(t.webSocketDebuggerUrl);const a=await Promise.race([new Promise((resolve,reject)=>{ws.addEventListener(\"open\",()=>ws.send(JSON.stringify({id:1,method:\"Runtime.evaluate\",params:{expression:\"[...document.querySelectorAll('[data-marker=item]')].slice(0,25).map((x,i)=>({i,id:x.getAttribute('data-item-id'),text:x.innerText.replace(/\\\\s+/g,' ').slice(0,190)}))\",returnByValue:true}})),{once:true});ws.addEventListener(\"message\",e=>{let m=JSON.parse(e.data);if(m.id===1)resolve(m.result?.result?.value||{})});ws.addEventListener(\"error\",reject,{once:true})}),new Promise((_,j)=>setTimeout(()=>j(Error(\"timeout\")),7500))]);console.log(JSON.stringify(a))}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only 25 public Avito displayed cards ID/title/prices in dedicated CDP17447; no private tabs or config changes."
+}
