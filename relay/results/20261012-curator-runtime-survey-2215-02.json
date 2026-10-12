@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$out=[ordered]@{checkedAt=(Get-Date).ToString('o')};$root='E:\\WebAIBridge';$out.bridgePathExists=Test-Path -LiteralPath $root;if($out.bridgePathExists){$out.gitHead=((& git -C $root rev-parse HEAD 2>$null) -join '').Trim();$out.gitBranch=((& git -C $root branch --show-current 2>$null) -join '').Trim();$out.gitDirtyCount=@(git -C $root status --porcelain=v1 -uno 2>$null).Count};$b='http://127.0.0.1:17448';foreach($spec in @(@('health','/api/operator-lifecycle'),@('watchdog','/api/supervisor-watchdog?detect=0'),@('assignments','/api/supervisor-watchdog/agent-assignments'),@('managed','/api/supervisor-watchdog/managed-chats'))){$key=$spec[0];try{$r=Invoke-RestMethod -Method GET -Uri ($b+$spec[1]) -TimeoutSec 3;if($key -eq 'health'){$out.health=[ordered]@{mode=$r.mode;revision=$r.revision;queuePaused=$r.queuePaused}}elseif($key -eq 'watchdog'){$out.watchdog=[ordered]@{mode=$r.config.mode;enabled=$r.config.enabled;autoContinue=$r.config.autoContinueEnabled;autonomous=$r.config.allowAutonomousSend;runtimeKeys=@($r.runtime.PSObject.Properties.Name|Select-Object -First 10)}}elseif($key -eq 'assignments'){$out.assignmentCounts=$r.counts}elseif($key -eq 'managed'){$out.chats=@($r.chats|ForEach-Object{[ordered]@{name=$_.name;status=$_.status;highMode=$_.highMode;activeAssignments=$_.activeAssignmentCount;openTabs=$_.openTabs;error=$_.error}})}}catch{$out[$key+'Error']=$_.Exception.GetType().Name}};try{$t=Invoke-RestMethod -Method GET -Uri ($b+'/api/settings') -TimeoutSec 3;$out.settingsKeys=@($t.PSObject.Properties.Name |Select-Object -First 14);$out.telegramSettings=[ordered]@{notifyEnabled=$t.settings.telegramNotifyEnabled;tokenConfigured=$t.settings.telegramBotTokenConfigured;chatConfigured=[bool]($t.settings.telegramChatId);threadConfigured=[bool]($t.settings.telegramThreadId)}}catch{$out.settingsError=$_.Exception.GetType().Name};$out|ConvertTo-Json -Compress -Depth 7"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"checkedAt\":\"2026-10-12T22:19:13.6272659+07:00\",\"bridgePathExists\":true,\"gitHead\":\"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\",\"gitBranch\":\"\",\"gitDirtyCount\":5,\"health\":{\"mode\":\"RUNNING_MANAGED\",\"revision\":7,\"queuePaused\":false},\"watchdog\":{\"mode\":\"off\",\"enabled\":false,\"autoContinue\":false,\"autonomous\":false,\"runtimeKeys\":[\"processRunning\",\"processPid\",\"state\"]},\"assignmentCounts\":{\"cancelled\":11,\"blocked\":35,\"failed\":12,\"completed\":10},\"chats\":[{\"name\":\"Bridge\",\"status\":\"profile_offline\",\"highMode\":false,\"activeAssignments\":0,\"openTabs\":0,\"error\":\"fetch failed\"},{\"name\":\"Media\",\"status\":\"profile_offline\",\"highMode\":false,\"activeAssignments\":0,\"openTabs\":0,\"error\":\"fetch failed\"},{\"name\":\"Creator\",\"status\":\"profile_offline\",\"highMode\":false,\"activeAssignments\":0,\"openTabs\":0,\"error\":\"fetch failed\"},{\"name\":\"Growth\",\"status\":\"profile_offline\",\"highMode\":false,\"activeAssignments\":0,\"openTabs\":0,\"error\":\"fetch failed\"},{\"name\":\"Native MCP\",\"status\":\"profile_offline\",\"highMode\":false,\"activeAssignments\":0,\"openTabs\":0,\"error\":\"fetch failed\"},{\"name\":\"QA\",\"status\":\"profile_offline\",\"highMode\":false,\"activeAssignments\":0,\"openTabs\":0,\"error\":\"fetch failed\"}],\"settingsError\":\"WebException\"}\r\n",
+      "stdout_bytes": 1203,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T15:19:14.709Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T15:19:14.469Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-curator-runtime-survey-2215-02"
+    },
+    "request_id": "20261012-curator-runtime-survey-2215-02",
+    "started_at": "2026-10-12T15:19:12.489Z",
+    "status": "completed"
+  },
+  "id": "20261012-curator-runtime-survey-2215-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
