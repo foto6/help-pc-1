@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-15pm-13mini-search-batch-a",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-15pm-13mini-search-a.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"hard_timeout\"}');process.exit(0)},16000);\ntry {\nconst v=await(await fetch('http://127.0.0.1:17447/json/version')).json();const w=new WebSocket(v.webSocketDebuggerUrl);\nawait new Promise((yes,no)=>{w.addEventListener('open',yes,{once:true});w.addEventListener('error',no,{once:true})});\nlet serial=100,p=new Map();w.addEventListener('message',e=>{const z=JSON.parse(e.data);if(p.has(z.id)){p.get(z.id)(z);p.delete(z.id)}});\nconst call=(method,params)=>Promise.race([new Promise(ok=>{const id=++serial;p.set(id,ok);w.send(JSON.stringify({id,method,params}))}),new Promise(ok=>setTimeout(()=>ok({error:{message:'timeout'}}),2700))]);\nlet out=[];\nfor(const entry of [[\"15pm_p3\",\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_15_pro_max-ASgBAgICA0SywA3Woe0RtMANzqs5sMENiPw3?user=1&s=104&p=3\"],[\"15pm_p7\",\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_15_pro_max-ASgBAgICA0SywA3Woe0RtMANzqs5sMENiPw3?user=1&s=104&p=7\"],[\"13mini_p3\",\"https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2013%20mini%20256&user=1&s=104&p=3\"],[\"13mini_p7\",\"https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2013%20mini%20512&user=1&s=104&p=7\"]]){let z=await call('Target.createTarget',{url:entry[1],background:true,newWindow:false});out.push({tag:entry[0],id:z.result?.targetId||null,error:z.error?.message||null})}\nconsole.log(JSON.stringify({created:out}));process.exit(0)\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,160)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 24000,
+  "note": "Create four isolated PUBLIC Avito research tabs (15 Pro Max and 13 mini, deep pages, private seller filter) in authorized Chrome CDP 17447. No modifications to prior tabs, account, payments, seller contact or system/proxy."
+}
