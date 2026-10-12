@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-neur0store-mtproto-start-guide-r11",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "from pathlib import Path\np=Path('E:/Neur0StoreCurator/MTProto-START-HERE.txt')\ns=\"Neur0Store Curator — Telegram MTProto\\nSTATUS: MTProto TGWS network is working, bot is NOT paired yet.\\n\\n1. Telegram @BotFather: /revoke on @Neur0Store_bot, keep new token PRIVATE.\\n2. Open https://my.telegram.org/apps in browser. Create API application, copy api_id and api_hash LOCALLY (never send into chats).\\n3. Double-click E:\\\\Neur0StoreCurator\\\\SETUP_MTPROTO.cmd.\\n   Type only ROTATED when asked, then enter api_id / api_hash / NEW token via hidden local prompts.\\n4. In @Neur0Store_bot chat send exact /start <CODE> printed by local program.\\n5. Run CHECK_MTPROTO.cmd then START_MTPROTO.cmd. Leave its window open.\\n6. Send in Telegram: /task Проверить статус Bridge и шести агентов\\n   /status shows queue receipt, /health shows gateway status.\\n\\nTGWSProxy: 127.0.0.1:1443. Its secret is read locally and never printed.\\nMTProto bot token + API hash + session are encrypted with Windows CurrentUser DPAPI.\\nBridge curator is already registered; other six agent chats unchanged.\\nNo public webhook, Telegram HTTPS Bot API or proxy reconfiguration.\\nAutostart is NOT enabled until one real delivery canary passes.\\nUNKNOWN ChatGPT send is never blindly repeated.\\n\\nVerified offline tests: 24 passed; Telethon v1.45.0 installed in isolated .venv.\\nVerified real TGWS MTProto transport handshake: connected true (WITHOUT bot login).\\nNever paste Telegram token, api_hash or TGWS secret into ChatGPT.\\n\"\nif p.exists():\n if p.read_text(encoding='utf8')!=s:raise RuntimeError('user_modified_start_guide')\n print('START_HERE_ALREADY_CURRENT')\nelse:\n with p.open('x',encoding='utf8',newline='') as f:f.write(s)\n print('START_HERE_FILE_INSTALLED')\n"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 16000,
+  "note": "Create-only concise MTProto owner onboarding text in isolated folder. No secrets or configuration changes."
+}
