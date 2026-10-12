@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-17pm-sorted-f1.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},8500);try{const v=await(await fetch('http://127.0.0.1:17447/json/version')).json(),w=new WebSocket(v.webSocketDebuggerUrl);await new Promise((ok,no)=>{w.addEventListener('open',ok,{once:true});w.addEventListener('error',no,{once:true})});\nlet n=0,p=new Map();w.addEventListener('message',e=>{const z=JSON.parse(e.data);if(p.has(z.id)){p.get(z.id)(z);p.delete(z.id)}});\nconst send=(method,params)=>Promise.race([new Promise(ok=>{const id=++n;p.set(id,ok);w.send(JSON.stringify({id,method,params}))}),new Promise(ok=>setTimeout(()=>ok({error:{message:'cdp_timeout'}}),3500))]);\nconst z=await send('Target.createTarget',{url:'https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2017%20pro%20max&s=1',background:true,newWindow:false});const target=z.result?.targetId;\nconst a=target?await send('Target.activateTarget',{targetId:target}):{};\nconsole.log(JSON.stringify({url:'https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2017%20pro%20max&s=1',target_id:target,activated:!!a.result,error:z.error?.message||null}));process.exit(0)\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"url\":\"https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2017%20pro%20max&s=1\",\"target_id\":\"A5BDF79C0A5B3DEA3EA473E3BA579581\",\"activated\":true,\"error\":null}\n",
+      "stdout_bytes": 159,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T14:45:12.696Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T14:45:12.508Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-iphone-17pm-sorted-f1"
+    },
+    "request_id": "20261012-iphone-17pm-sorted-f1",
+    "started_at": "2026-10-12T14:45:11.699Z",
+    "status": "completed"
+  },
+  "id": "20261012-iphone-17pm-sorted-f1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
