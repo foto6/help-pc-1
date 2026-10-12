@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "daemon.py",
+        "--check"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "CONFIG_OK exact_curator_binding_ok; no Telegram requests or sends\r\n",
+      "stdout_bytes": 67,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:56:21.745Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:56:21.483Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-neur0store-curator-check-after-pairing-0057-r02"
+    },
+    "request_id": "20261013-neur0store-curator-check-after-pairing-0057-r02",
+    "started_at": "2026-10-12T17:56:20.142Z",
+    "status": "completed"
+  },
+  "id": "20261013-neur0store-curator-check-after-pairing-0057-r02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
