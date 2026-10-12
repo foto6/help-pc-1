@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$o=[ordered]@{action='isolated_headless_browser'}\n$chrome='C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'\n$profile='E:\\PC-Control\\AvitoDirectChrome-20261012\\Profile'\n$port=17447\nif(!(Test-Path -LiteralPath $chrome -PathType Leaf)){throw 'CHROME_EXE_MISSING'}\nif(Test-Path -LiteralPath $profile){$o.status='ABORT_PROFILE_ALREADY_EXISTS';$o|ConvertTo-Json -Compress;exit 0}\n$inuse=@(Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue)\nif($inuse.Count -gt 0){$o.status='ABORT_PORT_IN_USE';$o|ConvertTo-Json -Compress;exit 0}\n$parent=Split-Path $profile -Parent\n[System.IO.Directory]::CreateDirectory($parent)|Out-Null\n$args=@('--headless=new','--remote-debugging-address=127.0.0.1',\"--remote-debugging-port=$port\",\"--user-data-dir=$profile\",'--no-proxy-server','--no-first-run','--no-default-browser-check','--disable-background-networking','https://www.avito.ru/')\n$p=Start-Process -FilePath $chrome -ArgumentList $args -PassThru\n$o.pid=$p.Id;$o.profileDedicated=$true;$o.port=$port;$o.explicitNoProxy=$true;$o.primaryChromeUnmodified=$true\nStart-Sleep -Seconds 3\ntry{$v=Invoke-RestMethod -Uri ('http://127.0.0.1:'+ $port +'/json/version') -TimeoutSec 3;$o.cdpReady=$true;$o.browser=$v.Browser;$o.status='STARTED'}catch{$o.cdpReady=$false;$o.status='STARTED_CDP_UNAVAILABLE'}\n$o|ConvertTo-Json -Compress -Depth 4"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"action\":\"isolated_headless_browser\",\"pid\":19856,\"profileDedicated\":true,\"port\":17447,\"explicitNoProxy\":true,\"primaryChromeUnmodified\":true,\"cdpReady\":true,\"browser\":\"Chrome/154.0.8037.99\",\"status\":\"STARTED\"}\r\n",
+      "stdout_bytes": 211,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T11:32:25.790Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T11:32:25.468Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-isolated-direct-start-04"
+    },
+    "request_id": "20261012-avito-isolated-direct-start-04",
+    "started_at": "2026-10-12T11:32:16.266Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-isolated-direct-start-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
