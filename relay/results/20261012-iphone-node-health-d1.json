@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $n=@(Get-CimInstance Win32_Process -Filter \"Name='node.exe'\" | Where-Object { [string]$_.CommandLine -like '*pc-iphone-avito-cards-c1.mjs*' } | Select-Object ProcessId,Name); Write-Output ('stuckNodeCount='+$n.Count); & node.exe -e 'const c=new AbortController();setTimeout(()=>c.abort(),3000);fetch(\"http://127.0.0.1:17447/json/list\",{signal:c.signal}).then(r=>r.json()).then(x=>console.log(JSON.stringify({ok:true,tabs:x.length,phones:x.filter(t=>t.url&&t.url.includes(\"/telefony/\")).map(t=>({id:t.id,url:t.url}))}))).catch(e=>console.log(JSON.stringify({ok:false,reason:String(e).slice(0,80)}))).finally(()=>process.exit())'"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "[eval]:1\r\nconst c=new AbortController();setTimeout(()=>c.abort(),3000);fetch(http://127.0.0.1:17447/json/list,{signal:c.signal}).then(r=>r.json()).then(x=>console.log(JSON.stringify({ok:true,tabs:x.length,phones:x.filter(t=>t.url&&t.url.includes(/telefony/)).map(t=>({id:t.id,url:t.url}))}))).catch(e=>console.log(JSON.stringify({ok:false,reason:String(e).slice(0,80)}))).finally(()=>process.exit())\r\n                                                                   ^^^^\r\nExpected ',', got ':'\r\n\r\nSyntaxError: missing ) after argument list\r\n    at makeContextifyScript (node:internal/vm:194:14)\r\n    at compileScript (node:internal/process/execution:388:10)\r\n    at evalTypeScript (node:internal/process/execution:260:22)\r\n    at node:internal/main/eval_string:71:3\r\n\r\nNode.js v24.18.0\r\n",
+      "stderr_bytes": 789,
+      "stderr_truncated": false,
+      "stdout": "stuckNodeCount=0\r\n",
+      "stdout_bytes": 18,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T14:10:38.239Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T14:10:38.057Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-iphone-node-health-d1"
+    },
+    "request_id": "20261012-iphone-node-health-d1",
+    "started_at": "2026-10-12T14:10:37.176Z",
+    "status": "completed"
+  },
+  "id": "20261012-iphone-node-health-d1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
