@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-15mini-reconcile-eval-b1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$p=@(Get-CimInstance Win32_Process -Filter \"Name='node.exe'\" | Where-Object{[string]$_.CommandLine -like '*pc-15mini-eval-b1.mjs*'} | Select-Object ProcessId,Name);[ordered]@{nodeCount=$p.Count;tempPresent=(Test-Path(Join-Path $env:TEMP 'pc-15mini-eval-b1.mjs'))}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only reconciliation for timed-out public listing observation, do not replay, kill, or alter processes."
+}
