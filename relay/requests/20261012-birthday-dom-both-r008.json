@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-birthday-dom-both-r008",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 4;$out=@();foreach($pair in @(@('88','8682F60C59EAE3EF9CF12DCE711A647B'),@('70','F67239432460BD1FD379FB6C9DAFC6AD'))){$label=$pair[0];$id=$pair[1];$o=[ordered]@{house=$label};$ws=$null;try{$t=@($tabs|Where-Object{$_.id -eq $id})[0];if(!$t){throw 'MISSING_TARGET'};$ws=[System.Net.WebSockets.ClientWebSocket]::new();$token=[System.Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(8));$null=$ws.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$token.Token).GetAwaiter().GetResult();$expression='({title:document.title,text:document.body.innerText.slice(0,18000),url:location.href})';$c=@{id=712;method='Runtime.evaluate';params=@{expression=$expression;returnByValue=$true}}|ConvertTo-Json -Compress -Depth 6;$bytes=[System.Text.Encoding]::UTF8.GetBytes($c);$null=$ws.SendAsync([ArraySegment[byte]]::new($bytes),[System.Net.WebSockets.WebSocketMessageType]::Text,$true,$token.Token).GetAwaiter().GetResult();$recvToken=[System.Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(9));$buf=New-Object byte[] 65536;$sb=[System.Text.StringBuilder]::new();$found=$false;for($k=0;$k -lt 18;$k++){$p=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$recvToken.Token).GetAwaiter().GetResult();[void]$sb.Append([System.Text.Encoding]::UTF8.GetString($buf,0,$p.Count));if($p.EndOfMessage){$msg=$sb.ToString();[void]$sb.Clear();$j=$msg|ConvertFrom-Json;if($j.id -eq 712){$found=$true;$o.data=$j.result.result.value;$o.exception=$j.result.exceptionDetails.text;$o.protocolError=$j.error.message;break}}};if(!$found){$o.error='NO_MATCH'}}catch{$o.error=$_.Exception.Message}finally{if($ws){$ws.Dispose()}};$out+=$o};@{results=$out}|ConvertTo-Json -Compress -Depth 8"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 35000,
+  "note": "Exact two public listings DOM text via Chrome DevTools Windows WebSockets, no page mutation."
+}
