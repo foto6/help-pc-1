@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import sys,unittest\nsys.path.insert(0,r'E:\\Neur0StoreCurator')\nsuite=unittest.defaultTestLoader.discover(r'E:\\Neur0StoreCurator',pattern='test_*.py')\nr=unittest.TextTestRunner(verbosity=1).run(suite)\nprint('OFFLINE_TESTS',r.testsRun,'FAILURES',len(r.failures),'ERRORS',len(r.errors))\nsys.exit(0 if r.wasSuccessful() else 1)\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "......................................\r\n----------------------------------------------------------------------\r\nRan 38 tests in 0.445s\r\n\r\nOK\r\n",
+      "stderr_bytes": 142,
+      "stderr_truncated": false,
+      "stdout": "OFFLINE_TESTS 38 FAILURES 0 ERRORS 0\r\n",
+      "stdout_bytes": 38,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:42:27.839Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:42:27.558Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-neur0store-owner-proxy-regression-suite-0058-v1"
+    },
+    "request_id": "20261013-neur0store-owner-proxy-regression-suite-0058-v1",
+    "started_at": "2026-10-12T17:42:25.563Z",
+    "status": "completed"
+  },
+  "id": "20261013-neur0store-owner-proxy-regression-suite-0058-v1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
