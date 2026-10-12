@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-descriptions-06",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$js=@'\nlet sockets=[];\ntry{\nconst v=await(await fetch(\"http://127.0.0.1:17447/json/list\")).json();\nconst ids=[\"251BEB4F668E7ADF5400D3821089D3F6\",\"EF6A592F8DA7E5C66A6F6046DBB9B113\"];\nconst out=[];\nfor(const id of ids){\n const tab=v.find(x=>x.id===id&&x.url.startsWith(\"https://www.avito.ru/krasnoyarsk/\"));if(!tab){out.push({id,error:\"NOT_FOUND\"});continue}\n const ws=new WebSocket(tab.webSocketDebuggerUrl);sockets.push(ws);\n try{\n const answer=await Promise.race([new Promise((resolve,reject)=>{\n ws.addEventListener(\"open\",()=>{const expression=\"(()=>{let s=document.body.innerText;let ix=s.indexOf('Описание');return {title:document.title,length:s.length,desc:ix>=0?s.slice(ix,ix+7200):s.slice(-7200)}})()\";ws.send(JSON.stringify({id:123,method:\"Runtime.evaluate\",params:{expression,returnByValue:true}}))},{once:true});\n ws.addEventListener(\"message\",e=>{let x=JSON.parse(e.data);if(x.id===123)resolve(x.result?.result?.value||{error:x.error?.code})});ws.addEventListener(\"error\",reject,{once:true})\n }),new Promise((_,reject)=>setTimeout(()=>reject(Error(\"timeout\")),7000))]);out.push({id,url:tab.url,data:answer})\n }catch(e){out.push({id,error:String(e).slice(0,100)})}ws.close()\n}\nconsole.log(JSON.stringify(out))\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,130)}))}\nfor(let w of sockets)try{w.close()}catch{};process.exit(0)\n'@\n$tmp=Join-Path $env:TEMP 'avito-house-description-20261012.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,$js,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22000,
+  "note": "Read only page text containing description from two public Avito rental listings already opened by assistant, isolated Chrome 17447 only. No private tabs, form input, secrets, screenshots persisted or modifications."
+}
