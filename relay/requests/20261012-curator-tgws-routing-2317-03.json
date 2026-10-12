@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-curator-tgws-routing-2317-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$out=[ordered]@{};$targets=Get-CimInstance Win32_Process|Where-Object{$_.Name -match '^(TgWsProxy_windows|Proxifier|python|pythonw)(\\.exe)?$'};$out.processes=@($targets|ForEach-Object{ $path=$_.ExecutablePath;$folder=if($path){Split-Path -Parent $path}else{''};[ordered]@{name=$_.Name;pid=$_.ProcessId;executableParent=$folder;scriptTag=if($_.Name -eq 'python.exe' -or $_.Name -eq 'pythonw.exe'){if($_.CommandLine -match '(?i)(tgws|proxy|http|server|tunnel)'){ 'proxy_related_keywords' }else{'not_proxy_related'}}else{'n/a'}}});$out.listeners=@(Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue|Where-Object{$_.LocalAddress -in @('127.0.0.1','::1') -and $_.LocalPort -ge 1024}|Select-Object LocalPort,OwningProcess|Sort-Object LocalPort -Unique|ForEach-Object{$p=Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue;[ordered]@{port=$_.LocalPort;process=if($p){$p.ProcessName}else{''}}}|Where-Object{$_.process -notmatch 'Chrome|Code|Teams|svchost|Wpn|Runtime|Search|msedge|WebView|System'}|Select-Object -First 40);$out|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Narrow read-only TGWS application binary directory and loopback listener process map. Do not emit command lines, proxy secrets, full config."
+}
