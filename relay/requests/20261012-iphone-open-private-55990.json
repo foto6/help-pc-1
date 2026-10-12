@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-open-private-55990",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-private-55990.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"timeout\"}');process.exit(0)},6500);\ntry{const t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id==='D229F01C94F7F6DF012309BB4CE211CD');const w=new WebSocket(t.webSocketDebuggerUrl);\nawait new Promise((ok,no)=>{w.addEventListener('open',ok,{once:true});w.addEventListener('error',no,{once:true})});let seq=0,p=new Map();w.addEventListener('message',e=>{const z=JSON.parse(e.data);if(p.has(z.id)){p.get(z.id)(z);p.delete(z.id)}});\nconst send=type=>Promise.race([new Promise(ok=>{let id=++seq;p.set(id,ok);w.send(JSON.stringify({id,method:'Input.dispatchMouseEvent',params:{type,x:760,y:690,button:'left',clickCount:1,modifiers:2}}))}),new Promise(ok=>setTimeout(()=>ok({error:'timeout'}),1800))]);\nconst a=await send('mousePressed'),b=await send('mouseReleased');console.log(JSON.stringify({pressed:!!a.result,released:!!b.result}));process.exit(0)\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "One Ctrl-click only on screenshot-verified public Avito iPhone16 Pro Max 512GB 55990 card title within own private-filter search tab. Open detail in background tab if possible; no messages, transactions, credential/profile changes."
+}
