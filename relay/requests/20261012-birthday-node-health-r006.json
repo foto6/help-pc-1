@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-birthday-node-health-r006",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';Write-Output 'PS_BEFORE_NODE';& node.exe -e \"console.log('NODE_OK');process.exit(0)\";Write-Output ('RC='+$LASTEXITCODE)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Minimal Node runtime diagnosis, no site changes."
+}
