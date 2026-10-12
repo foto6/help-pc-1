@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-birthday-activated-title88-r012",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$o=[ordered]@{step='start'};$ws=$null;try{$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 4;$t=@($tabs|Where-Object {$_.id -eq '8682F60C59EAE3EF9CF12DCE711A647B'})[0];$o.selected=$t.id;$ws=[System.Net.WebSockets.ClientWebSocket]::new();$token=[System.Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(6));$null=$ws.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$token.Token).GetAwaiter().GetResult();$o.step='connected';$c=@{id=712;method='Runtime.evaluate';params=@{expression='document.title';returnByValue=$true}}|ConvertTo-Json -Compress -Depth 5;$bytes=[Text.Encoding]::UTF8.GetBytes($c);$null=$ws.SendAsync([ArraySegment[byte]]::new($bytes),[System.Net.WebSockets.WebSocketMessageType]::Text,$true,$token.Token).GetAwaiter().GetResult();$cts=[System.Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(7));$buf=New-Object byte[] 65536;for($k=0;$k -lt 9;$k++){$p=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$cts.Token).GetAwaiter().GetResult();$raw=[Text.Encoding]::UTF8.GetString($buf,0,$p.Count);$j=$raw|ConvertFrom-Json;if($j.id -eq 712){$o.step='done';$o.value=$j.result.result.value;$o.exception=$j.result.exceptionDetails.text;break}}}catch{$o.error=$_.Exception.Message}finally{if($ws){$ws.Dispose()}};$o|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Single user-authorized public Avito page read-only title, post activation."
+}
