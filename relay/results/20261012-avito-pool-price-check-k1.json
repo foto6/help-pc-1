@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-poolprice-k1.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{const a=await(await fetch('http://127.0.0.1:17447/json/list')).json();const t=a.find(x=>x.id===\"75C6B39A522AF025284F4787A6856983\");ws=new WebSocket(t.webSocketDebuggerUrl);let z=await Promise.race([new Promise((ok,no)=>{ws.addEventListener('open',()=>ws.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:\"window.scrollTo(0,0);window.scrollY\",returnByValue:true}})),{once:true});ws.addEventListener('message',e=>{let x=JSON.parse(e.data);if(x.id===1)ok(x.result?.result?.value||0)});ws.addEventListener('error',no,{once:true})}),new Promise((_,no)=>setTimeout(()=>no(Error('timeout')),3800))]);console.log(JSON.stringify({y:z}))}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"y\":0}\n",
+      "stdout_bytes": 8,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T13:12:23.447Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T13:12:23.261Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-pool-price-check-k1"
+    },
+    "request_id": "20261012-avito-pool-price-check-k1",
+    "started_at": "2026-10-12T13:12:22.585Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-pool-price-check-k1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
