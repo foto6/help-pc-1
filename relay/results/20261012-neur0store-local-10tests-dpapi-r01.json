@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import unittest,sys,tempfile,os\nsys.path.insert(0,r'E:\\Neur0StoreCurator')\nsuite=unittest.defaultTestLoader.discover(r'E:\\Neur0StoreCurator',pattern='test_daemon.py')\nr=unittest.TextTestRunner(verbosity=2).run(suite)\nif not r.wasSuccessful():sys.exit(1)\nfrom secrets_store import write,read\nwith tempfile.TemporaryDirectory() as t:\n f=os.path.join(t,'dummy.dpapi');write({'synthetic_key':'synthetic_value'},f)\n assert read(f)=={'synthetic_key':'synthetic_value'}\nprint('WINDOWS_DPAPI_SYNTHETIC_ROUNDTRIP_OK')"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "test_authorized_task_is_durable_and_acknowledged (test_daemon.GatewayTests.test_authorized_task_is_durable_and_acknowledged) ... ok\r\ntest_blocked_assignment_no_replay (test_daemon.GatewayTests.test_blocked_assignment_no_replay) ... ok\r\ntest_duplicate_update_persists_exactly_once (test_daemon.GatewayTests.test_duplicate_update_persists_exactly_once) ... ok\r\ntest_no_configuration_fails_closed (test_daemon.GatewayTests.test_no_configuration_fails_closed) ... ERROR\r\ntest_offset_does_not_decrease (test_daemon.GatewayTests.test_offset_does_not_decrease) ... ok\r\ntest_queued_receipt_not_conflated_with_send (test_daemon.GatewayTests.test_queued_receipt_not_conflated_with_send) ... ok\r\ntest_stable_dedup_key (test_daemon.GatewayTests.test_stable_dedup_key) ... ok\r\ntest_unknown_outcome_never_resends (test_daemon.GatewayTests.test_unknown_outcome_never_resends) ... ok\r\ntest_unknown_stays_unknown (test_daemon.GatewayTests.test_unknown_stays_unknown) ... ok\r\ntest_wrong_telegram_sender_rejected (test_daemon.GatewayTests.test_wrong_telegram_sender_rejected) ... ok\r\n\r\n======================================================================\r\nERROR: test_no_configuration_fails_closed (test_daemon.GatewayTests.test_no_configuration_fails_closed)\r\n----------------------------------------------------------------------\r\nTraceback (most recent call last):\r\n  File \"E:\\Neur0StoreCurator\\test_daemon.py\", line 34, in test_no_configuration_fails_closed\r\n    with self.assertRaises(Blocked):config()\r\n                                    ~~~~~~^^\r\n  File \"E:\\Neur0StoreCurator\\daemon.py\", line 23, in config\r\n    saved=local_secrets()\r\n  File \"E:\\Neur0StoreCurator\\daemon.py\", line 15, in local_secrets\r\n    target=store_path()\r\n  File \"E:\\Neur0StoreCurator\\secrets_store.py\", line 9, in store_path\r\n    home = Path(os.environ.get(\"LOCALAPPDATA\", str(Path.home())))\r\n                                                   ~~~~~~~~~^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\pathlib\\_abc.py\", line 758, in home\r\n    return cls(\"~\").expanduser()\r\n           ~~~~~~~~~~~~~~~~~~~^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\pathlib\\_local.py\", line 808, in expanduser\r\n    raise RuntimeError(\"Could not determine home directory.\")\r\nRuntimeError: Could not determine home directory.\r\n\r\n----------------------------------------------------------------------\r\nRan 10 tests in 0.171s\r\n\r\nFAILED (errors=1)\r\n",
+      "stderr_bytes": 2522,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T15:55:42.507Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T15:55:42.312Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-neur0store-local-10tests-dpapi-r01"
+    },
+    "request_id": "20261012-neur0store-local-10tests-dpapi-r01",
+    "started_at": "2026-10-12T15:55:41.348Z",
+    "status": "completed"
+  },
+  "id": "20261012-neur0store-local-10tests-dpapi-r01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
