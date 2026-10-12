@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-deeppage-reconcile-v1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $n=@(Get-CimInstance Win32_Process -Filter \"Name='node.exe'\" | Where-Object { [string]$_.CommandLine -like '*pc-iphone-page37.mjs*' } | Select-Object ProcessId,Name); [ordered]@{stuckNodeCount=$n.Count;at=(Get-Date).ToUniversalTime().ToString('o');tempExists=(Test-Path (Join-Path $env:TEMP 'pc-iphone-page37.mjs'))} | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13000,
+  "note": "Read-only reconcile prior deep-page CDP script timeout. Do not kill, repeat previous effects or change Chrome."
+}
