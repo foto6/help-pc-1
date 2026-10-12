@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-chrome-avito-process-light-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$o=[ordered]@{};$c=@(Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\" -ErrorAction Stop);$o.total=$c.Count;$o.roots=@($c|Where-Object{($_.CommandLine -notmatch '--type=') -or ($_.CommandLine -match 'remote-debugging-port|proxy-server|no-proxy-server')}|Select-Object -First 20|ForEach-Object{$a=[string]$_.CommandLine;$p=[regex]::Match($a,'--remote-debugging-port=(\\d+)');[ordered]@{pid=$_.ProcessId;parent=$_.ParentProcessId;port=if($p.Success){$p.Groups[1].Value}else{'none'};hasUserDataDir=($a -match '--user-data-dir');hasExplicitProxy=($a -match '--proxy-server');hasNoProxy=($a -match '--no-proxy-server');hasPac=($a -match '--proxy-pac-url')}});$o|ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Read only per-Chrome-process port and proxy switch flags; do not print process command lines or sensitive values. Avoid global proxy changes."
+}
