@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-15pm-p7-compact.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"hard_timeout\"}');process.exit(0)},9000);try{const t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id==='CFAAFB47E6DBFE61AC764790DA0ED1FC');if(!t)throw Error('no_tab');const w=new WebSocket(t.webSocketDebuggerUrl);w.addEventListener('open',()=>w.send(JSON.stringify({id:77,method:'Runtime.evaluate',params:{expression:\"(()=>{const e=document.querySelectorAll('[data-marker=item]'),rows=[];for(let i=0;i<12;i++){const x=e[i];if(!x)break;rows.push([x.getAttribute('data-item-id'),x.querySelector('[itemprop=name]')?.textContent?.trim(),x.querySelector('[itemprop=price]')?.getAttribute('content'),x.querySelector('[data-marker=item-title]')?.getAttribute('href')?.split('?')[0]])}return {url:location.href,count:e.length,rows}})()\",returnByValue:true}})),{once:true});w.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===77){console.log(JSON.stringify(z.result?.result?.value||{error:'bad'}));process.exit(0)}});}catch(e){console.log(JSON.stringify({error:String(e).slice(0,80)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"url\":\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_15_pro_max-ASgBAgICA0SywA3Woe0RtMANzqs5sMENiPw3?s=104&user=1\",\"count\":50,\"rows\":[[\"8368661532\",\"iPhone 15 Pro Max, 512 ГБ, SIM + eSIM\",\"62900\",\"/krasnoyarsk/telefony/iphone_15_pro_max_512_gb_sim_esim_8368661532\"],[\"8489305291\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"59000\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8489305291\"],[\"8388002945\",\"iPhone 15 Pro Max, 1 ТБ, 1 SIM\",\"78980\",\"/krasnoyarsk/telefony/iphone_15_pro_max_1_tb_1_sim_8388002945\"],[\"8542987551\",\"iPhone 15 Pro Max, 512 ГБ, 1 SIM\",\"76990\",\"/krasnoyarsk/telefony/iphone_15_pro_max_512_gb_1_sim_8542987551\"],[\"8340702624\",\"iPhone 15 Pro Max, 1 ТБ, 2 SIM\",\"78990\",\"/krasnoyarsk/telefony/iphone_15_pro_max_1_tb_2_sim_8340702624\"],[\"8438733792\",\"iPhone 15 Pro Max, 512 ГБ, 2 SIM\",\"76960\",\"/krasnoyarsk/telefony/iphone_15_pro_max_512_gb_2_sim_8438733792\"],[\"8316020907\",\"iPhone 15 Pro Max, 1 ТБ, 1 SIM\",\"78970\",\"/krasnoyarsk/telefony/iphone_15_pro_max_1_tb_1_sim_8316020907\"],[\"8368294694\",\"iPhone 15 Pro Max, 1 ТБ, SIM + eSIM\",\"78970\",\"/krasnoyarsk/telefony/iphone_15_pro_max_1_tb_sim_esim_8368294694\"],[\"8459698916\",\"iPhone 15 Pro Max, 512 ГБ, 1 SIM\",\"77030\",\"/krasnoyarsk/telefony/iphone_15_pro_max_512_gb_1_sim_8459698916\"],[\"8367928111\",\"iPhone 15 Pro Max, 512 ГБ, SIM + eSIM\",\"76990\",\"/krasnoyarsk/telefony/iphone_15_pro_max_512_gb_sim_esim_8367928111\"],[\"8296283860\",\"iPhone 15 Pro Max, 512 ГБ, SIM + eSIM\",\"76990\",\"/krasnoyarsk/telefony/iphone_15_pro_max_512_gb_sim_esim_8296283860\"],[\"8482516349\",\"iPhone 15 Pro Max, 1 ТБ, SIM + eSIM\",\"79020\",\"/krasnoyarsk/telefony/iphone_15_pro_max_1_tb_sim_esim_8482516349\"]]}\n",
+      "stdout_bytes": 1704,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T15:42:21.936Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T15:42:21.685Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-15pm-p7-compact-c2"
+    },
+    "request_id": "20261012-15pm-p7-compact-c2",
+    "started_at": "2026-10-12T15:42:20.754Z",
+    "status": "completed"
+  },
+  "id": "20261012-15pm-p7-compact-c2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
