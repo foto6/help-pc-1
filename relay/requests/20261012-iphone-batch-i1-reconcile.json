@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-batch-i1-reconcile",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $n=@(Get-CimInstance Win32_Process -Filter \"Name='node.exe'\" | Where-Object { [string]$_.CommandLine -like '*pc-iphone-15pm-i1.mjs*' } | Select-Object ProcessId,Name); [ordered]@{stuckNodeCount=$n.Count;tempExists=(Test-Path (Join-Path $env:TEMP 'pc-iphone-15pm-i1.mjs'))} | ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only reconcile timed-out bounded iPhone public card extraction i1. No replay or process termination."
+}
