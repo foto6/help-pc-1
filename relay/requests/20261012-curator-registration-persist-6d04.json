@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-curator-registration-persist-6d04",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import sys,json,urllib.request\nsys.path.insert(0,'E:/Neur0StoreCurator')\nimport register\nbefore,after,p,already=register.planned()\nif not already or len(before)!=7 or len(after)!=7:raise RuntimeError('registration_not_persisted')\nothers=[r for r in before if r.get('id')!='tg-curator-owner']\nif len(others)!=6:raise RuntimeError('original_agent_count_changed')\ncur=[r for r in before if r.get('id')=='tg-curator-owner']\nif len(cur)!=1 or cur[0].get('url')!=register.CURATOR_URL or cur[0].get('profileId')!=p.get('id'):raise RuntimeError('curator_mismatch')\ntry:\n with urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog?detect=0',timeout=5) as f:s=json.load(f)\n watchdog={'mode':s.get('config',{}).get('mode'),'allowAutonomousSend':s.get('config',{}).get('allowAutonomousSend')}\nexcept Exception as e:watchdog={'read_error':type(e).__name__}\nprint(json.dumps({'registered':already,'total':len(before),'original_agents':len(others),'curator_id':cur[0]['id'],'profile_port':p.get('debugPort'),'watchdog':watchdog},ensure_ascii=True))"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only verify persisted 7 managed chats, exact curator binding and watchdog unchanged after one-time PUT; no tokens or writes."
+}
