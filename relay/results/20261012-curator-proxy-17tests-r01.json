@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import unittest,sys,compileall\nsys.path.insert(0,r'E:\\Neur0StoreCurator')\nfor name in ('telegram_transport','daemon','setup','register','secrets_store'):\n import importlib\n importlib.import_module(name)\ns=unittest.defaultTestLoader.discover(r'E:\\Neur0StoreCurator',pattern='test_daemon.py')\nr=unittest.TextTestRunner(verbosity=2).run(s)\nprint('CURATOR_TEST_COUNT',r.testsRun,'FAILURES',len(r.failures),'ERRORS',len(r.errors))\nif not r.wasSuccessful():sys.exit(1)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "test_authorized_task_is_durable_and_acknowledged (test_daemon.GatewayTests.test_authorized_task_is_durable_and_acknowledged) ... ok\r\ntest_blocked_assignment_no_replay (test_daemon.GatewayTests.test_blocked_assignment_no_replay) ... ok\r\ntest_duplicate_update_persists_exactly_once (test_daemon.GatewayTests.test_duplicate_update_persists_exactly_once) ... ok\r\ntest_no_configuration_fails_closed (test_daemon.GatewayTests.test_no_configuration_fails_closed) ... ok\r\ntest_offset_does_not_decrease (test_daemon.GatewayTests.test_offset_does_not_decrease) ... ok\r\ntest_queued_receipt_not_conflated_with_send (test_daemon.GatewayTests.test_queued_receipt_not_conflated_with_send) ... ok\r\ntest_stable_dedup_key (test_daemon.GatewayTests.test_stable_dedup_key) ... ok\r\ntest_unknown_outcome_never_resends (test_daemon.GatewayTests.test_unknown_outcome_never_resends) ... ok\r\ntest_unknown_stays_unknown (test_daemon.GatewayTests.test_unknown_stays_unknown) ... ok\r\ntest_wrong_telegram_sender_rejected (test_daemon.GatewayTests.test_wrong_telegram_sender_rejected) ... ok\r\ntest_http_connect_url_parses (test_daemon.ProxyTransportTests.test_http_connect_url_parses) ... ok\r\ntest_mtproto_rejected (test_daemon.ProxyTransportTests.test_mtproto_rejected) ... ok\r\ntest_no_invalid_proxy_port (test_daemon.ProxyTransportTests.test_no_invalid_proxy_port) ... ok\r\ntest_no_proxy_is_allowed (test_daemon.ProxyTransportTests.test_no_proxy_is_allowed) ... ok\r\ntest_socks5h_url_parses (test_daemon.ProxyTransportTests.test_socks5h_url_parses) ... ok\r\ntest_transport_refuses_non_bot_api_host (test_daemon.ProxyTransportTests.test_transport_refuses_non_bot_api_host) ... ok\r\ntest_unsupported_proxy_rejected (test_daemon.ProxyTransportTests.test_unsupported_proxy_rejected) ... ok\r\n\r\n----------------------------------------------------------------------\r\nRan 17 tests in 0.242s\r\n\r\nOK\r\n",
+      "stderr_bytes": 1858,
+      "stderr_truncated": false,
+      "stdout": "CURATOR_TEST_COUNT 17 FAILURES 0 ERRORS 0\r\n",
+      "stdout_bytes": 43,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:27:11.857Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:27:11.111Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-curator-proxy-17tests-r01"
+    },
+    "request_id": "20261012-curator-proxy-17tests-r01",
+    "started_at": "2026-10-12T16:27:09.722Z",
+    "status": "completed"
+  },
+  "id": "20261012-curator-proxy-17tests-r01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
