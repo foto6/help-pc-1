@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-reconcile-c1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $p=@(Get-CimInstance Win32_Process | Where-Object { [string]$_.CommandLine -like '*pc-iphone-avito-cards-c1.mjs*' } | Select-Object ProcessId,Name); [ordered]@{at=(Get-Date).ToUniversalTime().ToString('o');pendingNodeProcesses=$p;tempScriptExists=(Test-Path (Join-Path $env:TEMP 'pc-iphone-avito-cards-c1.mjs'));chromeCdpPortOpen=[bool](Test-NetConnection 127.0.0.1 -Port 17447 -InformationLevel Quiet -WarningAction SilentlyContinue)} | ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Reconcile timed-out read-only DOM capture c1: inspect node process and temp existence without killing processes, modifying browser or replaying any command."
+}
