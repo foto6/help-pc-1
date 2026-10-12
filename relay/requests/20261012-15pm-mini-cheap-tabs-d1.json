@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-15pm-mini-cheap-tabs-d1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-15pm-mini-cheap-tabs-d1.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"hard_timeout\"}');process.exit(0)},13000);\ntry{const v=await(await fetch('http://127.0.0.1:17447/json/version')).json();const w=new WebSocket(v.webSocketDebuggerUrl);\nawait new Promise((ok,no)=>{w.addEventListener('open',ok,{once:true});w.addEventListener('error',no,{once:true})});\nlet next=1,p=new Map();w.addEventListener('message',e=>{let z=JSON.parse(e.data);if(p.has(z.id)){p.get(z.id)(z);p.delete(z.id)}});\nconst create=url=>Promise.race([new Promise(ok=>{let id=next++;p.set(id,ok);w.send(JSON.stringify({id,method:'Target.createTarget',params:{url,background:true,newWindow:false}}))}),new Promise(ok=>setTimeout(()=>ok({error:{message:'cdp_timeout'}}),2500))]);\nlet out=[];for(let [tag,url] of [[\"15pm_private_cheapest\",\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_15_pro_max-ASgBAgICA0SywA3Woe0RtMANzqs5sMENiPw3?s=1&user=1\"],[\"13mini256_private_cheapest\",\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_13_mini/256_gb-ASgBAgICBESywA3wvcgBtMANzqs5sMENiPw35uAN~MFc?s=1&user=1\"],[\"13mini512_private_cheapest\",\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_13_mini/512_gb-ASgBAgICBESywA3wvcgBtMANzqs5sMENiPw35uAN~sFc?s=1&user=1\"]]){const a=await create(url);out.push({tag,id:a.result?.targetId||null,error:a.error?.message||null})}\nconsole.log(JSON.stringify({out}));process.exit(0);\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,110)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 21000,
+  "note": "Create three bounded new public Avito iPhone cheapest-first search tabs for only 15 Pro Max, 13 mini 256GB and 512GB, user=1 filter, in user-authorized isolated Chrome. No contacts or network/system edits."
+}
