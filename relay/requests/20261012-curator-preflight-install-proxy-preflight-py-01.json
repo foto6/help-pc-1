@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-curator-preflight-install-proxy-preflight-py-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "from pathlib import Path\np=Path('E:/Neur0StoreCurator/proxy_preflight.py')\ns=\"\\\"\\\"\\\"Credential-free Bot API connectivity test. Run interactively on owner's PC.\\\"\\\"\\\"\\nimport getpass, os, sys, urllib.error, urllib.request\\nfrom telegram_transport import open_telegram, parse_proxy, ProxyTransportError\\n\\ndef main():\\n    print(\\\"Bot API uses HTTPS; TGWS MTProto 127.0.0.1:1443 is NOT an HTTP CONNECT/SOCKS5 proxy.\\\")\\n    print(\\\"Use a real HTTP CONNECT or SOCKS5h proxy URL; leave empty to test direct access.\\\")\\n    entered=getpass.getpass(\\\"HTTP/SOCKS5h proxy URL (hidden, optional): \\\").strip()\\n    try:parse_proxy(entered)\\n    except ProxyTransportError as e:\\n        print(\\\"PROXY_INVALID:\\\"+str(e));return 2\\n    req=urllib.request.Request(\\\"https://api.telegram.org/\\\")\\n    try:\\n        with open_telegram(req,proxy=entered,timeout=8) as r:\\n            print(\\\"TELEGRAM_BOT_API_TRANSPORT_REACHABLE; HTTPS status=\\\"+str(r.status))\\n        return 0\\n    except urllib.error.HTTPError as e:\\n        # An HTTP status proves HTTPS routing succeeded even if root endpoint doesn't exist.\\n        print(\\\"TELEGRAM_BOT_API_TRANSPORT_REACHABLE; HTTPS status=\\\"+str(e.code))\\n        return 0\\n    except ProxyTransportError as e:\\n        print(\\\"PROXY_REJECTED:\\\"+str(e));return 2\\n    except (OSError,urllib.error.URLError,TimeoutError) as e:\\n        print(\\\"HTTPS_CONNECTIVITY_FAILED:\\\"+type(e).__name__);return 2\\n\\nif __name__==\\\"__main__\\\":sys.exit(main())\\n\"\nif p.exists():\n if p.read_text(encoding='utf8')!=s:raise RuntimeError('existing_file_not_ours')\n print('ALREADY_CURRENT')\nelse:\n with p.open('x',encoding='utf8',newline='') as f:f.write(s)\n print('INSTALLED_proxy_preflight.py')"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 14000,
+  "note": "Create-only isolated no-token HTTPS Telegram Bot API network test file; no network or credential access."
+}
