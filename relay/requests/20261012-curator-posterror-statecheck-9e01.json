@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-curator-posterror-statecheck-9e01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json,hashlib,os,pathlib\nbase='http://127.0.0.1:17448'\nout={}\ntry:\n with urllib.request.urlopen(base+'/api/supervisor-watchdog/managed-chats',timeout=7) as x: j=json.load(x)\n rows=j.get('chats',[])\n out['total']=len(rows)\n out['curator_matches']=[{'id':r.get('id'),'url':r.get('url'),'profileId':r.get('profileId'),'repo':r.get('repository'),'branch':r.get('branch'),'head':r.get('gitHead')} for r in rows if r.get('id')=='tg-curator-owner' or r.get('url')=='https://chatgpt.com/c/6ac7068e-883c-83ed-9081-cb94557e61bd']\n out['other_chats']=[{'id':r.get('id'),'name':r.get('name'),'profileId':r.get('profileId')} for r in rows if r.get('id')!='tg-curator-owner']\nexcept Exception as e:out['read_error']=type(e).__name__\ntry:\n p=pathlib.Path(os.getenv('LOCALAPPDATA',''))/'Neur0StoreCurator'\n out['backup_count']=len(list(p.glob('managed-chats-backup-*.json'))) if p.is_dir() else 0\nexcept Exception as e:out['backup_error']=type(e).__name__\nprint(json.dumps(out,ensure_ascii=True))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Read-only exact managed-chat and pre-registration backup count after owner's failed POST, no write/no secrets."
+}
