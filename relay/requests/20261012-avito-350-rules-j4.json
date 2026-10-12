@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-350-rules-j4",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito350-j4.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{const tt=await(await fetch('http://127.0.0.1:17447/json/list')).json();const t=tt.find(x=>x.id===\"75C6B39A522AF025284F4787A6856983\");ws=new WebSocket(t.webSocketDebuggerUrl);let x=await Promise.race([new Promise((ok,no)=>{ws.addEventListener('open',()=>ws.send(JSON.stringify({id:77,method:'Runtime.evaluate',params:{expression:'window.scrollTo(0,1150);window.scrollY',returnByValue:true}})),{once:true});ws.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===77)ok(z.result?.result?.value||0)});ws.addEventListener('error',no,{once:true})}),new Promise((_,j)=>setTimeout(()=>j(Error('timeout')),3400))]);console.log(JSON.stringify({y:x}))}catch(e){console.log(JSON.stringify({err:String(e).slice(0,110)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13000,
+  "note": "Scroll one public Avito 350 sqm cottage listing to rules and amenities, user-authorized isolated browser CDP17447. No booking or private data."
+}
