@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261013-avito-home-120-price-ten-retry-r40",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$t=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17447/json/new?'+[Uri]::EscapeDataString('https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/2-k._kottedzh_120_m_1745998049?guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D&checkIn=2026-11-03&checkOut=2026-11-04')) -TimeoutSec 8;@{id=$t.id;url=$t.url}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Open another public listing URL to check 10-adult quote Nov3-4, no booking."
+}
