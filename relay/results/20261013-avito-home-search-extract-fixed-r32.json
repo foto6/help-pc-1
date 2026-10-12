@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';[Console]::OutputEncoding=[Text.Encoding]::UTF8;$o=[ordered]@{stage='start'};$w=$null;try{$r=Invoke-WebRequest 'http://127.0.0.1:17447/json/activate/87DA026620C18E119450B17EFB40DD81' -UseBasicParsing -TimeoutSec 6;$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 5;$t=@($tabs|Where-Object{$_.id -eq '87DA026620C18E119450B17EFB40DD81'})[0];$w=[Net.WebSockets.ClientWebSocket]::new();$c=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(5));$null=$w.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$c.Token).GetAwaiter().GetResult();$cmd=@{id=310;method='Runtime.evaluate';params=@{expression='(()=>{let a=[...document.querySelectorAll(''a[data-marker=\"item-title\"]'')];return {count:a.length,urls:a.slice(0,40).map(x=>x.href.replace(/\\?.*/,''''))}})()';returnByValue=$true}}|ConvertTo-Json -Compress -Depth 5;$b=[Text.Encoding]::UTF8.GetBytes($cmd);$null=$w.SendAsync([ArraySegment[byte]]::new($b),[Net.WebSockets.WebSocketMessageType]::Text,$true,$c.Token).GetAwaiter().GetResult();$rc=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(7));$buf=New-Object byte[] 65536;$sb=[Text.StringBuilder]::new();for($k=0;$k -lt 20;$k++){$z=$w.ReceiveAsync([ArraySegment[byte]]::new($buf),$rc.Token).GetAwaiter().GetResult();[void]$sb.Append([Text.Encoding]::UTF8.GetString($buf,0,$z.Count));if($z.EndOfMessage){$j=$sb.ToString()|ConvertFrom-Json;[void]$sb.Clear();if($j.id -eq 310){$o.stage='done';$o.result=$j.result.result.value;$o.errorDetails=$j.result.exceptionDetails.text;break}}}}catch{$o.error=$_.Exception.Message}finally{if($w){$w.Dispose()}};$o|ConvertTo-Json -Compress -Depth 7"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"stage\":\"done\",\"result\":{\"count\":50,\"urls\":[\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_220_m_4914083572\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._taunhaus_114_m_8184428608\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._taunhaus_105_m_4441598077\",\"https://www.avito.ru/sheregesh/doma_dachi_kottedzhi/5-k._kottedzh_120_m_7521957621\",\"https://www.avito.ru/divnogorsk/doma_dachi_kottedzhi/3-k._kottedzh_125_m_3357908231\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/2-k._kottedzh_120_m_1745998049\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/dom_10_m_2721144128\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._kottedzh_151_m_8345145864\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._kottedzh_151_m_7595291675\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/1-k._dom_50_m_4389878023\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/1-k._dom_59_m_8105089669\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/1-k._kottedzh_49_m_4390006028\",\"https://www.avito.ru/sheregesh/doma_dachi_kottedzhi/5-k._dom_140_m_3564166868\",\"https://www.avito.ru/kemerovo/doma_dachi_kottedzhi/2-k._dom_70_m_3915505199\",\"https://www.avito.ru/ovsyanka/doma_dachi_kottedzhi/3-k._dom_65_m_7440697988\",\"https://www.avito.ru/sheregesh/doma_dachi_kottedzhi/5-k._dom_140_m_3356038404\",\"https://www.avito.ru/krasnoyarskiy_kray_sosnovoborsk/doma_dachi_kottedzhi/3-k._dom_120_m_7785790829\",\"https://www.avito.ru/sheregesh/doma_dachi_kottedzhi/5-k._dom_130_m_3692144379\",\"https://www.avito.ru/sheregesh/doma_dachi_kottedzhi/5-k._dom_140_m_7525518846\",\"https://www.avito.ru/divnogorsk/doma_dachi_kottedzhi/3-k._dom_125_m_3769769614\",\"https://www.avito.ru/zykovo/doma_dachi_kottedzhi/4-k._kottedzh_110_m_7406562031\",\"https://www.avito.ru/yarovoe/doma_dachi_kottedzhi/4-k._dom_70_m_7462389499\",\"https://www.avito.ru/divnogorsk/doma_dachi_kottedzhi/4-k._dom_120_m_3409154621\",\"https://www.avito.ru/gorno-altaysk/doma_dachi_kottedzhi/4-k._dom_53_m_3146969171\",\"https://www.avito.ru/divnogorsk/doma_dachi_kottedzhi/3-k._kottedzh_131_m_2841931148\",\"https://www.avito.ru/ovsyanka/doma_dachi_kottedzhi/5-k._kottedzh_160_m_8296109629\",\"https://www.avito.ru/sheregesh/doma_dachi_kottedzhi/4-k._dom_145_m_2789113944\",\"https://www.avito.ru/divnogorsk/doma_dachi_kottedzhi/5-k._dom_100_m_7906537191\",\"https://www.avito.ru/novosibirsk/doma_dachi_kottedzhi/10-k._i_bolee_kottedzh_350_m_4574162353\",\"https://www.avito.ru/krasnoyarskiy_kray_sosnovoborsk/doma_dachi_kottedzhi/3-k._dom_80_m_7812117877\",\"https://www.avito.ru/krasnoyarskiy_kray_sosnovoborsk/doma_dachi_kottedzhi/3-k._kottedzh_140_m_7954406363\",\"https://www.avito.ru/krasnoyarskiy_kray_sosnovoborsk/doma_dachi_kottedzhi/2-k._kottedzh_120_m_2738047003\",\"https://www.avito.ru/chelyabinsk/doma_dachi_kottedzhi/8-k._kottedzh_260_m_1981295166\",\"https://www.avito.ru/divnogorsk/doma_dachi_kottedzhi/4-k._dom_100_m_1048608826\",\"https://www.avito.ru/irkutsk/doma_dachi_kottedzhi/2-k._dom_40_m_4777970660\",\"https://www.avito.ru/krasnoyarskiy_kray_zheleznogorsk/doma_dachi_kottedzhi/3-k._gostevoy_dom_70_m_2259069053\",\"https://www.avito.ru/sheregesh/doma_dachi_kottedzhi/5-k._dom_104_m_3511616054\",\"https://www.avito.ru/emelyanovo/doma_dachi_kottedzhi/3-k._dom_100_m_2787275385\",\"https://www.avito.ru/sheregesh/doma_dachi_kottedzhi/5-k._dom_112_m_4587135419\",\"https://www.avito.ru/sheregesh/doma_dachi_kottedzhi/4-k._dom_148_m_8240474537\"]},\"errorDetails\":null}\r\n",
+      "stdout_bytes": 3482,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:48:59.564Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:48:59.233Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-avito-home-search-extract-fixed-r32"
+    },
+    "request_id": "20261013-avito-home-search-extract-fixed-r32",
+    "started_at": "2026-10-12T17:48:57.791Z",
+    "status": "completed"
+  },
+  "id": "20261013-avito-home-search-extract-fixed-r32",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
