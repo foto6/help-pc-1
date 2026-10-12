@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-birthday-house70-ten-date-r022",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$o=[ordered]@{step='start'};$ws=$null;try{$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 4;$t=@($tabs|Where-Object {$_.id -eq 'F67239432460BD1FD379FB6C9DAFC6AD'})[0];$ws=[System.Net.WebSockets.ClientWebSocket]::new();$token=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(6));$null=$ws.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$token.Token).GetAwaiter().GetResult();$req=@{id=71;method='Page.navigate';params=@{url='https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/4-k._dom_70_m_4698340709?guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D&checkIn=2026-11-03&checkOut=2026-11-04'}}|ConvertTo-Json -Compress -Depth 5;$bytes=[Text.Encoding]::UTF8.GetBytes($req);$null=$ws.SendAsync([ArraySegment[byte]]::new($bytes),[Net.WebSockets.WebSocketMessageType]::Text,$true,$token.Token).GetAwaiter().GetResult();$buf=New-Object byte[] 16384;$rc=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(8));for($i=0;$i -lt 10;$i++){$v=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$rc.Token).GetAwaiter().GetResult();$msg=[Text.Encoding]::UTF8.GetString($buf,0,$v.Count)|ConvertFrom-Json;if($msg.id -eq 71){$o.step='navigated';$o.errorText=$msg.result.errorText;$o.protocolError=$msg.error.message;break}}}catch{$o.error=$_.Exception.Message}finally{if($ws){$ws.Dispose()}};$o|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Navigate ONLY user-authorized house70 tab to Nov 3-4 2026 with 10 adults, inspect displayed booking price; do not book or contact owner."
+}
