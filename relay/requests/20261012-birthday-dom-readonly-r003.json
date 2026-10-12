@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-birthday-dom-readonly-r003",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$js=@'\n\nconst ids=[[\"88\",\"8682F60C59EAE3EF9CF12DCE711A647B\"],[\"70\",\"F67239432460BD1FD379FB6C9DAFC6AD\"]];\nconst result=[];\nconst tabs=await(await fetch(\"http://127.0.0.1:17447/json/list\")).json();\nfor(const [key,id] of ids){const t=tabs.find(x=>x.id===id);if(!t){result.push({key,error:\"target_missing\"});continue}let w;try{w=new WebSocket(t.webSocketDebuggerUrl);await Promise.race([new Promise((ok,no)=>{w.addEventListener(\"open\",ok,{once:true});w.addEventListener(\"error\",no,{once:true})}),new Promise((_,no)=>setTimeout(()=>no(Error(\"WS_TIMEOUT\")),5000))]);const exp=`(()=>{const body=document.body?.innerText||\"\";const h=[...document.querySelectorAll(\"h1,h2,h3\")].slice(0,40).map(x=>x.innerText);return{url:location.href,title:document.title,length:body.length,text:body.slice(0,18500),headings:h,meta:document.querySelector('meta[name=\"description\"]')?.content||\"\"}})()`;const res=await Promise.race([new Promise(ok=>{w.addEventListener(\"message\",ev=>{try{const x=JSON.parse(ev.data);if(x.id===17)ok(x)}catch{}});w.send(JSON.stringify({id:17,method:\"Runtime.evaluate\",params:{expression:exp,returnByValue:true,awaitPromise:false}}))}),new Promise((_,no)=>setTimeout(()=>no(Error(\"EVAL_TIMEOUT\")),7000))]);result.push({key,...(res.result?.result?.value||{}),error:res.error||res.result?.exceptionDetails?.text||null})}catch(e){result.push({key,error:String(e)})}finally{if(w)w.close();}}\nconsole.log(JSON.stringify({results:result}));process.exit(0);\n\n'@;$tmp=Join-Path $env:TEMP 'pc-birthday-dom-r003.mjs';try{[System.IO.File]::WriteAllText($tmp,$js,[System.Text.UTF8Encoding]::new($false)); & node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 35000,
+  "note": "Read-only DOM extraction from two exact user-specified public Avito tabs, no navigation."
+}
