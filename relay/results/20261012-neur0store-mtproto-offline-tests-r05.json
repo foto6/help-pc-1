@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import sys,unittest\nsys.path.insert(0,r'E:\\Neur0StoreCurator')\nfor name in ('daemon','secrets_store','mtproto_common','setup_mtproto','mtproto_gateway','mtproto_preflight','telegram_transport'):\n __import__(name)\nsuite=unittest.defaultTestLoader.discover(r'E:\\Neur0StoreCurator',pattern='test_*.py')\nres=unittest.TextTestRunner(verbosity=1).run(suite)\nprint('TESTS_RAN',res.testsRun,'FAILURES',len(res.failures),'ERRORS',len(res.errors))\nsys.exit(0 if res.wasSuccessful() else 1)\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "........................\r\n----------------------------------------------------------------------\r\nRan 24 tests in 0.264s\r\n\r\nOK\r\n",
+      "stderr_bytes": 128,
+      "stderr_truncated": false,
+      "stdout": "TESTS_RAN 24 FAILURES 0 ERRORS 0\r\n",
+      "stdout_bytes": 34,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:47:59.525Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:47:59.321Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-neur0store-mtproto-offline-tests-r05"
+    },
+    "request_id": "20261012-neur0store-mtproto-offline-tests-r05",
+    "started_at": "2026-10-12T16:47:58.075Z",
+    "status": "completed"
+  },
+  "id": "20261012-neur0store-mtproto-offline-tests-r05",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
