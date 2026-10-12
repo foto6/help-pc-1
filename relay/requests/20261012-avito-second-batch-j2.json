@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-second-batch-j2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-openbatch-j2.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{let v=await(await fetch(\"http://127.0.0.1:17447/json/version\")).json();ws=new WebSocket(v.webSocketDebuggerUrl);await new Promise((ok,no)=>{ws.addEventListener('open',ok,{once:true});ws.addEventListener('error',no,{once:true})});const pend=new Map();let seq=15;ws.addEventListener('message',e=>{let x=JSON.parse(e.data);if(pend.has(x.id)){pend.get(x.id)(x);pend.delete(x.id)}});let out=[];for(let url of [\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/5-k._kottedzh_350_m_4496472087\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/5-k._dom_120_m_2273447271\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/4-k._kottedzh_100_m_2343773252\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_109_m_7676761571\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._taunhaus_115_m_8071239748\"]){try{let x=await Promise.race([new Promise(ok=>{let id=++seq;pend.set(id,ok);ws.send(JSON.stringify({id,method:'Target.createTarget',params:{url,background:true,newWindow:false}}))}),new Promise((_,j)=>setTimeout(()=>j(Error('timeout')),2900))]);out.push({url,id:x.result?.targetId||null})}catch(e){out.push({url,err:'timeout'})}}console.log(JSON.stringify(out))}catch(e){console.log(JSON.stringify({error:String(e).slice(0,140)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22000,
+  "note": "Open 5 public Avito listing URLs (350,120,100,109,115 sqm) in background for user-authorized comparison on isolated Chrome CDP17447; no other browsing, proxy, or configuration change."
+}
