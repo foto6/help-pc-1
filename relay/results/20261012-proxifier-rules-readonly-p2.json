@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$path=Join-Path $env:APPDATA 'Proxifier4\\Profiles\\Default.ppx'\n[xml]$doc=Get-Content -LiteralPath $path -Raw -Encoding UTF8\n$nodes=$doc.SelectNodes('//*[local-name()=\"Rule\"]')\n$out=[ordered]@{root=$doc.DocumentElement.LocalName;ruleCount=$nodes.Count;rules=@();profileFileBytes=(Get-Item -LiteralPath $path).Length}\nforeach($r in $nodes){\n $n=[string]$r.SelectSingleNode('./*[local-name()=\"Name\"]').InnerText\n $a=$r.SelectSingleNode('./*[local-name()=\"Action\"]')\n $app=$r.SelectSingleNode('./*[local-name()=\"Applications\"]')\n $host=$r.SelectSingleNode('./*[local-name()=\"TargetHosts\"]')\n $ports=$r.SelectSingleNode('./*[local-name()=\"TargetPorts\"]')\n $out.rules+=@{name=$n;enabled=$r.GetAttribute('enabled');actionType=if($a){$a.GetAttribute('type')}else{'missing'};applications=if($app){$app.InnerText}else{''};targetHostsPresent=($null -ne $host -and $host.InnerText.Length -gt 0);portsFilterPresent=($null -ne $ports -and $ports.InnerText.Length -gt 0);childNames=@($r.ChildNodes|ForEach-Object{$_.LocalName})}\n}\n$out.schemaTopChildren=@($doc.DocumentElement.ChildNodes|ForEach-Object{$_.LocalName})\n$out|ConvertTo-Json -Compress -Depth 6"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "�� 㤠���� ��१������ ��६����� Host, ⠪ ��� ��� ���� ����ﭭ�� ���� ����㯭� ⮫쪮 ��� �⥭��.\r\n��ப�:10 ����:2\r\n+  $host=$r.SelectSingleNode('./*[local-name()=\"TargetHosts\"]')\r\n+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : WriteError: (Host:String) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : VariableNotWritable\r\n \r\n",
+      "stderr_bytes": 405,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T11:46:02.745Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T11:46:02.579Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-proxifier-rules-readonly-p2"
+    },
+    "request_id": "20261012-proxifier-rules-readonly-p2",
+    "started_at": "2026-10-12T11:46:01.797Z",
+    "status": "completed"
+  },
+  "id": "20261012-proxifier-rules-readonly-p2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
