@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$o=[ordered]@{stage='start';datesClicked=0};$w=$null;try{$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 5;$t=@($tabs|Where-Object{$_.id -eq 'F67239432460BD1FD379FB6C9DAFC6AD'})[0];$w=[Net.WebSockets.ClientWebSocket]::new();$ct=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(7));$null=$w.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$ct.Token).GetAwaiter().GetResult();$seq=440;foreach($x in @(1025,1059)){foreach($type in @('mousePressed','mouseReleased')){$m=@{id=$seq;method='Input.dispatchMouseEvent';params=@{type=$type;x=$x;y=146;button='left';clickCount=1}}|ConvertTo-Json -Compress -Depth 5;$seq++;$b=[Text.Encoding]::UTF8.GetBytes($m);$null=$w.SendAsync([ArraySegment[byte]]::new($b),[Net.WebSockets.WebSocketMessageType]::Text,$true,$ct.Token).GetAwaiter().GetResult()};$o.datesClicked++;Start-Sleep -Milliseconds 320};$o.stage='clicks_sent'}catch{$o.error=$_.Exception.Message}finally{if($w){$w.Dispose()}};$o|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"stage\":\"clicks_sent\",\"datesClicked\":2}\r\n",
+      "stdout_bytes": 42,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:27:26.059Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:27:25.659Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-birthday-select-nov3-4-r024"
+    },
+    "request_id": "20261012-birthday-select-nov3-4-r024",
+    "started_at": "2026-10-12T16:27:21.781Z",
+    "status": "completed"
+  },
+  "id": "20261012-birthday-select-nov3-4-r024",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
