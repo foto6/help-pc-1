@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-15pm256-three-details-06",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $urls=@('https://www.avito.ru/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_2_sim_7976558546','https://www.avito.ru/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8053145926','https://www.avito.ru/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8399084915');$results=@(); foreach($url in $urls){$r=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17447/json/new?'+[uri]::EscapeDataString($url)) -TimeoutSec 6; $results+=@([ordered]@{id=$r.id;url=$url})};$results|ConvertTo-Json -Compress -Depth 3"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 23000,
+  "note": "Open three PUBLIC iPhone 15 Pro Max 256GB Avito listing detail pages in own Chrome tabs, for condition and seller verification; no account, messages or payment actions."
+}
