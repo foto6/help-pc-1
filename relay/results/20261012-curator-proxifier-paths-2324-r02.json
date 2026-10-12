@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "from pathlib import Path\nimport os,json\npaths=[]\nfor key in ('APPDATA','LOCALAPPDATA','PROGRAMDATA'):\n root=os.environ.get(key,'')\n if not root:continue\n base=Path(root)\n for sub in ('Proxifier','Initex','TgWsProxy','TGWSProxy'):\n  p=base/sub\n  if p.is_dir():\n   files=[]\n   try:\n    files=[{'name':x.name,'suffix':x.suffix,'size_bytes':x.stat().st_size} for x in p.iterdir() if x.is_file()][:35]\n   except OSError:pass\n   paths.append({'root':key,'sub':sub,'files':files})\nprint(json.dumps({'paths':paths},ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"paths\": [{\"root\": \"APPDATA\", \"sub\": \"TgWsProxy\", \"files\": [{\"name\": \".first_run_done_mtproto\", \"suffix\": \"\", \"size_bytes\": 0}, {\"name\": \".ipv6_warned\", \"suffix\": \"\", \"size_bytes\": 0}, {\"name\": \".update_check_cache.json\", \"suffix\": \".json\", \"size_bytes\": 2052}, {\"name\": \"config.json\", \"suffix\": \".json\", \"size_bytes\": 530}, {\"name\": \"proxy.log\", \"suffix\": \".log\", \"size_bytes\": 983264}, {\"name\": \"proxy.log.1\", \"suffix\": \".1\", \"size_bytes\": 5242866}]}, {\"root\": \"APPDATA\", \"sub\": \"TGWSProxy\", \"files\": [{\"name\": \".first_run_done_mtproto\", \"suffix\": \"\", \"size_bytes\": 0}, {\"name\": \".ipv6_warned\", \"suffix\": \"\", \"size_bytes\": 0}, {\"name\": \".update_check_cache.json\", \"suffix\": \".json\", \"size_bytes\": 2052}, {\"name\": \"config.json\", \"suffix\": \".json\", \"size_bytes\": 530}, {\"name\": \"proxy.log\", \"suffix\": \".log\", \"size_bytes\": 983264}, {\"name\": \"proxy.log.1\", \"suffix\": \".1\", \"size_bytes\": 5242866}]}]}\r\n",
+      "stdout_bytes": 901,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:35:53.470Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:35:53.095Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-curator-proxifier-paths-2324-r02"
+    },
+    "request_id": "20261012-curator-proxifier-paths-2324-r02",
+    "started_at": "2026-10-12T16:35:52.284Z",
+    "status": "completed"
+  },
+  "id": "20261012-curator-proxifier-paths-2324-r02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
