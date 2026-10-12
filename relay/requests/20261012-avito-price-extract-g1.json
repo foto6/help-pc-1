@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-price-extract-g1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-price-extract-g1.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{let tt=await(await fetch(\"http://127.0.0.1:17447/json/list\")).json();let t=tt.find(x=>x.id===\"0E020825CF96957FA4AD787C7C2F5C65\");ws=new WebSocket(t.webSocketDebuggerUrl);let a=await Promise.race([new Promise((ok,no)=>{ws.addEventListener(\"open\",()=>{ws.send(JSON.stringify({id:11,method:'Runtime.evaluate',params:{expression:\"Array.from(document.querySelectorAll('[data-marker=item]')).slice(0,12).map(x=>({id:x.getAttribute('data-item-id'),url:x.querySelector('a[href]')?.href||''}))\",returnByValue:true}}))},{once:true});ws.addEventListener(\"message\",e=>{let x=JSON.parse(e.data);if(x.id===11)ok(x.result?.result?.value||null)});ws.addEventListener(\"error\",no,{once:true})}),new Promise((_,bad)=>setTimeout(()=>bad(Error('timeout')),5000))]);console.log(JSON.stringify(a))}catch(e){console.log(JSON.stringify({error:String(e).slice(0,80)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13500,
+  "note": "Read-only links for public Avito budget-filtered house listing, dedicated 17447 Chrome, no private tabs or changes."
+}
