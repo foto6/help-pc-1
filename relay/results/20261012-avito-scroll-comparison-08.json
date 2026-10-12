@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$js=@'\nlet sockets=[];\ntry{\nconst targets=await(await fetch(\"http://127.0.0.1:17447/json/list\")).json();\nconst ids=[\"EF6A592F8DA7E5C66A6F6046DBB9B113\",\"99269AD269095748DC081498F3A72B77\",\"1CCEF88CBF3B89E87F8DF6FA7EA20ECD\"];\nlet out=[];\nfor(const id of ids){const t=targets.find(x=>x.id===id&&x.url.startsWith(\"https://www.avito.ru/krasnoyarsk/\"));if(!t){out.push({id,error:\"no_tab\"});continue}\nconst s=new WebSocket(t.webSocketDebuggerUrl);sockets.push(s);\ntry{\nconst r=await Promise.race([new Promise((ok,no)=>{s.addEventListener(\"open\",()=>s.send(JSON.stringify({id:220,method:\"Runtime.evaluate\",params:{expression:\"window.scrollTo(0,1000);window.scrollY\",returnByValue:true}})),{once:true});s.addEventListener(\"message\",e=>{let x=JSON.parse(e.data);if(x.id===220)ok(x.result?.result?.value||0)});s.addEventListener(\"error\",no,{once:true})}),new Promise((_,bad)=>setTimeout(()=>bad(Error(\"timeout\")),4000))]);\nout.push({id,scrollY:r})}catch(e){out.push({id,error:\"timeout\"})}s.close()}\nconsole.log(JSON.stringify(out))\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,120)}))}\nfor(let s of sockets)try{s.close()}catch{};process.exit(0)\n'@\n$tmp=Join-Path $env:TEMP 'pc-avito-scroll-comparison.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,$js,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -ErrorAction SilentlyContinue -Force}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\\win\\async.c, line 94\r\n",
+      "stderr_bytes": 87,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"EF6A592F8DA7E5C66A6F6046DBB9B113\",\"scrollY\":1000},{\"id\":\"99269AD269095748DC081498F3A72B77\",\"scrollY\":1000},{\"id\":\"1CCEF88CBF3B89E87F8DF6FA7EA20ECD\",\"scrollY\":1000}]\n",
+      "stdout_bytes": 173,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T12:23:41.798Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T12:23:41.612Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-scroll-comparison-08"
+    },
+    "request_id": "20261012-avito-scroll-comparison-08",
+    "started_at": "2026-10-12T12:23:40.686Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-scroll-comparison-08",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
