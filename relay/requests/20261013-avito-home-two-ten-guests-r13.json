@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261013-avito-home-two-ten-guests-r13",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$o=@();foreach($url in @('https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_76_m_8358148190?guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D&checkIn=2026-11-03&checkOut=2026-11-04','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/4-k._dom_70_m_4698340709?guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D&checkIn=2026-11-03&checkOut=2026-11-04')){try{$t=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17447/json/new?'+[Uri]::EscapeDataString($url)) -TimeoutSec 8;$o+=@{id=$t.id;url=$t.url}}catch{$o+=@{url=$url;error=$_.Exception.Message}}};$o|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "Open two public Avito quote pages for Nov 3-4 with 10 adults, background targets only, no booking."
+}
