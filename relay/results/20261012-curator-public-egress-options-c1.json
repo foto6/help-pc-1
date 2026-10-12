@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import ssl,socket,urllib.request,urllib.error,json,concurrent.futures,time\nsites=['https://api.telegram.org/','https://my.telegram.org/','https://www.cloudflare.com/cdn-cgi/trace','https://workers.cloudflare.com/','https://api.github.com/','https://google.com/']\ndef p(u):\n t=time.monotonic()\n try:\n  op=urllib.request.build_opener(urllib.request.ProxyHandler({}))\n  with op.open(urllib.request.Request(u,headers={'User-Agent':'Neur0StoreTransportProbe/1.0'}),timeout=4) as r: return {'host':r.url.split('/')[2],'http':r.status,'ms':int((time.monotonic()-t)*1000)}\n except urllib.error.HTTPError as e:return {'host':u.split('/')[2],'http':e.code,'ms':int((time.monotonic()-t)*1000)}\n except Exception as e:return {'host':u.split('/')[2],'error':type(e).__name__}\nwith concurrent.futures.ThreadPoolExecutor(max_workers=6) as ex: print(json.dumps(list(ex.map(p,sites)),ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"host\": \"api.telegram.org\", \"error\": \"URLError\"}, {\"host\": \"my.telegram.org\", \"error\": \"URLError\"}, {\"host\": \"www.cloudflare.com\", \"http\": 200, \"ms\": 988}, {\"host\": \"www.cloudflare.com\", \"http\": 200, \"ms\": 1894}, {\"host\": \"api.github.com\", \"http\": 200, \"ms\": 987}, {\"host\": \"www.google.com\", \"http\": 200, \"ms\": 1970}]\r\n",
+      "stdout_bytes": 321,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:00:50.527Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:00:50.257Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-curator-public-egress-options-c1"
+    },
+    "request_id": "20261012-curator-public-egress-options-c1",
+    "started_at": "2026-10-12T17:00:45.120Z",
+    "status": "completed"
+  },
+  "id": "20261012-curator-public-egress-options-c1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
