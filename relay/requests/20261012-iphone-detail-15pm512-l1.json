@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-detail-15pm512-l1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-detail-l1.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},8500);\ntry{\nconst v=await(await fetch('http://127.0.0.1:17447/json/version')).json();const w=new WebSocket(v.webSocketDebuggerUrl);\nawait new Promise((ok,no)=>{w.addEventListener('open',ok,{once:true});w.addEventListener('error',no,{once:true})});\nlet n=0,p=new Map();w.addEventListener('message',e=>{let z=JSON.parse(e.data);if(p.has(z.id)){p.get(z.id)(z);p.delete(z.id)}});\nconst send=(method,params)=>Promise.race([new Promise(ok=>{let id=++n;p.set(id,ok);w.send(JSON.stringify({id,method,params}))}),new Promise(ok=>setTimeout(()=>ok({error:{message:'timeout'}}),3500))]);\nconst a=await send('Target.createTarget',{url:\"https://www.avito.ru/krasnoyarsk/telefony/iphone_15_pro_max_512_gb_sim_esim_8107250406\",background:true,newWindow:false});const target_id=a.result?.targetId||null;\nif(!target_id){console.log(JSON.stringify({error:a.error?.message||'not_created'}));process.exit(0)}\nconst b=await send('Target.activateTarget',{targetId:target_id});\nconsole.log(JSON.stringify({created:true,activated:!!b.result,target_id,url:\"https://www.avito.ru/krasnoyarsk/telefony/iphone_15_pro_max_512_gb_sim_esim_8107250406\",error:b.error?.message||null}));process.exit(0);\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,130)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Open ONE publicly visible iPhone 15 Pro Max 512GB candidate Avito detail as new tab in authorized isolated Chrome 17447, activate for screenshot; no contact, payments, cookies, account or network settings changes."
+}
