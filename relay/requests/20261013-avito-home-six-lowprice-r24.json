@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261013-avito-home-six-lowprice-r24",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$out=@();foreach($u in @('https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/1-k._dom_55_m_8056168061?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_50_m_3939686510?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_45_m_4668464780?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/2-k._dom_40_m_4643604368?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/1-k._dom_36_m_2738051678?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/1-k._dom_60_m_4589776920?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D')){try{$t=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17447/json/new?'+[Uri]::EscapeDataString($u)) -TimeoutSec 7;$out+=@{id=$t.id;url=$t.url}}catch{$out+=@{url=$u;error=$_.Exception.Message}}};$out|ConvertTo-Json -Compress -Depth 4"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 50000,
+  "note": "Open six small previously unseen public cottage listings, quote 10 guests Nov3-4; no reservations, messages, payments."
+}
