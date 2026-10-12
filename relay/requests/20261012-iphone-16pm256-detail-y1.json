@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-16pm256-detail-y1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-16pm256-detail-y1.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},10500);\ntry{\n const v=await(await fetch('http://127.0.0.1:17447/json/version')).json();const bw=new WebSocket(v.webSocketDebuggerUrl);\n await new Promise((ok,no)=>{bw.addEventListener('open',ok,{once:true});bw.addEventListener('error',no,{once:true})});\n const az=await Promise.race([new Promise(ok=>{bw.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===1)ok(z)});bw.send(JSON.stringify({id:1,method:'Target.activateTarget',params:{targetId:\"FE24FB1BB37ACBE2E8A052F0FC033E7C\"}}))}),new Promise(ok=>setTimeout(()=>ok({}),3500))]);\n const t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id===\"FE24FB1BB37ACBE2E8A052F0FC033E7C\");\n const w=new WebSocket(t.webSocketDebuggerUrl);\n w.addEventListener('open',()=>w.send(JSON.stringify({id:2,method:'Runtime.evaluate',params:{expression:'(()=>{window.scrollTo(0,1130);return {scrollY:window.scrollY}})()',returnByValue:true}})),{once:true});\n w.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===2){console.log(JSON.stringify({activated:!!az.result,scroll:z.result?.result?.value||null}));process.exit(0)}})\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,130)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 19000,
+  "note": "Activate one agent-created public 16 Pro Max 256GB listing and scroll to full description for defect verification; no account, seller contact or network change."
+}
