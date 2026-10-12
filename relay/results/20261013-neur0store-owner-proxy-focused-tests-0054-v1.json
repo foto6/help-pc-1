@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import sys,unittest\nsys.path.insert(0,r'E:\\Neur0StoreCurator')\nr=unittest.TextTestRunner(verbosity=2).run(unittest.defaultTestLoader.loadTestsFromName('test_owner_proxy'))\nprint('FOCUSED_PROXY',r.testsRun,len(r.failures),len(r.errors))\nsys.exit(0 if r.wasSuccessful() else 1)\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "test_host_and_port_are_explicit_and_unchanged (test_owner_proxy.OwnerHTTPProxyTests.test_host_and_port_are_explicit_and_unchanged) ... ok\r\ntest_http_connect_auth_handler_no_duplicate_timeout (test_owner_proxy.OwnerHTTPProxyTests.test_http_connect_auth_handler_no_duplicate_timeout) ... ERROR\r\ntest_proxy_basic_header_and_telegram_tls_sni (test_owner_proxy.OwnerHTTPProxyTests.test_proxy_basic_header_and_telegram_tls_sni) ... ERROR\r\ntest_proxy_read_only_uses_dpapi (test_owner_proxy.OwnerHTTPProxyTests.test_proxy_read_only_uses_dpapi) ... ok\r\ntest_proxy_url_missing_file_is_empty (test_owner_proxy.OwnerHTTPProxyTests.test_proxy_url_missing_file_is_empty) ... ok\r\n\r\n======================================================================\r\nERROR: test_http_connect_auth_handler_no_duplicate_timeout (test_owner_proxy.OwnerHTTPProxyTests.test_http_connect_auth_handler_no_duplicate_timeout)\r\n----------------------------------------------------------------------\r\nTraceback (most recent call last):\r\n  File \"E:\\Neur0StoreCurator\\test_owner_proxy.py\", line 46, in test_http_connect_auth_handler_no_duplicate_timeout\r\n    actual=telegram_transport.open_telegram(\r\n        req,proxy=\"http://synthetic-user:synthetic-pass@104.165.1.52:6637\",timeout=9)\r\n  File \"E:\\Neur0StoreCurator\\telegram_transport.py\", line 111, in open_telegram\r\n    urllib.request.ProxyHandler({}),BasicHandler()).open(req,timeout=timeout)\r\n                                                    ~~~~^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 495, in open\r\n    response = meth(req, response)\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 599, in http_response\r\n    code, msg, hdrs = response.code, response.msg, response.info()\r\n                      ^^^^^^^^^^^^^\r\nAttributeError: 'object' object has no attribute 'code'\r\n\r\n======================================================================\r\nERROR: test_proxy_basic_header_and_telegram_tls_sni (test_owner_proxy.OwnerHTTPProxyTests.test_proxy_basic_header_and_telegram_tls_sni)\r\n----------------------------------------------------------------------\r\nTraceback (most recent call last):\r\n  File \"E:\\Neur0StoreCurator\\test_owner_proxy.py\", line 56, in test_proxy_basic_header_and_telegram_tls_sni\r\n    c=telegram_transport.open_telegram(\r\n        req,proxy=\"http://synthetic-user:synthetic-pass@104.165.1.52:6637\",timeout=9)\r\n  File \"E:\\Neur0StoreCurator\\telegram_transport.py\", line 111, in open_telegram\r\n    urllib.request.ProxyHandler({}),BasicHandler()).open(req,timeout=timeout)\r\n                                                    ~~~~^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 495, in open\r\n    response = meth(req, response)\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\urllib\\request.py\", line 599, in http_response\r\n    code, msg, hdrs = response.code, response.msg, response.info()\r\n                      ^^^^^^^^^^^^^\r\nAttributeError: 'BasicTunnelHTTPS' object has no attribute 'code'. Did you mean: 'close'?\r\n\r\n----------------------------------------------------------------------\r\nRan 5 tests in 0.125s\r\n\r\nFAILED (errors=2)\r\n",
+      "stderr_bytes": 3439,
+      "stderr_truncated": false,
+      "stdout": "FOCUSED_PROXY 5 0 2\r\n",
+      "stdout_bytes": 21,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:41:04.001Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:41:03.753Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-neur0store-owner-proxy-focused-tests-0054-v1"
+    },
+    "request_id": "20261013-neur0store-owner-proxy-focused-tests-0054-v1",
+    "started_at": "2026-10-12T17:41:02.717Z",
+    "status": "completed"
+  },
+  "id": "20261013-neur0store-owner-proxy-focused-tests-0054-v1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
