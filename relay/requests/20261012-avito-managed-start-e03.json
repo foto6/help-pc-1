@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-managed-start-e03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$script='E:\\PC-Control\\Proxifier-Avito-20261012\\START_AVITO_MCP.ps1'\nif(!(Test-Path -LiteralPath $script)){throw 'LAUNCHER_MISSING'}\n& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script\nif($LASTEXITCODE -ne 0){throw \"AVITO_MCP_START_FAILED_$LASTEXITCODE\"}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "Execute previously syntax-checked idempotent launcher for NEW dedicated Avito CDP17447 Chrome from about:blank, apply Proxifier PID-only Direct for existing second Chrome and managed browser; leave existing browsers and Default proxy unchanged, verified profile backup and rollback."
+}
