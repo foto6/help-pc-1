@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$out=@();foreach($u in @('https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/6-k._kottedzh_180_m_2689642376?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/4-k._kottedzh_120_m_4628254145?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_90_m_4194561451?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_61_m_4282345837?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_60_m_7731305164?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D')){try{$new=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17447/json/new?'+[Uri]::EscapeDataString($u)) -TimeoutSec 7;$out+=@{id=$new.id;url=$new.url}}catch{$out+=@{error=$_.Exception.Message;url=$u}}};$out|ConvertTo-Json -Compress -Depth 4"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"437F16908C9BD474357865A52CB35975\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/6-k._kottedzh_180_m_2689642376?checkIn=2026-11-03\\u0026checkOut=2026-11-04\\u0026guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D\"},{\"id\":\"70933DDDDD735F995B869E415AC4569A\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/4-k._kottedzh_120_m_4628254145?checkIn=2026-11-03\\u0026checkOut=2026-11-04\\u0026guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D\"},{\"id\":\"31711D28A80D617079F74735B00657EE\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_90_m_4194561451?checkIn=2026-11-03\\u0026checkOut=2026-11-04\\u0026guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D\"},{\"id\":\"166C8C02ADC2F71408BE38C907FDB162\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_61_m_4282345837?checkIn=2026-11-03\\u0026checkOut=2026-11-04\\u0026guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D\"},{\"id\":\"AF59B5B95C0C141F6B5AFA0380E8450A\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_60_m_7731305164?checkIn=2026-11-03\\u0026checkOut=2026-11-04\\u0026guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D\"}]\r\n",
+      "stdout_bytes": 1475,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:34:09.757Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:34:08.799Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-avito-home-new-five-r17"
+    },
+    "request_id": "20261013-avito-home-new-five-r17",
+    "started_at": "2026-10-12T17:34:05.965Z",
+    "status": "completed"
+  },
+  "id": "20261013-avito-home-new-five-r17",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
