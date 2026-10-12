@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$js=@'\nlet sock;try{\nconst v=await(await fetch(\"http://127.0.0.1:17447/json/list\")).json();let t=v.find(x=>x.url.startsWith(\"https://www.avito.ru/krasnoyarsk/\"));if(!t)throw Error(\"TAB_NOT_FOUND\");\nsock=new WebSocket(t.webSocketDebuggerUrl);\nconst answer=await Promise.race([new Promise((resolve,reject)=>{\nsock.addEventListener(\"open\",()=>{sock.send(JSON.stringify({id:22,method:\"Runtime.evaluate\",params:{expression:\"([...document.querySelectorAll('[data-marker=item]')].slice(0,10).map((el,i)=>({i,title:(el.querySelector('h3')?.textContent||'').slice(0,90),href:el.querySelector('a[href]')?.href||'',testId:el.getAttribute('data-item-id')})))\",returnByValue:true}}))},{once:true});\nsock.addEventListener(\"message\",e=>{let x=JSON.parse(e.data);if(x.id===22)resolve(x.result?.result?.value||{err:x.error?.code})});\nsock.addEventListener(\"error\",reject,{once:true})}),new Promise((_,bad)=>setTimeout(()=>bad(Error(\"TIMEOUT\")),5000))]);\nconsole.log(JSON.stringify(answer))\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}))}\nif(sock)sock.close();process.exit(0)\n'@\n$tmp=Join-Path $env:TEMP 'avito-simple-titles.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,$js,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"i\":0,\"title\":\"\",\"href\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/2-k._dom_95_m_7719784354?context=H4sIAAAAAAAA_wE_AMD_YToyOntzOjEzOiJsb2NhbFByaW9yaXR5IjtiOjA7czoxOiJ4IjtzOjE2OiJoRUxTcE1ZWWZ0OEdIQkRkIjt9IeGZQj8AAAA\",\"testId\":\"7719784354\"},{\"i\":1,\"title\":\"\",\"href\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/1-k._dom_36_m_2738051678?context=H4sIAAAAAAAA_wE_AMD_YToyOntzOjEzOiJsb2NhbFByaW9yaXR5IjtiOjA7czoxOiJ4IjtzOjE2OiJoRUxTcE1ZWWZ0OEdIQkRkIjt9IeGZQj8AAAA\",\"testId\":\"2738051678\"},{\"i\":2,\"title\":\"\",\"href\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/5-k._dom_150_m_7572971653?context=H4sIAAAAAAAA_wE_AMD_YToyOntzOjEzOiJsb2NhbFByaW9yaXR5IjtiOjA7czoxOiJ4IjtzOjE2OiJoRUxTcE1ZWWZ0OEdIQkRkIjt9IeGZQj8AAAA\",\"testId\":\"7572971653\"},{\"i\":3,\"title\":\"\",\"href\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_88_m_7714813321?context=H4sIAAAAAAAA_wE_AMD_YToyOntzOjEzOiJsb2NhbFByaW9yaXR5IjtiOjA7czoxOiJ4IjtzOjE2OiJoRUxTcE1ZWWZ0OEdIQkRkIjt9IeGZQj8AAAA\",\"testId\":\"7714813321\"},{\"i\":4,\"title\":\"\",\"href\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/4-k._kottedzh_120_m_4628254145?context=H4sIAAAAAAAA_wE_AMD_YToyOntzOjEzOiJsb2NhbFByaW9yaXR5IjtiOjA7czoxOiJ4IjtzOjE2OiJoRUxTcE1ZWWZ0OEdIQkRkIjt9IeGZQj8AAAA\",\"testId\":\"4628254145\"},{\"i\":5,\"title\":\"\",\"href\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/1-k._dom_55_m_8056168061?context=H4sIAAAAAAAA_wE_AMD_YToyOntzOjEzOiJsb2NhbFByaW9yaXR5IjtiOjA7czoxOiJ4IjtzOjE2OiJoRUxTcE1ZWWZ0OEdIQkRkIjt9IeGZQj8AAAA\",\"testId\":\"8056168061\"},{\"i\":6,\"title\":\"\",\"href\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_90_m_4194561451?context=H4sIAAAAAAAA_wE_AMD_YToyOntzOjEzOiJsb2NhbFByaW9yaXR5IjtiOjA7czoxOiJ4IjtzOjE2OiJoRUxTcE1ZWWZ0OEdIQkRkIjt9IeGZQj8AAAA\",\"testId\":\"4194561451\"},{\"i\":7,\"title\":\"\",\"href\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/6-k._kottedzh_180_m_2689642376?context=H4sIAAAAAAAA_wE_AMD_YToyOntzOjEzOiJsb2NhbFByaW9yaXR5IjtiOjA7czoxOiJ4IjtzOjE2OiJoRUxTcE1ZWWZ0OEdIQkRkIjt9IeGZQj8AAAA\",\"testId\":\"2689642376\"},{\"i\":8,\"title\":\"\",\"href\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_45_m_4668464780?context=H4sIAAAAAAAA_wE_AMD_YToyOntzOjEzOiJsb2NhbFByaW9yaXR5IjtiOjA7czoxOiJ4IjtzOjE2OiJoRUxTcE1ZWWZ0OEdIQkRkIjt9IeGZQj8AAAA\",\"testId\":\"4668464780\"},{\"i\":9,\"title\":\"\",\"href\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_50_m_3939686510?context=H4sIAAAAAAAA_wE_AMD_YToyOntzOjEzOiJsb2NhbFByaW9yaXR5IjtiOjA7czoxOiJ4IjtzOjE2OiJoRUxTcE1ZWWZ0OEdIQkRkIjt9IeGZQj8AAAA\",\"testId\":\"3939686510\"}]\n",
+      "stdout_bytes": 2545,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T12:18:53.095Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T12:18:52.914Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-10-headings-04"
+    },
+    "request_id": "20261012-avito-10-headings-04",
+    "started_at": "2026-10-12T12:18:52.221Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-10-headings-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
