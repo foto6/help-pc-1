@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-activate-15pm-j1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-activate-15pm-j1.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},6500);\ntry{\nconst x=await(await fetch('http://127.0.0.1:17447/json/version')).json();\nconst ws=new WebSocket(x.webSocketDebuggerUrl);\nws.addEventListener('open',()=>ws.send(JSON.stringify({id:1,method:'Target.activateTarget',params:{targetId:'EF27777D4E798E704D04D5D474887AFA'}})),{once:true});\nws.addEventListener('message',e=>{let z=JSON.parse(e.data);if(z.id===1){console.log(JSON.stringify({activated:!!z.result,error:z.error?.message||null,target_id:'EF27777D4E798E704D04D5D474887AFA'}));process.exit(0)}});\nws.addEventListener('error',()=>{console.log(JSON.stringify({error:'ws_error'}));process.exit(0)},{once:true});\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,130)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Activate ONLY this agent-created iPhone 15 Pro Max Avito tab in user-authorized isolated Chrome 17447 so screenshots can render; no other tabs closed, no other process/proxy changes, no purchases."
+}
