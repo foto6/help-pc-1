@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-neur0store-mtproto-tgws-handshake-r10",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,sys,pathlib\np=pathlib.Path('E:/Neur0StoreCurator/.venv/Scripts/python.exe')\ns=\"import asyncio,sys\\nsys.path.insert(0,\\\"E:/Neur0StoreCurator\\\")\\nfrom mtproto_common import client_for\\nasync def main():\\n c=client_for(10000,\\\"0\\\"*32)\\n try:\\n  await asyncio.wait_for(c.connect(),timeout=22)\\n  print(\\\"TGWS_MTPROTO_TRANSPORT_CONNECTED\\\",bool(c.is_connected()))\\n except Exception as e:\\n  print(\\\"TGWS_MTPROTO_TRANSPORT_BLOCKED\\\",type(e).__name__)\\n finally:\\n  try:await asyncio.wait_for(c.disconnect(),timeout=5)\\n  except Exception:pass\\nasyncio.run(main())\"\nr=subprocess.run([str(p),'-c',s],timeout=31,capture_output=True,text=True)\nprint(r.stdout.strip()[:400])\nprint('exit',r.returncode)\nif r.returncode and r.stderr:print('error_class',r.stderr.splitlines()[-1].split(':')[0][:100])\n"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 39000,
+  "note": "Credential-free one-shot MTProto transport handshake through existing local TGWS proxy port; no bot login, no session saved, no settings changed."
+}
