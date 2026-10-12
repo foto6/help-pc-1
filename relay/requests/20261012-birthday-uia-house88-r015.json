@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-birthday-uia-house88-r015",
+  "action": "uia.snapshot",
+  "params": {
+    "window_title": "Авито (7714813321)"
+  },
+  "timeout_ms": 22000,
+  "note": "Read-only accessibility snapshot of public user-authorized house 88 listing window only."
+}
