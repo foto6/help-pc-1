@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $urls=@('https://www.avito.ru/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_2_sim_7976558546','https://www.avito.ru/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8053145926','https://www.avito.ru/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8399084915');$results=@(); foreach($url in $urls){$r=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17447/json/new?'+[uri]::EscapeDataString($url)) -TimeoutSec 6; $results+=@([ordered]@{id=$r.id;url=$url})};$results|ConvertTo-Json -Compress -Depth 3"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"FC9E3614DBBF31AA5EEC321BCD7BC262\",\"url\":\"https://www.avito.ru/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_2_sim_7976558546\"},{\"id\":\"FF52C2C4549DF07270B1681BC266BAA2\",\"url\":\"https://www.avito.ru/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8053145926\"},{\"id\":\"0DC913FEE1093BE0EBB996D90627B02A\",\"url\":\"https://www.avito.ru/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8399084915\"}]\r\n",
+      "stdout_bytes": 411,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T15:58:12.083Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T15:58:11.794Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-15pm256-three-details-06"
+    },
+    "request_id": "20261012-15pm256-three-details-06",
+    "started_at": "2026-10-12T15:58:10.909Z",
+    "status": "completed"
+  },
+  "id": "20261012-15pm256-three-details-06",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
