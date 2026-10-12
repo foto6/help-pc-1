@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-private-deep-scroll-3600",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-private-deep-scroll.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"timeout\"}');process.exit(0)},6000);\ntry{const t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id==='D229F01C94F7F6DF012309BB4CE211CD');const w=new WebSocket(t.webSocketDebuggerUrl);w.addEventListener('open',()=>w.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:'window.scrollTo(0,3600);({scrollY:window.scrollY})',returnByValue:true}})),{once:true});w.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===1){console.log(JSON.stringify(z.result?.result?.value||{error:'none'}));process.exit(0)}})}catch(e){console.log(JSON.stringify({error:String(e).slice(0,130)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Scroll authorized private-filter iPhone public search tab for deeper offers, no sellers contacted, account or network changes."
+}
