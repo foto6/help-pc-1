@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$r=Invoke-WebRequest 'http://127.0.0.1:17447/json/activate/4A30E49B892C311B3193153E3A015064' -UseBasicParsing -TimeoutSec 6;@{target='4A30E49B892C311B3193153E3A015064';ok=($r.StatusCode -eq 200)}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"target\":\"4A30E49B892C311B3193153E3A015064\",\"ok\":true}\r\n",
+      "stdout_bytes": 57,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:42:21.751Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:42:21.553Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-home-120-activate-a03"
+    },
+    "request_id": "20261012-avito-home-120-activate-a03",
+    "started_at": "2026-10-12T16:42:20.767Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-home-120-activate-a03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
