@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-neur0store-local-10tests-dpapi-r01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import unittest,sys,tempfile,os\nsys.path.insert(0,r'E:\\Neur0StoreCurator')\nsuite=unittest.defaultTestLoader.discover(r'E:\\Neur0StoreCurator',pattern='test_daemon.py')\nr=unittest.TextTestRunner(verbosity=2).run(suite)\nif not r.wasSuccessful():sys.exit(1)\nfrom secrets_store import write,read\nwith tempfile.TemporaryDirectory() as t:\n f=os.path.join(t,'dummy.dpapi');write({'synthetic_key':'synthetic_value'},f)\n assert read(f)=={'synthetic_key':'synthetic_value'}\nprint('WINDOWS_DPAPI_SYNTHETIC_ROUNDTRIP_OK')"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 17000,
+  "note": "Execute 10 isolated offline unit tests and synthetic Windows DPAPI round-trip; never read user bot token or send Telegram messages."
+}
