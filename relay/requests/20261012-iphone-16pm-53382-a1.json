@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-16pm-53382-a1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-16pm-53382-a1.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({status:'hard_timeout'}));process.exit(0)},10500);\ntry{\n const bv=await(await fetch('http://127.0.0.1:17447/json/version')).json();\n const b=new WebSocket(bv.webSocketDebuggerUrl);await new Promise((ok,no)=>{b.addEventListener('open',ok,{once:true});b.addEventListener('error',no,{once:true})});\n const a=await Promise.race([new Promise(ok=>{b.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===1)ok(z)});b.send(JSON.stringify({id:1,method:'Target.activateTarget',params:{targetId:\"798DA7C436D8130EBC3306F47BE455B7\"}}))}),new Promise(ok=>setTimeout(()=>ok({}),3300))]);b.close();\n const t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id===\"798DA7C436D8130EBC3306F47BE455B7\");if(!t)throw Error('MISSING');\n const w=new WebSocket(t.webSocketDebuggerUrl);\n w.addEventListener('open',()=>w.send(JSON.stringify({id:2,method:'Runtime.evaluate',params:{expression:'(()=>{window.scrollTo(0,1110);return {scrollY:window.scrollY}})()',returnByValue:true}})),{once:true});\n w.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===2){console.log(JSON.stringify({activated:!!a.result,scroll:z.result?.result?.value||null,url:t.url.split('?')[0]}));process.exit(0)}});w.addEventListener('error',()=>{console.log('{\"status\":\"page_ws_error\"}');process.exit(0)},{once:true});\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,130)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 19000,
+  "note": "Activate one agent-opened 16PM 256GB public Avito detail and scroll to condition & description, no seller messages, payments, or config changes."
+}
