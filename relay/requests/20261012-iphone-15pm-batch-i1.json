@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-15pm-batch-i1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-15pm-i1.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},8500);\ntry{let a=await(await fetch('http://127.0.0.1:17447/json/list')).json();let t=a.find(x=>x.id==='EF27777D4E798E704D04D5D474887AFA');if(!t)throw Error('MISSING');\nlet w=new WebSocket(t.webSocketDebuggerUrl);w.addEventListener('open',()=>w.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:\"(()=>Array.from(document.querySelectorAll('[data-marker=\\\"item\\\"]')).slice(0,14).map((e,i)=>{let l=Array.from(e.querySelectorAll('a[href]')).find(a=>/iPhone/i.test(a.textContent||''))||e.querySelector('a[itemprop=\\\"url\\\"]');let text=(e.textContent||'').replace(/\\\\s+/g,' ').slice(0,230);return{i,name:l?.textContent?.trim().slice(0,95)||'',url:l?.href?(new URL(l.href)).origin+(new URL(l.href)).pathname:'',price:(text.match(/[\\\\d\\\\s]{3,12}₽/)||[])[0]?.trim()||'',snippet:text};}))()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{let z=JSON.parse(e.data);if(z.id===1){console.log(JSON.stringify(z.result?.result?.value||{error:z.result?.exceptionDetails?.text||'EMPTY'}));process.exit(0)}});w.addEventListener('error',()=>{console.log('{\"error\":\"WS\"}');process.exit(0)},{once:true});\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Read-only bounded 14 public iPhone 15 Pro Max Avito cards (title,price,clean public URL), on own isolated background tab 17447; no navigation or private data."
+}
