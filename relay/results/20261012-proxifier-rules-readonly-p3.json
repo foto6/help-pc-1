@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$path=Join-Path $env:APPDATA 'Proxifier4\\Profiles\\Default.ppx'\n[xml]$doc=Get-Content -LiteralPath $path -Raw -Encoding UTF8\n$nodes=$doc.SelectNodes('//*[local-name()=\"Rule\"]')\n$out=[ordered]@{root=$doc.DocumentElement.LocalName;ruleCount=$nodes.Count;rules=@();profileFileBytes=(Get-Item -LiteralPath $path).Length}\nforeach($r in $nodes){\n $nameNode=$r.SelectSingleNode('./*[local-name()=\"Name\"]')\n $n=if($nameNode){[string]$nameNode.InnerText}else{''}\n $actionNode=$r.SelectSingleNode('./*[local-name()=\"Action\"]')\n $appNode=$r.SelectSingleNode('./*[local-name()=\"Applications\"]')\n $hostNode=$r.SelectSingleNode('./*[local-name()=\"TargetHosts\"]')\n $portsNode=$r.SelectSingleNode('./*[local-name()=\"TargetPorts\"]')\n $out.rules+=@{name=$n;enabled=$r.GetAttribute('enabled');actionType=if($actionNode){$actionNode.GetAttribute('type')}else{'missing'};applications=if($appNode){$appNode.InnerText}else{''};targetHostsPresent=($null -ne $hostNode -and $hostNode.InnerText.Length -gt 0);portsFilterPresent=($null -ne $portsNode -and $portsNode.InnerText.Length -gt 0);childNames=@($r.ChildNodes|ForEach-Object{$_.LocalName})}\n}\n$out.schemaTopChildren=@($doc.DocumentElement.ChildNodes|ForEach-Object{$_.LocalName})\n$out|ConvertTo-Json -Compress -Depth 6"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"root\":\"ProxifierProfile\",\"ruleCount\":4,\"rules\":[{\"name\":\"tgwsproxy_windows.exe [auto-created]\",\"applications\":\"tgwsproxy_windows.exe\",\"targetHostsPresent\":false,\"portsFilterPresent\":false,\"childNames\":[\"Action\",\"Applications\",\"Name\"],\"actionType\":\"Direct\",\"enabled\":\"true\"},{\"name\":\"Localhost\",\"applications\":\"\",\"targetHostsPresent\":false,\"portsFilterPresent\":false,\"childNames\":[\"Action\",\"Targets\",\"Name\"],\"actionType\":\"Direct\",\"enabled\":\"true\"},{\"name\":\"cg\",\"applications\":\"chatgpt.exe\",\"targetHostsPresent\":false,\"portsFilterPresent\":false,\"childNames\":[\"Action\",\"Applications\",\"Name\"],\"actionType\":\"Direct\",\"enabled\":\"true\"},{\"name\":\"Default\",\"applications\":\"\",\"targetHostsPresent\":false,\"portsFilterPresent\":false,\"childNames\":[\"Action\",\"Name\"],\"actionType\":\"Proxy\",\"enabled\":\"true\"}],\"profileFileBytes\":1672,\"schemaTopChildren\":[\"Options\",\"ProxyList\",\"ChainList\",\"RuleList\"]}\r\n",
+      "stdout_bytes": 885,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T11:46:33.091Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T11:46:32.919Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-proxifier-rules-readonly-p3"
+    },
+    "request_id": "20261012-proxifier-rules-readonly-p3",
+    "started_at": "2026-10-12T11:46:32.253Z",
+    "status": "completed"
+  },
+  "id": "20261012-proxifier-rules-readonly-p3",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
