@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-mtproto-telethon-probe-r01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,importlib.util,socket,os,pathlib\nout={'telethon_installed':importlib.util.find_spec('telethon') is not None,'api_id_configured':False,'tgws_config_keys':[],'tgws_secret_shape':'not_found','tgws_listening':False}\np=pathlib.Path(os.environ.get('APPDATA',''))/'TgWsProxy'/'config.json'\ntry:\n c=json.loads(p.read_text(encoding='utf-8-sig'))\n out['tgws_config_keys']=sorted(list(c.keys()))\n for k,v in c.items():\n  if 'secret' in k.lower():\n   out['tgws_secret_shape']='type_'+type(v).__name__+'_length_'+str(len(v)) if isinstance(v,str) else type(v).__name__\nexcept Exception as e:out['config_error']=type(e).__name__\ntry:\n s=socket.create_connection(('127.0.0.1',1443),timeout=1.5)\n s.close();out['tgws_listening']=True\nexcept Exception as e:out['tgws_check_error']=type(e).__name__\nprint(json.dumps(out,ensure_ascii=True))"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only Telethon availability and TGWS config KEY NAMES/secret shape only, no secret values or credentials."
+}
