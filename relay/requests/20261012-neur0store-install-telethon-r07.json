@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-neur0store-install-telethon-r07",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,sys,pathlib,json\np=pathlib.Path('E:/Neur0StoreCurator/.venv/Scripts/python.exe')\nif not p.is_file():raise RuntimeError('isolated_venv_missing')\ntry:\n r=subprocess.run([str(p),'-m','pip','install','--disable-pip-version-check','--no-input','--only-binary=:all:','Telethon==1.45.0'],timeout=66,capture_output=True,text=True)\nexcept subprocess.TimeoutExpired:\n print('TELETHON_ISOLATED_INSTALL_TIMED_OUT; verify exact package installed state before reattempt')\n raise SystemExit(3)\nprint(json.dumps({'exit_code':r.returncode,'pip_error_lines':[x.strip()[:160] for x in r.stderr.splitlines() if 'ERROR' in x or 'WARNING' in x][:4]},ensure_ascii=True))\nif r.returncode:sys.exit(r.returncode)\nc=subprocess.run([str(p),'-c','import telethon; print(telethon.__version__)'],timeout=7,capture_output=True,text=True)\nprint('INSTALLED_TELETHON_VERSION',c.stdout.strip() if c.returncode==0 else 'VERIFY_FAILED')\nsys.exit(c.returncode)\n"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 82000,
+  "note": "Install pinned Telethon into the new isolated MTProto-only Python3.12 venv. Never touch global Python/proxies/TGWS/session or credentials."
+}
