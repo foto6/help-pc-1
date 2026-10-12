@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$dir='E:\\PC-Control\\Proxifier-Avito-20261012'\n[System.IO.Directory]::CreateDirectory($dir)|Out-Null\n$script=@'\n$ErrorActionPreference='Stop'\n$homeDir=Split-Path -Parent $MyInvocation.MyCommand.Path\n$original=Join-Path $env:APPDATA 'Proxifier4\\Profiles\\Default.ppx'\n$backup=Join-Path $homeDir 'Default-original-backup.ppx'\n$proposed=Join-Path $homeDir 'SecondChrome-And-AvitoMCP-Direct-PIDs.ppx'\n$chromeExe='C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'\n$proxifierExe='C:\\Program Files (x86)\\Proxifier\\Proxifier.exe'\n$chromeProfile='E:\\PC-Control\\AvitoMCPChrome-20261012\\Profile'\n$port=17447\nif(!(Test-Path $original) -or !(Test-Path $backup) -or !(Test-Path $chromeExe) -or !(Test-Path $proxifierExe)){throw 'PREFLIGHT_FILES_MISSING'}\nif((Get-FileHash $original -Algorithm SHA256).Hash -ne (Get-FileHash $backup -Algorithm SHA256).Hash){throw 'PROXIFIER_BASELINE_CHANGED_STOP'}\n$chrome=@(Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\")\n$roots=@($chrome | Where-Object {([string]$_.CommandLine -notmatch '--type=')})\n$primary=@($roots | Where-Object {$_.CommandLine -match '--remote-debugging-port=17410'})\n$ordinarySecond=@($roots | Where-Object {$_.CommandLine -notmatch '--remote-debugging-port' -and $_.CommandLine -notmatch 'AvitoMCPChrome-20261012'})\nif($primary.Count -ne 1 -or $ordinarySecond.Count -ne 1){throw 'CHROME_ROOT_IDENTITY_AMBIGUOUS_ABORT'}\n$managed=@($roots|Where-Object {$_.CommandLine -match '--remote-debugging-port=17447' -and $_.CommandLine -match 'AvitoMCPChrome-20261012'})\nif($managed.Count -gt 1){throw 'MULTIPLE_MANAGED_CHROME_ROOTS_ABORT'}\n$newBrowser=$false\nif($managed.Count -eq 0){\n if(@(Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue).Count -gt 0){throw 'PORT_17447_ALREADY_IN_USE_ABORT'}\n [System.IO.Directory]::CreateDirectory((Split-Path $chromeProfile -Parent))|Out-Null\n $arguments=@(\n '--no-first-run','--no-default-browser-check','--no-proxy-server',\n '--remote-debugging-address=127.0.0.1',\n '--remote-debugging-port=17447',\n '--user-data-dir=E:\\PC-Control\\AvitoMCPChrome-20261012\\Profile',\n '--window-size=1440,900',\n 'about:blank'\n )\n $p=Start-Process -FilePath $chromeExe -ArgumentList $arguments -PassThru\n $newBrowser=$true\n Start-Sleep -Seconds 3\n $chrome=@(Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\")\n $roots=@($chrome | Where-Object {([string]$_.CommandLine -notmatch '--type=')})\n $managed=@($roots | Where-Object {$_.CommandLine -match '--remote-debugging-port=17447' -and $_.CommandLine -match 'AvitoMCPChrome-20261012'})\n}\nif($managed.Count -ne 1){throw 'MANAGED_BROWSER_NOT_RUNNING_ABORT'}\nif($managed[0].ProcessId -eq $primary[0].ProcessId -or $managed[0].ProcessId -eq $ordinarySecond[0].ProcessId){throw 'PROCESS_OVERLAP_ABORT'}\n$v=Invoke-RestMethod -Uri 'http://127.0.0.1:17447/json/version' -TimeoutSec 3\nif(!$v.Browser){throw 'CDP_UNAVAILABLE_ABORT'}\n$targets=@([int]$ordinarySecond[0].ProcessId,[int]$managed[0].ProcessId)\n$children=@($chrome | Where-Object {$targets -contains [int]$_.ParentProcessId})\n$pids=@($targets+@($children|Select-Object -ExpandProperty ProcessId)|Sort-Object -Unique)\nif(([int]$primary[0].ProcessId -in $pids) -or ($pids.Count -lt 2)){throw 'UNSAFE_PID_SCOPE_ABORT'}\n$base=[System.IO.File]::ReadAllText($original,[System.Text.Encoding]::UTF8)\n$match=[regex]::Match($base,'<RuleList(?:\\s[^>]*)?>')\nif(!$match.Success -or ([regex]::Matches($base,'<RuleList(?:\\s[^>]*)?>').Count -ne 1)){throw 'UNKNOWN_RULE_LIST_ABORT'}\n$apps=($pids|ForEach-Object{\"pid=$_\"} ) -join ';'\n$rule=([Environment]::NewLine)+'    <Rule enabled=\"true\">'+([Environment]::NewLine)+'      <Action type=\"Direct\" />'+([Environment]::NewLine)+'      <Applications>'+$apps+'</Applications>'+([Environment]::NewLine)+'      <Name>SecondChrome + AvitoMCP DIRECT [session]</Name>'+([Environment]::NewLine)+'    </Rule>'\n$next=$base.Insert($match.Index+$match.Length,$rule)\n[xml]$oldXml=$base\n[xml]$newXml=$next\n$oldRules=@($oldXml.SelectNodes('//*[local-name()=\"Rule\"]/Name')|ForEach-Object {$_.InnerText})\n$newRules=@($newXml.SelectNodes('//*[local-name()=\"Rule\"]/Name')|ForEach-Object {$_.InnerText})\nif($newRules.Count -ne $oldRules.Count+1 -or $newRules[0] -ne 'SecondChrome + AvitoMCP DIRECT [session]' -or (($newRules|Select-Object -Skip 1) -join '|' -ne ($oldRules -join '|'))){throw 'RULE_ORDER_INVALID_ABORT'}\nforeach($tag in @('Options','ProxyList','ChainList')){\n if($oldXml.DocumentElement.SelectSingleNode($tag).OuterXml -cne $newXml.DocumentElement.SelectSingleNode($tag).OuterXml){throw \"BASELINE_CHANGED_$tag\"}\n}\nif($next.Replace($rule,'') -cne $base){throw 'EXTRA_CONFIG_DIFF_ABORT'}\n[System.IO.File]::WriteAllText($proposed,$next,[System.Text.UTF8Encoding]::new($false))\n$load=Start-Process -FilePath $proxifierExe -ArgumentList ('\"'+$proposed+'\" silent-load') -Wait -PassThru\nif($load.ExitCode -ne 0){throw \"PROXIFIER_LOAD_FAILED_$($load.ExitCode)\"}\n$o=[ordered]@{\n result='MCP_AVITO_READY';addedBrowser=$newBrowser;\n mainChromePid=[int]$primary[0].ProcessId;\n existingSecondChromePid=[int]$ordinarySecond[0].ProcessId;\n avitoMcpChromePid=[int]$managed[0].ProcessId;\n avitoMcpCdpPort=17447;procDirectPidCount=$pids.Count;\n mainChromeExcluded=$true;\n originalProxifierRulesUnchanged=$true;\n windowsSystemProxyUnchanged=$true;\n backupPath=$backup\n}\n$o|ConvertTo-Json -Compress -Depth 4\n'@\n$path=Join-Path $dir 'START_AVITO_MCP.ps1'\n[System.IO.File]::WriteAllText($path,$script,[System.Text.UTF8Encoding]::new($false))\n$cmdPath=Join-Path $dir 'START_AVITO_MCP.cmd'\n$cmd='@echo off'+[Environment]::NewLine+'powershell.exe -NoProfile -ExecutionPolicy Bypass -File \"%~dp0START_AVITO_MCP.ps1\"'+[Environment]::NewLine+'echo.'+[Environment]::NewLine+'pause'+[Environment]::NewLine\n[System.IO.File]::WriteAllText($cmdPath,$cmd,[System.Text.Encoding]::ASCII)\n$tok=$null;$err=$null\n[System.Management.Automation.Language.Parser]::ParseFile($path,[ref]$tok,[ref]$err)|Out-Null\nif(@($err).Count -gt 0){throw 'SCRIPT_PARSE_FAILED'}\n[ordered]@{status='created_not_executed';launcher=$cmdPath;scriptPath=$path;parseErrors=@($err).Count;liveProxyUnchanged=$true}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"status\":\"created_not_executed\",\"launcher\":\"E:\\\\PC-Control\\\\Proxifier-Avito-20261012\\\\START_AVITO_MCP.cmd\",\"scriptPath\":\"E:\\\\PC-Control\\\\Proxifier-Avito-20261012\\\\START_AVITO_MCP.ps1\",\"parseErrors\":0,\"liveProxyUnchanged\":true}\r\n",
+      "stdout_bytes": 229,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T12:07:46.432Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T12:07:46.256Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-managed-write-launcher-e02"
+    },
+    "request_id": "20261012-avito-managed-write-launcher-e02",
+    "started_at": "2026-10-12T12:07:45.571Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-managed-write-launcher-e02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
