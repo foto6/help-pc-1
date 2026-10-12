@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-extract-50-listings-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$js=@'\nlet ws;try{\nconst tabs=await(await fetch(\"http://127.0.0.1:17447/json/list\")).json();\nconst t=tabs.find(x=>x.url.startsWith(\"https://www.avito.ru/krasnoyarsk/\")&&x.webSocketDebuggerUrl);\nif(!t)throw Error(\"tab missing\");\nws=new WebSocket(t.webSocketDebuggerUrl);\nconst answer=await Promise.race([\nnew Promise((ok,bad)=>{\nws.addEventListener(\"open\",()=>{const expression=\"(()=>[...document.querySelectorAll('[data-marker=item]')].slice(0,50).map((el,i)=>({i,text:el.textContent.trim().replace(/\\\\s+/g,' ').slice(0,270),link:el.querySelector('a[href*=\\\"/krasnoyarsk/\\\"]')?.href||el.querySelector('a[href]')?.href||''})))()\";ws.send(JSON.stringify({id:84,method:\"Runtime.evaluate\",params:{expression,returnByValue:true}}))},{once:true});\nws.addEventListener(\"message\",e=>{let x=JSON.parse(e.data);if(x.id===84)ok(x.result?.result?.value||{error:x.error?.message})});\nws.addEventListener(\"error\",bad,{once:true})\n}),\nnew Promise((_,bad)=>setTimeout(()=>bad(Error(\"timeout\")),8000))\n]);\nconsole.log(JSON.stringify(answer))\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}))}\nif(ws)ws.close();process.exit(0)\n'@\n$tmp=Join-Path $env:TEMP 'pc-avito-listing-snippets-20261012.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,$js,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Read only public Avito search cards from user-authorized dedicated Chrome tab CDP 17447. Return short listing text and public URLs, no private browsing or credentials. No network config changes."
+}
