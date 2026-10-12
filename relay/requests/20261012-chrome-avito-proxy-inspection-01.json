@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-chrome-avito-proxy-inspection-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue'\n$o=[ordered]@{at=(Get-Date).ToUniversalTime().ToString('o')}\n$ps=@(Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\" -ErrorAction SilentlyContinue)\n$o.chromeCount=$ps.Count\n$o.chromeRoots=@($ps|Where-Object{$_.CommandLine -match '--user-data-dir=|--remote-debugging-port=|--proxy-(server|pac-url|bypass-list)|--no-proxy-server'}|ForEach-Object{\n $a=$_.CommandLine\n $p=[regex]::Match($a,'--remote-debugging-port(?:=|\\s+)(\\d+)')\n $d=[regex]::Match($a,'--user-data-dir(?:=|\\s+)(?:\"([^\"]+)\"|([^\\s]+))')\n $q=[regex]::Match($a,'--proxy-server(?:=|\\s+)(?:\"([^\"]+)\"|([^\\s]+))')\n [ordered]@{pid=$_.ProcessId;parentPid=$_.ParentProcessId;debugPort=if($p.Success){$p.Groups[1].Value}else{''};userDataDir=if($d.Success){if($d.Groups[1].Success){$d.Groups[1].Value}else{$d.Groups[2].Value}}else{''};proxyServerFlagPresent=$q.Success;proxyPacFlagPresent=($a -match '--proxy-pac-url');proxyBypassFlagPresent=($a -match '--proxy-bypass-list');noProxyServerFlagPresent=($a -match '--no-proxy-server')}\n})\n$o.osProxy=[ordered]@{}\ntry{$r=Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings' -ErrorAction Stop;$o.osProxy.proxyEnable=[int]$r.ProxyEnable;$o.osProxy.autoConfigUrlPresent=![string]::IsNullOrWhiteSpace([string]$r.AutoConfigURL);$o.osProxy.proxyServerConfigured=![string]::IsNullOrWhiteSpace([string]$r.ProxyServer)}catch{$o.osProxy.state='unknown'}\nforeach($port in @(17410,17447)){try{$r=Invoke-RestMethod -Uri ('http://127.0.0.1:'+ $port+'/json/version') -TimeoutSec 2;$o['cdp'+$port]=[ordered]@{available=$true;browser=$r.Browser}}catch{$o['cdp'+$port]=[ordered]@{available=$false}}}\n$o|ConvertTo-Json -Compress -Depth 6"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Read-only detect per-instance Chrome root startup flags (never output proxy server string or credentials), Windows proxy existence booleans, CDP ports. Do not change proxy settings or terminate processes."
+}
