@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$o=[ordered]@{stage='read_only_preflight';at=(Get-Date).ToUniversalTime().ToString('o')}\n$roots=@(Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\" -ErrorAction SilentlyContinue|Where-Object{([string]$_.CommandLine -notmatch '--type=')}|ForEach-Object{$cmd=[string]$_.CommandLine;$m=[regex]::Match($cmd,'--remote-debugging-port=(\\d+)');@{pid=$_.ProcessId;parent=$_.ParentProcessId;cdpPort=if($m.Success){$m.Groups[1].Value}else{'none'};userDataIsolated=($cmd -match '--user-data-dir=');isExistingManaged=($cmd -match 'AvitoDirectChrome-20261012')}});$o.chromeRoots=$roots\n$work='E:\\PC-Control\\Proxifier-Avito-20261012';$orig=Join-Path $env:APPDATA 'Proxifier4\\Profiles\\Default.ppx';$backup=Join-Path $work 'Default-original-backup.ppx';$o.configBackupExists=(Test-Path $backup);$o.originalMatchesBackup=if((Test-Path $orig) -and (Test-Path $backup)){(Get-FileHash $orig).Hash -eq (Get-FileHash $backup).Hash}else{$false}\n$o.proxifierRunning=!!(Get-Process Proxifier -ErrorAction SilentlyContinue)\nforeach($port in @(17410,17447)){try{$v=Invoke-RestMethod \"http://127.0.0.1:$port/json/version\" -TimeoutSec 2;$o[\"cdp$port\"]=$true}catch{$o[\"cdp$port\"]=$false}}\n$o|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"stage\":\"read_only_preflight\",\"at\":\"2026-10-12T12:05:52.3695998Z\",\"chromeRoots\":[{\"parent\":6400,\"pid\":16760,\"userDataIsolated\":true,\"isExistingManaged\":false,\"cdpPort\":\"17410\"},{\"parent\":9768,\"pid\":9148,\"userDataIsolated\":false,\"isExistingManaged\":false,\"cdpPort\":\"none\"}],\"configBackupExists\":true,\"originalMatchesBackup\":true,\"proxifierRunning\":true,\"cdp17410\":true,\"cdp17447\":false}\r\n",
+      "stdout_bytes": 388,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T12:05:54.982Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T12:05:54.794Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-mcp-preflight-e01"
+    },
+    "request_id": "20261012-avito-mcp-preflight-e01",
+    "started_at": "2026-10-12T12:05:51.792Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-mcp-preflight-e01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
