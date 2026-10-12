@@ -1,0 +1,171 @@
+{
+  "action": "windows.list",
+  "executor_result": {
+    "action": "windows.list",
+    "data": {
+      "windows": [
+        {
+          "app_name": null,
+          "hwnd": 397428,
+          "pid": 14820,
+          "title": "3-к. дом, 88 м² в аренду в Красноярске | Снять дом в Красноярске | Авито (7714813321) - Google Chrome",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 461510,
+          "pid": 17912,
+          "title": "C:\\WINDOWS\\system32\\cmd.exe",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 789906,
+          "pid": 17912,
+          "title": "C:\\WINDOWS\\SYSTEM32\\cmd.exe",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 7408472,
+          "pid": 17912,
+          "title": "C:\\WINDOWS\\system32\\cmd.exe",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 5771008,
+          "pid": 17912,
+          "title": "C:\\WINDOWS\\system32\\cmd.exe ",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 922022,
+          "pid": 26252,
+          "title": "downloads — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 2035502,
+          "pid": 20912,
+          "title": "Lightshot — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 5048524,
+          "pid": 6460,
+          "title": "Lightshot — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 198288,
+          "pid": 9768,
+          "title": "Neur0StoreCurator — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 65830,
+          "pid": 9768,
+          "title": "Program Manager",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 789194,
+          "pid": 11296,
+          "title": "Proxification Rules",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 197810,
+          "pid": 11296,
+          "title": "SecondChrome-And-AvitoMCP-Direct-PIDs - Proxifier",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 460520,
+          "pid": 17340,
+          "title": "Диспетчер задач",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 262574,
+          "pid": 15392,
+          "title": "Интерфейс ввода Windows",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 3017014,
+          "pid": 15256,
+          "title": "Калькулятор",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 658202,
+          "pid": 17912,
+          "title": "Командная строка - agy",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 131446,
+          "pid": 15256,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 196760,
+          "pid": 6244,
+          "title": "Настройки",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 789926,
+          "pid": 14644,
+          "title": "Поиск домов Красноярск - Google Chrome",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 461786,
+          "pid": 18504,
+          "title": "Этот компьютер — проводник",
+          "visible": true
+        },
+        {
+          "app_name": null,
+          "hwnd": 67390,
+          "pid": 15384,
+          "title": "‎Носок С мылом (1328596)",
+          "visible": true
+        }
+      ]
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:19:56.185Z",
+    "ok": true,
+    "request_id": "20261012-birthday-windows-list-r014",
+    "started_at": "2026-10-12T16:19:56.180Z",
+    "status": "completed"
+  },
+  "id": "20261012-birthday-windows-list-r014",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
