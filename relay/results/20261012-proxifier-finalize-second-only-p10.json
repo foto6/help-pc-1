@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$work='E:\\PC-Control\\Proxifier-Avito-20261012'\n$script=Join-Path $work 'REFRESH_SECOND_CHROME_DIRECT.ps1'\nif(!(Test-Path $script)){throw 'SCRIPT_MISSING'}\n$output=(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script 2>&1 |Out-String)\n$exitCode=$LASTEXITCODE\nif($exitCode -ne 0){throw \"REFRESH_FAILED_WITH_EXIT_CODE_$exitCode\"}\n[xml]$profile=Get-Content -LiteralPath (Join-Path $work 'SecondChrome-Direct-PIDs.ppx') -Raw\n$rule=$profile.SelectNodes('//*[local-name()=\"Rule\"]')[0]\n$txt=$rule.SelectSingleNode('./Applications').InnerText\n$ids=@([regex]::Matches($txt,'pid=(\\d+)')|ForEach-Object{[int]$_.Groups[1].Value})\nif((16760 -in $ids) -or (9316 -in $ids) -or !(9148 -in $ids)){throw 'PID_LIST_BAD'}\n$o=[ordered]@{refreshSucceeded=$true;mainChromeExcluded=$true;isolatedTestChromeExcluded=$true;secondChromeIncluded=$true;perSessionPidCount=$ids.Count}\n$c=Get-CimInstance Win32_Process -Filter 'ProcessId=9316' -ErrorAction SilentlyContinue\nif($c -and $c.Name -eq 'chrome.exe' -and $c.CommandLine -match 'remote-debugging-port=17447' -and $c.CommandLine -match 'AvitoDirectChrome-20261012'){Stop-Process -Id 9316 -ErrorAction Stop;$o.temporaryTestChromeStopped=$true}else{$o.temporaryTestChromeStopped=$false}\n$o.mainAndSecondChromeNotTerminated=$true\n$o|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"refreshSucceeded\":true,\"mainChromeExcluded\":true,\"isolatedTestChromeExcluded\":true,\"secondChromeIncluded\":true,\"perSessionPidCount\":11,\"temporaryTestChromeStopped\":true,\"mainAndSecondChromeNotTerminated\":true}\r\n",
+      "stdout_bytes": 213,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T11:56:46.038Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T11:56:45.843Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-proxifier-finalize-second-only-p10"
+    },
+    "request_id": "20261012-proxifier-finalize-second-only-p10",
+    "started_at": "2026-10-12T11:56:43.311Z",
+    "status": "completed"
+  },
+  "id": "20261012-proxifier-finalize-second-only-p10",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
