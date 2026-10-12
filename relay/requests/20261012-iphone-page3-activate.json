@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-page3-activate",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-page3.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"timeout\"}');process.exit(0)},6000);\ntry{const v=await(await fetch('http://127.0.0.1:17447/json/version')).json();const w=new WebSocket(v.webSocketDebuggerUrl);w.addEventListener('open',()=>w.send(JSON.stringify({id:1,method:'Target.activateTarget',params:{targetId:'D229F01C94F7F6DF012309BB4CE211CD'}})),{once:true});w.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===1){console.log(JSON.stringify({activated:!!z.result,error:z.error?.message||null}));process.exit(0)}})}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Activate only our own open page3 public Avito iPhone 16 Pro Max target for visual research; no other Chrome/profile/proxy changes."
+}
