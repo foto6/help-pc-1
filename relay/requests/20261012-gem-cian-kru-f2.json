@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-gem-cian-kru-f2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$js=@'\nconst v=await(await fetch(\"http://127.0.0.1:17410/json/version\")).json();\nconst ws=new WebSocket(v.webSocketDebuggerUrl);\nawait new Promise((yes,no)=>{ws.addEventListener(\"open\",yes,{once:true});ws.addEventListener(\"error\",no,{once:true})});\nws.addEventListener(\"message\",e=>{let x=JSON.parse(e.data);if(x.id===1){console.log(JSON.stringify({target_id:x.result?.targetId||null,error:x.error?.code||null}));ws.close();process.exit(0)}});\nws.send(JSON.stringify({id:1,method:\"Target.createTarget\",params:{url:\"https://krasnoyarsk.cian.ru/rent/suburban/292108973/\",background:true,newWindow:false}}));\nsetTimeout(()=>process.exit(1),5500)\n'@\n$p=Join-Path $env:TEMP 'pc-cian-kru-mcp.mjs'\ntry{[System.IO.File]::WriteAllText($p,$js,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item -LiteralPath $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Open public Cian listing in existing managed 17410 Chrome as background tab without changing focus, no proxy edits or private page screenshots."
+}
