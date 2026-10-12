@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import socket,ssl,urllib.request,urllib.error,json,time,os\nout={'probes':[]}\ndef try_connect(port):\n t=time.monotonic(); result={'local_port':port}\n try:\n  s=socket.create_connection(('127.0.0.1',port),timeout=2);s.settimeout(2)\n  s.sendall(b'CONNECT api.telegram.org:443 HTTP/1.1\\r\\nHost: api.telegram.org:443\\r\\n\\r\\n')\n  b=s.recv(170)\n  result['prefix']=b.decode('latin1','replace').split('\\r\\n')[0][:100]\n except Exception as e:result['error']=type(e).__name__\n finally:\n  try:s.close()\n  except:pass\n result['elapsed_ms']=round((time.monotonic()-t)*1000)\n out['probes'].append(result)\nfor port in (8000,1443):try_connect(port)\ntry:\n t=time.monotonic()\n opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))\n with opener.open('https://api.telegram.org',timeout=5) as response:out['direct_telegram']={'http':response.status,'ms':round((time.monotonic()-t)*1000)}\nexcept urllib.error.HTTPError as e:out['direct_telegram']={'http':e.code}\nexcept Exception as e:out['direct_telegram']={'error':type(e).__name__,'reason_type':str(e.reason.__class__.__name__) if hasattr(e,'reason') else ''}\nprint(json.dumps(out,ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"probes\": [{\"local_port\": 8000, \"prefix\": \"HTTP/1.1 404 Not Found\", \"elapsed_ms\": 99}, {\"local_port\": 1443, \"error\": \"TimeoutError\", \"elapsed_ms\": 2001}], \"direct_telegram\": {\"error\": \"URLError\", \"reason_type\": \"TimeoutError\"}}\r\n",
+      "stdout_bytes": 230,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:20:41.521Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:20:41.319Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-curator-proxy-connectivity-2317-02"
+    },
+    "request_id": "20261012-curator-proxy-connectivity-2317-02",
+    "started_at": "2026-10-12T16:20:33.565Z",
+    "status": "completed"
+  },
+  "id": "20261012-curator-proxy-connectivity-2317-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
