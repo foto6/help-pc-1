@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261013-avito-home-120-calendar-r41",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 4;$t=@($tabs|Where-Object{$_.id -eq 'F6789E1F2FBBA22807E8FD964FF1DBDD'})[0];$w=[Net.WebSockets.ClientWebSocket]::new();try{$ct=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(5));$null=$w.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$ct.Token).GetAwaiter().GetResult();$i=410;foreach($ty in @('mousePressed','mouseReleased')){$cmd=@{id=$i;method='Input.dispatchMouseEvent';params=@{type=$ty;x=862;y=410;button='left';clickCount=1}}|ConvertTo-Json -Compress -Depth 5;$b=[Text.Encoding]::UTF8.GetBytes($cmd);$null=$w.SendAsync([ArraySegment[byte]]::new($b),[Net.WebSockets.WebSocketMessageType]::Text,$true,$ct.Token).GetAwaiter().GetResult();$i++};@{sent=$true;target='F6789E1F2FBBA22807E8FD964FF1DBDD'}|ConvertTo-Json -Compress}finally{$w.Dispose()}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Open date picker only in public 120m rental page to inspect availability; no booking."
+}
