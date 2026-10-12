@@ -1,0 +1,46 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "register.py"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "Existing managed chats: 6 ; candidate: 7\r\nExisting curator registration: False\r\nChatGPT exact profile debug port: 17410\r\nOther agent bindings unchanged (planned).\r\nREAD_ONLY_PREVIEW_OK; use REGISTER_CURATOR.cmd to approve a write.\r\n",
+      "stdout_bytes": 232,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T15:57:46.492Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T15:57:46.295Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-neur0store-curator-binding-readonly-r01"
+    },
+    "request_id": "20261012-neur0store-curator-binding-readonly-r01",
+    "started_at": "2026-10-12T15:57:45.559Z",
+    "status": "completed"
+  },
+  "id": "20261012-neur0store-curator-binding-readonly-r01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
