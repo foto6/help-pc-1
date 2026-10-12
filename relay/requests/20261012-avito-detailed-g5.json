@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-detailed-g5",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-g5-scroll.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet a=[];let v=await(await fetch('http://127.0.0.1:17447/json/list')).json();for(const id of [\"38AC30F9B71FDC33019DBD7A9309EAB2\",\"0A8A2242C74C03B63EEBEDB89441D7D7\",\"88F33FF7CE7B171A51416C6F60D5A429\"]){let t=v.find(x=>x.id===id);if(!t)continue;let ws=new WebSocket(t.webSocketDebuggerUrl);try{let x=await Promise.race([new Promise((ok,bad)=>{ws.addEventListener('open',()=>ws.send(JSON.stringify({id:12,method:'Runtime.evaluate',params:{expression:'window.scrollTo(0,650);window.scrollY',returnByValue:true}})),{once:true});ws.addEventListener('message',e=>{let z=JSON.parse(e.data);if(z.id===12)ok(z.result?.result?.value||0)});ws.addEventListener('error',bad,{once:true})}),new Promise((_,rej)=>setTimeout(()=>rej(Error('timeout')),2800))]);a.push({id,scroll:x})}catch(e){a.push({id,error:'timeout'})}ws.close()}console.log(JSON.stringify(a));process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Scroll 3 public rental listings in managed Avito Chrome for visual review of description, rules, additional fees; no other browser tabs or system changes."
+}
