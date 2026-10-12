@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-chrome-avito-root-detect-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$c=@(Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\" -ErrorAction Stop);$o=[ordered]@{total=$c.Count};$o.rootLike=@($c|Where-Object{$_.CommandLine -notmatch '--type='}|ForEach-Object{$a=[string]$_.CommandLine;$p=[regex]::Match($a,'--remote-debugging-port=(\\d+)');$d=[regex]::Match($a,'--user-data-dir=(?:\"([^\"]+)\"|([^\\s]+))');[ordered]@{pid=$_.ProcessId;parent=$_.ParentProcessId;port=if($p.Success){$p.Groups[1].Value}else{'none'};dataDirIsolated=($d.Success);chromeExePath=$_.ExecutablePath;proxyFlag=($a -match '--proxy-server');noProxy=($a -match '--no-proxy-server');proxyPac=($a -match '--proxy-pac-url');windowTitle=[string]($_.Name)}});$o.systemProxy=@{};try{$r=Get-ItemProperty 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings';$o.systemProxy=@{winProxyEnabled=$r.ProxyEnable;autoConfigSet=!!$r.AutoConfigURL;serverSet=!!$r.ProxyServer}}catch{};$o|ConvertTo-Json -Depth 6 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only inspect Chrome root processes only, explicit proxy flag booleans and Windows proxy enablement. No paths for profiles, no network endpoint strings, no credentials."
+}
