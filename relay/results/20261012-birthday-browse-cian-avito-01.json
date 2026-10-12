@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$js=@'\nconst port=17410;\nconst urls=[\n\"https://krasnoyarsk.cian.ru/rent/suburban/292875313/\",\n\"https://krasnoyarsk.cian.ru/rent/suburban/289887922/\",\n\"https://krasnoyarsk.cian.ru/rent/suburban/248493503/\",\n\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno\",\n\"https://krasnoyarsk.sutochno.ru/houses\"\n];\nconst info=await (await fetch(\"http://127.0.0.1:\"+port+\"/json/version\")).json();\nconst ws=new WebSocket(info.webSocketDebuggerUrl);\nawait new Promise((resolve,reject)=>{ws.addEventListener(\"open\",resolve,{once:true});ws.addEventListener(\"error\",reject,{once:true})});\nlet idx=0; const pending=new Map();\nws.addEventListener(\"message\",e=>{try{const x=JSON.parse(e.data);if(x.id&&pending.has(x.id)){const f=pending.get(x.id);pending.delete(x.id);f(x)}}catch{}});\nconst send=(method,params)=>new Promise((res,rej)=>{const id=++idx;pending.set(id,res);ws.send(JSON.stringify({id,method,params}));setTimeout(()=>{if(pending.has(id)){pending.delete(id);rej(Error(\"CDP_TIMEOUT\"))}},7000)});\nlet results=[];\nfor(const url of urls){try{const x=await send(\"Target.createTarget\",{url,background:true,newWindow:false});results.push({url,ok:!!x.result?.targetId,target_id:x.result?.targetId||null,error_code:x.error?.code||null});}catch(e){results.push({url,error:String(e).slice(0,60)})}}\nws.close();console.log(JSON.stringify({results}));\n'@\n& node.exe -e $js"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "[eval]:3\r\nhttps://krasnoyarsk.cian.ru/rent/suburban/292875313/,\r\n     ^\r\nExpected ',', got ':'\r\n\r\nSyntaxError: Unexpected token ':'\r\n    at makeContextifyScript (node:internal/vm:194:14)\r\n    at compileScript (node:internal/process/execution:388:10)\r\n    at evalTypeScript (node:internal/process/execution:260:22)\r\n    at node:internal/main/eval_string:71:3\r\n\r\nNode.js v24.18.0\r\n",
+      "stderr_bytes": 379,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T11:16:01.998Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T11:16:01.810Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-birthday-browse-cian-avito-01"
+    },
+    "request_id": "20261012-birthday-browse-cian-avito-01",
+    "started_at": "2026-10-12T11:16:01.169Z",
+    "status": "completed"
+  },
+  "id": "20261012-birthday-browse-cian-avito-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
