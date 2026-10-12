@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-15pm256-prices-sample-05",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-15pm256-public-prices-05.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"hard_timeout\"}');process.exit(0)},9300);\ntry{const a=await(await fetch('http://127.0.0.1:17447/json/list')).json();const t=a.find(x=>x.id==='FD23CE5B5AF8CEC45BAE8D8AB673A2FD');if(!t)throw Error('target_missing');const w=new WebSocket(t.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:\"(()=>{const a=document.querySelectorAll('[data-marker=item]');let out=[];for(const i of [0,1,2,3,4,5,7,10,13,17,21,25,30,35,40]){const e=a[i];if(!e)continue;const n=e.querySelector('[itemprop=name]'),p=e.querySelector('[itemprop=price]'),l=e.querySelector('[data-marker=item-title]');out.push([i,e.getAttribute('data-item-id'),n?.textContent?.trim(),p?.getAttribute('content'),l?.getAttribute('href')?.split('?')[0]]);}return{url:location.href,count:a.length,rows:out};})()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===1){console.log(JSON.stringify(z.result?.result?.value||{error:z.error?.message||z.result?.exceptionDetails?.text||'empty'}));process.exit(0)}});\nw.addEventListener('error',()=>{console.log('{\"error\":\"ws_error\"}');process.exit(0)},{once:true})\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Read-only sampling 15 publicly visible iPhone 15 Pro Max 256 GB listing prices and public paths on authorized Chrome private seller sorted page. No personal data, messages or navigation."
+}
