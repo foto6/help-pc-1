@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "from pathlib import Path\np=Path('E:/Neur0StoreCurator/MTProto-START-HERE.txt')\ns=\"Neur0Store Curator — Telegram MTProto\\nSTATUS: MTProto TGWS network is working, bot is NOT paired yet.\\n\\n1. Telegram @BotFather: /revoke on @Neur0Store_bot, keep new token PRIVATE.\\n2. Open https://my.telegram.org/apps in browser. Create API application, copy api_id and api_hash LOCALLY (never send into chats).\\n3. Double-click E:\\\\Neur0StoreCurator\\\\SETUP_MTPROTO.cmd.\\n   Type only ROTATED when asked, then enter api_id / api_hash / NEW token via hidden local prompts.\\n4. In @Neur0Store_bot chat send exact /start <CODE> printed by local program.\\n5. Run CHECK_MTPROTO.cmd then START_MTPROTO.cmd. Leave its window open.\\n6. Send in Telegram: /task Проверить статус Bridge и шести агентов\\n   /status shows queue receipt, /health shows gateway status.\\n\\nTGWSProxy: 127.0.0.1:1443. Its secret is read locally and never printed.\\nMTProto bot token + API hash + session are encrypted with Windows CurrentUser DPAPI.\\nBridge curator is already registered; other six agent chats unchanged.\\nNo public webhook, Telegram HTTPS Bot API or proxy reconfiguration.\\nAutostart is NOT enabled until one real delivery canary passes.\\nUNKNOWN ChatGPT send is never blindly repeated.\\n\\nVerified offline tests: 24 passed; Telethon v1.45.0 installed in isolated .venv.\\nVerified real TGWS MTProto transport handshake: connected true (WITHOUT bot login).\\nNever paste Telegram token, api_hash or TGWS secret into ChatGPT.\\n\"\nif p.exists():\n if p.read_text(encoding='utf8')!=s:raise RuntimeError('user_modified_start_guide')\n print('START_HERE_ALREADY_CURRENT')\nelse:\n with p.open('x',encoding='utf8',newline='') as f:f.write(s)\n print('START_HERE_FILE_INSTALLED')\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "START_HERE_FILE_INSTALLED\r\n",
+      "stdout_bytes": 27,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:53:33.706Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:53:33.472Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-neur0store-mtproto-start-guide-r11"
+    },
+    "request_id": "20261012-neur0store-mtproto-start-guide-r11",
+    "started_at": "2026-10-12T16:53:32.901Z",
+    "status": "completed"
+  },
+  "id": "20261012-neur0store-mtproto-start-guide-r11",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
