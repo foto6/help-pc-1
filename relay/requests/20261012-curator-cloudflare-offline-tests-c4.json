@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-curator-cloudflare-offline-tests-c4",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import sys,unittest\nsys.path.insert(0,r'E:\\Neur0StoreCurator')\nfor name in ('cloudflare_transport','setup_cloudflare','cloudflare_gateway','check_cloudflare'):\n __import__(name)\nsuite=unittest.defaultTestLoader.discover(r'E:\\Neur0StoreCurator',pattern='test_*.py')\nr=unittest.TextTestRunner(verbosity=1).run(suite)\nprint('CLOUDFLARE_FALLBACK_OFFLINE_TESTS',r.testsRun,'FAILURES',len(r.failures),'ERRORS',len(r.errors))\nsys.exit(0 if r.wasSuccessful() else 1)"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 18000,
+  "note": "Offline unit tests for Cloudflare Worker optional transport plus existing MTProto/SQLite module, no credential use, no internet calls."
+}
