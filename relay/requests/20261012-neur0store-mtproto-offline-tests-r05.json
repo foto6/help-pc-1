@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-neur0store-mtproto-offline-tests-r05",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import sys,unittest\nsys.path.insert(0,r'E:\\Neur0StoreCurator')\nfor name in ('daemon','secrets_store','mtproto_common','setup_mtproto','mtproto_gateway','mtproto_preflight','telegram_transport'):\n __import__(name)\nsuite=unittest.defaultTestLoader.discover(r'E:\\Neur0StoreCurator',pattern='test_*.py')\nres=unittest.TextTestRunner(verbosity=1).run(suite)\nprint('TESTS_RAN',res.testsRun,'FAILURES',len(res.failures),'ERRORS',len(res.errors))\nsys.exit(0 if res.wasSuccessful() else 1)\n"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 14000,
+  "note": "Offline syntax checks and all MTProto/Telegram SQLite tests; no Telethon login, no secrets or network."
+}
