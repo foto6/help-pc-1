@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "from pathlib import Path\np=Path('E:/Neur0StoreCurator/proxy_preflight.py')\ns=\"\\\"\\\"\\\"Credential-free Bot API connectivity test. Run interactively on owner's PC.\\\"\\\"\\\"\\nimport getpass, os, sys, urllib.error, urllib.request\\nfrom telegram_transport import open_telegram, parse_proxy, ProxyTransportError\\n\\ndef main():\\n    print(\\\"Bot API uses HTTPS; TGWS MTProto 127.0.0.1:1443 is NOT an HTTP CONNECT/SOCKS5 proxy.\\\")\\n    print(\\\"Use a real HTTP CONNECT or SOCKS5h proxy URL; leave empty to test direct access.\\\")\\n    entered=getpass.getpass(\\\"HTTP/SOCKS5h proxy URL (hidden, optional): \\\").strip()\\n    try:parse_proxy(entered)\\n    except ProxyTransportError as e:\\n        print(\\\"PROXY_INVALID:\\\"+str(e));return 2\\n    req=urllib.request.Request(\\\"https://api.telegram.org/\\\")\\n    try:\\n        with open_telegram(req,proxy=entered,timeout=8) as r:\\n            print(\\\"TELEGRAM_BOT_API_TRANSPORT_REACHABLE; HTTPS status=\\\"+str(r.status))\\n        return 0\\n    except urllib.error.HTTPError as e:\\n        # An HTTP status proves HTTPS routing succeeded even if root endpoint doesn't exist.\\n        print(\\\"TELEGRAM_BOT_API_TRANSPORT_REACHABLE; HTTPS status=\\\"+str(e.code))\\n        return 0\\n    except ProxyTransportError as e:\\n        print(\\\"PROXY_REJECTED:\\\"+str(e));return 2\\n    except (OSError,urllib.error.URLError,TimeoutError) as e:\\n        print(\\\"HTTPS_CONNECTIVITY_FAILED:\\\"+type(e).__name__);return 2\\n\\nif __name__==\\\"__main__\\\":sys.exit(main())\\n\"\nif p.exists():\n if p.read_text(encoding='utf8')!=s:raise RuntimeError('existing_file_not_ours')\n print('ALREADY_CURRENT')\nelse:\n with p.open('x',encoding='utf8',newline='') as f:f.write(s)\n print('INSTALLED_proxy_preflight.py')"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "INSTALLED_proxy_preflight.py\r\n",
+      "stdout_bytes": 30,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:28:44.713Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:28:44.505Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-curator-preflight-install-proxy-preflight-py-01"
+    },
+    "request_id": "20261012-curator-preflight-install-proxy-preflight-py-01",
+    "started_at": "2026-10-12T16:28:43.880Z",
+    "status": "completed"
+  },
+  "id": "20261012-curator-preflight-install-proxy-preflight-py-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
