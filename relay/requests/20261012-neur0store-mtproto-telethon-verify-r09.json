@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-neur0store-mtproto-telethon-verify-r09",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,sys,json,pathlib\np=pathlib.Path('E:/Neur0StoreCurator/.venv/Scripts/python.exe')\nchecks=[\n [str(p),'-m','unittest','discover','-s','E:/Neur0StoreCurator','-p','test_*.py'],\n [str(p),'-c',\"import sys;sys.path.insert(0,'E:/Neur0StoreCurator');from mtproto_common import client_for,proxy_config; h,p,s=proxy_config();c=client_for(10000,'0'*32); print('TELETHON_MTPROTO_CLIENT_CONSTRUCTED',type(c).__name__,'proxy_port',p,'secret_not_exposed');c.session.close()\"]\n]\nfor index,argv in enumerate(checks):\n r=subprocess.run(argv,timeout=20,capture_output=True,text=True)\n print('CHECK_'+str(index+1)+'_EXIT',r.returncode)\n if index==0:\n  print('UNIT_SUMMARY',r.stderr.splitlines()[-2:] if r.stderr else [])\n else:print('CLIENT_SUMMARY',r.stdout.strip()[:220])\n if r.returncode:\n  print('ERROR_TYPE',r.stderr.splitlines()[-1][:200] if r.stderr else 'no_stderr')\n  sys.exit(r.returncode)\n"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 45000,
+  "note": "Verify all MTProto unit tests and create a dummy Telethon MTProxy client with local config in isolated venv; no Telegram login, no secret print."
+}
