@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$o=@();foreach($url in @('https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_76_m_8358148190?guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D&checkIn=2026-11-03&checkOut=2026-11-04','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/4-k._dom_70_m_4698340709?guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D&checkIn=2026-11-03&checkOut=2026-11-04')){try{$t=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17447/json/new?'+[Uri]::EscapeDataString($url)) -TimeoutSec 8;$o+=@{id=$t.id;url=$t.url}}catch{$o+=@{url=$url;error=$_.Exception.Message}}};$o|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"3F377E3C0DFD0E1D67A7C71367A07D96\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_76_m_8358148190?guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D\\u0026checkIn=2026-11-03\\u0026checkOut=2026-11-04\"},{\"id\":\"20EE7DEEB9170B997BE6051EBA9A5569\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/4-k._dom_70_m_4698340709?guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D\\u0026checkIn=2026-11-03\\u0026checkOut=2026-11-04\"}]\r\n",
+      "stdout_bytes": 587,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:14:54.756Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:14:54.467Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-avito-home-two-ten-guests-r13"
+    },
+    "request_id": "20261013-avito-home-two-ten-guests-r13",
+    "started_at": "2026-10-12T17:14:53.573Z",
+    "status": "completed"
+  },
+  "id": "20261013-avito-home-two-ten-guests-r13",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
