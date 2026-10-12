@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "FileNotFoundError: [WinError 206] Имя файла или его расширение имеет слишком большую длину",
+    "error_kind": "executor_failure",
+    "finished_at": "2026-10-12T15:53:34.100Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "unknown",
+      "observed_at": "2026-10-12T15:53:33.896Z",
+      "reason": "executor_failure",
+      "reconciliation_required": true,
+      "reexecution_safe": false,
+      "request_id": "20261012-curator-secure-wizard-tests-2215-07"
+    },
+    "request_id": "20261012-curator-secure-wizard-tests-2215-07",
+    "started_at": "2026-10-12T15:53:33.479Z",
+    "status": "error"
+  },
+  "id": "20261012-curator-secure-wizard-tests-2215-07",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
