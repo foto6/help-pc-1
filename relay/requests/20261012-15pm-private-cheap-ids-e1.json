@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-15pm-private-cheap-ids-e1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-15pm-private-cheap-e1.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"timeout\"}');process.exit(0)},7500);try{const t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id==='2A718006A9ABE5D947BA203590E7188E');if(!t)throw Error('tab_missing');const w=new WebSocket(t.webSocketDebuggerUrl);w.addEventListener('open',()=>w.send(JSON.stringify({id:8,method:'Runtime.evaluate',params:{expression:\"(()=>{const a=document.querySelectorAll('[data-marker=item]'),rows=[];for(let i=0;i<8;i++){let e=a[i];if(!e)break;rows.push({id:e.getAttribute('data-item-id'),name:e.querySelector('[itemprop=name]')?.textContent?.trim()||'',price:e.querySelector('[itemprop=price]')?.getAttribute('content'),url:e.querySelector('[data-marker=item-title]')?.getAttribute('href')?.split('?')[0],detail:e.textContent?.replace(/\\\\s+/g,' ').slice(0,240)})}return {page:location.href,count:a.length,rows}})()\",returnByValue:true}})),{once:true});w.addEventListener('message',e=>{let z=JSON.parse(e.data);if(z.id===8){console.log(JSON.stringify(z.result?.result?.value||{error:z.error?.message||'no_value'}));process.exit(0)}});}catch(e){console.log(JSON.stringify({error:String(e).slice(0,110)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Read only first eight PUBLIC 15 Pro Max lowest-price private-filter listings with public links and snippets in own browser tab. No contact, account, or system changes."
+}
