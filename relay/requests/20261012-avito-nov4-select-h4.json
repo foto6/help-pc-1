@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-nov4-select-h4",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-select-h4.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{const tabs=await(await fetch('http://127.0.0.1:17447/json/list')).json();let t=tabs.find(x=>x.id===\"38AC30F9B71FDC33019DBD7A9309EAB2\");ws=new WebSocket(t.webSocketDebuggerUrl);let z=await Promise.race([new Promise((ok,no)=>{ws.addEventListener('open',()=>ws.send(JSON.stringify({id:51,method:'Runtime.evaluate',params:{expression:\"(()=>{let e=document.elementFromPoint(1059,440);let txt=e?.textContent?.trim()?.slice(0,40)||'';e?.click();return {tag:e?.tagName,text:txt}})()\",returnByValue:true}})),{once:true});ws.addEventListener('message',e=>{let x=JSON.parse(e.data);if(x.id===51)ok(x.result?.result?.value||{})});ws.addEventListener('error',no,{once:true})}),new Promise((_,j)=>setTimeout(()=>j(Error('timeout')),5400))]);console.log(JSON.stringify(z))}catch(e){console.log(JSON.stringify({err:String(e).slice(0,90)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13000,
+  "note": "Set Nov4 check-out for exploratory Nov3 overnight price on public Avito listing only; do not complete reservations or submit booking."
+}
