@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-birthday-cdp-wheel88-r018",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$o=[ordered]@{step='start';wheels=0};$ws=$null;try{$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 5;$t=@($tabs|Where-Object {$_.id -eq '8682F60C59EAE3EF9CF12DCE711A647B'})[0];$ws=[System.Net.WebSockets.ClientWebSocket]::new();$token=[System.Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(5));$null=$ws.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$token.Token).GetAwaiter().GetResult();for($k=0;$k -lt 3;$k++){$c=@{id=(700+$k);method='Input.dispatchMouseEvent';params=@{type='mouseWheel';x=850;y=600;deltaY=620;deltaX=0}}|ConvertTo-Json -Compress -Depth 6;$bytes=[Text.Encoding]::UTF8.GetBytes($c);$null=$ws.SendAsync([ArraySegment[byte]]::new($bytes),[System.Net.WebSockets.WebSocketMessageType]::Text,$true,$token.Token).GetAwaiter().GetResult();$o.wheels++;Start-Sleep -Milliseconds 160};$o.step='sent'}catch{$o.error=$_.Exception.Message}finally{if($ws){$ws.Dispose()}};$o|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Only scroll user-authorized public house88 Chrome tab through CDP mouseWheel, do not click or type."
+}
