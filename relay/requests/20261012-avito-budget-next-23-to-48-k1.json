@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-budget-next-23-to-48-k1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-budgets-k1.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{const a=await(await fetch('http://127.0.0.1:17447/json/list')).json();const t=a.find(x=>x.id===\"0E020825CF96957FA4AD787C7C2F5C65\");ws=new WebSocket(t.webSocketDebuggerUrl);let res=await Promise.race([new Promise((resolve,reject)=>{ws.addEventListener('open',()=>ws.send(JSON.stringify({id:4,method:'Runtime.evaluate',params:{expression:\"(()=>{window.scrollTo(0,3200);let q=[...document.querySelectorAll('[data-marker=item]')];return {scroll:window.scrollY,totalDOM:q.length,list:q.slice(20,52).map(x=>({id:x.getAttribute('data-item-id'),t:(x.textContent||'').replace(/\\\\s+/g,' ').slice(0,190)}))}})()\",returnByValue:true}})),{once:true});ws.addEventListener('message',e=>{let x=JSON.parse(e.data);if(x.id===4)resolve(x.result?.result?.value||{err:x.error?.message})});ws.addEventListener('error',reject,{once:true})}),new Promise((_,no)=>setTimeout(()=>no(Error(\"timeout\")),9000))]);console.log(JSON.stringify(res))}catch(e){console.log(JSON.stringify({error:String(e).slice(0,180)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22500,
+  "note": "Read publicly listed Avito house search cards 20-52 in assistant-managed Chrome after scrolling to 3200, only title/price information, no private data or network changes."
+}
