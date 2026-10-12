@@ -1,0 +1,14 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-neur0store-curator-binding-readonly-r01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "register.py"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 16000,
+  "note": "Read-only exact existing curator ChatGPT tab, Chrome profile, and managed-chat list preflight; do not mutate config."
+}
