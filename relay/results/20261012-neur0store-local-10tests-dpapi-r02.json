@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import unittest,sys,tempfile,os\nsys.path.insert(0,r'E:\\Neur0StoreCurator')\nsuite=unittest.defaultTestLoader.discover(r'E:\\Neur0StoreCurator',pattern='test_daemon.py')\nr=unittest.TextTestRunner(verbosity=2).run(suite)\nif not r.wasSuccessful():sys.exit(1)\nfrom secrets_store import write,read\nwith tempfile.TemporaryDirectory() as t:\n f=os.path.join(t,'dummy.dpapi');write({'synthetic_key':'synthetic_value'},f)\n assert read(f)=={'synthetic_key':'synthetic_value'}\nprint('WINDOWS_DPAPI_SYNTHETIC_ROUNDTRIP_OK')"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "test_authorized_task_is_durable_and_acknowledged (test_daemon.GatewayTests.test_authorized_task_is_durable_and_acknowledged) ... ok\r\ntest_blocked_assignment_no_replay (test_daemon.GatewayTests.test_blocked_assignment_no_replay) ... ok\r\ntest_duplicate_update_persists_exactly_once (test_daemon.GatewayTests.test_duplicate_update_persists_exactly_once) ... ok\r\ntest_no_configuration_fails_closed (test_daemon.GatewayTests.test_no_configuration_fails_closed) ... ok\r\ntest_offset_does_not_decrease (test_daemon.GatewayTests.test_offset_does_not_decrease) ... ok\r\ntest_queued_receipt_not_conflated_with_send (test_daemon.GatewayTests.test_queued_receipt_not_conflated_with_send) ... ok\r\ntest_stable_dedup_key (test_daemon.GatewayTests.test_stable_dedup_key) ... ok\r\ntest_unknown_outcome_never_resends (test_daemon.GatewayTests.test_unknown_outcome_never_resends) ... ok\r\ntest_unknown_stays_unknown (test_daemon.GatewayTests.test_unknown_stays_unknown) ... ok\r\ntest_wrong_telegram_sender_rejected (test_daemon.GatewayTests.test_wrong_telegram_sender_rejected) ... ok\r\n\r\n----------------------------------------------------------------------\r\nRan 10 tests in 0.137s\r\n\r\nOK\r\n",
+      "stderr_bytes": 1166,
+      "stderr_truncated": false,
+      "stdout": "WINDOWS_DPAPI_SYNTHETIC_ROUNDTRIP_OK\r\n",
+      "stdout_bytes": 38,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T15:57:18.846Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T15:57:18.604Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-neur0store-local-10tests-dpapi-r02"
+    },
+    "request_id": "20261012-neur0store-local-10tests-dpapi-r02",
+    "started_at": "2026-10-12T15:57:17.743Z",
+    "status": "completed"
+  },
+  "id": "20261012-neur0store-local-10tests-dpapi-r02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
