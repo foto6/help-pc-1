@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-109-rules-j3",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito109-j3.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{const tt=await(await fetch('http://127.0.0.1:17447/json/list')).json();const t=tt.find(x=>x.id===\"4188CC815B5E45BA65B495367CE84D01\");ws=new WebSocket(t.webSocketDebuggerUrl);let x=await Promise.race([new Promise((ok,no)=>{ws.addEventListener('open',()=>ws.send(JSON.stringify({id:12,method:'Runtime.evaluate',params:{expression:'window.scrollTo(0,1050);window.scrollY',returnByValue:true}})),{once:true});ws.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===12)ok(z.result?.result?.value||0)});ws.addEventListener('error',no,{once:true})}),new Promise((_,j)=>setTimeout(()=>j(Error('timeout')),4000))]);console.log(JSON.stringify({y:x}))}catch(e){console.log(JSON.stringify({err:String(e).slice(0,110)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13000,
+  "note": "Scroll public Avito 109 sqm house listing to rules on isolated user-authorized Chrome only; no booking/payment/proxy changes."
+}
