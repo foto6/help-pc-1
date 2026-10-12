@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-locations-i2.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet out=[];let v=await(await fetch('http://127.0.0.1:17447/json/list')).json();for(const [id,y] of [[\"0A8A2242C74C03B63EEBEDB89441D7D7\",1400],[\"88F33FF7CE7B171A51416C6F60D5A429\",1300]]){const t=v.find(x=>x.id===id);if(!t)continue;let ws=new WebSocket(t.webSocketDebuggerUrl);try{let r=await Promise.race([new Promise((ok,no)=>{ws.addEventListener('open',()=>ws.send(JSON.stringify({id:299,method:'Runtime.evaluate',params:{expression:'window.scrollTo(0,'+y+');window.scrollY',returnByValue:true}})),{once:true});ws.addEventListener('message',e=>{let x=JSON.parse(e.data);if(x.id===299)ok(x.result?.result?.value||0)});ws.addEventListener('error',no,{once:true})}),new Promise((_,j)=>setTimeout(()=>j(Error('timeout')),3000))]);out.push({id,result:r})}catch(e){out.push({id,error:'timeout'})}ws.close()}console.log(JSON.stringify(out));process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\\win\\async.c, line 94\r\n",
+      "stderr_bytes": 87,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"0A8A2242C74C03B63EEBEDB89441D7D7\",\"result\":1400},{\"id\":\"88F33FF7CE7B171A51416C6F60D5A429\",\"result\":1300}]\n",
+      "stdout_bytes": 114,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T13:06:42.653Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T13:06:42.451Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-locations-i2"
+    },
+    "request_id": "20261012-avito-locations-i2",
+    "started_at": "2026-10-12T13:06:41.578Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-locations-i2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
