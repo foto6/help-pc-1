@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-home-150-activate-a18",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$r=Invoke-WebRequest 'http://127.0.0.1:17447/json/activate/EB407A848AF3A37ED207DA1F3638A58E' -UseBasicParsing -TimeoutSec 6;@{ok=($r.StatusCode -eq 200)}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Activate existing public 150m five-room house listing for screenshot only."
+}
