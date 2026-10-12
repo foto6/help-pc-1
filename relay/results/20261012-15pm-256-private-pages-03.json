@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $urls=@('https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2015%20pro%20max%20256&user=1&s=1','https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2015%20pro%20max%20256&user=1&s=104&p=2','https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2015%20pro%20max%20256&user=1&s=104&p=4'); $results=@();foreach($u in $urls){$api='http://127.0.0.1:17447/json/new?'+[uri]::EscapeDataString($u);$r=Invoke-RestMethod -Method Put -Uri $api -TimeoutSec 6;$results+=@([ordered]@{id=$r.id;url=$u})};$results|ConvertTo-Json -Compress -Depth 4"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"FD23CE5B5AF8CEC45BAE8D8AB673A2FD\",\"url\":\"https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2015%20pro%20max%20256\\u0026user=1\\u0026s=1\"},{\"id\":\"94FEB1E61DA61860515131489E6020EB\",\"url\":\"https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2015%20pro%20max%20256\\u0026user=1\\u0026s=104\\u0026p=2\"},{\"id\":\"8936DC0205BD845331B4D7AAC855D599\",\"url\":\"https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2015%20pro%20max%20256\\u0026user=1\\u0026s=104\\u0026p=4\"}]\r\n",
+      "stdout_bytes": 460,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T15:55:53.756Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T15:55:53.480Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-15pm-256-private-pages-03"
+    },
+    "request_id": "20261012-15pm-256-private-pages-03",
+    "started_at": "2026-10-12T15:55:52.707Z",
+    "status": "completed"
+  },
+  "id": "20261012-15pm-256-private-pages-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
