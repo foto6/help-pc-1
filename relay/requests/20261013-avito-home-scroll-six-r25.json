@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261013-avito-home-scroll-six-r25",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 5;$out=@();foreach($pair in @(@('55','8895E26A1B208AB8185B06F438396668'),@('50','3FECE58B86DAF832F643FE31CD89577A'),@('45','B4D1C276668A618700D992633AF0D4FB'),@('40','63E1121F5A6D3BEF3A19C547F51D3F1F'),@('36','B37143ED3D98230AC00A0B56A4D2B557'),@('60b','B67BF0940DD8FCE37980D3F08482BD00'))){$o=[ordered]@{house=$pair[0]};$w=$null;try{$t=@($tabs|Where-Object{$_.id -eq $pair[1]})[0];$w=[Net.WebSockets.ClientWebSocket]::new();$ct=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(5));$null=$w.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$ct.Token).GetAwaiter().GetResult();$cmd=@{id=250;method='Runtime.evaluate';params=@{expression='window.scrollTo(0,1250);window.scrollY';returnByValue=$true}}|ConvertTo-Json -Compress -Depth 5;$b=[Text.Encoding]::UTF8.GetBytes($cmd);$null=$w.SendAsync([ArraySegment[byte]]::new($b),[Net.WebSockets.WebSocketMessageType]::Text,$true,$ct.Token).GetAwaiter().GetResult();$rc=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(7));$buf=New-Object byte[] 8192;for($k=0;$k -lt 10;$k++){$r=$w.ReceiveAsync([ArraySegment[byte]]::new($buf),$rc.Token).GetAwaiter().GetResult();$j=([Text.Encoding]::UTF8.GetString($buf,0,$r.Count)|ConvertFrom-Json);if($j.id -eq 250){$o.y=$j.result.result.value;break}}}catch{$o.error=$_.Exception.Message}finally{if($w){$w.Dispose()}};$out+=$o};$out|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 55000,
+  "note": "Read-only scrolling of six exact public Avito listings to their party/guest policy. No bookings or account changes."
+}
