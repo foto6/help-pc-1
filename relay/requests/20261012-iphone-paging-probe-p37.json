@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-paging-probe-p37",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-p37.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nconst hard=setTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},23000);\nconst list=[\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_16_pro_max-ASgBAgICA0SywA3MsYwVtMANzqs5sMENiPw3?p=3&s=104\",\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_16_pro_max-ASgBAgICA0SywA3MsYwVtMANzqs5sMENiPw3?p=7&s=104\"];let ws;\ntry{\n const v=await(await fetch(\"http://127.0.0.1:17447/json/version\")).json();\n ws=new WebSocket(v.webSocketDebuggerUrl);\n await new Promise((ok,no)=>{ws.addEventListener(\"open\",ok,{once:true});ws.addEventListener(\"error\",no,{once:true})});\n const m=new Map();let idx=1;\n ws.addEventListener(\"message\",e=>{try{const r=JSON.parse(e.data);if(m.has(r.id)){m.get(r.id)(r);m.delete(r.id)}}catch{}});\n const call=(method,params)=>Promise.race([new Promise(ok=>{const id=idx++;m.set(id,ok);ws.send(JSON.stringify({id,method,params}))}),new Promise(ok=>setTimeout(()=>ok({error:{message:\"timeout\"}}),4500))]);\n const created=[];\n for(const url of list){const r=await call(\"Target.createTarget\",{url,background:true,newWindow:false});created.push({url,id:r.result?.targetId||null,error:r.error?.message||null});}\n console.log(JSON.stringify({created}));process.exit(0);\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,180)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Research-only open two deep-page public iPhone 16 Pro Max searches on Chrome 17447, pages 3 and 7; background only, no proxy/account/seller interactions."
+}
