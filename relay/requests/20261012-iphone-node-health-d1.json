@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-node-health-d1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $n=@(Get-CimInstance Win32_Process -Filter \"Name='node.exe'\" | Where-Object { [string]$_.CommandLine -like '*pc-iphone-avito-cards-c1.mjs*' } | Select-Object ProcessId,Name); Write-Output ('stuckNodeCount='+$n.Count); & node.exe -e 'const c=new AbortController();setTimeout(()=>c.abort(),3000);fetch(\"http://127.0.0.1:17447/json/list\",{signal:c.signal}).then(r=>r.json()).then(x=>console.log(JSON.stringify({ok:true,tabs:x.length,phones:x.filter(t=>t.url&&t.url.includes(\"/telefony/\")).map(t=>({id:t.id,url:t.url}))}))).catch(e=>console.log(JSON.stringify({ok:false,reason:String(e).slice(0,80)}))).finally(()=>process.exit())'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Read-only reconcile specific former Node script and test CDP /json/list via bounded Node fetch, no new tabs or mutations. Do not replay c1."
+}
