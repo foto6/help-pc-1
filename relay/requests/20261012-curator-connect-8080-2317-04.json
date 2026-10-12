@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-curator-connect-8080-2317-04",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,socket,ssl,urllib.request,urllib.error,time\nout={}\nfor port in (8080,):\n for probe in ('connect','socks5'):\n  t=time.monotonic();r={}\n  try:\n   s=socket.create_connection(('127.0.0.1',port),timeout=2);s.settimeout(3)\n   if probe=='connect':\n    s.sendall(b'CONNECT api.telegram.org:443 HTTP/1.1\\r\\nHost: api.telegram.org:443\\r\\n\\r\\n');buf=s.recv(200);r={'kind':'http-connect','status_line':buf.decode('latin-1','replace').split('\\r\\n')[0][:120]}\n   else:\n    s.sendall(bytes([5,1,0]));resp=s.recv(2);r={'kind':'socks5','supported_no_auth':resp==bytes([5,0]),'reply_hex':resp.hex()}\n  except Exception as e:r={'error':type(e).__name__}\n  finally:\n   try:s.close()\n   except:pass\n  r['ms']=round((time.monotonic()-t)*1000);out[probe]=r\nprint(json.dumps(out,ensure_ascii=True))"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 14000,
+  "note": "Read-only protocol handshake test on existing tunnel-client loopback port 8080, to discover HTTPS CONNECT or SOCKS5 API path; no Telegram token."
+}
