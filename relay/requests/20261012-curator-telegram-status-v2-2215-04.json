@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-curator-telegram-status-v2-2215-04",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\nbase='http://127.0.0.1:17448'\ndef get(p):\n try:\n  with urllib.request.urlopen(base+p,timeout=4) as r:return json.load(r)\n except Exception as e:return {'error':type(e).__name__}\nx=get('/api/status');y=get('/api/ai-profiles');s=x.get('settings') if isinstance(x,dict) else None\nif not isinstance(s,dict):s={}\nq={'statusKeys':list(x.keys())[:15] if isinstance(x,dict) else [],'telegram':{'notificationEnabled':s.get('telegramNotifyEnabled'),'tokenConfigured':s.get('telegramBotTokenConfigured'),'chatConfigured':bool(s.get('telegramChatId'))},'profiles':[{'name':p.get('name'),'port':p.get('debugPort'),'workerConnected':p.get('workerConnected')} for p in y.get('aiProfiles',[]) if p.get('provider')=='chatgpt'] if isinstance(y,dict) else []}\nprint(json.dumps(q,ensure_ascii=True))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only local Bridge status; only non-secret Telegram configuration booleans and profile ports."
+}
