@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$js=@'\nlet ws;try{\nconst base=\"http://127.0.0.1:17447\";\nconst info=await(await fetch(base+\"/json/version\")).json();\nws=new WebSocket(info.webSocketDebuggerUrl);\nawait new Promise((ok,no)=>{ws.addEventListener(\"open\",ok,{once:true});ws.addEventListener(\"error\",no,{once:true})});\nconst urls=[\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/2-k._dom_95_m_7719784354\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/4-k._kottedzh_120_m_4628254145\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/6-k._kottedzh_180_m_2689642376\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/5-k._dom_150_m_7572971653\"];\nconst pend=new Map();let counter=40;\nws.addEventListener(\"message\",e=>{let x=JSON.parse(e.data);if(pend.has(x.id)){pend.get(x.id)(x);pend.delete(x.id)}});\nconst send=(method,params)=>Promise.race([new Promise(resolve=>{let id=++counter;pend.set(id,resolve);ws.send(JSON.stringify({id,method,params}))}),new Promise((_,reject)=>setTimeout(()=>reject(Error(\"CDP_TIMEOUT\")),3200))]);\nconst out=[];\nfor(let url of urls){try{let x=await send(\"Target.createTarget\",{url,background:true,newWindow:false});out.push({url,id:x.result?.targetId||null,error:x.error?.code||null})}catch(e){out.push({url,error:\"TIMEOUT\"})}}\nconsole.log(JSON.stringify(out))\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}))}\nif(ws)ws.close();process.exit(0)\n'@\n$tmp=Join-Path $env:TEMP 'pc-avito-open-selected.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,$js,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -ErrorAction SilentlyContinue -Force}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/2-k._dom_95_m_7719784354\",\"id\":\"EF6A592F8DA7E5C66A6F6046DBB9B113\",\"error\":null},{\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/4-k._kottedzh_120_m_4628254145\",\"id\":\"1CCEF88CBF3B89E87F8DF6FA7EA20ECD\",\"error\":null},{\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/6-k._kottedzh_180_m_2689642376\",\"id\":\"99269AD269095748DC081498F3A72B77\",\"error\":null},{\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/5-k._dom_150_m_7572971653\",\"id\":\"251BEB4F668E7ADF5400D3821089D3F6\",\"error\":null}]\n",
+      "stdout_bytes": 583,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T12:20:06.144Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T12:20:05.891Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-open-selected-05"
+    },
+    "request_id": "20261012-avito-open-selected-05",
+    "started_at": "2026-10-12T12:20:05.115Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-open-selected-05",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
