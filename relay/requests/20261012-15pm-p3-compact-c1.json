@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-15pm-p3-compact-c1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-15pm-p3-compact.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},7800);try{\nconst t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id==='FCD1272A7DC4E4537390D862FE735F52');if(!t)throw Error('tab_missing');\nconst w=new WebSocket(t.webSocketDebuggerUrl);w.addEventListener('open',()=>w.send(JSON.stringify({id:99,method:'Runtime.evaluate',params:{expression:\"(()=>({url:location.href,count:document.querySelectorAll('[data-marker=item]').length,rows:Array.from(document.querySelectorAll('[data-marker=item]')).slice(0,8).map(x=>[x.getAttribute('data-item-id'),x.querySelector('[itemprop=name]')?.textContent?.trim(),x.querySelector('[itemprop=price]')?.getAttribute('content'),x.querySelector('[data-marker=item-title]')?.getAttribute('href')?.split('?')[0]] )}))()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===99){console.log(JSON.stringify(z.result?.result?.value||{error:z.result?.exceptionDetails?.text||z.error?.message||'no_value'}));process.exit(0)}});\nw.addEventListener('error',()=>{console.log('{\"error\":\"ws\"}');process.exit(0)},{once:true});\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,140)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Read-only eight public listing title/price/link from exact authorized Avito 15 Pro Max search p3. No page navigation or private user data."
+}
