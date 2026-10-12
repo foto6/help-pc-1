@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-15pm-512-activate-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $r=Invoke-WebRequest -Uri 'http://127.0.0.1:17447/json/activate/104E906260A714E9E6696448734E7920' -TimeoutSec 5 -UseBasicParsing; Write-Output ('HTTP '+$r.StatusCode+' '+[string]$r.Content)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Activate exactly prior user-authorized iPhone 15 Pro Max 512GB public Avito tab for screenshot; do not contact sellers, modify proxy, or inspect private data."
+}
