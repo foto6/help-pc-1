@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$o=[ordered]@{step='start';wheels=0};$ws=$null;try{$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 5;$t=@($tabs|Where-Object {$_.id -eq '8682F60C59EAE3EF9CF12DCE711A647B'})[0];$ws=[System.Net.WebSockets.ClientWebSocket]::new();$token=[System.Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(5));$null=$ws.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$token.Token).GetAwaiter().GetResult();for($k=0;$k -lt 3;$k++){$c=@{id=(700+$k);method='Input.dispatchMouseEvent';params=@{type='mouseWheel';x=850;y=600;deltaY=620;deltaX=0}}|ConvertTo-Json -Compress -Depth 6;$bytes=[Text.Encoding]::UTF8.GetBytes($c);$null=$ws.SendAsync([ArraySegment[byte]]::new($bytes),[System.Net.WebSockets.WebSocketMessageType]::Text,$true,$token.Token).GetAwaiter().GetResult();$o.wheels++;Start-Sleep -Milliseconds 160};$o.step='sent'}catch{$o.error=$_.Exception.Message}finally{if($ws){$ws.Dispose()}};$o|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"step\":\"sent\",\"wheels\":3}\r\n",
+      "stdout_bytes": 28,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:22:24.055Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:22:23.862Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-birthday-cdp-wheel88-r018"
+    },
+    "request_id": "20261012-birthday-cdp-wheel88-r018",
+    "started_at": "2026-10-12T16:22:20.510Z",
+    "status": "completed"
+  },
+  "id": "20261012-birthday-cdp-wheel88-r018",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
