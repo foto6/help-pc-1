@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-curator-tgws-config-schema-2324-r03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "from pathlib import Path\nimport os,json\npath=Path(os.environ.get('APPDATA',''))/'TgWsProxy'/'config.json'\ntry:\n config=json.loads(path.read_text(encoding='utf8-sig'))\nexcept Exception as e:\n print(json.dumps({'error':type(e).__name__}));raise SystemExit()\ndef shape(x):\n if isinstance(x,dict):return {k:shape(v) for k,v in x.items()}\n if isinstance(x,list):return {'type':'list','count':len(x),'sample_schema':shape(x[0]) if x else None}\n return type(x).__name__\nprint(json.dumps({'config_keys_and_value_types_only':shape(config)},ensure_ascii=True))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Read TgWsProxy config schema only: key names and value data types, NO values, URLs, MTProto proxy secrets, logs or tokens."
+}
