@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$stuck=@(Get-CimInstance Win32_Process -Filter \"Name='node.exe'\" | Where-Object { [string]$_.CommandLine -like '*pc-iphone-15pm-50-k2.mjs*' })\nif ($stuck.Count -gt 0) { Write-Output 'BLOCKED_UNRECONCILED_PREVIOUS'; exit 0 }\n$tmp=Join-Path $env:TEMP 'pc-iphone-five-k3.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},6000);\ntry{let a=await(await fetch('http://127.0.0.1:17447/json/list')).json();let t=a.find(x=>x.id==='EF27777D4E798E704D04D5D474887AFA');let w=new WebSocket(t.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:4,method:'Runtime.evaluate',params:{expression:\"(()=>{const x=document.querySelectorAll('[data-marker=\\\"item\\\"]');const a=[];for(let i=0;i<5;i++){const e=x[i];if(!e)break;const n=e.querySelector('[itemprop=\\\"name\\\"]');const p=e.querySelector('[itemprop=\\\"price\\\"]');const u=e.querySelector('[data-marker=\\\"item-title\\\"]');a.push([i,e.getAttribute('data-item-id'),n?.textContent?.trim()||'',p?.getAttribute('content')||'',u?.getAttribute('href')?.split('?')[0]||''])}return a})()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{let z=JSON.parse(e.data);if(z.id===4){console.log(JSON.stringify(z.result?.result?.value||{error:z.result?.exceptionDetails?.text||'EMPTY'}));process.exit(0)}});\nw.addEventListener('error',()=>{console.log('{\"error\":\"ws_error\"}');process.exit(0)},{once:true});\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,120)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[[0,\"8044898069\",\"iPhone 15 Pro Max, 256 ГБ\",\"61490\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_8044898069\"],[1,\"8356783210\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"47990\",\"/barnaul/telefony/iphone_15_pro_max_256_gb_sim_esim_8356783210\"],[2,\"8107250406\",\"iPhone 15 Pro Max, 512 ГБ, SIM + eSIM\",\"44990\",\"/krasnoyarsk/telefony/iphone_15_pro_max_512_gb_sim_esim_8107250406\"],[3,\"8043912596\",\"iPhone 15 Pro Max, 256 ГБ\",\"61490\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_8043912596\"],[4,\"8461133627\",\"iPhone 15 Pro Max, 512 ГБ, SIM + eSIM\",\"56990\",\"/krasnoyarsk/telefony/iphone_15_pro_max_512_gb_sim_esim_8461133627\"]]\n",
+      "stdout_bytes": 636,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T14:23:30.104Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T14:23:29.874Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-iphone-15pm-five-k3"
+    },
+    "request_id": "20261012-iphone-15pm-five-k3",
+    "started_at": "2026-10-12T14:23:28.824Z",
+    "status": "completed"
+  },
+  "id": "20261012-iphone-15pm-five-k3",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
