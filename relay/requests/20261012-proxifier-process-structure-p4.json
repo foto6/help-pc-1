@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-proxifier-process-structure-p4",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$o=[ordered]@{}\n$c=@(Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\" -ErrorAction SilentlyContinue)\n$roots=@($c|Where-Object{[string]$_.CommandLine -notmatch '--type='}|ForEach-Object{@{pid=$_.ProcessId;parent=$_.ParentProcessId;port=if($_.CommandLine -match '--remote-debugging-port=(\\d+)'){$Matches[1]}else{'none'};dataDirCustom=($_.CommandLine -match '--user-data-dir=')}})\n$o.roots=$roots\n$o.secondChildren=@($c|Where-Object{$_.ParentProcessId -eq 9148}|ForEach-Object{$cmd=[string]$_.CommandLine;@{pid=$_.ProcessId;parent=$_.ParentProcessId;networkService=($cmd -match 'network\\.mojom\\.NetworkService');type=if($cmd -match '--type=([a-z-]+)'){$Matches[1]}else{'none'}}})\n$p=Get-Process -Name Proxifier -ErrorAction SilentlyContinue|Select-Object -First 1;$o.proxifierTitle=$p.MainWindowTitle\n[xml]$x=Get-Content -Raw (Join-Path $env:APPDATA 'Proxifier4\\Profiles\\Default.ppx')\n$r=$x.SelectNodes('//*[local-name()=\"Rule\"]')\n$o.ruleAttributes=@($r|Select-Object -First 2|ForEach-Object{[ordered]@{name=$_.SelectSingleNode('./Name').InnerText;attributes=@($_.Attributes|ForEach-Object{$_.Name+'='+$_.Value});applicationNode=@($_.SelectNodes('./Applications')|ForEach-Object{@($_.Attributes|ForEach-Object{$_.Name})});actionAttributes=@($_.SelectSingleNode('./Action').Attributes|ForEach-Object{$_.Name});targetsAttributes=@($_.SelectNodes('./Targets')|ForEach-Object{@($_.Attributes|ForEach-Object{$_.Name})})}})\n$o|ConvertTo-Json -Depth 6 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 19000,
+  "note": "Read-only identify second Chrome root PID and network service child PID, Proxifier active title and XML tag schema. Do not output any proxy hosts, passwords or configuration raw text."
+}
