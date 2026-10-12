@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$root='E:\\Neur0StoreCurator';if(-not (Test-Path -LiteralPath (Join-Path $root 'START_CURATOR.cmd') -PathType Leaf)){throw 'start_script_missing'};$existing=@(Get-CimInstance Win32_Process|Where-Object{$_.Name -eq 'python.exe' -and $_.CommandLine -match '(?i)\\bdaemon\\.py\\b' -and $_.CommandLine -notmatch '(?i)--check|--once'});if($existing.Count -gt 0){Write-Output \"GATEWAY_ALREADY_RUNNING count=$($existing.Count); not starting duplicate\";exit 0};$p=Start-Process -FilePath 'cmd.exe' -ArgumentList @('/c','E:\\Neur0StoreCurator\\START_CURATOR.cmd') -WorkingDirectory $root -PassThru;Write-Output \"GATEWAY_START_LAUNCHED pid=$($p.Id); use read-only follow-up to verify daemon.py running\""
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "GATEWAY_START_LAUNCHED pid=25444; use read-only follow-up to verify daemon.py running\r\n",
+      "stdout_bytes": 87,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:57:53.986Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:57:53.347Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-neur0store-curator-gateway-start-0101-r04"
+    },
+    "request_id": "20261013-neur0store-curator-gateway-start-0101-r04",
+    "started_at": "2026-10-12T17:57:51.741Z",
+    "status": "completed"
+  },
+  "id": "20261013-neur0store-curator-gateway-start-0101-r04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
