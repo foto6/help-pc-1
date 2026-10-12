@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$t='166C8C02ADC2F71408BE38C907FDB162';$r=Invoke-WebRequest ('http://127.0.0.1:17447/json/activate/'+$t) -UseBasicParsing -TimeoutSec 5;$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 5;$v=@($tabs|Where-Object{$_.id -eq $t})[0];$w=[Net.WebSockets.ClientWebSocket]::new();try{$ct=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(5));$null=$w.ConnectAsync([Uri]$v.webSocketDebuggerUrl,$ct.Token).GetAwaiter().GetResult();$c=@{id=301;method='Runtime.evaluate';params=@{expression='window.scrollTo(0,0);window.scrollY';returnByValue=$true}}|ConvertTo-Json -Compress -Depth 5;$b=[Text.Encoding]::UTF8.GetBytes($c);$null=$w.SendAsync([ArraySegment[byte]]::new($b),[Net.WebSockets.WebSocketMessageType]::Text,$true,$ct.Token).GetAwaiter().GetResult();$rc=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(7));$buf=New-Object byte[] 8192;for($k=0;$k -lt 8;$k++){$p=$w.ReceiveAsync([ArraySegment[byte]]::new($buf),$rc.Token).GetAwaiter().GetResult();$j=([Text.Encoding]::UTF8.GetString($buf,0,$p.Count)|ConvertFrom-Json);if($j.id -eq 301){@{active=($r.StatusCode -eq 200);scrollY=$j.result.result.value}|ConvertTo-Json -Compress;break}}}finally{$w.Dispose()}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"active\":true,\"scrollY\":0}\r\n",
+      "stdout_bytes": 29,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:44:42.875Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:44:42.586Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-avito-home-61-evidence-top-r30"
+    },
+    "request_id": "20261013-avito-home-61-evidence-top-r30",
+    "started_at": "2026-10-12T17:44:40.012Z",
+    "status": "completed"
+  },
+  "id": "20261013-avito-home-61-evidence-top-r30",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
