@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue'\n$o=[ordered]@{check='read_only_nonproxy_connectivity'}\n$hosts=@('www.avito.ru','avito.ru','www.cian.ru','ya.ru')\n$o.dns=@($hosts|ForEach-Object{$h=$_;$ips=@(Resolve-DnsName -Name $h -Type A -DnsOnly -ErrorAction SilentlyContinue|Where-Object {$_.Type -eq 'A'}|Select-Object -ExpandProperty IPAddress);@{host=$h;resolved=($ips.Count -gt 0);addressCount=$ips.Count;loopbackOrBlocked=(@($ips|Where-Object{$_ -match '^(0\\.|127\\.|10\\.|192\\.168\\.|172\\.(1[6-9]|2[0-9]|3[0-1])\\.)'}).Count -gt 0)}})\n$o.connect=@()\nforeach($url in @('https://www.avito.ru/','https://avito.ru/','https://krasnoyarsk.cian.ru/','https://ya.ru/')){\n $out=(& curl.exe --noproxy '*' --connect-timeout 4 --max-time 7 --location --silent --show-error --output NUL --write-out '%{http_code}' $url 2>$null)\n $o.connect+=@{site=([uri]$url).Host;status=if(\"$out\" -match '^\\d{3}$'){\"$out\"}else{'failed'};exitCode=$LASTEXITCODE}\n}\n$o|ConvertTo-Json -Depth 5 -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"check\":\"read_only_nonproxy_connectivity\",\"dns\":[{\"addressCount\":3,\"host\":\"www.avito.ru\",\"loopbackOrBlocked\":false,\"resolved\":true},{\"addressCount\":3,\"host\":\"avito.ru\",\"loopbackOrBlocked\":false,\"resolved\":true},{\"addressCount\":1,\"host\":\"www.cian.ru\",\"loopbackOrBlocked\":false,\"resolved\":true},{\"addressCount\":3,\"host\":\"ya.ru\",\"loopbackOrBlocked\":false,\"resolved\":true}],\"connect\":[{\"status\":\"000\",\"site\":\"www.avito.ru\",\"exitCode\":7},{\"status\":\"000\",\"site\":\"avito.ru\",\"exitCode\":7},{\"status\":\"200\",\"site\":\"krasnoyarsk.cian.ru\",\"exitCode\":0},{\"status\":\"200\",\"site\":\"ya.ru\",\"exitCode\":0}]}\r\n",
+      "stdout_bytes": 589,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T11:33:55.288Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T11:33:55.114Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-direct-network-probes-05"
+    },
+    "request_id": "20261012-avito-direct-network-probes-05",
+    "started_at": "2026-10-12T11:33:43.521Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-direct-network-probes-05",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
