@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-first-cards-retry-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$js=@'\nconst ctl=new AbortController();setTimeout(()=>ctl.abort(),4500);\ntry{\nconst tabs=await(await fetch(\"http://127.0.0.1:17447/json/list\",{signal:ctl.signal})).json();\nconst t=tabs.find(x=>x.url.startsWith(\"https://www.avito.ru/krasnoyarsk/\") && x.webSocketDebuggerUrl);\nif(!t)throw new Error(\"Avito tab missing\");\nconst ws=new WebSocket(t.webSocketDebuggerUrl);\nconst out=await Promise.race([\nnew Promise((resolve,reject)=>{\nws.addEventListener(\"open\",()=>{\nws.send(JSON.stringify({id:77,method:\"Runtime.evaluate\",params:{expression:\"({title:document.title,markerCount:document.querySelectorAll('[data-marker=item]').length,linkCount:document.querySelectorAll('a[href]').length})\",returnByValue:true}}))},{once:true});\nws.addEventListener(\"message\",e=>{let r=JSON.parse(e.data);if(r.id===77)resolve(r.result?.result?.value||{error:r.error?.message?.slice(0,50)})});\nws.addEventListener(\"error\",reject,{once:true});\n}),\nnew Promise((_,reject)=>setTimeout(()=>reject(new Error(\"timeout\")),5000))\n]);\nconsole.log(JSON.stringify(out));ws.close()\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,150)}))}\nprocess.exit(0)\n'@\n$tmp=Join-Path $env:TEMP 'pc-public-avito-count.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,$js,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -ErrorAction SilentlyContinue -Force}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only Avito public browser title and listing count in 17447 using fast timed CDP evaluation. No private browser access, cookie exposure, network or system changes."
+}
