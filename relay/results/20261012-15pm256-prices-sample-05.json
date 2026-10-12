@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-15pm256-public-prices-05.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"hard_timeout\"}');process.exit(0)},9300);\ntry{const a=await(await fetch('http://127.0.0.1:17447/json/list')).json();const t=a.find(x=>x.id==='FD23CE5B5AF8CEC45BAE8D8AB673A2FD');if(!t)throw Error('target_missing');const w=new WebSocket(t.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:\"(()=>{const a=document.querySelectorAll('[data-marker=item]');let out=[];for(const i of [0,1,2,3,4,5,7,10,13,17,21,25,30,35,40]){const e=a[i];if(!e)continue;const n=e.querySelector('[itemprop=name]'),p=e.querySelector('[itemprop=price]'),l=e.querySelector('[data-marker=item-title]');out.push([i,e.getAttribute('data-item-id'),n?.textContent?.trim(),p?.getAttribute('content'),l?.getAttribute('href')?.split('?')[0]]);}return{url:location.href,count:a.length,rows:out};})()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===1){console.log(JSON.stringify(z.result?.result?.value||{error:z.error?.message||z.result?.exceptionDetails?.text||'empty'}));process.exit(0)}});\nw.addEventListener('error',()=>{console.log('{\"error\":\"ws_error\"}');process.exit(0)},{once:true})\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"url\":\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_15_pro_max/256_gb-ASgBAgICBESywA3Woe0RtMANzqs5sMENiPw35uAN~MFc?cd=1&context=H4sIAAAAAAAA_3yQy3KbMBRA_8XbLnqxTVOT6SKWiypGkEEOArFDks0jArvhZdzpv3dwnOkuS-lejc45mWM5f1rHAmehTm9vB9WVp2bx2Do2gLMgTadI7VYam0GasXw2Y6lqPkrsVikfS-qOZZoU87kXCTvLpa1IdVakQ3sQQ9hq_AR0Fw4aUxLgn0CrsN9gHwRleYApRTuWa_QF6APLOzQBTVje4S0IGrYd3oF4YKVGa6BRDvQYtgH6CmIXDrcdPx9_d2eFi0HWUe6_RLn65Q0EW8UBPU3Bi0T9ZCtSXhRptq2IAyNj3mv33UPUvJUr_T6vmVFL00iTGtUE_z1qe1C1VUhkFRLzaX47O0ts-mwVzDvyYN2aXHTMr_P8eW7WuFaaeHaCyLcEeZ8wpvf_g0Jj3siVZ-8jpkh1Wgfookh9GcTShSze9Pf7pX-Nrn613cwcGvP1hw94t4bfgSbhMDcTlFUfvDGHDG9e7zzXNHYnsSyOquavWeIZsWKKNJY-7smPxePffwMA5GmUgxUCAAA&f=ASgBAgICBUSywA3Woe0RtMANzqs5sMENiPw35uAN~MFcsLMU_qGPAw&user=1\",\"count\":93,\"rows\":[[0,\"8358178736\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"39999\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8358178736\"],[1,\"8276157273\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"45000\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8276157273\"],[2,\"7976558546\",\"iPhone 15 Pro Max, 256 ГБ, 2 SIM\",\"46148\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_2_sim_7976558546\"],[3,\"8053145926\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"48900\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8053145926\"],[4,\"8399084915\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"48990\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8399084915\"],[5,\"8291286579\",\"iPhone 15 Pro Max, 256 ГБ, eSIM\",\"50000\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_esim_8291286579\"],[7,\"8288271301\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"52500\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8288271301\"],[10,\"8438876386\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"55000\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8438876386\"],[13,\"8489305291\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"59000\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8489305291\"],[17,\"8205388951\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"60000\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8205388951\"],[21,\"8206200180\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"62900\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8206200180\"],[25,\"8427735096\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"64990\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8427735096\"],[30,\"8406530823\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"64990\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8406530823\"],[35,\"8276669521\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"67990\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8276669521\"],[40,\"8350305500\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"74700\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8350305500\"]]}\n",
+      "stdout_bytes": 2809,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T15:57:38.171Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T15:57:37.967Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-15pm256-prices-sample-05"
+    },
+    "request_id": "20261012-15pm256-prices-sample-05",
+    "started_at": "2026-10-12T15:57:37.213Z",
+    "status": "completed"
+  },
+  "id": "20261012-15pm256-prices-sample-05",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
