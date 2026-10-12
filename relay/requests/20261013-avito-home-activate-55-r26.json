@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261013-avito-home-activate-55-r26",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$r=Invoke-WebRequest 'http://127.0.0.1:17447/json/activate/8895E26A1B208AB8185B06F438396668' -UseBasicParsing -TimeoutSec 6;@{ok=($r.StatusCode -eq 200)}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Activate public 55m cottage to view rule screenshot, no booking."
+}
