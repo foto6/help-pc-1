@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "from pathlib import Path\nimport json\nroot=Path(\"E:/WebAIBridge/app\")\nout={\"app_exists\":root.is_dir(),\"sample_files\":[],\"matches\":[]}\nif root.is_dir():\n count=0\n for p in root.rglob(\"*\"):\n  if not p.is_file() or p.suffix.lower() not in (\".js\",\".mjs\",\".ts\",\".cjs\",\".tsx\"):continue\n  if any(x in p.parts for x in (\"node_modules\",\".git\",\"dist\",\"build\",\".next\")):continue\n  count+=1\n  if len(out[\"sample_files\"])<25:out[\"sample_files\"].append(str(p.relative_to(root)))\n  if p.stat().st_size>3_000_000:continue\n  try:\n   s=p.read_text(encoding=\"utf-8\",errors=\"replace\")\n   if \"/agent-assignments\" in s or \"allowAutonomousSend\" in s:\n    out[\"matches\"].append({\"path\":str(p.relative_to(root)),\"contains_assignment\":\"/agent-assignments\" in s,\"contains_autonomous_gate\":\"allowAutonomousSend\" in s})\n  except Exception:pass\n  if count>=1000:break\n out[\"scanned_files\"]=count\nprint(json.dumps(out,ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"app_exists\": true, \"sample_files\": [\"agent-assignment-live-dry-run.js\", \"agent-assignment-r19-soak.js\", \"agent-assignment-restart-harness.js\", \"agent-dag-orchestrator-r38.js\", \"agent-dag-orchestrator-r38.test.js\", \"agent-evidence-collector.js\", \"agent-evidence-collector.test.js\", \"agent-execution-control.js\", \"agent-execution-control.test.js\", \"agent-project-native-dry-run.js\", \"agent-project-native-dry-run.test.js\", \"bridge-assignment-r19.test.js\", \"bridge-control-reliability.test.js\", \"bridge-core.js\", \"bridge-core.test.js\", \"chat-file-attachment-rehearsal.js\", \"chat-file-attachment-rehearsal.test.js\", \"chat-file-attachment.js\", \"chat-file-attachment.test.js\", \"chat-inventory-contract.test.js\", \"chat-inventory-replay.js\", \"chat-inventory.js\", \"chat-inventory.test.js\", \"chat-lifecycle-contract.test.js\", \"chat-lifecycle-r20-soak.js\"], \"matches\": [{\"path\": \"agent-assignment-live-dry-run.js\", \"contains_assignment\": true, \"contains_autonomous_gate\": false}, {\"path\": \"agent-assignment-r19-soak.js\", \"contains_assignment\": true, \"contains_autonomous_gate\": false}, {\"path\": \"agent-assignment-restart-harness.js\", \"contains_assignment\": true, \"contains_autonomous_gate\": false}, {\"path\": \"dormant-operational-health-r49.test.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"independent-cutover-attestation-r48.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"independent-cutover-attestation-r48.test.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"live-control-plane-cutover-r42.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"live-control-plane-cutover-r42.test.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"paused-queue-health-r48.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"paused-queue-health-r48.test.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"r21-integration-rehearsal.js\", \"contains_assignment\": true, \"contains_autonomous_gate\": false}, {\"path\": \"r42-contract.test.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"server.js\", \"contains_assignment\": true, \"contains_autonomous_gate\": true}, {\"path\": \"supervisor-control.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"supervisor-control.test.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"ui-static.test.js\", \"contains_assignment\": true, \"contains_autonomous_gate\": false}, {\"path\": \"data\\\\operator-tools\\\\r50-read-only-chrome-check\\\\r50-restart-readiness-preflight.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"data\\\\operator-tools\\\\r51-target-continuity\\\\r51-target-continuity.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"data\\\\operator-tools\\\\r52-discard-audit\\\\r51-target-continuity.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"data\\\\operator-tools\\\\r54-managed-observation\\\\r50-restart-readiness-preflight.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"data\\\\operator-tools\\\\r54-managed-observation\\\\r51-target-continuity.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"data\\\\operator-tools\\\\r52-discard-audit\\\\releases\\\\e7c8181fc0550830b527dc909004d9df9fb73f83\\\\r51-target-continuity.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}, {\"path\": \"data\\\\operator-tools\\\\r50-read-only-chrome-check\\\\releases\\\\814c0e7e328599c85d7927e2a48b3e0f5df1becc\\\\r50-restart-readiness-preflight.js\", \"contains_assignment\": false, \"contains_autonomous_gate\": true}], \"scanned_files\": 323}\r\n",
+      "stdout_bytes": 3764,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T18:29:45.005Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T18:29:44.665Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-curator-bridge-app-api-0158-r09"
+    },
+    "request_id": "20261013-curator-bridge-app-api-0158-r09",
+    "started_at": "2026-10-12T18:29:36.544Z",
+    "status": "completed"
+  },
+  "id": "20261013-curator-bridge-app-api-0158-r09",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
