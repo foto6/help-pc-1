@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "from pathlib import Path\nimport subprocess,sys\np=Path('E:/Neur0StoreCurator/.venv')\nif p.exists():\n if not (p/'Scripts/python.exe').exists():raise RuntimeError('existing_broken_venv_do_not_replace')\n print('ISOLATED_VENV_ALREADY_PRESENT')\nelse:\n r=subprocess.run(['py.exe','-3.12','-m','venv',str(p)],timeout=35,check=False,capture_output=True,text=True)\n if r.returncode!=0:raise RuntimeError('venv_creation_failed_'+str(r.returncode))\n print('ISOLATED_PYTHON312_VENV_CREATED')\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "ISOLATED_PYTHON312_VENV_CREATED\r\n",
+      "stdout_bytes": 33,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:48:40.088Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:48:39.825Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-neur0store-create-isolated-venv-r06"
+    },
+    "request_id": "20261012-neur0store-create-isolated-venv-r06",
+    "started_at": "2026-10-12T16:48:29.794Z",
+    "status": "completed"
+  },
+  "id": "20261012-neur0store-create-isolated-venv-r06",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
