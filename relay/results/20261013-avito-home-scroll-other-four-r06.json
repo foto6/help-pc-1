@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 5;$out=@();foreach($pair in @(@('70m','DD5E08230B248EF7D8C5243F626F90FD'),@('80mA','880E8B55185A80D858A4C2656586CDB3'),@('80mB','DBF49096B12CBFACCCE447BCAE7D92EA'),@('75m','9E306F0F2D4912C581CE1F2B3396F2BA'))){$name=$pair[0];$target=$pair[1];$o=[ordered]@{name=$name};$w=$null;try{$t=@($tabs|Where-Object{$_.id -eq $target})[0];if(!$t){throw 'TARGET_MISSING'};$w=[Net.WebSockets.ClientWebSocket]::new();$ct=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(5));$null=$w.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$ct.Token).GetAwaiter().GetResult();$msg=@{id=111;method='Runtime.evaluate';params=@{expression='window.scrollTo(0,1270);window.scrollY';returnByValue=$true}}|ConvertTo-Json -Compress -Depth 5;$b=[Text.Encoding]::UTF8.GetBytes($msg);$null=$w.SendAsync([ArraySegment[byte]]::new($b),[Net.WebSockets.WebSocketMessageType]::Text,$true,$ct.Token).GetAwaiter().GetResult();$rc=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(6));$buf=New-Object byte[] 8192;for($k=0;$k -lt 9;$k++){$r=$w.ReceiveAsync([ArraySegment[byte]]::new($buf),$rc.Token).GetAwaiter().GetResult();$j=([Text.Encoding]::UTF8.GetString($buf,0,$r.Count)|ConvertFrom-Json);if($j.id -eq 111){$o.scrollY=$j.result.result.value;$o.success=$true;break}}}catch{$o.error=$_.Exception.Message}finally{if($w){$w.Dispose()}};$out+= $o};$out|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"name\":\"70m\",\"scrollY\":1270,\"success\":true},{\"name\":\"80mA\",\"scrollY\":1270,\"success\":true},{\"name\":\"80mB\",\"scrollY\":1270,\"success\":true},{\"name\":\"75m\",\"scrollY\":1270,\"success\":true}]\r\n",
+      "stdout_bytes": 185,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:06:27.731Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:06:27.501Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-avito-home-scroll-other-four-r06"
+    },
+    "request_id": "20261013-avito-home-scroll-other-four-r06",
+    "started_at": "2026-10-12T17:06:26.285Z",
+    "status": "completed"
+  },
+  "id": "20261013-avito-home-scroll-other-four-r06",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
