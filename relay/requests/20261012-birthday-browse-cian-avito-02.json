@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-birthday-browse-cian-avito-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$js=@'\nconst port=17410;\nconst urls=[\n\"https://krasnoyarsk.cian.ru/rent/suburban/292875313/\",\n\"https://krasnoyarsk.cian.ru/rent/suburban/289887922/\",\n\"https://krasnoyarsk.cian.ru/rent/suburban/248493503/\",\n\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno\",\n\"https://krasnoyarsk.sutochno.ru/houses\"\n];\nconst info=await (await fetch(\"http://127.0.0.1:\"+port+\"/json/version\")).json();\nconst ws=new WebSocket(info.webSocketDebuggerUrl);\nawait new Promise((resolve,reject)=>{ws.addEventListener(\"open\",resolve,{once:true});ws.addEventListener(\"error\",reject,{once:true})});\nlet idx=0;const pending=new Map();\nws.addEventListener(\"message\",e=>{try{const x=JSON.parse(e.data);if(x.id&&pending.has(x.id)){const f=pending.get(x.id);pending.delete(x.id);f(x)}}catch{}});\nconst send=(method,params)=>new Promise((res,rej)=>{const id=++idx;pending.set(id,res);ws.send(JSON.stringify({id,method,params}));setTimeout(()=>{if(pending.has(id)){pending.delete(id);rej(Error(\"CDP_TIMEOUT\"))}},7000)});\nlet results=[];\nfor(const url of urls){try{const x=await send(\"Target.createTarget\",{url,background:true,newWindow:false});results.push({url,ok:!!x.result?.targetId,target_id:x.result?.targetId||null,error_code:x.error?.code||null});}catch(e){results.push({url,error:String(e).slice(0,60)})}}\nws.close();console.log(JSON.stringify({results}));\n'@\n$tmp=Join-Path $env:TEMP 'pc-cottage-background-open-20261012.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,$js,[System.Text.UTF8Encoding]::new($false)); & node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 26000,
+  "note": "User authorized public property research: create 5 public Chrome tabs in background via CDP; temporary one-off script securely removed; never focus, capture private tabs, log secrets, or persist images."
+}
