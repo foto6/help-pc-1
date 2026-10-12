@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261013-avito-home-deep-five-r04",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$out=@();foreach($u0 in @('https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/2-k._dom_70_m_7688107684?checkIn=2026-11-03&checkOut=2026-11-04','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_80_m_4321930924?checkIn=2026-11-03&checkOut=2026-11-04','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_80_m_4216003763?checkIn=2026-11-03&checkOut=2026-11-04','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_75_m_2756494816?checkIn=2026-11-03&checkOut=2026-11-04','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_76_m_8358148190?checkIn=2026-11-03&checkOut=2026-11-04')){try{$enc=[Uri]::EscapeDataString($u0);$t=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17447/json/new?'+$enc) -TimeoutSec 6;$out+=@{id=$t.id;url=$t.url}}catch{$out+=@{url=$u0;error=$_.Exception.Message}}};$out|ConvertTo-Json -Compress -Depth 4"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 42000,
+  "note": "Research 5 previously discovered, not yet inspected public Avito house listings in isolated Chrome, no booking."
+}
