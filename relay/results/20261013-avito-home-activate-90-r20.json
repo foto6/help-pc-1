@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$r=Invoke-WebRequest 'http://127.0.0.1:17447/json/activate/31711D28A80D617079F74735B00657EE' -UseBasicParsing -TimeoutSec 6;@{ok=($r.StatusCode -eq 200)}|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true}\r\n",
+      "stdout_bytes": 13,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:36:45.941Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:36:45.699Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-avito-home-activate-90-r20"
+    },
+    "request_id": "20261013-avito-home-activate-90-r20",
+    "started_at": "2026-10-12T17:36:44.804Z",
+    "status": "completed"
+  },
+  "id": "20261013-avito-home-activate-90-r20",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
