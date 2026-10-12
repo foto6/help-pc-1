@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-front-dom-k1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-front-dom-k1.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},5500);\ntry{let a=await(await fetch('http://127.0.0.1:17447/json/list')).json();let t=a.find(x=>x.id==='EF27777D4E798E704D04D5D474887AFA');let w=new WebSocket(t.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:\"(()=>{const e=document.querySelector('[data-marker=item]');const sels=['[itemprop=\\\"name\\\"]','[itemprop=\\\"price\\\"]','[data-marker=\\\"item-price\\\"]','[data-marker=\\\"item-title\\\"]','a[itemprop=\\\"url\\\"]','a[href*=\\\"/telefony/\\\"]'];return Object.fromEntries(sels.map(s=>{const n=e?.querySelector(s);return [s,{exists:!!n,text:n?.textContent?.trim().slice(0,90)||'',content:n?.getAttribute('content')||'',href:n?.getAttribute('href')?.slice(0,120)||''}]}))})()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{let z=JSON.parse(e.data);if(z.id===1){console.log(JSON.stringify(z.result?.result?.value||{error:'EMPTY'}));process.exit(0)}});\nw.addEventListener('error',()=>{console.log('{\"error\":\"ws_error\"}');process.exit(0)},{once:true})\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,130)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only tiny CSS selector inspection of first public iPhone 15 Pro Max card in own activated Chrome 17447 tab; avoid heavy DOM scans and private content."
+}
