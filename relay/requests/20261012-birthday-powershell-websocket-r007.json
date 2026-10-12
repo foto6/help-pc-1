@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-birthday-powershell-websocket-r007",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $id='8682F60C59EAE3EF9CF12DCE711A647B';$o=[ordered]@{id=$id;stage='init'};$ws=$null;try{$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 4;$t=@($tabs|Where-Object{$_.id -eq $id})[0];if(!$t){throw 'TARGET_NOT_FOUND'};$o.stage='target_found';$ws=[System.Net.WebSockets.ClientWebSocket]::new();$token=[System.Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(5));$ws.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$token.Token).GetAwaiter().GetResult();$o.stage='connected';$expression='(()=>({title:document.title,body:(document.body?.innerText||\\\"\\\").slice(0,15000)}))()';$command=@{id=712;method='Runtime.evaluate';params=@{expression=$expression;returnByValue=$true}}|ConvertTo-Json -Compress -Depth 6;$bytes=[System.Text.Encoding]::UTF8.GetBytes($command);$segment=[ArraySegment[byte]]::new($bytes);$ws.SendAsync($segment,[System.Net.WebSockets.WebSocketMessageType]::Text,$true,$token.Token).GetAwaiter().GetResult();$o.stage='sent';$cts=[System.Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(6));$buf=New-Object byte[] 65536;$sb=[System.Text.StringBuilder]::new();for($k=0;$k -lt 12;$k++){$p=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$cts.Token).GetAwaiter().GetResult();[void]$sb.Append([System.Text.Encoding]::UTF8.GetString($buf,0,$p.Count));if($p.EndOfMessage){$msg=$sb.ToString();$sb.Clear()|Out-Null;$j=$msg|ConvertFrom-Json;if($j.id -eq 712){$o.stage='done';$o.result=$j.result.result.value;break}}};if($o.stage -ne 'done'){$o.error='NO_MATCHING_RESPONSE'}}catch{$o.error=$_.Exception.Message}finally{if($ws){$ws.Dispose()}};$o|ConvertTo-Json -Compress -Depth 7"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22000,
+  "note": "Read public listing DOM through Powershell ClientWebSocket, target-specific CDP read-only."
+}
