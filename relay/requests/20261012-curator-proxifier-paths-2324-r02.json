@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-curator-proxifier-paths-2324-r02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "from pathlib import Path\nimport os,json\npaths=[]\nfor key in ('APPDATA','LOCALAPPDATA','PROGRAMDATA'):\n root=os.environ.get(key,'')\n if not root:continue\n base=Path(root)\n for sub in ('Proxifier','Initex','TgWsProxy','TGWSProxy'):\n  p=base/sub\n  if p.is_dir():\n   files=[]\n   try:\n    files=[{'name':x.name,'suffix':x.suffix,'size_bytes':x.stat().st_size} for x in p.iterdir() if x.is_file()][:35]\n   except OSError:pass\n   paths.append({'root':key,'sub':sub,'files':files})\nprint(json.dumps({'paths':paths},ensure_ascii=True))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only listing of Proxifier config filenames and sizes in explicit app folders, never read config contents, passwords or protected directories."
+}
