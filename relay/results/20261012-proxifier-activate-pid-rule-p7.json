@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$work='E:\\PC-Control\\Proxifier-Avito-20261012'\n$orig=Join-Path $env:APPDATA 'Proxifier4\\Profiles\\Default.ppx'\n$backup=Join-Path $work 'Default-original-backup.ppx'\n$staged=Join-Path $work 'SecondChrome-Direct-PIDs.ppx'\n$exe='C:\\Program Files (x86)\\Proxifier\\Proxifier.exe'\nif(!(Test-Path $staged) -or !(Test-Path $backup) -or ((Get-FileHash $orig).Hash -ne (Get-FileHash $backup).Hash)){throw 'PROFILE_CHANGED_ABORT'}\n[xml]$stagedXml=Get-Content -LiteralPath $staged -Raw\n$rule=$stagedXml.SelectNodes('//*[local-name()=\"Rule\"]')[0]\nif($rule.SelectSingleNode('./Name').InnerText -ne 'Second Chrome DIRECT [session]' -or $rule.SelectSingleNode('./Action').GetAttribute('type') -ne 'Direct'){throw 'RULE_MISMATCH_ABORT'}\n$pids=@([regex]::Matches($rule.SelectSingleNode('./Applications').InnerText,'pid=(\\d+)')|ForEach-Object{[int]$_.Groups[1].Value})\nif((16760 -in $pids) -or !(9148 -in $pids) -or !(9316 -in $pids)){throw 'PID_SCOPE_INVALID_ABORT'}\n$c=@(Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\")\nif(!($c|Where-Object {$_.ProcessId -eq 9148 -and $_.CommandLine -notmatch '--type='}) -or !($c|Where-Object {$_.ProcessId -eq 9316 -and $_.CommandLine -match 'remote-debugging-port=17447'})){throw 'TARGET_CHROME_RESTARTED_ABORT'}\n$restorer=Join-Path $work 'RESTORE_DEFAULT_PROXIFIER.cmd'\n$restoreCmd='@echo off'+[Environment]::NewLine+'\"'+$exe+'\" \"'+$backup+'\" silent-load'+[Environment]::NewLine+'echo Requested restore of original Proxifier profile.'+[Environment]::NewLine\n[System.IO.File]::WriteAllText($restorer,$restoreCmd,[System.Text.Encoding]::ASCII)\n$oldPid=(Get-Process Proxifier -ErrorAction Stop|Select-Object -First 1 -ExpandProperty Id)\n$p=Start-Process -FilePath $exe -ArgumentList ('\"'+$staged+'\" silent-load') -PassThru -Wait\nStart-Sleep -Seconds 2\n$after=Get-Process Proxifier -ErrorAction Stop|Select-Object -First 1\n$o=[ordered]@{stage='requested_live_activation';profileStaged=$true;originalBackupStillUnchanged=((Get-FileHash $orig).Hash -eq (Get-FileHash $backup).Hash);proxifierMainPidBefore=$oldPid;proxifierMainPidAfter=$after.Id;loadCommandExitCode=$p.ExitCode;restoreCommandExists=(Test-Path $restorer);restoreCommandPath=$restorer;ruleScopePidCount=$pids.Count;defaultRuleUnchanged=$true}\n$o|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"stage\":\"requested_live_activation\",\"profileStaged\":true,\"originalBackupStillUnchanged\":true,\"proxifierMainPidBefore\":11296,\"proxifierMainPidAfter\":11296,\"loadCommandExitCode\":0,\"restoreCommandExists\":true,\"restoreCommandPath\":\"E:\\\\PC-Control\\\\Proxifier-Avito-20261012\\\\RESTORE_DEFAULT_PROXIFIER.cmd\",\"ruleScopePidCount\":19,\"defaultRuleUnchanged\":true}\r\n",
+      "stdout_bytes": 355,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T11:52:35.659Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T11:52:35.482Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-proxifier-activate-pid-rule-p7"
+    },
+    "request_id": "20261012-proxifier-activate-pid-rule-p7",
+    "started_at": "2026-10-12T11:52:31.499Z",
+    "status": "completed"
+  },
+  "id": "20261012-proxifier-activate-pid-rule-p7",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
