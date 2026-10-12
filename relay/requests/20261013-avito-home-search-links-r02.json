@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261013-avito-home-search-links-r02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';[Console]::OutputEncoding=[Text.Encoding]::UTF8;$o=[ordered]@{step='init'};$w=$null;try{$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 5;$t=@($tabs|Where-Object{$_.id -eq '87DA026620C18E1195600D0E76D3F4AC0686E969'})[0];if(!$t){throw 'TARGET_MISSING'};$w=[Net.WebSockets.ClientWebSocket]::new();$ct=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(5));$null=$w.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$ct.Token).GetAwaiter().GetResult();$c=@{id=251;method='Runtime.evaluate';params=@{expression='(()=>{const arr=[...document.querySelectorAll(''a[href*=\"/doma_dachi_kottedzhi/\"]'')];return {title:document.title,total:arr.length,links:arr.filter(a=>/_[0-9]{10,}(?:[?]|$)/.test(a.getAttribute(''href'')||'''')).slice(0,35).map(a=>({url:a.href,title:(a.innerText||a.getAttribute(''aria-label'')||'''').slice(0,140),card:(a.closest(''[data-marker=\"item\"],article'')?.innerText||'''').slice(0,240)}))}})()';returnByValue=$true}}|ConvertTo-Json -Compress -Depth 5;$b=[Text.Encoding]::UTF8.GetBytes($c);$null=$w.SendAsync([ArraySegment[byte]]::new($b),[Net.WebSockets.WebSocketMessageType]::Text,$true,$ct.Token).GetAwaiter().GetResult();$recv=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(9));$buf=New-Object byte[] 65536;$sb=[Text.StringBuilder]::new();for($k=0;$k -lt 80;$k++){$r=$w.ReceiveAsync([ArraySegment[byte]]::new($buf),$recv.Token).GetAwaiter().GetResult();[void]$sb.Append([Text.Encoding]::UTF8.GetString($buf,0,$r.Count));if($r.EndOfMessage){$v=$sb.ToString();[void]$sb.Clear();$j=$v|ConvertFrom-Json;if($j.id -eq 251){$o.step='done';$o.result=$j.result.result.value;$o.err=$j.result.exceptionDetails.text;break}}}}catch{$o.error=$_.Exception.Message}finally{if($w){$w.Dispose()}};$o|ConvertTo-Json -Compress -Depth 9"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "Read public search result anchor titles URLs via Chrome CDP for Avito housing listings, no navigation or purchases."
+}
