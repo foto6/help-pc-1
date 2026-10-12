@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-neur0store-create-isolated-venv-r06",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "from pathlib import Path\nimport subprocess,sys\np=Path('E:/Neur0StoreCurator/.venv')\nif p.exists():\n if not (p/'Scripts/python.exe').exists():raise RuntimeError('existing_broken_venv_do_not_replace')\n print('ISOLATED_VENV_ALREADY_PRESENT')\nelse:\n r=subprocess.run(['py.exe','-3.12','-m','venv',str(p)],timeout=35,check=False,capture_output=True,text=True)\n if r.returncode!=0:raise RuntimeError('venv_creation_failed_'+str(r.returncode))\n print('ISOLATED_PYTHON312_VENV_CREATED')\n"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 44000,
+  "note": "Create isolated user-requested MTProto Python3.12 virtualenv only under E:\\Neur0StoreCurator\\.venv; no global installs or credential access."
+}
