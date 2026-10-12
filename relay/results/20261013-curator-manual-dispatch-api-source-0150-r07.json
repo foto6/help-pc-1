@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$root='E:\\WebAIBridge';$out=@();foreach($dir in @(\"$root\\src\",\"$root\\server\",\"$root\\app\",\"$root\\apps\",\"$root\\packages\")){if(Test-Path -LiteralPath $dir){& rg.exe -l --glob '*.js' --glob '*.ts' --glob '!**/node_modules/**' --glob '!**/dist/**' -F '/api/supervisor-watchdog/agent-assignments' $dir 2>$null | Select-Object -First 12 | ForEach-Object{$out+=$_}}};[ordered]@{paths=@($out|Select-Object -First 20);matchCount=$out.Count;rgAvailable=[bool](Get-Command rg.exe -ErrorAction SilentlyContinue)}|ConvertTo-Json -Compress -Depth 3"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "& : The term 'rg.exe' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the \r\nspelling of the name, or if a path was included, verify that the path is correct and try again.\r\nAt line:1 char:190\r\n+ ... \",\"$root\\packages\")){if(Test-Path -LiteralPath $dir){& rg.exe -l --gl ...\r\n+                                                            ~~~~~~\r\n    + CategoryInfo          : ObjectNotFound: (rg.exe:String) [], CommandNotFoundException\r\n    + FullyQualifiedErrorId : CommandNotFoundException\r\n \r\n",
+      "stderr_bytes": 539,
+      "stderr_truncated": false,
+      "stdout": "{\"paths\":[],\"matchCount\":0,\"rgAvailable\":false}\r\n",
+      "stdout_bytes": 49,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T18:28:35.089Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T18:28:34.744Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-curator-manual-dispatch-api-source-0150-r07"
+    },
+    "request_id": "20261013-curator-manual-dispatch-api-source-0150-r07",
+    "started_at": "2026-10-12T18:28:32.865Z",
+    "status": "completed"
+  },
+  "id": "20261013-curator-manual-dispatch-api-source-0150-r07",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
