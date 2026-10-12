@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-curator-public-egress-options-c1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import ssl,socket,urllib.request,urllib.error,json,concurrent.futures,time\nsites=['https://api.telegram.org/','https://my.telegram.org/','https://www.cloudflare.com/cdn-cgi/trace','https://workers.cloudflare.com/','https://api.github.com/','https://google.com/']\ndef p(u):\n t=time.monotonic()\n try:\n  op=urllib.request.build_opener(urllib.request.ProxyHandler({}))\n  with op.open(urllib.request.Request(u,headers={'User-Agent':'Neur0StoreTransportProbe/1.0'}),timeout=4) as r: return {'host':r.url.split('/')[2],'http':r.status,'ms':int((time.monotonic()-t)*1000)}\n except urllib.error.HTTPError as e:return {'host':u.split('/')[2],'http':e.code,'ms':int((time.monotonic()-t)*1000)}\n except Exception as e:return {'host':u.split('/')[2],'error':type(e).__name__}\nwith concurrent.futures.ThreadPoolExecutor(max_workers=6) as ex: print(json.dumps(list(ex.map(p,sites)),ensure_ascii=True))"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 13500,
+  "note": "Read-only network reachability of public Bot API/my.telegram/Cloudflare/GitHub with 4s timeout each. No credential/token, no user projects touched."
+}
