@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-15pm-p7-compact-c2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-15pm-p7-compact.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"hard_timeout\"}');process.exit(0)},9000);try{const t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id==='CFAAFB47E6DBFE61AC764790DA0ED1FC');if(!t)throw Error('no_tab');const w=new WebSocket(t.webSocketDebuggerUrl);w.addEventListener('open',()=>w.send(JSON.stringify({id:77,method:'Runtime.evaluate',params:{expression:\"(()=>{const e=document.querySelectorAll('[data-marker=item]'),rows=[];for(let i=0;i<12;i++){const x=e[i];if(!x)break;rows.push([x.getAttribute('data-item-id'),x.querySelector('[itemprop=name]')?.textContent?.trim(),x.querySelector('[itemprop=price]')?.getAttribute('content'),x.querySelector('[data-marker=item-title]')?.getAttribute('href')?.split('?')[0]])}return {url:location.href,count:e.length,rows}})()\",returnByValue:true}})),{once:true});w.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===77){console.log(JSON.stringify(z.result?.result?.value||{error:'bad'}));process.exit(0)}});}catch(e){console.log(JSON.stringify({error:String(e).slice(0,80)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only 12 public listings from previously opened Avito iPhone 15 Pro Max private seller p7 search; only id name price URL, no account state."
+}
