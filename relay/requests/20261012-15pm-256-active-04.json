@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-15pm-256-active-04",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$r=Invoke-WebRequest -Uri 'http://127.0.0.1:17447/json/activate/FD23CE5B5AF8CEC45BAE8D8AB673A2FD' -TimeoutSec 5 -UseBasicParsing; Write-Output $r.StatusCode"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Activate only own public 15 Pro Max 256GB cheapest private search for screenshot, no navigation elsewhere or seller actions."
+}
