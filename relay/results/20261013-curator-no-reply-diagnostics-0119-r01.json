@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess\nfor name,args in [('db',[ 'python.exe','-c',\"import os,json,datetime,sqlite3\\nfrom pathlib import Path\\nr=Path(os.environ.get(\\\"LOCALAPPDATA\\\",str(Path.home())))/\\\"Neur0StoreCurator\\\"\\nout={\\\"local_clock\\\":datetime.datetime.now().isoformat(timespec=\\\"seconds\\\"),\\\"credential_store_present\\\":(r/\\\"credentials.dpapi\\\").is_file(),\\\"proxy_store_present\\\":(r/\\\"owner_proxy.dpapi\\\").is_file()}\\ndb=r/\\\"inbox.sqlite3\\\"\\nif db.is_file():\\n try:\\n  c=sqlite3.connect(\\\"file:\\\"+db.as_posix()+\\\"?mode=ro\\\",uri=True,timeout=1)\\n  vals=c.execute(\\\"SELECT v FROM meta WHERE k='offset'\\\").fetchone()\\n  out[\\\"sqlite\\\"]={\\\"has_offset\\\":vals is not None,\\\"offset_digits\\\":len(vals[0]) if vals else 0,\\\"row_count\\\":c.execute(\\\"SELECT COUNT(*) FROM inbox\\\").fetchone()[0],\\\"states\\\":[{\\\"state\\\":k,\\\"count\\\":v} for k,v in c.execute(\\\"SELECT state,COUNT(*) FROM inbox GROUP BY state\\\")],\\\"most_recent\\\":[{\\\"state\\\":state,\\\"noted\\\":bool(noted),\\\"error_kind\\\":(err or \\\"\\\")[:80]} for state,noted,err in c.execute(\\\"SELECT state,noted,error FROM inbox ORDER BY update_id DESC LIMIT 8\\\")]}\\n  c.close()\\n except Exception as e:out[\\\"sqlite_error\\\"]=type(e).__name__\\nelse:out[\\\"sqlite\\\"]={\\\"exists\\\":False}\\nprint(json.dumps(out,ensure_ascii=True))\"]),('process',['powershell.exe','-NoProfile','-Command',\"$ErrorActionPreference='Continue'; $p=@(Get-CimInstance Win32_Process|Where-Object{$_.Name -in @('python.exe','pythonw.exe') -and $_.CommandLine -match 'daemon\\\\.py' -and $_.CommandLine -notmatch '--check|--once'});$q=@(Get-CimInstance Win32_Process|Where-Object{$_.Name -in @('cmd.exe','python.exe','pythonw.exe') -and $_.CommandLine -match 'START_CURATOR|setup\\\\.py'}); [ordered]@{daemonCount=$p.Count;daemonPids=@($p|ForEach-Object{$_.ProcessId});ownerLauncherCount=$q.Count}|ConvertTo-Json -Compress\"])]:\n try:\n  r=subprocess.run(args,capture_output=True,text=True,timeout=12)\n  print(name+'_STATUS',r.returncode)\n  print(name+'_RESULT',r.stdout.strip()[:4300])\n except Exception as e:print(name+'_ERROR_TYPE',type(e).__name__)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "db_STATUS 0\r\ndb_RESULT {\"local_clock\": \"2026-10-13T01:24:02\", \"credential_store_present\": true, \"proxy_store_present\": true, \"sqlite\": {\"has_offset\": true, \"offset_digits\": 9, \"row_count\": 1, \"states\": [{\"state\": \"QUEUED\", \"count\": 1}], \"most_recent\": [{\"state\": \"QUEUED\", \"noted\": false, \"error_kind\": \"\"}]}}\r\nprocess_STATUS 0\r\nprocess_RESULT {\"daemonCount\":1,\"daemonPids\":[25756],\"ownerLauncherCount\":2}\r\n",
+      "stdout_bytes": 407,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T18:24:05.468Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T18:24:05.206Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-curator-no-reply-diagnostics-0119-r01"
+    },
+    "request_id": "20261013-curator-no-reply-diagnostics-0119-r01",
+    "started_at": "2026-10-12T18:24:01.561Z",
+    "status": "completed"
+  },
+  "id": "20261013-curator-no-reply-diagnostics-0119-r01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
