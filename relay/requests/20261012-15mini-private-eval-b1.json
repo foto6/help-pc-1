@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-15mini-private-eval-b1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-15mini-eval-b1.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},20500);\nconst targets=[{\"label\":\"15pm_p3\",\"id\":\"FCD1272A7DC4E4537390D862FE735F52\"},{\"label\":\"13mini_p3\",\"id\":\"51CA747F671F07D8283AC97184C115E1\"}],out=[];\ntry{\nconst v=await(await fetch('http://127.0.0.1:17447/json/version')).json();\nconst main=new WebSocket(v.webSocketDebuggerUrl);await new Promise((ok,no)=>{main.addEventListener('open',ok,{once:true});main.addEventListener('error',no,{once:true})});\nlet sn=40,p=new Map();main.addEventListener('message',e=>{let z=JSON.parse(e.data);if(p.has(z.id)){p.get(z.id)(z);p.delete(z.id)}});\nconst active=(id)=>Promise.race([new Promise(ok=>{let i=++sn;p.set(i,ok);main.send(JSON.stringify({id:i,method:'Target.activateTarget',params:{targetId:id}}))}),new Promise(ok=>setTimeout(()=>ok({error:'activation_timeout'}),2300))]);\nfor(const t of targets){\nconst a=await active(t.id);\nconst list=await(await fetch('http://127.0.0.1:17447/json/list')).json();\nconst tab=list.find(z=>z.id===t.id);\nif(!tab){out.push({label:t.label,error:'tab_not_found'});continue}\nconst ws=new WebSocket(tab.webSocketDebuggerUrl);\nconst result=await Promise.race([new Promise(ok=>{\nws.addEventListener('open',()=>ws.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:\"(()=>{const e=document.querySelectorAll('[data-marker=\\\"item\\\"]'),rows=[];for(let i=0;i<12;i++){const n=e[i];if(!n)break;rows.push({i,id:n.getAttribute('data-item-id'),name:n.querySelector('[itemprop=\\\"name\\\"]')?.textContent?.trim()||'',price:n.querySelector('[itemprop=\\\"price\\\"]')?.getAttribute('content')||'',href:n.querySelector('[data-marker=\\\"item-title\\\"]')?.getAttribute('href')?.split('?')[0]||'',end:n.textContent?.trim().slice(-90)||''})}return{url:location.href,count:e.length,rows}})()\",returnByValue:true}})),{once:true});\nws.addEventListener('message',e=>{let z=JSON.parse(e.data);if(z.id===1)ok(z.result?.result?.value||{error:z.result?.exceptionDetails?.text||'eval_failed'})});\nws.addEventListener('error',()=>ok({error:'ws_error'}),{once:true})\n}),new Promise(ok=>setTimeout(()=>ok({error:'eval_timeout'}),5800))]);\nout.push({label:t.label,activated:!!a.result,result});ws.close();\n}\nconsole.log(JSON.stringify({out}));process.exit(0)\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,150),out}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 28000,
+  "note": "Activate only two newly created research tabs on user-approved Avito Chrome; read up to 12 PUBLIC iPhone listing titles prices seller card captions per tab via CDP, no private user content, other processes or seller contacts."
+}
