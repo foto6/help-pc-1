@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$work='E:\\PC-Control\\Proxifier-Avito-20261012'\n$original=Join-Path $env:APPDATA 'Proxifier4\\Profiles\\Default.ppx'\n$backup=Join-Path $work 'Default-original-backup.ppx'\nif(!(Test-Path -LiteralPath $backup) -or (Get-FileHash $original).Hash -ne (Get-FileHash $backup).Hash){throw 'BACKUP_MISMATCH_DO_NOT_MODIFY'}\n$chrome=@(Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\")\n$main=$chrome|Where-Object {$_.ProcessId -eq 16760 -and $_.CommandLine -match 'remote-debugging-port=17410'}\n$second=$chrome|Where-Object{$_.ProcessId -eq 9148 -and $_.CommandLine -notmatch '--type='}\n$test=$chrome|Where-Object{$_.ProcessId -eq 9316 -and $_.CommandLine -match 'remote-debugging-port=17447'}\nif(!$main -or !$second -or !$test){throw 'BROWSER_PROCESS_IDENTITIES_CHANGED_DO_NOT_MODIFY'}\n$roots=@(9148,9316)\n$extra=@($chrome|Where-Object {$roots -contains $_.ParentProcessId})\n$pids=@($roots+@($extra|Select-Object -ExpandProperty ProcessId)|Sort-Object -Unique)\n$apps=($pids|ForEach-Object{\"pid=$_\"}) -join ';'\n$txt=[System.IO.File]::ReadAllText($original,[System.Text.Encoding]::UTF8)\n$rx=[regex]::Match($txt,'<RuleList(?:\\s[^>]*)?>')\nif(!$rx.Success -or ([regex]::Matches($txt,'<RuleList(?:\\s[^>]*)?>').Count -ne 1)){throw 'UNKNOWN_RULELIST_SCHEMA'}\n$rule=([Environment]::NewLine)+'    <Rule enabled=\"true\">'+([Environment]::NewLine)+'      <Action type=\"Direct\" />'+([Environment]::NewLine)+'      <Applications>'+$apps+'</Applications>'+([Environment]::NewLine)+'      <Name>Second Chrome DIRECT [session]</Name>'+([Environment]::NewLine)+'    </Rule>'\n$proposed=$txt.Insert($rx.Index+$rx.Length,$rule)\n$staged=Join-Path $work 'SecondChrome-Direct-PIDs.ppx'\n[System.IO.File]::WriteAllText($staged,$proposed,[System.Text.UTF8Encoding]::new($false))\n[xml]$oldxml=$txt;[xml]$newxml=$proposed\n$oldNames=@($oldxml.SelectNodes('//*[local-name()=\"Rule\"]/Name')|ForEach-Object{$_.InnerText})\n$newNames=@($newxml.SelectNodes('//*[local-name()=\"Rule\"]/Name')|ForEach-Object{$_.InnerText})\nif(($newNames.Count -ne ($oldNames.Count+1)) -or ($newNames[0] -ne 'Second Chrome DIRECT [session]') -or (($newNames|Select-Object -Skip 1) -join '|' -ne ($oldNames -join '|'))){throw 'RULE_INSERTION_INVALID'}\nforeach($tag in @('Options','ProxyList','ChainList')){if($oldxml.DocumentElement.SelectSingleNode($tag).OuterXml -cne $newxml.DocumentElement.SelectSingleNode($tag).OuterXml){throw \"PROXY_CONFIG_CHANGED_$tag\"}}\nif($proposed.Replace($rule,'') -cne $txt){throw 'ORIGINAL_XML_NOT_PRESERVED'}\n$o=[ordered]@{status='STAGED_VALIDATED_NOT_APPLIED';stagedPath=$staged;backupExists=$true;ruleName=$newNames[0];scope='only second-Chrome and isolated-test Chrome current PIDs';mainChromePid=16760;newRulePidCount=$pids.Count;priorRuleNames=$oldNames;oldRuleCount=$oldNames.Count;newRuleCount=$newNames.Count;proxyServerChainAndOptionsUnchanged=$true;originalDefaultRuleStillLast=($newNames[-1] -eq 'Default')}\n$o|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"status\":\"STAGED_VALIDATED_NOT_APPLIED\",\"stagedPath\":\"E:\\\\PC-Control\\\\Proxifier-Avito-20261012\\\\SecondChrome-Direct-PIDs.ppx\",\"backupExists\":true,\"ruleName\":\"Second Chrome DIRECT [session]\",\"scope\":\"only second-Chrome and isolated-test Chrome current PIDs\",\"mainChromePid\":16760,\"newRulePidCount\":19,\"priorRuleNames\":[\"tgwsproxy_windows.exe [auto-created]\",\"Localhost\",\"cg\",\"Default\"],\"oldRuleCount\":4,\"newRuleCount\":5,\"proxyServerChainAndOptionsUnchanged\":true,\"originalDefaultRuleStillLast\":true}\r\n",
+      "stdout_bytes": 501,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T11:51:37.516Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T11:51:37.338Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-proxifier-staged-pid-rule-p6"
+    },
+    "request_id": "20261012-proxifier-staged-pid-rule-p6",
+    "started_at": "2026-10-12T11:51:36.401Z",
+    "status": "completed"
+  },
+  "id": "20261012-proxifier-staged-pid-rule-p6",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
