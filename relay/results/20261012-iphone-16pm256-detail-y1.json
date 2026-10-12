@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-16pm256-detail-y1.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},10500);\ntry{\n const v=await(await fetch('http://127.0.0.1:17447/json/version')).json();const bw=new WebSocket(v.webSocketDebuggerUrl);\n await new Promise((ok,no)=>{bw.addEventListener('open',ok,{once:true});bw.addEventListener('error',no,{once:true})});\n const az=await Promise.race([new Promise(ok=>{bw.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===1)ok(z)});bw.send(JSON.stringify({id:1,method:'Target.activateTarget',params:{targetId:\"FE24FB1BB37ACBE2E8A052F0FC033E7C\"}}))}),new Promise(ok=>setTimeout(()=>ok({}),3500))]);\n const t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id===\"FE24FB1BB37ACBE2E8A052F0FC033E7C\");\n const w=new WebSocket(t.webSocketDebuggerUrl);\n w.addEventListener('open',()=>w.send(JSON.stringify({id:2,method:'Runtime.evaluate',params:{expression:'(()=>{window.scrollTo(0,1130);return {scrollY:window.scrollY}})()',returnByValue:true}})),{once:true});\n w.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===2){console.log(JSON.stringify({activated:!!az.result,scroll:z.result?.result?.value||null}));process.exit(0)}})\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,130)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\\win\\async.c, line 94\r\n",
+      "stderr_bytes": 87,
+      "stderr_truncated": false,
+      "stdout": "{\"activated\":true,\"scroll\":{\"scrollY\":1130}}\n",
+      "stdout_bytes": 45,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T14:36:14.194Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T14:36:13.996Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-iphone-16pm256-detail-y1"
+    },
+    "request_id": "20261012-iphone-16pm256-detail-y1",
+    "started_at": "2026-10-12T14:36:13.053Z",
+    "status": "completed"
+  },
+  "id": "20261012-iphone-16pm256-detail-y1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
