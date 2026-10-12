@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261013-avito-home-explore-search-seven-r34",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$o=@();foreach($u in @('https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._taunhaus_114_m_8184428608?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._taunhaus_105_m_4441598077?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/2-k._kottedzh_120_m_1745998049?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._kottedzh_151_m_8345145864?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/zykovo/doma_dachi_kottedzhi/4-k._kottedzh_110_m_7406562031?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarskiy_kray_sosnovoborsk/doma_dachi_kottedzhi/3-k._dom_80_m_7812117877?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/emelyanovo/doma_dachi_kottedzhi/3-k._dom_100_m_2787275385?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D')){try{$t=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17447/json/new?'+[Uri]::EscapeDataString($u)) -TimeoutSec 8;$o+=@{id=$t.id;url=$t.url}}catch{$o+=@{url=$u;error=$_.Exception.Message}}};$o|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 55000,
+  "note": "Open 7 sourced public Avito house ads from search result page for 10 adults Nov3-4, isolated Chrome read-only quotes."
+}
