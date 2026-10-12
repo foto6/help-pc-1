@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-ten-guests-h6.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{let ts=await(await fetch('http://127.0.0.1:17447/json/list')).json();let t=ts.find(x=>x.id===\"38AC30F9B71FDC33019DBD7A9309EAB2\");ws=new WebSocket(t.webSocketDebuggerUrl);let a=await Promise.race([new Promise((ok,no)=>{ws.addEventListener('open',()=>ws.send(JSON.stringify({id:67,method:'Runtime.evaluate',params:{expression:\"(async()=>{let count=0;for(let i=0;i<8;i++){let e=document.elementFromPoint(978,467);if(!e)break;e.click();count++;await new Promise(r=>setTimeout(r,125))}return {clicked:count,widget:(document.elementFromPoint(940,468)?.parentElement?.textContent||'').trim().slice(0,85)}})()\",returnByValue:true,awaitPromise:true}})),{once:true});ws.addEventListener('message',e=>{let x=JSON.parse(e.data);if(x.id===67)ok(x.result?.result?.value||{error:x.error?.message})});ws.addEventListener('error',no,{once:true})}),new Promise((_,j)=>setTimeout(()=>j(Error('timeout')),7000))]);console.log(JSON.stringify(a))}catch(e){console.log(JSON.stringify({err:String(e).slice(0,130)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{}\n",
+      "stdout_bytes": 3,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T13:00:53.745Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T13:00:53.565Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-ten-guests-h6"
+    },
+    "request_id": "20261012-avito-ten-guests-h6",
+    "started_at": "2026-10-12T13:00:52.880Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-ten-guests-h6",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
