@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "from pathlib import Path\nroot=Path('E:/Neur0StoreCurator')\nfiles={\"test_mtproto.py\":\"\\\"\\\"\\\"Offline MTProto adapter tests; no bot API, no credentials, no live TGWS connection.\\\"\\\"\\\"\\nimport unittest, tempfile, pathlib, os, json\\nfrom unittest.mock import patch\\nimport daemon\\nimport mtproto_common as common\\nimport mtproto_gateway as mt\\n\\nclass MTProtoGatewayTests(unittest.TestCase):\\n    def setUp(self):\\n        self.tmp=tempfile.TemporaryDirectory()\\n        self.db=daemon.open_db({\\\"db\\\":str(pathlib.Path(self.tmp.name)/\\\"inbox.sqlite3\\\")})\\n        mt.setup_outbox(self.db)\\n        self.c={\\\"db\\\":str(pathlib.Path(self.tmp.name)/\\\"inbox.sqlite3\\\"),\\\"chatid\\\":71,\\\"userid\\\":71,\\n                \\\"base\\\":\\\"http://127.0.0.1:17448\\\",\\\"CURATOR_MANAGED_CHAT_ID\\\":\\\"tg-curator-owner\\\",\\n                \\\"CURATOR_REPOSITORY\\\":\\\"foto6/boss\\\",\\n                \\\"CURATOR_BRANCH\\\":\\\"agent/telegram-curator-authority-20261012\\\",\\n                \\\"CURATOR_EXPECTED_HEAD\\\":\\\"773b42f59018a2e55834b87275796486d686e4f6\\\"}\\n    def tearDown(self):\\n        self.db.close()\\n        self.tmp.cleanup()\\n    def test_message_is_saved_only_once(self):\\n        mt.accept_message(self.db,self.c,41,\\\"/task Проверить Bridge\\\")\\n        mt.accept_message(self.db,self.c,41,\\\"/task Проверить Bridge\\\")\\n        self.assertEqual(self.db.execute(\\\"SELECT COUNT(*) FROM inbox\\\").fetchone()[0],1)\\n        r=self.db.execute(\\\"SELECT body,state FROM inbox\\\").fetchone()\\n        self.assertEqual(r[\\\"body\\\"],\\\"Проверить Bridge\\\")\\n        self.assertEqual(r[\\\"state\\\"],\\\"RECEIVED\\\")\\n    def test_receipt_outbox_deduplicated(self):\\n        mt.queue_reply(self.db,self.c,\\\"OK\\\",41)\\n        mt.queue_reply(self.db,self.c,\\\"OK\\\",41)\\n        self.assertEqual(self.db.execute(\\\"SELECT COUNT(*) FROM mtproto_outbox\\\").fetchone()[0],1)\\n    def test_status_displays_native_message_id(self):\\n        mt.accept_message(self.db,self.c,22,\\\"task\\\")\\n        self.assertIn(\\\"#22: RECEIVED\\\",mt.current_status(self.db))\\n    def test_delivery_callback_does_not_call_bot_api(self):\\n        mt.accept_message(self.db,self.c,77,\\\"test\\\")\\n        with patch.object(daemon,\\\"notify\\\") as forbidden:\\n            mt.queue_reply(self.db,self.c,\\\"sent\\\",77)\\n            forbidden.assert_not_called()\\n    def test_proxy_config_is_local_and_never_emits_secret(self):\\n        root=pathlib.Path(self.tmp.name)/\\\"TgWsProxy\\\"\\n        root.mkdir()\\n        (root/\\\"config.json\\\").write_text(json.dumps({\\n          \\\"host\\\":\\\"127.0.0.1\\\",\\\"port\\\":1443,\\\"secret\\\":\\\"a\\\"*32\\n        }),encoding=\\\"utf8\\\")\\n        with patch.dict(os.environ,{\\\"APPDATA\\\":self.tmp.name}):\\n            host,port,secret=common.proxy_config()\\n        self.assertEqual((host,port),(\\\"127.0.0.1\\\",1443))\\n        self.assertEqual(len(secret),32)\\n    def test_proxy_rejects_nonlocal_ip(self):\\n        root=pathlib.Path(self.tmp.name)/\\\"TgWsProxy\\\";root.mkdir()\\n        (root/\\\"config.json\\\").write_text(json.dumps({\\n          \\\"host\\\":\\\"198.51.100.1\\\",\\\"port\\\":1443,\\\"secret\\\":\\\"a\\\"*32\\n        }),encoding=\\\"utf8\\\")\\n        with patch.dict(os.environ,{\\\"APPDATA\\\":self.tmp.name}):\\n            with self.assertRaises(common.MTSetupError):common.proxy_config()\\n    def test_bridge_binding_is_pinned(self):\\n        c=common.make_bridge_config({\\\"chatid\\\":71,\\\"userid\\\":71})\\n        self.assertEqual(c[\\\"CURATOR_MANAGED_CHAT_ID\\\"],\\\"tg-curator-owner\\\")\\n        self.assertEqual(c[\\\"chatid\\\"],71)\\n        self.assertEqual(c[\\\"CURATOR_BRANCH\\\"],\\\"agent/telegram-curator-authority-20261012\\\")\\n\\nif __name__==\\\"__main__\\\":unittest.main()\\n\",\"INSTALL_MTPROTO.cmd\":\"@echo off\\r\\nsetlocal\\r\\ncd /d \\\"%~dp0\\\"\\r\\nif exist \\\".venv\\\\Scripts\\\\python.exe\\\" goto install\\r\\npy -3.12 -m venv \\\".venv\\\"\\r\\nif errorlevel 1 (echo Python 3.12 unavailable. Install Python 3.12 and retry.& pause& exit /b 1)\\r\\n:install\\r\\n\\\".venv\\\\Scripts\\\\python.exe\\\" -m pip install --disable-pip-version-check --no-input \\\"Telethon==1.45.0\\\"\\r\\nif errorlevel 1 (echo ISOLATED_TELETHON_INSTALL_FAILED. No global Python changed.& pause& exit /b 1)\\r\\n\\\".venv\\\\Scripts\\\\python.exe\\\" -c \\\"import telethon; print('TELETHON_INSTALLED',telethon.__version__)\\\"\\r\\npause\\r\\n\",\"SETUP_MTPROTO.cmd\":\"@echo off\\r\\nsetlocal\\r\\ncd /d \\\"%~dp0\\\"\\r\\nif not exist \\\".venv\\\\Scripts\\\\python.exe\\\" (echo First run INSTALL_MTPROTO.cmd.& pause& exit /b 1)\\r\\n\\\".venv\\\\Scripts\\\\python.exe\\\" setup_mtproto.py\\r\\nif errorlevel 1 echo MTProto pairing blocked. Do not share credentials or rerun with old token.\\r\\npause\\r\\n\",\"CHECK_MTPROTO.cmd\":\"@echo off\\r\\nsetlocal\\r\\ncd /d \\\"%~dp0\\\"\\r\\nif not exist \\\".venv\\\\Scripts\\\\python.exe\\\" (echo First run INSTALL_MTPROTO.cmd.& pause& exit /b 1)\\r\\n\\\".venv\\\\Scripts\\\\python.exe\\\" mtproto_preflight.py\\r\\nif errorlevel 1 echo MTProto gateway is not ready; no provider-chat assignment sent.\\r\\npause\\r\\n\",\"START_MTPROTO.cmd\":\"@echo off\\r\\nsetlocal\\r\\ncd /d \\\"%~dp0\\\"\\r\\nif not exist \\\".venv\\\\Scripts\\\\python.exe\\\" (echo First run INSTALL_MTPROTO.cmd.& pause& exit /b 1)\\r\\n\\\".venv\\\\Scripts\\\\python.exe\\\" mtproto_preflight.py\\r\\nif errorlevel 1 (echo Safety preflight failed; MTProto gateway NOT started.& pause& exit /b 1)\\r\\necho Starting private MTProto bot. Keep this window open; close it to stop.\\r\\n\\\".venv\\\\Scripts\\\\python.exe\\\" mtproto_gateway.py\\r\\necho Gateway exited. Inspect terminal state before restart; unknown sends must not be replayed.\\r\\npause\\r\\n\"}\nfor name,src in files.items():\n p=root/name\n if p.exists():\n  if p.read_text(encoding='utf8')!=src:raise RuntimeError('existing_file_conflict:'+name)\n  print('MATCH_'+name)\n else:\n  with p.open('x',encoding='utf8',newline='') as f:f.write(src)\n  print('CREATED_'+name)\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "CREATED_test_mtproto.py\r\nCREATED_INSTALL_MTPROTO.cmd\r\nCREATED_SETUP_MTPROTO.cmd\r\nCREATED_CHECK_MTPROTO.cmd\r\nCREATED_START_MTPROTO.cmd\r\n",
+      "stdout_bytes": 135,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:47:03.157Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:47:02.940Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-neur0store-mtproto-install-operators-r03"
+    },
+    "request_id": "20261012-neur0store-mtproto-install-operators-r03",
+    "started_at": "2026-10-12T16:47:02.384Z",
+    "status": "completed"
+  },
+  "id": "20261012-neur0store-mtproto-install-operators-r03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
