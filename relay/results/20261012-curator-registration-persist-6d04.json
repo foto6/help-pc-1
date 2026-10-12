@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import sys,json,urllib.request\nsys.path.insert(0,'E:/Neur0StoreCurator')\nimport register\nbefore,after,p,already=register.planned()\nif not already or len(before)!=7 or len(after)!=7:raise RuntimeError('registration_not_persisted')\nothers=[r for r in before if r.get('id')!='tg-curator-owner']\nif len(others)!=6:raise RuntimeError('original_agent_count_changed')\ncur=[r for r in before if r.get('id')=='tg-curator-owner']\nif len(cur)!=1 or cur[0].get('url')!=register.CURATOR_URL or cur[0].get('profileId')!=p.get('id'):raise RuntimeError('curator_mismatch')\ntry:\n with urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog?detect=0',timeout=5) as f:s=json.load(f)\n watchdog={'mode':s.get('config',{}).get('mode'),'allowAutonomousSend':s.get('config',{}).get('allowAutonomousSend')}\nexcept Exception as e:watchdog={'read_error':type(e).__name__}\nprint(json.dumps({'registered':already,'total':len(before),'original_agents':len(others),'curator_id':cur[0]['id'],'profile_port':p.get('debugPort'),'watchdog':watchdog},ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"registered\": true, \"total\": 7, \"original_agents\": 6, \"curator_id\": \"tg-curator-owner\", \"profile_port\": 17410, \"watchdog\": {\"mode\": \"off\", \"allowAutonomousSend\": false}}\r\n",
+      "stdout_bytes": 172,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:15:51.901Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:15:51.694Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-curator-registration-persist-6d04"
+    },
+    "request_id": "20261012-curator-registration-persist-6d04",
+    "started_at": "2026-10-12T16:15:51.035Z",
+    "status": "completed"
+  },
+  "id": "20261012-curator-registration-persist-6d04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
