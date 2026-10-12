@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,daemon\nout={\"sent\":False}\ntry:\n c=daemon.config()\n msg=\"Neur0Store: проверка связи. Telegram-подключение активно, задача сохранена, но отправка в ChatGPT пока не подтверждена (ожидает Bridge).\"\n r=daemon.notify(c,msg)\n out[\"sent\"]=bool(r.get(\"ok\") is True and isinstance(r.get(\"result\"),dict) and bool(r[\"result\"].get(\"message_id\")))\n if not out[\"sent\"]:out[\"reason\"]=\"telegram_api_no_confirmed_message\"\nexcept Exception as e:\n out[\"error_type\"]=type(e).__name__\n if isinstance(e,daemon.Blocked):out[\"error_code\"]=str(e)[:100]\nprint(json.dumps(out,ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"sent\": true}\r\n",
+      "stdout_bytes": 16,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T18:25:31.146Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T18:25:30.651Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-curator-owner-one-reply-test-0130-r03"
+    },
+    "request_id": "20261013-curator-owner-one-reply-test-0130-r03",
+    "started_at": "2026-10-12T18:25:28.755Z",
+    "status": "completed"
+  },
+  "id": "20261013-curator-owner-one-reply-test-0130-r03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
