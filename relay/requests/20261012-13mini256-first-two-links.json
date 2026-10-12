@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-13mini256-first-two-links",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-mini-first-links.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"timeout\"}');process.exit(0)},7500);\ntry{let t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id==='27D5F2C915CD3E5E0282DC98CCF3C884');if(!t)throw Error('target_not_found');let w=new WebSocket(t.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:\"(()=>{const a=document.querySelectorAll('[data-marker=item]');return {url:location.href,total:a.length,rows:[0,1,2].map(i=>{const e=a[i];if(!e)return null;return {id:e.getAttribute('data-item-id'),name:e.querySelector('[itemprop=name]')?.textContent?.trim(),price:e.querySelector('[itemprop=price]')?.getAttribute('content'),link:e.querySelector('[data-marker=item-title]')?.getAttribute('href')?.split('?')[0]}})}})()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{let z=JSON.parse(e.data);if(z.id===1){console.log(JSON.stringify(z.result?.result?.value||{error:'eval_empty'}));process.exit(0)}});\nw.addEventListener('error',()=>{console.log('{\"error\":\"ws_error\"}');process.exit(0)},{once:true});\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,120)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Read-only public first three Avito iPhone 13 mini 256 GB listing links/prices; user-authorized isolated browser, no seller contact or any state edits."
+}
