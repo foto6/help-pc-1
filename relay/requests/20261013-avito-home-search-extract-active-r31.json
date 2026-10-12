@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261013-avito-home-search-extract-active-r31",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';[Console]::OutputEncoding=[Text.Encoding]::UTF8;$o=[ordered]@{stage='start'};$w=$null;try{$r=Invoke-WebRequest 'http://127.0.0.1:17447/json/activate/87DA026620C18E119450B17EFB40DD81' -UseBasicParsing -TimeoutSec 6;$t=@(Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 5|Where-Object{$_.id -eq '87DA026620C18E119450B17EFB40DD81'})[0];$w=[Net.WebSockets.ClientWebSocket]::new();$c=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(5));$null=$w.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$c.Token).GetAwaiter().GetResult();$cmd=@{id=310;method='Runtime.evaluate';params=@{expression='(()=>{let a=[...document.querySelectorAll(''a[data-marker=\"item-title\"]'')];return {count:a.length,urls:a.slice(0,40).map(x=>x.href.replace(/\\?.*/,''''))}})()';returnByValue=$true}}|ConvertTo-Json -Compress -Depth 5;$b=[Text.Encoding]::UTF8.GetBytes($cmd);$null=$w.SendAsync([ArraySegment[byte]]::new($b),[Net.WebSockets.WebSocketMessageType]::Text,$true,$c.Token).GetAwaiter().GetResult();$rc=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(7));$buf=New-Object byte[] 65536;$sb=[Text.StringBuilder]::new();for($k=0;$k -lt 20;$k++){$z=$w.ReceiveAsync([ArraySegment[byte]]::new($buf),$rc.Token).GetAwaiter().GetResult();[void]$sb.Append([Text.Encoding]::UTF8.GetString($buf,0,$z.Count));if($z.EndOfMessage){$j=$sb.ToString()|ConvertFrom-Json;[void]$sb.Clear();if($j.id -eq 310){$o.stage='done';$o.result=$j.result.result.value;$o.errorDetails=$j.result.exceptionDetails.text;break}}}}catch{$o.error=$_.Exception.Message}finally{if($w){$w.Dispose()}};$o|ConvertTo-Json -Compress -Depth 7"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 24000,
+  "note": "Read-only extract up to 40 public listing URLs from authorized Avito search results in isolated Chrome, no booking."
+}
