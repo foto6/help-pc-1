@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-home-150-rules-a19",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 4;$t=@($tabs|Where-Object{$_.id -eq 'EB407A848AF3A37ED207DA1F3638A58E'})[0];$w=[Net.WebSockets.ClientWebSocket]::new();try{$ct=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(6));$null=$w.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$ct.Token).GetAwaiter().GetResult();$msg=@{id=150;method='Runtime.evaluate';params=@{expression='window.scrollTo(0,1280);window.scrollY';returnByValue=$true}}|ConvertTo-Json -Compress -Depth 5;$b=[Text.Encoding]::UTF8.GetBytes($msg);$null=$w.SendAsync([ArraySegment[byte]]::new($b),[Net.WebSockets.WebSocketMessageType]::Text,$true,$ct.Token).GetAwaiter().GetResult();$rc=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(7));$buf=New-Object byte[] 8192;for($k=0;$k -lt 12;$k++){$r=$w.ReceiveAsync([ArraySegment[byte]]::new($buf),$rc.Token).GetAwaiter().GetResult();$j=([Text.Encoding]::UTF8.GetString($buf,0,$r.Count)|ConvertFrom-Json);if($j.id -eq 150){@{status='ack';scrollY=$j.result.result.value}|ConvertTo-Json -Compress;break}}}finally{$w.Dispose()}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 19000,
+  "note": "Scroll 150m five-room public Avito cottage to rules section; read-only photo inspection."
+}
