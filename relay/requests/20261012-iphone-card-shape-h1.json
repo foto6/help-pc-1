@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-card-shape-h1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-card-shape-h1.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},6500);\ntry{const arr=await(await fetch('http://127.0.0.1:17447/json/list')).json();const t=arr.find(x=>x.id==='EF27777D4E798E704D04D5D474887AFA');if(!t)throw Error('MISSING');const w=new WebSocket(t.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:17,method:'Runtime.evaluate',params:{expression:\"(()=>{const e=document.querySelector('[data-marker=\\\"item\\\"]');if(!e)return {error:'no_item'};return {html:e.outerHTML.slice(0,1600),text:(e.textContent||'').replace(/\\\\s+/g,' ').slice(0,380),h3s:e.querySelectorAll('h3').length,links:Array.from(e.querySelectorAll('a[href]')).slice(0,3).map(a=>({href:a.href,text:(a.textContent||'').slice(0,60)}))}})()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{let v=JSON.parse(e.data);if(v.id===17){console.log(JSON.stringify(v.result?.result?.value||{error:v.result?.exceptionDetails?.text||v.error?.message||'empty'}));process.exit(0)}});\nw.addEventListener('error',()=>{console.log(JSON.stringify({error:'ws_error'}));process.exit(0)},{once:true})\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,150)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only inspect tiny public DOM snippet of first iPhone 15 Pro Max search card on isolated tab. No private state, navigation, download or focus changes."
+}
