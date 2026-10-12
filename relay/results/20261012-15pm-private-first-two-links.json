@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-15pm-first-links.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"timeout\"}');process.exit(0)},8000);\ntry{let t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id==='2A718006A9ABE5D947BA203590E7188E');if(!t)throw Error('target_not_found');let w=new WebSocket(t.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:\"(()=>{const a=document.querySelectorAll('[data-marker=item]');return {url:location.href,total:a.length,rows:[0,1,2,3].map(i=>{const e=a[i];if(!e)return null;return {id:e.getAttribute('data-item-id'),name:e.querySelector('[itemprop=name]')?.textContent?.trim(),price:e.querySelector('[itemprop=price]')?.getAttribute('content'),link:e.querySelector('[data-marker=item-title]')?.getAttribute('href')?.split('?')[0]}})}})()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{let z=JSON.parse(e.data);if(z.id===1){console.log(JSON.stringify(z.result?.result?.value||{error:'eval_empty'}));process.exit(0)}});\nw.addEventListener('error',()=>{console.log('{\"error\":\"ws_error\"}');process.exit(0)},{once:true});\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,130)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"url\":\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_15_pro_max-ASgBAgICA0SywA3Woe0RtMANzqs5sMENiPw3?f=ASgBAgICBESywA3Woe0RtMANzqs5sMENiPw3sLMU_qGPAw&user=1\",\"total\":50,\"rows\":[{\"id\":\"8358178736\",\"name\":\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"price\":\"39999\",\"link\":\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8358178736\"},{\"id\":\"8276157273\",\"name\":\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"price\":\"45000\",\"link\":\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8276157273\"},{\"id\":\"7976558546\",\"name\":\"iPhone 15 Pro Max, 256 ГБ, 2 SIM\",\"price\":\"46148\",\"link\":\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_2_sim_7976558546\"},{\"id\":\"8228767937\",\"name\":\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"price\":\"47800\",\"link\":\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8228767937\"}]}\n",
+      "stdout_bytes": 843,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T15:47:52.809Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T15:47:52.611Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-15pm-private-first-two-links"
+    },
+    "request_id": "20261012-15pm-private-first-two-links",
+    "started_at": "2026-10-12T15:47:51.781Z",
+    "status": "completed"
+  },
+  "id": "20261012-15pm-private-first-two-links",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
