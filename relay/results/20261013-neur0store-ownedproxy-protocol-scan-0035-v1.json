@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import socket,json,time\nhost=\"104.165.1.52\"\nout={}\nfor port in (6637,16637):\n row={\"port\":port}\n start=time.monotonic()\n try:\n  s=socket.create_connection((host,port),timeout=5)\n  s.settimeout(4)\n  row[\"tcp\"]=\"connected\"\n  if port==16637:\n   s.sendall(b'\\x05\\x02\\x00\\x02')\n   reply=s.recv(2)\n   row[\"socks5_method_code\"]=(reply[1] if len(reply)==2 and reply[0]==5 else \"invalid_or_timeout\")\n  else:\n   s.sendall(b\"CONNECT api.telegram.org:443 HTTP/1.1\\r\\nHost: api.telegram.org:443\\r\\n\\r\\n\")\n   data=s.recv(240)\n   line=data.decode(\"latin1\",\"replace\").split(\"\\r\\n\")[0][:125]\n   row[\"connect_status\"]=line if line.startswith(\"HTTP/\") else \"not_http_connect\"\n except Exception as e:row[\"error_type\"]=type(e).__name__\n finally:\n  try:s.close()\n  except Exception:pass\n row[\"elapsed_ms\"]=int((time.monotonic()-start)*1000)\n out[str(port)]=row\nprint(json.dumps(out,ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"6637\": {\"port\": 6637, \"tcp\": \"connected\", \"connect_status\": \"HTTP/1.0 407 Proxy Authentication Required\", \"elapsed_ms\": 493}, \"16637\": {\"port\": 16637, \"error_type\": \"ConnectionRefusedError\", \"elapsed_ms\": 2408}}\r\n",
+      "stdout_bytes": 215,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:32:54.501Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:32:54.263Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-neur0store-ownedproxy-protocol-scan-0035-v1"
+    },
+    "request_id": "20261013-neur0store-ownedproxy-protocol-scan-0035-v1",
+    "started_at": "2026-10-12T17:32:50.502Z",
+    "status": "completed"
+  },
+  "id": "20261013-neur0store-ownedproxy-protocol-scan-0035-v1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
