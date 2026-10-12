@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-13mini-detail-15pm512-search",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-mini-detail-15pm512.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"hard_timeout\"}');process.exit(0)},14000);\ntry{const v=await(await fetch('http://127.0.0.1:17447/json/version')).json();const w=new WebSocket(v.webSocketDebuggerUrl);await new Promise((ok,no)=>{w.addEventListener('open',ok,{once:true});w.addEventListener('error',no,{once:true})});\nlet sn=0,p=new Map();w.addEventListener('message',e=>{const z=JSON.parse(e.data);if(p.has(z.id)){p.get(z.id)(z);p.delete(z.id)}});\nconst call=(method,params)=>Promise.race([new Promise(ok=>{let id=++sn;p.set(id,ok);w.send(JSON.stringify({id,method,params}))}),new Promise(ok=>setTimeout(()=>ok({error:{message:'timeout'}}),4000))]);\nconst out=[];for(const [tag,url] of [[\"mini256_20k\",\"https://www.avito.ru/krasnoyarsk/telefony/iphone_13_mini_256_gb_sim_esim_8394331865\"],[\"15pm512_cheapest\",\"https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2015%20pro%20max%20512&user=1&s=1\"]]){const z=await call('Target.createTarget',{url,background:true,newWindow:false});out.push({tag,id:z.result?.targetId||null,error:z.error?.message||null})}\nlet active=false;if(out[0]?.id){let z=await call('Target.activateTarget',{targetId:out[0].id});active=!!z.result}\nconsole.log(JSON.stringify({out,miniActivated:active}));process.exit(0)\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,140)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 23000,
+  "note": "Open exactly one public 13mini 256GB listing and one public 15 Pro Max 512GB private-cheapest search in new isolated Chrome tabs; activate mini detail for screenshot; no private data or seller contact."
+}
