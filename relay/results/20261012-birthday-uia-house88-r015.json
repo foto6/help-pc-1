@@ -1,0 +1,21 @@
+{
+  "action": "uia.snapshot",
+  "executor_result": {
+    "action": "uia.snapshot",
+    "data": {},
+    "dry_run": false,
+    "error": "window not found: Авито (7714813321)",
+    "error_kind": "stale_target",
+    "finished_at": "2026-10-12T16:20:22.029Z",
+    "ok": false,
+    "request_id": "20261012-birthday-uia-house88-r015",
+    "started_at": "2026-10-12T16:20:20.647Z",
+    "status": "stale_target"
+  },
+  "id": "20261012-birthday-uia-house88-r015",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
