@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-rules-budget-g3",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-rules-g3.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet out=[];let v=await(await fetch('http://127.0.0.1:17447/json/list')).json();for(const id of [\"C6DF1191AD11A4F40C5152CDF9011972\",\"38AC30F9B71FDC33019DBD7A9309EAB2\",\"88F33FF7CE7B171A51416C6F60D5A429\",\"54033D18B7447FD77E30A8D41C2C8B5D\",\"0A8A2242C74C03B63EEBEDB89441D7D7\",\"920430E5990D8033857341DBCA63CA19\"]){let t=v.find(x=>x.id===id&&x.url.startsWith('https://www.avito.ru/'));if(!t)continue;let ws=new WebSocket(t.webSocketDebuggerUrl);try{let x=await Promise.race([new Promise((ok,bad)=>{ws.addEventListener('open',()=>ws.send(JSON.stringify({id:330,method:'Runtime.evaluate',params:{expression:'window.scrollTo(0,1000);window.scrollY',returnByValue:true}})),{once:true});ws.addEventListener('message',e=>{let z=JSON.parse(e.data);if(z.id===330)ok(z.result?.result?.value||0)});ws.addEventListener('error',bad,{once:true})}),new Promise((_,rej)=>setTimeout(()=>rej(Error('timeout')),3200))]);out.push({id,scroll:x})}catch(e){out.push({id,error:'timeout'})}ws.close()}console.log(JSON.stringify(out));process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 27000,
+  "note": "Scroll six public Avito rental listing tabs to rules around y=1000 in dedicated managed Chrome CDP17447, with no interaction with other browsing profiles."
+}
