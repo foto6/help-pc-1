@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-idx12to22-j1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-idx-j1.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{let a=await(await fetch('http://127.0.0.1:17447/json/list')).json();let t=a.find(x=>x.id===\"0E020825CF96957FA4AD787C7C2F5C65\");ws=new WebSocket(t.webSocketDebuggerUrl);const z=await Promise.race([new Promise((ok,no)=>{ws.addEventListener('open',()=>ws.send(JSON.stringify({id:2,method:'Runtime.evaluate',params:{expression:\"Array.from(document.querySelectorAll('[data-marker=item]')).slice(12,22).map(x=>({id:x.getAttribute('data-item-id'),url:x.querySelector('a[href]')?.href||''}))\",returnByValue:true}})),{once:true});ws.addEventListener('message',e=>{let m=JSON.parse(e.data);if(m.id===2)ok(m.result?.result?.value||null)});ws.addEventListener('error',no,{once:true})}),new Promise((_,no)=>setTimeout(()=>no(Error('timeout')),4000))]);console.log(JSON.stringify(z))}catch(e){console.log(JSON.stringify({error:String(e).slice(0,120)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13000,
+  "note": "Read only ten additional public Avito filtered listing links, no user or system changes."
+}
