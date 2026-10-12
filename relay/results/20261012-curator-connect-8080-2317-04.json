@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,socket,ssl,urllib.request,urllib.error,time\nout={}\nfor port in (8080,):\n for probe in ('connect','socks5'):\n  t=time.monotonic();r={}\n  try:\n   s=socket.create_connection(('127.0.0.1',port),timeout=2);s.settimeout(3)\n   if probe=='connect':\n    s.sendall(b'CONNECT api.telegram.org:443 HTTP/1.1\\r\\nHost: api.telegram.org:443\\r\\n\\r\\n');buf=s.recv(200);r={'kind':'http-connect','status_line':buf.decode('latin-1','replace').split('\\r\\n')[0][:120]}\n   else:\n    s.sendall(bytes([5,1,0]));resp=s.recv(2);r={'kind':'socks5','supported_no_auth':resp==bytes([5,0]),'reply_hex':resp.hex()}\n  except Exception as e:r={'error':type(e).__name__}\n  finally:\n   try:s.close()\n   except:pass\n  r['ms']=round((time.monotonic()-t)*1000);out[probe]=r\nprint(json.dumps(out,ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"connect\": {\"kind\": \"http-connect\", \"status_line\": \"HTTP/1.1 404 Not Found\", \"ms\": 9}, \"socks5\": {\"error\": \"TimeoutError\", \"ms\": 3008}}\r\n",
+      "stdout_bytes": 138,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:22:07.537Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:22:07.303Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-curator-connect-8080-2317-04"
+    },
+    "request_id": "20261012-curator-connect-8080-2317-04",
+    "started_at": "2026-10-12T16:22:03.722Z",
+    "status": "completed"
+  },
+  "id": "20261012-curator-connect-8080-2317-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
