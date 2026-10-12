@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-private-filter-click",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-private-filter.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"timeout\"}');process.exit(0)},8000);try{\nconst t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id==='D229F01C94F7F6DF012309BB4CE211CD');const w=new WebSocket(t.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:\"(()=>{const e=[...document.querySelectorAll('button')].find(n=>n.textContent?.trim()==='Частные');if(!e)return{clicked:false,reason:'button_not_found',matches:[...document.querySelectorAll('button')].filter(n=>/Частн|Продавц/.test(n.textContent||'')).slice(0,4).map(n=>n.textContent.slice(0,70))};e.click();return{clicked:true,text:e.textContent?.trim(),search:location.search}})()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===1){console.log(JSON.stringify(z.result?.result?.value||{error:z.result?.exceptionDetails?.text||'empty'}));process.exit(0)}})\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,120)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Apply only public Avito search filter 'Частные' on isolated agent-owned page3 iPhone browser tab. No seller contact, purchase, credentials or proxy changes; verify selected filter afterward."
+}
