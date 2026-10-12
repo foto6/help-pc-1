@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-page37-extract",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-page37.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:\"hard_timeout\"}));process.exit(0)},18500);\nconst targets=[{\"p\":3,\"id\":\"D229F01C94F7F6DF012309BB4CE211CD\"},{\"p\":7,\"id\":\"D625D2F1944A0B6F8149A9EFDCEC522D\"}],out=[];\ntry{\n const arr=await(await fetch(\"http://127.0.0.1:17447/json/list\")).json();\n for(const item of targets){\n  const t=arr.find(x=>x.id===item.id);\n  if(!t){out.push({page:item.p,error:\"missing\"});continue}\n  const ws=new WebSocket(t.webSocketDebuggerUrl);\n  const res=await Promise.race([new Promise(ok=>{\n   ws.addEventListener(\"open\",()=>ws.send(JSON.stringify({id:11,method:\"Runtime.evaluate\",params:{expression:\"(()=>({url:location.href,title:document.title,cards:Array.from(document.querySelectorAll('[data-marker=item]')).slice(0,9).map(e=>({id:e.getAttribute('data-item-id'),name:e.querySelector('[itemprop=name]')?.textContent?.trim()||'',price:e.querySelector('[itemprop=price]')?.getAttribute('content')||'',href:e.querySelector('[data-marker=item-title]')?.getAttribute('href')?.split('?')[0]||'',tail:(e.textContent||'').replace(/\\\\s+/g,' ').slice(-170)}))}))()\",returnByValue:true}})),{once:true});\n   ws.addEventListener(\"message\",e=>{const z=JSON.parse(e.data);if(z.id===11)ok(z.result?.result?.value||{error:z.error?.message||z.result?.exceptionDetails?.text||\"no_value\"})});\n   ws.addEventListener(\"error\",()=>ok({error:\"websocket_error\"}),{once:true})\n  }),new Promise(ok=>setTimeout(()=>ok({error:\"timeout\"}),6500))]);\n  out.push({page:item.p,data:res});ws.close();\n }\n console.log(JSON.stringify({out}));process.exit(0);\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,180),out}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 26000,
+  "note": "Read-only inspect public iPhone 16 Pro Max pagination pages 3 and 7, first 9 cards each with public title price url and seller snippet; no private info, no navigation."
+}
