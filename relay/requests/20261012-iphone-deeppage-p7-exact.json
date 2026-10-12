@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-deeppage-p7-exact",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-deeppage-p7-exact.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"script_timeout\"}');process.exit(0)},10000);\ntry{const t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id==='D625D2F1944A0B6F8149A9EFDCEC522D');if(!t)throw Error('TAB_MISSING');const w=new WebSocket(t.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:\"(()=>{const nodes=document.querySelectorAll('[data-marker=item]');const a=[];for(let i=0;i<6;i++){const e=nodes[i];if(!e)break;a.push({i,name:e.querySelector('[itemprop=name]')?.textContent?.trim()||'',price:e.querySelector('[itemprop=price]')?.getAttribute('content')||'',url:e.querySelector('[data-marker=item-title]')?.getAttribute('href')?.split('?')[0]||'',tail:e.textContent?.trim().slice(-115)||''})}return{search:location.search,href:location.href,items:nodes.length,rows:a}})()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===1){console.log(JSON.stringify(z.result?.result?.value||{error:z.result?.exceptionDetails?.text||'EMPTY'}));process.exit(0)}});\nw.addEventListener('error',()=>{console.log('{\"error\":\"ws_error\"}');process.exit(0)},{once:true})\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,130)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 19000,
+  "note": "Read-only exact page 7 URL and six public Avito 16 Pro Max cards in our own activated tab; no navigation, private state or purchases."
+}
