@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "from pathlib import Path\nimport json\nroot=Path(\"E:/WebAIBridge\")\nout={\"root_exists\":root.is_dir(),\"children\":[],\"likely_files\":[]}\nif root.is_dir():\n try:\n  out[\"children\"]=[{\"name\":p.name,\"directory\":p.is_dir()} for p in root.iterdir() if p.name.lower() not in (\"node_modules\",\".git\",\".env\",\"logs\",\".secrets\",\".output\")][:80]\n  for sub in (\"src\",\"server\",\"apps\",\"packages\",\"backend\",\"web\",\"services\"):\n   target=root/sub\n   if not target.is_dir():continue\n   files=[]\n   for p in target.rglob(\"*\"):\n    if len(files)>=20:break\n    if p.is_file() and p.suffix in (\".js\",\".ts\",\".mjs\",\".cjs\") and \"node_modules\" not in p.parts:\n     if any(w in p.name.lower() for w in (\"supervisor\",\"watchdog\",\"assignment\",\"agent\",\"server\",\"api\")):\n      files.append(str(p.relative_to(root)))\n   out[\"likely_files\"]+=files\n except Exception as e:out[\"error_type\"]=type(e).__name__\nprint(json.dumps(out,ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"root_exists\": true, \"children\": [{\"name\": \".gitattributes\", \"directory\": false}, {\"name\": \".github\", \"directory\": true}, {\"name\": \".gitignore\", \"directory\": false}, {\"name\": \"app\", \"directory\": true}, {\"name\": \"attachment-state.png\", \"directory\": false}, {\"name\": \"CHANGELOG.md\", \"directory\": false}, {\"name\": \"chrome-profile-web-bridge\", \"directory\": true}, {\"name\": \"chrome-profiles\", \"directory\": true}, {\"name\": \"data\", \"directory\": true}, {\"name\": \"docs\", \"directory\": true}, {\"name\": \"extension\", \"directory\": true}, {\"name\": \"README.md\", \"directory\": false}, {\"name\": \"TASKS\", \"directory\": true}, {\"name\": \"upload-menu.png\", \"directory\": false}], \"likely_files\": []}\r\n",
+      "stdout_bytes": 677,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T18:29:10.092Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T18:29:09.812Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-curator-bridge-source-locations-0154-r08"
+    },
+    "request_id": "20261013-curator-bridge-source-locations-0154-r08",
+    "started_at": "2026-10-12T18:29:09.004Z",
+    "status": "completed"
+  },
+  "id": "20261013-curator-bridge-source-locations-0154-r08",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
