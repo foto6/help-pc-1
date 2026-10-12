@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import socket,json,re\no={\"http_connect_proxy\":True,\"authentication_schemes\":[]}\ntry:\n s=socket.create_connection((\"104.165.1.52\",6637),timeout=5);s.settimeout(4)\n s.sendall(b\"CONNECT api.telegram.org:443 HTTP/1.1\\r\\nHost: api.telegram.org:443\\r\\nConnection: close\\r\\n\\r\\n\")\n b=b\"\"\n while b\"\\r\\n\\r\\n\" not in b and len(b)<6000:\n  part=s.recv(700)\n  if not part:break\n  b+=part\n headers=b.decode(\"latin1\",\"replace\").split(\"\\r\\n\")\n o[\"status\"]=headers[0][:100]\n schemes=[]\n for line in headers[1:]:\n  if line.lower().startswith(\"proxy-authenticate:\"):\n   v=line.split(\":\",1)[1].strip()\n   scheme=v.split(\" \",1)[0].strip()\n   if scheme.lower() in (\"basic\",\"digest\",\"negotiate\",\"ntlm\"):schemes.append(scheme)\n o[\"authentication_schemes\"]=schemes\nexcept Exception as e:o[\"error_type\"]=type(e).__name__\nfinally:\n try:s.close()\n except:pass\nprint(json.dumps(o,ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"http_connect_proxy\": true, \"authentication_schemes\": [\"Basic\"], \"status\": \"HTTP/1.0 407 Proxy Authentication Required\"}\r\n",
+      "stdout_bytes": 123,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:33:49.781Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:33:49.556Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-neur0store-http-auth-schemes-0040-v1"
+    },
+    "request_id": "20261013-neur0store-http-auth-schemes-0040-v1",
+    "started_at": "2026-10-12T17:33:48.425Z",
+    "status": "completed"
+  },
+  "id": "20261013-neur0store-http-auth-schemes-0040-v1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
