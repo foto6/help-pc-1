@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "shell execution timed out",
+    "error_kind": "timeout",
+    "finished_at": "2026-10-12T17:40:32.269Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "unknown",
+      "observed_at": "2026-10-12T17:40:31.981Z",
+      "reason": "timeout",
+      "reconciliation_required": true,
+      "reexecution_safe": false,
+      "request_id": "20261013-neur0store-owner-proxy-offline-tests-0048-v1"
+    },
+    "request_id": "20261013-neur0store-owner-proxy-offline-tests-0048-v1",
+    "started_at": "2026-10-12T17:40:12.837Z",
+    "status": "timeout"
+  },
+  "id": "20261013-neur0store-owner-proxy-offline-tests-0048-v1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
