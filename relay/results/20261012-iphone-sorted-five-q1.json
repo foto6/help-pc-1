@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-sorted-five-q1.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},7000);\ntry{let a=await(await fetch('http://127.0.0.1:17447/json/list')).json();let t=a.find(x=>x.id===\"A197A860B09456EC6A9C05E8C5F61560\");let w=new WebSocket(t.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:4,method:'Runtime.evaluate',params:{expression:\"(()=>{const x=document.querySelectorAll('[data-marker=\\\"item\\\"]');const a=[];for(let i=0;i<7;i++){const e=x[i];if(!e)break;const n=e.querySelector('[itemprop=\\\"name\\\"]');const p=e.querySelector('[itemprop=\\\"price\\\"]');const u=e.querySelector('[data-marker=\\\"item-title\\\"]');a.push([i,e.getAttribute('data-item-id'),n?.textContent?.trim()||'',p?.getAttribute('content')||'',u?.getAttribute('href')?.split('?')[0]||''])}return a})()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{let z=JSON.parse(e.data);if(z.id===4){console.log(JSON.stringify(z.result?.result?.value||{error:z.result?.exceptionDetails?.text||'EMPTY'}));process.exit(0)}});\nw.addEventListener('error',()=>{console.log('{\"error\":\"ws_error\"}');process.exit(0)},{once:true});\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,110)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[[0,\"8220958313\",\"iPhone 15 Pro Max, 256 ГБ\",\"36850\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_8220958313\"],[1,\"8285012767\",\"iPhone 15 Pro Max, 256 ГБ, 2 SIM\",\"39432\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_2_sim_8285012767\"],[2,\"8253352006\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"39850\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8253352006\"],[3,\"8358178736\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"39999\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8358178736\"],[4,\"7904045473\",\"iPhone 15 Pro Max, 256 ГБ, eSIM\",\"40490\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_esim_7904045473\"],[5,\"7605390837\",\"iPhone 15 Pro Max, 256 ГБ, eSIM\",\"40999\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_esim_7605390837\"],[6,\"8434996895\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"41200\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8434996895\"]]\n",
+      "stdout_bytes": 905,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T14:28:45.241Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T14:28:45.041Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-iphone-sorted-five-q1"
+    },
+    "request_id": "20261012-iphone-sorted-five-q1",
+    "started_at": "2026-10-12T14:28:44.250Z",
+    "status": "completed"
+  },
+  "id": "20261012-iphone-sorted-five-q1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
