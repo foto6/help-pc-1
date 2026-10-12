@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$out=@();foreach($u in @('https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/1-k._dom_55_m_8056168061?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_50_m_3939686510?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_45_m_4668464780?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/2-k._dom_40_m_4643604368?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/1-k._dom_36_m_2738051678?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/1-k._dom_60_m_4589776920?checkIn=2026-11-03&checkOut=2026-11-04&guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D')){try{$t=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17447/json/new?'+[Uri]::EscapeDataString($u)) -TimeoutSec 7;$out+=@{id=$t.id;url=$t.url}}catch{$out+=@{url=$u;error=$_.Exception.Message}}};$out|ConvertTo-Json -Compress -Depth 4"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"8895E26A1B208AB8185B06F438396668\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/1-k._dom_55_m_8056168061?checkIn=2026-11-03\\u0026checkOut=2026-11-04\\u0026guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D\"},{\"id\":\"3FECE58B86DAF832F643FE31CD89577A\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_50_m_3939686510?checkIn=2026-11-03\\u0026checkOut=2026-11-04\\u0026guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D\"},{\"id\":\"B4D1C276668A618700D992633AF0D4FB\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_45_m_4668464780?checkIn=2026-11-03\\u0026checkOut=2026-11-04\\u0026guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D\"},{\"id\":\"63E1121F5A6D3BEF3A19C547F51D3F1F\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/2-k._dom_40_m_4643604368?checkIn=2026-11-03\\u0026checkOut=2026-11-04\\u0026guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D\"},{\"id\":\"B37143ED3D98230AC00A0B56A4D2B557\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/1-k._dom_36_m_2738051678?checkIn=2026-11-03\\u0026checkOut=2026-11-04\\u0026guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D\"},{\"id\":\"B67BF0940DD8FCE37980D3F08482BD00\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/1-k._dom_60_m_4589776920?checkIn=2026-11-03\\u0026checkOut=2026-11-04\\u0026guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D\"}]\r\n",
+      "stdout_bytes": 1755,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:39:47.463Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:39:45.959Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-avito-home-six-lowprice-r24"
+    },
+    "request_id": "20261013-avito-home-six-lowprice-r24",
+    "started_at": "2026-10-12T17:39:43.866Z",
+    "status": "completed"
+  },
+  "id": "20261013-avito-home-six-lowprice-r24",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
