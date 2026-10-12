@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-ten-price-h8.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{const ts=await(await fetch(\"http://127.0.0.1:17447/json/list\")).json();const t=ts.find(x=>x.id===\"38AC30F9B71FDC33019DBD7A9309EAB2\");ws=new WebSocket(t.webSocketDebuggerUrl);await new Promise((ok,no)=>{ws.addEventListener('open',ok,{once:true});ws.addEventListener('error',no,{once:true})});const pending=new Map();let seq=160;ws.addEventListener('message',e=>{const x=JSON.parse(e.data);if(pending.has(x.id)){pending.get(x.id)(x);pending.delete(x.id)}});const send=(method,params)=>new Promise(ok=>{let id=++seq;pending.set(id,ok);ws.send(JSON.stringify({id,method,params}))});await send('Input.dispatchMouseEvent',{type:'mousePressed',x:1096,y:332,button:'left',clickCount:1});await send('Input.dispatchMouseEvent',{type:'mouseReleased',x:1096,y:332,button:'left',clickCount:1});await new Promise(r=>setTimeout(r,600));const x=await send('Runtime.evaluate',{expression:\"(()=>({guestLabel:[...document.querySelectorAll('*')].filter(x=>x.childElementCount===0 && /10 взрослых/.test(x.textContent||'')).slice(0,2).map(x=>x.textContent.slice(0,40)),visibleAmount:[...document.querySelectorAll('h1,h2,[data-marker]')].map(x=>x.textContent).filter(x=>/₽/.test(x)).slice(0,5).map(x=>x.slice(0,70))}))()\",returnByValue:true});console.log(JSON.stringify(x.result?.result?.value||{error:x.error?.code||null}))}catch(e){console.log(JSON.stringify({err:String(e).slice(0,160)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"guestLabel\":[\"10 взрослых\"],\"visibleAmount\":[\"9 000 ₽ за суткиwindow.trackElementsVisibility && window.trackVisibili\",\"9 000 ₽ \",\"О таунхаусеКоличество комнат: 2Площадь дома: 110 м²Площадь участка: 1 \",\"ПравилаЗаезд: с 16:00Выезд: до 12:00Количество гостей: 10Шуметь на уча\",\"🌅 эллинг нa беpeгу Енисeя в Удaчном — идеальноe меcто для отдыxa!📍 А\"]}\n",
+      "stdout_bytes": 529,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T13:03:22.226Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T13:03:22.046Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-ten-price-h8"
+    },
+    "request_id": "20261012-avito-ten-price-h8",
+    "started_at": "2026-10-12T13:03:20.673Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-ten-price-h8",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
