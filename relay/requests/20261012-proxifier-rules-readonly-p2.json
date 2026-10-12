@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-proxifier-rules-readonly-p2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$path=Join-Path $env:APPDATA 'Proxifier4\\Profiles\\Default.ppx'\n[xml]$doc=Get-Content -LiteralPath $path -Raw -Encoding UTF8\n$nodes=$doc.SelectNodes('//*[local-name()=\"Rule\"]')\n$out=[ordered]@{root=$doc.DocumentElement.LocalName;ruleCount=$nodes.Count;rules=@();profileFileBytes=(Get-Item -LiteralPath $path).Length}\nforeach($r in $nodes){\n $n=[string]$r.SelectSingleNode('./*[local-name()=\"Name\"]').InnerText\n $a=$r.SelectSingleNode('./*[local-name()=\"Action\"]')\n $app=$r.SelectSingleNode('./*[local-name()=\"Applications\"]')\n $host=$r.SelectSingleNode('./*[local-name()=\"TargetHosts\"]')\n $ports=$r.SelectSingleNode('./*[local-name()=\"TargetPorts\"]')\n $out.rules+=@{name=$n;enabled=$r.GetAttribute('enabled');actionType=if($a){$a.GetAttribute('type')}else{'missing'};applications=if($app){$app.InnerText}else{''};targetHostsPresent=($null -ne $host -and $host.InnerText.Length -gt 0);portsFilterPresent=($null -ne $ports -and $ports.InnerText.Length -gt 0);childNames=@($r.ChildNodes|ForEach-Object{$_.LocalName})}\n}\n$out.schemaTopChildren=@($doc.DocumentElement.ChildNodes|ForEach-Object{$_.LocalName})\n$out|ConvertTo-Json -Compress -Depth 6"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only locally parses Proxifier Default.ppx. Only return rule names, app pattern names, action types and counts; NEVER return proxy addresses/credentials, targets, config raw or chains."
+}
