@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-open-g2.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{const v=await(await fetch(\"http://127.0.0.1:17447/json/version\")).json();ws=new WebSocket(v.webSocketDebuggerUrl);await new Promise((y,n)=>{ws.addEventListener('open',y,{once:true});ws.addEventListener('error',n,{once:true})});const pending=new Map();let seq=80;ws.addEventListener('message',e=>{const x=JSON.parse(e.data);if(pending.has(x.id)){pending.get(x.id)(x);pending.delete(x.id)}});const urls=[\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_88_m_7714813321\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/2-k._taunhaus_110_m_7313084190\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/4-k._taunhaus_110_m_3560368896\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_75_m_2756494816\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_76_m_8358148190\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_60_m_7731305164\"];const out=[];for(const url of urls){try{let x=await Promise.race([new Promise(ok=>{let id=++seq;pending.set(id,ok);ws.send(JSON.stringify({id,method:'Target.createTarget',params:{url,background:true,newWindow:false}}))}),new Promise((_,bad)=>setTimeout(()=>bad(Error('timeout')),3400))]);out.push({url,id:x.result?.targetId||null})}catch(e){out.push({url,error:'timeout'})}}console.log(JSON.stringify(out))}catch(e){console.log(JSON.stringify({error:String(e).slice(0,80)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_88_m_7714813321\",\"id\":\"C6DF1191AD11A4F40C5152CDF9011972\"},{\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/2-k._taunhaus_110_m_7313084190\",\"id\":\"38AC30F9B71FDC33019DBD7A9309EAB2\"},{\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/4-k._taunhaus_110_m_3560368896\",\"id\":\"88F33FF7CE7B171A51416C6F60D5A429\"},{\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_75_m_2756494816\",\"id\":\"54033D18B7447FD77E30A8D41C2C8B5D\"},{\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_76_m_8358148190\",\"id\":\"0A8A2242C74C03B63EEBEDB89441D7D7\"},{\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_60_m_7731305164\",\"id\":\"920430E5990D8033857341DBCA63CA19\"}]\n",
+      "stdout_bytes": 788,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T12:48:43.357Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T12:48:43.073Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-open-budget-g2"
+    },
+    "request_id": "20261012-avito-open-budget-g2",
+    "started_at": "2026-10-12T12:48:42.278Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-open-budget-g2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
