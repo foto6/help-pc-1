@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\nbase=\"http://127.0.0.1:17448/api/supervisor-watchdog\"\nout={}\ntry:\n with urllib.request.urlopen(base,timeout=6) as r:j=json.loads(r.read(200000).decode(\"utf8\"))\n for group in (\"config\",\"capabilities\",\"runtime\",\"detection\"):\n  v=j.get(group)\n  if not isinstance(v,dict):\n   out[group]={\"type\":type(v).__name__}\n   continue\n  safe={}\n  for k,x in v.items():\n   if isinstance(x,(bool,int,float)) or x is None:safe[k]=x\n   elif isinstance(x,str) and len(x)<90 and not any(q in k.lower() for q in (\"error\",\"url\",\"token\",\"secret\",\"prompt\",\"message\",\"text\",\"id\")):safe[k]=x\n   elif isinstance(x,dict):\n    safe[k]={\"keys\":list(x.keys())[:28]}\n   elif isinstance(x,list):safe[k]={\"count\":len(x)}\n  out[group]={\"keys\":list(v.keys())[:50],\"safe\":safe}\nexcept Exception as e:out={\"error_type\":type(e).__name__}\nprint(json.dumps(out,ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"config\": {\"keys\": [\"mode\", \"enabled\", \"bridgeUrl\", \"apiToken\", \"profileId\", \"debugPort\", \"supervisorChatUrl\", \"supervisorChatTitlePattern\", \"continuationText\", \"pollSeconds\", \"idleMinutes\", \"kickCooldownMinutes\", \"maxConsecutiveKicks\", \"autoDetectProfile\", \"autoDetectChat\", \"stopStaleGenerationEnabled\", \"autoContinueEnabled\", \"sendProtectedDraftEnabled\", \"allowProfileRecovery\", \"allowAutonomousSend\", \"bridgeRestartAfterSeconds\", \"profileRecoverAfterSeconds\", \"enforceHighMode\", \"highModeStrategy\", \"openExistingChatIfMissing\", \"freshVerifyBeforeKick\", \"freshVerifySettleSeconds\", \"freshVerifyLoadTimeoutSeconds\", \"generationActivityGraceSeconds\", \"generationStallMinutes\", \"generationStallConfirmations\", \"closeFreshVerifyWhenIdle\", \"providerErrorBackoffMinutes\", \"providerErrorBackoffMaxMinutes\", \"providerErrorMigrationThreshold\", \"closeChatDuringProviderBackoff\", \"migrationEnabled\", \"migrationHandoffMaxChars\", \"migrationUrlWaitSeconds\", \"surfaceReadyTimeoutSeconds\", \"providerProbeTimeoutSeconds\", \"managedProjects\", \"managedChats\", \"knownProjectChats\", \"autonomyMode\", \"autoDetectChatEnabled\", \"apiTokenConfigured\"], \"safe\": {\"mode\": \"off\", \"enabled\": false, \"debugPort\": 17410, \"supervisorChatTitlePattern\": \"\\u0410\\u0433\\u0435\\u043d\\u0442 \\u043c\\u043e\\u0441\\u0442\\u0430\", \"pollSeconds\": 30, \"idleMinutes\": 15, \"kickCooldownMinutes\": 15, \"maxConsecutiveKicks\": 4, \"autoDetectProfile\": false, \"autoDetectChat\": false, \"stopStaleGenerationEnabled\": false, \"autoContinueEnabled\": false, \"sendProtectedDraftEnabled\": false, \"allowProfileRecovery\": false, \"allowAutonomousSend\": false, \"bridgeRestartAfterSeconds\": 60, \"profileRecoverAfterSeconds\": 90, \"enforceHighMode\": true, \"highModeStrategy\": \"verify_only\", \"openExistingChatIfMissing\": false, \"freshVerifyBeforeKick\": true, \"freshVerifySettleSeconds\": 8, \"freshVerifyLoadTimeoutSeconds\": 30, \"generationActivityGraceSeconds\": 120, \"generationStallMinutes\": 10, \"generationStallConfirmations\": 2, \"closeFreshVerifyWhenIdle\": true, \"providerErrorBackoffMinutes\": 15, \"providerErrorBackoffMaxMinutes\": 60, \"providerErrorMigrationThreshold\": 3, \"closeChatDuringProviderBackoff\": false, \"migrationEnabled\": false, \"migrationHandoffMaxChars\": 18000, \"migrationUrlWaitSeconds\": 60, \"surfaceReadyTimeoutSeconds\": 15, \"providerProbeTimeoutSeconds\": 12, \"managedProjects\": {\"count\": 1}, \"managedChats\": {\"count\": 7}, \"knownProjectChats\": {\"count\": 7}, \"autonomyMode\": \"off\", \"autoDetectChatEnabled\": false, \"apiTokenConfigured\": false}}, \"capabilities\": {\"keys\": [\"mode\", \"active\", \"monitor\", \"recoverBridge\", \"recoverProfile\", \"openExistingChat\", \"mutateProviderUi\", \"autonomousSend\", \"stopStaleGeneration\", \"autoContinue\", \"sendProtectedDraft\", \"migrateConversation\"], \"safe\": {\"mode\": \"off\", \"active\": false, \"monitor\": false, \"recoverBridge\": false, \"recoverProfile\": false, \"openExistingChat\": false, \"mutateProviderUi\": false, \"autonomousSend\": false, \"stopStaleGeneration\": false, \"autoContinue\": false, \"sendProtectedDraft\": false, \"migrateConversation\": false}}, \"runtime\": {\"keys\": [\"processRunning\", \"processPid\", \"state\"], \"safe\": {\"processRunning\": false, \"processPid\": 0, \"state\": {\"keys\": [\"lastFingerprint\", \"recentFingerprints\", \"maxTranscriptChars\", \"lastProgressTargetId\", \"progressConversationId\", \"lastSuppressionKey\", \"lastProgressAt\", \"lastKickAt\", \"consecutiveKicks\", \"bridgeDownSince\", \"profileDownSince\", \"lastError\", \"lastAction\", \"providerBackoffUntil\", \"providerBackoffAttempts\", \"providerBackoffReason\", \"migrationCount\", \"lastMigrationAt\", \"lastMigrationReason\", \"observedAt\", \"observedMode\", \"observedProfileId\", \"observedChatUrl\", \"observedChatTitle\", \"observedGenerating\", \"observedHighMode\", \"observedComposerHasText\", \"observedProviderLoadError\"]}}}, \"detection\": {\"keys\": [\"profile\", \"chat\", \"targetError\"], \"safe\": {\"profile\": {\"keys\": [\"selected\", \"source\", \"confidence\", \"ambiguous\", \"candidates\"]}, \"chat\": {\"keys\": [\"selected\", \"reason\", \"confidence\", \"ambiguous\", \"candidates\", \"source\"]}}}}\r\n",
+      "stdout_bytes": 3990,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T18:27:55.791Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T18:27:55.437Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-curator-bridge-capabilities-readonly-0146-r06"
+    },
+    "request_id": "20261013-curator-bridge-capabilities-readonly-0146-r06",
+    "started_at": "2026-10-12T18:27:54.443Z",
+    "status": "completed"
+  },
+  "id": "20261013-curator-bridge-capabilities-readonly-0146-r06",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
