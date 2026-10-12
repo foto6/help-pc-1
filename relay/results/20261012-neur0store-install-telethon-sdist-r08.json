@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,sys,pathlib,json\np=pathlib.Path('E:/Neur0StoreCurator/.venv/Scripts/python.exe')\nif not p.is_file():raise RuntimeError('isolated_venv_missing')\ntry:\n r=subprocess.run([str(p),'-m','pip','install','--disable-pip-version-check','--no-input','Telethon==1.45.0'],timeout=95,capture_output=True,text=True)\nexcept subprocess.TimeoutExpired:\n print('MTProto pip dependency install timed out; verify package state before retry')\n sys.exit(3)\nprint(json.dumps({'exit_code':r.returncode,'pip_error_lines':[x.strip()[:210] for x in r.stderr.splitlines() if 'ERROR' in x or 'WARNING' in x][:5]},ensure_ascii=True))\nif r.returncode:sys.exit(r.returncode)\nc=subprocess.run([str(p),'-c','import telethon; print(telethon.__version__)'],timeout=8,capture_output=True,text=True)\nprint('TELETHON_INSTALLED',c.stdout.strip() if c.returncode==0 else 'VERIFY_FAILED')\nsys.exit(c.returncode)\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"exit_code\": 0, \"pip_error_lines\": []}\r\nTELETHON_INSTALLED 1.45.0\r\n",
+      "stdout_bytes": 68,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:50:00.195Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:49:59.969Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-neur0store-install-telethon-sdist-r08"
+    },
+    "request_id": "20261012-neur0store-install-telethon-sdist-r08",
+    "started_at": "2026-10-12T16:49:51.726Z",
+    "status": "completed"
+  },
+  "id": "20261012-neur0store-install-telethon-sdist-r08",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
