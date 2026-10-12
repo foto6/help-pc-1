@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-mcp-preflight-e01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$o=[ordered]@{stage='read_only_preflight';at=(Get-Date).ToUniversalTime().ToString('o')}\n$roots=@(Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\" -ErrorAction SilentlyContinue|Where-Object{([string]$_.CommandLine -notmatch '--type=')}|ForEach-Object{$cmd=[string]$_.CommandLine;$m=[regex]::Match($cmd,'--remote-debugging-port=(\\d+)');@{pid=$_.ProcessId;parent=$_.ParentProcessId;cdpPort=if($m.Success){$m.Groups[1].Value}else{'none'};userDataIsolated=($cmd -match '--user-data-dir=');isExistingManaged=($cmd -match 'AvitoDirectChrome-20261012')}});$o.chromeRoots=$roots\n$work='E:\\PC-Control\\Proxifier-Avito-20261012';$orig=Join-Path $env:APPDATA 'Proxifier4\\Profiles\\Default.ppx';$backup=Join-Path $work 'Default-original-backup.ppx';$o.configBackupExists=(Test-Path $backup);$o.originalMatchesBackup=if((Test-Path $orig) -and (Test-Path $backup)){(Get-FileHash $orig).Hash -eq (Get-FileHash $backup).Hash}else{$false}\n$o.proxifierRunning=!!(Get-Process Proxifier -ErrorAction SilentlyContinue)\nforeach($port in @(17410,17447)){try{$v=Invoke-RestMethod \"http://127.0.0.1:$port/json/version\" -TimeoutSec 2;$o[\"cdp$port\"]=$true}catch{$o[\"cdp$port\"]=$false}}\n$o|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 19000,
+  "note": "Read-only preflight of Chrome roots CDP ports, Proxifier running and original config local backup hashes. Do not inspect private tabs, print command lines, or modify anything."
+}
