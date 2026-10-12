@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-cards-research-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$js=@'\nconst port=17447;const targetId=\"AA1D82B7F14CE6896A268FCB2514A214\";\nconst tabs=await(await fetch(\"http://127.0.0.1:\"+port+\"/json/list\")).json();const t=tabs.find(x=>x.id===targetId && x.type===\"page\");if(!t)throw Error(\"TARGET_MISSING\");\nconst ws=new WebSocket(t.webSocketDebuggerUrl);await new Promise((y,n)=>{ws.addEventListener(\"open\",y,{once:true});ws.addEventListener(\"error\",n,{once:true})});\nlet seq=10;const pending=new Map();ws.addEventListener(\"message\",e=>{try{let x=JSON.parse(e.data);if(x.id && pending.has(x.id)){pending.get(x.id)(x);pending.delete(x.id)}}catch{}});\nconst send=(method,params)=>new Promise((ok,no)=>{let id=++seq;pending.set(id,ok);ws.send(JSON.stringify({id,method,params}));setTimeout(()=>{if(pending.has(id)){pending.delete(id);no(Error(\"CDP_TIMEOUT\"))}},6500)});\nconst expr=\"(()=>{let a=[...document.querySelectorAll('[data-marker=\\\"item\\\"]')].slice(0,32);return {url:location.href,title:document.title,numberCards:a.length,bodyLength:document.body.innerText.length,cards:a.map((x,i)=>({i,title:(x.querySelector('[itemprop=name]')?.textContent||x.querySelector('h3')?.textContent||'').trim().slice(0,110),text:x.innerText.slice(0,360),link:x.querySelector('a[href*=item_]')?.href||x.querySelector('a[href^=\\\"/krasnoyarsk/\\\"]')?.href||x.querySelector('a[href]')?.href||null})),fallback:a.length?[]:[...document.querySelectorAll('a[href*=\\\"_\\\"],a[href*=\\\"doma_dachi_kottedzhi\\\"]')].filter(x=>/дом|коттедж|баня/i.test(x.innerText)).slice(0,25).map(x=>({text:x.innerText.slice(0,140),link:x.href}))}})()\";\nlet result=await send(\"Runtime.evaluate\",{expression:expr,returnByValue:true});ws.close();console.log(JSON.stringify(result.result?.result?.value||{error:\"NO_EVAL\"}));\n'@\n$tmp=Join-Path $env:TEMP 'avito-house-cards-20261012.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,$js,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 19000,
+  "note": "Read-only public Avito house listing DOM over isolated Chrome CDP 17447; return 32 visible public cards titles, displayed prices and public links. No credentials, unrelated tabs, or network/system changes."
+}
