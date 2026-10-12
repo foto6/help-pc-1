@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-relay-preflight-b2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $t=@(Invoke-RestMethod -Uri 'http://127.0.0.1:17447/json/list' -TimeoutSec 4); $v=@($t | Where-Object { $_.url -like 'https://www.avito.ru/krasnoyarsk/telefony*' } | Select-Object id,title,url); [ordered]@{ at=(Get-Date).ToUniversalTime().ToString('o'); count=$t.Count; iphoneTabs=$v } | ConvertTo-Json -Depth 5 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only CDP inventory of public Avito phone listings on isolated no-proxy Chrome 17447; do not change tabs, browser focus, proxy, running tasks or system."
+}
