@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$o=[ordered]@{step='start'};$ws=$null;try{$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 4;$t=@($tabs|Where-Object {$_.id -eq 'F67239432460BD1FD379FB6C9DAFC6AD'})[0];$ws=[System.Net.WebSockets.ClientWebSocket]::new();$token=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(6));$null=$ws.ConnectAsync([Uri]$t.webSocketDebuggerUrl,$token.Token).GetAwaiter().GetResult();$req=@{id=71;method='Page.navigate';params=@{url='https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/4-k._dom_70_m_4698340709?guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A10%2C%22adultsCount%22%3A10%2C%22children%22%3A%5B%5D%7D&checkIn=2026-11-03&checkOut=2026-11-04'}}|ConvertTo-Json -Compress -Depth 5;$bytes=[Text.Encoding]::UTF8.GetBytes($req);$null=$ws.SendAsync([ArraySegment[byte]]::new($bytes),[Net.WebSockets.WebSocketMessageType]::Text,$true,$token.Token).GetAwaiter().GetResult();$buf=New-Object byte[] 16384;$rc=[Threading.CancellationTokenSource]::new([TimeSpan]::FromSeconds(8));for($i=0;$i -lt 10;$i++){$v=$ws.ReceiveAsync([ArraySegment[byte]]::new($buf),$rc.Token).GetAwaiter().GetResult();$msg=[Text.Encoding]::UTF8.GetString($buf,0,$v.Count)|ConvertFrom-Json;if($msg.id -eq 71){$o.step='navigated';$o.errorText=$msg.result.errorText;$o.protocolError=$msg.error.message;break}}}catch{$o.error=$_.Exception.Message}finally{if($ws){$ws.Dispose()}};$o|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"step\":\"navigated\",\"errorText\":null,\"protocolError\":null}\r\n",
+      "stdout_bytes": 60,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:25:47.145Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:25:46.894Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-birthday-house70-ten-date-r022"
+    },
+    "request_id": "20261012-birthday-house70-ten-date-r022",
+    "started_at": "2026-10-12T16:25:45.482Z",
+    "status": "completed"
+  },
+  "id": "20261012-birthday-house70-ten-date-r022",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
