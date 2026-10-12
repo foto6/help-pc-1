@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-home-120-activate-a03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$r=Invoke-WebRequest 'http://127.0.0.1:17447/json/activate/4A30E49B892C311B3193153E3A015064' -UseBasicParsing -TimeoutSec 6;@{target='4A30E49B892C311B3193153E3A015064';ok=($r.StatusCode -eq 200)}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 11000,
+  "note": "Activate existing Avito house120 tab for visual research only."
+}
