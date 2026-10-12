@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-curator-proxy-topology-2317-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$out=[ordered]@{};$out.at=(Get-Date).ToString('o');$out.processes=@(Get-CimInstance Win32_Process|Where-Object{$_.Name -match '^(python|pythonw|tgws|xray|sing-box|v2ray|clash|mihomo|nekoray|proxifier|cloudflared|3proxy|gost)(\\.exe)?$'}|Select-Object -First 45 Name,ProcessId);$out.listeners=@(Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue|Where-Object{$_.LocalAddress -in @('127.0.0.1','::1') -and $_.LocalPort -ge 1024}|ForEach-Object { $p=Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue;$n=if($p){$p.ProcessName}else{''};if($n -match 'python|tgws|xray|clash|mihomo|sing|nekoray|proxifier|gost|3proxy|v2ray|cloudflared|shadowsocks|proxy'){[ordered]@{port=$_.LocalPort;process=$n}}}|Select-Object -First 60);$out.paths=@('E:\\TGWSproxy','E:\\TGWSProxy','E:\\tgwsproxy','E:\\TGWS','E:\\tgws-proxy','E:\\Neur0StoreCurator','E:\\pc-github-relay')|ForEach-Object{@{path=$_;exists=(Test-Path -LiteralPath $_ -PathType Container)}};$out.proxyEnvironment=@{httpConfigured=[bool]$env:HTTP_PROXY;httpsConfigured=[bool]$env:HTTPS_PROXY;allConfigured=[bool]$env:ALL_PROXY;noProxyConfigured=[bool]$env:NO_PROXY};$out|ConvertTo-Json -Compress -Depth 7"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only narrow proxy process/listening-port topology. Never show command lines, credentials, config secrets, URLs."
+}
