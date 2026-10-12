@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-date-ui-h1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-date-ui-h1.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{let tabs=await(await fetch('http://127.0.0.1:17447/json/list')).json();let t=tabs.find(x=>x.id===\"38AC30F9B71FDC33019DBD7A9309EAB2\");ws=new WebSocket(t.webSocketDebuggerUrl);let z=await Promise.race([new Promise((ok,no)=>{ws.addEventListener('open',()=>ws.send(JSON.stringify({id:38,method:'Runtime.evaluate',params:{expression:\"(()=>{let el=[...document.querySelectorAll('button,[role=button]')].find(x=>/Выберите даты|Выбрать даты/.test(x.textContent||''));if(!el)return {found:false};el.click();return {found:true,tag:el.tagName,label:el.textContent.trim().slice(0,100)}})()\",returnByValue:true}})),{once:true});ws.addEventListener('message',e=>{let x=JSON.parse(e.data);if(x.id===38)ok(x.result?.result?.value||{})});ws.addEventListener('error',no,{once:true})}),new Promise((_,rej)=>setTimeout(()=>rej(Error('timeout')),6000))]);console.log(JSON.stringify(z))}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13500,
+  "note": "Click only date-picker button (not booking) on public user-authorized Avito listing CDP17447 to inspect November 3 rates; do not book or submit user data."
+}
