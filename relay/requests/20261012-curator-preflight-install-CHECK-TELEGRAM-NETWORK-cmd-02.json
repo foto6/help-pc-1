@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-curator-preflight-install-CHECK-TELEGRAM-NETWORK-cmd-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "from pathlib import Path\np=Path('E:/Neur0StoreCurator/CHECK_TELEGRAM_NETWORK.cmd')\ns=\"@echo off\\r\\nsetlocal\\r\\ncd /d \\\"%~dp0\\\"\\r\\npython.exe proxy_preflight.py\\r\\nif errorlevel 1 (echo HTTPS path BLOCKED - do not run BotFather pairing yet.) else echo Bot API network path reachable.\\r\\npause\\r\\n\"\nif p.exists():\n if p.read_text(encoding='utf8')!=s:raise RuntimeError('existing_file_not_ours')\n print('ALREADY_CURRENT')\nelse:\n with p.open('x',encoding='utf8',newline='') as f:f.write(s)\n print('INSTALLED_CHECK_TELEGRAM_NETWORK.cmd')"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 14000,
+  "note": "Create-only no-token Telegram Bot API proxy network check .cmd on isolated disk. No interactions."
+}
