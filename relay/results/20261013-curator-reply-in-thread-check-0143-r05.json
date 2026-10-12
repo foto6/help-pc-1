@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import sqlite3,json,daemon\nfrom pathlib import Path\nout={\"reply_sent\":False}\ntry:\n c=daemon.config()\n db=sqlite3.connect(\"file:\"+Path(c[\"db\"]).as_posix()+\"?mode=ro\",uri=True,timeout=2)\n r=db.execute(\"SELECT message_id FROM inbox ORDER BY update_id DESC LIMIT 1\").fetchone()\n db.close()\n if not r or int(r[0])<=0:\n  out[\"error\"]=\"no_queued_message_id\"\n else:\n  result=daemon.notify(c,\"Neur0Store: задачу сохранил. Telegram работает, но Bridge сейчас отключил автоматическую отправку в чат куратора. Задача ожидает разрешённого запуска.\",int(r[0]))\n  out[\"reply_sent\"]=bool(result.get(\"ok\") and result.get(\"result\",{}).get(\"message_id\"))\nexcept Exception as e:\n out[\"exception\"]=type(e).__name__\n if isinstance(e,daemon.Blocked):out[\"error_code\"]=str(e)[:80]\nprint(json.dumps(out,ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"reply_sent\": true}\r\n",
+      "stdout_bytes": 22,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T18:27:13.787Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T18:27:13.435Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-curator-reply-in-thread-check-0143-r05"
+    },
+    "request_id": "20261013-curator-reply-in-thread-check-0143-r05",
+    "started_at": "2026-10-12T18:27:11.329Z",
+    "status": "completed"
+  },
+  "id": "20261013-curator-reply-in-thread-check-0143-r05",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
