@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-p7-activate.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"error\":\"timeout\"}');process.exit(0)},6500);\ntry{const v=await(await fetch('http://127.0.0.1:17447/json/version')).json();const w=new WebSocket(v.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:1,method:'Target.activateTarget',params:{targetId:'D625D2F1944A0B6F8149A9EFDCEC522D'}})),{once:true});\nw.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===1){console.log(JSON.stringify({activated:!!z.result,error:z.error?.message||null}));process.exit(0)}})\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,110)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"activated\":true,\"error\":null}\n",
+      "stdout_bytes": 32,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T14:53:19.981Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T14:53:19.796Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-iphone-page7-activate"
+    },
+    "request_id": "20261012-iphone-page7-activate",
+    "started_at": "2026-10-12T14:53:19.071Z",
+    "status": "completed"
+  },
+  "id": "20261012-iphone-page7-activate",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
