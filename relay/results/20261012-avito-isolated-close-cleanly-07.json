@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$o=[ordered]@{pid=19856}\n$p=Get-CimInstance Win32_Process -Filter \"ProcessId = 19856\" -ErrorAction SilentlyContinue\nif(!$p){$o.result='ALREADY_EXITED'}elseif(([string]$p.Name -ne 'chrome.exe') -or ([string]$p.CommandLine -notmatch '--headless') -or ([string]$p.CommandLine -notmatch 'AvitoDirectChrome-20261012')){$o.result='SKIPPED_IDENTITY_MISMATCH'}else{Stop-Process -Id 19856 -ErrorAction Stop;$o.result='STOPPED_ISOLATED_ONLY'}\n$o.primaryAndSecondChromeUntouched=$true;$o.windowsProxyUntouched=$true\n$o|ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"pid\":19856,\"result\":\"STOPPED_ISOLATED_ONLY\",\"primaryAndSecondChromeUntouched\":true,\"windowsProxyUntouched\":true}\r\n",
+      "stdout_bytes": 116,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T11:38:38.915Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T11:38:38.739Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-isolated-close-cleanly-07"
+    },
+    "request_id": "20261012-avito-isolated-close-cleanly-07",
+    "started_at": "2026-10-12T11:38:37.856Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-isolated-close-cleanly-07",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
