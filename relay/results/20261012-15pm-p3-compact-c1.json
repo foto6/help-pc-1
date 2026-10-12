@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-15pm-p3-compact.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},7800);try{\nconst t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id==='FCD1272A7DC4E4537390D862FE735F52');if(!t)throw Error('tab_missing');\nconst w=new WebSocket(t.webSocketDebuggerUrl);w.addEventListener('open',()=>w.send(JSON.stringify({id:99,method:'Runtime.evaluate',params:{expression:\"(()=>({url:location.href,count:document.querySelectorAll('[data-marker=item]').length,rows:Array.from(document.querySelectorAll('[data-marker=item]')).slice(0,8).map(x=>[x.getAttribute('data-item-id'),x.querySelector('[itemprop=name]')?.textContent?.trim(),x.querySelector('[itemprop=price]')?.getAttribute('content'),x.querySelector('[data-marker=item-title]')?.getAttribute('href')?.split('?')[0]] )}))()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===99){console.log(JSON.stringify(z.result?.result?.value||{error:z.result?.exceptionDetails?.text||z.error?.message||'no_value'}));process.exit(0)}});\nw.addEventListener('error',()=>{console.log('{\"error\":\"ws\"}');process.exit(0)},{once:true});\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,140)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"url\":\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_15_pro_max-ASgBAgICA0SywA3Woe0RtMANzqs5sMENiPw3?p=3&s=104&user=1\",\"count\":44,\"rows\":[[\"8349131754\",\"iPhone 15 Pro Max, 1 ТБ, SIM + eSIM\",\"60990\",\"/krasnoyarsk/telefony/iphone_15_pro_max_1_tb_sim_esim_8349131754\"],[\"8314517975\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"59999\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8314517975\"],[\"8276157273\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"45000\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8276157273\"],[\"8375042328\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"55000\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8375042328\"],[\"8349200519\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"65000\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8349200519\"],[\"8449518415\",\"iPhone 15 Pro Max, 512 ГБ, SIM + eSIM\",\"70000\",\"/krasnoyarsk/telefony/iphone_15_pro_max_512_gb_sim_esim_8449518415\"],[\"8251835111\",\"iPhone 15 Pro Max, 256 ГБ, SIM + eSIM\",\"52000\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_sim_esim_8251835111\"],[\"8260846699\",\"iPhone 15 Pro Max, 256 ГБ, 1 SIM\",\"53999\",\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_1_sim_8260846699\"]]}\n",
+      "stdout_bytes": 1228,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T15:41:33.027Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T15:41:32.811Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-15pm-p3-compact-c1"
+    },
+    "request_id": "20261012-15pm-p3-compact-c1",
+    "started_at": "2026-10-12T15:41:31.989Z",
+    "status": "completed"
+  },
+  "id": "20261012-15pm-p3-compact-c1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
