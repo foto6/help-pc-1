@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-proxifier-avito-test-navigate-p8",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$js=@'\nconst port=17447,url=\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno\";\nconst version=await (await fetch(\"http://127.0.0.1:\"+port+\"/json/version\")).json();\nconst ws=new WebSocket(version.webSocketDebuggerUrl);\nawait new Promise((yes,no)=>{ws.addEventListener(\"open\",yes,{once:true});ws.addEventListener(\"error\",no,{once:true})});\nconst p=new Promise((yes,no)=>{ws.addEventListener(\"message\",e=>{try{const data=JSON.parse(e.data);if(data.id===100){yes(data)}}catch{}},{once:false});setTimeout(()=>no(Error(\"timeout\")),7000)});\nws.send(JSON.stringify({id:100,method:\"Target.createTarget\",params:{url,background:true,newWindow:false}}));\nconst out=await p;ws.close();console.log(JSON.stringify({ok:!!out.result?.targetId,target_id:out.result?.targetId||null,error_code:out.error?.code||null,url}));\n'@\n$tmp=Join-Path $env:TEMP 'pc-test-avito-direct-cdp.mjs'\ntry{[System.IO.File]::WriteAllText($tmp,$js,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Open public Avito Krasnoyarsk search as background tab ONLY in assistant-created CDP17447 test Chrome after PID Direct rule. Do not access/change primary Chrome or second non-debug Chrome; no sensitive capture; no configuration change."
+}
