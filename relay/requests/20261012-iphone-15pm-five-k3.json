@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-15pm-five-k3",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$stuck=@(Get-CimInstance Win32_Process -Filter \"Name='node.exe'\" | Where-Object { [string]$_.CommandLine -like '*pc-iphone-15pm-50-k2.mjs*' })\nif ($stuck.Count -gt 0) { Write-Output 'BLOCKED_UNRECONCILED_PREVIOUS'; exit 0 }\n$tmp=Join-Path $env:TEMP 'pc-iphone-five-k3.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},6000);\ntry{let a=await(await fetch('http://127.0.0.1:17447/json/list')).json();let t=a.find(x=>x.id==='EF27777D4E798E704D04D5D474887AFA');let w=new WebSocket(t.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:4,method:'Runtime.evaluate',params:{expression:\"(()=>{const x=document.querySelectorAll('[data-marker=\\\"item\\\"]');const a=[];for(let i=0;i<5;i++){const e=x[i];if(!e)break;const n=e.querySelector('[itemprop=\\\"name\\\"]');const p=e.querySelector('[itemprop=\\\"price\\\"]');const u=e.querySelector('[data-marker=\\\"item-title\\\"]');a.push([i,e.getAttribute('data-item-id'),n?.textContent?.trim()||'',p?.getAttribute('content')||'',u?.getAttribute('href')?.split('?')[0]||''])}return a})()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{let z=JSON.parse(e.data);if(z.id===4){console.log(JSON.stringify(z.result?.result?.value||{error:z.result?.exceptionDetails?.text||'EMPTY'}));process.exit(0)}});\nw.addEventListener('error',()=>{console.log('{\"error\":\"ws_error\"}');process.exit(0)},{once:true});\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,120)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Reconcile previous timed-out Node code by process check; if safe read only FIRST FIVE public iPhone search cards via proven DOM selectors. No tab mutation or replay."
+}
