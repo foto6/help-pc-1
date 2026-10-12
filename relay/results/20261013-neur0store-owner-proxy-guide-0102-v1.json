@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "from pathlib import Path\np=Path('E:/Neur0StoreCurator/OWNER-PROXY-START-HERE.txt')\ns=\"Neur0Store Curator — your personal HTTP CONNECT proxy\\n\\nSTATUS: installed and tested offline, proxy TCP/HTTP authentication verified without credentials.\\nTarget proxy protocol: HTTP CONNECT with Basic authentication on port 6637.\\nOther advertised port 16637 currently refuses connections; do NOT use it.\\n\\nWHAT TO DO (on your Windows PC):\\n1. Open E:\\\\Neur0StoreCurator\\\\CONFIGURE_TELEGRAM_PROXY.cmd.\\n   In its local hidden prompts enter your proxy USERNAME and PASSWORD.\\n   Nothing you type is copied to ChatGPT/GitHub/relay.\\n   It attempts HTTPS to api.telegram.org THROUGH this proxy and only on success\\n   saves username and password encrypted with Windows CurrentUser DPAPI.\\n   Success message: TELEGRAM_HTTPS_OVER_PROXY_VERIFIED and PRIVATE_PROXY_CONFIGURED.\\n2. Check via E:\\\\Neur0StoreCurator\\\\CHECK_TELEGRAM_NETWORK.cmd.\\n   With encrypted credentials present it runs automatically, no second prompt.\\n3. Revoke the previously exposed bot token via Telegram @BotFather /revoke.\\n   Open E:\\\\Neur0StoreCurator\\\\SETUP_BOT.cmd, enter literal ROTATED, then the\\n   freshly generated BotFather token in its hidden local input, and send exact\\n   one-time /start code shown by the local console to @Neur0Store_bot.\\n4. Run CHECK_CURATOR.cmd; only if configuration passes run START_CURATOR.cmd.\\n   Leave the terminal open for private incoming Telegram commands.\\n\\nSECURITY:\\n- Only Telegram Bot API requests are routed through this proxy; no system/Chrome\\n  proxy settings, Proxifier, TGWS, six other ChatGPT agents or projects are changed.\\n- HTTP CONNECT Basic sends the proxy password to your proxy provider; use a trusted\\n  upstream. The Telegram API traffic remains protected by HTTPS.\\n- User posted proxy credentials in chat. Rotate the proxy password when possible;\\n  re-running with changed credentials would require a deliberate encrypted-store\\n  rotation, not manual plaintext file editing.\\n- Never paste your new BotFather token or your proxy password in ChatGPT again.\\n\\nTESTS:\\n- Read-only real proxy probe: port 6637 HTTP 407 Basic authentication required.\\n- SOCKS5 port 16637 TCP refused.\\n- 38/38 local offline regression tests pass using synthetic credentials.\\n- Real password-authenticated HTTPS tunnel is NOT confirmed until local wizard\\n  reports TELEGRAM_HTTPS_OVER_PROXY_VERIFIED.\\n- Real Telegram->ChatGPT task dispatch and autonomy remain separate Bridge gates.\\n\\nSOURCE: https://github.com/foto6/boss/tree/agent/telegram-curator-owner-http-proxy-20261013/telegram_curator\\n\"\nif p.exists():\n if p.read_text(encoding='utf8')!=s:raise RuntimeError('user_modified_guide_no_replace')\n print('OWNER_PROXY_GUIDE_ALREADY_CURRENT')\nelse:\n with p.open('x',encoding='utf8',newline='') as fh:fh.write(s)\n print('OWNER_PROXY_GUIDE_INSTALLED')\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "OWNER_PROXY_GUIDE_INSTALLED\r\n",
+      "stdout_bytes": 29,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:43:39.839Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:43:39.576Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-neur0store-owner-proxy-guide-0102-v1"
+    },
+    "request_id": "20261013-neur0store-owner-proxy-guide-0102-v1",
+    "started_at": "2026-10-12T17:43:38.919Z",
+    "status": "completed"
+  },
+  "id": "20261013-neur0store-owner-proxy-guide-0102-v1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
