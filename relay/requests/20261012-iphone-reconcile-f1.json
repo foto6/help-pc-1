@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-reconcile-f1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $n=@(Get-CimInstance Win32_Process -Filter \"Name='node.exe'\" | Where-Object { [string]$_.CommandLine -like '*pc-iphone-cards-f1.mjs*' -or [string]$_.CommandLine -like '*pc-iphone-avito-cards-c1.mjs*' } | Select-Object ProcessId,Name); [ordered]@{nodeProcesses=$n;f1TempExists=(Test-Path (Join-Path $env:TEMP 'pc-iphone-cards-f1.mjs'));c1TempExists=(Test-Path (Join-Path $env:TEMP 'pc-iphone-avito-cards-c1.mjs'))} | ConvertTo-Json -Depth 4 -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only reconcile prior timed-out DOM probes; verify no lingering Node process before further Chrome actions. Do not replay or kill processes."
+}
