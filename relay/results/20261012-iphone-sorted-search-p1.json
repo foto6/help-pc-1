@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-sorted-p1.mjs'\ntry{\n[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},9500);\ntry{const v=await(await fetch('http://127.0.0.1:17447/json/version')).json();const w=new WebSocket(v.webSocketDebuggerUrl);\nawait new Promise((ok,no)=>{w.addEventListener('open',ok,{once:true});w.addEventListener('error',no,{once:true})});\nlet seq=0;const pending=new Map();w.addEventListener('message',e=>{const z=JSON.parse(e.data);if(pending.has(z.id)){pending.get(z.id)(z);pending.delete(z.id)}});\nconst send=(method,params)=>Promise.race([new Promise(resolve=>{let id=++seq;pending.set(id,resolve);w.send(JSON.stringify({id,method,params}))}),new Promise(resolve=>setTimeout(()=>resolve({error:{message:'cdp_timeout'}}),3000))]);\nconst results=[];for(const url of [\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_15_pro_max-ASgBAgICA0SywA3Woe0RtMANzqs5sMENiPw3?s=1\",\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_16_pro_max-ASgBAgICA0SywA3MsYwVtMANzqs5sMENiPw3?s=1\"]){const z=await send('Target.createTarget',{url,background:true,newWindow:false});results.push({target_id:z.result?.targetId||null,url,error:z.error?.message||null})}\nlet activation=null;if(results[0]?.target_id){const z=await send('Target.activateTarget',{targetId:results[0].target_id});activation=!!z.result}\nconsole.log(JSON.stringify({results,firstActivated:activation}));process.exit(0);\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item $tmp -Force -ErrorAction SilentlyContinue }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"results\":[{\"target_id\":\"A197A860B09456EC6A9C05E8C5F61560\",\"url\":\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_15_pro_max-ASgBAgICA0SywA3Woe0RtMANzqs5sMENiPw3?s=1\",\"error\":null},{\"target_id\":\"FE68C457A397F88C8B5E6B85CB64C4FA\",\"url\":\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple/iphone_16_pro_max-ASgBAgICA0SywA3MsYwVtMANzqs5sMENiPw3?s=1\",\"error\":null}],\"firstActivated\":true}\n",
+      "stdout_bytes": 426,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T14:27:54.577Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T14:27:54.162Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-iphone-sorted-search-p1"
+    },
+    "request_id": "20261012-iphone-sorted-search-p1",
+    "started_at": "2026-10-12T14:27:53.390Z",
+    "status": "completed"
+  },
+  "id": "20261012-iphone-sorted-search-p1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
