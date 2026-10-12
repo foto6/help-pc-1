@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito10fast-11",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito10fast11.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{let tt=await(await fetch(\"http://127.0.0.1:17447/json/list\")).json();let t=tt.find(x=>x.url.includes(\"posutochno-ASg\"));ws=new WebSocket(t.webSocketDebuggerUrl);let data=await Promise.race([new Promise((ok,no)=>{ws.addEventListener(\"open\",()=>{let ex=\"Array.from(document.querySelectorAll('[data-marker=item]')).slice(0,12).map(x=>({id:x.getAttribute('data-item-id'),txt:(x.textContent||'').replace(/\\\\s+/g,' ').slice(0,320)}))\";ws.send(JSON.stringify({id:2,method:'Runtime.evaluate',params:{expression:ex,returnByValue:true}}))},{once:true});ws.addEventListener('message',e=>{let r=JSON.parse(e.data);if(r.id===2)ok(r.result?.result?.value||null)});ws.addEventListener('error',no,{once:true})}),new Promise((_,bad)=>setTimeout(()=>bad(Error('timeout')),5000))]);console.log(JSON.stringify(data))}catch(e){console.log(JSON.stringify({error:String(e).slice(0,130)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13000,
+  "note": "Read only first 12 public Avito cottage listing textContent from approved CDP port17447, no browser configuration or private data."
+}
