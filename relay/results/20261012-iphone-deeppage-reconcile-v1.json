@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $n=@(Get-CimInstance Win32_Process -Filter \"Name='node.exe'\" | Where-Object { [string]$_.CommandLine -like '*pc-iphone-page37.mjs*' } | Select-Object ProcessId,Name); [ordered]@{stuckNodeCount=$n.Count;at=(Get-Date).ToUniversalTime().ToString('o');tempExists=(Test-Path (Join-Path $env:TEMP 'pc-iphone-page37.mjs'))} | ConvertTo-Json -Compress"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"stuckNodeCount\":0,\"at\":\"2026-10-12T14:52:32.6304773Z\",\"tempExists\":true}\r\n",
+      "stdout_bytes": 76,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T14:52:32.952Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T14:52:32.773Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-iphone-deeppage-reconcile-v1"
+    },
+    "request_id": "20261012-iphone-deeppage-reconcile-v1",
+    "started_at": "2026-10-12T14:52:31.866Z",
+    "status": "completed"
+  },
+  "id": "20261012-iphone-deeppage-reconcile-v1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
