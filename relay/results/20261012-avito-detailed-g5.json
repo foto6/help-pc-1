@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-g5-scroll.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet a=[];let v=await(await fetch('http://127.0.0.1:17447/json/list')).json();for(const id of [\"38AC30F9B71FDC33019DBD7A9309EAB2\",\"0A8A2242C74C03B63EEBEDB89441D7D7\",\"88F33FF7CE7B171A51416C6F60D5A429\"]){let t=v.find(x=>x.id===id);if(!t)continue;let ws=new WebSocket(t.webSocketDebuggerUrl);try{let x=await Promise.race([new Promise((ok,bad)=>{ws.addEventListener('open',()=>ws.send(JSON.stringify({id:12,method:'Runtime.evaluate',params:{expression:'window.scrollTo(0,650);window.scrollY',returnByValue:true}})),{once:true});ws.addEventListener('message',e=>{let z=JSON.parse(e.data);if(z.id===12)ok(z.result?.result?.value||0)});ws.addEventListener('error',bad,{once:true})}),new Promise((_,rej)=>setTimeout(()=>rej(Error('timeout')),2800))]);a.push({id,scroll:x})}catch(e){a.push({id,error:'timeout'})}ws.close()}console.log(JSON.stringify(a));process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\\win\\async.c, line 94\r\n",
+      "stderr_bytes": 87,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"38AC30F9B71FDC33019DBD7A9309EAB2\",\"scroll\":650},{\"id\":\"0A8A2242C74C03B63EEBEDB89441D7D7\",\"scroll\":650},{\"id\":\"88F33FF7CE7B171A51416C6F60D5A429\",\"scroll\":650}]\n",
+      "stdout_bytes": 167,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T12:52:52.651Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T12:52:52.476Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-detailed-g5"
+    },
+    "request_id": "20261012-avito-detailed-g5",
+    "started_at": "2026-10-12T12:52:51.643Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-detailed-g5",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
