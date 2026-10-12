@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-birthday-uia-active-r016",
+  "action": "uia.snapshot",
+  "params": {},
+  "timeout_ms": 30000,
+  "note": "Read-only accessibility snapshot of foreground Chrome public house listing."
+}
