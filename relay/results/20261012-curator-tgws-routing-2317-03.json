@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$out=[ordered]@{};$targets=Get-CimInstance Win32_Process|Where-Object{$_.Name -match '^(TgWsProxy_windows|Proxifier|python|pythonw)(\\.exe)?$'};$out.processes=@($targets|ForEach-Object{ $path=$_.ExecutablePath;$folder=if($path){Split-Path -Parent $path}else{''};[ordered]@{name=$_.Name;pid=$_.ProcessId;executableParent=$folder;scriptTag=if($_.Name -eq 'python.exe' -or $_.Name -eq 'pythonw.exe'){if($_.CommandLine -match '(?i)(tgws|proxy|http|server|tunnel)'){ 'proxy_related_keywords' }else{'not_proxy_related'}}else{'n/a'}}});$out.listeners=@(Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue|Where-Object{$_.LocalAddress -in @('127.0.0.1','::1') -and $_.LocalPort -ge 1024}|Select-Object LocalPort,OwningProcess|Sort-Object LocalPort -Unique|ForEach-Object{$p=Get-Process -Id $_.OwningProcess -ErrorAction SilentlyContinue;[ordered]@{port=$_.LocalPort;process=if($p){$p.ProcessName}else{''}}}|Where-Object{$_.process -notmatch 'Chrome|Code|Teams|svchost|Wpn|Runtime|Search|msedge|WebView|System'}|Select-Object -First 40);$out|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"processes\":[{\"name\":\"Proxifier.exe\",\"pid\":11296,\"executableParent\":\"C:\\\\Program Files (x86)\\\\Proxifier\",\"scriptTag\":\"n/a\"},{\"name\":\"pythonw.exe\",\"pid\":14512,\"executableParent\":\"C:\\\\Users\\\\foto6\\\\AppData\\\\Local\\\\Programs\\\\Python\\\\Python312\",\"scriptTag\":\"not_proxy_related\"},{\"name\":\"TgWsProxy_windows.exe\",\"pid\":5404,\"executableParent\":\"C:\\\\Users\\\\foto6\\\\AppData\\\\Roaming\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\Startup\",\"scriptTag\":\"n/a\"},{\"name\":\"TgWsProxy_windows.exe\",\"pid\":18200,\"executableParent\":\"C:\\\\Users\\\\foto6\\\\AppData\\\\Roaming\\\\Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\Startup\",\"scriptTag\":\"n/a\"},{\"name\":\"python.exe\",\"pid\":2984,\"executableParent\":\"E:\\\\manhwa\\\\.venv\\\\Scripts\",\"scriptTag\":\"not_proxy_related\"},{\"name\":\"python.exe\",\"pid\":23304,\"executableParent\":\"E:\\\\ai\\\\python311\",\"scriptTag\":\"not_proxy_related\"}],\"listeners\":[{\"port\":1443,\"process\":\"TgWsProxy_windows\"},{\"port\":8000,\"process\":\"python\"},{\"port\":8080,\"process\":\"tunnel-client\"},{\"port\":17448,\"process\":\"node\"},{\"port\":17449,\"process\":\"node\"},{\"port\":42050,\"process\":\"OneDrive.Sync.Service\"},{\"port\":49340,\"process\":\"steam\"},{\"port\":49343,\"process\":\"steam\"},{\"port\":49669,\"process\":\"jhi_service\"},{\"port\":61893,\"process\":\"agy\"},{\"port\":61894,\"process\":\"agy\"},{\"port\":62564,\"process\":\"Proxifier\"}]}\r\n",
+      "stdout_bytes": 1283,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:21:31.383Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:21:31.193Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-curator-tgws-routing-2317-03"
+    },
+    "request_id": "20261012-curator-tgws-routing-2317-03",
+    "started_at": "2026-10-12T16:21:28.948Z",
+    "status": "completed"
+  },
+  "id": "20261012-curator-tgws-routing-2317-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
