@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261013-avito-home-search-pages-p2p3-r01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$out=@();foreach($u0 in @('https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno?priceMax=12000&p=2','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno?priceMax=12000&p=3','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno?q=%D0%BD%D0%B0%2010%20%D1%87%D0%B5%D0%BB%D0%BE%D0%B2%D0%B5%D0%BA&p=2')){$enc=[Uri]::EscapeDataString($u0);$t=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17447/json/new?'+$enc) -TimeoutSec 8;$out+=@{id=$t.id;url=$t.url}};$out|ConvertTo-Json -Compress -Depth 4"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 35000,
+  "note": "Open three public Avito search-result pages in isolated Chrome; read-only scouting; no change to proxy/other windows."
+}
