@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-cards-f1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-cards-f1.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},8500);\ntry{\nconst arr=await(await fetch('http://127.0.0.1:17447/json/list')).json();\nconst tab=arr.find(x=>x.id==='5BE7D591DA96F1CAFD3416FF88E7DE17');\nif(!tab)throw Error('TARGET_MISSING');\nconst w=new WebSocket(tab.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:13,method:'Runtime.evaluate',params:{expression:\"(()=>Array.from(document.querySelectorAll('[data-marker=\\\"item\\\"]')).slice(0,35).map((e,i)=>{const h=e.querySelector('h3');const p=e.querySelector('[data-marker=\\\"item-price\\\"]')||e.querySelector('[itemprop=\\\"price\\\"]');const a=h?.closest('a[href]')||e.querySelector('a[href]');return {i,name:h?.textContent?.trim().slice(0,100)||'',price:p?.textContent?.trim().slice(0,55)||'',snippet:(e.textContent||'').replace(/\\\\s+/g,' ').slice(0,230),link:a?.href?new URL(a.href).origin+new URL(a.href).pathname:''};}))()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',ev=>{const v=JSON.parse(ev.data);if(v.id===13){console.log(JSON.stringify(v.result?.result?.value||{error:v.result?.exceptionDetails?.text||v.error?.message||'EMPTY'}));process.exit(0)}});\nw.addEventListener('error',()=>{console.log(JSON.stringify({error:'WS_ERROR'}));process.exit(0)},{once:true})\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,120)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Read-only public first 35 Avito phone listing cards from exact isolated Chrome user-approved tab 17447; no focus/navigation/scroll, no private session data. Force process exit on timeout."
+}
