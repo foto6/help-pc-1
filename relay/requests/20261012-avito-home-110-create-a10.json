@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-home-110-create-a10",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$u=[Uri]::EscapeDataString('https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/2-k._taunhaus_110_m_7313084190?checkIn=2026-11-03&checkOut=2026-11-04');$t=Invoke-RestMethod -Method Put -Uri (\"http://127.0.0.1:17447/json/new?\"+$u) -TimeoutSec 8;@{target=$t.id;url=$t.url;title=$t.title}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Create one new tab in isolated Avito Chrome to inspect public 110m riverside rental, no booking."
+}
