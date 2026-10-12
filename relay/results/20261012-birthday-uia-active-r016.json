@@ -1,0 +1,21 @@
+{
+  "action": "uia.snapshot",
+  "executor_result": {
+    "action": "uia.snapshot",
+    "data": {},
+    "dry_run": false,
+    "error": "COMError: (-2147220991, 'Событие не смогло вызвать ни одного из абонентов', (None, None, None, 0, None))",
+    "error_kind": "executor_failure",
+    "finished_at": "2026-10-12T16:20:54.082Z",
+    "ok": false,
+    "request_id": "20261012-birthday-uia-active-r016",
+    "started_at": "2026-10-12T16:20:53.031Z",
+    "status": "error"
+  },
+  "id": "20261012-birthday-uia-active-r016",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
