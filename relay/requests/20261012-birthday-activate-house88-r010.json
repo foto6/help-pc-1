@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-birthday-activate-house88-r010",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$t=Invoke-WebRequest 'http://127.0.0.1:17447/json/activate/8682F60C59EAE3EF9CF12DCE711A647B' -UseBasicParsing -TimeoutSec 6;@{httpStatus=[int]$t.StatusCode;result=$t.Content}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Activate only user-provided house88 target in managed second Chrome, to allow visible DOM and image inspection; no site submission."
+}
