@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261013-avito-home-activate-zykovo-r35",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$r=Invoke-WebRequest 'http://127.0.0.1:17447/json/activate/8EA0EA0B83000C46BA05CBB74A5F0E3D' -UseBasicParsing -TimeoutSec 7;@{ok=($r.StatusCode -eq 200)}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Activate public Zykovo 110m Avito listing for visual review only, do not book."
+}
