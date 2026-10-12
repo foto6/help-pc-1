@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-json-d2.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nconst controller=new AbortController();\nsetTimeout(()=>controller.abort(),3500);\ntry {\n const res=await fetch('http://127.0.0.1:17447/json/list',{signal:controller.signal});\n const arr=await res.json();\n console.log(JSON.stringify({ok:true,count:arr.length,tabs:arr.filter(t=>t.type==='page'&&String(t.url).includes('/telefony/')).map(t=>({id:t.id,title:t.title,url:t.url}))}));\n} catch(e) { console.log(JSON.stringify({ok:false,error:String(e).slice(0,120)})); }\nprocess.exit(0);\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"count\":100,\"tabs\":[{\"id\":\"5BE7D591DA96F1CAFD3416FF88E7DE17\",\"title\":\"Купить 📱 мобильный телефон, смартфон Apple по низкой цене на Авито в Красноярске с доставкой | Смартфоны и мобильные телефоны на Авито\",\"url\":\"https://www.avito.ru/krasnoyarsk/telefony/mobilnye_telefony/apple-ASgBAgICAkS0wA3OqzmwwQ2I_Dc?cd=1&context=H4sIAAAAAAAA_0SQy27bOhiE38Xbszi_ZCupFXRR0xVBgVYgGqZI7UQy1iWk7EY320XfvZDjoEty5sd8M0Xohb-70INwoU8fH2-6r0_t4qULV08QLkjba-KixmA7KjvVr3aqteOTwlGT86mm0VTnoprfgxTsrPxAk-asSY_2IMe0M_gH0G06GkxJgn8CbdJhjXcgKSsTTCnastKg_4A-s7JHV6CClT3egKRp1-MtyGdWG7QCeiiBHtMuQf-D3Kbj3bMrp1_9WeNqVE6g4RpoUl80aTedzBKrMj6Y6JNZOt6ppfnUHbPat62yudVt8o_ZBaN2XqWQVynMr_Pt3E9hOxTLZPaoN-_e_2Iyfpv113mfNvJyEQcCkSeB4gcPf2QllcG8Vcs42B-YJs1plaCLJu4ySj-CIlsPj39_dzvcds1mPWcazFdf7BDft_kGVKTjvIWkrPliyzgUeP3-yL7lWXSVfnXUjr8XIrZyyTRpPXPck--Llz9_BwC6A9Uq7QEAAA\"}]}\n",
+      "stdout_bytes": 964,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T14:11:12.613Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T14:11:12.384Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-iphone-node-json-d2"
+    },
+    "request_id": "20261012-iphone-node-json-d2",
+    "started_at": "2026-10-12T14:11:11.657Z",
+    "status": "completed"
+  },
+  "id": "20261012-iphone-node-json-d2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
