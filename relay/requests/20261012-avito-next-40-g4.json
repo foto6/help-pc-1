@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-next-40-g4",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-next40-g4.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{let tabs=await(await fetch(\"http://127.0.0.1:17447/json/list\")).json();let t=tabs.find(x=>x.id===\"0E020825CF96957FA4AD787C7C2F5C65\");ws=new WebSocket(t.webSocketDebuggerUrl);let a=await Promise.race([new Promise((ok,no)=>{ws.addEventListener(\"open\",()=>ws.send(JSON.stringify({id:111,method:'Runtime.evaluate',params:{expression:\"Array.from(document.querySelectorAll('[data-marker=item]')).slice(12,50).map(x=>({id:x.getAttribute('data-item-id'),url:x.querySelector('a[href]')?.href||''}))\",returnByValue:true}})),{once:true});ws.addEventListener(\"message\",e=>{let x=JSON.parse(e.data);if(x.id===111)ok(x.result?.result?.value||null)});ws.addEventListener(\"error\",no,{once:true})}),new Promise((_,bad)=>setTimeout(()=>bad(Error('timeout')),5500))]);console.log(JSON.stringify(a))}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Read-only public Avito budget-filtered 38 more listing hyperlinks, no private tabs or proxy changes."
+}
