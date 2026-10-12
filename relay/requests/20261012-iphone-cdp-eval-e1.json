@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-cdp-eval-e1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-eval-e1.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nconst die=setTimeout(()=>{console.log(JSON.stringify({status:'hard_timeout'}));process.exit(0)},5500);\ntry{\n const a=await(await fetch('http://127.0.0.1:17447/json/list')).json();\n const t=a.find(x=>x.id==='5BE7D591DA96F1CAFD3416FF88E7DE17');\n if(!t)throw Error('tab_missing');\n const w=new WebSocket(t.webSocketDebuggerUrl);\n w.addEventListener('open',()=>w.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:'({url:location.pathname,title:document.title,items:document.querySelectorAll(\\'[data-marker=item]\\').length})',returnByValue:true}})),{once:true});\n w.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===1){console.log(JSON.stringify({status:'reply',data:z.result?.result?.value,error:z.error?.message,ex:z.result?.exceptionDetails?.text}));process.exit(0)}},{once:false});\n w.addEventListener('error',e=>{console.log(JSON.stringify({status:'ws_error'}));process.exit(0)},{once:true});\n}catch(e){console.log(JSON.stringify({status:'error',error:String(e).slice(0,160)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Bounded read-only CDP Runtime.evaluate minimal public-page metadata of exact authorized Avito iPhone tab. Force exit after 5.5s, no browser navigation or writes."
+}
