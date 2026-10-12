@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-guest-cdp-h7.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{const v=await(await fetch(\"http://127.0.0.1:17447/json/list\")).json();const t=v.find(x=>x.id===\"38AC30F9B71FDC33019DBD7A9309EAB2\");ws=new WebSocket(t.webSocketDebuggerUrl);await new Promise((ok,no)=>{ws.addEventListener('open',ok,{once:true});ws.addEventListener('error',no,{once:true})});let seq=100;let pending=new Map();ws.addEventListener('message',e=>{const z=JSON.parse(e.data);if(pending.has(z.id)){pending.get(z.id)(z);pending.delete(z.id)}});let send=(method,params)=>new Promise(ok=>{const id=++seq;pending.set(id,ok);ws.send(JSON.stringify({id,method,params}))});let count=0;for(let i=0;i<8;i++){await send('Input.dispatchMouseEvent',{type:'mousePressed',x:977,y:468,button:'left',clickCount:1});await send('Input.dispatchMouseEvent',{type:'mouseReleased',x:977,y:468,button:'left',clickCount:1});count++;await new Promise(r=>setTimeout(r,85))}const z=await send('Runtime.evaluate',{expression:\"document.body.innerText.slice(0,400).includes('10 взрослых')\",returnByValue:true});console.log(JSON.stringify({mouseClicks:count,count10Detected:z.result?.result?.value||false,evalError:z.error?.code||null}))}catch(e){console.log(JSON.stringify({error:String(e).slice(0,120)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"mouseClicks\":8,\"count10Detected\":false,\"evalError\":null}\n",
+      "stdout_bytes": 59,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T13:02:13.625Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T13:02:13.440Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-guests-cdp-h7"
+    },
+    "request_id": "20261012-avito-guests-cdp-h7",
+    "started_at": "2026-10-12T13:02:11.729Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-guests-cdp-h7",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
