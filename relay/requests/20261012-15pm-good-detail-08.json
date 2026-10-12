@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-15pm-good-detail-08",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'pa15detail08.mjs';try{[IO.File]::WriteAllText($p,@'\nsetTimeout(()=>process.exit(2),7500);\nconst a=await(await fetch('http://127.0.0.1:17447/json/list')).json();\nconst t=a.find(x=>x.id==='0DC913FEE1093BE0EBB996D90627B02A');\nif(!t)process.exit(3);\nconst w=new WebSocket(t.webSocketDebuggerUrl);\nw.onopen=()=>w.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:'window.scrollTo(0,700); location.pathname',returnByValue:true}}));\nw.onmessage=e=>{let r=JSON.parse(e.data);if(r.id===1){console.log(JSON.stringify({path:r.result?.result?.value,error:r.error}));process.exit(0)}};\n\n'@);& node $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Scroll only public iPhone 15 Pro Max 256 GB listing in agent-created Chrome tab for visual examination. No contacts or payment."
+}
