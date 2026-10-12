@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "from pathlib import Path\np=Path('E:/Neur0StoreCurator/CLOUDFLARE-START-HERE.txt')\ndata=\"NEUR0STORE: Telegram bot without api_id/api_hash\\nMODE: owner Cloudflare Worker relay; Telegram MTProto developer keys NOT needed.\\n\\n1) Open https://dash.cloudflare.com/ -> Workers & Pages -> Create Worker\\n2) In Worker editor paste code from:\\nhttps://github.com/foto6/boss/blob/agent/telegram-cloudflare-botapi-fallback-20261012/telegram_curator/cloudflare_worker/worker.js\\n3) Under Worker Settings -> Variables and Secrets, add Secret TELEGRAM_BOT_TOKEN = NEW bot token from @BotFather (OLD exposed token must be revoked). Never paste it into ChatGPT or GitHub.\\n4) Double-click CREATE_WORKER_KEY.cmd on PC, copy its locally generated long key into another Cloudflare Secret named CURATOR_RELAY_KEY. Do not send it to ChatGPT/GitHub.\\n5) Deploy Worker and copy HTTPS address https://<your-worker>.<account>.workers.dev\\n6) Double-click SETUP_CLOUDFLARE.cmd. Type ROTATED, enter Worker address and the key in hidden local prompt. Then DM @Neur0Store_bot exact /start CODE printed locally.\\n7) Double-click CHECK_CLOUDFLARE.cmd, then START_CLOUDFLARE.cmd; send /task Verify Bridge status in Telegram.\\n\\nSECURITY: Worker accepts getMe/getWebhookInfo/getUpdates/sendMessage only with secret key. Telegram token is stored only as Cloudflare encrypted secret, local owner binding in Windows DPAPI. No Telegram developer API keys.\\nWARNING: source/test installed; Worker NOT yet deployed nor bot connected. Do not mistake local 33 passing tests for confirmed end-to-end delivery. Existing Bridge supervisor gate must independently deliver curator assignments. Do not start both Telegram consumers together.\\n\"\nif p.exists():\n if p.read_text(encoding='utf8')!=data:raise RuntimeError('existing_file_modified_stop')\n print('ALREADY_CURRENT')\nelse:\n with p.open('x',encoding='utf8',newline='') as fh:fh.write(data)\n print('CLOUDFLARE_GUIDE_INSTALLED')\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "CLOUDFLARE_GUIDE_INSTALLED\r\n",
+      "stdout_bytes": 28,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:08:34.338Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:08:34.113Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-curator-cloudflare-guide-local-c5"
+    },
+    "request_id": "20261012-curator-cloudflare-guide-local-c5",
+    "started_at": "2026-10-12T17:08:33.578Z",
+    "status": "completed"
+  },
+  "id": "20261012-curator-cloudflare-guide-local-c5",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
