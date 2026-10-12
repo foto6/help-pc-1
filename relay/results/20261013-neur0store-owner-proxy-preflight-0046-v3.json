@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "from pathlib import Path\nimport os\np=Path('E:/Neur0StoreCurator/proxy_preflight.py')\nold=\"\\\"\\\"\\\"Credential-free Bot API connectivity test. Run interactively on owner's PC.\\\"\\\"\\\"\\nimport getpass, os, sys, urllib.error, urllib.request\\nfrom telegram_transport import open_telegram, parse_proxy, ProxyTransportError\\n\\ndef main():\\n    print(\\\"Bot API uses HTTPS; TGWS MTProto 127.0.0.1:1443 is NOT an HTTP CONNECT/SOCKS5 proxy.\\\")\\n    print(\\\"Use a real HTTP CONNECT or SOCKS5h proxy URL; leave empty to test direct access.\\\")\\n    entered=getpass.getpass(\\\"HTTP/SOCKS5h proxy URL (hidden, optional): \\\").strip()\\n    try:parse_proxy(entered)\\n    except ProxyTransportError as e:\\n        print(\\\"PROXY_INVALID:\\\"+str(e));return 2\\n    req=urllib.request.Request(\\\"https://api.telegram.org/\\\")\\n    try:\\n        with open_telegram(req,proxy=entered,timeout=8) as r:\\n            print(\\\"TELEGRAM_BOT_API_TRANSPORT_REACHABLE; HTTPS status=\\\"+str(r.status))\\n        return 0\\n    except urllib.error.HTTPError as e:\\n        # An HTTP status proves HTTPS routing succeeded even if root endpoint doesn't exist.\\n        print(\\\"TELEGRAM_BOT_API_TRANSPORT_REACHABLE; HTTPS status=\\\"+str(e.code))\\n        return 0\\n    except ProxyTransportError as e:\\n        print(\\\"PROXY_REJECTED:\\\"+str(e));return 2\\n    except (OSError,urllib.error.URLError,TimeoutError) as e:\\n        print(\\\"HTTPS_CONNECTIVITY_FAILED:\\\"+type(e).__name__);return 2\\n\\nif __name__==\\\"__main__\\\":sys.exit(main())\\n\"\nnew=\"\\\"\\\"\\\"Credential-free Bot API connectivity test. Run interactively on owner's PC.\\\"\\\"\\\"\\nimport getpass, os, sys, urllib.error, urllib.request\\nfrom telegram_transport import open_telegram, parse_proxy, ProxyTransportError\\n\\ndef main():\\n    from owner_proxy import exists as owner_proxy_exists, proxy_url\\n    from secrets_store import SecretError\\n    print(\\\"Telegram API requires HTTPS; using existing HTTP CONNECT/SOCKS5h route.\\\")\\n    if owner_proxy_exists():\\n        print(\\\"Testing saved owner proxy credentials from local encrypted DPAPI.\\\")\\n        try:entered=proxy_url()\\n        except SecretError:\\n            print(\\\"LOCAL_PROXY_SECRET_UNAVAILABLE\\\");return 2\\n    else:\\n        print(\\\"No encrypted proxy configured. First run CONFIGURE_TELEGRAM_PROXY.cmd.\\\")\\n        entered=getpass.getpass(\\\"HTTP/SOCKS5h proxy URL (hidden, optional): \\\").strip()\\n        try:parse_proxy(entered)\\n        except ProxyTransportError as e:\\n            print(\\\"PROXY_INVALID:\\\"+str(e));return 2\\n    req=urllib.request.Request(\\\"https://api.telegram.org/\\\")\\n    try:\\n        with open_telegram(req,proxy=entered,timeout=8) as r:\\n            print(\\\"TELEGRAM_BOT_API_TRANSPORT_REACHABLE; HTTPS status=\\\"+str(r.status))\\n        return 0\\n    except urllib.error.HTTPError as e:\\n        # An HTTP status proves HTTPS routing succeeded even if root endpoint doesn't exist.\\n        print(\\\"TELEGRAM_BOT_API_TRANSPORT_REACHABLE; HTTPS status=\\\"+str(e.code))\\n        return 0\\n    except ProxyTransportError as e:\\n        print(\\\"PROXY_REJECTED:\\\"+str(e));return 2\\n    except (OSError,urllib.error.URLError,TimeoutError) as e:\\n        print(\\\"HTTPS_CONNECTIVITY_FAILED:\\\"+type(e).__name__);return 2\\n\\nif __name__==\\\"__main__\\\":sys.exit(main())\\n\"\nif not p.is_file() or p.read_text(encoding='utf8')!=old:raise RuntimeError('existing_local_preflight_drift_abort')\ntemp=p.with_name(p.name+'.newownedproxy')\nwith temp.open('x',encoding='utf8',newline='') as fh:fh.write(new)\nos.replace(temp,p)\nprint('TELEGRAM_PROXY_PREFLIGHT_AUTO_USES_DPAPI')\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "TELEGRAM_PROXY_PREFLIGHT_AUTO_USES_DPAPI\r\n",
+      "stdout_bytes": 42,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:39:14.005Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:39:13.748Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-neur0store-owner-proxy-preflight-0046-v3"
+    },
+    "request_id": "20261013-neur0store-owner-proxy-preflight-0046-v3",
+    "started_at": "2026-10-12T17:39:13.145Z",
+    "status": "completed"
+  },
+  "id": "20261013-neur0store-owner-proxy-preflight-0046-v3",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
