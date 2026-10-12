@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$out=@();foreach($u0 in @('https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno?priceMax=12000&p=2','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno?priceMax=12000&p=3','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno?q=%D0%BD%D0%B0%2010%20%D1%87%D0%B5%D0%BB%D0%BE%D0%B2%D0%B5%D0%BA&p=2')){$enc=[Uri]::EscapeDataString($u0);$t=Invoke-RestMethod -Method Put -Uri ('http://127.0.0.1:17447/json/new?'+$enc) -TimeoutSec 8;$out+=@{id=$t.id;url=$t.url}};$out|ConvertTo-Json -Compress -Depth 4"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"id\":\"34DE676D13737A1BDD956DC59C94A3C1\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno?priceMax=12000\\u0026p=2\"},{\"id\":\"022851EF3AF8253466118F8E478F7940\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno?priceMax=12000\\u0026p=3\"},{\"id\":\"87DA026620C18E119450B17EFB40DD81\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno?q=%D0%BD%D0%B0%2010%20%D1%87%D0%B5%D0%BB%D0%BE%D0%B2%D0%B5%D0%BA\\u0026p=2\"}]\r\n",
+      "stdout_bytes": 485,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T17:00:55.942Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T17:00:55.119Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261013-avito-home-search-pages-p2p3-r01"
+    },
+    "request_id": "20261013-avito-home-search-pages-p2p3-r01",
+    "started_at": "2026-10-12T17:00:54.109Z",
+    "status": "completed"
+  },
+  "id": "20261013-avito-home-search-pages-p2p3-r01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
