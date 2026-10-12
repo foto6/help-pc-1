@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $s=[ordered]@{stage='cdp-http-probe';at=(Get-Date).ToUniversalTime().ToString('o')}; try{$tabs=Invoke-RestMethod 'http://127.0.0.1:17447/json/list' -TimeoutSec 4; $s.targets=@($tabs | Where-Object {$_.url -match '7714813321|4698340709'} | ForEach-Object {@{id=$_.id;title=$_.title;url=$_.url}});$s.total=@($tabs).Count}catch{$s.error=$_.Exception.GetType().Name}; $s | ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"stage\":\"cdp-http-probe\",\"at\":\"2026-10-12T16:11:51.6397711Z\",\"targets\":[{\"title\":\"4-�. ���, 70 �? ���७�� ����᭮��᪥ | ����� ��� ����᭮��᪥ | ���� (4698340709)\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/4-k._dom_70_m_4698340709?guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A2%2C%22adultsCount%22%3A2%2C%22children%22%3A%5B%5D%7D\\u0026checkIn=2026-11-02\\u0026checkOut=2026-11-03\",\"id\":\"F67239432460BD1FD379FB6C9DAFC6AD\"},{\"title\":\"3-�. ���, 88 �? ���७�� ����᭮��᪥ | ����� ��� ����᭮��᪥ | ���� (7714813321)\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_88_m_7714813321?guestsDetailed=%7B%22version%22%3A1%2C%22totalCount%22%3A2%2C%22adultsCount%22%3A2%2C%22children%22%3A%5B%5D%7D\\u0026checkIn=2026-11-03\\u0026checkOut=2026-11-04\",\"id\":\"8682F60C59EAE3EF9CF12DCE711A647B\"}],\"total\":252}\r\n",
+      "stdout_bytes": 860,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:11:52.001Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:11:51.810Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-birthday-relay-cdp-diagnostic-r004"
+    },
+    "request_id": "20261012-birthday-relay-cdp-diagnostic-r004",
+    "started_at": "2026-10-12T16:11:50.999Z",
+    "status": "completed"
+  },
+  "id": "20261012-birthday-relay-cdp-diagnostic-r004",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
