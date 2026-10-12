@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-curator-proxy-17tests-r01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import unittest,sys,compileall\nsys.path.insert(0,r'E:\\Neur0StoreCurator')\nfor name in ('telegram_transport','daemon','setup','register','secrets_store'):\n import importlib\n importlib.import_module(name)\ns=unittest.defaultTestLoader.discover(r'E:\\Neur0StoreCurator',pattern='test_daemon.py')\nr=unittest.TextTestRunner(verbosity=2).run(s)\nprint('CURATOR_TEST_COUNT',r.testsRun,'FAILURES',len(r.failures),'ERRORS',len(r.errors))\nif not r.wasSuccessful():sys.exit(1)"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 18000,
+  "note": "Offline Telegram transport/owner gateway unit tests, verify source imports and explicit MTProto rejection; never access token or Telegram."
+}
