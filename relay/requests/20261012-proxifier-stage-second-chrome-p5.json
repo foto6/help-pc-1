@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-proxifier-stage-second-chrome-p5",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$original=Join-Path $env:APPDATA 'Proxifier4\\Profiles\\Default.ppx'\n$work='E:\\PC-Control\\Proxifier-Avito-20261012'\n[System.IO.Directory]::CreateDirectory($work)|Out-Null\n$backup=Join-Path $work 'Default-original-backup.ppx'\nif(!(Test-Path -LiteralPath $backup)){Copy-Item -LiteralPath $original -Destination $backup -ErrorAction Stop}\n$baseHash=(Get-FileHash $original -Algorithm SHA256).Hash\nif((Get-FileHash $backup -Algorithm SHA256).Hash -ne $baseHash){throw 'BACKUP_HASH_MISMATCH_WITH_ACTIVE_PROFILE'}\n$exe='C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'\n$port=17447\n$running=@(Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\"|Where-Object {($_.CommandLine -match '--remote-debugging-port=17447') -and ($_.CommandLine -notmatch '--type=')})\nif($running.Count -gt 0){throw 'PORT_17447_ALREADY_HAS_CHROME'}\n$p=Start-Process -FilePath $exe -ArgumentList @('--headless=new','--remote-debugging-address=127.0.0.1','--remote-debugging-port=17447','--user-data-dir=E:\\PC-Control\\AvitoDirectChrome-20261012\\Profile','--no-proxy-server','--no-first-run','--no-default-browser-check','https://www.avito.ru/') -PassThru\nStart-Sleep -Seconds 3\n$cp=@(Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\")\n$root1=$cp|Where-Object{$_.ProcessId -eq 16760 -and $_.CommandLine -match 'remote-debugging-port=17410'}\n$root2=$cp|Where-Object{$_.ProcessId -eq 9148 -and $_.CommandLine -notmatch '--type='}\nif(!$root1 -or !$root2){throw 'CHROME_ROOTS_CHANGED_ABORT'}\n$root3=$cp|Where-Object{$_.ProcessId -eq $p.Id -and $_.CommandLine -match 'remote-debugging-port=17447'}\nif(!$root3){throw 'ISOLATED_CHROME_DID_NOT_START'}\n$roots=@(9148,$p.Id)\n$children=@($cp|Where-Object{$roots -contains $_.ParentProcessId})\n$nets=@($children|Where-Object{$_.CommandLine -match 'network\\.mojom\\.NetworkService'}|Select-Object -ExpandProperty ProcessId)\n$allowPids=@($roots)+@($children|Select-Object -ExpandProperty ProcessId)|Sort-Object -Unique\n$out=[ordered]@{stage='backup_and_test_browser_ready';profileBackupVerified=$true;backupPath=$backup;originalHashPrefix=$baseHash.Substring(0,12);primaryChromePid=16760;secondChromePid=9148;testChromePid=$p.Id;testChromeCdpPort=17447;secondChromeNetworkServiceCount=@($nets).Count;allowPidCount=@($allowPids);allowPids=$allowPids;testChromeReady=$false}\ntry{$v=Invoke-RestMethod 'http://127.0.0.1:17447/json/version' -TimeoutSec 3;$out.testChromeReady=$true}catch{}\n$out|ConvertTo-Json -Compress -Depth 5"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22000,
+  "note": "Back up current Proxifier .ppx locally and compare SHA256, then start only a separate temporary headless Chrome CDP 17447. No changes yet to Proxifier or existing Chrome 17410 or ordinary Chrome. PIDs safe to report; do not print profile contents."
+}
