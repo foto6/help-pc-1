@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-search12.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{let v=await(await fetch(\"http://127.0.0.1:17447/json/version\")).json();ws=new WebSocket(v.webSocketDebuggerUrl);await new Promise((ok,no)=>{ws.addEventListener('open',ok,{once:true});ws.addEventListener('error',no,{once:true})});let ids=[];let pending=new Map();let n=20;ws.addEventListener('message',e=>{let x=JSON.parse(e.data);if(pending.has(x.id)){pending.get(x.id)(x);pending.delete(x.id)}});let arr=[\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno?q=%D0%B1%D0%B0%D0%BD%D1%8F\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno?q=%D0%BD%D0%B0%2010%20%D1%87%D0%B5%D0%BB%D0%BE%D0%B2%D0%B5%D0%BA\",\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno?priceMax=10000\"];for(let url of arr){let z=await Promise.race([new Promise(ok=>{let id=++n;pending.set(id,ok);ws.send(JSON.stringify({id,method:'Target.createTarget',params:{url,background:true,newWindow:false}}))}),new Promise((_,no)=>setTimeout(()=>no(Error('TIMEOUT')),3800))]).catch(()=>null);ids.push({url,id:z?.result?.targetId||null})}console.log(JSON.stringify(ids))}catch(e){console.log(JSON.stringify({error:String(e).slice(0,90)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno?q=%D0%B1%D0%B0%D0%BD%D1%8F\",\"id\":\"A93F5B8E54F447B4552C74AD367E20AD\"},{\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno?q=%D0%BD%D0%B0%2010%20%D1%87%D0%B5%D0%BB%D0%BE%D0%B2%D0%B5%D0%BA\",\"id\":\"3618E52BCCD356365C3E7C68F77FE6A5\"},{\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/sdam/posutochno?priceMax=10000\",\"id\":\"0E020825CF96957FA4AD787C7C2F5C65\"}]\n",
+      "stdout_bytes": 469,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T12:47:02.848Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T12:47:02.631Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-new-search-12"
+    },
+    "request_id": "20261012-avito-new-search-12",
+    "started_at": "2026-10-12T12:47:01.572Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-new-search-12",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
