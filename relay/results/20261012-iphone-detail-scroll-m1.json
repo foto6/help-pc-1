@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-scroll-m1.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},5000);\ntry{const t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id==='507CA2A335B0F66B9544E22A8B264305');const w=new WebSocket(t.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:2,method:'Runtime.evaluate',params:{expression:\"(()=>{window.scrollTo(0,650);return {scrollY:window.scrollY,url:location.pathname,title:document.title}})()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{let z=JSON.parse(e.data);if(z.id===2){console.log(JSON.stringify(z.result?.result?.value||{error:'no_result'}));process.exit(0)}})\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,120)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"scrollY\":650,\"url\":\"/krasnoyarsk/telefony/iphone_15_pro_max_512_gb_sim_esim_8107250406\",\"title\":\"iPhone 15 Pro Max, 512 ГБ, SIM + eSIM купить в Красноярске по низкой цене | Электроника | Авито (8107250406)\"}\n",
+      "stdout_bytes": 260,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T14:25:46.760Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T14:25:46.561Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-iphone-detail-scroll-m1"
+    },
+    "request_id": "20261012-iphone-detail-scroll-m1",
+    "started_at": "2026-10-12T14:25:45.819Z",
+    "status": "completed"
+  },
+  "id": "20261012-iphone-detail-scroll-m1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
