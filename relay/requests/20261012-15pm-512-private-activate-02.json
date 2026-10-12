@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-15pm-512-private-activate-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$r=Invoke-WebRequest -Uri 'http://127.0.0.1:17447/json/activate/2B38754E4510BAF7DE8D930CC9842D1E' -TimeoutSec 5 -UseBasicParsing; Write-Output $r.StatusCode"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 11000,
+  "note": "Activate only previously created 15 Pro Max 512 private-listing search tab to enable screenshot, no other tabs or user account changes."
+}
