@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-card-shape-h1.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},6500);\ntry{const arr=await(await fetch('http://127.0.0.1:17447/json/list')).json();const t=arr.find(x=>x.id==='EF27777D4E798E704D04D5D474887AFA');if(!t)throw Error('MISSING');const w=new WebSocket(t.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:17,method:'Runtime.evaluate',params:{expression:\"(()=>{const e=document.querySelector('[data-marker=\\\"item\\\"]');if(!e)return {error:'no_item'};return {html:e.outerHTML.slice(0,1600),text:(e.textContent||'').replace(/\\\\s+/g,' ').slice(0,380),h3s:e.querySelectorAll('h3').length,links:Array.from(e.querySelectorAll('a[href]')).slice(0,3).map(a=>({href:a.href,text:(a.textContent||'').slice(0,60)}))}})()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{let v=JSON.parse(e.data);if(v.id===17){console.log(JSON.stringify(v.result?.result?.value||{error:v.result?.exceptionDetails?.text||v.error?.message||'empty'}));process.exit(0)}});\nw.addEventListener('error',()=>{console.log(JSON.stringify({error:'ws_error'}));process.exit(0)},{once:true})\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,150)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"html\":\"<div data-marker=\\\"item\\\" data-is-xl=\\\"\\\" data-item-id=\\\"8044898069\\\" id=\\\"i8044898069\\\" class=\\\"root-fa99e5017242c4d3 slider-_6c54e572770b4b9d list-fa99e5017242c4d3 redesign-fa99e5017242c4d3 ivaItemRedesign-fa99e5017242c4d3 responsive-fa99e5017242c4d3 xl-fa99e5017242c4d3 item-_9abded21b2ade2a5 listItem-_9abded21b2ade2a5 js-catalog-item-enum\\\" itemscope=\\\"\\\" itemtype=\\\"http://schema.org/Product\\\"><div class=\\\"theme-_9b55d0fe2fa02415 theme-_8ab160932e9f9a89\\\"><div class=\\\"content-fa99e5017242c4d3\\\"><div class=\\\"slider-fa99e5017242c4d3\\\" data-marker=\\\"item-image\\\"><div class=\\\"redesignGalleryBadgesWrapper-_5b384c2db61c0540\\\"><div class=\\\"root-_0043f1cb28e6e065 margin-top_none-_5b158953f4bbdc07 margin-bottom_none-_5b158953f4bbdc07 root_fullWidth-_0043f1cb28e6e065 root_wrap-_0043f1cb28e6e065\\\" style=\\\"--module-spacer-column-gap:var(--theme-gap-4);--module-spacer-row-gap:var(--theme-gap-0)\\\"></div></div><a class=\\\"sliderLink-fa99e5017242c4d3\\\" data-marker=\\\"item-photo-sliderLink\\\" itemprop=\\\"url\\\" href=\\\"/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_8044898069?context=H4sIAAAAAAAA_wE_AMD_YToyOntzOjEzOiJsb2NhbFByaW9yaXR5IjtiOjA7czoxOiJ4IjtzOjE2OiJLdDNyc1dmb1k5WFRDVGpVIjt9FEwXoT8AAAA\\\" target=\\\"_blank\\\" rel=\\\"noopener noreferrer\\\"><div class=\\\"root-_6c54e572770b4b9d redesign-_6c54e572770b4b9d roundCorners-_6c54e572770b4b9d\\\" data-marker=\\\"item-photo\\\"><div class=\\\"photoSlider-_6c54e572770b4b9d aspect-ratio-1-1-_6c54e572770b4b9d\\\"><ul class=\\\"list-_6c54e572770b4b9d\\\"><li class=\\\"list-item-_6c54e572770b4b9d dotsCounter-_6c54e572770b4b9d\\\" data-marker=\\\"slider-image/image-https://50.img.avito.st/image/1/1.9gr0RLaAWuPi5PjilBeuANbkWOd\",\"text\":\"Ещё4 фотоiPhone 15 Pro Max, 256 ГБ61 490 ₽Новыйр-н ЦентральныйОригинальный телефон, без ремонтов с гарантией до 3 лет! Мы заинтересованы, чтобы Вы приобрели устройство именно у нас поэтому дарим Вам подарок: 1. Яндекс станция лайт 2. 2. AirPods Pro 2. 3. Battery Pack magsafe + доп. Провод. 4. Кардхолдер magsaf...Продвинуто Apple Market - Магазин, в котором все покупают4,94,9·84\",\"h3s\":0,\"links\":[{\"href\":\"https://www.avito.ru/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_8044898069?context=H4sIAAAAAAAA_wE_AMD_YToyOntzOjEzOiJsb2NhbFByaW9yaXR5IjtiOjA7czoxOiJ4IjtzOjE2OiJLdDNyc1dmb1k5WFRDVGpVIjt9FEwXoT8AAAA\",\"text\":\"Ещё4 фото\"},{\"href\":\"https://www.avito.ru/krasnoyarsk/telefony/iphone_15_pro_max_256_gb_8044898069?context=H4sIAAAAAAAA_wE_AMD_YToyOntzOjEzOiJsb2NhbFByaW9yaXR5IjtiOjA7czoxOiJ4IjtzOjE2OiJLdDNyc1dmb1k5WFRDVGpVIjt9FEwXoT8AAAA\",\"text\":\"iPhone 15 Pro Max, 256 ГБ\"},{\"href\":\"https://www.avito.ru/brands/applejuicy?src=search_seller_info&iid=8044898069\",\"text\":\"Apple Market - Магазин, в котором все покупают4,94,9·843 отз\"}]}\n",
+      "stdout_bytes": 2969,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T14:17:27.169Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T14:17:26.990Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-iphone-card-shape-h1"
+    },
+    "request_id": "20261012-iphone-card-shape-h1",
+    "started_at": "2026-10-12T14:17:26.263Z",
+    "status": "completed"
+  },
+  "id": "20261012-iphone-card-shape-h1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
