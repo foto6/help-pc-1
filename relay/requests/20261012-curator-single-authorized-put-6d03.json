@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-curator-single-authorized-put-6d03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import sys,json,pathlib,os\nsys.path.insert(0,'E:/Neur0StoreCurator')\nimport register\nfrom daemon import Blocked\nbefore,after,p,already=register.planned()\nstore=pathlib.Path(os.environ.get('LOCALAPPDATA') or str(pathlib.Path.home()))/'Neur0StoreCurator'\nbackups=sorted(store.glob('managed-chats-backup-*.json'))\nif len(backups)!=1:raise RuntimeError('expected_exactly_one_prior_recovery_backup')\nold=json.loads(backups[0].read_text(encoding='utf8'))\nif register.checksum(old)!=register.checksum(before):raise RuntimeError('existing_agent_bindings_changed_abort')\nexpected=['chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982','agent-media','chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c','chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0','agent-pc-control','chat-6ac45fb0-9074-83eb-99eb-397265b228e7']\nif [r.get('id') for r in before]!=expected or len(after)!=7 or already:raise RuntimeError('exact_expected_six_and_unregistered_curator_required')\nif int(p.get('debugPort') or 0)!=17410 or after[-1].get('url')!=register.CURATOR_URL or after[-1].get('profileId')!=p.get('id'):raise RuntimeError('curator_exact_profile_mismatch')\nprint('RECOVERED_OLD_POST_NO_EFFECT; PREWRITE_6_CHATS_MATCH_LOCAL_BACKUP; PUT_ONCE')\nsent=register.put_managed_chats(after)\nrows=[register.core(t) for t in sent.get('chats',[])]\nif len(rows)!=7 or register.checksum(rows[:6])!=register.checksum(before) or rows[6].get('id')!=register.CURATOR_ID or rows[6].get('profileId')!=p.get('id'):\n raise RuntimeError('PUT_RETURNED_BUT_REGISTRATION_READBACK_MISMATCH')\nprint('REGISTRATION_ACCEPTED_7_CHATS; ALL_6_PRESERVED; EXACT_CURATOR_PROFILE_17410')"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 23000,
+  "note": "OWNER-APPROVED prior interactive REGISTER: reconcile original POST no effect via exact backup; one immutable bounded HTTP PUT preserving all six existing managed agent configs; no replay on UNKNOWN."
+}
