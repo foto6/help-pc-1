@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-pool-price-check-k1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Join-Path $env:TEMP 'avito-poolprice-k1.mjs';try{[System.IO.File]::WriteAllText($p,@'\nlet ws;try{const a=await(await fetch('http://127.0.0.1:17447/json/list')).json();const t=a.find(x=>x.id===\"75C6B39A522AF025284F4787A6856983\");ws=new WebSocket(t.webSocketDebuggerUrl);let z=await Promise.race([new Promise((ok,no)=>{ws.addEventListener('open',()=>ws.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:\"window.scrollTo(0,0);window.scrollY\",returnByValue:true}})),{once:true});ws.addEventListener('message',e=>{let x=JSON.parse(e.data);if(x.id===1)ok(x.result?.result?.value||0)});ws.addEventListener('error',no,{once:true})}),new Promise((_,no)=>setTimeout(()=>no(Error('timeout')),3800))]);console.log(JSON.stringify({y:z}))}catch(e){console.log(JSON.stringify({error:String(e).slice(0,100)}))}if(ws)ws.close();process.exit(0)\n'@,[System.Text.UTF8Encoding]::new($false));& node.exe $p}finally{Remove-Item $p -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12500,
+  "note": "Move within public 350sqm Avito listing to guest/date UI; no booking or personal data."
+}
