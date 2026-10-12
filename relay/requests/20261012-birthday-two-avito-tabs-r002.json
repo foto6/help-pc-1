@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-birthday-two-avito-tabs-r002",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$js=@'\n\nconst port=17447;\nconst pages=[\n {key:\"house88\",url:\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/3-k._dom_88_m_7714813321?checkIn=2026-11-03&checkOut=2026-11-04\"},\n {key:\"house70\",url:\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/4-k._dom_70_m_4698340709?checkIn=2026-11-02&checkOut=2026-11-03\"}\n];\nconst sleep=ms=>new Promise(r=>setTimeout(r,ms));\nasync function conn(wsUrl){const w=new WebSocket(wsUrl);await new Promise((ok,no)=>{w.addEventListener(\"open\",ok,{once:true});w.addEventListener(\"error\",no,{once:true});setTimeout(()=>no(new Error(\"socket_timeout\")),6000)});let i=0;const p=new Map();w.addEventListener(\"message\",e=>{try{const x=JSON.parse(e.data);if(x.id&&p.has(x.id)){p.get(x.id)(x);p.delete(x.id)}}catch{}});return {w,send:(method,params={})=>Promise.race([new Promise(ok=>{const id=++i;p.set(id,ok);w.send(JSON.stringify({id,method,params}))}),new Promise((_,no)=>setTimeout(()=>no(new Error(\"CDP_TIMEOUT:\"+method)),10000))])};}\nconst ver=await(await fetch(\"http://127.0.0.1:\"+port+\"/json/version\")).json();\nconst b=await conn(ver.webSocketDebuggerUrl);const targets=[];\nfor(const page of pages){try{const x=await b.send(\"Target.createTarget\",{url:page.url,background:true,newWindow:false});targets.push({key:page.key,id:x.result?.targetId||null,url:page.url,error:x.error?.message})}catch(e){targets.push({key:page.key,error:String(e)})}}\nb.w.close();\nawait sleep(8000);\nconst tabs=await(await fetch(\"http://127.0.0.1:\"+port+\"/json/list\")).json();\nfor(const t of targets){if(!t.id)continue;const tab=tabs.find(x=>x.id===t.id);if(!tab){t.error=\"TARGET_NOT_FOUND\";continue}t.currentUrl=tab.url;t.title=tab.title;try{const c=await conn(tab.webSocketDebuggerUrl);const expr=`(()=>{let body=document.body?.innerText||\"\";let title=document.title;let images=[...document.querySelectorAll(\"img\")].slice(0,15).map(x=>({alt:(x.alt||\"\").slice(0,80),width:x.naturalWidth,height:x.naturalHeight}));let a=[...document.querySelectorAll('meta[name=\"description\"],meta[property=\"og:description\"]')].map(x=>x.content).slice(0,3);return {url:location.href,title,readyState:document.readyState,bodyLength:body.length,text:body.slice(0,15000),images,meta:a}})()`;const e=await c.send(\"Runtime.evaluate\",{expression:expr,returnByValue:true,awaitPromise:false});t.dom=e.result?.result?.value||null;t.cdpError=e.error||e.result?.exceptionDetails?.text||null;c.w.close()}catch(e){t.error=String(e)}}\nconsole.log(JSON.stringify({port,targets}));\n\n'@;$tmp=Join-Path $env:TEMP 'pc-birthday-2houses-r002.mjs';try{[System.IO.File]::WriteAllText($tmp,$js,[System.Text.UTF8Encoding]::new($false));& node.exe $tmp}finally{Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 60000,
+  "note": "Open only user-authorized two public Avito listing targets as background Chrome CDP tabs and read their visible DOM. No account/input/proxy changes."
+}
