@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop';$o=@();foreach($url in @('https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/5-k._dom_150_m_7572971653?checkIn=2026-11-03&checkOut=2026-11-04','https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/2-k._dom_95_m_7719784354?checkIn=2026-11-03&checkOut=2026-11-04')){$u=[Uri]::EscapeDataString($url);$t=Invoke-RestMethod -Method Put -Uri (\"http://127.0.0.1:17447/json/new?\"+$u) -TimeoutSec 8;$o+=@{target=$t.id;url=$t.url}};$o|ConvertTo-Json -Compress -Depth 4"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "[{\"target\":\"EB407A848AF3A37ED207DA1F3638A58E\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/5-k._dom_150_m_7572971653?checkIn=2026-11-03\\u0026checkOut=2026-11-04\"},{\"target\":\"B962AAF322F0B182FFBBB9D3300EB8CF\",\"url\":\"https://www.avito.ru/krasnoyarsk/doma_dachi_kottedzhi/2-k._dom_95_m_7719784354?checkIn=2026-11-03\\u0026checkOut=2026-11-04\"}]\r\n",
+      "stdout_bytes": 358,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T16:54:38.194Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T16:54:37.975Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-avito-home-more-150-95-a16"
+    },
+    "request_id": "20261012-avito-home-more-150-95-a16",
+    "started_at": "2026-10-12T16:54:37.202Z",
+    "status": "completed"
+  },
+  "id": "20261012-avito-home-more-150-95-a16",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
