@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-new-search-g1.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log(JSON.stringify({error:'hard_timeout'}));process.exit(0)},10500);\ntry{\nconst info=await(await fetch('http://127.0.0.1:17447/json/version')).json();\nconst w=new WebSocket(info.webSocketDebuggerUrl);\nawait new Promise((ok,no)=>{w.addEventListener('open',ok,{once:true});w.addEventListener('error',no,{once:true})});\nlet seq=0;const p=new Map();\nw.addEventListener('message',e=>{const z=JSON.parse(e.data);if(p.has(z.id)){p.get(z.id)(z);p.delete(z.id)}});\nconst results=[];\nfor(const url of [\"https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2015%20pro%20max&sort=price\",\"https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2016%20pro%20max&sort=price\"]){\n const z=await Promise.race([new Promise(ok=>{const id=++seq;p.set(id,ok);w.send(JSON.stringify({id,method:'Target.createTarget',params:{url,background:true,newWindow:false}}))}),new Promise(ok=>setTimeout(()=>ok({error:{message:'cdp_reply_timeout'}}),3500))]);\n results.push({url,target_id:z.result?.targetId||null,error:z.error?.message||null});\n}\nconsole.log(JSON.stringify({ok:true,results}));process.exit(0);\n}catch(e){console.log(JSON.stringify({error:String(e).slice(0,120)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ok\":true,\"results\":[{\"url\":\"https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2015%20pro%20max&sort=price\",\"target_id\":\"EF27777D4E798E704D04D5D474887AFA\",\"error\":null},{\"url\":\"https://www.avito.ru/krasnoyarsk/telefony?q=iphone%2016%20pro%20max&sort=price\",\"target_id\":\"B025E9E07C7426B014912EF6ABB37AB5\",\"error\":null}]}\n",
+      "stdout_bytes": 322,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T14:14:51.220Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T14:14:51.012Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-iphone-background-search-g1"
+    },
+    "request_id": "20261012-iphone-background-search-g1",
+    "started_at": "2026-10-12T14:14:50.293Z",
+    "status": "completed"
+  },
+  "id": "20261012-iphone-background-search-g1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
