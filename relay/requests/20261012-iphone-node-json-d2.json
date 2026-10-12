@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-iphone-node-json-d2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-iphone-json-d2.mjs'\ntry {\n[System.IO.File]::WriteAllText($tmp,@'\nconst controller=new AbortController();\nsetTimeout(()=>controller.abort(),3500);\ntry {\n const res=await fetch('http://127.0.0.1:17447/json/list',{signal:controller.signal});\n const arr=await res.json();\n console.log(JSON.stringify({ok:true,count:arr.length,tabs:arr.filter(t=>t.type==='page'&&String(t.url).includes('/telefony/')).map(t=>({id:t.id,title:t.title,url:t.url}))}));\n} catch(e) { console.log(JSON.stringify({ok:false,error:String(e).slice(0,120)})); }\nprocess.exit(0);\n'@,[System.Text.UTF8Encoding]::new($false))\n& node.exe $tmp\n} finally { Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue }"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Read-only local CDP tabs via Node JS on isolated 17447; no active page, focus, session or proxy changes."
+}
