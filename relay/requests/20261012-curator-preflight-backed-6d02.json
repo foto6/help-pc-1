@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-curator-preflight-backed-6d02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import sys,json,pathlib,os,datetime,urllib.error,urllib.request\nfrom unittest.mock import patch\nsys.path.insert(0,'E:/Neur0StoreCurator')\nimport register\nfrom daemon import Blocked\nbefore,after,p,already=register.planned()\nstore=pathlib.Path(os.environ.get('LOCALAPPDATA') or str(pathlib.Path.home()))/'Neur0StoreCurator'\nbackups=sorted(store.glob('managed-chats-backup-*.json'))\nif not backups:raise RuntimeError('no_prior_backup_abort')\noriginal=json.loads(backups[-1].read_text(encoding='utf8'))\nunchanged=register.checksum(original)==register.checksum(before)\nclass Response:\n def __enter__(self):return self\n def __exit__(self,*args):pass\n def read(self,n):return b'{\"chats\":[]}'\nhttp_method=[]\ndef fake(req,timeout=None):http_method.append(req.get_method());return Response()\nwith patch.object(register.urllib.request,'urlopen',fake):register.put_managed_chats(after)\nif http_method!=['PUT']:raise RuntimeError('not_using_http_put')\nprint(json.dumps({'existing_count':len(before),'candidate_count':len(after),'curator_already_registered':already,'prior_backup_exactly_matches_current':unchanged,'backup_count':len(backups),'http_method_mock_test':'PUT_PASS','chrome_profile_port':p.get('debugPort')},ensure_ascii=True))\nif not unchanged or len(before)!=6 or len(after)!=7 or already:raise RuntimeError('unreconciled_config_drift_abort')"
+    ],
+    "cwd": "E:\\Neur0StoreCurator"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only live Bridge vs prior backup checksum + exact curator tab preflight; mock verifies fixed registration HTTP PUT, no real write."
+}
