@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-birthday-scroll88-r017",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop';$r=Invoke-WebRequest 'http://127.0.0.1:17447/json/activate/8682F60C59EAE3EF9CF12DCE711A647B' -UseBasicParsing -TimeoutSec 6;Add-Type -AssemblyName System.Windows.Forms;[System.Windows.Forms.SendKeys]::SendWait('{PGDN}{PGDN}{PGDN}');Start-Sleep -Milliseconds 700;@{activated=($r.StatusCode -eq 200);sentPageDown=3}|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Scroll only activated user-authorized public rental listing 88m three pages, no forms or bookings."
+}
