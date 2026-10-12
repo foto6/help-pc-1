@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Continue';$out=[ordered]@{checkedAt=(Get-Date).ToString('o')};try{$j=Invoke-RestMethod -Method GET -Uri 'http://127.0.0.1:17448/api/status' -TimeoutSec 6;$out.statusKeys=@($j.PSObject.Properties.Name | Select-Object -First 25);$s=if($j.settings){$j.settings}else{if($j.state.settings){$j.state.settings}else{$null}}};if($s){$out.telegram=[ordered]@{notifyEnabled=$s.telegramNotifyEnabled;tokenConfigured=$s.telegramBotTokenConfigured;chatIdConfigured=[bool]($s.telegramChatId);threadIdConfigured=[bool]($s.telegramThreadId)}}}catch{$out.error=$_.Exception.GetType().Name};try{$t=Invoke-RestMethod -Method GET -Uri 'http://127.0.0.1:17448/api/ai-profiles' -TimeoutSec 5;$out.aiProfiles=@($t.aiProfiles|Where-Object{$_.provider -eq 'chatgpt'}|ForEach-Object{[ordered]@{name=$_.name;port=$_.debugPort;workerConnected=$_.workerConnected}})} }catch{$out.profileError=$_.Exception.GetType().Name};$out|ConvertTo-Json -Compress -Depth 5"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "��ப�:1 ����:341\r\n+ ... gs}else{if($j.state.settings){$j.state.settings}else{$null}}};if($s){ ...\r\n+                                                                  ~\r\n� ������ Try ��������� ���� Catch ��� ���� Finally.\r\n��ப�:1 ����:550\r\n+ ... gramChatId);threadIdConfigured=[bool]($s.telegramThreadId)}}}catch{$o ...\r\n+                                                                 ~\r\n���।�������� ���ᥬ� \"}\" � ��ࠦ���� ��� ������.\r\n��ப�:1 ����:861\r\n+ ... name;port=$_.debugPort;workerConnected=$_.workerConnected}})} }catch{ ...\r\n+                                                                  ~\r\n� ������ Try ��������� ���� Catch ��� ���� Finally.\r\n��ப�:1 ����:862\r\n+ ... me;port=$_.debugPort;workerConnected=$_.workerConnected}})} }catch{$o ...\r\n+                                                                 ~\r\n���।�������� ���ᥬ� \"}\" � ��ࠦ���� ��� ������.\r\n    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : MissingCatchOrFinally\r\n \r\n",
+      "stderr_bytes": 1047,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-12T15:30:21.982Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-12T15:30:21.797Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261012-curator-telegram-bot-capability-2215-03"
+    },
+    "request_id": "20261012-curator-telegram-bot-capability-2215-03",
+    "started_at": "2026-10-12T15:30:21.106Z",
+    "status": "completed"
+  },
+  "id": "20261012-curator-telegram-bot-capability-2215-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
