@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-15mini-privatefilter-probe",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$tmp=Join-Path $env:TEMP 'pc-15mini-filter-probe.mjs'\ntry {[System.IO.File]::WriteAllText($tmp,@'\nsetTimeout(()=>{console.log('{\"status\":\"timeout\"}');process.exit(0)},7000);\ntry {\nconst t=(await(await fetch('http://127.0.0.1:17447/json/list')).json()).find(x=>x.id==='D229F01C94F7F6DF012309BB4CE211CD');\nif(!t)throw Error('TARGET_NOT_FOUND');\nconst w=new WebSocket(t.webSocketDebuggerUrl);\nw.addEventListener('open',()=>w.send(JSON.stringify({id:1,method:'Runtime.evaluate',params:{expression:\"(()=>({url:location.href,query:location.search,title:document.title,activeButtons:Array.from(document.querySelectorAll('button,[role=button]')).filter(x=>(x.textContent||'').trim()==='Частные').slice(0,2).map(x=>({html:x.outerHTML.slice(0,500)}))}))()\",returnByValue:true}})),{once:true});\nw.addEventListener('message',e=>{const z=JSON.parse(e.data);if(z.id===1){console.log(JSON.stringify(z.result?.result?.value||{error:'eval_failed'}));process.exit(0)}});\n} catch(e){console.log(JSON.stringify({error:String(e).slice(0,90)}));process.exit(0)}\n'@,[System.Text.UTF8Encoding]::new($false)); & node.exe $tmp} finally {Remove-Item $tmp -Force -ErrorAction SilentlyContinue}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only page URL and filter semantics on authorized CDP Chrome 17447; no tab changes, private content or system changes."
+}
