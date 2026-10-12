@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-avito-isolated-close-cleanly-07",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Continue';$o=[ordered]@{pid=19856}\n$p=Get-CimInstance Win32_Process -Filter \"ProcessId = 19856\" -ErrorAction SilentlyContinue\nif(!$p){$o.result='ALREADY_EXITED'}elseif(([string]$p.Name -ne 'chrome.exe') -or ([string]$p.CommandLine -notmatch '--headless') -or ([string]$p.CommandLine -notmatch 'AvitoDirectChrome-20261012')){$o.result='SKIPPED_IDENTITY_MISMATCH'}else{Stop-Process -Id 19856 -ErrorAction Stop;$o.result='STOPPED_ISOLATED_ONLY'}\n$o.primaryAndSecondChromeUntouched=$true;$o.windowsProxyUntouched=$true\n$o|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13000,
+  "note": "Only stop assistant-created isolated Chrome root PID 19856 after verifying exact headless profile identity. Never touch existing Chrome roots PID16760 or PID9148, Windows proxy, or other apps; retain profile on disk for manual review."
+}
