@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261012-proxifier-finalize-second-only-p10",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$work='E:\\PC-Control\\Proxifier-Avito-20261012'\n$script=Join-Path $work 'REFRESH_SECOND_CHROME_DIRECT.ps1'\nif(!(Test-Path $script)){throw 'SCRIPT_MISSING'}\n$output=(& powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script 2>&1 |Out-String)\n$exitCode=$LASTEXITCODE\nif($exitCode -ne 0){throw \"REFRESH_FAILED_WITH_EXIT_CODE_$exitCode\"}\n[xml]$profile=Get-Content -LiteralPath (Join-Path $work 'SecondChrome-Direct-PIDs.ppx') -Raw\n$rule=$profile.SelectNodes('//*[local-name()=\"Rule\"]')[0]\n$txt=$rule.SelectSingleNode('./Applications').InnerText\n$ids=@([regex]::Matches($txt,'pid=(\\d+)')|ForEach-Object{[int]$_.Groups[1].Value})\nif((16760 -in $ids) -or (9316 -in $ids) -or !(9148 -in $ids)){throw 'PID_LIST_BAD'}\n$o=[ordered]@{refreshSucceeded=$true;mainChromeExcluded=$true;isolatedTestChromeExcluded=$true;secondChromeIncluded=$true;perSessionPidCount=$ids.Count}\n$c=Get-CimInstance Win32_Process -Filter 'ProcessId=9316' -ErrorAction SilentlyContinue\nif($c -and $c.Name -eq 'chrome.exe' -and $c.CommandLine -match 'remote-debugging-port=17447' -and $c.CommandLine -match 'AvitoDirectChrome-20261012'){Stop-Process -Id 9316 -ErrorAction Stop;$o.temporaryTestChromeStopped=$true}else{$o.temporaryTestChromeStopped=$false}\n$o.mainAndSecondChromeNotTerminated=$true\n$o|ConvertTo-Json -Compress"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Apply syntax-checked helper to refresh Direct PID rule for ONLY existing second non-CDP Chrome, then stop ONLY assistant-created isolated Chrome PID9316 after exact commandline identity check. Do not touch main Chrome, user second Chrome or other programs. No raw secret config printed."
+}
