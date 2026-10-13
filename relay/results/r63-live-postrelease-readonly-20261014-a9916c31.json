@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$u='http://127.0.0.1:17448';$h=Invoke-RestMethod ($u+'/api/health') -TimeoutSec 6;$s=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6;$c=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 6;$a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6;Write-Output ('HEALTH='+$h.state);Write-Output ('HOLD='+$c.cutoverState.holdActive);Write-Output ('QUEUE_PAUSED='+$h.assignmentQueue.paused);Write-Output ('ASSIGNMENTS='+@($a.assignments).Count);Write-Output ('ACTIVE='+@($a.assignments|Where-Object {$_.state -in @('running','dispatching','awaiting_evidence')}).Count);Write-Output ('QUEUED='+@($a.assignments|Where-Object {$_.state -eq 'queued'}).Count);Write-Output ('COMPLETED='+@($a.assignments|Where-Object {$_.state -eq 'completed'}).Count);Write-Output ('CODE_RELOAD_REQUIRED='+$s.codeReloadRequired);Write-Output ('HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "HEALTH=DEGRADED\r\nHOLD=False\r\nQUEUE_PAUSED=\r\nASSIGNMENTS=69\r\nACTIVE=0\r\nQUEUED=0\r\nCOMPLETED=10\r\nCODE_RELOAD_REQUIRED=\r\nHEAD=01e5db790f50b5eb42588b8942f3dd1de4f0a6bf\r\n",
+      "stdout_bytes": 164,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:44:03.868Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:44:03.618Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-live-postrelease-readonly-20261014-a9916c31"
+    },
+    "request_id": "r63-live-postrelease-readonly-20261014-a9916c31",
+    "started_at": "2026-10-13T21:44:02.463Z",
+    "status": "completed"
+  },
+  "id": "r63-live-postrelease-readonly-20261014-a9916c31",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
