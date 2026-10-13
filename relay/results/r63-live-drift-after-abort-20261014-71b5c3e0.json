@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$p='E:\\WebAIBridge';$h=Invoke-RestMethod 'http://127.0.0.1:17448/api/health' -TimeoutSec 6;$cut=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 6;$op=Invoke-RestMethod 'http://127.0.0.1:17448/api/operator-lifecycle' -TimeoutSec 6;$a=Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 6;Write-Output ('GIT_HEAD='+((& git.exe -C $p rev-parse HEAD)|Out-String).Trim());Write-Output ('GIT_TRACKED_DIRTY='+(@(& git.exe -C $p status --porcelain=v1 --untracked-files=no).Count));Write-Output ('HEALTH='+$h.state);Write-Output ('HEALTH_REASONS='+(@($h.reasons)-join ','));Write-Output ('R42_HOLD='+$cut.cutoverState.holdActive);Write-Output ('R42_STATUS='+$cut.cutoverState.status);Write-Output ('OP_MODE='+$op.mode);Write-Output ('QUEUE_PAUSED='+$op.queuePaused);Write-Output ('QUEUED='+@($a.assignments|Where-Object {$_.state -eq 'queued'}).Count);Write-Output ('ACTIVE='+@($a.assignments|Where-Object {$_.state -in @('dispatching','running','awaiting_evidence','unknown')}).Count);Write-Output ('SERVER_HASH='+(Get-FileHash -LiteralPath (Join-Path $p 'app\\server.js') -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "GIT_HEAD=d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2\r\nGIT_TRACKED_DIRTY=0\r\nHEALTH=DEGRADED\r\nHEALTH_REASONS=browser_cdp:health_probe_stale,git_baseline:health_probe_stale\r\nR42_HOLD=True\r\nR42_STATUS=CUTOVER_HOLD_PREPARED\r\nOP_MODE=PAUSED_BROWSER\r\nQUEUE_PAUSED=True\r\nQUEUED=0\r\nACTIVE=0\r\nSERVER_HASH=DF69095E52999A207D53C0A98CE57A8BDA7FE341BDF493335FF7434EEDF6865E\r\n",
+      "stdout_bytes": 358,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:27:52.037Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:27:51.779Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-live-drift-after-abort-20261014-71b5c3e0"
+    },
+    "request_id": "r63-live-drift-after-abort-20261014-71b5c3e0",
+    "started_at": "2026-10-13T21:27:50.695Z",
+    "status": "completed"
+  },
+  "id": "r63-live-drift-after-abort-20261014-71b5c3e0",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
