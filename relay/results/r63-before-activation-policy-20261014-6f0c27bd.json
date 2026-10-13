@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $s=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 3; $o=$s.cutoverState.originalAutonomy; Write-Output ('ORIG_SUPERVISOR_ENABLED='+$o.enabled); Write-Output ('ORIG_OPEN_IF_MISSING='+$o.openExistingChatIfMissing); Write-Output ('ORIG_AUTOCONTINUE='+$o.autoContinueEnabled); Write-Output ('ORIG_ALLOW_AUTOSEND='+$o.allowAutonomousSend); Write-Output ('ORIG_MODE='+$o.mode); Write-Output ('ORIG_HIGH='+$o.enforceHighMode); Write-Output ('ORIG_LIFECYCLE='+$s.cutoverState.originalOperatorLifecycleMode); Write-Output ('ORIG_QUEUE_PAUSED='+$s.cutoverState.originalQueuePaused); Write-Output ('HOLD_STATUS='+$s.cutoverState.status); $f='E:\\WebAIBridge\\app\\.env'; Write-Output ('ENV_EXISTS='+(Test-Path -LiteralPath $f -PathType Leaf)); if(Test-Path -LiteralPath $f -PathType Leaf){$lines=[IO.File]::ReadAllLines($f);$matches=@($lines | Where-Object {$_ -match '^\\s*(export\\s+)?BRIDGE_EXISTING_TABS_ONLY\\s*='});Write-Output ('ENV_STICKY_MATCH_COUNT='+$matches.Count);Write-Output ('ENV_STICKY_ENABLED='+(@($matches|Where-Object {$_ -match '(?i)=\\s*[''\\\"]?(1|true|on|yes)[''\\\"]?\\s*$'}).Count -eq 1))}; Write-Output ('HOLD='+$s.cutoverState.holdActive)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "ORIG_SUPERVISOR_ENABLED=False\r\nORIG_OPEN_IF_MISSING=False\r\nORIG_AUTOCONTINUE=False\r\nORIG_ALLOW_AUTOSEND=False\r\nORIG_MODE=off\r\nORIG_HIGH=True\r\nORIG_LIFECYCLE=RUNNING_MANAGED\r\nORIG_QUEUE_PAUSED=True\r\nHOLD_STATUS=CUTOVER_HOLD_PREPARED\r\nENV_EXISTS=True\r\nENV_STICKY_MATCH_COUNT=0\r\nENV_STICKY_ENABLED=False\r\nHOLD=True\r\n",
+      "stdout_bytes": 313,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:58:52.626Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:58:52.397Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-before-activation-policy-20261014-6f0c27bd"
+    },
+    "request_id": "r63-before-activation-policy-20261014-6f0c27bd",
+    "started_at": "2026-10-13T20:58:51.546Z",
+    "status": "completed"
+  },
+  "id": "r63-before-activation-policy-20261014-6f0c27bd",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
