@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "Write-Output ('NODE=' + (& node --version)); Write-Output ('GIT=' + (& git --version)); Write-Output ('BRIDGE_EXISTS=' + (Test-Path -LiteralPath 'E:\\WebAIBridge\\app\\server.js')); Write-Output ('R41_ROOT_EXISTS=' + (Test-Path -LiteralPath 'E:\\PCControlAutonomyR41')); Write-Output ('R58_SHADOW_EXISTS=' + (Test-Path -LiteralPath 'E:\\WebAIBridge-R58-SHADOW'));"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "NODE=v24.18.0\r\nGIT=git version 2.55.0.windows.5\r\nBRIDGE_EXISTS=True\r\nR41_ROOT_EXISTS=True\r\nR58_SHADOW_EXISTS=False\r\n",
+      "stdout_bytes": 116,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T19:30:35.379Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T19:30:35.162Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r58-pccontrol-readonly-devcheck-20261014-f62a0d9c"
+    },
+    "request_id": "r58-pccontrol-readonly-devcheck-20261014-f62a0d9c",
+    "started_at": "2026-10-13T19:30:34.268Z",
+    "status": "completed"
+  },
+  "id": "r58-pccontrol-readonly-devcheck-20261014-f62a0d9c",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
