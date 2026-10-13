@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $app='E:\\WebAIBridge\\app'; $raw=& node.exe (Join-Path $app 'r56-sticky-readonly-preflight.js') --app $app; $r=($raw|Out-String|ConvertFrom-Json); Write-Output ('R56_SOURCE_PRESENT='+$r.observations.r56Installed); Write-Output ('R50_GUARD_PRESENT='+$r.observations.r50GuardPresent); Write-Output ('R42_HOLD='+$r.observations.holdActive); Write-Output ('QUEUE_PAUSED='+$r.observations.queuePaused); Write-Output ('SUPERVISOR_OFF='+$r.observations.supervisorOff); Write-Output ('READONLY_STAGING_CANDIDATE='+$r.readOnlyStagingCandidate); Write-Output ('BLOCKER_CODES='+($r.blockers -join ',')); Write-Output ('SOURCE_HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "R56_SOURCE_PRESENT=True\r\nR50_GUARD_PRESENT=True\r\nR42_HOLD=True\r\nQUEUE_PAUSED=True\r\nSUPERVISOR_OFF=True\r\nREADONLY_STAGING_CANDIDATE=True\r\nBLOCKER_CODES=\r\nSOURCE_HEAD=d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2\r\n",
+      "stdout_bytes": 207,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:55:17.646Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:55:17.421Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-live-r56-r50-source-preflight-20261014-d0f83ca1"
+    },
+    "request_id": "r62-live-r56-r50-source-preflight-20261014-d0f83ca1",
+    "started_at": "2026-10-13T20:55:16.515Z",
+    "status": "completed"
+  },
+  "id": "r62-live-r56-r50-source-preflight-20261014-d0f83ca1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
