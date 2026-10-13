@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $root='E:\\PCControlAutonomyR61-SHADOW'; $to=Join-Path $root 'r45-durable-autonomy\\releases\\r61'; if(Test-Path -LiteralPath $to){throw 'REFUSE_EXISTING_RELEASE'}; $manifest=Get-Content -LiteralPath (Join-Path $root 'MANIFEST.json') -Raw | ConvertFrom-Json; if($manifest.exactSha -ne 'd17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2' -or $manifest.deployment -ne 'SHADOW_ONLY'){throw 'RELEASE_MANIFEST_DRIFT'}; New-Item -ItemType Directory -Path $to -Force|Out-Null; $list=@($manifest.files.PSObject.Properties.Name); foreach($name in $list){Copy-Item -LiteralPath (Join-Path $root $name) -Destination (Join-Path $to $name) -ErrorAction Stop}; Copy-Item -LiteralPath (Join-Path $root 'MANIFEST.json') -Destination (Join-Path $to 'MANIFEST.json') -ErrorAction Stop; Write-Output ('R61_STANDARD_RELEASE='+$to); Write-Output ('COPIED_MODULES='+$list.Count); Write-Output ('PROD_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "R61_STANDARD_RELEASE=E:\\PCControlAutonomyR61-SHADOW\\r45-durable-autonomy\\releases\\r61\r\nCOPIED_MODULES=9\r\nPROD_SHA256=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 183,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:32:47.298Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:32:47.066Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r61-r41-standard-release-path-20261014-6e671b92"
+    },
+    "request_id": "r61-r41-standard-release-path-20261014-6e671b92",
+    "started_at": "2026-10-13T20:32:46.190Z",
+    "status": "completed"
+  },
+  "id": "r61-r41-standard-release-path-20261014-6e671b92",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
