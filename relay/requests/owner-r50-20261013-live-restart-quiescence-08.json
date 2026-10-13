@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r50-20261013-live-restart-quiescence-08",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json,pathlib,subprocess\nresult={'noMutations':True}\ntry:\n with urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1',timeout=15) as f:r=json.load(f)\n result['chats']=[{'id':x.get('id'),'status':x.get('status'),'generating':x.get('generating'),'draftPresent':x.get('draftPresent'),'openTabs':x.get('openTabs'),'high':x.get('highMode'),'pending':x.get('activeAssignmentCount')} for x in r.get('chats',[])]\nexcept Exception as e:result['inspectionError']=type(e).__name__\nsrc=pathlib.Path('E:/WebAIBridge')\nresult['restartLaunchers']=[p.name for p in src.glob('*.cmd') if any(w in p.name.upper() for w in ('START','STOP','RESTART'))][:28]\nresult['serverPath']=str(src/'app/server.js')\nprint(json.dumps(result,ensure_ascii=True)[:4000])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22000,
+  "note": "Read-only current ChatGPT agent generation/drafts before any source patch or Bridge process restart, enumerate launchers by filename only. No provider text, no tabs changed."
+}
