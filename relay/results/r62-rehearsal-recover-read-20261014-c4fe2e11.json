@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$dest='E:\\WebAIBridge-R62-CUTOVER-DRYRUN'; Write-Output ('DRYRUN_DIR_EXISTS='+(Test-Path -LiteralPath $dest -PathType Container)); if(Test-Path -LiteralPath (Join-Path $dest '.git')){Write-Output ('GIT_HEAD='+((& git.exe -C $dest rev-parse HEAD 2>$null)|Out-String).Trim());Write-Output ('R42_SCRIPT_EXISTS='+(Test-Path -LiteralPath (Join-Path $dest 'app\\r42-cutover.ps1')));Write-Output ('GIT_WORKTREE_CHANGE_COUNT='+@(& git.exe -C $dest status --porcelain=v1 --untracked-files=no).Count)}; Write-Output ('PRODUCTION_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "DRYRUN_DIR_EXISTS=True\r\nGIT_HEAD=5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\r\nR42_SCRIPT_EXISTS=False\r\nGIT_WORKTREE_CHANGE_COUNT=402\r\nPRODUCTION_HASH=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 213,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:44:09.688Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:44:09.442Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-rehearsal-recover-read-20261014-c4fe2e11"
+    },
+    "request_id": "r62-rehearsal-recover-read-20261014-c4fe2e11",
+    "started_at": "2026-10-13T20:44:08.533Z",
+    "status": "completed"
+  },
+  "id": "r62-rehearsal-recover-read-20261014-c4fe2e11",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
