@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-exact-sha-win-tests-20261014-6c4a90ef",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R62-SHADOW'; $sha='cb6b061351b44a902df1827b0c8b94155f9f3312'; if(Test-Path -LiteralPath $root){throw 'NO_OVERWRITE_SHADOW'}; & git.exe clone --single-branch --no-tags --depth 1 --branch agent/bridge-r62-r42-sticky-safe-release-20261014 https://github.com/foto6/WebAIBridge.git $root; if($LASTEXITCODE -ne 0){throw 'CLONE_FAILED'}; $got=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($got -ne $sha){throw 'SHA_MISMATCH'}; Write-Output ('EXACT_SHA='+$got); Write-Output ('PROD_SERVER_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 35000,
+  "note": "Clone R62 into NEW isolated exact-SHA test directory. Do not touch installed WebAIBridge, existing tabs, service, or R42 HOLD"
+}
