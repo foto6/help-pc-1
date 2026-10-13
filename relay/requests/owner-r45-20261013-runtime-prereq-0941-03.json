@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r45-20261013-runtime-prereq-0941-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import shutil,json,subprocess,os\nout={x:bool(shutil.which(x)) for x in ('node','gh','git')}\nout['nodePath']=os.path.basename(shutil.which('node') or '')\nout['operatorToolsPresent']=os.path.isdir('E:/WebAIBridge/app/data/operator-tools')\ntry:\n a=subprocess.run(['git','-C','E:/WebAIBridge','cat-file','-e','6e7f6b1de49c7add74c81e6ec93c0096db7b3eb2^{commit}'],timeout=3,capture_output=True)\n out['R45ObjectAlreadyLocal']=a.returncode==0\nexcept Exception:out['R45ObjectAlreadyLocal']=False\nprint(json.dumps(out))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only prerequisite check for isolated R45 operator kit; no browser, Bridge API, file mutations, credentials, or user chats."
+}
