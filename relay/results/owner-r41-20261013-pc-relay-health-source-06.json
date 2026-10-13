@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "from pathlib import Path\nimport json\np=Path('E:/pc-github-relay/.pc-relay')\nnames=sorted([{'name':f.name,'file':f.is_file(),'size':f.stat().st_size if f.is_file() else None} for f in p.iterdir()],key=lambda x:x['name']) if p.is_dir() else []\nprint(json.dumps({'rootExists':p.is_dir(),'names':names[:70],'readOnly':True},ensure_ascii=True)[:4200])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"rootExists\": true, \"names\": [{\"name\": \"audit.jsonl\", \"file\": true, \"size\": 24793687}, {\"name\": \"health.json\", \"file\": true, \"size\": 1171}, {\"name\": \"live.stderr.log\", \"file\": true, \"size\": 417}, {\"name\": \"live.stdout.log\", \"file\": true, \"size\": 10224}, {\"name\": \"outcomes.jsonl\", \"file\": true, \"size\": 2906308}, {\"name\": \"state\", \"file\": false, \"size\": null}], \"readOnly\": true}\r\n",
+      "stdout_bytes": 382,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:23:07.566Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:23:07.343Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-pc-relay-health-source-06"
+    },
+    "request_id": "owner-r41-20261013-pc-relay-health-source-06",
+    "started_at": "2026-10-13T03:23:06.705Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-pc-relay-health-source-06",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
