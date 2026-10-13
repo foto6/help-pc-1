@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r59-shadow-fetch-base-20261014-93daf652",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "git.exe -C E:\\WebAIBridge-R59-SHADOW fetch --no-tags --depth=1 origin 5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 35000,
+  "note": "Fetch exact original production base Git commit only into separate R59 SHADOW object store for three-way merge analysis; never checkout, reset or touch production"
+}
