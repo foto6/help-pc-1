@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,subprocess,json,hashlib,shutil,datetime,os,urllib.request\nSRC_SHA='f4f59c973a07d11d38257b2f2d7f0e5f33778e54'\nORIG_BLOB='702708f54a2570962be0a6839c4eb419ab8b9805'\nR=pathlib.Path('E:/WebAIBridge')\nAPP=R/'app'\nSOURCE=pathlib.Path('E:/PCControlAutonomyR41/bridge-r50-shadow')/SRC_SHA\nB=pathlib.Path('E:/PCControlAutonomyR41/backups/r50-held-live-hotpatch-20261013')\nTARGET=APP/'server.js';NEW=APP/'autonomous-send-gate-r50.js'\ndef bh(v):return hashlib.sha1(b'blob '+str(len(v)).encode()+bytes([0])+v).hexdigest()\ndef cmd(*a):\n p=subprocess.run(a,cwd=R,capture_output=True,text=True,timeout=8)\n if p.returncode:raise RuntimeError('GIT_CHECK_ERROR_'+str(a[:2]))\n return p.stdout.strip()\nif not SOURCE.is_dir() or not (SOURCE/'MANIFEST.json').is_file():raise RuntimeError('UNVERIFIED_R50_SHADOW')\nmanifest=json.loads((SOURCE/'MANIFEST.json').read_text('utf8'))\nif manifest.get('sourceSha')!=SRC_SHA or manifest.get('passed') is not True:raise RuntimeError('R50_SOURCE_MANIFEST_NOT_TRUSTED')\nfor name in ('server.js','autonomous-send-gate-r50.js'):\n raw=(SOURCE/name).read_bytes()\n if bh(raw)!=manifest['files'].get(name):raise RuntimeError('R50_SOURCE_MISMATCH_'+name)\nif cmd('git','rev-parse','HEAD')!='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03':raise RuntimeError('PRODUCTION_HEAD_DRIFT')\nif cmd('git','status','--porcelain','--','app/server.js','app/autonomous-send-gate-r50.js'):raise RuntimeError('USER_TARGET_EDIT_PRESERVE')\nif bh(TARGET.read_bytes())!=ORIG_BLOB or NEW.exists():raise RuntimeError('PRODUCTION_BLOB_OR_NEW_MODULE_CHANGED')\nif B.exists():raise RuntimeError('AUDIT_BACKUP_EXISTS_DO_NOT_OVERWRITE')\ndef get(route):\n with urllib.request.urlopen('http://127.0.0.1:17448'+route,timeout=5) as f:return json.load(f)\nhealth=get('/api/health');op=get('/api/operator-lifecycle');cut=get('/api/projects/control-plane/cutover-r42/status');queue=get('/api/supervisor-watchdog/agent-assignments');sup=get('/api/supervisor-watchdog?detect=0').get('config',{})\npending=[x for x in queue.get('assignments',[]) if x.get('state')=='queued']\ninflight=[x for x in queue.get('assignments',[]) if x.get('state') in ('dispatching','running','awaiting_evidence')]\nif health.get('state')!='PAUSED' or op.get('queuePaused') is not True or cut.get('cutoverState',{}).get('holdActive') is not True:raise RuntimeError('R42_QUEUE_NOT_PROTECTED')\nif sup.get('allowAutonomousSend') is not False or sup.get('enabled') is not False:raise RuntimeError('WATCHDOG_ALREADY_ENABLED')\nif len(pending)!=1 or pending[0].get('targetChatId')!='tg-curator-owner' or pending[0].get('dispatchSubmitAttempted') is not False or inflight:raise RuntimeError('ASSIGNMENT_SET_CHANGED')\nB.mkdir(parents=True,exist_ok=False)\nshutil.copy2(TARGET,B/'server.js.R49.original')\nmetadata={'schema':'bridge.r50.controlled_hotpatch.v1','sourceSha':SRC_SHA,'originalHead':cmd('git','rev-parse','HEAD'),'originalServerBlob':ORIG_BLOB,'newServerBlob':manifest['files']['server.js'],'newGateBlob':manifest['files']['autonomous-send-gate-r50.js'],'queuedAssignmentId':pending[0]['id'],'queuePausedBefore':True,'r42HoldBefore':True,'autoSendEnabledBefore':False,'originalServerProcessPid':6400,'installedAt':datetime.datetime.now().isoformat(),'rollback':'copy local backup server.js.R49.original to app/server.js, remove R50 gate only if its blob matches this manifest, after exact process identity gate; DO NOT reset/git checkout'}\n(B/'MANIFEST.json').write_text(json.dumps(metadata,indent=2),encoding='utf8')\ndef safeInstall(src,dst):\n tmp=dst.with_name(dst.name+'.r50-staged.tmp')\n if tmp.exists() or dst.exists() and dst==NEW:raise RuntimeError('TARGET_OR_TEMP_EXISTING_'+dst.name)\n with tmp.open('xb') as file:\n  payload=src.read_bytes();file.write(payload);file.flush();os.fsync(file.fileno())\n os.replace(tmp,dst)\nsafeInstall(SOURCE/'autonomous-send-gate-r50.js',NEW)\nsafeInstall(SOURCE/'server.js',TARGET)\nif bh(TARGET.read_bytes())!=manifest['files']['server.js'] or bh(NEW.read_bytes())!=manifest['files']['autonomous-send-gate-r50.js']:raise RuntimeError('POST_INSTALL_BLOB_MISMATCH')\nnode=subprocess.run(['node.exe','--check',str(TARGET)],cwd=APP,capture_output=True,text=True,timeout=12)\nif node.returncode:raise RuntimeError('POST_INSTALL_NODE_SYNTAX_FAILED_'+node.stderr[-700:])\nprint(json.dumps({'status':'R50_SOURCE_FILES_INSTALLED_SAFE_FOR_CONTROLLED_RESTART','backup':str(B),'productionHeadUnchanged':metadata['originalHead'],'fileHashMatched':True,'testSyntaxExit':node.returncode,'r49ServerStillRunning':True,'r42HoldPreserved':True,'queuePausedPreserved':True,'providerSend':False,'restartPerformed':False},ensure_ascii=True)[:2700])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"status\": \"R50_SOURCE_FILES_INSTALLED_SAFE_FOR_CONTROLLED_RESTART\", \"backup\": \"E:\\\\PCControlAutonomyR41\\\\backups\\\\r50-held-live-hotpatch-20261013\", \"productionHeadUnchanged\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"fileHashMatched\": true, \"testSyntaxExit\": 0, \"r49ServerStillRunning\": true, \"r42HoldPreserved\": true, \"queuePausedPreserved\": true, \"providerSend\": false, \"restartPerformed\": false}\r\n",
+      "stdout_bytes": 404,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:47:18.307Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:47:18.008Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r50-20261013-protected-hotpatch-files-22"
+    },
+    "request_id": "owner-r50-20261013-protected-hotpatch-files-22",
+    "started_at": "2026-10-13T04:47:16.681Z",
+    "status": "completed"
+  },
+  "id": "owner-r50-20261013-protected-hotpatch-files-22",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
