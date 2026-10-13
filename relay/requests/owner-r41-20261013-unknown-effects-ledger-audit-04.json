@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-unknown-effects-ledger-audit-04",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json,collections\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments',timeout=6) as response:j=json.load(response)\nitems=j.get('assignments',[])\ncounts=collections.Counter();sus=[]\nfor x in items:\n st=x.get('state');attempt=x.get('dispatchSubmitAttempted') is True;cnt=int(x.get('dispatchCount') or 0)\n if attempt:counts[str(st)+'_send_attempted']+=1\n if cnt>0:counts[str(st)+'_dispatch_nonzero']+=1\n if st in ('queued','dispatching','running','awaiting_evidence') and (attempt or cnt):\n  sus.append({'id':x.get('id'),'state':st,'attempted':attempt,'count':cnt})\n if st in ('blocked','failed') and attempt and not x.get('dispatchFingerprint'):\n  sus.append({'id':x.get('id'),'state':st,'attempted':attempt,'reasonCategory':str(x.get('dispatchFailureCode',''))[:60]})\nprint(json.dumps({'total':len(items),'attempts':dict(counts),'potentialUnknown':sus[:16],'potentialUnknownCount':len(sus),'readOnly':True},ensure_ascii=True)[:4200])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only assignment evidence state aggregation to determine if R41 can ever verify no outstanding unknown Sends; no text, no replays or mutation."
+}
