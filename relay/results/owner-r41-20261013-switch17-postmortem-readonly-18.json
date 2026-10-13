@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,subprocess,json,os\nr=pathlib.Path('E:/PCControlAutonomyR41')\nold='506f9a951f9b782e27b0d886e441b6747095e3fc'\nnew='6f03a58c7c29adfbb8dbe936274d147f45404418'\ns=r/'START_R41_OBSERVER.cmd';p=r/'STOP_R41_USER_OBSERVER.ps1';w=r/'WATCHER_R41.json';journal=r/'data/pc-control-supervisor.json'\ncmd=\"$rows=@(Get-CimInstance Win32_Process | Where-Object {$_.Name -ieq 'node.exe' -and $_.CommandLine -like '*PCControlAutonomyR41*pc-autonomy-daemon.js*'} | Select-Object ProcessId,CommandLine); $rows | ConvertTo-Json -Compress\"\nz=subprocess.run(['powershell.exe','-NoProfile','-Command',cmd],capture_output=True,text=True,timeout=8)\nrows=json.loads(z.stdout) if z.returncode==0 and z.stdout.strip() else []\nif isinstance(rows,dict):rows=[rows]\nprocesses=[{'pid':x.get('ProcessId'),'old':old in (x.get('CommandLine') or ''),'new':new in (x.get('CommandLine') or ''),'watch':'--watch' in (x.get('CommandLine') or ''),'dispatch':'--dispatch' in (x.get('CommandLine') or '')} for x in rows]\nstart=s.read_text('utf8') if s.is_file() else ''\nstop=p.read_text('utf8') if p.is_file() else ''\nowner=json.loads(w.read_text('utf8')) if w.is_file() else {}\nstate=json.loads(journal.read_text('utf8')) if journal.is_file() else {}\nlocks=[]\nfor q in sorted((r/'data').glob('*.lock')):\n k=q/'owner.json'\n try:\n  d=json.loads(k.read_text('utf8'))\n  locks.append({'name':q.name,'pid':d.get('pid'),'at':d.get('at')})\n except:locks.append({'name':q.name,'invalid':True})\nbackup=r/'backups/r41-fenced-observer-switch-20261013'\nstartup=pathlib.Path(os.environ['APPDATA'])/'Microsoft/Windows/Start Menu/Programs/Startup/PCControl_R41_Observer.cmd'\nprint(json.dumps({'processes':processes,'ownerPid':owner.get('pid'),'ownerSha':owner.get('source'),'starterOld':old in start,'starterNew':new in start,'starterDispatch':'--dispatch' in start,'stopOld':old in stop,'stopNew':new in stop,'stopHasDispatchWord':'--dispatch' in stop,'startupExists':startup.is_file(),'backupCount':len(list(backup.iterdir())) if backup.exists() else 0,'journalRevision':state.get('revision'),'lastCycle':state.get('lastCycle'),'lastStatus':state.get('lastDecision',{}).get('status'),'lastDispatch':state.get('lastDecision',{}).get('dispatched'),'pendingUnknown':len(state.get('pendingUnknown',[])),'locks':locks,'readOnly':True},ensure_ascii=True)[:5400])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"processes\": [{\"pid\": 16400, \"old\": false, \"new\": true, \"watch\": true, \"dispatch\": false}], \"ownerPid\": 21436, \"ownerSha\": \"506f9a951f9b782e27b0d886e441b6747095e3fc\", \"starterOld\": true, \"starterNew\": false, \"starterDispatch\": false, \"stopOld\": true, \"stopNew\": false, \"stopHasDispatchWord\": true, \"startupExists\": true, \"backupCount\": 3, \"journalRevision\": 30, \"lastCycle\": \"2026-10-13T03:55:40.378Z\", \"lastStatus\": \"READ_ONLY\", \"lastDispatch\": 0, \"pendingUnknown\": 0, \"locks\": [], \"readOnly\": true}\r\n",
+      "stdout_bytes": 503,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:56:03.976Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:56:03.740Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-switch17-postmortem-readonly-18"
+    },
+    "request_id": "owner-r41-20261013-switch17-postmortem-readonly-18",
+    "started_at": "2026-10-13T03:56:02.414Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-switch17-postmortem-readonly-18",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
