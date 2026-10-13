@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-managed-inspection-curl-corrected-20261014-e590cb2c",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "curl.exe --noproxy 127.0.0.1 --max-time 4 -sS -o E:\\WebAIBridge-R63-OPERATOR-BACKUP-20261014-v1\\R63_MANAGED_INSPECT.json http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 11000,
+  "note": "Corrected read-only original managed chat inspection. No provider Send. Store responses only on local user PC, do not expose identities"
+}
