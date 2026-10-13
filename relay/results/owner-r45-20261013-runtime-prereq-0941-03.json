@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import shutil,json,subprocess,os\nout={x:bool(shutil.which(x)) for x in ('node','gh','git')}\nout['nodePath']=os.path.basename(shutil.which('node') or '')\nout['operatorToolsPresent']=os.path.isdir('E:/WebAIBridge/app/data/operator-tools')\ntry:\n a=subprocess.run(['git','-C','E:/WebAIBridge','cat-file','-e','6e7f6b1de49c7add74c81e6ec93c0096db7b3eb2^{commit}'],timeout=3,capture_output=True)\n out['R45ObjectAlreadyLocal']=a.returncode==0\nexcept Exception:out['R45ObjectAlreadyLocal']=False\nprint(json.dumps(out))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"node\": true, \"gh\": true, \"git\": true, \"nodePath\": \"node.EXE\", \"operatorToolsPresent\": true, \"R45ObjectAlreadyLocal\": false}\r\n",
+      "stdout_bytes": 127,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T02:38:29.167Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T02:38:28.942Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r45-20261013-runtime-prereq-0941-03"
+    },
+    "request_id": "owner-r45-20261013-runtime-prereq-0941-03",
+    "started_at": "2026-10-13T02:38:28.205Z",
+    "status": "completed"
+  },
+  "id": "owner-r45-20261013-runtime-prereq-0941-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
