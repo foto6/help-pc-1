@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json\nbase='http://127.0.0.1:17448'\nresult={}\nfor route,key in [('/api/supervisor-watchdog/managed-chats','chats'),('/api/supervisor-watchdog/agent-assignments','assignments')]:\n try:\n  with urllib.request.urlopen(base+route,timeout=6) as f:d=json.load(f)\n  result[key]={'keys':sorted(d)[:24],'error':None}\n  if key=='chats':\n   rows=d.get('chats',d.get('managedChats',[]))\n   result[key]['count']=len(rows) if isinstance(rows,list) else None\n   result[key]['rows']=[{k:x.get(k) for k in ['id','managedChatId','chatId','title','profileId','provider','status','url','tabCount','activeAssignmentCount','lastSeenAt'] if x.get(k) is not None} for x in rows[:12]] if isinstance(rows,list) else []\n  else:\n   rows=d.get('assignments',[])\n   statuses={}\n   for x in rows:statuses[str(x.get('state'))]=statuses.get(str(x.get('state')),0)+1\n   result[key]['count']=len(rows)\n   result[key]['statuses']=statuses\n   result[key]['queued']=[{k:x.get(k) for k in ['id','state','managedChatId','targetChatId','targetProfileId','dispatchCount','dispatchSubmitAttempted','lastPreflightReason','lastPreflightAt'] if x.get(k) is not None} for x in rows if x.get('state')=='queued'][:3]\n except Exception as e:result[key]={'error':type(e).__name__}\nprint(json.dumps({'result':result,'readOnly':True,'noProviderTextRead':True},ensure_ascii=True)[:7000])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"result\": {\"chats\": {\"keys\": [\"chats\", \"checkedAt\", \"idleMinutes\", \"inspected\"], \"error\": null, \"count\": 7, \"rows\": [{\"id\": \"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\", \"profileId\": \"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\", \"status\": \"profile_offline\", \"url\": \"https://chatgpt.com/c/6ac45836-87a0-83ed-bea4-0ad0f99c8982\", \"activeAssignmentCount\": 0, \"lastSeenAt\": \"2026-10-12T10:21:48.439Z\"}, {\"id\": \"agent-media\", \"profileId\": \"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\", \"status\": \"profile_offline\", \"url\": \"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45e9a-66e8-83ed-a34b-4aabeb4aacbf\", \"activeAssignmentCount\": 0, \"lastSeenAt\": \"2026-10-12T10:21:48.442Z\"}, {\"id\": \"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\", \"profileId\": \"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\", \"status\": \"profile_offline\", \"url\": \"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac455e9-bea0-83eb-aa94-fd3dde516c0c\", \"activeAssignmentCount\": 0, \"lastSeenAt\": \"2026-10-12T10:21:48.446Z\"}, {\"id\": \"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\", \"profileId\": \"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\", \"status\": \"profile_offline\", \"url\": \"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\", \"activeAssignmentCount\": 0, \"lastSeenAt\": \"2026-10-12T10:21:48.464Z\"}, {\"id\": \"agent-pc-control\", \"profileId\": \"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\", \"status\": \"profile_offline\", \"url\": \"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\", \"activeAssignmentCount\": 0, \"lastSeenAt\": \"2026-10-12T10:21:48.465Z\"}, {\"id\": \"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\", \"profileId\": \"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\", \"status\": \"profile_offline\", \"url\": \"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ac45fb0-9074-83eb-99eb-397265b228e7\", \"activeAssignmentCount\": 0, \"lastSeenAt\": \"2026-10-12T10:21:48.465Z\"}, {\"id\": \"tg-curator-owner\", \"profileId\": \"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\", \"status\": \"unknown\", \"url\": \"https://chatgpt.com/c/6ac7068e-883c-83ed-9081-cb94557e61bd\", \"activeAssignmentCount\": 1, \"lastSeenAt\": \"\"}]}, \"assignments\": {\"keys\": [\"assignments\", \"counts\", \"object\"], \"error\": null, \"count\": 69, \"statuses\": {\"cancelled\": 11, \"blocked\": 35, \"failed\": 12, \"completed\": 10, \"queued\": 1}, \"queued\": [{\"id\": \"bd455cb4-a1e8-4b77-845f-abdbe17ae476\", \"state\": \"queued\", \"targetChatId\": \"tg-curator-owner\", \"targetProfileId\": \"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\", \"dispatchCount\": 0, \"dispatchSubmitAttempted\": false, \"lastPreflightReason\": \"ready\", \"lastPreflightAt\": \"2026-10-13T03:58:15.935Z\"}]}}, \"readOnly\": true, \"noProviderTextRead\": true}\r\n",
+      "stdout_bytes": 2671,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:58:22.533Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:58:22.309Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-exact-chat-queue-authority-21"
+    },
+    "request_id": "owner-r41-20261013-exact-chat-queue-authority-21",
+    "started_at": "2026-10-13T03:58:21.620Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-exact-chat-queue-authority-21",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
