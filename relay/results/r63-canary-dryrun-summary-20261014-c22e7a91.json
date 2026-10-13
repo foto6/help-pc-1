@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$f='E:\\WebAIBridge-R63-OPERATOR-BACKUP-20261014-v1\\R63_CANARY_DRYRUN.json';if(-not(Test-Path -LiteralPath $f -PathType Leaf)){throw 'DRYRUN_MISSING'};$o=Get-Content -LiteralPath $f -Raw -Encoding UTF8|ConvertFrom-Json;$r=@($o.rows);Write-Output ('DRY_RUN='+$o.dryRun);Write-Output ('SEND_ATTEMPTED='+$o.sendAttempted);Write-Output ('REPLACEMENT_ATTEMPTED='+$o.replacementAttempted);Write-Output ('AUTO_CONTINUE='+$o.autoContinueEnabled);Write-Output ('CODING_CHATS='+$r.Count);Write-Output ('PREFLIGHT_ALLOWED='+@($r|Where-Object{$_.preflightAllowed -eq $true}).Count);Write-Output ('WOULD_DISPATCH='+@($r|Where-Object{$_.wouldDispatch -eq $true}).Count);for($i=0;$i -lt $r.Count;$i++){$x=$r[$i];Write-Output ('CANDIDATE_'+($i+1)+'_READY='+$x.preflightAllowed+',reason='+$x.preflightReason+',tabs='+$x.openTabs+',selected='+$x.schedulerSelected+',wouldDispatch='+$x.wouldDispatch)}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "DRY_RUN=True\r\nSEND_ATTEMPTED=False\r\nREPLACEMENT_ATTEMPTED=False\r\nAUTO_CONTINUE=False\r\nCODING_CHATS=7\r\nPREFLIGHT_ALLOWED=5\r\nWOULD_DISPATCH=5\r\nCANDIDATE_1_READY=True,reason=ready,tabs=1,selected=True,wouldDispatch=True\r\nCANDIDATE_2_READY=True,reason=ready,tabs=1,selected=True,wouldDispatch=True\r\nCANDIDATE_3_READY=True,reason=ready,tabs=1,selected=True,wouldDispatch=True\r\nCANDIDATE_4_READY=False,reason=target_chat_unavailable,tabs=0,selected=False,wouldDispatch=False\r\nCANDIDATE_5_READY=False,reason=active_generation,tabs=1,selected=False,wouldDispatch=False\r\nCANDIDATE_6_READY=True,reason=ready,tabs=1,selected=True,wouldDispatch=True\r\nCANDIDATE_7_READY=True,reason=ready,tabs=1,selected=True,wouldDispatch=True\r\n",
+      "stdout_bytes": 716,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:45:02.053Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:45:01.682Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-canary-dryrun-summary-20261014-c22e7a91"
+    },
+    "request_id": "r63-canary-dryrun-summary-20261014-c22e7a91",
+    "started_at": "2026-10-13T21:45:00.320Z",
+    "status": "completed"
+  },
+  "id": "r63-canary-dryrun-summary-20261014-c22e7a91",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
