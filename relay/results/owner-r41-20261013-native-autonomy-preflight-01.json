@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,subprocess,json,pathlib\nE=pathlib.Path('E:/PCControlAutonomyR41');W=pathlib.Path('E:/WebAIBridge')\ndef cmd(*a):\n try:\n  x=subprocess.run(a,capture_output=True,text=True,timeout=5)\n  return x.stdout.strip() if x.returncode==0 else None\n except Exception:return None\nhold=W/'app/data/projects-live-control-plane-cutover-r42.json'\nj=json.loads(hold.read_text(encoding='utf-8-sig')) if hold.is_file() else {}\nr=cmd('gh','api','repos/foto6/help-pc-2/commits/fab9d1756e00eaad5e65c67982d9763afa5f328d','--jq','.sha')\nrelease=W/'app/data/operator-tools/r45-durable-autonomy/releases/28e4accf59e37e767c37585b85cdacbdbac62120'\nprint(json.dumps({'existingInstallRoot':E.exists(),'existingR45Release':release.is_dir(),'r45Manifest':(release/'MANIFEST.json').is_file(),'gitCommitReadable':r=='fab9d1756e00eaad5e65c67982d9763afa5f328d','node':cmd('node','--version'),'productionHead':cmd('git','-C','E:/WebAIBridge','rev-parse','HEAD'),'r42hold':j.get('holdActive'),'readOnly':True}))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"existingInstallRoot\": false, \"existingR45Release\": true, \"r45Manifest\": true, \"gitCommitReadable\": true, \"node\": \"v24.18.0\", \"productionHead\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"r42hold\": true, \"readOnly\": true}\r\n",
+      "stdout_bytes": 225,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:18:07.175Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:18:06.941Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-native-autonomy-preflight-01"
+    },
+    "request_id": "owner-r41-20261013-native-autonomy-preflight-01",
+    "started_at": "2026-10-13T03:18:04.894Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-native-autonomy-preflight-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
