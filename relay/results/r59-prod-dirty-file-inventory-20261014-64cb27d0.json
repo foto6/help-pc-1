@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "git.exe -C E:\\WebAIBridge diff --name-status --no-ext-diff && git.exe -C E:\\WebAIBridge rev-parse HEAD"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "warning: in the working copy of 'app/ensure-supervisor-watchdog.ps1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/r42-cutover.ps1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/r42-json-encoding.test.ps1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/r42-rollback.ps1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/start.ps1', LF will be replaced by CRLF the next time Git touches it\n",
+      "stderr_bytes": 581,
+      "stderr_truncated": false,
+      "stdout": "M\tapp/ensure-supervisor-watchdog.ps1\nM\tapp/r42-cutover.ps1\nM\tapp/r42-json-encoding.test.ps1\nM\tapp/r42-rollback.ps1\nM\tapp/server.js\nM\tapp/start.ps1\n5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\n",
+      "stdout_bytes": 188,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:03:27.982Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:03:27.745Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r59-prod-dirty-file-inventory-20261014-64cb27d0"
+    },
+    "request_id": "r59-prod-dirty-file-inventory-20261014-64cb27d0",
+    "started_at": "2026-10-13T20:03:27.141Z",
+    "status": "completed"
+  },
+  "id": "r59-prod-dirty-file-inventory-20261014-64cb27d0",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
