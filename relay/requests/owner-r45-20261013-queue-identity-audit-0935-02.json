@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r45-20261013-queue-identity-audit-0935-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json,datetime\nB='http://127.0.0.1:17448'\ndef get(p):\n try:\n  with urllib.request.urlopen(B+p,timeout=3) as x:return json.load(x)\n except Exception as e:return {'error':type(e).__name__}\nop=get('/api/operator-lifecycle');wd=get('/api/supervisor-watchdog?detect=0').get('config',{}); a=get('/api/supervisor-watchdog/agent-assignments');m=get('/api/supervisor-watchdog/managed-chats?inspect=0'); s=get('/api/status');q=[{'id':x.get('id'),'key':x.get('idempotencyKey'),'state':x.get('state'),'target':x.get('targetChatId'),'createdAt':x.get('createdAt'),'repository':x.get('repository'),'branch':x.get('branch'),'dispatchSubmitAttempted':x.get('dispatchSubmitAttempted'),'lastFailure':x.get('dispatchFailureCode')} for x in a.get('assignments',[]) if x.get('state') in ('queued','dispatching','running','awaiting_evidence')];z={'at':datetime.datetime.now().isoformat(),'operator':{k:v for k,v in op.items() if k in ('mode','queuePaused','pauseReason','allowAutonomousSend','state','paused','emergencyStopped','object')},'watchdog':{k:v for k,v in wd.items() if k in ('mode','enabled','allowAutonomousSend','autoContinueEnabled')},'status':{k:v for k,v in s.items() if k in ('paused','emergencyStopped','operatorLifecycle','mode','codeReloadRequired')},'queue':q,'managed': [{'id':x.get('id'),'status':x.get('status'),'enabled':x.get('enabled'),'activeAssignmentCount':x.get('activeAssignmentCount'),'highMode':x.get('highMode'),'openTabs':x.get('openTabs')} for x in m.get('chats',[])],'readOnly':True};print(json.dumps(z,ensure_ascii=True)[:10000])"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 26000,
+  "note": "R45 read-only operator, queue idempotency & cached managed chat metadata; no provider payload text, no side effects."
+}
