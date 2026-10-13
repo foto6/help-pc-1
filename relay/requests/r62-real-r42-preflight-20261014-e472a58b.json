@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-real-r42-preflight-20261014-e472a58b",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $root='E:\\WebAIBridge'; $target='d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2'; $branch='agent/bridge-r61-failclosed-dispatch-inspection-20261014'; $expected='5853a5a8dd0677c1d8ea2a23e16c98d85f6d5592'; $before=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($before -ne $expected){throw 'PRODUCTION_PRESERVE_COMMIT_MISMATCH'}; $log='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\R62_REAL_R42_PREFLIGHT.log'; & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $root 'app\\r42-cutover.ps1') -RepoPath $root -TargetSha $target -TargetBranch $branch -PreflightOnly *> $log; $rc=$LASTEXITCODE; Write-Output ('PREFLIGHT_RC='+$rc); if(Test-Path -LiteralPath $log){Get-Content -LiteralPath $log -Tail 10}; Write-Output ('UNCHANGED_PRODUCTION_HEAD='+((& git.exe -C $root rev-parse HEAD)|Out-String).Trim()); Write-Output ('TRACKED_CHANGES='+@(& git.exe -C $root status --porcelain=v1 --untracked-files=no).Count); Write-Output ('SERVER_SHA256='+(Get-FileHash -LiteralPath (Join-Path $root 'app\\server.js') -Algorithm SHA256).Hash); if($rc -ne 0){exit $rc}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 55000,
+  "note": "Official original R42 -PreflightOnly against safely committed clean production local snapshot, exact R61 SHA, no server stop, no tab/browser change; save report only under local backup"
+}
