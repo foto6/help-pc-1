@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,os,subprocess,json,time,shutil\nR=pathlib.Path('E:/PCControlAutonomyR41')\nSHA='506f9a951f9b782e27b0d886e441b6747095e3fc'\nREL=R/'releases'/SHA\nCFG=R/'config.r41-integrated.json'\nSRC=R/'START_R41_OBSERVER.cmd'\nS=pathlib.Path(os.environ['APPDATA'])/'Microsoft/Windows/Start Menu/Programs/Startup'\nENTRY=S/'PCControl_R41_Observer.cmd'\nif not REL.is_dir() or not CFG.is_file() or not SRC.is_file() or not S.is_dir():raise RuntimeError('R41_OBSERVER_BOOTSTRAP_NOT_READY')\nif ENTRY.exists() or (R/'WATCHER_R41.json').exists():raise RuntimeError('R41_STARTUP_ALREADY_OWNED_ABORT')\ncfg=json.loads(CFG.read_text('utf8'))\nif cfg.get('mode')!='observe' or cfg.get('operatorApproved') is not False:raise RuntimeError('R41_ARMED_CONFIG_FORBIDDEN')\ncontents=SRC.read_text(encoding='utf8')\nif '--dispatch' in contents or '--i-accept-real-send' in contents or '--watch' not in contents:raise RuntimeError('STARTUP_SCRIPT_NOT_READ_ONLY')\nnode=shutil.which('node')\nif not node:raise RuntimeError('NO_NODE')\nwith ENTRY.open('x',encoding='utf8') as f:f.write('@echo off\\r\\ncall \"'+str(SRC)+'\"\\r\\n')\nlogs=R/'logs';logs.mkdir(exist_ok=True)\nfd=(logs/'observer.live.log').open('a',encoding='utf8')\nflags=subprocess.DETACHED_PROCESS|subprocess.CREATE_NEW_PROCESS_GROUP\np=subprocess.Popen([node,str(REL/'bin/pc-autonomy-daemon.js'),'--config',str(CFG),'--watch'],cwd=str(REL),creationflags=flags,stdin=subprocess.DEVNULL,stdout=fd,stderr=fd,close_fds=True)\nfd.close()\ntime.sleep(2.5)\nrunning=p.poll() is None\nstatus={'version':'r41.autostart.v1','source':SHA,'pid':p.pid,'runningAtInstall':running,'entry':str(ENTRY),'observerOnly':True,'sendEnabled':False}\n(R/'WATCHER_R41.json').write_text(json.dumps(status,indent=2),encoding='utf8')\ntail=(logs/'observer.live.log').read_text(encoding='utf8',errors='replace')[-1800:]\nprint(json.dumps({'mode':'READ_ONLY_LOGON_STARTUP','registered':True,'pid':p.pid,'processRunning':running,'root':str(R),'startupEntryName':ENTRY.name,'lastLog':tail[-900:],'noProviderSend':True,'otherScheduledTasksUnmodified':True},ensure_ascii=True)[:3400])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"mode\": \"READ_ONLY_LOGON_STARTUP\", \"registered\": true, \"pid\": 21436, \"processRunning\": true, \"root\": \"E:\\\\PCControlAutonomyR41\", \"startupEntryName\": \"PCControl_R41_Observer.cmd\", \"lastLog\": \"{\\\"contract\\\":\\\"pc.control.autonomy.v1\\\",\\\"revision\\\":3,\\\"at\\\":\\\"2026-10-13T03:29:22.905Z\\\",\\\"dispatchEnabled\\\":false,\\\"decision\\\":{\\\"admitted\\\":false,\\\"blocks\\\":[\\\"observer_mode\\\",\\\"operator_approval_missing\\\",\\\"bridge_unhealthy\\\",\\\"bridge_health_reasons_present\\\",\\\"r42_cutover_hold\\\",\\\"operator_reconciliation_unknown\\\",\\\"autonomous_send_disabled\\\"],\\\"status\\\":\\\"READ_ONLY\\\",\\\"dispatched\\\":0,\\\"probeError\\\":null},\\\"cooldownUntil\\\":0,\\\"unknownEffects\\\":0,\\\"taskCounts\\\":{\\\"PENDING\\\":1},\\\"bridgeHealth\\\":\\\"BLOCKED\\\"}\\n\", \"noProviderSend\": true, \"otherScheduledTasksUnmodified\": true}\r\n",
+      "stdout_bytes": 778,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:29:25.599Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:29:25.382Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-user-startup-observer-install-12"
+    },
+    "request_id": "owner-r41-20261013-user-startup-observer-install-12",
+    "started_at": "2026-10-13T03:29:22.277Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-user-startup-observer-install-12",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
