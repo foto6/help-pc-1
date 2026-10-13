@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r60-live-readonly-tick-20261014-5e1089c4",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "cd /d E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014\\app && node.exe autonomy-r45-runner.js --plan autonomy-r45-plan.example.json --state E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014\\R60_READONLY_ONCE.state.json --once"
+    ],
+    "cwd": "E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014\\app"
+  },
+  "timeout_ms": 25000,
+  "note": "Run exactly one R60 R45 status-only observation of live loopback Bridge with synthetic disabled example plan, no dispatch or brain flags, local isolated journal only, no ChatGPT tabs"
+}
