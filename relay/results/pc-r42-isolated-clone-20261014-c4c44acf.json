@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $dst='E:\\PCControlR42-SHADOW'; if(Test-Path -LiteralPath $dst){throw 'SHADOW_ALREADY_EXISTS'}; & git.exe clone --depth 1 --single-branch --no-tags --branch agent/pc-r42-shell-pipe-drain-20261014 https://github.com/foto6/help-pc-1.git $dst; if($LASTEXITCODE -ne 0){throw 'CLONE_FAILED'}; $got=((& git.exe -C $dst rev-parse HEAD)|Out-String).Trim(); if($got -ne '3addc7e686fb5a03ff912351bb964f0a9f2cb858'){throw 'EXACT_SHA_MISMATCH'}; Write-Output ('PC_R42_HEAD='+$got); Write-Output ('PYTHON_VERSION='+((& py.exe -3 --version)|Out-String).Trim()); Write-Output ('PYTEST_VERSION='+((& py.exe -3 -m pytest --version 2>$null)|Out-String).Trim())"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Cloning into 'E:\\PCControlR42-SHADOW'...\nUpdating files:  80% (3422/4268)\rUpdating files:  81% (3458/4268)\rUpdating files:  82% (3500/4268)\rUpdating files:  83% (3543/4268)\rUpdating files:  84% (3586/4268)\rUpdating files:  85% (3628/4268)\rUpdating files:  86% (3671/4268)\rUpdating files:  87% (3714/4268)\rUpdating files:  88% (3756/4268)\rUpdating files:  89% (3799/4268)\rUpdating files:  90% (3842/4268)\rUpdating files:  91% (3884/4268)\rUpdating files:  92% (3927/4268)\rUpdating files:  93% (3970/4268)\rUpdating files:  94% (4012/4268)\rUpdating files:  95% (4055/4268)\rUpdating files:  96% (4098/4268)\rUpdating files:  97% (4140/4268)\rUpdating files:  98% (4183/4268)\rUpdating files:  99% (4226/4268)\rUpdating files: 100% (4268/4268)\rUpdating files: 100% (4268/4268), done.\n",
+      "stderr_bytes": 774,
+      "stderr_truncated": false,
+      "stdout": "PC_R42_HEAD=3addc7e686fb5a03ff912351bb964f0a9f2cb858\r\nPYTHON_VERSION=Python 3.13.14\r\nPYTEST_VERSION=pytest 9.1.1\r\n",
+      "stdout_bytes": 114,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T19:58:35.403Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T19:58:35.159Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-r42-isolated-clone-20261014-c4c44acf"
+    },
+    "request_id": "pc-r42-isolated-clone-20261014-c4c44acf",
+    "started_at": "2026-10-13T19:58:19.756Z",
+    "status": "completed"
+  },
+  "id": "pc-r42-isolated-clone-20261014-c4c44acf",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
