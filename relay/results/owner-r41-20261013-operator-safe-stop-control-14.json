@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "from pathlib import Path\nimport json\nroot=Path('E:/PCControlAutonomyR41')\nstem='STOP_R41_USER_OBSERVER'\nscript=root/(stem+'.ps1')\ncmd=root/(stem+'.cmd')\nif script.exists() or cmd.exists():raise RuntimeError('SAFE_STOP_ALREADY_EXISTS_DO_NOT_OVERWRITE')\nsha='506f9a951f9b782e27b0d886e441b6747095e3fc'\ntarget=str(root/'releases'/sha/'bin/pc-autonomy-daemon.js')\nexpected=str(root/'START_R41_OBSERVER.cmd')\npower=\"\"\"$ErrorActionPreference = 'Stop'\n$startup = Join-Path $env:APPDATA 'Microsoft\\\\Windows\\\\Start Menu\\\\Programs\\\\Startup\\\\PCControl_R41_Observer.cmd'\n$expected = '%s'\n$target = '%s'\nif (Test-Path -LiteralPath $startup) {\n  $text = Get-Content -Raw -LiteralPath $startup\n  if (-not $text.Contains($expected) -or $text.Contains('--dispatch')) {\n    throw 'R41_STOP_REFUSED_UNEXPECTED_STARTUP_CONTENT'\n  }\n  Remove-Item -LiteralPath $startup -ErrorAction Stop\n  Write-Output 'R41 Startup entry disabled'\n}\n$rows = @(Get-CimInstance Win32_Process | Where-Object {\n  $_.Name -ieq 'node.exe' -and $_.CommandLine -and\n  $_.CommandLine.Contains($target) -and $_.CommandLine.Contains('--watch') -and\n  (-not $_.CommandLine.Contains('--dispatch'))\n})\nforeach ($row in $rows) {\n  Stop-Process -Id $row.ProcessId -Force -ErrorAction Stop\n  Write-Output ('Stopped exact R41 observer PID: ' + $row.ProcessId)\n}\nWrite-Output 'R41 observer stop complete; production PC Control and WebAIBridge untouched'\n\"\"\"%(expected.replace(\"'\",\"''\"),target.replace(\"'\",\"''\"))\nscript.write_text(power,encoding='utf-8')\ncmd.write_text('@echo off\\r\\npowershell.exe -NoProfile -ExecutionPolicy Bypass -File \"'+str(script)+'\"\\r\\npause\\r\\n',encoding='utf-8')\nprint(json.dumps({'scriptsCreated':[str(cmd),str(script)],'executed':False,'targetSha':sha,'safeStop':'matches exact node process and startup entry only','providerSend':False}))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"scriptsCreated\": [\"E:\\\\PCControlAutonomyR41\\\\STOP_R41_USER_OBSERVER.cmd\", \"E:\\\\PCControlAutonomyR41\\\\STOP_R41_USER_OBSERVER.ps1\"], \"executed\": false, \"targetSha\": \"506f9a951f9b782e27b0d886e441b6747095e3fc\", \"safeStop\": \"matches exact node process and startup entry only\", \"providerSend\": false}\r\n",
+      "stdout_bytes": 298,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:32:09.684Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:32:09.459Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-operator-safe-stop-control-14"
+    },
+    "request_id": "owner-r41-20261013-operator-safe-stop-control-14",
+    "started_at": "2026-10-13T03:32:08.849Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-operator-safe-stop-control-14",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
