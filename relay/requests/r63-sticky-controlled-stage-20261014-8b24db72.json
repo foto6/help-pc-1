@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-sticky-controlled-stage-20261014-8b24db72",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "curl.exe --noproxy \"*\" --max-time 8 -sS -o NUL -w \"R63_ACTIVATE_HTTP=%{http_code}\" -X POST http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/activate"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Once-only R63 strict staged HOLD release after explicit local sticky environment restart; server-side terminal-only R62 admission, all sends remain disabled and queue paused. If unknown, GET status before further changes"
+}
