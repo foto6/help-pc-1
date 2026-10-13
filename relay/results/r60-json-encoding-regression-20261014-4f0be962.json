@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014\\app\\r42-json-encoding.test.ps1"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "NODE_JSON_OK\r\nR42_JSON_ENCODING_PASS\r\n",
+      "stdout_bytes": 38,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:13:24.771Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:13:24.494Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r60-json-encoding-regression-20261014-4f0be962"
+    },
+    "request_id": "r60-json-encoding-regression-20261014-4f0be962",
+    "started_at": "2026-10-13T20:13:23.369Z",
+    "status": "completed"
+  },
+  "id": "r60-json-encoding-regression-20261014-4f0be962",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
