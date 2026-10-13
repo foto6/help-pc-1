@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,pathlib,subprocess,json,shutil\nhome=pathlib.Path(os.environ.get('LOCALAPPDATA',''))\npf=pathlib.Path(os.environ.get('ProgramFiles','C:/Program Files'))\ncandidates=[home/'Programs/Ollama/ollama.exe',home/'Ollama/ollama.exe',pf/'Ollama/ollama.exe',pathlib.Path('C:/Ollama/ollama.exe')]\nusage=shutil.disk_usage('C:/')\nr={'ollamaPathsPresent':[str(p) for p in candidates if p.is_file()],'wingetOnPath':bool(shutil.which('winget')),'gpuProbe':None,'freeDiskGB':round(usage.free/1e9,1),'localOllamaDataDir':(pathlib.Path.home()/'.ollama').exists(),'readOnly':True}\np=subprocess.run(['powershell.exe','-NoProfile','-Command',\"\"\"$r=Get-CimInstance Win32_VideoController | Select-Object -First 2 Name,AdapterRAM; $r | ConvertTo-Json -Compress\"\"\"],capture_output=True,text=True,timeout=6)\nif p.returncode==0 and p.stdout.strip():\n try:r['gpuProbe']=[x.get('Name') for x in (lambda y:y if isinstance(y,list) else [y])(json.loads(p.stdout))]\n except:pass\nprint(json.dumps(r,ensure_ascii=True)[:1600])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ollamaPathsPresent\": [], \"wingetOnPath\": true, \"gpuProbe\": [\"AMD Radeon RX 5700 XT\"], \"freeDiskGB\": 42.5, \"localOllamaDataDir\": false, \"readOnly\": true}\r\n",
+      "stdout_bytes": 156,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:24:46.828Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:24:46.453Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-ollama-install-readiness-09"
+    },
+    "request_id": "owner-r41-20261013-ollama-install-readiness-09",
+    "started_at": "2026-10-13T04:24:45.264Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-ollama-install-readiness-09",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
