@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r59-merge-conflict-preflight-20261014-3ee750ac",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R59-SHADOW'; $patch='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\tracked-local-changes.patch'; if(-not (Test-Path -LiteralPath $patch -PathType Leaf)){throw 'PATCH_MISSING'}; $head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($head -ne 'c7ef06be94e8ada0119c226628a08c2c6d052ea4'){throw 'SHADOW_SOURCE_DRIFT'}; $dirty=@(& git.exe -C $root status --porcelain=v1 --untracked-files=no); if(@($dirty).Count -ne 0){throw 'SHADOW_NOT_CLEAN'}; & git.exe -C $root apply --check --verbose $patch 2>&1|ForEach-Object {Write-Output ($_ -replace '[^\\x20-\\x7E]','')}; $code=$LASTEXITCODE; Write-Output ('DIRECT_PATCH_APPLICABLE='+($code -eq 0)); Write-Output ('APPLY_CHECK_EXIT='+$code); Write-Output ('SHADOW_TRACKED_CHANGES='+(@(& git.exe -C $root status --porcelain=v1 --untracked-files=no).Count)); Write-Output ('PRODUCTION_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Read-only direct git patch applicability check from locally backed-up dirty production six-file patch onto clean R59 shadow, do NOT apply or mutate"
+}
