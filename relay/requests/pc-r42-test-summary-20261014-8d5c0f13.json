@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-r42-test-summary-20261014-8d5c0f13",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$f='E:\\PCControlR42-SHADOW\\R42_PIPE_TESTS.log';if(Test-Path -LiteralPath $f){Write-Output ('BYTES='+(Get-Item -LiteralPath $f).Length);Get-Content -LiteralPath $f -Tail 9}else{Write-Output 'LOG_MISSING';exit 2}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read completed R42 Python focused regression summary; no new tests or side effects"
+}
