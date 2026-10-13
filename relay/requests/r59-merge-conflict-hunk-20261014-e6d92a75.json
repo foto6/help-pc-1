@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r59-merge-conflict-hunk-20261014-e6d92a75",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $f='E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014\\app\\server.js'; $lines=[System.IO.File]::ReadAllLines($f); $starts=@();$ends=@(); for($i=0;$i -lt $lines.Length;$i++){if($lines[$i].StartsWith('<<<<<<< ')){$starts+=($i)};if($lines[$i].StartsWith('>>>>>>> ')){$ends+=($i)}}; Write-Output ('CONFLICT_BLOCK_COUNT='+$starts.Count); $printed=0; for($n=0;$n -lt [Math]::Min($starts.Count,$ends.Count);$n++){ $from=[Math]::Max(0,$starts[$n]-6);$to=[Math]::Min($lines.Length-1,$ends[$n]+6); Write-Output ('BLOCK_LINES='+($from+1)+'-'+($to+1)); for($j=$from;$j -le $to;$j++){ $line=$lines[$j];if($line -match '(?i)(token|secret|password|credential|cookie|authorization|api[_-]?key|bearer|session)'){$line='[redacted sensitive-pattern line]'}; $line=$line.Substring(0,[Math]::Min(220,$line.Length)); $printed+=$line.Length;if($printed -gt 7200){Write-Output 'TRUNCATED';break};Write-Output ('L'+($j+1)+':'+$line)} }"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Read only bounded sanitized conflict hunk context from isolated R59 merge candidate; redact any sensitive-pattern line, no secrets, no changes"
+}
