@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r45-20261013-r42-focused-unit-tests-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import pathlib,subprocess,json\nroot=pathlib.Path('E:/WebAIBridge/app/data/operator-tools/r45-durable-autonomy/scratch/28e4accf59e37e767c37585b85cdacbdbac62120')\nif len(list(root.glob('*.test.js')))!=6:raise RuntimeError('R45_SCRATCH_NOT_VERIFIED')\ncmd=['node','--test','autonomy-r45.test.js','autonomy-r45-git-gate.test.js']\ntry:\n r=subprocess.run(cmd,cwd=root,capture_output=True,text=True,timeout=15)\n x=r.stdout+'\\n'+r.stderr\n line=x.splitlines()\n details=[line[i] for i in range(len(line)) if any(s in line[i] for s in ('✖','not ok','AssertionError','expected:','actual:','R45_','fail '))]\n print(json.dumps({'finished':True,'exitCode':r.returncode,'errors':'\\n'.join(details)[-6000:],'tail':'\\n'.join(line[-65:])[-7000:],'noProviderEffects':True},ensure_ascii=True))\nexcept subprocess.TimeoutExpired:print(json.dumps({'finished':False,'reason':'unit_test_timeout','noProviderEffects':True}))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "New distinct focused R45 source-only unit tests in already staged isolated 16-file scratch, not replay of prior timed out source-download+suite command. No browser/production/queue effects."
+}
