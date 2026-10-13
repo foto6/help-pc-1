@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "cd /d E:\\WebAIBridge-R61-SHADOW && git.exe fetch --no-tags --depth=10 origin agent/bridge-r61-failclosed-dispatch-inspection-20261014 && git.exe merge --ff-only FETCH_HEAD && git.exe rev-parse HEAD && cd app && node.exe --check autonomy-r45-runner.js && node.exe --check autonomy-r45-core.js && node.exe --test --test-reporter=tap autonomy-r45.test.js autonomy-r45-brain.test.js autonomy-r45-git-gate.test.js autonomy-r45-lock.test.js autonomy-r45-review.test.js autonomy-r57-gpt-git.test.js autonomy-r57-successor.test.js autonomous-send-gate-r50.test.js existing-tab-session-r55.test.js existing-tab-session-r56-cdp.test.js r56-worker-sticky.test.js r56-r42-hold-failclosed.test.js r56-launch-preservation.test.js r56-sticky-readonly-preflight.test.js r34-sticky-chat-exact-id.test.js r58-shadow-rehearsal-contract.test.js > E:\\WebAIBridge-R61-SHADOW\\R61_FINAL_TESTS.log 2>&1"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "From https://github.com/foto6/WebAIBridge\n * branch            agent/bridge-r61-failclosed-dispatch-inspection-20261014 -> FETCH_HEAD\n   830c00e..d17d0cf  agent/bridge-r61-failclosed-dispatch-inspection-20261014 -> origin/agent/bridge-r61-failclosed-dispatch-inspection-20261014\n",
+      "stderr_bytes": 279,
+      "stderr_truncated": false,
+      "stdout": "Updating 830c00e..d17d0cf\nFast-forward\n app/autonomy-r45-git-gate.test.js | 2 +-\n 1 file changed, 1 insertion(+), 1 deletion(-)\nd17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2\n",
+      "stdout_bytes": 169,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:28:24.300Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:28:24.050Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r61-win-tests-final-20261014-fd17d0cf"
+    },
+    "request_id": "r61-win-tests-final-20261014-fd17d0cf",
+    "started_at": "2026-10-13T20:28:19.890Z",
+    "status": "completed"
+  },
+  "id": "r61-win-tests-final-20261014-fd17d0cf",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
