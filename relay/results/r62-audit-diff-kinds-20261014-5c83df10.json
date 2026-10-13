@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$f='E:\\WebAIBridge\\app\\data\\projects-live-control-plane-cutover-r42-reconcile.json';if(-not(Test-Path -LiteralPath $f)){throw 'NO_AUDIT_EVIDENCE'};$a=Get-Content -LiteralPath $f -Raw -Encoding UTF8|ConvertFrom-Json;Write-Output ('DIFF_COUNT='+$a.diff.count);Write-Output ('CONFLICT_COUNT='+@($a.conflicts).Count);$idx=0;foreach($d in @($a.diff.diffs)){;  $idx++;$before=$d.before;$after=$d.after;$names=@(($before.PSObject.Properties.Name)+($after.PSObject.Properties.Name)|Sort-Object -Unique);  $changed=@($names|Where-Object {([string]($before.$_ | ConvertTo-Json -Compress -Depth 5)) -cne ([string]($after.$_ | ConvertTo-Json -Compress -Depth 5))});  Write-Output ('DIFF_'+$idx+'_FIELD_NAMES='+($changed -join ','));};Write-Output ('PROVIDER_MUTATION='+$a.providerMutationPerformed)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "DIFF_COUNT=6\r\nCONFLICT_COUNT=0\r\nDIFF_1_FIELD_NAMES=conversationFreshness,runtimeFreshness\r\nDIFF_2_FIELD_NAMES=conversationFreshness,runtimeFreshness\r\nDIFF_3_FIELD_NAMES=conversationFreshness,runtimeFreshness\r\nDIFF_4_FIELD_NAMES=conversationFreshness,runtimeFreshness\r\nDIFF_5_FIELD_NAMES=conversationFreshness,runtimeFreshness\r\nDIFF_6_FIELD_NAMES=conversationFreshness,runtimeFreshness\r\nPROVIDER_MUTATION=False\r\n",
+      "stdout_bytes": 411,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:20:29.280Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:20:29.018Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-audit-diff-kinds-20261014-5c83df10"
+    },
+    "request_id": "r62-audit-diff-kinds-20261014-5c83df10",
+    "started_at": "2026-10-13T21:20:28.077Z",
+    "status": "completed"
+  },
+  "id": "r62-audit-diff-kinds-20261014-5c83df10",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
