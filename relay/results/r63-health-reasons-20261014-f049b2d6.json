@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$h=Invoke-RestMethod 'http://127.0.0.1:17448/api/health' -TimeoutSec 7;Write-Output ('STATE='+$h.state);Write-Output ('REASONS='+(@($h.reasons)|ForEach-Object {[string]$_ -replace '[^a-zA-Z0-9_:\\-/.]','_'} -join ','}));Write-Output ('QUEUE='+($h.assignmentQueue|ConvertTo-Json -Compress -Depth 3));$s=Invoke-RestMethod 'http://127.0.0.1:17448/api/status' -TimeoutSec 7;Write-Output ('OPERATOR='+$s.operatorLifecycle.mode);Write-Output ('PAUSED='+$s.settings.paused)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "At line:1 char:246\r\n+ ... ject {[string]$_ -replace '[^a-zA-Z0-9_:\\-/.]','_'} -join ','}));Writ ...\r\n+                                                                  ~\r\nMissing closing ')' in expression.\r\nAt line:1 char:246\r\n+ ... ect {[string]$_ -replace '[^a-zA-Z0-9_:\\-/.]','_'} -join ','}));Write ...\r\n+                                                                 ~\r\nUnexpected token '}' in expression or statement.\r\nAt line:1 char:247\r\n+ ... ct {[string]$_ -replace '[^a-zA-Z0-9_:\\-/.]','_'} -join ','}));Write- ...\r\n+                                                                 ~\r\nUnexpected token ')' in expression or statement.\r\nAt line:1 char:248\r\n+ ... t {[string]$_ -replace '[^a-zA-Z0-9_:\\-/.]','_'} -join ','}));Write-O ...\r\n+                                                                 ~\r\nUnexpected token ')' in expression or statement.\r\n    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : MissingEndParenthesisInExpression\r\n \r\n",
+      "stderr_bytes": 1022,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:44:21.267Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:44:20.994Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-health-reasons-20261014-f049b2d6"
+    },
+    "request_id": "r63-health-reasons-20261014-f049b2d6",
+    "started_at": "2026-10-13T21:44:20.218Z",
+    "status": "completed"
+  },
+  "id": "r63-health-reasons-20261014-f049b2d6",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
