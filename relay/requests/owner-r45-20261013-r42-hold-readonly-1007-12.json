@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r45-20261013-r42-hold-readonly-1007-12",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "from pathlib import Path\nimport json\np=Path('E:/WebAIBridge/app/data/projects-live-control-plane-cutover-r42.json')\nif not p.is_file():print(json.dumps({'exists':False,'holdActive':None,'readOnly':True}))\nelse:\n d=json.loads(p.read_text(encoding='utf-8-sig'))\n print(json.dumps({'exists':True,'holdActive':d.get('holdActive'),'status':d.get('status'),'updatedAt':d.get('updatedAt'),'eventCount':len(d.get('events',[])),'readOnly':True}))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Exact source R49 R42 cutover HOLD state file boolean check, no mutations, no provider/browser access."
+}
