@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$u='http://127.0.0.1:17448';$before=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 5;if($before.cutoverState.holdActive -ne $true){throw 'HOLD_ALREADY_CHANGED_ABORT'};$result=Invoke-RestMethod -Uri ($u+'/api/projects/control-plane/cutover-r42/activate') -Method POST -ContentType 'application/json' -Body '{}' -TimeoutSec 12;Write-Output ('CONTRACT='+$result.object);Write-Output ('STATUS='+$result.status);Write-Output ('HOLD_RELEASED='+(-not $result.cutoverState.holdActive));Write-Output ('QUEUE_PAUSED='+$result.queuePaused);Write-Output ('WATCHDOG_NOT_STARTED='+($null -eq $result.watchdog));Write-Output ('NO_LAUNCHER='+($null -eq $result.launcherPid));Write-Output ('NO_CHAT_DELETION='+(-not $result.providerChatDeletionPerformed));$post=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 5;$op=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 5;Write-Output ('POST_STATUS='+$post.cutoverState.status);Write-Output ('POST_HOLD='+$post.cutoverState.holdActive);Write-Output ('POST_QUEUE_PAUSED='+$op.queuePaused);if($post.cutoverState.status -ne 'R63_HOLD_RELEASED_PAUSED' -or $post.cutoverState.holdActive -ne $false -or $op.queuePaused -ne $true){throw 'R63_RELEASE_READBACK_MISMATCH_RECONCILE'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Invoke-RestMethod : {\"error\":\"R62 recovery blocked: sticky_mode_not_proven\",\"code\":\"R62_ACTIVATION_PRECONDITION_FAILED\"\r\n}\r\nAt line:1 char:243\r\n+ ... T'};$result=Invoke-RestMethod -Uri ($u+'/api/projects/control-plane/c ...\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestMethod], WebExc \r\n   eption\r\n    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMethodCommand\r\n",
+      "stderr_bytes": 549,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:35:25.824Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:35:25.589Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-controlled-hold-release-20261014-ff3980d2"
+    },
+    "request_id": "r63-controlled-hold-release-20261014-ff3980d2",
+    "started_at": "2026-10-13T21:35:24.693Z",
+    "status": "completed"
+  },
+  "id": "r63-controlled-hold-release-20261014-ff3980d2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
