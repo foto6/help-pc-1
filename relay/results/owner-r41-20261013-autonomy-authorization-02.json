@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json\nbase='http://127.0.0.1:17448'\ndef get(route):\n with urllib.request.urlopen(base+route,timeout=4) as response:return json.load(response)\ns=get('/api/status')\nh=get('/api/health')\nc=get('/api/projects/control-plane/cutover-r42/status')\nsections={}\nfor k in ('agentAssignmentCutover','agentControlHealth','operatorLifecycle','operational','queue','agentAssignments'):\n raw=s.get(k)\n if isinstance(raw,dict):\n  kept={}\n  for name,val in raw.items():\n   if name in ('status','state','mode','queuePaused','reconciliationRequired','pendingUnknown','unknownEffectCount','pendingUnknownCount','blocked','queued','active','failed','holdActive','ready','paused','reason','reasonCode','healthState','dispatchInFlight','enabled','allowAutonomousSend','error','oldestQueuedAgeMs'):\n    if isinstance(val,(str,bool,int,float)) or val is None:kept[name]=val\n  sections[k]={'keys':list(raw)[:35],'flags':kept}\n  if k=='agentAssignments':\n   row=raw.get('counts')\n   if isinstance(row,dict):sections[k]['counts']=row\n else: sections[k]={'type':type(raw).__name__}\nprint(json.dumps({'status':sections,'health':{'state':h.get('state'),'reasons':h.get('reasons'),'queueDisposition':(h.get('queueSafety') or {}).get('queueDisposition')},'cutover':{'holdActive':c.get('cutoverState',{}).get('holdActive'),'original':{k:c.get('cutoverState',{}).get('originalAutonomy',{}).get(k) for k in ('enabled','mode','allowAutonomousSend','autoContinueEnabled')}},'readOnly':True},ensure_ascii=True)[:7200])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"status\": {\"agentAssignmentCutover\": {\"keys\": [\"version\", \"ranAt\", \"registrationBackfill\", \"legacyMigration\"], \"flags\": {}}, \"agentControlHealth\": {\"keys\": [\"version\", \"serverStartedAt\", \"codeReloadRequiresServerRestart\", \"workerRegistrations\"], \"flags\": {}}, \"operatorLifecycle\": {\"keys\": [\"contract\", \"mode\", \"revision\", \"changedAt\", \"changedBy\", \"reason\", \"previousMode\", \"queuePausedBeforeAll\", \"quiescence\", \"startup\", \"queuePaused\", \"profiles\"], \"flags\": {\"mode\": \"RUNNING_MANAGED\", \"reason\": \"Operator authorized browser/worker recovery only. Preserve paused queue and R42 reconcile hold pending independent verification.\", \"queuePaused\": true}}, \"operational\": {\"keys\": [\"version\", \"checkedAt\", \"startedAt\", \"state\", \"ok\", \"reasons\", \"eventLoop\", \"components\", \"dormantComponents\", \"componentStaleAfterMs\", \"maintenance\", \"assignmentQueue\", \"browserProbe\", \"supervisorConfig\", \"codeReload\", \"degraded\", \"blockers\", \"queueSafety\", \"operationalMode\", \"notices\"], \"flags\": {\"state\": \"PAUSED\"}}, \"queue\": {\"keys\": [\"paused\", \"tasks\", \"assignments\"], \"flags\": {\"paused\": true}}, \"agentAssignments\": {\"type\": \"list\"}}, \"health\": {\"state\": \"PAUSED\", \"reasons\": [], \"queueDisposition\": \"PAUSED_HOLD\"}, \"cutover\": {\"holdActive\": true, \"original\": {\"enabled\": false, \"mode\": \"off\", \"allowAutonomousSend\": false, \"autoContinueEnabled\": false}}, \"readOnly\": true}\r\n",
+      "stdout_bytes": 1362,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:14:36.410Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:14:36.177Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-autonomy-authorization-02"
+    },
+    "request_id": "owner-r41-20261013-autonomy-authorization-02",
+    "started_at": "2026-10-13T04:14:35.337Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-autonomy-authorization-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
