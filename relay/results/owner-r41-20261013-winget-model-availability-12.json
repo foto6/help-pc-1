@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json\ncmd=['winget','show','--id','Ollama.Ollama','--exact','--source','winget','--accept-source-agreements']\ntry:\n p=subprocess.run(cmd,capture_output=True,text=True,timeout=12)\n result={'available':p.returncode==0,'exit':p.returncode,'textTail':p.stdout[-1500:],'errorTail':p.stderr[-400:],'readOnly':True}\nexcept subprocess.TimeoutExpired:result={'available':False,'reason':'repository_read_timed_out','readOnly':True}\nprint(json.dumps(result,ensure_ascii=True)[:2300])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"available\": false, \"reason\": \"repository_read_timed_out\", \"readOnly\": true}\r\n",
+      "stdout_bytes": 79,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:29:39.661Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:29:39.394Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-winget-model-availability-12"
+    },
+    "request_id": "owner-r41-20261013-winget-model-availability-12",
+    "started_at": "2026-10-13T04:29:26.696Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-winget-model-availability-12",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
