@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-pc-relay-health-source-06",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "from pathlib import Path\nimport json\np=Path('E:/pc-github-relay/.pc-relay')\nnames=sorted([{'name':f.name,'file':f.is_file(),'size':f.stat().st_size if f.is_file() else None} for f in p.iterdir()],key=lambda x:x['name']) if p.is_dir() else []\nprint(json.dumps({'rootExists':p.is_dir(),'names':names[:70],'readOnly':True},ensure_ascii=True)[:4200])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only discover existing PC Control relay's health/status producer filenames, no contents/secrets, no mutation."
+}
