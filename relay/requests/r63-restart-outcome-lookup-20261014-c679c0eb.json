@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-restart-outcome-lookup-20261014-c679c0eb",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "r63-production-server-only-restart-20261014-0ad6c92e",
+    "action": "shell.run"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only original R63 Node-only restart durable action reconciliation; do not replay a potentially executed restart"
+}
