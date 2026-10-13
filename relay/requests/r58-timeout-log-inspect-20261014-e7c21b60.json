@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r58-timeout-log-inspect-20261014-e7c21b60",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R58-SHADOW'; $log=Join-Path $root 'R58_R50_R56_TESTS.log'; Write-Output ('LOG_EXISTS='+(Test-Path -LiteralPath $log -PathType Leaf)); if(Test-Path -LiteralPath $log -PathType Leaf){$f=Get-Item -LiteralPath $log; Write-Output ('LOG_BYTES='+$f.Length);Write-Output ('LOG_MODIFIED='+$f.LastWriteTimeUtc.ToString('o')); Write-Output 'LOG_TAIL_BEGIN'; Get-Content -LiteralPath $log -Tail 45; Write-Output 'LOG_TAIL_END'}; $ps=Get-CimInstance Win32_Process -Filter \"Name='node.exe'\" -ErrorAction SilentlyContinue; $ids=@($ps | Where-Object { $_.CommandLine -like '*WebAIBridge-R58-SHADOW*' } | Select-Object -ExpandProperty ProcessId); Write-Output ('ACTIVE_R58_NODE_PROCESSES='+$ids.Count); Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only reconciliation: inspect original R58 test logfile and active exact R58 child processes; NO retest/replay"
+}
