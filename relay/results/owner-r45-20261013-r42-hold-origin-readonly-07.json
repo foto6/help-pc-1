@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,pathlib\nf=pathlib.Path('E:/WebAIBridge/app/data/projects-live-control-plane-cutover-r42.json')\nd=json.loads(f.read_text('utf-8-sig'))\ndef safe(e):\n out={}\n for k in ('type','at','status','reason','lifecycleMode','queuePaused','holdActive','sourceSha','targetSha','blocker'):\n  if k in e:out[k]=str(e[k])[:180]\n return out\nresult={'status':d.get('status'),'holdActive':d.get('holdActive'),'updatedAt':d.get('updatedAt'),'originalOperatorLifecycleMode':d.get('originalOperatorLifecycleMode'),'originalQueuePaused':d.get('originalQueuePaused'),'originalAutonomyFlags':{k:v for k,v in (d.get('originalAutonomy') or {}).items() if k in ('mode','enabled','allowAutonomousSend','autoContinueEnabled','enforceHighMode','highModeStrategy')},'events':[safe(x) for x in d.get('events',[])][-12:],'readOnly':True}\nprint(json.dumps(result,ensure_ascii=True)[:4400])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"status\": \"CUTOVER_HOLD_PREPARED\", \"holdActive\": true, \"updatedAt\": \"2026-10-09T06:08:32.821Z\", \"originalOperatorLifecycleMode\": \"PAUSED_BROWSER\", \"originalQueuePaused\": true, \"originalAutonomyFlags\": {\"mode\": \"off\", \"enabled\": false, \"allowAutonomousSend\": false, \"enforceHighMode\": true, \"highModeStrategy\": \"verify_only\", \"autoContinueEnabled\": false}, \"events\": [{\"type\": \"cutover_hold_prepared\", \"at\": \"2026-10-08T08:24:28.4861661Z\"}, {\"type\": \"read_only_live_reconcile_persisted\", \"at\": \"2026-10-09T06:08:32.816Z\"}], \"readOnly\": true}\r\n",
+      "stdout_bytes": 543,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:00:14.204Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:00:13.989Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r45-20261013-r42-hold-origin-readonly-07"
+    },
+    "request_id": "owner-r45-20261013-r42-hold-origin-readonly-07",
+    "started_at": "2026-10-13T03:00:13.343Z",
+    "status": "completed"
+  },
+  "id": "owner-r45-20261013-r42-hold-origin-readonly-07",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
