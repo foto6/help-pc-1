@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $url='http://127.0.0.1:17448'; try{$r=Invoke-RestMethod -Uri ($url+'/api/health') -TimeoutSec 2;Write-Output ('BRIDGE_HTTP_OK=True');Write-Output ('BRIDGE_HEALTH='+$r.state)}catch{Write-Output 'BRIDGE_HTTP_OK=False'}; try{$r=Invoke-RestMethod -Uri ($url+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 2;Write-Output ('R42_HOLD='+$r.cutoverState.holdActive);Write-Output ('CUTOVER_STATUS='+$r.cutoverState.status)}catch{Write-Output 'CUTOVER_API_UNAVAILABLE'}; try{$r=Invoke-RestMethod -Uri ($url+'/api/operator-lifecycle') -TimeoutSec 2;Write-Output ('OP_MODE='+$r.mode);Write-Output ('QUEUE_PAUSED='+$r.queuePaused)}catch{Write-Output 'LIFECYCLE_API_UNAVAILABLE'}; Write-Output ('HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "BRIDGE_HTTP_OK=True\r\nBRIDGE_HEALTH=PAUSED\r\nR42_HOLD=True\r\nCUTOVER_STATUS=CUTOVER_HOLD_PREPARED\r\nOP_MODE=PAUSED_BROWSER\r\nQUEUE_PAUSED=True\r\nHEAD=d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2\r\n",
+      "stdout_bytes": 186,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:52:11.470Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:52:11.224Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-r61-post-switch-health-20261014-a269b30e"
+    },
+    "request_id": "r62-r61-post-switch-health-20261014-a269b30e",
+    "started_at": "2026-10-13T20:52:10.361Z",
+    "status": "completed"
+  },
+  "id": "r62-r61-post-switch-health-20261014-a269b30e",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
