@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-sticky-recovery-network-check-20261014-51ee4c23",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "netstat -ano -p tcp | findstr /C:\":17448\" & curl.exe --max-time 2 -s -o NUL -w \"HTTP_CODE=%{http_code}\" http://127.0.0.1:17448/api/health"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only reconcile unknown sticky server start: TCP listener + HTTP code only, no duplicate Start-Process"
+}
