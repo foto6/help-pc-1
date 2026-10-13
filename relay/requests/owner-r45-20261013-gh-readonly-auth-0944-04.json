@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r45-20261013-gh-readonly-auth-0944-04",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,json\nr=subprocess.run(['gh','api','repos/foto6/WebAIBridge/commits/6e7f6b1de49c7add74c81e6ec93c0096db7b3eb2','--jq','.sha'],capture_output=True,text=True,timeout=8);print(json.dumps({'ghReadAllowed':r.returncode==0,'exactCommit':r.stdout.strip() if r.returncode==0 else '', 'errorCode':r.returncode}))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only verify gh access to exact R45 SHA for isolated source kit; no credentials, browser, Git worktree, or provider modifications."
+}
