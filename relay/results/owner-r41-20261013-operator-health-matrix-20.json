@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json,pathlib\nBASE='http://127.0.0.1:17448'\nroutes={\n'health':'/api/health',\n'lifecycle':'/api/operator-lifecycle',\n'watchdog':'/api/supervisor-watchdog?detect=0',\n'cutover':'/api/projects/control-plane/cutover-r42/status',\n'status':'/api/status'}\nout={}\nfor key,route in routes.items():\n try:\n  with urllib.request.urlopen(BASE+route,timeout=5) as r:d=json.load(r)\n  top=sorted(d.keys()) if isinstance(d,dict) else []\n  s={'ok':True,'keys':top[:48]}\n  if key=='health':s.update({k:d.get(k) for k in ['state','reasons','blockers','codeReloadRequired','updatedAt'] if k in d})\n  if key=='lifecycle':\n   for k in ['mode','queuePaused','reconciliationRequired','reason','paused','state','contract','startup']: \n    if k in d:s[k]=d.get(k)\n  if key=='watchdog':\n   cfg=d.get('config') or {}\n   if isinstance(cfg,dict):s['config']={k:cfg.get(k) for k in ['enabled','mode','allowAutonomousSend','autoContinueEnabled','highModeStrategy','enforceHighMode'] if k in cfg}\n   for k in ['mode','enabled','allowAutonomousSend','queuePaused','reconciliationRequired']:\n    if k in d:s[k]=d.get(k)\n  if key=='cutover':\n   cv=d.get('cutoverState') or {}\n   if isinstance(cv,dict):s['cutoverState']={k:cv.get(k) for k in ['status','holdActive','updatedAt'] if k in cv}\n  out[key]=s\n except Exception as e:out[key]={'ok':False,'errorType':type(e).__name__}\nprint(json.dumps({'snapshot':out,'noSend':True},ensure_ascii=True)[:5600])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"snapshot\": {\"health\": {\"ok\": true, \"keys\": [\"assignmentQueue\", \"blockers\", \"browserProbe\", \"checkedAt\", \"codeReload\", \"componentStaleAfterMs\", \"components\", \"degraded\", \"dormantComponents\", \"eventLoop\", \"maintenance\", \"notices\", \"ok\", \"operationalMode\", \"queueSafety\", \"reasons\", \"startedAt\", \"state\", \"supervisorConfig\", \"version\"], \"state\": \"BLOCKED\", \"reasons\": [\"git_evidence:health_probe_stale\", \"timeline_io:health_probe_stale\", \"assignment_queue:oldest_queued_over_60s\"], \"blockers\": [\"assignment_queue:oldest_queued_over_60s\"]}, \"lifecycle\": {\"ok\": true, \"keys\": [\"changedAt\", \"changedBy\", \"contract\", \"mode\", \"previousMode\", \"profiles\", \"queuePaused\", \"queuePausedBeforeAll\", \"quiescence\", \"reason\", \"revision\", \"startup\"], \"mode\": \"RUNNING_MANAGED\", \"queuePaused\": false, \"reason\": \"Operator authorized browser/worker recovery only. Preserve paused queue and R42 reconcile hold pending independent verification.\", \"contract\": \"bridge.operator_lifecycle.r40.v1\", \"startup\": {\"mode\": \"RUNNING_MANAGED\", \"serverAllowed\": true, \"maintenanceAllowed\": true, \"taskDispatchAllowed\": true, \"browserAutostartAllowed\": true, \"workerAutostartAllowed\": true, \"reason\": \"RUNNING_MANAGED permits configured managed launch paths\"}}, \"watchdog\": {\"ok\": true, \"keys\": [\"capabilities\", \"config\", \"detection\", \"runtime\"], \"config\": {\"enabled\": false, \"mode\": \"off\", \"allowAutonomousSend\": false, \"autoContinueEnabled\": false, \"highModeStrategy\": \"verify_only\", \"enforceHighMode\": true}}, \"cutover\": {\"ok\": true, \"keys\": [\"autonomy\", \"currentBridgeConversationAuthority\", \"cutoverState\", \"object\", \"parent\", \"providerChatDeletionAutomatic\", \"rollbackContract\"], \"cutoverState\": {\"status\": \"CUTOVER_HOLD_PREPARED\", \"holdActive\": true, \"updatedAt\": \"2026-10-09T06:08:32.821Z\"}}, \"status\": {\"ok\": true, \"keys\": [\"agentAssignmentCutover\", \"agentAssignments\", \"agentControlHealth\", \"aiProfiles\", \"browser\", \"chats\", \"controlPlaneResponsive\", \"coordinator\", \"counts\", \"decisions\", \"e2eRuns\", \"events\", \"factCandidates\", \"facts\", \"generatedAt\", \"health\", \"imports\", \"loginSessions\", \"models\", \"ok\", \"operational\", \"operatorLifecycle\", \"outbox\", \"paths\", \"people\", \"queue\", \"serverStartedAt\", \"settings\", \"system\", \"tasks\", \"version\"]}}, \"noSend\": true}\r\n",
+      "stdout_bytes": 2238,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:57:30.247Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:57:30.031Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-operator-health-matrix-20"
+    },
+    "request_id": "owner-r41-20261013-operator-health-matrix-20",
+    "started_at": "2026-10-13T03:57:29.215Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-operator-health-matrix-20",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
