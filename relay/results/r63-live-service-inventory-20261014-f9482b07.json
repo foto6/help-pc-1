@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$root='E:\\WebAIBridge';$head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim();$dirty=@(& git.exe -C $root status --porcelain=v1 --untracked-files=no);$port=Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction Stop|Select-Object -First 1;$p=Get-CimInstance Win32_Process -Filter ('ProcessId='+$port.OwningProcess) -ErrorAction Stop;Write-Output ('BRIDGE_HEAD='+$head);Write-Output ('BRIDGE_TRACKED_DIRTY='+$dirty.Count);Write-Output ('BRIDGE_PID='+$p.ProcessId);Write-Output ('BRIDGE_PROCESS='+$p.Name);Write-Output ('BRIDGE_SERVERJS_CMDLINE='+([bool]($p.CommandLine -match 'server\\.js')));Write-Output ('BRIDGE_EXE_NODE='+($p.Name -eq 'node.exe'));$data='E:\\WebAIBridge\\app\\data';$files=@(Get-ChildItem -LiteralPath $data -File -Recurse -Force -ErrorAction SilentlyContinue);Write-Output ('DATA_FILES='+$files.Count);Write-Output ('DATA_MB='+[Math]::Round((($files|Measure-Object Length -Sum).Sum/1MB),2));$a=Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 5;Write-Output ('QUEUED='+@($a.assignments|Where-Object {$_.state -eq 'queued'}).Count);$c=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 5;Write-Output ('HOLD='+$c.cutoverState.holdActive)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "BRIDGE_HEAD=d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2\r\nBRIDGE_TRACKED_DIRTY=0\r\nBRIDGE_PID=28348\r\nBRIDGE_PROCESS=node.exe\r\nBRIDGE_SERVERJS_CMDLINE=True\r\nBRIDGE_EXE_NODE=True\r\nDATA_FILES=1088\r\nDATA_MB=295.78\r\nQUEUED=0\r\nHOLD=True\r\n",
+      "stdout_bytes": 227,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:26:00.929Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:26:00.668Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-live-service-inventory-20261014-f9482b07"
+    },
+    "request_id": "r63-live-service-inventory-20261014-f9482b07",
+    "started_at": "2026-10-13T21:25:58.074Z",
+    "status": "completed"
+  },
+  "id": "r63-live-service-inventory-20261014-f9482b07",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
