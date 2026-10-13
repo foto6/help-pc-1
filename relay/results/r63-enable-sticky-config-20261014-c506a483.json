@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$u='http://127.0.0.1:17448';$cut=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 5;$op=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 5;if($cut.cutoverState.holdActive -ne $true -or $op.queuePaused -ne $true){throw 'BRIDGE_NOT_HELD_AND_PAUSED'};$f='E:\\WebAIBridge\\app\\.env';$backup='E:\\WebAIBridge-R63-OPERATOR-BACKUP-20261014-v1';if(-not(Test-Path -LiteralPath $f -PathType Leaf) -or -not(Test-Path -LiteralPath (Join-Path $backup 'MANIFEST.json'))){throw 'MISSING_SOURCE_OR_BACKUP'};$marker=Join-Path $backup 'STICKY_ENV_APPEND_MANIFEST.json';if(Test-Path -LiteralPath $marker){throw 'NO_DUPLICATE_CONFIG_APPEND'};$key=@(Get-Content -LiteralPath $f -Encoding UTF8|Where-Object {$_ -match '^\\s*BRIDGE_EXISTING_TABS_ONLY\\s*='});if($key.Count -ne 0){throw 'STICKY_ALREADY_CONFIGURED'};$length=(Get-Item -LiteralPath $f).Length;$hash=(Get-FileHash -LiteralPath $f -Algorithm SHA256).Hash;$addition=[System.Text.Encoding]::UTF8.GetBytes(\"`r`nBRIDGE_EXISTING_TABS_ONLY=1`r`n\");$stream=[System.IO.File]::Open($f,[System.IO.FileMode]::Open,[System.IO.FileAccess]::ReadWrite,[System.IO.FileShare]::None);try{[void]$stream.Seek(0,[System.IO.SeekOrigin]::End);$stream.Write($addition,0,$addition.Length);$stream.Flush($true)}finally{$stream.Dispose()};$after=(Get-Item -LiteralPath $f).Length;if($after -ne $length+$addition.Length){throw 'STICKY_APPEND_SIZE_MISMATCH'};$present=@(Get-Content -LiteralPath $f -Encoding UTF8|Where-Object {$_ -match '^\\s*BRIDGE_EXISTING_TABS_ONLY\\s*=\\s*1\\s*$'});if($present.Count -ne 1){throw 'STICKY_APPEND_VALIDATION_FAILED'};$m=@{contract='bridge.r63.sticky_env_append.v1';atUtc=[DateTime]::UtcNow.ToString('o');path=$f;originalBytes=$length;originalSha256=$hash;appendBytes=$addition.Length;currentSha256=(Get-FileHash -LiteralPath $f -Algorithm SHA256).Hash;appendKey='BRIDGE_EXISTING_TABS_ONLY=1'};$m|ConvertTo-Json|Set-Content -LiteralPath $marker -Encoding UTF8;Write-Output ('STICKY_KEY_ENABLED_ON_NEXT_RESTART=True');Write-Output ('ORIGINAL_ENV_BYTES='+$length);Write-Output ('APPENDED_BYTES='+$addition.Length);Write-Output ('ROLLBACK_META='+$marker);Write-Output 'NO_SECRETS_READBACK_OR_PROVIDER_SEND'"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "STICKY_KEY_ENABLED_ON_NEXT_RESTART=True\r\nORIGINAL_ENV_BYTES=1946\r\nAPPENDED_BYTES=31\r\nROLLBACK_META=E:\\WebAIBridge-R63-OPERATOR-BACKUP-20261014-v1\\STICKY_ENV_APPEND_MANIFEST.json\r\nNO_SECRETS_READBACK_OR_PROVIDER_SEND\r\n",
+      "stdout_bytes": 217,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:37:49.007Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:37:48.771Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-enable-sticky-config-20261014-c506a483"
+    },
+    "request_id": "r63-enable-sticky-config-20261014-c506a483",
+    "started_at": "2026-10-13T21:37:47.770Z",
+    "status": "completed"
+  },
+  "id": "r63-enable-sticky-config-20261014-c506a483",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
