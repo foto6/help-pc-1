@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$f='E:\\PCControlR42-SHADOW\\R42_ALL_TESTS.log';Write-Output ('BYTES='+(Get-Item -LiteralPath $f).Length);Get-Content -LiteralPath $f -Tail 30"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "BYTES=9111\r\n        assert schema[\"$id\"] == \"pc_relay.cutover_candidate.v1\"\r\n        assert set(schema[\"required\"]) == {\r\n            \"contract\",\r\n            \"repository\",\r\n            \"branch\",\r\n            \"exact_start_sha\",\r\n            \"source_blobs\",\r\n            \"live_branch\",\r\n            \"health_contract\",\r\n            \"watchdog_contract\",\r\n            \"incident_fixture\",\r\n            \"autostart\",\r\n            \"reboot_recovery\",\r\n            \"rollback\",\r\n            \"logs\",\r\n            \"release_gate\",\r\n        }\r\n        for item in manifest[\"source_blobs\"].values():\r\n>           assert _git_blob_sha(item[\"path\"]) == item[\"git_blob_sha1\"], item[\"path\"]\r\nE           AssertionError: tools/github_relay.py\r\nE           assert '91d0997ce4b2...66e20a4aae446' == 'b87ef62c6e55...6343deacd4cb0'\r\nE             \r\nE             - b87ef62c6e55eb071e6180780f56343deacd4cb0\r\nE             + 91d0997ce4b253ddb9e62a7513766e20a4aae446\r\n\r\ntests\\test_relay_watchdog_cutover_candidate.py:218: AssertionError\r\n=========================== short test summary info ===========================\r\nFAILED tests/test_preflight.py::test_cross_repo_preflight_fixture_pack_and_manifest_are_exact\r\nFAILED tests/test_relay_watchdog_cutover_candidate.py::test_cutover_manifest_source_blobs_and_schema_are_exact\r\n2 failed, 230 passed in 9.30s\r\n",
+      "stdout_bytes": 1329,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:00:33.713Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:00:33.472Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-r42-fullpytest-summary-20261014-90d4b31c"
+    },
+    "request_id": "pc-r42-fullpytest-summary-20261014-90d4b31c",
+    "started_at": "2026-10-13T20:00:32.740Z",
+    "status": "completed"
+  },
+  "id": "pc-r42-fullpytest-summary-20261014-90d4b31c",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
