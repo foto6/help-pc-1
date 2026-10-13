@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $dst='E:\\PCControlR41-R61-VERIFY'; $expect='5d46ed23cfc72350663fe8adf66255f584f2ab1a'; if(Test-Path -LiteralPath $dst){throw 'ISOLATED_R41_EXISTS'}; & git.exe clone --depth 1 --single-branch --no-tags --branch agent/pc-autonomy-r41-native-supervisor-20261013 https://github.com/foto6/help-pc-2.git $dst; if($LASTEXITCODE -ne 0){throw 'R41_CLONE_FAILED'}; $got=((& git.exe -C $dst rev-parse HEAD)|Out-String).Trim(); if($got -ne $expect){throw 'R41_EXACT_SHA_DRIFT'}; $env:PC_R61_PACKAGE='E:\\PCControlAutonomyR61-SHADOW\\autonomy-r45-runner.js'; $env:PC_R61_SHA='d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2'; Push-Location $dst; try {& node.exe --input-type=module -e 'import {verifyR45Release} from \"./bin/pc-autonomy-daemon.js\"; const p=verifyR45Release({r45:{runner:process.env.PC_R61_PACKAGE,sha:process.env.PC_R61_SHA}});if(p!==process.env.PC_R61_PACKAGE)throw Error(\"PATH_MISMATCH\"); console.log(\"R61_MANIFEST_VERIFIED_NINE_FILES\");'; if($LASTEXITCODE -ne 0){throw 'R41_RELEASE_VERIFICATION_FAILED'}} finally {Pop-Location}; Write-Output ('R41_VERIFIER_HEAD='+$got); Write-Output ('R61_PACKAGE_SHA='+$env:PC_R61_SHA); Write-Output ('PROD_HASH='+(Get-FileHash 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Cloning into 'E:\\PCControlR41-R61-VERIFY'...\nfile:///E:/PCControlR41-R61-VERIFY/[eval1]:1\r\nimport {verifyR45Release} from ./bin/pc-autonomy-daemon.js; const p=verifyR45Release({r45:{runner:process.env.PC_R61_PACKAGE,sha:process.env.PC_R61_SHA}});if(p!==process.env.PC_R61_PACKAGE)throw Error(PATH_MISMATCH); console.log(R61_MANIFEST_VERIFIED_NINE_FILES);\r\n                               ^\r\n\r\nSyntaxError: Unexpected token '.'\r\n    at compileSourceTextModule (node:internal/modules/esm/utils:318:16)\r\n    at ModuleLoader.createModuleWrap (node:internal/modules/esm/loader:210:12)\r\n    at ModuleLoader.eval (node:internal/modules/esm/loader:248:23)\r\n    at node:internal/process/execution:77:24\r\n    at asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:11)\r\n    at Object.runEntryPointWithESMLoader (node:internal/modules/run_main:123:19)\r\n    at evalModuleEntryPoint (node:internal/process/execution:76:47)\r\n    at node:internal/main/eval_string:37:3\r\n\r\nNode.js v24.18.0\r\nR41_RELEASE_VERIFICATION_FAILED\r\nAt line:1 char:992\r\n+ ... ($LASTEXITCODE -ne 0){throw 'R41_RELEASE_VERIFICATION_FAILED'}} final ...\r\n+                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (R41_RELEASE_VERIFICATION_FAILED:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : R41_RELEASE_VERIFICATION_FAILED\r\n \r\n",
+      "stderr_bytes": 1369,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:31:14.165Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:31:13.928Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r61-r41-native-compat-20261014-7bf946c2"
+    },
+    "request_id": "r61-r41-native-compat-20261014-7bf946c2",
+    "started_at": "2026-10-13T20:31:10.401Z",
+    "status": "completed"
+  },
+  "id": "r61-r41-native-compat-20261014-7bf946c2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
