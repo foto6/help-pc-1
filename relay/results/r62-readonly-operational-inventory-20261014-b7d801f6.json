@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $src='E:\\WebAIBridge'; $h=((& git.exe -C $src rev-parse HEAD)|Out-String).Trim(); Write-Output ('GIT_HEAD='+$h); Write-Output ('TRACKED_CHANGES='+@(& git.exe -C $src status --porcelain=v1 --untracked-files=no).Count); Write-Output ('PROD_SERVER_SHA256='+(Get-FileHash -LiteralPath (Join-Path $src 'app\\server.js') -Algorithm SHA256).Hash); Write-Output ('BACKUP_EXISTS='+(Test-Path 'E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\MANIFEST.json')); Write-Output ('R61_SHADOW_EXISTS='+(Test-Path 'E:\\WebAIBridge-R61-SHADOW')); Write-Output ('R61_SUPERVISOR_SHADOW_EXISTS='+(Test-Path 'E:\\PCControlAutonomyR61-SHADOW')); $u='http://127.0.0.1:17448'; $hea=Invoke-RestMethod -Uri ($u+'/api/health') -Method Get -TimeoutSec 5; $cut=Invoke-RestMethod -Uri ($u+'/api/projects/control-plane/cutover-r42/status') -Method Get -TimeoutSec 5; $assign=Invoke-RestMethod -Uri ($u+'/api/supervisor-watchdog/agent-assignments') -Method Get -TimeoutSec 5; $a=@($assign.assignments); Write-Output ('BRIDGE_HEALTH='+$hea.state); Write-Output ('HEALTH_REASON_COUNT='+@($hea.reasons).Count); Write-Output ('R42_HOLD='+$cut.cutoverState.holdActive); Write-Output ('ASSIGNMENTS_TOTAL='+$a.Count); foreach($s in @('queued','dispatching','running','awaiting_evidence','completed','blocked','failed','cancelled','unknown')){Write-Output ('COUNT_'+$s.ToUpper()+'='+@($a|Where-Object {$_.state -eq $s}).Count)}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "GIT_HEAD=5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\r\nTRACKED_CHANGES=6\r\nPROD_SERVER_SHA256=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\nBACKUP_EXISTS=True\r\nR61_SHADOW_EXISTS=True\r\nR61_SUPERVISOR_SHADOW_EXISTS=True\r\nBRIDGE_HEALTH=PAUSED\r\nHEALTH_REASON_COUNT=0\r\nR42_HOLD=True\r\nASSIGNMENTS_TOTAL=69\r\nCOUNT_QUEUED=1\r\nCOUNT_DISPATCHING=0\r\nCOUNT_RUNNING=0\r\nCOUNT_AWAITING_EVIDENCE=0\r\nCOUNT_COMPLETED=10\r\nCOUNT_BLOCKED=35\r\nCOUNT_FAILED=12\r\nCOUNT_CANCELLED=11\r\nCOUNT_UNKNOWN=0\r\n",
+      "stdout_bytes": 489,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:39:21.369Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:39:21.132Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-readonly-operational-inventory-20261014-b7d801f6"
+    },
+    "request_id": "r62-readonly-operational-inventory-20261014-b7d801f6",
+    "started_at": "2026-10-13T20:39:20.034Z",
+    "status": "completed"
+  },
+  "id": "r62-readonly-operational-inventory-20261014-b7d801f6",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
