@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-preserve-untracked-r50-20261014-d51ac47e",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $repo='E:\\WebAIBridge'; $file='app/autonomous-send-gate-r50.js'; $source=Join-Path $repo $file; $backup='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\files\\app\\autonomous-send-gate-r50.js'; $branch='preserve/owner-six-hotfixes-r62-20261014'; $expected='5853a5a8dd0677c1d8ea2a23e16c98d85f6d5592'; $blob='4b1fb7ba970ce03fff025a4a240a18334ad42546'; $head=((& git.exe -C $repo rev-parse HEAD)|Out-String).Trim(); if($head -ne $expected){throw 'PRODUCTION_PRESERVATION_HEAD_CHANGED'}; $actual=((& git.exe -C $repo hash-object --no-filters -- $source)|Out-String).Trim(); if($actual -ne $blob){throw 'R50_SOURCE_BLOB_DRIFT'}; $list=@(& git.exe -C $repo status --porcelain=v1 --untracked-files=all); if($list.Count -ne 1 -or $list[0] -ne ('?? '+$file)){throw 'UNEXPECTED_DIRTY_WORKTREE'}; if(Test-Path -LiteralPath $backup){throw 'BACKUP_R50_ALREADY_EXISTS_STOP'}; Copy-Item -LiteralPath $source -Destination $backup -ErrorAction Stop; if((Get-FileHash -LiteralPath $source -Algorithm SHA256).Hash -ne (Get-FileHash -LiteralPath $backup -Algorithm SHA256).Hash){throw 'R50_BACKUP_MISMATCH'}; & git.exe -C $repo add -- $file; if($LASTEXITCODE -ne 0){throw 'R50_STAGE_FAILED'}; & git.exe -C $repo -c 'user.name=PC Control local preservation' -c 'user.email=pc-control@users.noreply.github.com' -c 'commit.gpgsign=false' commit -m 'Local-only preserve original R50 exact source blob before R61 cutover' *> $null; if($LASTEXITCODE -ne 0){throw 'R50_LOCAL_COMMIT_FAILED'}; Write-Output ('LOCAL_FINAL_HEAD='+((& git.exe -C $repo rev-parse HEAD)|Out-String).Trim()); Write-Output ('STATUS_ENTRIES='+@(& git.exe -C $repo status --porcelain=v1 --untracked-files=all).Count); Write-Output ('PRODUCTION_SHA256='+(Get-FileHash -LiteralPath (Join-Path $repo 'app\\server.js') -Algorithm SHA256).Hash); Write-Output 'LOCAL_R50_BLOB_IDENTICAL_TO_R61_AND_BACKED_UP'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Owner authorized: backup only exact single untracked R50 JS blob proven same as R61 GitHub; commit it locally on existing preservation branch, do not edit content or publish to remote"
+}
