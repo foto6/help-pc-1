@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-canary-dryrun-summary-20261014-c22e7a91",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$f='E:\\WebAIBridge-R63-OPERATOR-BACKUP-20261014-v1\\R63_CANARY_DRYRUN.json';if(-not(Test-Path -LiteralPath $f -PathType Leaf)){throw 'DRYRUN_MISSING'};$o=Get-Content -LiteralPath $f -Raw -Encoding UTF8|ConvertFrom-Json;$r=@($o.rows);Write-Output ('DRY_RUN='+$o.dryRun);Write-Output ('SEND_ATTEMPTED='+$o.sendAttempted);Write-Output ('REPLACEMENT_ATTEMPTED='+$o.replacementAttempted);Write-Output ('AUTO_CONTINUE='+$o.autoContinueEnabled);Write-Output ('CODING_CHATS='+$r.Count);Write-Output ('PREFLIGHT_ALLOWED='+@($r|Where-Object{$_.preflightAllowed -eq $true}).Count);Write-Output ('WOULD_DISPATCH='+@($r|Where-Object{$_.wouldDispatch -eq $true}).Count);for($i=0;$i -lt $r.Count;$i++){$x=$r[$i];Write-Output ('CANDIDATE_'+($i+1)+'_READY='+$x.preflightAllowed+',reason='+$x.preflightReason+',tabs='+$x.openTabs+',selected='+$x.schedulerSelected+',wouldDispatch='+$x.wouldDispatch)}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13000,
+  "note": "Print only preflight codes and readiness booleans of saved local safe dry-run; no chat identities, message text, credentials or sends"
+}
