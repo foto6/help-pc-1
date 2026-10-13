@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r50-20261013-held-drift-reconcile-24",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json,subprocess,pathlib,hashlib\nB='http://127.0.0.1:17448'\ndef get(p):\n try:\n  with urllib.request.urlopen(B+p,timeout=6) as f:return json.load(f)\n except Exception as e:return {'error':type(e).__name__}\nh=get('/api/health');op=get('/api/operator-lifecycle');cv=get('/api/projects/control-plane/cutover-r42/status');a=get('/api/supervisor-watchdog/agent-assignments');s=get('/api/supervisor-watchdog?detect=0');w=(s.get('config') or {})\nt=a.get('assignments',[])\nqt=[x for x in t if x.get('state')=='queued']\nactive=[x for x in t if x.get('state') in ('dispatching','running','awaiting_evidence')]\ndef bh(p):\n x=p.read_bytes();return hashlib.sha1(b'blob '+str(len(x)).encode()+bytes([0])+x).hexdigest()\np=pathlib.Path('E:/WebAIBridge/app/server.js')\nout={'healthState':h.get('state'),'healthReasons':h.get('reasons'),'healthError':h.get('error'),'queuePaused':op.get('queuePaused'),'lifecycleMode':op.get('mode'),'operatorError':op.get('error'),'r42Hold':cv.get('cutoverState',{}).get('holdActive'),'r42Status':cv.get('cutoverState',{}).get('status'),'r42Error':cv.get('error'),'autonomyMode':w.get('mode'),'autonomyEnabled':w.get('enabled'),'allowAutonomousSend':w.get('allowAutonomousSend'),'queuedCount':len(qt),'queued':[{k:x.get(k) for k in ('id','targetChatId','state','dispatchSubmitAttempted','dispatchCount')} for x in qt[:4]],'activeCount':len(active),'active':[{k:x.get(k) for k in ('id','targetChatId','state','dispatchSubmitAttempted')} for x in active[:3]],'serverBlob':bh(p),'r50PatchFilePresent':pathlib.Path('E:/WebAIBridge/app/autonomous-send-gate-r50.js').is_file(),'readOnly':True}\nprint(json.dumps(out,ensure_ascii=True)[:3700])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 31000,
+  "note": "Immediately reconcile guard drift after aborted exact-PID hotrestart; no restart happened, source files R50 staged. Read only health, operator, HOLD, supervisor, exact queued IDs and local source hash. Do not send/replay."
+}
