@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json\ntry:\n with urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments',timeout=4) as r:d=json.load(r)\n q=[x for x in d.get('assignments',[]) if x.get('id')=='bd455cb4-a1e8-4b77-845f-abdbe17ae476']\n keys=('id','state','createdAt','updatedAt','queuedAt','queueTimelinePending','queueTimelineRecordedAt','queueTimelineError','dispatchCount','dispatchSubmitAttempted','dispatchFailureCode','lastPreflightAt','lastPreflightReason','projectId','resourceClass','expectedHead','targetChatId','targetProfileId')\n print(json.dumps({'matchCount':len(q),'record':{k:q[0].get(k) for k in keys} if q else None,'readOnly':True},ensure_ascii=True))\nexcept Exception as e:print(json.dumps({'error':type(e).__name__}))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"matchCount\": 1, \"record\": {\"id\": \"bd455cb4-a1e8-4b77-845f-abdbe17ae476\", \"state\": \"queued\", \"createdAt\": \"2026-10-12T17:58:15.950Z\", \"updatedAt\": \"2026-10-13T02:46:50.519Z\", \"queuedAt\": \"2026-10-12T17:58:15.950Z\", \"queueTimelinePending\": false, \"queueTimelineRecordedAt\": \"\", \"queueTimelineError\": \"\", \"dispatchCount\": 0, \"dispatchSubmitAttempted\": false, \"dispatchFailureCode\": \"\", \"lastPreflightAt\": \"2026-10-13T02:46:50.519Z\", \"lastPreflightReason\": \"ready\", \"projectId\": \"\", \"resourceClass\": \"cpu\", \"expectedHead\": \"773b42f59018a2e55834b87275796486d686e4f6\", \"targetChatId\": \"tg-curator-owner\", \"targetProfileId\": \"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\"}, \"readOnly\": true}\r\n",
+      "stdout_bytes": 680,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T02:46:53.647Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T02:46:53.414Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r45-20261013-curator-queue-flags-1005-11"
+    },
+    "request_id": "owner-r45-20261013-curator-queue-flags-1005-11",
+    "started_at": "2026-10-13T02:46:52.760Z",
+    "status": "completed"
+  },
+  "id": "owner-r45-20261013-curator-queue-flags-1005-11",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
