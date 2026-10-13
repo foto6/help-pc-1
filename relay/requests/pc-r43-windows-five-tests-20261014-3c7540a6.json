@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-r43-windows-five-tests-20261014-3c7540a6",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $root='E:\\PCControlR43-SHADOW'; $log='E:\\PCControlR43_TESTS.log'; $got=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($got -ne 'a55cb8fb61e7e0c8b99fd13fe5310ad4c6dee65f'){throw 'R43_SHA_DRIFT'}; if(Test-Path -LiteralPath $log){throw 'R43_TEST_LOG_ALREADY_EXISTS'}; $env:PYTHONPATH='src'; Push-Location -LiteralPath $root; try{& py.exe -3 -m pytest tests\\test_shell_pipe_drain.py *> $log;$rc=$LASTEXITCODE}finally{Pop-Location}; Write-Output ('PYTEST_EXIT='+$rc); Write-Output ('PYTEST_LOG_BYTES='+(Get-Item -LiteralPath $log).Length); Get-Content -LiteralPath $log -Tail 7; if($rc -ne 0){exit $rc}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 21000,
+  "note": "Run isolated exact-head R43 pytest five bounded original-executor-timeout cleanup regressions on Windows, no live relay changes, log only in E:\\PCControlR43-SHADOW"
+}
