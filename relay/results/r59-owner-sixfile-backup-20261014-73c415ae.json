@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $src='E:\\WebAIBridge'; $dest='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1'; $expected='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03'; $files=@('app/ensure-supervisor-watchdog.ps1','app/r42-cutover.ps1','app/r42-json-encoding.test.ps1','app/r42-rollback.ps1','app/server.js','app/start.ps1'); if(Test-Path -LiteralPath $dest){throw 'BACKUP_ALREADY_EXISTS'}; $head=((& git.exe -C $src rev-parse HEAD)|Out-String).Trim(); if($head -ne $expected){throw 'PRODUCTION_HEAD_DRIFT'}; $changes=@(& git.exe -C $src diff --name-only --no-ext-diff); if(@($changes).Count -ne $files.Count -or @($changes|Where-Object {$files -notcontains $_}).Count -ne 0){throw 'MODIFIED_FILE_LIST_DRIFT'}; $staged=@(& git.exe -C $src diff --cached --name-only); if(@($staged).Count -ne 0){throw 'UNBACKED_STAGED_CHANGES'}; New-Item -ItemType Directory -Path $dest -ErrorAction Stop|Out-Null; $list=@(); foreach($rel in $files){$file=Join-Path $src $rel;$t=Join-Path (Join-Path $dest 'files') $rel;New-Item -ItemType Directory -Path (Split-Path -Parent $t) -Force|Out-Null;$hash=(Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash;Copy-Item -LiteralPath $file -Destination $t -ErrorAction Stop; $copy=(Get-FileHash -LiteralPath $t -Algorithm SHA256).Hash; if($hash -ne $copy){throw ('BACKUP_COPY_HASH_MISMATCH '+$rel)}; $list+=@{path=$rel;sha256=$hash;bytes=(Get-Item -LiteralPath $t).Length}}; $cmd='git.exe -C '+$src+' diff --binary -- '+($files -join ' ')+' > '+(Join-Path $dest 'tracked-local-changes.patch'); & cmd.exe /d /c $cmd; if($LASTEXITCODE -ne 0){throw 'BACKUP_PATCH_FAILED'}; $manifest=@{contract='bridge.r59.local_sixfile_backup.v1';atUtc=[DateTime]::UtcNow.ToString('o');productionHead=$expected;files=$list;patchBytes=(Get-Item -LiteralPath (Join-Path $dest 'tracked-local-changes.patch')).Length}; $manifest|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $dest 'MANIFEST.json') -Encoding UTF8; Write-Output ('BACKUP_READY_FILES='+$list.Count); Write-Output ('BACKUP_PATCH_BYTES='+$manifest.patchBytes); Write-Output ('BACKUP_MANIFEST='+ (Join-Path $dest 'MANIFEST.json')); Write-Output ('PRODUCTION_SERVER_SHA256='+(Get-FileHash -LiteralPath (Join-Path $src 'app\\server.js') -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "warning: in the working copy of 'app/ensure-supervisor-watchdog.ps1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/r42-cutover.ps1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/r42-json-encoding.test.ps1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/r42-rollback.ps1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/start.ps1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/ensure-supervisor-watchdog.ps1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/r42-cutover.ps1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/r42-json-encoding.test.ps1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/r42-rollback.ps1', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/start.ps1', LF will be replaced by CRLF the next time Git touches it\n",
+      "stderr_bytes": 1162,
+      "stderr_truncated": false,
+      "stdout": "BACKUP_READY_FILES=6\r\nBACKUP_PATCH_BYTES=9078\r\nBACKUP_MANIFEST=E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\MANIFEST.json\r\nPRODUCTION_SERVER_SHA256=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 213,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:04:23.384Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:04:23.063Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r59-owner-sixfile-backup-20261014-73c415ae"
+    },
+    "request_id": "r59-owner-sixfile-backup-20261014-73c415ae",
+    "started_at": "2026-10-13T20:04:21.597Z",
+    "status": "completed"
+  },
+  "id": "r59-owner-sixfile-backup-20261014-73c415ae",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
