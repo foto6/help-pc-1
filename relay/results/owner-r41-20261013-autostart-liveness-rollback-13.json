@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import os,json,pathlib,subprocess\nR=pathlib.Path('E:/PCControlAutonomyR41')\nJ=R/'data/pc-control-supervisor.json'\nentry=pathlib.Path(os.environ['APPDATA'])/'Microsoft/Windows/Start Menu/Programs/Startup/PCControl_R41_Observer.cmd'\nowner=json.loads((R/'WATCHER_R41.json').read_text('utf8')) if (R/'WATCHER_R41.json').exists() else {}\njournal=json.loads(J.read_text('utf8')) if J.exists() else {}\npid=owner.get('pid')\nps=\"\"\"$p=Get-CimInstance Win32_Process -Filter 'ProcessId = %s' -ErrorAction SilentlyContinue; if ($null -ne $p) { [pscustomobject]@{pid=$p.ProcessId; executable=$p.Name; matches=($p.CommandLine -like '*PCControlAutonomyR41*pc-autonomy-daemon.js*' -and $p.CommandLine -like '*--watch*')} | ConvertTo-Json -Compress }\"\"\"%(pid or 0)\nr=subprocess.run(['powershell.exe','-NoProfile','-Command',ps],capture_output=True,text=True,timeout=8)\nv=json.loads(r.stdout) if r.returncode==0 and r.stdout.strip() else None\nprint(json.dumps({'startupEntry':entry.is_file(),'startupContentReadOnly':entry.read_text(encoding='utf8').strip()[:180] if entry.is_file() else '', 'ownerPid':pid,'process':v,'journalRevision':journal.get('revision'),'lastCycle':journal.get('lastCycle'),'decision':journal.get('lastDecision'),'logPresent':(R/'logs/observer.live.log').is_file(),'sendEnabled':False,'readOnly':True},ensure_ascii=True)[:4000])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"startupEntry\": true, \"startupContentReadOnly\": \"@echo off\\n\\ncall \\\"E:\\\\PCControlAutonomyR41\\\\START_R41_OBSERVER.cmd\\\"\", \"ownerPid\": 21436, \"process\": {\"pid\": 21436, \"executable\": \"node.exe\", \"matches\": true}, \"journalRevision\": 5, \"lastCycle\": \"2026-10-13T03:31:23.080Z\", \"decision\": {\"admitted\": false, \"blocks\": [\"observer_mode\", \"operator_approval_missing\", \"bridge_unhealthy\", \"bridge_health_reasons_present\", \"r42_cutover_hold\", \"operator_reconciliation_unknown\", \"autonomous_send_disabled\"], \"status\": \"READ_ONLY\", \"dispatched\": 0, \"probeError\": null}, \"logPresent\": true, \"sendEnabled\": false, \"readOnly\": true}\r\n",
+      "stdout_bytes": 623,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:31:40.839Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:31:40.485Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-autostart-liveness-rollback-13"
+    },
+    "request_id": "owner-r41-20261013-autostart-liveness-rollback-13",
+    "started_at": "2026-10-13T03:31:39.204Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-autostart-liveness-rollback-13",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
