@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-managed-profiles-census-20261014-7bc8ff41",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $u='http://127.0.0.1:17448/api/ai-profiles'; $r=Invoke-RestMethod -Uri $u -TimeoutSec 4; $a=@($r.aiProfiles); Write-Output ('PROFILE_TOTAL='+$a.Count); Write-Output ('CHATGPT_PROFILES='+@($a|Where-Object {$_.provider -eq 'chatgpt'}).Count); Write-Output ('ENABLED='+@($a|Where-Object {$_.enabled -ne $false}).Count); Write-Output ('CHROME_ONLINE='+@($a|Where-Object {$_.chromeConnected -eq $true -or $_.browserOnline -eq $true -or $_.chromeOnline -eq $true}).Count); Write-Output ('DEBUG_PORTS='+@($a|Where-Object {$_.debugPort -gt 0}).Count); Write-Output ('ATTACH_MODES='+@($a|Where-Object {$_.chromeLaunchMode -eq 'attach'}).Count); Write-Output ('CHROME_MODE_KEYS='+((@($a)|Select-Object -First 1|Get-Member -MemberType NoteProperty|Select-Object -ExpandProperty Name|Where-Object {$_ -match '(?i)chrome|online|debugPort|provider|worker|enabled|mode'}) -join ','))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 11000,
+  "note": "Read only aggregate existing Chrome profile launch modes/online indicators to avoid any new browser on R42 activation; no URLs/IDs/content"
+}
