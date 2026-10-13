@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-autostart-liveness-rollback-13",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,json,pathlib,subprocess\nR=pathlib.Path('E:/PCControlAutonomyR41')\nJ=R/'data/pc-control-supervisor.json'\nentry=pathlib.Path(os.environ['APPDATA'])/'Microsoft/Windows/Start Menu/Programs/Startup/PCControl_R41_Observer.cmd'\nowner=json.loads((R/'WATCHER_R41.json').read_text('utf8')) if (R/'WATCHER_R41.json').exists() else {}\njournal=json.loads(J.read_text('utf8')) if J.exists() else {}\npid=owner.get('pid')\nps=\"\"\"$p=Get-CimInstance Win32_Process -Filter 'ProcessId = %s' -ErrorAction SilentlyContinue; if ($null -ne $p) { [pscustomobject]@{pid=$p.ProcessId; executable=$p.Name; matches=($p.CommandLine -like '*PCControlAutonomyR41*pc-autonomy-daemon.js*' -and $p.CommandLine -like '*--watch*')} | ConvertTo-Json -Compress }\"\"\"%(pid or 0)\nr=subprocess.run(['powershell.exe','-NoProfile','-Command',ps],capture_output=True,text=True,timeout=8)\nv=json.loads(r.stdout) if r.returncode==0 and r.stdout.strip() else None\nprint(json.dumps({'startupEntry':entry.is_file(),'startupContentReadOnly':entry.read_text(encoding='utf8').strip()[:180] if entry.is_file() else '', 'ownerPid':pid,'process':v,'journalRevision':journal.get('revision'),'lastCycle':journal.get('lastCycle'),'decision':journal.get('lastDecision'),'logPresent':(R/'logs/observer.live.log').is_file(),'sendEnabled':False,'readOnly':True},ensure_ascii=True)[:4000])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only evidence of autostart + exact PC Control R41 observer PID/command line/journal multiple cycles. No Send, no changes."
+}
