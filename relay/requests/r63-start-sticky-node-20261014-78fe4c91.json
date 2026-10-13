@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-start-sticky-node-20261014-78fe4c91",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$root='E:\\WebAIBridge';$sha=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim();if($sha -ne '01e5db790f50b5eb42588b8942f3dd1de4f0a6bf'){throw 'HEAD_DRIFT'};$listener=Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction SilentlyContinue|Select-Object -First 1;if($listener){Write-Output ('SERVER_ALREADY_LISTENING_PID='+$listener.OwningProcess);exit 0};$dir='E:\\WebAIBridge-R63-OPERATOR-BACKUP-20261014-v1';if(-not(Test-Path -LiteralPath (Join-Path $dir 'STICKY_ENV_APPEND_MANIFEST.json'))){throw 'STICKY_CONFIG_NOT_PINNED'};$script=Join-Path $root 'app\\server.js';$p=Start-Process -FilePath 'C:\\Program Files\\nodejs\\node.exe' -ArgumentList ('\"'+$script+'\"') -WorkingDirectory (Join-Path $root 'app') -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $dir 'r63-sticky-node.stdout.log') -RedirectStandardError (Join-Path $dir 'r63-sticky-node.stderr.log') -ErrorAction Stop;Write-Output ('STARTED_R63_STICKY_NODE_PID='+$p.Id);Write-Output 'CHROME_NOT_LAUNCHED'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Start only R63 Node server with audited local BRIDGE_EXISTING_TABS_ONLY=1 .env after confirmed PID 24272 stopped; if listener exists do not duplicate; never call start.ps1 or open Chrome"
+}
