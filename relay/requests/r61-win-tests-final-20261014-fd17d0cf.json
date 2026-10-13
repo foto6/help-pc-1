@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r61-win-tests-final-20261014-fd17d0cf",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "cd /d E:\\WebAIBridge-R61-SHADOW && git.exe fetch --no-tags --depth=10 origin agent/bridge-r61-failclosed-dispatch-inspection-20261014 && git.exe merge --ff-only FETCH_HEAD && git.exe rev-parse HEAD && cd app && node.exe --check autonomy-r45-runner.js && node.exe --check autonomy-r45-core.js && node.exe --test --test-reporter=tap autonomy-r45.test.js autonomy-r45-brain.test.js autonomy-r45-git-gate.test.js autonomy-r45-lock.test.js autonomy-r45-review.test.js autonomy-r57-gpt-git.test.js autonomy-r57-successor.test.js autonomous-send-gate-r50.test.js existing-tab-session-r55.test.js existing-tab-session-r56-cdp.test.js r56-worker-sticky.test.js r56-r42-hold-failclosed.test.js r56-launch-preservation.test.js r56-sticky-readonly-preflight.test.js r34-sticky-chat-exact-id.test.js r58-shadow-rehearsal-contract.test.js > E:\\WebAIBridge-R61-SHADOW\\R61_FINAL_TESTS.log 2>&1"
+    ],
+    "cwd": "E:\\WebAIBridge-R61-SHADOW"
+  },
+  "timeout_ms": 38000,
+  "note": "FF-only exact isolated R61 branch update and full 16-file Windows tests with output redirected, no provider send/production mutation"
+}
