@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$f='E:\\WebAIBridge-R59-SHADOW\\R59_TESTS.log';Write-Output ('EXISTS='+(Test-Path -LiteralPath $f));if(Test-Path -LiteralPath $f){Write-Output ('BYTES='+(Get-Item -LiteralPath $f).Length);Get-Content -LiteralPath $f -Tail 20};Write-Output ('HEAD='+((& git.exe -C 'E:\\WebAIBridge-R59-SHADOW' rev-parse HEAD)|Out-String).Trim())"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "EXISTS=True\r\nBYTES=28182\r\nok 136 - R58 shadow evidence never claims authority to dispatch or promote\r\n  ---\r\n  duration_ms: 0.2613\r\n  type: 'test'\r\n  ...\r\n# Subtest: R58 shadow runs all guarded tests, not an unattended npm installation\r\nok 137 - R58 shadow runs all guarded tests, not an unattended npm installation\r\n  ---\r\n  duration_ms: 0.4073\r\n  type: 'test'\r\n  ...\r\n1..137\r\n# tests 137\r\n# suites 0\r\n# pass 137\r\n# fail 0\r\n# cancelled 0\r\n# skipped 0\r\n# todo 0\r\n# duration_ms 775.9738\r\nHEAD=c7ef06be94e8ada0119c226628a08c2c6d052ea4\r\n",
+      "stdout_bytes": 534,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T19:57:50.916Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T19:57:50.692Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r59-summary-ps-20261014-d8be5df1"
+    },
+    "request_id": "r59-summary-ps-20261014-d8be5df1",
+    "started_at": "2026-10-13T19:57:49.939Z",
+    "status": "completed"
+  },
+  "id": "r59-summary-ps-20261014-d8be5df1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
