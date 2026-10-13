@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,subprocess,shutil\nout={'ollamaInstalled':bool(shutil.which('ollama')),'readOnly':True}\nfor p in ('http://127.0.0.1:11434/api/tags','http://127.0.0.1:11434/api/ps'):\n try:\n  with urllib.request.urlopen(p,timeout=3) as x:d=json.load(x)\n  if p.endswith('/tags'):out['installedModels']=[str(x.get('name',''))[:80] for x in d.get('models',[])][:12]\n  else:out['loadedModels']=[str(x.get('name',''))[:80] for x in d.get('models',[])][:12]\n except Exception as e:out['error_'+p.rsplit('/',1)[-1]]=type(e).__name__\nprint(json.dumps(out,ensure_ascii=True)[:2600])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ollamaInstalled\": false, \"readOnly\": true, \"error_tags\": \"URLError\", \"error_ps\": \"URLError\"}\r\n",
+      "stdout_bytes": 96,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:15:28.484Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:15:28.190Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-local-ai-availability-03"
+    },
+    "request_id": "owner-r41-20261013-local-ai-availability-03",
+    "started_at": "2026-10-13T04:15:23.331Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-local-ai-availability-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
