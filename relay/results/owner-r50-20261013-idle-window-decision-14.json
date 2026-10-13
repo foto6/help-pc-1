@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json,subprocess,pathlib\nBASE='http://127.0.0.1:17448'\ndef get(route):\n with urllib.request.urlopen(BASE+route,timeout=9) as f:return json.load(f)\nc=get('/api/supervisor-watchdog/managed-chats?inspect=1')\nh=get('/api/health');q=get('/api/supervisor-watchdog/agent-assignments')\nhold=get('/api/projects/control-plane/cutover-r42/status')\nrows=[{'id':x.get('id'),'status':x.get('status'),'generating':x.get('generating'),'draft':x.get('draftPresent'),'open':x.get('openTabs'),'high':x.get('highMode')} for x in c.get('chats',[])]\nactive=[x.get('id') for x in q.get('assignments',[]) if x.get('state') in ('dispatching','running','awaiting_evidence')]\nallQuiet=all(not x['generating'] and not x['draft'] for x in rows)\nprint(json.dumps({'allChatTabsQuiet':allQuiet,'rows':rows,'assignmentActive':active,'r49':h.get('state'),'queueDisposition':(h.get('queueSafety') or {}).get('queueDisposition'),'r42Hold':hold.get('cutoverState',{}).get('holdActive'),'safeToHotRestart':allQuiet and not active and h.get('state')=='PAUSED' and hold.get('cutoverState',{}).get('holdActive') is True,'readOnly':True},ensure_ascii=True)[:3100])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"allChatTabsQuiet\": false, \"rows\": [{\"id\": \"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\", \"status\": \"idle\", \"generating\": false, \"draft\": false, \"open\": 1, \"high\": true}, {\"id\": \"agent-media\", \"status\": \"idle\", \"generating\": false, \"draft\": false, \"open\": 1, \"high\": true}, {\"id\": \"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\", \"status\": \"idle\", \"generating\": false, \"draft\": false, \"open\": 1, \"high\": true}, {\"id\": \"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\", \"status\": \"closed\", \"generating\": false, \"draft\": false, \"open\": 0, \"high\": false}, {\"id\": \"agent-pc-control\", \"status\": \"stalled\", \"generating\": true, \"draft\": false, \"open\": 1, \"high\": true}, {\"id\": \"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\", \"status\": \"idle\", \"generating\": false, \"draft\": false, \"open\": 1, \"high\": true}, {\"id\": \"tg-curator-owner\", \"status\": \"idle\", \"generating\": false, \"draft\": false, \"open\": 1, \"high\": true}], \"assignmentActive\": [], \"r49\": \"PAUSED\", \"queueDisposition\": \"PAUSED_HOLD\", \"r42Hold\": true, \"safeToHotRestart\": false, \"readOnly\": true}\r\n",
+      "stdout_bytes": 1033,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:31:55.022Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:31:54.776Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r50-20261013-idle-window-decision-14"
+    },
+    "request_id": "owner-r50-20261013-idle-window-decision-14",
+    "started_at": "2026-10-13T04:31:53.970Z",
+    "status": "completed"
+  },
+  "id": "owner-r50-20261013-idle-window-decision-14",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
