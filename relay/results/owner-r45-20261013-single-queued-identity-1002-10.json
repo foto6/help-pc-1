@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json\ntry:\n with urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments',timeout=4) as r:d=json.load(r)\n q=[{'id':x.get('id'),'state':x.get('state'),'idempotencyKey':x.get('idempotencyKey'),'managedChatId':x.get('targetChatId'),'createdAt':x.get('createdAt'),'dispatchSubmitAttempted':x.get('dispatchSubmitAttempted'),'repo':x.get('repository'),'branch':x.get('branch')} for x in d.get('assignments',[]) if x.get('state')=='queued']\n print(json.dumps({'success':True,'count':len(d.get('assignments',[])),'queued':q[:4],'noTextCaptured':True},ensure_ascii=True))\nexcept Exception as e:print(json.dumps({'success':False,'error':type(e).__name__}))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"success\": true, \"count\": 69, \"queued\": [{\"id\": \"bd455cb4-a1e8-4b77-845f-abdbe17ae476\", \"state\": \"queued\", \"idempotencyKey\": \"telegram-curator-902724262\", \"managedChatId\": \"tg-curator-owner\", \"createdAt\": \"2026-10-12T17:58:15.950Z\", \"dispatchSubmitAttempted\": false, \"repo\": \"foto6/boss\", \"branch\": \"agent/telegram-curator-authority-20261012\"}], \"noTextCaptured\": true}\r\n",
+      "stdout_bytes": 372,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T02:45:39.697Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T02:45:39.486Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r45-20261013-single-queued-identity-1002-10"
+    },
+    "request_id": "owner-r45-20261013-single-queued-identity-1002-10",
+    "started_at": "2026-10-13T02:45:38.770Z",
+    "status": "completed"
+  },
+  "id": "owner-r45-20261013-single-queued-identity-1002-10",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
