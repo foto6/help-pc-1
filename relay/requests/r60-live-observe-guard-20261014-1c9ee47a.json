@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r60-live-observe-guard-20261014-1c9ee47a",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $health=Invoke-RestMethod -Uri ($u+'/api/health') -Method Get -TimeoutSec 5; $cut=Invoke-RestMethod -Uri ($u+'/api/projects/control-plane/cutover-r42/status') -Method Get -TimeoutSec 5; $op=Invoke-RestMethod -Uri ($u+'/api/operator-lifecycle') -Method Get -TimeoutSec 5; $assign=Invoke-RestMethod -Uri ($u+'/api/supervisor-watchdog/agent-assignments') -Method Get -TimeoutSec 5; $a=@($assign.assignments); $q=@($a|Where-Object {$_.state -eq 'queued'}); Write-Output ('HEALTH_STATE='+$health.state); Write-Output ('HEALTH_REASON_COUNT='+@($health.reasons).Count); Write-Output ('QUEUE_PAUSED='+$op.queuePaused); Write-Output ('OPERATOR_MODE='+$op.mode); Write-Output ('R42_HOLD='+$cut.cutoverState.holdActive); Write-Output ('ASSIGNMENT_COUNT='+$a.Count); Write-Output ('QUEUED_COUNT='+$q.Count); Write-Output ('QUEUED_ZERO_SEND='+(@($q|Where-Object {$_.dispatchSubmitAttempted -eq $false -and [int]$_.dispatchCount -eq 0}).Count)); Write-Output ('ACTIVE_COUNT='+(@($a|Where-Object {$_.state -in @('dispatching','running','awaiting_evidence')}).Count)); Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22000,
+  "note": "Read-only sanitized local Bridge health/R42 hold/operator queue and assignments safety counters; no IDs, chat content, credentials or mutations"
+}
