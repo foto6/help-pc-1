@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r50-20261013-stalled-target-preflight-15",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,importlib.util,subprocess,os\nB='http://127.0.0.1:17448'\ndef get(route,t=6):\n with urllib.request.urlopen(B+route,timeout=t) as r:return json.load(r)\nrows=get('/api/supervisor-watchdog/managed-chats?inspect=1',16).get('chats',[])\np=next((x for x in rows if x.get('id')=='agent-pc-control'),{})\nprofiles=get('/api/ai-profiles').get('aiProfiles',[])\ndef clean(x,fields):return {k:x.get(k) for k in fields if k in x}\nport=17410\ntry:\n with urllib.request.urlopen(f'http://127.0.0.1:{port}/json/list',timeout=3) as r:tabs=json.load(r)\nexcept Exception:tabs=[]\nmatch=[clean(x,['id','url','title','type']) for x in tabs if str(p.get('url','')) and x.get('url')==p.get('url')]\nprint(json.dumps({'pcChat':clean(p,['id','name','status','url','generating','draftPresent','openTabs','highMode','profileWorkerConnected','lastObservedAt','activeAssignmentCount']),'matches':match,'tabCount':len(tabs),'websocketClientInstalled':importlib.util.find_spec('websocket') is not None,'websocketsInstalled':importlib.util.find_spec('websockets') is not None,'heldQueue':get('/api/operator-lifecycle').get('queuePaused'),'r42Hold':get('/api/projects/control-plane/cutover-r42/status').get('cutoverState',{}).get('holdActive'),'readonly':True},ensure_ascii=True)[:4900])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 27000,
+  "note": "Read only exact stalled pc-control managed chat URL and CDP debugger target, no text read, no browser navigation, no Send."
+}
