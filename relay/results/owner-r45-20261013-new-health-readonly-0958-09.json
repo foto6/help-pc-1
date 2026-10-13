@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json,pathlib\nsha='b2b6e468050d929abc9e1d364c27d831a0ea89e6';base=pathlib.Path('E:/WebAIBridge/app/data/operator-tools/r45-durable-autonomy');release=base/'releases'/sha\ncmd=['node','autonomy-r45-runner.js','--plan',str(release/'autonomy-r45-plan.example.json'),'--state',str(base/'data'/'read-only-diagnostics.state.json'),'--once']\ntry:\n r=subprocess.run(cmd,cwd=release,capture_output=True,text=True,timeout=18)\n output=json.loads(r.stdout.strip().splitlines()[-1]) if r.returncode==0 else {}\n print(json.dumps({'exitCode':r.returncode,'status':output.get('status'),'bridge':output.get('bridge'),'dispatched':output.get('dispatched'),'source':sha,'sent':False,'monitorStarted':False,'error':r.stderr[-300:]},ensure_ascii=True))\nexcept subprocess.TimeoutExpired:print(json.dumps({'error':'bounded_read_only_timeout','sent':False}))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"exitCode\": 0, \"status\": \"READ_ONLY\", \"bridge\": {\"health\": \"BLOCKED\", \"reasons\": [\"git_evidence:health_probe_stale\", \"timeline_io:health_probe_stale\", \"assignment_queue:oldest_queued_over_60s\"], \"assignmentCount\": 69, \"assignmentStates\": {\"cancelled\": 11, \"blocked\": 35, \"failed\": 12, \"completed\": 10, \"queued\": 1}, \"queue\": {\"active\": 0, \"queued\": 1, \"oldestQueuedAgeMs\": 31560321}, \"codeReloadRequired\": false}, \"dispatched\": [], \"source\": \"b2b6e468050d929abc9e1d364c27d831a0ea89e6\", \"sent\": false, \"monitorStarted\": false, \"error\": \"\"}\r\n",
+      "stdout_bytes": 541,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T02:44:16.602Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T02:44:16.360Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r45-20261013-new-health-readonly-0958-09"
+    },
+    "request_id": "owner-r45-20261013-new-health-readonly-0958-09",
+    "started_at": "2026-10-13T02:44:15.537Z",
+    "status": "completed"
+  },
+  "id": "owner-r45-20261013-new-health-readonly-0958-09",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
