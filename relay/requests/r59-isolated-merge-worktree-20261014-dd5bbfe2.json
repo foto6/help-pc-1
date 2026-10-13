@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r59-isolated-merge-worktree-20261014-dd5bbfe2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $dest='E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014'; $old='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03'; $new='c7ef06be94e8ada0119c226628a08c2c6d052ea4'; $patch='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\tracked-local-changes.patch'; if(Test-Path -LiteralPath $dest){throw 'REFUSE_EXISTING_MERGE_CANDIDATE'}; & git.exe clone --depth 1 --single-branch --no-tags --branch agent/bridge-r59-autonomy-release-gates-20261014 https://github.com/foto6/WebAIBridge.git $dest; if($LASTEXITCODE -ne 0){throw 'CANDIDATE_CLONE_FAILED'}; $got=((& git.exe -C $dest rev-parse HEAD)|Out-String).Trim(); if($got -ne $new){throw 'CANDIDATE_HEAD_DRIFT'}; & git.exe -C $dest fetch --no-tags --depth 1 origin $old; if($LASTEXITCODE -ne 0){throw 'BASE_FETCH_FAILED'}; $ErrorActionPreference='Continue'; & git.exe -C $dest apply --3way $patch 2>&1 | ForEach-Object { Write-Output ('APPLY='+($_ -replace '[^\\x20-\\x7E]','')) }; Write-Output ('APPLY_EXIT='+$LASTEXITCODE); $unmerged=@(& git.exe -C $dest diff --name-only --diff-filter=U); Write-Output ('UNMERGED_FILES='+($unmerged -join ',')); $stat=@(& git.exe -C $dest status --short --untracked-files=no); Write-Output ('TRACKED_STATUS_LINES='+$stat.Count); Write-Output ('PRODUCTION_SERVER_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 70000,
+  "note": "Prepare NEW isolated R59 vs owner's 6-file hotfix three-way merge with conflict markers only in new candidate checkout. No production/writeback to old shadows, no ChatGPT actions"
+}
