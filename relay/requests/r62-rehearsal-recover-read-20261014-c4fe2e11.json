@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-rehearsal-recover-read-20261014-c4fe2e11",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$dest='E:\\WebAIBridge-R62-CUTOVER-DRYRUN'; Write-Output ('DRYRUN_DIR_EXISTS='+(Test-Path -LiteralPath $dest -PathType Container)); if(Test-Path -LiteralPath (Join-Path $dest '.git')){Write-Output ('GIT_HEAD='+((& git.exe -C $dest rev-parse HEAD 2>$null)|Out-String).Trim());Write-Output ('R42_SCRIPT_EXISTS='+(Test-Path -LiteralPath (Join-Path $dest 'app\\r42-cutover.ps1')));Write-Output ('GIT_WORKTREE_CHANGE_COUNT='+@(& git.exe -C $dest status --porcelain=v1 --untracked-files=no).Count)}; Write-Output ('PRODUCTION_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 11000,
+  "note": "Read-only reconcile previous isolated git clone command that returned PowerShell NativeCommandError; no replay"
+}
