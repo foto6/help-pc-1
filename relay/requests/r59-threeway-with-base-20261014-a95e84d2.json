@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r59-threeway-with-base-20261014-a95e84d2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "cd /d E:\\WebAIBridge-R59-SHADOW && git.exe apply --3way --check E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\tracked-local-changes.patch"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Read-only exact-blob three-way merge feasibility check after fetching original R49 base into isolated R59; no patch application"
+}
