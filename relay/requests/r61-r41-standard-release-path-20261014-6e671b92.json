@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r61-r41-standard-release-path-20261014-6e671b92",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\PCControlAutonomyR61-SHADOW'; $to=Join-Path $root 'r45-durable-autonomy\\releases\\r61'; if(Test-Path -LiteralPath $to){throw 'REFUSE_EXISTING_RELEASE'}; $manifest=Get-Content -LiteralPath (Join-Path $root 'MANIFEST.json') -Raw | ConvertFrom-Json; if($manifest.exactSha -ne 'd17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2' -or $manifest.deployment -ne 'SHADOW_ONLY'){throw 'RELEASE_MANIFEST_DRIFT'}; New-Item -ItemType Directory -Path $to -Force|Out-Null; $list=@($manifest.files.PSObject.Properties.Name); foreach($name in $list){Copy-Item -LiteralPath (Join-Path $root $name) -Destination (Join-Path $to $name) -ErrorAction Stop}; Copy-Item -LiteralPath (Join-Path $root 'MANIFEST.json') -Destination (Join-Path $to 'MANIFEST.json') -ErrorAction Stop; Write-Output ('R61_STANDARD_RELEASE='+$to); Write-Output ('COPIED_MODULES='+$list.Count); Write-Output ('PROD_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Copy only SHA-pinned R61 module release to standard R41 SHADOW_ONLY deployment directory; no existing config or live watcher touched"
+}
