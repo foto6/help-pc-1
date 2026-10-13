@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-r43-test-read-20261014-1a9e6f24",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $root='E:\\PCControlR43-SHADOW'; $f='E:\\PCControlR43_TESTS.log'; Write-Output ('SHADOW_EXISTS='+(Test-Path -LiteralPath (Join-Path $root 'src\\pc_executor\\shell.py') -PathType Leaf)); Write-Output ('SHADOW_HEAD='+((& git.exe -C $root rev-parse HEAD)|Out-String).Trim()); Write-Output ('TEST_LOG_EXISTS='+(Test-Path -LiteralPath $f -PathType Leaf)); if(Test-Path -LiteralPath $f){Get-Content -LiteralPath $f -Tail 12}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only verify isolated R43 exact HEAD and focused Windows pytest summary, no app changes"
+}
