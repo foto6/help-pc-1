@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,json,subprocess,shutil,datetime\nR=pathlib.Path('E:/PCControlAutonomyR41')\nSHA='506f9a951f9b782e27b0d886e441b6747095e3fc'\nSOURCE=R/'releases'/SHA\nCFG=R/'config.r41-integrated.json'\nTASK='PCControl-R41-Observer'\nif not SOURCE.is_dir() or not CFG.is_file():raise RuntimeError('R41_INSTALL_MISSING')\nc=json.loads(CFG.read_text('utf8'))\nplan=json.loads(pathlib.Path(c['r45']['plan']).read_text('utf8'))\nif c.get('mode')!='observe' or c.get('operatorApproved') is not False or plan.get('allowDispatch') is not False:raise RuntimeError('R41_CONFIG_NOT_READ_ONLY')\nif (R/'START_R41_OBSERVER.cmd').exists() or (R/'STOP_R41_OBSERVER.cmd').exists():raise RuntimeError('R41_LAUNCHER_ALREADY_PRESENT')\ncheck=subprocess.run(['schtasks.exe','/Query','/TN',TASK],capture_output=True,text=True,timeout=7)\nif check.returncode==0:raise RuntimeError('R41_SCHEDULED_TASK_ALREADY_EXISTS')\nnode=shutil.which('node')\nif not node:raise RuntimeError('NODE_NOT_INSTALLED')\n(R/'logs').mkdir(exist_ok=True)\nlines=['@echo off','setlocal','cd /d \"'+str(SOURCE)+'\"','\"'+node+'\" \"'+str(SOURCE/'bin/pc-autonomy-daemon.js')+'\" --config \"'+str(CFG)+'\" --watch >> \"'+str(R/'logs/observer.stdout.log')+'\" 2>&1','exit /b %errorlevel%']\nstart=R/'START_R41_OBSERVER.cmd';stop=R/'STOP_R41_OBSERVER.cmd'\nwith start.open('x',encoding='utf8') as f:f.write('\\r\\n'.join(lines)+'\\r\\n')\nwith stop.open('x',encoding='utf8') as f:f.write('@echo off\\r\\nschtasks.exe /End /TN \"'+TASK+'\"\\r\\nschtasks.exe /Delete /TN \"'+TASK+'\" /F\\r\\n')\ncmd='cmd.exe /d /c \"'+str(start)+'\"'\ncreated=subprocess.run(['schtasks.exe','/Create','/SC','ONLOGON','/TN',TASK,'/TR',cmd,'/RL','LIMITED'],capture_output=True,text=True,timeout=12)\nmeta={'status':'REGISTERED' if created.returncode==0 else 'FAILED','task':TASK,'readOnly':True,'source':SHA,'createdAt':datetime.datetime.now().isoformat(),'sendEnabled':False,'noExistingTasksModified':True}\n(R/'AUTOSTART_R41.json').write_text(json.dumps(meta,indent=2),encoding='utf8')\nprint(json.dumps({'registered':created.returncode==0,'task':TASK,'returncode':created.returncode,'nodePresent':True,'startScript':str(start),'rollbackScript':str(stop),'message':(created.stdout+created.stderr)[-380:],'newProviderMessages':0,'productionModified':False,'notStartedYet':True},ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"registered\": false, \"task\": \"PCControl-R41-Observer\", \"returncode\": 1, \"nodePresent\": true, \"startScript\": \"E:\\\\PCControlAutonomyR41\\\\START_R41_OBSERVER.cmd\", \"rollbackScript\": \"E:\\\\PCControlAutonomyR41\\\\STOP_R41_OBSERVER.cmd\", \"message\": \"ERROR: Access is denied.\\n\\n\", \"newProviderMessages\": 0, \"productionModified\": false, \"notStartedYet\": true}\r\n",
+      "stdout_bytes": 352,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:28:12.327Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:28:12.085Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-readonly-autostart-install-11"
+    },
+    "request_id": "owner-r41-20261013-readonly-autostart-install-11",
+    "started_at": "2026-10-13T03:28:11.233Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-readonly-autostart-install-11",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
