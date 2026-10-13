@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-queue-provenance-readonly-20261014-b71f248a",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $b='http://127.0.0.1:17448'; $assign=Invoke-RestMethod ($b+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 5; $a=@($assign.assignments); $q=@($a | Where-Object {$_.state -eq 'queued'}); $risk=@($a | Where-Object {$_.state -in @('unknown','dispatching','running','awaiting_evidence')}); Write-Output ('QUEUED_COUNT='+$q.Count); Write-Output ('UNCERTAIN_OR_ACTIVE_COUNT='+$risk.Count); foreach($x in $q){Write-Output ('QUEUED_ID_DIGEST='+([Convert]::ToHexString([Security.Cryptography.SHA256]::HashData([Text.Encoding]::UTF8.GetBytes([string]$x.id))).Substring(0,16)));Write-Output ('QUEUED_ATTEMPTED='+$x.dispatchSubmitAttempted);Write-Output ('QUEUED_DISPATCHCOUNT='+$x.dispatchCount);Write-Output ('QUEUED_HAS_CI='+([bool]$x.ciRunId));Write-Output ('QUEUED_AGENT_BOUND='+([bool]$x.targetChatId))}; Write-Output ('LIVE_BRIDGE_PROCESS_COUNT='+(@(Get-CimInstance Win32_Process -Filter \"Name='node.exe'\" -ErrorAction SilentlyContinue|Where-Object{$_.CommandLine -match 'WebAIBridge.{0,150}server\\.js'}).Count))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only hashed queued original id and provenance risk counts, no raw chat ids/messages and no dispatch"
+}
