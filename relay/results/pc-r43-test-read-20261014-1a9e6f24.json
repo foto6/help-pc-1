@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $root='E:\\PCControlR43-SHADOW'; $f='E:\\PCControlR43_TESTS.log'; Write-Output ('SHADOW_EXISTS='+(Test-Path -LiteralPath (Join-Path $root 'src\\pc_executor\\shell.py') -PathType Leaf)); Write-Output ('SHADOW_HEAD='+((& git.exe -C $root rev-parse HEAD)|Out-String).Trim()); Write-Output ('TEST_LOG_EXISTS='+(Test-Path -LiteralPath $f -PathType Leaf)); if(Test-Path -LiteralPath $f){Get-Content -LiteralPath $f -Tail 12}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "fatal: cannot change to 'E:\\PCControlR43-SHADOW': No such file or directory\n",
+      "stderr_bytes": 76,
+      "stderr_truncated": false,
+      "stdout": "SHADOW_EXISTS=False\r\nSHADOW_HEAD=\r\nTEST_LOG_EXISTS=False\r\n",
+      "stdout_bytes": 58,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:05:56.259Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:05:56.028Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-r43-test-read-20261014-1a9e6f24"
+    },
+    "request_id": "pc-r43-test-read-20261014-1a9e6f24",
+    "started_at": "2026-10-13T21:05:55.252Z",
+    "status": "completed"
+  },
+  "id": "pc-r43-test-read-20261014-1a9e6f24",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
