@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,subprocess,json,shutil,datetime,time,os\nR=pathlib.Path('E:/PCControlAutonomyR41')\nOLD='506f9a951f9b782e27b0d886e441b6747095e3fc'\nNEW='6f03a58c7c29adfbb8dbe936274d147f45404418'\nold=R/'releases'/OLD/'bin/pc-autonomy-daemon.js'\nnew=R/'releases'/NEW/'bin/pc-autonomy-daemon.js'\ncfg=R/'config.r41-integrated.json'\nstarter=R/'START_R41_OBSERVER.cmd'\nstopper=R/'STOP_R41_USER_OBSERVER.ps1'\nownerFile=R/'WATCHER_R41.json'\njournal=R/'data/pc-control-supervisor.json'\nif not old.is_file() or not new.is_file() or not cfg.is_file():raise RuntimeError('SOURCE_FILES_NOT_PRESENT')\nmanifest=json.loads((new.parent.parent/'MANIFEST.json').read_text('utf8'))\nconfig=json.loads(cfg.read_text('utf8'));state=json.loads(journal.read_text('utf8'))\nowner=json.loads(ownerFile.read_text('utf8'))\nif manifest.get('sha')!=NEW or manifest.get('tests')!='PASS':raise RuntimeError('NEW_RELEASE_NOT_VERIFIED')\nif config.get('mode')!='observe' or config.get('operatorApproved') is not False or state.get('pendingUnknown'):raise RuntimeError('UNAUTHORIZED_OPERATOR_STATE')\nstartText=starter.read_text('utf8');stopText=stopper.read_text('utf8')\nif str(old) not in startText or str(old) not in stopText or '--dispatch' in startText:raise RuntimeError('EXACT_OLD_STARTER_BINDING_MISMATCH')\npid=owner.get('pid')\nps=\"\"\"$p=Get-CimInstance Win32_Process -Filter 'ProcessId = %s' -ErrorAction Stop; if ($null -eq $p -or $p.Name -ine 'node.exe' -or $p.CommandLine -notlike '*PCControlAutonomyR41*pc-autonomy-daemon.js*' -or $p.CommandLine -notlike '*--watch*' -or $p.CommandLine -like '*--dispatch*') {throw 'OLD_OBSERVER_IDENTITY_CHANGED'}; Stop-Process -Id $p.ProcessId -Force -ErrorAction Stop; Write-Output 'STOPPED_VERIFIED_OBSERVER'\"\"\"%pid\nb=R/'backups'/'r41-fenced-observer-switch-20261013'\nif b.exists():raise RuntimeError('BACKUP_ALREADY_EXISTS_NO_OVERWRITE')\nb.mkdir(parents=True)\nshutil.copy2(starter,b/'START_R41_OBSERVER.cmd')\nshutil.copy2(stopper,b/'STOP_R41_USER_OBSERVER.ps1')\nshutil.copy2(ownerFile,b/'WATCHER_R41.json')\noldRev=state.get('revision')\ndone=subprocess.run(['powershell.exe','-NoProfile','-Command',ps],capture_output=True,text=True,timeout=10)\nif done.returncode:raise RuntimeError('OLD_OBSERVER_STOP_FAILED_'+done.stderr[-250:])\nlog=R/'logs/observer.live.log'\nfd=log.open('a',encoding='utf8')\nflags=subprocess.DETACHED_PROCESS|subprocess.CREATE_NEW_PROCESS_GROUP\np=subprocess.Popen(['node.exe',str(new),'--config',str(cfg),'--watch'],cwd=str(new.parent.parent),creationflags=flags,stdin=subprocess.DEVNULL,stdout=fd,stderr=fd,close_fds=True)\nfd.close()\ntime.sleep(2.8)\nhealthy=p.poll() is None\nnextState=json.loads(journal.read_text('utf8')) if journal.is_file() else {}\nif not healthy or int(nextState.get('revision') or 0)<=int(oldRev or 0) or nextState.get('lastDecision',{}).get('status')!='READ_ONLY':\n print(json.dumps({'status':'R41_SWITCH_NOT_CONFIRMED','newPid':p.pid,'running':healthy,'prevRevision':oldRev,'newRevision':nextState.get('revision'),'startupUnchanged':True,'backupPath':str(b),'manualReconciliationRequired':True},ensure_ascii=True))\n raise SystemExit(2)\nstartNew=startText.replace(str(old),str(new))\nstopNew=stopText.replace(str(old),str(new))\nif '--dispatch' in startNew or '--dispatch' in stopNew:raise RuntimeError('REPLACEMENT_UNSAFE')\ntmp=R/'START_R41_OBSERVER.cmd.tmp-r41'\nwith tmp.open('x',encoding='utf8') as f:f.write(startNew)\ntmp.replace(starter)\nstmp=R/'STOP_R41_USER_OBSERVER.ps1.tmp-r41'\nwith stmp.open('x',encoding='utf8') as f:f.write(stopNew)\nstmp.replace(stopper)\nowner['pid']=p.pid;owner['source']=NEW;owner['runningAtInstall']=True;owner['switchedAt']=datetime.datetime.now().isoformat()\nwtmp=R/'WATCHER_R41.json.tmp-r41'\nwith wtmp.open('x',encoding='utf8') as f:json.dump(owner,f,indent=2)\nwtmp.replace(ownerFile)\nprint(json.dumps({'status':'R41_FENCED_OBSERVER_SWITCH_PASS','oldPid':pid,'newPid':p.pid,'oldRevision':oldRev,'newRevision':nextState.get('revision'),'newObserverStatus':nextState.get('lastDecision',{}).get('status'),'sha':NEW,'startupUpdated':True,'stopControlUpdated':True,'backupPath':str(b),'noSend':True,'productionUntouched':True},ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\r\n  File \"<string>\", line 44, in <module>\r\n    if '--dispatch' in startNew or '--dispatch' in stopNew:raise RuntimeError('REPLACEMENT_UNSAFE')\r\n                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nRuntimeError: REPLACEMENT_UNSAFE\r\n",
+      "stderr_bytes": 313,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:38:42.117Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:38:41.893Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-fenced-observer-switch-17"
+    },
+    "request_id": "owner-r41-20261013-fenced-observer-switch-17",
+    "started_at": "2026-10-13T03:38:38.091Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-fenced-observer-switch-17",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
