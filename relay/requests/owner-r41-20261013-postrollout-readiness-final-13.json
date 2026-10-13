@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-postrollout-readiness-final-13",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import pathlib,json,urllib.request,subprocess,os\nroot=pathlib.Path('E:/PCControlAutonomyR41')\nowner=json.loads((root/'WATCHER_R41.json').read_text('utf8'))\nj=json.loads((root/'data/pc-control-supervisor.json').read_text('utf8'))\nlock=root/'data/pc-control-supervisor.json.watcher.lock/owner.json'\nl=json.loads(lock.read_text('utf8')) if lock.is_file() else {}\nq=\"\"\"$x=@(Get-CimInstance Win32_Process | Where-Object {$_.Name -ieq 'node.exe' -and $_.CommandLine -like '*PCControlAutonomyR41*pc-autonomy-daemon.js*'} | Select-Object ProcessId,CommandLine);$x|ConvertTo-Json -Compress\"\"\"\np=subprocess.run(['powershell.exe','-NoProfile','-Command',q],capture_output=True,text=True,timeout=8)\nrows=json.loads(p.stdout) if p.returncode==0 and p.stdout.strip() else []\nif isinstance(rows,dict):rows=[rows]\ndef get(route):\n try:\n  with urllib.request.urlopen('http://127.0.0.1:17448'+route,timeout=5) as x:return json.load(x)\n except Exception as e:return {'error':type(e).__name__}\nhealth=get('/api/health');op=get('/api/operator-lifecycle');cut=get('/api/projects/control-plane/cutover-r42/status');queue=get('/api/supervisor-watchdog/agent-assignments')\nqueued=[x for x in queue.get('assignments',[]) if x.get('state')=='queued']\nprint(json.dumps({'release':owner.get('source'),'ownerPid':owner.get('pid'),'leasePid':l.get('pid'),'exactProcessCount':len(rows),'watcherPids':[x.get('ProcessId') for x in rows],'noDispatchFlags':all('--dispatch' not in str(x.get('CommandLine','')) for x in rows),'revision':j.get('revision'),'lastCycle':j.get('lastCycle'),'lastStatus':j.get('lastDecision',{}).get('status'),'lastDispatched':j.get('lastDecision',{}).get('dispatched'),'newUnknownCount':len(j.get('pendingUnknown',[])),'r49Health':health.get('state'),'r49Reasons':health.get('reasons'),'queuePaused':op.get('queuePaused'),'r42Hold':cut.get('cutoverState',{}).get('holdActive'),'queuedCount':len(queued),'curatorStillQueuedOnce':len(queued)==1 and queued[0].get('targetChatId')=='tg-curator-owner' and queued[0].get('dispatchSubmitAttempted')==False,'readonly':True},ensure_ascii=True)[:3400])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22000,
+  "note": "Final R41 true process/lease/revision and R49 post-hold queued Curator intact sanity proof only, no mutation or provider sends."
+}
