@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-reconcile-unsent-one-20261014-3e7c2ff8",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$u='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments';$cut=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 5;if($cut.cutoverState.holdActive -ne $true){throw 'R42_HOLD_NOT_ACTIVE'};$a=Invoke-RestMethod -Uri $u -TimeoutSec 5;$q=@($a.assignments|Where-Object {$_.state -eq 'queued'});$inflight=@($a.assignments|Where-Object {$_.state -in @('unknown','dispatching','running','awaiting_evidence')});if($q.Count -ne 1 -or $inflight.Count -ne 0){throw 'QUEUE_NOT_QUIESCENT'};$x=$q[0];if(-not $x.id -or $x.dispatchSubmitAttempted -ne $false -or [int]$x.dispatchCount -ne 0 -or $x.dispatchStartedAt -or $x.submittedAt){throw 'UNSENT_NOT_PROVEN'};$dir='E:\\WebAIBridge-R62-OPERATOR-EVIDENCE-20261014';if(Test-Path -LiteralPath $dir){throw 'NO_OVERWRITE_EXISTING_AUDIT'};New-Item -ItemType Directory -Path $dir -ErrorAction Stop|Out-Null;$json=ConvertTo-Json -InputObject $x -Depth 25;$file=Join-Path $dir 'original-queued-assignment.json';[System.IO.File]::WriteAllText($file,$json,(New-Object System.Text.UTF8Encoding($false)));$acl=Get-Acl -LiteralPath $file;$acl.SetAccessRuleProtection($true,$true);Set-Acl -LiteralPath $file -AclObject $acl;$hash=(Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash;$b=Invoke-RestMethod -Uri $u -TimeoutSec 5;$latest=@($b.assignments|Where-Object {$_.id -eq $x.id});if($latest.Count -ne 1 -or $latest[0].state -ne 'queued' -or $latest[0].dispatchSubmitAttempted -ne $false -or [int]$latest[0].dispatchCount -ne 0){throw 'QUEUE_IDENTITY_OR_SEND_STATE_CHANGED_ABORT'};$idPath=[Uri]::EscapeDataString([string]$x.id);$result=Invoke-RestMethod -Uri ($u+'/'+$idPath+'/cancel') -Method POST -ContentType 'application/json' -Body '{}' -TimeoutSec 10;if($result.id -ne $x.id -or $result.state -ne 'cancelled'){throw 'CANCEL_RESULT_UNEXPECTED_RECONCILE'};$end=Invoke-RestMethod -Uri $u -TimeoutSec 5;Write-Output ('ARCHIVE_LOCAL='+$file);Write-Output ('ARCHIVE_SHA256='+$hash);Write-Output ('CANCELLED_UNSENT_COUNT=1');Write-Output ('REMAINING_QUEUED='+@($end.assignments|Where-Object {$_.state -eq 'queued'}).Count);Write-Output ('REMAINING_ACTIVE='+@($end.assignments|Where-Object {$_.state -in @('running','dispatching','awaiting_evidence','unknown')}).Count);Write-Output ('R42_HOLD_STILL='+((Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 5).cutoverState.holdActive))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 37000,
+  "note": "One guarded original queued zero-Send cancellation only after local private backup. Verify R42 HOLD and exact id before POST, no provider Send, never retry outcome-unknown"
+}
