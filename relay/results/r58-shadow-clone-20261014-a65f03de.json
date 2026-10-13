@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $shadow='E:\\WebAIBridge-R58-SHADOW'; $expect='86d643c6105caf906aa29125aace38320946ef95'; $branch='agent/bridge-r58-gpt-warm-sticky-integration-20261014'; if(Test-Path -LiteralPath $shadow){ throw 'REFUSE_EXISTING_SHADOW' }; Write-Output 'SHADOW_CLONE_START'; & git.exe clone --depth 1 --single-branch --no-tags --branch $branch 'https://github.com/foto6/WebAIBridge.git' $shadow; if($LASTEXITCODE -ne 0){throw 'SHADOW_CLONE_FAILED'}; $sha=((& git.exe -C $shadow rev-parse HEAD) | Out-String).Trim(); if($LASTEXITCODE -ne 0 -or $sha -ne $expect){throw ('R58_SHA_MISMATCH='+$sha)}; $tests=Join-Path $shadow 'app\\r58-shadow-rehearsal.ps1'; if(-not (Test-Path -LiteralPath $tests -PathType Leaf)){throw 'SHADOW_RUNNER_MISSING'}; Write-Output ('SHADOW_SHA='+$sha); Write-Output ('SHADOW_ROOT='+$shadow); Write-Output ('SCRIPT_EXISTS='+ (Test-Path $tests)); Write-Output ('PRODUCTION_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Cloning into 'E:\\WebAIBridge-R58-SHADOW'...\n",
+      "stderr_bytes": 44,
+      "stderr_truncated": false,
+      "stdout": "SHADOW_CLONE_START\r\nSHADOW_SHA=86d643c6105caf906aa29125aace38320946ef95\r\nSHADOW_ROOT=E:\\WebAIBridge-R58-SHADOW\r\nSCRIPT_EXISTS=True\r\nPRODUCTION_SHA256=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 216,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T19:32:41.135Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T19:32:40.862Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r58-shadow-clone-20261014-a65f03de"
+    },
+    "request_id": "r58-shadow-clone-20261014-a65f03de",
+    "started_at": "2026-10-13T19:32:35.925Z",
+    "status": "completed"
+  },
+  "id": "r58-shadow-clone-20261014-a65f03de",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
