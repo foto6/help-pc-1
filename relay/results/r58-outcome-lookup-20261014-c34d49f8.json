@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-13T19:33:27.269Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "r58-win-tests-r50-r56-20261014-a872d1c6"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:b0d1e0de04b39f3d6b371f1d837568da0f5924d854e63dffc01aa9cdde69aec3",
+            "journal_sequence": 3530,
+            "previous_record_sha256": "0405b16529dcb4c5bd6a5cd3e80953a16e05e0e3743998064c2e73f3b7e42ec6",
+            "record_sha256": "b5ab34dde14019b91957836381942d989bcb2a86c3c267c33025047cff7f62f1",
+            "recorded_at": "2026-10-13T19:33:27.537Z",
+            "request_id": "r58-win-tests-r50-r56-20261014-a872d1c6",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-13T19:35:22.802Z",
+              "reason": "timeout",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "r58-win-tests-r50-r56-20261014-a872d1c6"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:b0d1e0de04b39f3d6b371f1d837568da0f5924d854e63dffc01aa9cdde69aec3",
+            "journal_sequence": 3531,
+            "previous_record_sha256": "b5ab34dde14019b91957836381942d989bcb2a86c3c267c33025047cff7f62f1",
+            "record_sha256": "fbe5ddff1326e31dc6275c5ecb6bfde6c2a933d42c907c9b517827b1ffd519ae",
+            "recorded_at": "2026-10-13T19:35:23.018Z",
+            "request_id": "r58-win-tests-r50-r56-20261014-a872d1c6",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-13T19:35:22.802Z",
+          "reason": "timeout",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "r58-win-tests-r50-r56-20261014-a872d1c6"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-13T19:35:22.802Z",
+            "reason": "timeout",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "r58-win-tests-r50-r56-20261014-a872d1c6"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:b0d1e0de04b39f3d6b371f1d837568da0f5924d854e63dffc01aa9cdde69aec3",
+          "journal_sequence": 3531,
+          "previous_record_sha256": "b5ab34dde14019b91957836381942d989bcb2a86c3c267c33025047cff7f62f1",
+          "record_sha256": "fbe5ddff1326e31dc6275c5ecb6bfde6c2a933d42c907c9b517827b1ffd519ae",
+          "recorded_at": "2026-10-13T19:35:23.018Z",
+          "request_id": "r58-win-tests-r50-r56-20261014-a872d1c6",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "3a5186d0c44e242a565fdd5e5883b5b590f40fedd6a1c5f2564f54d742d479b2",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 3531
+        },
+        "reason": "timeout",
+        "replay_authorized": false,
+        "requestId": "r58-win-tests-r50-r56-20261014-a872d1c6",
+        "request_id": "r58-win-tests-r50-r56-20261014-a872d1c6",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T19:36:07.418Z",
+    "ok": true,
+    "request_id": "r58-outcome-lookup-20261014-c34d49f8",
+    "started_at": "2026-10-13T19:36:07.199Z",
+    "status": "completed"
+  },
+  "id": "r58-outcome-lookup-20261014-c34d49f8",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
