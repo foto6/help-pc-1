@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r45-20261013-r42-source-live-readonly-06",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,pathlib,json\nsha='28e4accf59e37e767c37585b85cdacbdbac62120'\nbase=pathlib.Path('E:/WebAIBridge/app/data/operator-tools/r45-durable-autonomy')\nrelease=base/'releases'/sha\ngatejs=\"const r=require('./autonomy-r45-runner');r.readR42CutoverGate({api:r.api},'http://127.0.0.1:17448').then(x=>process.stdout.write(JSON.stringify(x))).catch(e=>{process.stdout.write(JSON.stringify({ok:false,error:String(e.message)}));process.exitCode=2})\"\ng=subprocess.run(['node','-e',gatejs],cwd=release,capture_output=True,text=True,timeout=8)\nstatus=subprocess.run(['node','autonomy-r45-runner.js','--plan',str(release/'autonomy-r45-plan.example.json'),'--state',str(base/'data'/'readonly-r42-validation.state.json'),'--once'],cwd=release,capture_output=True,text=True,timeout=9)\nprint(json.dumps({'r42GateExit':g.returncode,'r42Gate':json.loads(g.stdout or '{}'),'monitorExit':status.returncode,'monitor':json.loads(status.stdout.splitlines()[-1]) if status.returncode==0 else {'error':status.stderr[-250:]},'readOnly':True,'providerSend':False,'activated':False},ensure_ascii=True)[:6500])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22000,
+  "note": "Read-only direct R42 cutover gate on real R49 plus standalone installed R45 --once. Does not dispatch, send, create/rebind tab, start monitor, change operator/queue/production."
+}
