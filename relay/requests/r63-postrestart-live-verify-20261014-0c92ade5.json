@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-postrestart-live-verify-20261014-0c92ade5",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$u='http://127.0.0.1:17448';$h=Invoke-RestMethod ($u+'/api/health') -TimeoutSec 5;$c=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 5;$o=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 5;$a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 5;Write-Output ('HTTP_OK=True');Write-Output ('HEALTH='+$h.state);Write-Output ('HOLD='+$c.cutoverState.holdActive);Write-Output ('R42_STATUS='+$c.cutoverState.status);Write-Output ('QUEUE_PAUSED='+$o.queuePaused);Write-Output ('ASSIGNMENT_TOTAL='+@($a.assignments).Count);Write-Output ('QUEUED='+@($a.assignments|Where-Object{$_.state -eq 'queued'}).Count);Write-Output ('ACTIVE='+@($a.assignments|Where-Object{$_.state -in @('running','dispatching','awaiting_evidence','unknown')}).Count);Write-Output ('PRODUCTION_SERVER_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only confirmation R63 new listener after original restart UNKNOWN: HTTP healthy/hold/paused/zero queue, no Sends or browser actions"
+}
