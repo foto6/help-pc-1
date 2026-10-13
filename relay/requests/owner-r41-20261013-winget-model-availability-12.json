@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-winget-model-availability-12",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,json\ncmd=['winget','show','--id','Ollama.Ollama','--exact','--source','winget','--accept-source-agreements']\ntry:\n p=subprocess.run(cmd,capture_output=True,text=True,timeout=12)\n result={'available':p.returncode==0,'exit':p.returncode,'textTail':p.stdout[-1500:],'errorTail':p.stderr[-400:],'readOnly':True}\nexcept subprocess.TimeoutExpired:result={'available':False,'reason':'repository_read_timed_out','readOnly':True}\nprint(json.dumps(result,ensure_ascii=True)[:2300])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 19000,
+  "note": "Read-only trusted Windows winget manifest lookup for optional local Ollama offline planner, no installation, no downloads of models or edits."
+}
