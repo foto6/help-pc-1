@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-pc-relay-health-fields-fixed-08",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,pathlib\np=pathlib.Path('E:/pc-github-relay/.pc-relay/health.json')\nd=json.loads(p.read_text('utf-8-sig'))\nsafe=lambda x: {k:x.get(k) for k in ('schema','version','status','state','observedAt','updatedAt','checkedAt','reconciliationRequired','reconciliation_required','syncState','lastPollAt','lastProgressAt','live','relayState','ready','runtime','producer') if k in x}\nprint(json.dumps({'topKeys':sorted(d.keys()),'top':safe(d),'nested':{k:safe(v) for k,v in d.items() if k in ('relay','executor','github','liveness','health','status') and isinstance(v,dict)}},ensure_ascii=True)[:3600])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 11000,
+  "note": "Corrected read-only health-schema field inspection; previous request 07 completed with encoding error before opening file. No effects."
+}
