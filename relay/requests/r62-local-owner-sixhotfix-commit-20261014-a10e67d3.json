@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-local-owner-sixhotfix-commit-20261014-a10e67d3",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $repo='E:\\WebAIBridge'; $back='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\files'; $original='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03'; $branch='preserve/owner-six-hotfixes-r62-20261014'; $files=@('app/ensure-supervisor-watchdog.ps1','app/r42-cutover.ps1','app/r42-json-encoding.test.ps1','app/r42-rollback.ps1','app/server.js','app/start.ps1'); $head=((& git.exe -C $repo rev-parse HEAD)|Out-String).Trim(); if($head -ne $original){throw 'STOP_PRODUCTION_SHA_CHANGED'}; $changed=@(& git.exe -C $repo diff --name-only --no-ext-diff); if($changed.Count -ne 6 -or @($changed|Where-Object {$files -notcontains $_}).Count -ne 0){throw 'STOP_PRODUCTION_CHANGED_FILES_DRIFT'}; if(@(& git.exe -C $repo diff --cached --name-only).Count -gt 0){throw 'STOP_ORIGINAL_STAGING_NOT_EMPTY'}; foreach($rel in $files){$p=Join-Path $repo $rel;$b=Join-Path $back $rel;if(-not (Test-Path -LiteralPath $b -PathType Leaf)){throw 'STOP_BACKUP_FILE_MISSING'};if((Get-FileHash -LiteralPath $p -Algorithm SHA256).Hash -ne (Get-FileHash -LiteralPath $b -Algorithm SHA256).Hash){throw ('STOP_BACKUP_DRIFT '+$rel)}}; $existing=@(& git.exe -C $repo branch --list $branch); if($existing.Count -ne 0){throw 'STOP_PRESERVATION_BRANCH_ALREADY_EXISTS'}; & git.exe -C $repo switch -c $branch 2>$null; if($LASTEXITCODE -ne 0){throw 'STOP_BRANCH_CREATION_FAILED'}; & git.exe -C $repo add -- $files; if($LASTEXITCODE -ne 0){throw 'STOP_GIT_ADD_FAILED'}; $staged=@(& git.exe -C $repo diff --cached --name-only); if($staged.Count -ne 6 -or @($staged|Where-Object {$files -notcontains $_}).Count -ne 0){throw 'STOP_STAGE_DRIFT'}; & git.exe -C $repo -c 'user.name=PC Control local preservation' -c 'user.email=pc-control@users.noreply.github.com' -c 'commit.gpgsign=false' commit -m 'Local-only preserve original six owner hotfixes before R61 gated cutover' *> $null; if($LASTEXITCODE -ne 0){throw 'STOP_PRESERVATION_COMMIT_FAILED'}; Write-Output ('LOCAL_PRESERVE_HEAD='+((& git.exe -C $repo rev-parse HEAD)|Out-String).Trim()); Write-Output ('LOCAL_BRANCH='+((& git.exe -C $repo branch --show-current)|Out-String).Trim()); Write-Output ('TRACKED_MODIFICATIONS='+@(& git.exe -C $repo status --porcelain=v1 --untracked-files=no).Count); Write-Output ('ORIGINAL_SERVER_SHA256='+(Get-FileHash -LiteralPath (Join-Path $repo 'app\\server.js') -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 28000,
+  "note": "Owner approved deployment: immutable local-only branch commit of exact six independently backup-hash-verified production hotfix files; no production source content change, no remote push, no browser operations"
+}
