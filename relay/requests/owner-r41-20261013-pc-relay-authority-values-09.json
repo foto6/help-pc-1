@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-pc-relay-authority-values-09",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,pathlib,time\nd=json.loads(pathlib.Path('E:/pc-github-relay/.pc-relay/health.json').read_text('utf-8-sig'))\nnow=time.time()\nprint(json.dumps({'status':d.get('status'),'phase':d.get('phase'),'live':d.get('live'),'reconciliationRequired':d.get('reconciliation_required'),'updatedAgeSeconds':round(now-d.get('updated_at_unix',0),1),'backlogCount':d.get('backlog_count'),'localEqualsRemote':bool(d.get('local_head') and d.get('local_head')==d.get('remote_head')),'pidPresent':isinstance(d.get('pid'),int),'readOnly':True}))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 11000,
+  "note": "Read-only sanitized PC relay freshness/authority values to wire R41 directly to existing producer, no user content."
+}
