@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-native-autonomy-preflight-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import os,subprocess,json,pathlib\nE=pathlib.Path('E:/PCControlAutonomyR41');W=pathlib.Path('E:/WebAIBridge')\ndef cmd(*a):\n try:\n  x=subprocess.run(a,capture_output=True,text=True,timeout=5)\n  return x.stdout.strip() if x.returncode==0 else None\n except Exception:return None\nhold=W/'app/data/projects-live-control-plane-cutover-r42.json'\nj=json.loads(hold.read_text(encoding='utf-8-sig')) if hold.is_file() else {}\nr=cmd('gh','api','repos/foto6/help-pc-2/commits/fab9d1756e00eaad5e65c67982d9763afa5f328d','--jq','.sha')\nrelease=W/'app/data/operator-tools/r45-durable-autonomy/releases/28e4accf59e37e767c37585b85cdacbdbac62120'\nprint(json.dumps({'existingInstallRoot':E.exists(),'existingR45Release':release.is_dir(),'r45Manifest':(release/'MANIFEST.json').is_file(),'gitCommitReadable':r=='fab9d1756e00eaad5e65c67982d9763afa5f328d','node':cmd('node','--version'),'productionHead':cmd('git','-C','E:/WebAIBridge','rev-parse','HEAD'),'r42hold':j.get('holdActive'),'readOnly':True}))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 21000,
+  "note": "PC Control R41 exact-head read-only preflight before isolated package install. Do not modify R49, relay, queue or Chrome."
+}
