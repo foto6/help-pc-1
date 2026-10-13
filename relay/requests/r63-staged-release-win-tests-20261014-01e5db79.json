@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-staged-release-win-tests-20261014-01e5db79",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R63-SHADOW'; $sha='01e5db790f50b5eb42588b8942f3dd1de4f0a6bf'; if(Test-Path -LiteralPath $root){throw 'NO_SHADOW_OVERWRITE'}; & git.exe clone --depth 1 --single-branch --no-tags --branch agent/bridge-r63-r42-staged-paused-20261014 https://github.com/foto6/WebAIBridge.git $root; if($LASTEXITCODE -ne 0){throw 'CLONE_FAILED'}; $head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($head -ne $sha){throw 'EXACT_SHA_MISMATCH'}; $cmd='cd /d '+$root+'\\app && node.exe --check server.js && node.exe --test --test-reporter=tap r63-r42-staged-activation.test.js r62-r42-sticky-release-gate.test.js autonomy-r45.test.js autonomy-r45-brain.test.js autonomy-r45-git-gate.test.js autonomy-r45-lock.test.js autonomy-r45-review.test.js autonomy-r57-gpt-git.test.js autonomy-r57-successor.test.js autonomous-send-gate-r50.test.js existing-tab-session-r55.test.js existing-tab-session-r56-cdp.test.js r56-worker-sticky.test.js r56-r42-hold-failclosed.test.js r56-launch-preservation.test.js r56-sticky-readonly-preflight.test.js r34-sticky-chat-exact-id.test.js r58-shadow-rehearsal-contract.test.js > '+$root+'\\R63_TESTS.log 2>&1'; & cmd.exe /d /c $cmd; if($LASTEXITCODE -ne 0){throw 'NODE_TEST_FAILED'}; Write-Output ('R63_SHA='+$head); Get-Content -LiteralPath (Join-Path $root 'R63_TESTS.log') -Tail 9; Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 70000,
+  "note": "Exact R63 isolated clone and Windows source regressions, output redirected to local file; no production, Chrome or queued task changes"
+}
