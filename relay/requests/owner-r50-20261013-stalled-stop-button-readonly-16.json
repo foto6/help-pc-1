@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r50-20261013-stalled-stop-button-readonly-16",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "node.exe",
+      "--input-type=module",
+      "-e",
+      "const id='F7A2D32B34B5F309AF6B6D899CFFBA1F';\nconst expected='https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83eb-bc98-dc74acc6e810';\nconst t=await (await fetch('http://127.0.0.1:17410/json/list')).json();\nconst matches=t.filter(x=>x.id===id&&x.url===expected&&x.type==='page');\nif(matches.length!==1)throw Error('EXACT_TARGET_DRIFT');\nconst ws=new WebSocket(matches[0].webSocketDebuggerUrl);\nawait Promise.race([new Promise((r,j)=>{ws.onopen=r;ws.onerror=j}),new Promise((_,j)=>setTimeout(()=>j(Error('CDP_CONNECTION_TIMEOUT')),4500))]);\nconst exp=\"(()=>{const b=[...document.querySelectorAll('button')].filter(x=>{const t=String(x.getAttribute('data-testid')||'')+' '+String(x.getAttribute('aria-label')||'');return /stop[-_ ]?(button|generat|response)|остановить/i.test(t)});return {url:location.href,matchCount:b.length,buttons:b.map(x=>({testid:x.getAttribute('data-testid'),label:x.getAttribute('aria-label'),disabled:x.disabled,visible:!!x.getClientRects().length})).slice(0,6)}})()\";\nconst out=await Promise.race([new Promise((resolve,reject)=>{ws.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.id===91)resolve(d)}catch(err){reject(err)}};ws.send(JSON.stringify({id:91,method:'Runtime.evaluate',params:{expression:exp,returnByValue:true,awaitPromise:false}}))}),new Promise((_,j)=>setTimeout(()=>j(Error('CDP_EVAL_TIMEOUT')),6000))]);\nws.close();const val=out.result?.result?.value;console.log(JSON.stringify({status:'READ_ONLY_STOP_CONTROL_PREFLIGHT',value:val||null,error:out.error?.message||null,noClicked:true}));\n"
+    ],
+    "cwd": "E:\\WebAIBridge\\app"
+  },
+  "timeout_ms": 17000,
+  "note": "Read-only CDP DOM inspection on exact already-open Native MCP stalled tab for Stop Generating control, no page text, no click, no provider send, no UI focus change. Abort on id or URL mismatch."
+}
