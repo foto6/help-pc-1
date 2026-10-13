@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "curl.exe --noproxy \"*\" --max-time 8 -sS -o NUL -w \"R63_ACTIVATE_HTTP=%{http_code}\" -X POST http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/activate"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "\"R63_ACTIVATE_HTTP=200\"",
+      "stdout_bytes": 23,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:40:49.696Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:40:49.456Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-sticky-controlled-stage-20261014-8b24db72"
+    },
+    "request_id": "r63-sticky-controlled-stage-20261014-8b24db72",
+    "started_at": "2026-10-13T21:40:48.881Z",
+    "status": "completed"
+  },
+  "id": "r63-sticky-controlled-stage-20261014-8b24db72",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
