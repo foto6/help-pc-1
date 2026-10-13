@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r45-20261013-r42-hold-origin-readonly-07",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,pathlib\nf=pathlib.Path('E:/WebAIBridge/app/data/projects-live-control-plane-cutover-r42.json')\nd=json.loads(f.read_text('utf-8-sig'))\ndef safe(e):\n out={}\n for k in ('type','at','status','reason','lifecycleMode','queuePaused','holdActive','sourceSha','targetSha','blocker'):\n  if k in e:out[k]=str(e[k])[:180]\n return out\nresult={'status':d.get('status'),'holdActive':d.get('holdActive'),'updatedAt':d.get('updatedAt'),'originalOperatorLifecycleMode':d.get('originalOperatorLifecycleMode'),'originalQueuePaused':d.get('originalQueuePaused'),'originalAutonomyFlags':{k:v for k,v in (d.get('originalAutonomy') or {}).items() if k in ('mode','enabled','allowAutonomousSend','autoContinueEnabled','enforceHighMode','highModeStrategy')},'events':[safe(x) for x in d.get('events',[])][-12:],'readOnly':True}\nprint(json.dumps(result,ensure_ascii=True)[:4400])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Read-only structured R42 persisted hold origin/events. No tokens/secrets, provider transcript, migrations, settings or queue writes; no Send/activation."
+}
