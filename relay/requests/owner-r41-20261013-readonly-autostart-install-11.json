@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-readonly-autostart-install-11",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import pathlib,json,subprocess,shutil,datetime\nR=pathlib.Path('E:/PCControlAutonomyR41')\nSHA='506f9a951f9b782e27b0d886e441b6747095e3fc'\nSOURCE=R/'releases'/SHA\nCFG=R/'config.r41-integrated.json'\nTASK='PCControl-R41-Observer'\nif not SOURCE.is_dir() or not CFG.is_file():raise RuntimeError('R41_INSTALL_MISSING')\nc=json.loads(CFG.read_text('utf8'))\nplan=json.loads(pathlib.Path(c['r45']['plan']).read_text('utf8'))\nif c.get('mode')!='observe' or c.get('operatorApproved') is not False or plan.get('allowDispatch') is not False:raise RuntimeError('R41_CONFIG_NOT_READ_ONLY')\nif (R/'START_R41_OBSERVER.cmd').exists() or (R/'STOP_R41_OBSERVER.cmd').exists():raise RuntimeError('R41_LAUNCHER_ALREADY_PRESENT')\ncheck=subprocess.run(['schtasks.exe','/Query','/TN',TASK],capture_output=True,text=True,timeout=7)\nif check.returncode==0:raise RuntimeError('R41_SCHEDULED_TASK_ALREADY_EXISTS')\nnode=shutil.which('node')\nif not node:raise RuntimeError('NODE_NOT_INSTALLED')\n(R/'logs').mkdir(exist_ok=True)\nlines=['@echo off','setlocal','cd /d \"'+str(SOURCE)+'\"','\"'+node+'\" \"'+str(SOURCE/'bin/pc-autonomy-daemon.js')+'\" --config \"'+str(CFG)+'\" --watch >> \"'+str(R/'logs/observer.stdout.log')+'\" 2>&1','exit /b %errorlevel%']\nstart=R/'START_R41_OBSERVER.cmd';stop=R/'STOP_R41_OBSERVER.cmd'\nwith start.open('x',encoding='utf8') as f:f.write('\\r\\n'.join(lines)+'\\r\\n')\nwith stop.open('x',encoding='utf8') as f:f.write('@echo off\\r\\nschtasks.exe /End /TN \"'+TASK+'\"\\r\\nschtasks.exe /Delete /TN \"'+TASK+'\" /F\\r\\n')\ncmd='cmd.exe /d /c \"'+str(start)+'\"'\ncreated=subprocess.run(['schtasks.exe','/Create','/SC','ONLOGON','/TN',TASK,'/TR',cmd,'/RL','LIMITED'],capture_output=True,text=True,timeout=12)\nmeta={'status':'REGISTERED' if created.returncode==0 else 'FAILED','task':TASK,'readOnly':True,'source':SHA,'createdAt':datetime.datetime.now().isoformat(),'sendEnabled':False,'noExistingTasksModified':True}\n(R/'AUTOSTART_R41.json').write_text(json.dumps(meta,indent=2),encoding='utf8')\nprint(json.dumps({'registered':created.returncode==0,'task':TASK,'returncode':created.returncode,'nodePresent':True,'startScript':str(start),'rollbackScript':str(stop),'message':(created.stdout+created.stderr)[-380:],'newProviderMessages':0,'productionModified':False,'notStartedYet':True},ensure_ascii=True))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 32000,
+  "note": "User-authorized dedicated Windows ONLOGON observer-only PC Control R41 task. No --dispatch, no browser/queue/mcp production edits; preserve other tasks; reversible with exact STOP_R41_OBSERVER.cmd. Never reexecute unknown result."
+}
