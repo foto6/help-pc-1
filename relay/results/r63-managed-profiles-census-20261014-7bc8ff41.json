@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $u='http://127.0.0.1:17448/api/ai-profiles'; $r=Invoke-RestMethod -Uri $u -TimeoutSec 4; $a=@($r.aiProfiles); Write-Output ('PROFILE_TOTAL='+$a.Count); Write-Output ('CHATGPT_PROFILES='+@($a|Where-Object {$_.provider -eq 'chatgpt'}).Count); Write-Output ('ENABLED='+@($a|Where-Object {$_.enabled -ne $false}).Count); Write-Output ('CHROME_ONLINE='+@($a|Where-Object {$_.chromeConnected -eq $true -or $_.browserOnline -eq $true -or $_.chromeOnline -eq $true}).Count); Write-Output ('DEBUG_PORTS='+@($a|Where-Object {$_.debugPort -gt 0}).Count); Write-Output ('ATTACH_MODES='+@($a|Where-Object {$_.chromeLaunchMode -eq 'attach'}).Count); Write-Output ('CHROME_MODE_KEYS='+((@($a)|Select-Object -First 1|Get-Member -MemberType NoteProperty|Select-Object -ExpandProperty Name|Where-Object {$_ -match '(?i)chrome|online|debugPort|provider|worker|enabled|mode'}) -join ','))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "PROFILE_TOTAL=4\r\nCHATGPT_PROFILES=2\r\nENABLED=3\r\nCHROME_ONLINE=0\r\nDEBUG_PORTS=3\r\nATTACH_MODES=3\r\nCHROME_MODE_KEYS=chromeLaunchMode,chromePath,chromeProfileDirectory,chromeProfilePath,debugPort,enabled,modelId,modelSelectionStrategy,online,provider,proxyMode,timezoneMode,workerClientId,workerConnected,workerDebugUrl,workerError,workerLastSeenAt,workerLikelyLoggedIn,workerProvider\r\n",
+      "stdout_bytes": 382,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:59:44.227Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:59:43.998Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-managed-profiles-census-20261014-7bc8ff41"
+    },
+    "request_id": "r63-managed-profiles-census-20261014-7bc8ff41",
+    "started_at": "2026-10-13T20:59:43.111Z",
+    "status": "completed"
+  },
+  "id": "r63-managed-profiles-census-20261014-7bc8ff41",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
