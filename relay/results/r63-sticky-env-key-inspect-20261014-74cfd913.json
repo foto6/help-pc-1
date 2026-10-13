@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$f='E:\\WebAIBridge\\app\\.env';Write-Output ('ENV_FILE_EXISTS='+(Test-Path -LiteralPath $f -PathType Leaf));if(Test-Path -LiteralPath $f -PathType Leaf){$lines=Get-Content -LiteralPath $f -Encoding UTF8; $found=@($lines|Where-Object{$_ -match '^\\s*BRIDGE_EXISTING_TABS_ONLY\\s*='});Write-Output ('STICKY_KEY_ENTRIES='+$found.Count);Write-Output ('STICKY_KEY_ALREADY_TRUE='+(@($found|Where-Object{$_ -match '^\\s*BRIDGE_EXISTING_TABS_ONLY\\s*=\\s*(1|true|yes|on)\\s*$'}).Count -gt 0))}else{Write-Output 'STICKY_KEY_ENTRIES=0'};Write-Output ('DATA_BACKUP_EXISTS='+(Test-Path -LiteralPath 'E:\\WebAIBridge-R63-OPERATOR-BACKUP-20261014-v1\\MANIFEST.json'))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "ENV_FILE_EXISTS=True\r\nSTICKY_KEY_ENTRIES=0\r\nSTICKY_KEY_ALREADY_TRUE=False\r\nDATA_BACKUP_EXISTS=True\r\n",
+      "stdout_bytes": 100,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:36:57.451Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:36:57.219Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-sticky-env-key-inspect-20261014-74cfd913"
+    },
+    "request_id": "r63-sticky-env-key-inspect-20261014-74cfd913",
+    "started_at": "2026-10-13T21:36:56.460Z",
+    "status": "completed"
+  },
+  "id": "r63-sticky-env-key-inspect-20261014-74cfd913",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
