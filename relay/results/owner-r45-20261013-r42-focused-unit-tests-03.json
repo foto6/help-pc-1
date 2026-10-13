@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,subprocess,json\nroot=pathlib.Path('E:/WebAIBridge/app/data/operator-tools/r45-durable-autonomy/scratch/28e4accf59e37e767c37585b85cdacbdbac62120')\nif len(list(root.glob('*.test.js')))!=6:raise RuntimeError('R45_SCRATCH_NOT_VERIFIED')\ncmd=['node','--test','autonomy-r45.test.js','autonomy-r45-git-gate.test.js']\ntry:\n r=subprocess.run(cmd,cwd=root,capture_output=True,text=True,timeout=15)\n x=r.stdout+'\\n'+r.stderr\n line=x.splitlines()\n details=[line[i] for i in range(len(line)) if any(s in line[i] for s in ('✖','not ok','AssertionError','expected:','actual:','R45_','fail '))]\n print(json.dumps({'finished':True,'exitCode':r.returncode,'errors':'\\n'.join(details)[-6000:],'tail':'\\n'.join(line[-65:])[-7000:],'noProviderEffects':True},ensure_ascii=True))\nexcept subprocess.TimeoutExpired:print(json.dumps({'finished':False,'reason':'unit_test_timeout','noProviderEffects':True}))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"finished\": true, \"exitCode\": 0, \"errors\": \"\\u0432\\u201e\\u2116 fail 0\", \"tail\": \"\\u0432\\u045a\\u201d R45 independent remote start gate pins exact baseline HEAD (2.9908ms)\\n\\u0432\\u045a\\u201d R45 independent acceptance demands exact remote HEAD AND same successful CI run (0.5496ms)\\n\\u0432\\u045a\\u201d R45 independent acceptance refuses branch movement and forged Bridge CI field (0.5968ms)\\n\\u0432\\u045a\\u201d R45 git gate fail-closed on malformed repo, shell/branch parameters and no credentials (0.4032ms)\\n\\u0432\\u045a\\u201d R45 git remote outage is retryable; no CI run is attempted (0.2472ms)\\n\\u0432\\u045a\\u201d R45 runner blocks new dispatch when remote baseline SHA has moved (9.1652ms)\\n\\u0432\\u045a\\u201d R45 runner quarantines apparently completed Bridge task until independently confirmed (8.5808ms)\\n\\u0432\\u045a\\u201d R45 transient independent attestation defers evidence instead of accepting or resending (5.0694ms)\\n\\u0432\\u045a\\u201d R45 validates exact SHA, DAG cycles, missing agents, duplicate ids (1.9644ms)\\n\\u0432\\u045a\\u201d R45 only advances on exact commit and successful CI, not prose/ACK (3.3596ms)\\n\\u0432\\u045a\\u201d R45 refuses stale, duplicate-tab, non-High, draft or provider error surfaces (1.4326ms)\\n\\u0432\\u045a\\u201d R45 dependencies unblock only on verified accepted predecessor (0.5059ms)\\n\\u0432\\u045a\\u201d R45 completed task cannot be silently removed from active roadmap (0.5257ms)\\n\\u0432\\u045a\\u201d R45 checkpoint is advisory at 40 min and never triggers another Send (0.4077ms)\\n\\u0432\\u045a\\u201d R45 task dispatch carries a bounded 35-minute checkpoint directive without creating chats (0.4872ms)\\n\\u0432\\u045a\\u201d R45 local store is atomic, lock is exclusive and release works (10.1597ms)\\n\\u0432\\u045a\\u201d R45 read-only output distinguishes local plan state from BLOCKED live Bridge (4.4253ms)\\n\\u0432\\u045a\\u201d R45 runner read-only never inspects tabs or dispatches (4.8236ms)\\n\\u0432\\u045a\\u201d R45 does not probe cutover endpoint when prior dispatch is unreconciled (5.5633ms)\\n\\u0432\\u045a\\u201d R45 refuses to queue while R42 cutover hold is active, even if health reports HEALTHY (4.9525ms)\\n\\u0432\\u045a\\u201d R45 unavailable R42 hold state blocks all queue/post effects (4.7504ms)\\n\\u0432\\u045a\\u201d R45 dispatch writes intent and returns exact provider assignment (6.5058ms)\\n\\u0432\\u045a\\u201d R45 unknown Send cannot be reissued after error or restart (8.886ms)\\n\\u0432\\u045a\\u201d R45 unhealthy bridge blocks browser inspection and all side effects (3.162ms)\\n\\u0432\\u045a\\u201d R45 only permits loopback, no external destination or embedded credential (0.4266ms)\\n\\u0432\\u201e\\u2116 tests 25\\n\\u0432\\u201e\\u2116 suites 0\\n\\u0432\\u201e\\u2116 pass 25\\n\\u0432\\u201e\\u2116 fail 0\\n\\u0432\\u201e\\u2116 cancelled 0\\n\\u0432\\u201e\\u2116 skipped 0\\n\\u0432\\u201e\\u2116 todo 0\\n\\u0432\\u201e\\u2116 duration_ms 169.9821\\n\", \"noProviderEffects\": true}\r\n",
+      "stdout_bytes": 2912,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T02:56:04.661Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T02:56:04.421Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r45-20261013-r42-focused-unit-tests-03"
+    },
+    "request_id": "owner-r45-20261013-r42-focused-unit-tests-03",
+    "started_at": "2026-10-13T02:56:03.564Z",
+    "status": "completed"
+  },
+  "id": "owner-r45-20261013-r42-focused-unit-tests-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
