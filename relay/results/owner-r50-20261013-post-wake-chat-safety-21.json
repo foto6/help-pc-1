@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json\nB='http://127.0.0.1:17448'\ndef get(s,t=12):\n with urllib.request.urlopen(B+s,timeout=t) as r:return json.load(r)\nc=get('/api/supervisor-watchdog/managed-chats?inspect=1').get('chats',[])\nrows=[{k:x.get(k) for k in ('id','status','generating','draftPresent','openTabs','highMode','profileWorkerConnected') if k in x} for x in c]\nh=get('/api/health');q=get('/api/supervisor-watchdog/agent-assignments');op=get('/api/operator-lifecycle');cut=get('/api/projects/control-plane/cutover-r42/status')\nprint(json.dumps({'rows':rows,'allTabsQuiet':not any(x.get('generating') or x.get('draftPresent') for x in c),'health':h.get('state'),'queuePaused':op.get('queuePaused'),'r42Hold':cut.get('cutoverState',{}).get('holdActive'),'activeAssignments':sum(x.get('state') in ('dispatching','running','awaiting_evidence') for x in q.get('assignments',[])),'readOnly':True},ensure_ascii=True)[:3700])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"rows\": [{\"id\": \"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\", \"status\": \"idle\", \"generating\": false, \"draftPresent\": false, \"openTabs\": 1, \"highMode\": true, \"profileWorkerConnected\": true}, {\"id\": \"agent-media\", \"status\": \"idle\", \"generating\": false, \"draftPresent\": false, \"openTabs\": 1, \"highMode\": true, \"profileWorkerConnected\": true}, {\"id\": \"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\", \"status\": \"idle\", \"generating\": false, \"draftPresent\": false, \"openTabs\": 1, \"highMode\": true, \"profileWorkerConnected\": true}, {\"id\": \"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\", \"status\": \"closed\", \"generating\": false, \"draftPresent\": false, \"openTabs\": 0, \"highMode\": false, \"profileWorkerConnected\": true}, {\"id\": \"agent-pc-control\", \"status\": \"stalled\", \"generating\": true, \"draftPresent\": false, \"openTabs\": 1, \"highMode\": true, \"profileWorkerConnected\": true}, {\"id\": \"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\", \"status\": \"idle\", \"generating\": false, \"draftPresent\": false, \"openTabs\": 1, \"highMode\": true, \"profileWorkerConnected\": true}, {\"id\": \"tg-curator-owner\", \"status\": \"idle\", \"generating\": false, \"draftPresent\": false, \"openTabs\": 1, \"highMode\": true, \"profileWorkerConnected\": true}], \"allTabsQuiet\": false, \"health\": \"PAUSED\", \"queuePaused\": true, \"r42Hold\": true, \"activeAssignments\": 0, \"readOnly\": true}\r\n",
+      "stdout_bytes": 1320,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:46:10.919Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:46:10.690Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r50-20261013-post-wake-chat-safety-21"
+    },
+    "request_id": "owner-r50-20261013-post-wake-chat-safety-21",
+    "started_at": "2026-10-13T04:46:09.849Z",
+    "status": "completed"
+  },
+  "id": "owner-r50-20261013-post-wake-chat-safety-21",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
