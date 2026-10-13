@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-running-code-preflight-20261014-1a56d3c8",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge\\app'; $f='E:\\WebAIBridge-R61-SHADOW\\app\\r56-sticky-readonly-preflight.js'; if(-not (Test-Path -LiteralPath $f)){throw 'NO_PREFLIGHT'}; $result=(& node.exe $f --app $root | Out-String | ConvertFrom-Json); Write-Output ('STAGING_CANDIDATE='+$result.readOnlyStagingCandidate); Write-Output ('SAFE_SEND='+$result.safeToLiveDispatch); Write-Output ('R50='+$result.observations.r50GuardPresent); Write-Output ('R56='+$result.observations.r56Installed); Write-Output ('R42_HOLD='+$result.observations.holdActive); Write-Output ('PAUSED='+$result.observations.queuePaused); Write-Output ('BLOCKERS='+($result.blockers -join ',')); $u='http://127.0.0.1:17448'; $status=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 5; Write-Output ('CODE_RELOAD_REQUIRED='+$status.codeReloadRequired); Write-Output ('SERVER_SHA256='+(Get-FileHash -LiteralPath (Join-Path $root 'server.js') -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only actual installed R61 R50/R56 guards and loopback running-process code reload state; no policy/queue change"
+}
