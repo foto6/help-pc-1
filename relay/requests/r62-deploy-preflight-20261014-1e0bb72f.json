@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-deploy-preflight-20261014-1e0bb72f",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p='E:\\WebAIBridge';$h=((& git.exe -C $p rev-parse HEAD)|Out-String).Trim();Write-Output ('HEAD='+$h);Write-Output ('DIRTY='+(@(& git.exe -C $p status --porcelain=v1 --untracked-files=no).Count));Write-Output ('SERVER_HASH='+(Get-FileHash -LiteralPath (Join-Path $p 'app\\server.js') -Algorithm SHA256).Hash);$s=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 4;Write-Output ('HOLD='+$s.cutoverState.holdActive);$a=Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 4;$rows=@($a.assignments);Write-Output ('TOTAL='+$rows.Count);Write-Output ('QUEUED='+@($rows|Where-Object {$_.state -eq 'queued'}).Count)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Read-only preflight for R62 staged deployment; do not mutate running browser, bridge or queue"
+}
