@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-real-preflight-clean-20261014-82cd1ae7",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $root='E:\\WebAIBridge'; $want='8646d55a309417ee147dbe5773e48b9dec11cbdb'; $target='d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2'; $ref='agent/bridge-r61-failclosed-dispatch-inspection-20261014'; if(((& git.exe -C $root rev-parse HEAD)|Out-String).Trim() -ne $want){throw 'PRODUCTION_HEAD_DRIFT'}; if(@(& git.exe -C $root status --porcelain=v1 --untracked-files=all).Count -ne 0){throw 'WORKTREE_NOT_CLEAN'}; $log='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\R62_REAL_PREFLIGHT_AFTER_PRESERVATION.log'; & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $root 'app\\r42-cutover.ps1') -RepoPath $root -TargetSha $target -TargetBranch $ref -PreflightOnly *> $log; $rc=$LASTEXITCODE; Write-Output ('PREFLIGHT_EXIT='+$rc); Get-Content -LiteralPath $log -Tail 3; Write-Output ('HEAD_UNCHANGED='+((& git.exe -C $root rev-parse HEAD)|Out-String).Trim()); Write-Output ('SERVER_SHA256='+(Get-FileHash -LiteralPath (Join-Path $root 'app\\server.js') -Algorithm SHA256).Hash); if($rc -ne 0){exit $rc}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 55000,
+  "note": "R42 original production read-only exact-head preflight after preserving all 7 user-changed files in local Git and independent backup; no provider/Chrome actions"
+}
