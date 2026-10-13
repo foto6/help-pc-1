@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$p=Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction SilentlyContinue|Select-Object -First 1;Write-Output ('LISTENER='+(!!$p));if($p){Write-Output ('LISTENER_PID='+$p.OwningProcess);$x=Get-CimInstance Win32_Process -Filter ('ProcessId='+[int]$p.OwningProcess);Write-Output ('PROCESS='+$x.Name)};Write-Output ('OLD_PID_ALIVE='+[bool](Get-Process -Id 28348 -ErrorAction SilentlyContinue));Write-Output ('GIT_HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "LISTENER=True\r\nLISTENER_PID=24272\r\nPROCESS=node.exe\r\nOLD_PID_ALIVE=False\r\nGIT_HEAD=01e5db790f50b5eb42588b8942f3dd1de4f0a6bf\r\n",
+      "stdout_bytes": 125,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:33:58.869Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:33:58.631Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-live-pid-after-unknown-20261014-d4f50a3c"
+    },
+    "request_id": "r63-live-pid-after-unknown-20261014-d4f50a3c",
+    "started_at": "2026-10-13T21:33:56.763Z",
+    "status": "completed"
+  },
+  "id": "r63-live-pid-after-unknown-20261014-d4f50a3c",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
