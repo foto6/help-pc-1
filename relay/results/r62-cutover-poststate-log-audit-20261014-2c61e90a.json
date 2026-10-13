@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $log='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\R62_LIVE_CUTOVER_OUTPUT.log'; Write-Output ('OUTPUT_LOG_EXISTS='+(Test-Path -LiteralPath $log -PathType Leaf)); if(Test-Path -LiteralPath $log){Write-Output ('OUTPUT_LOG_BYTES='+(Get-Item $log).Length);Get-Content -LiteralPath $log -Tail 9 | ForEach-Object {$_ -replace '(?i)(password|token|secret|cookie|bearer|api.key).*','[filtered sensitive line]'}}; try{$s=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 2;$c=$s.cutoverState;Write-Output ('CUTOVER_PHASE='+$c.status);Write-Output ('CUTOVER_HOLD='+$c.holdActive);Write-Output ('CUTOVER_TARGET='+$c.targetSha);Write-Output ('ROLLBACK_MANIFEST_EXISTS='+(Test-Path -LiteralPath ([string]$c.rollbackManifest) -PathType Leaf));Write-Output ('CUTOVER_EVENTS='+@($c.events).Count)}catch{Write-Output 'CUTOVER_API_FAILED'}; Write-Output ('SOURCE_HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "OUTPUT_LOG_EXISTS=True\r\nOUTPUT_LOG_BYTES=0\r\nCUTOVER_PHASE=CUTOVER_HOLD_PREPARED\r\nCUTOVER_HOLD=True\r\nCUTOVER_TARGET=d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2\r\nROLLBACK_MANIFEST_EXISTS=True\r\nCUTOVER_EVENTS=1\r\nSOURCE_HEAD=d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2\r\n",
+      "stdout_bytes": 260,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:53:33.261Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:53:33.028Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-cutover-poststate-log-audit-20261014-2c61e90a"
+    },
+    "request_id": "r62-cutover-poststate-log-audit-20261014-2c61e90a",
+    "started_at": "2026-10-13T20:53:32.196Z",
+    "status": "completed"
+  },
+  "id": "r62-cutover-poststate-log-audit-20261014-2c61e90a",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
