@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r45-20261013-curator-queue-flags-1005-11",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json\ntry:\n with urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments',timeout=4) as r:d=json.load(r)\n q=[x for x in d.get('assignments',[]) if x.get('id')=='bd455cb4-a1e8-4b77-845f-abdbe17ae476']\n keys=('id','state','createdAt','updatedAt','queuedAt','queueTimelinePending','queueTimelineRecordedAt','queueTimelineError','dispatchCount','dispatchSubmitAttempted','dispatchFailureCode','lastPreflightAt','lastPreflightReason','projectId','resourceClass','expectedHead','targetChatId','targetProfileId')\n print(json.dumps({'matchCount':len(q),'record':{k:q[0].get(k) for k in keys} if q else None,'readOnly':True},ensure_ascii=True))\nexcept Exception as e:print(json.dumps({'error':type(e).__name__}))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "R45 read-only exact queued curator assignment metadata; no text, no send, no side effects, no replay."
+}
