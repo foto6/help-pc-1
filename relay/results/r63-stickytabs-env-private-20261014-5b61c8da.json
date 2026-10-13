@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $f='E:\\WebAIBridge\\app\\.env'; $backupDir='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1'; $backup=Join-Path $backupDir 'R63_ENV_ORIGINAL_CURRENT_USER_DPAPI.bin'; $manifest=Join-Path $backupDir 'R63_ENV_STICKY_CHANGE.json'; $expectedHead='d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2'; $actualHead=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim(); if($actualHead -ne $expectedHead){throw 'R63_ABORT_SOURCE_DRIFT'}; $h=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 4; if($h.cutoverState.holdActive -ne $true){throw 'R63_ABORT_R42_HOLD_RELEASED'}; if(-not (Test-Path -LiteralPath $f -PathType Leaf)){throw 'R63_ABORT_ENV_MISSING'}; if((Test-Path -LiteralPath $backup) -or (Test-Path -LiteralPath $manifest)){throw 'R63_ABORT_PRIVATE_BACKUP_EXISTS'}; $item=Get-Item -LiteralPath $f -Force; if(($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0){throw 'R63_ABORT_REPARSE_POINT'}; $bytes=[IO.File]::ReadAllBytes($f); if($bytes.Length -gt 1048576){throw 'R63_ABORT_ENV_OVERSIZED'}; $text=[Text.Encoding]::UTF8.GetString($bytes); if([regex]::IsMatch($text,'(?m)^\\s*(?:export\\s+)?BRIDGE_EXISTING_TABS_ONLY\\s*=')){throw 'R63_ABORT_EXISTING_SETTING'}; $originalHash=(Get-FileHash -LiteralPath $f -Algorithm SHA256).Hash; $encrypted=[Security.Cryptography.ProtectedData]::Protect($bytes,$null,[Security.Cryptography.DataProtectionScope]::CurrentUser); [IO.File]::WriteAllBytes($backup,$encrypted); $decrypted=[Security.Cryptography.ProtectedData]::Unprotect([IO.File]::ReadAllBytes($backup),$null,[Security.Cryptography.DataProtectionScope]::CurrentUser); if(-not [Linq.Enumerable]::SequenceEqual([byte[]]$bytes,[byte[]]$decrypted)){throw 'R63_PRIVATE_DPAPI_BACKUP_MISMATCH'}; $suffix=[Text.Encoding]::ASCII.GetBytes(\"`r`nBRIDGE_EXISTING_TABS_ONLY=1`r`n\"); $newBytes=New-Object byte[] ($bytes.Length+$suffix.Length); [Array]::Copy($bytes,0,$newBytes,0,$bytes.Length); [Array]::Copy($suffix,0,$newBytes,$bytes.Length,$suffix.Length); $tmp=$f+'.r63-tmp-'+[guid]::NewGuid().ToString('N'); try{[IO.File]::WriteAllBytes($tmp,$newBytes);[IO.File]::Replace($tmp,$f,$null)}finally{if(Test-Path $tmp){Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}}; $postBytes=[IO.File]::ReadAllBytes($f); if(-not [Linq.Enumerable]::SequenceEqual([byte[]]$newBytes,[byte[]]$postBytes)){throw 'R63_WRITTEN_BYTES_MISMATCH'}; $postHash=(Get-FileHash -LiteralPath $f -Algorithm SHA256).Hash; @{contract='r63.existing_tabs_only_private_env_patch.v1';backupFormat='DPAPI_CurrentUser';originalSha256=$originalHash;patchedSha256=$postHash;originalByteCount=$bytes.Length;appendedByteCount=$suffix.Length}|ConvertTo-Json|Set-Content -LiteralPath $manifest -Encoding UTF8; Write-Output 'R63_STICKY_ENV_ENABLED_FOR_NEXT_SERVER_START'; Write-Output 'PRIVATE_DPAPI_BACKUP_VERIFIED=True'; Write-Output ('ORIGINAL_ENV_SHA256='+$originalHash); Write-Output ('PATCHED_ENV_SHA256='+$postHash); Write-Output ('TARGET_HEAD='+$actualHead)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Unable to find type [Security.Cryptography.ProtectedData].\r\nAt line:1 char:1334\r\n+ ... HA256).Hash; $encrypted=[Security.Cryptography.ProtectedData]::Protec ...\r\n+                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (Security.Cryptography.ProtectedData:TypeName) [], ParentContainsError \r\n   RecordException\r\n    + FullyQualifiedErrorId : TypeNotFound\r\n \r\n",
+      "stderr_bytes": 419,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:00:42.285Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:00:42.038Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-stickytabs-env-private-20261014-5b61c8da"
+    },
+    "request_id": "r63-stickytabs-env-private-20261014-5b61c8da",
+    "started_at": "2026-10-13T21:00:40.992Z",
+    "status": "completed"
+  },
+  "id": "r63-stickytabs-env-private-20261014-5b61c8da",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
