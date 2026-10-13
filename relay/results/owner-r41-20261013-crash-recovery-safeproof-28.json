@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,subprocess,json,time,os\nr=pathlib.Path('E:/PCControlAutonomyR41')\nsha='d5c2ac399b3dc71cb9f83f28c2fc86ed942878bd'\ns=(r/'START_R41_OBSERVER.cmd').read_text('utf8')\nstop=r/'STOP_R41_USER_OBSERVER.ps1'\nt=stop.read_text('utf8')\ncfg=json.loads((r/'config.r41-integrated.json').read_text('utf8'))\nstate=json.loads((r/'data/pc-control-supervisor.json').read_text('utf8'))\nowner=json.loads((r/'WATCHER_R41.json').read_text('utf8'))\nlock=json.loads((r/'data/pc-control-supervisor.json.watcher.lock/owner.json').read_text('utf8'))\nps=\"\"\"$token=$null;$errors=$null;[System.Management.Automation.Language.Parser]::ParseFile('%s',[ref]$token,[ref]$errors)|Out-Null; Write-Output $errors.Count\"\"\"%str(stop).replace(\"'\",\"''\")\nsyntax=subprocess.run(['powershell.exe','-NoProfile','-Command',ps],capture_output=True,text=True,timeout=6)\ncheck=subprocess.run(['powershell.exe','-NoProfile','-Command',\"\"\"$p=Get-CimInstance Win32_Process -Filter 'ProcessId = 8276';if($p -and $p.Name -ieq 'node.exe' -and $p.CommandLine -like '*PCControlAutonomyR41*pc-autonomy-daemon.js*' -and $p.CommandLine -like '*--watch*' -and $p.CommandLine -notlike '*--dispatch*'){exit 0}else{exit 2}\"\"\"],capture_output=True,text=True,timeout=7)\nprint(json.dumps({'source':sha,'livePid8276':check.returncode==0,'lockMatchesOwner':lock.get('pid')==owner.get('pid')==8276,'journalRevision':state.get('revision'),'cycleAt':state.get('lastCycle'),'readOnlyStatus':state.get('lastDecision',{}).get('status'),'dispatchCount':state.get('lastDecision',{}).get('dispatched'),'retryLoop':':restart' in s and 'goto restart' in s and 'Start-Sleep -Seconds 75' in s,'sendFlagAbsent':'--dispatch' not in s,'stopFlagHonored': 'STOP_R41_OBSERVER.flag' in s and 'STOP_R41_OBSERVER.flag' in t,'stopPowerShellSyntaxOkay':syntax.returncode==0 and syntax.stdout.strip()=='0','currentUserStartupEntry':(pathlib.Path(os.environ['APPDATA'])/'Microsoft/Windows/Start Menu/Programs/Startup/PCControl_R41_Observer.cmd').exists(),'readOnly':True},ensure_ascii=True)[:2900])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"source\": \"d5c2ac399b3dc71cb9f83f28c2fc86ed942878bd\", \"livePid8276\": true, \"lockMatchesOwner\": true, \"journalRevision\": 42, \"cycleAt\": \"2026-10-13T04:06:43.449Z\", \"readOnlyStatus\": \"READ_ONLY\", \"dispatchCount\": 0, \"retryLoop\": true, \"sendFlagAbsent\": true, \"stopFlagHonored\": true, \"stopPowerShellSyntaxOkay\": true, \"currentUserStartupEntry\": true, \"readOnly\": true}\r\n",
+      "stdout_bytes": 369,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:07:01.432Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:07:01.198Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-crash-recovery-safeproof-28"
+    },
+    "request_id": "owner-r41-20261013-crash-recovery-safeproof-28",
+    "started_at": "2026-10-13T04:06:59.878Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-crash-recovery-safeproof-28",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
