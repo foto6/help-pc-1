@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-r42-isolated-clone-20261014-c4c44acf",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $dst='E:\\PCControlR42-SHADOW'; if(Test-Path -LiteralPath $dst){throw 'SHADOW_ALREADY_EXISTS'}; & git.exe clone --depth 1 --single-branch --no-tags --branch agent/pc-r42-shell-pipe-drain-20261014 https://github.com/foto6/help-pc-1.git $dst; if($LASTEXITCODE -ne 0){throw 'CLONE_FAILED'}; $got=((& git.exe -C $dst rev-parse HEAD)|Out-String).Trim(); if($got -ne '3addc7e686fb5a03ff912351bb964f0a9f2cb858'){throw 'EXACT_SHA_MISMATCH'}; Write-Output ('PC_R42_HEAD='+$got); Write-Output ('PYTHON_VERSION='+((& py.exe -3 --version)|Out-String).Trim()); Write-Output ('PYTEST_VERSION='+((& py.exe -3 -m pytest --version 2>$null)|Out-String).Trim())"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 35000,
+  "note": "Exact-SHA isolated PC Executor R42 checkout and Python pytest availability only; live PC relay untouched"
+}
