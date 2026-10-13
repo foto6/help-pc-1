@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014'; $branch='agent/bridge-r60-production-hotfix-integration-20261014'; $base='c7ef06be94e8ada0119c226628a08c2c6d052ea4'; $head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($head -ne $base){throw 'SOURCE_HEAD_DRIFT'}; $staged=@(& git.exe -C $root diff --cached --name-only); if($staged.Count -ne 5){throw 'NOT_FIVE_VERIFIED_STAGED_FILES'}; $unmerged=@(& git.exe -C $root diff --name-only --diff-filter=U); if($unmerged.Count -ne 0){throw 'UNMERGED_FILES_PRESENT'}; & git.exe -C $root switch -c $branch; if($LASTEXITCODE -ne 0){throw 'NEW_BRANCH_FAILED'}; & git.exe -C $root -c 'user.name=ChatGPT PC Control' -c 'user.email=pc-control@users.noreply.github.com' -c 'commit.gpgsign=false' commit -m 'R60 integrate preserved R42 operator hotfix files with guarded R59 GPT bridge'; if($LASTEXITCODE -ne 0){throw 'COMMIT_FAILED'}; $sha=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); $parent=((& git.exe -C $root rev-parse HEAD^)|Out-String).Trim(); if($parent -ne $base){throw 'PARENT_SHA_MISMATCH'}; Write-Output ('R60_LOCAL_COMMIT='+$sha); Write-Output ('R60_PARENT='+$parent); Write-Output ('R60_SOURCE_FILES='+(@(& git.exe -C $root diff-tree --no-commit-id --name-only -r HEAD).Count)); Write-Output ('PRODUCTION_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Switched to a new branch 'agent/bridge-r60-production-hotfix-integration-20261014'\n",
+      "stderr_bytes": 83,
+      "stderr_truncated": false,
+      "stdout": "[agent/bridge-r60-production-hotfix-integration-20261014 41ae714] R60 integrate preserved R42 operator hotfix files with guarded R59 GPT bridge\n 5 files changed, 30 insertions(+), 7 deletions(-)\nR60_LOCAL_COMMIT=41ae7146b397353495dd4d8b3ddddc00a8ea434a\r\nR60_PARENT=c7ef06be94e8ada0119c226628a08c2c6d052ea4\r\nR60_SOURCE_FILES=5\r\nPRODUCTION_SHA256=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 411,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:12:07.040Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:12:06.813Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r60-commit-isolated-hotfix-20261014-9b0e82f3"
+    },
+    "request_id": "r60-commit-isolated-hotfix-20261014-9b0e82f3",
+    "started_at": "2026-10-13T20:12:05.613Z",
+    "status": "completed"
+  },
+  "id": "r60-commit-isolated-hotfix-20261014-9b0e82f3",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
