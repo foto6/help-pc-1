@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-live-postrelease-readonly-20261014-a9916c31",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$u='http://127.0.0.1:17448';$h=Invoke-RestMethod ($u+'/api/health') -TimeoutSec 6;$s=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6;$c=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 6;$a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6;Write-Output ('HEALTH='+$h.state);Write-Output ('HOLD='+$c.cutoverState.holdActive);Write-Output ('QUEUE_PAUSED='+$h.assignmentQueue.paused);Write-Output ('ASSIGNMENTS='+@($a.assignments).Count);Write-Output ('ACTIVE='+@($a.assignments|Where-Object {$_.state -in @('running','dispatching','awaiting_evidence')}).Count);Write-Output ('QUEUED='+@($a.assignments|Where-Object {$_.state -eq 'queued'}).Count);Write-Output ('COMPLETED='+@($a.assignments|Where-Object {$_.state -eq 'completed'}).Count);Write-Output ('CODE_RELOAD_REQUIRED='+$s.codeReloadRequired);Write-Output ('HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only post-R63 real bridge health and old assignment counters, no raw chat IDs or provider send"
+}
