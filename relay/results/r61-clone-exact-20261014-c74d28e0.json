@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$dest='E:\\WebAIBridge-R61-SHADOW';$sha='830c00ed830c45e525933f5add314c9b9e3c4200';if(Test-Path -LiteralPath $dest){throw 'SHADOW_ALREADY_EXISTS'};& git.exe clone --depth 1 --single-branch --no-tags --branch agent/bridge-r61-failclosed-dispatch-inspection-20261014 https://github.com/foto6/WebAIBridge.git $dest;if($LASTEXITCODE -ne 0){throw 'CLONE_FAILED'};$got=((& git.exe -C $dest rev-parse HEAD)|Out-String).Trim();if($got -ne $sha){throw 'SHA_MISMATCH'};Write-Output ('R61_SHA='+$got);Write-Output ('PRODUCTION_SERVER_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Cloning into 'E:\\WebAIBridge-R61-SHADOW'...\n",
+      "stderr_bytes": 44,
+      "stderr_truncated": false,
+      "stdout": "R61_SHA=830c00ed830c45e525933f5add314c9b9e3c4200\r\nPRODUCTION_SERVER_HASH=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 139,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:26:46.085Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:26:45.838Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r61-clone-exact-20261014-c74d28e0"
+    },
+    "request_id": "r61-clone-exact-20261014-c74d28e0",
+    "started_at": "2026-10-13T20:26:40.689Z",
+    "status": "completed"
+  },
+  "id": "r61-clone-exact-20261014-c74d28e0",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
