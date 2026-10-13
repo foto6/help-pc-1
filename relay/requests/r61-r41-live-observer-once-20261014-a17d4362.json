@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r61-r41-live-observer-once-20261014-a17d4362",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\PCControlAutonomyR61-SHADOW'; $runner=Join-Path $root 'r45-durable-autonomy\\releases\\r61\\autonomy-r45-runner.js'; $plan='E:\\WebAIBridge-R61-SHADOW\\app\\autonomy-r45-plan.example.json'; $testNode='E:\\PCControlR41-R61-VERIFY\\bin\\pc-autonomy-daemon.js'; $cfgFile=Join-Path $root 'R61_R41_OBSERVER_ONCE.config.json'; $j1=Join-Path $root 'R61_R41_OBSERVER_ONCE.state.json'; $j2=Join-Path $root 'R61_RUNNER_OBSERVER_ONCE.state.json'; if(Test-Path -LiteralPath $cfgFile){throw 'REFUSE_CONFIG_OVERWRITE'}; if(-not (Test-Path -LiteralPath $runner) -or -not (Test-Path -LiteralPath $plan) -or -not (Test-Path -LiteralPath $testNode)){throw 'REQUIRED_SOURCE_MISSING'}; $cfg=@{contract='pc.control.autonomy.v1';mode='observe';operatorApproved=$false;enableBrain=$false;allowNewChat=$false;allowProviderRateBypass=$false;allowUnsafeReplay=$false;pollIntervalMs=60000;maxSendsPerHour=3;bridge=@{url='http://127.0.0.1:17448'};r45=@{runner=$runner;plan=$plan;state=$j2;sha='d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2'};state=$j1}; [IO.File]::WriteAllText($cfgFile,($cfg|ConvertTo-Json -Depth 8),(New-Object System.Text.UTF8Encoding($false))); & node.exe $testNode --config $cfgFile --once; if($LASTEXITCODE -ne 0){throw 'ISOLATED_R41_R61_CYCLE_FAILED'}; Write-Output ('R61_R41_STATE_CREATED='+(Test-Path -LiteralPath $j1)); Write-Output ('R61_RUNNER_STATE_CREATED='+(Test-Path -LiteralPath $j2)); Write-Output ('PRODUCTION_SHA256='+(Get-FileHash 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 40000,
+  "note": "ONE authenticated PC R41 run once, observe-only config with R61 immutable package, real loopback Bridge; no --watch/--dispatch/--brain, never active service configuration or provider Send"
+}
