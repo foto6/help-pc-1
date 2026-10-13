@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-live-bridge-r61-cutover-20261014-7b38e6c5",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $root='E:\\WebAIBridge'; $target='d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2'; $pre='8646d55a309417ee147dbe5773e48b9dec11cbdb'; $ref='agent/bridge-r61-failclosed-dispatch-inspection-20261014'; $report='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\R62_LIVE_CUTOVER_REPORT.json'; $log='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\R62_LIVE_CUTOVER_OUTPUT.log'; $current=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($current -ne $pre){throw 'ABORT_SOURCE_SHA_CHANGED'}; if(@(& git.exe -C $root status --porcelain=v1 --untracked-files=all).Count -ne 0){throw 'ABORT_PRODUCTION_DIRTY'}; if(Test-Path -LiteralPath $report){throw 'ABORT_REPORT_ALREADY_EXISTS'}; if(Test-Path -LiteralPath $log){throw 'ABORT_LOG_ALREADY_EXISTS'}; $h=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/health' -TimeoutSec 5; $c=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 5; if($h.state -ne 'PAUSED' -or $c.cutoverState.holdActive -ne $true){throw 'ABORT_EXPECTED_INITIAL_HOLD_NOT_PRESENT'}; $a=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 6; if(@($a.assignments|Where-Object {$_.state -in @('dispatching','running','awaiting_evidence')}).Count -ne 0){throw 'ABORT_ACTIVE_AGENT_ASSIGNMENT'}; Write-Output 'R62_CUTOVER_TXN_STARTED_WITH_HOLD'; & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $root 'app\\r42-cutover.ps1') -RepoPath $root -TargetSha $target -TargetBranch $ref -ReportPath $report *> $log; $rc=$LASTEXITCODE; Write-Output ('CUTOVER_COMMAND_EXIT='+$rc); Write-Output ('REPORT_EXISTS='+(Test-Path -LiteralPath $report -PathType Leaf)); Write-Output ('LOG_BYTES='+((Get-Item -LiteralPath $log).Length)); $now=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); Write-Output ('CURRENT_LOCAL_HEAD='+$now); if($rc -eq 0){ $cut=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 8;Write-Output ('POSTCUTOVER_HOLD_ACTIVE='+$cut.cutoverState.holdActive);$health=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/health' -TimeoutSec 6;Write-Output ('POSTCUTOVER_HEALTH='+$health.state)}; Write-Output 'R62_CUTOVER_COMMAND_FINISHED'; if($rc -ne 0){exit $rc}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 115000,
+  "note": "User-approved controlled official R42 cutover, commit-preserved clean hotfix source, exact R61 SHA, immutable local rollback manifest and PAUSED_BROWSER no-Chrome restart. Never release R42 HOLD or dispatch Send. Unique non-replayed request."
+}
