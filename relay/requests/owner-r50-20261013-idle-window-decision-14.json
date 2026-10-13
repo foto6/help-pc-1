@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r50-20261013-idle-window-decision-14",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json,subprocess,pathlib\nBASE='http://127.0.0.1:17448'\ndef get(route):\n with urllib.request.urlopen(BASE+route,timeout=9) as f:return json.load(f)\nc=get('/api/supervisor-watchdog/managed-chats?inspect=1')\nh=get('/api/health');q=get('/api/supervisor-watchdog/agent-assignments')\nhold=get('/api/projects/control-plane/cutover-r42/status')\nrows=[{'id':x.get('id'),'status':x.get('status'),'generating':x.get('generating'),'draft':x.get('draftPresent'),'open':x.get('openTabs'),'high':x.get('highMode')} for x in c.get('chats',[])]\nactive=[x.get('id') for x in q.get('assignments',[]) if x.get('state') in ('dispatching','running','awaiting_evidence')]\nallQuiet=all(not x['generating'] and not x['draft'] for x in rows)\nprint(json.dumps({'allChatTabsQuiet':allQuiet,'rows':rows,'assignmentActive':active,'r49':h.get('state'),'queueDisposition':(h.get('queueSafety') or {}).get('queueDisposition'),'r42Hold':hold.get('cutoverState',{}).get('holdActive'),'safeToHotRestart':allQuiet and not active and h.get('state')=='PAUSED' and hold.get('cutoverState',{}).get('holdActive') is True,'readOnly':True},ensure_ascii=True)[:3100])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 21000,
+  "note": "Read-only final zero-generating, zero-draft seven chat check before contemplating zero-send guarded R50 live deployment; never write/Send/restart in this request."
+}
