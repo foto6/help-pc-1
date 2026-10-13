@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-private-sticky-config-20261014-d284ca71",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; Add-Type -AssemblyName System.Security; $f='E:\\WebAIBridge\\app\\.env'; $b='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\R63_ENV_ORIGINAL_CURRENT_USER_DPAPI.bin'; $m='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\R63_ENV_STICKY_CHANGE.json'; $head=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim(); if($head -ne 'd17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2'){throw 'ABORT_SOURCE_HEAD'}; $r=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 3; if($r.cutoverState.holdActive -ne $true){throw 'ABORT_HOLD_NOT_ACTIVE'}; if(-not (Test-Path -LiteralPath $f -PathType Leaf) -or (Test-Path -LiteralPath $b) -or (Test-Path -LiteralPath $m)){throw 'ABORT_ENV_OR_BACKUP_STATE'}; $item=Get-Item -LiteralPath $f -Force; if(($item.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0){throw 'ABORT_ENV_REPARSE'}; [byte[]]$bytes=[IO.File]::ReadAllBytes($f); if($bytes.Length -gt 1048576){throw 'ABORT_ENV_LARGE'}; if([regex]::IsMatch([Text.Encoding]::UTF8.GetString($bytes),'(?m)^\\s*(?:export\\s+)?BRIDGE_EXISTING_TABS_ONLY\\s*=')){throw 'ABORT_EXISTING_KEY'}; $oldHash=(Get-FileHash -LiteralPath $f -Algorithm SHA256).Hash; [byte[]]$cipher=[Security.Cryptography.ProtectedData]::Protect($bytes,$null,[Security.Cryptography.DataProtectionScope]::CurrentUser); [IO.File]::WriteAllBytes($b,$cipher); [byte[]]$check=[Security.Cryptography.ProtectedData]::Unprotect([IO.File]::ReadAllBytes($b),$null,[Security.Cryptography.DataProtectionScope]::CurrentUser); if([Convert]::ToBase64String($bytes) -cne [Convert]::ToBase64String($check)){throw 'ENCRYPTED_BACKUP_VERIFICATION_FAILED'}; [byte[]]$suffix=[Text.Encoding]::ASCII.GetBytes(\"`r`nBRIDGE_EXISTING_TABS_ONLY=1`r`n\"); [byte[]]$merged=New-Object byte[] ($bytes.Length+$suffix.Length); [Array]::Copy($bytes,0,$merged,0,$bytes.Length); [Array]::Copy($suffix,0,$merged,$bytes.Length,$suffix.Length); $tmp=$f+'.r63-'+[guid]::NewGuid().ToString('N')+'.tmp'; try{[IO.File]::WriteAllBytes($tmp,$merged);[IO.File]::Replace($tmp,$f,$null)}finally{if(Test-Path -LiteralPath $tmp){Remove-Item -LiteralPath $tmp -Force -ErrorAction SilentlyContinue}}; $afterHash=(Get-FileHash -LiteralPath $f -Algorithm SHA256).Hash; if([Convert]::ToBase64String([IO.File]::ReadAllBytes($f)) -cne [Convert]::ToBase64String($merged)){throw 'APPENDED_ENV_BYTES_NOT_EXACT'}; @{contract='r63.sticky_env_private_backup.v1';backupFormat='DPAPI_CurrentUser';originalSha256=$oldHash;newSha256=$afterHash;appendedSetting='BRIDGE_EXISTING_TABS_ONLY=1'}|ConvertTo-Json|Set-Content -LiteralPath $m -Encoding UTF8; Write-Output 'R63_ENV_APPENDED_VERIFIED=True'; Write-Output 'R63_PRIVATE_DPAPI_BACKUP_VERIFIED=True'; Write-Output ('ENV_BEFORE_SHA256='+$oldHash); Write-Output ('ENV_AFTER_SHA256='+$afterHash); Write-Output 'SERVER_RESTARTED=False'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Owner-approved private one-time append BRIDGE_EXISTING_TABS_ONLY=1 using DPAPI encrypted byte-for-byte backup; never display .env content or secrets; no Chrome/server restart"
+}
