@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $b='E:\\WebAIBridge'; $a='E:\\WebAIBridge-R58-SHADOW'; Write-Output ('BRIDGE_WORKTREE='+ (Test-Path -LiteralPath $b -PathType Container)); Write-Output ('R58_SHADOW='+ (Test-Path -LiteralPath $a -PathType Container)); Write-Output ('PRODUCTION_SERVER_SHA256='+(Get-FileHash -LiteralPath (Join-Path $b 'app\\server.js') -Algorithm SHA256).Hash); $head=((& git.exe -C $b rev-parse HEAD) | Out-String).Trim(); Write-Output ('PRODUCTION_GIT_HEAD='+$head); $branch=((& git.exe -C $b branch --show-current) | Out-String).Trim(); Write-Output ('PRODUCTION_BRANCH='+$branch); $status=@(& git.exe -C $b status --porcelain=v1 --untracked-files=no); Write-Output ('PRODUCTION_TRACKED_CHANGES='+$status.Count); Write-Output ('R58_HEAD='+ ((& git.exe -C $a rev-parse HEAD) | Out-String).Trim()); Write-Output ('R41_OBSERVER_DIR='+(Test-Path -LiteralPath 'E:\\PCControlAutonomyR41')); Write-Output ('R58_TEST_A='+(Test-Path -LiteralPath (Join-Path $a 'R58_R50_R56_TESTS.log'))); Write-Output ('R58_TEST_B='+(Test-Path -LiteralPath (Join-Path $a 'R58_R45_R57_TESTS.log')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "BRIDGE_WORKTREE=True\r\nR58_SHADOW=True\r\nPRODUCTION_SERVER_SHA256=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\nPRODUCTION_GIT_HEAD=5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\r\nPRODUCTION_BRANCH=\r\nPRODUCTION_TRACKED_CHANGES=6\r\nR58_HEAD=86d643c6105caf906aa29125aace38320946ef95\r\nR41_OBSERVER_DIR=True\r\nR58_TEST_A=True\r\nR58_TEST_B=True\r\n",
+      "stdout_bytes": 350,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T19:53:56.385Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T19:53:56.162Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r59-op-readonly-pcstate-20261014-v1"
+    },
+    "request_id": "r59-op-readonly-pcstate-20261014-v1",
+    "started_at": "2026-10-13T19:53:55.164Z",
+    "status": "completed"
+  },
+  "id": "r59-op-readonly-pcstate-20261014-v1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
