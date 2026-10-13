@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json\nbase='http://127.0.0.1:17448'\ntry:\n with urllib.request.urlopen(base+'/api/ai-profiles',timeout=6) as r:d=json.load(r)\n rows=d.get('aiProfiles',[])\n def r(x):\n  return {k:x.get(k) for k in ['id','name','provider','debugPort','chromeLaunchMode','attachAutoStart','workerConnected','workerLastSeenAt','enabled','lastLaunchAt','launchError','chromeProfilePath','status'] if k in x and k!='chromeProfilePath'}\n print(json.dumps({'profiles':[r(x) for x in rows],'count':len(rows),'systemKeys':sorted((d.get('system') or {}).keys())[:30],'readOnly':True},ensure_ascii=True)[:3600])\nexcept Exception as e:print(json.dumps({'errorType':type(e).__name__}))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"profiles\": [{\"id\": \"builtin-chatgpt\", \"name\": \"ChatGPT \\u043e\\u0441\\u043d\\u043e\\u0432\\u043d\\u043e\\u0439\", \"provider\": \"chatgpt\", \"debugPort\": 17447, \"chromeLaunchMode\": \"attach\", \"attachAutoStart\": false, \"workerConnected\": false, \"workerLastSeenAt\": \"\", \"enabled\": false, \"lastLaunchAt\": \"2026-09-26T17:38:59.196Z\", \"launchError\": \"\"}, {\"id\": \"builtin-gemini\", \"name\": \"Gemini \\u043e\\u0441\\u043d\\u043e\\u0432\\u043d\\u043e\\u0439\", \"provider\": \"gemini\", \"debugPort\": 0, \"chromeLaunchMode\": \"managed\", \"attachAutoStart\": true, \"workerConnected\": false, \"workerLastSeenAt\": \"\", \"enabled\": true}, {\"id\": \"gemini-personal-attach\", \"name\": \"Gemini Personal - attached\", \"provider\": \"gemini\", \"debugPort\": 17447, \"chromeLaunchMode\": \"attach\", \"attachAutoStart\": true, \"workerConnected\": false, \"workerLastSeenAt\": \"2026-10-13T03:59:09.126Z\", \"enabled\": true, \"lastLaunchAt\": \"2026-10-12T15:03:56.647Z\", \"launchError\": \"\"}, {\"id\": \"ef72920c-cfe7-4824-a79b-7a0e0943ce7e\", \"name\": \"ChatGPT \\u043f\\u0440\\u043e\\u0444\\u0438\\u043b\\u044c 2\", \"provider\": \"chatgpt\", \"debugPort\": 17410, \"chromeLaunchMode\": \"attach\", \"attachAutoStart\": true, \"workerConnected\": true, \"workerLastSeenAt\": \"2026-10-13T03:59:12.072Z\", \"enabled\": true, \"lastLaunchAt\": \"2026-10-12T15:03:56.667Z\", \"launchError\": \"\"}], \"count\": 4, \"systemKeys\": [\"autostartEnabled\", \"autostartPath\", \"chromeAvailable\", \"chromeHeadless\", \"chromeNoSandbox\", \"chromePath\", \"extensionAvailable\", \"extensionPath\", \"localBaseUrl\", \"networkAccessScripts\", \"openAiCompatibleBaseUrl\", \"profileRoot\", \"proxy\", \"publicBaseUrl\", \"startCmd\", \"startScript\"], \"readOnly\": true}\r\n",
+      "stdout_bytes": 1608,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:59:12.914Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:59:12.696Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-browser-profile-binding-readonly-22"
+    },
+    "request_id": "owner-r41-20261013-browser-profile-binding-readonly-22",
+    "started_at": "2026-10-13T03:59:11.894Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-browser-profile-binding-readonly-22",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
