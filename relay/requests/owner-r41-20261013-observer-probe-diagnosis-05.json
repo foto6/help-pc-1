@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-observer-probe-diagnosis-05",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import pathlib,json,urllib.request\np=pathlib.Path('E:/PCControlAutonomyR41/data/r45-coordinator.json')\nd=json.loads(p.read_text('utf8')) if p.exists() else {}\nerrors={}\nfor route in ('/api/health','/api/status','/api/supervisor-watchdog/agent-assignments'):\n try:\n  with urllib.request.urlopen('http://127.0.0.1:17448'+route,timeout=3) as f:\n   payload=json.load(f)\n  errors[route]={'reachable':True,'status':payload.get('state'),'total':len(payload.get('assignments',[]))}\n except Exception as e:errors[route]={'reachable':False,'error':type(e).__name__}\nprint(json.dumps({'r45LastError':str(d.get('lastError',''))[:260],'endpoints':errors,'readOnly':True}))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only root-cause of R41 observer's R45 OBSERVE_FAILED; independent GET only, no provider/browser/queue change."
+}
