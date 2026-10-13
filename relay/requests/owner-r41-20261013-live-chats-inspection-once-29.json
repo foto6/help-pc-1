@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-live-chats-inspection-once-29",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request\ntry:\n with urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1',timeout=12) as r:d=json.load(r)\n rows=d.get('chats',[])\n keep=('id','status','openTabs','profileWorkerConnected','profileWorkerRegistrationState','generating','draftPresent','highMode','contextLimit','providerLoadError','activeAssignmentCount','compatible')\n clean=[]\n for x in rows:clean.append({k:x[k] for k in keep if k in x})\n print(json.dumps({'status':'INSPECTION_COMPLETED','count':len(clean),'rows':clean,'noProviderTextCaptured':True,'noSend':True},ensure_ascii=True)[:5000])\nexcept Exception as e:print(json.dumps({'status':'READ_ONLY_INSPECTION_UNAVAILABLE','error':type(e).__name__,'noSend':True}))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "One bounded background CDP READ_ONLY Bridge managed-chat DOM check; 12s max, sanitized boolean/status-only, no browser focus/new tab or Send, protects user's active chats. No replay unknown."
+}
