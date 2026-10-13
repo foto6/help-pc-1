@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json\nr=subprocess.run(['gh','api','repos/foto6/WebAIBridge/commits/6e7f6b1de49c7add74c81e6ec93c0096db7b3eb2','--jq','.sha'],capture_output=True,text=True,timeout=8);print(json.dumps({'ghReadAllowed':r.returncode==0,'exactCommit':r.stdout.strip() if r.returncode==0 else '', 'errorCode':r.returncode}))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ghReadAllowed\": true, \"exactCommit\": \"6e7f6b1de49c7add74c81e6ec93c0096db7b3eb2\", \"errorCode\": 0}\r\n",
+      "stdout_bytes": 100,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T02:38:59.686Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T02:38:59.448Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r45-20261013-gh-readonly-auth-0944-04"
+    },
+    "request_id": "owner-r45-20261013-gh-readonly-auth-0944-04",
+    "started_at": "2026-10-13T02:38:57.465Z",
+    "status": "completed"
+  },
+  "id": "owner-r45-20261013-gh-readonly-auth-0944-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
