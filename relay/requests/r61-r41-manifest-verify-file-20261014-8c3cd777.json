@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r61-r41-manifest-verify-file-20261014-8c3cd777",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$root='E:\\PCControlR41-R61-VERIFY';$sha='5d46ed23cfc72350663fe8adf66255f584f2ab1a';if(-not (Test-Path -LiteralPath $root)){throw 'ISOLATED_R41_MISSING'};$head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim();if($head -ne $sha){throw 'SOURCE_DRIFT'};$code=@'\nimport { verifyR45Release } from './bin/pc-autonomy-daemon.js';\nconst runner = 'E:\\\\PCControlAutonomyR61-SHADOW\\\\autonomy-r45-runner.js';\nconst sha = 'd17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2';\nconst resolved = verifyR45Release({r45:{runner,sha}});\nif (resolved !== runner) throw Error('RUNNER_PATH_MISMATCH: '+resolved);\nconsole.log('R61_R41_NINE_BLOB_MANIFEST_VALID');\n'@;$out=Join-Path $root 'R61_MANIFEST_VERIFY.mjs';if(Test-Path $out){throw 'VERIFY_SCRIPT_ALREADY_EXISTS'};[IO.File]::WriteAllText($out,$code,(New-Object System.Text.UTF8Encoding($false)));Push-Location $root;try{& node.exe $out;if($LASTEXITCODE -ne 0){throw 'R61_R41_VERIFIER_FAILED'}}finally{Pop-Location};Write-Output ('R41_SOURCE_HEAD='+$sha)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "One-off nine-module R61 manifest verification via actual R41 release verifier from isolated clone; writes only new isolated JS test file"
+}
