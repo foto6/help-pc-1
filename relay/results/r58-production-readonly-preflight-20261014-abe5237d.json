@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $source='E:\\WebAIBridge-R58-SHADOW\\app\\r56-sticky-readonly-preflight.js'; $prod='E:\\WebAIBridge\\app'; if(-not (Test-Path -LiteralPath $source -PathType Leaf)){throw 'R58_PREFLIGHT_MISSING'}; $raw=& node.exe $source --app $prod; if($LASTEXITCODE -ne 0){throw 'R56_PREFLIGHT_COMMAND_FAILED'}; $result=($raw | Out-String | ConvertFrom-Json); Write-Output ('PREFLIGHT_CONTRACT='+$result.contract); Write-Output ('READONLY_CANDIDATE='+$result.readOnlyStagingCandidate); Write-Output ('SAFE_TO_DISPATCH='+$result.safeToLiveDispatch); Write-Output ('BLOCKERS='+($result.blockers -join ',')); Write-Output ('SOURCE_R50='+$result.observations.r50GuardPresent); Write-Output ('SOURCE_R56='+$result.observations.r56Installed); Write-Output ('R42_HOLD='+$result.observations.holdActive); Write-Output ('QUEUE_PAUSED='+$result.observations.queuePaused); Write-Output ('UNKNOWN_COUNTERS='+($result.observations.assignmentCounts | ConvertTo-Json -Compress)); Write-Output ('PRODUCTION_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "PREFLIGHT_CONTRACT=bridge.r56.sticky_production_readonly_preflight.v1\r\nREADONLY_CANDIDATE=False\r\nSAFE_TO_DISPATCH=False\r\nBLOCKERS=r56_source_not_present\r\nSOURCE_R50=True\r\nSOURCE_R56=False\r\nR42_HOLD=True\r\nQUEUE_PAUSED=True\r\nUNKNOWN_COUNTERS={\"cancelled\":11,\"blocked\":35,\"failed\":12,\"completed\":10,\"queued\":1}\r\nPRODUCTION_SHA256=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 393,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T19:42:58.896Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T19:42:58.657Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r58-production-readonly-preflight-20261014-abe5237d"
+    },
+    "request_id": "r58-production-readonly-preflight-20261014-abe5237d",
+    "started_at": "2026-10-13T19:42:57.551Z",
+    "status": "completed"
+  },
+  "id": "r58-production-readonly-preflight-20261014-abe5237d",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
