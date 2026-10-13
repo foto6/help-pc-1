@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,json,pathlib\nsha='6e7f6b1de49c7add74c81e6ec93c0096db7b3eb2'\nroot=pathlib.Path('E:/WebAIBridge/app/data/operator-tools/r45-durable-autonomy')\nrelease=root/'releases'/sha\njournal=root/'data'/'read-only-diagnostics.state.json'\ncmd=['node','autonomy-r45-runner.js','--plan',str(release/'autonomy-r45-plan.example.json'),'--state',str(journal),'--once']\ntry:\n r=subprocess.run(cmd,cwd=release,capture_output=True,text=True,timeout=18)\n print(json.dumps({'exitCode':r.returncode,'output':r.stdout[-6000:],'error':r.stderr[-600:],'sourceRelease':sha,'statePath':str(journal),'readOnly':True,'sentMessages':False,'startedMonitor':False}))\nexcept subprocess.TimeoutExpired:\n print(json.dumps({'error':'isolated_read_only_probe_timeout','sourceRelease':sha,'noProviderSideEffects':True}))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"exitCode\": 0, \"output\": \"{\\\"at\\\":\\\"2026-10-13T02:41:03.750Z\\\",\\\"planId\\\":\\\"r45-edit-me\\\",\\\"revision\\\":1,\\\"counts\\\":{\\\"PENDING\\\":1},\\\"checkpointDue\\\":[],\\\"reconciliationRequired\\\":[],\\\"dispatched\\\":[],\\\"status\\\":\\\"READ_ONLY\\\",\\\"brainReason\\\":\\\"disabled\\\"}\\n\", \"error\": \"\", \"sourceRelease\": \"6e7f6b1de49c7add74c81e6ec93c0096db7b3eb2\", \"statePath\": \"E:\\\\WebAIBridge\\\\app\\\\data\\\\operator-tools\\\\r45-durable-autonomy\\\\data\\\\read-only-diagnostics.state.json\", \"readOnly\": true, \"sentMessages\": false, \"startedMonitor\": false}\r\n",
+      "stdout_bytes": 523,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T02:41:04.019Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T02:41:03.801Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r45-20261013-installed-readonly-once-0952-07"
+    },
+    "request_id": "owner-r45-20261013-installed-readonly-once-0952-07",
+    "started_at": "2026-10-13T02:41:03.016Z",
+    "status": "completed"
+  },
+  "id": "owner-r45-20261013-installed-readonly-once-0952-07",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
