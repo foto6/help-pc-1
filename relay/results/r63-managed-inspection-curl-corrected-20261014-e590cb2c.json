@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "curl.exe --noproxy 127.0.0.1 --max-time 4 -sS -o E:\\WebAIBridge-R63-OPERATOR-BACKUP-20261014-v1\\R63_MANAGED_INSPECT.json http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:43:01.206Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:43:00.970Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-managed-inspection-curl-corrected-20261014-e590cb2c"
+    },
+    "request_id": "r63-managed-inspection-curl-corrected-20261014-e590cb2c",
+    "started_at": "2026-10-13T21:43:00.327Z",
+    "status": "completed"
+  },
+  "id": "r63-managed-inspection-curl-corrected-20261014-e590cb2c",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
