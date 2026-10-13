@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-production-admission-readonly-20261014-8c6a217f",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $p='E:\\WebAIBridge'; $candidate='E:\\WebAIBridge-R61-SHADOW'; $backup='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1'; $head=((& git.exe -C $p rev-parse HEAD)|Out-String).Trim(); Write-Output ('PRODUCTION_HEAD='+$head); Write-Output ('PRODUCTION_DIRTY_COUNT='+(@(& git.exe -C $p status --porcelain=v1 --untracked-files=no).Count)); Write-Output ('PROD_HASH='+(Get-FileHash (Join-Path $p 'app\\server.js') -Algorithm SHA256).Hash); Write-Output ('R61_SHADOW_EXISTS='+(Test-Path -LiteralPath $candidate)); Write-Output ('R61_SHADOW_SHA='+((& git.exe -C $candidate rev-parse HEAD)|Out-String).Trim()); Write-Output ('BACKUP_MANIFEST_EXISTS='+(Test-Path -LiteralPath (Join-Path $backup 'MANIFEST.json'))); $u='http://127.0.0.1:17448'; $health=Invoke-RestMethod ($u+'/api/health') -TimeoutSec 5; $assign=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 5; $cut=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 5; $list=@($assign.assignments); Write-Output ('HEALTH='+$health.state); Write-Output ('R42_HOLD='+$cut.cutoverState.holdActive); Write-Output ('ASSIGNMENTS='+$list.Count); Write-Output ('ACTIVE='+(@($list|Where-Object {$_.state -in @('running','dispatching','awaiting_evidence')}).Count)); Write-Output ('QUEUED='+(@($list|Where-Object {$_.state -eq 'queued'}).Count))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22000,
+  "note": "R62 read-only exact production and R61 source preflight before considering authorized reversible cutover; no browser mutation, no credential reads, no operator change"
+}
