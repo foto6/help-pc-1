@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r61-failure-detail-20261014-81b82f2d",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$f='E:\\WebAIBridge-R61-SHADOW\\R61_TESTS.log';$m=Select-String -LiteralPath $f -Pattern '^not ok' -Context 1,25;foreach($x in $m){Write-Output ($x.Context.PreContext -join \"`n\");Write-Output $x.Line;Write-Output ($x.Context.PostContext -join \"`n\")}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13000,
+  "note": "Read only failed test and bounded context from original R61 test log; no action replay or files changed"
+}
