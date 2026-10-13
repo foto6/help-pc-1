@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r45-20261013-r42-scratch-observe-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import pathlib,json\np=pathlib.Path('E:/WebAIBridge/app/data/operator-tools/r45-durable-autonomy/scratch/28e4accf59e37e767c37585b85cdacbdbac62120')\nif not p.exists():print(json.dumps({'exists':False}))\nelse:print(json.dumps({'exists':True,'count':len(list(p.iterdir())),'testCount':len(list(p.glob('*.test.js'))),'runner':(p/'autonomy-r45-runner.js').exists(),'readOnly':True}))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only scratch check after UNKNOWN prior source testing request. No original re-execution, no test/rewrite, no browser/production access."
+}
