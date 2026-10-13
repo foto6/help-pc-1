@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1'; $res=Invoke-RestMethod -Uri $u -Method Get -TimeoutSec 12; if($null -eq $res.chats){Write-Output 'MISSING_CHATS_ARRAY';exit 3}; $a=@($res.chats); Write-Output ('INSPECTED_CHAT_COUNT='+$a.Count); Write-Output ('INSPECTED_TRUE='+@($a|Where-Object {$_.inspected -eq $true}).Count); Write-Output ('IDLE='+@($a|Where-Object {$_.status -eq 'idle'}).Count); Write-Output ('ONE_TAB='+@($a|Where-Object {$_.openTabs -eq 1}).Count); Write-Output ('HIGH_MODE='+@($a|Where-Object {$_.highMode -eq $true}).Count); Write-Output ('ORIGINAL_STICKY='+@($a|Where-Object {$_.stickyPinned -eq $true}).Count); Write-Output ('CONTEXT_LIMIT='+@($a|Where-Object {$_.contextLimit -eq $true}).Count); Write-Output ('GENERATING='+@($a|Where-Object {$_.generating -eq $true}).Count); Write-Output ('DRAFT_PRESENT='+@($a|Where-Object {$_.draftPresent -eq $true}).Count); Write-Output ('PROVIDER_LOAD_ERROR='+@($a|Where-Object {$_.providerLoadError -eq $true}).Count); Write-Output ('RATE_LIMITED='+@($a|Where-Object {$_.providerRateLimited -eq $true}).Count); Write-Output ('ACTIVE_ASSIGNMENT='+@($a|Where-Object {$_.activeAssignmentCount -gt 0}).Count); Write-Output ('BROWSER_TARGET_PINNED='+@($a|Where-Object {$_.targetId -or $_.cdpTargetId}).Count); Write-Output ('SCHEMA_KEYS='+ ((@($a)|Select-Object -First 1|Get-Member -MemberType NoteProperty|Select-Object -ExpandProperty Name|Where-Object {$_ -in @('status','inspected','openTabs','highMode','stickyPinned','documentEpoch','contextLimit','providerLoadError','providerRateLimited')}) -join ','))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "INSPECTED_CHAT_COUNT=7\r\nINSPECTED_TRUE=0\r\nIDLE=5\r\nONE_TAB=6\r\nHIGH_MODE=6\r\nORIGINAL_STICKY=0\r\nCONTEXT_LIMIT=0\r\nGENERATING=1\r\nDRAFT_PRESENT=0\r\nPROVIDER_LOAD_ERROR=0\r\nRATE_LIMITED=0\r\nACTIVE_ASSIGNMENT=1\r\nBROWSER_TARGET_PINNED=0\r\nSCHEMA_KEYS=contextLimit,highMode,openTabs,providerLoadError,status\r\n",
+      "stdout_bytes": 295,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:40:38.609Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:40:38.384Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-chat-readonly-inspect-20261014-6e93304f"
+    },
+    "request_id": "r62-chat-readonly-inspect-20261014-6e93304f",
+    "started_at": "2026-10-13T20:40:37.323Z",
+    "status": "completed"
+  },
+  "id": "r62-chat-readonly-inspect-20261014-6e93304f",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
