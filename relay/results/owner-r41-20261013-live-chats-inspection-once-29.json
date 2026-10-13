@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request\ntry:\n with urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1',timeout=12) as r:d=json.load(r)\n rows=d.get('chats',[])\n keep=('id','status','openTabs','profileWorkerConnected','profileWorkerRegistrationState','generating','draftPresent','highMode','contextLimit','providerLoadError','activeAssignmentCount','compatible')\n clean=[]\n for x in rows:clean.append({k:x[k] for k in keep if k in x})\n print(json.dumps({'status':'INSPECTION_COMPLETED','count':len(clean),'rows':clean,'noProviderTextCaptured':True,'noSend':True},ensure_ascii=True)[:5000])\nexcept Exception as e:print(json.dumps({'status':'READ_ONLY_INSPECTION_UNAVAILABLE','error':type(e).__name__,'noSend':True}))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"status\": \"INSPECTION_COMPLETED\", \"count\": 7, \"rows\": [{\"id\": \"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\", \"status\": \"idle\", \"openTabs\": 1, \"profileWorkerConnected\": true, \"profileWorkerRegistrationState\": \"registered\", \"generating\": false, \"draftPresent\": false, \"highMode\": true, \"contextLimit\": false, \"providerLoadError\": false, \"activeAssignmentCount\": 0}, {\"id\": \"agent-media\", \"status\": \"idle\", \"openTabs\": 1, \"profileWorkerConnected\": true, \"profileWorkerRegistrationState\": \"registered\", \"generating\": false, \"draftPresent\": false, \"highMode\": true, \"contextLimit\": false, \"providerLoadError\": false, \"activeAssignmentCount\": 0}, {\"id\": \"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\", \"status\": \"idle\", \"openTabs\": 1, \"profileWorkerConnected\": true, \"profileWorkerRegistrationState\": \"registered\", \"generating\": false, \"draftPresent\": false, \"highMode\": true, \"contextLimit\": false, \"providerLoadError\": false, \"activeAssignmentCount\": 0}, {\"id\": \"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\", \"status\": \"closed\", \"openTabs\": 0, \"profileWorkerConnected\": true, \"profileWorkerRegistrationState\": \"registered\", \"generating\": false, \"draftPresent\": false, \"highMode\": false, \"contextLimit\": false, \"providerLoadError\": false, \"activeAssignmentCount\": 0}, {\"id\": \"agent-pc-control\", \"status\": \"working\", \"openTabs\": 1, \"profileWorkerConnected\": true, \"profileWorkerRegistrationState\": \"registered\", \"generating\": true, \"draftPresent\": false, \"highMode\": true, \"contextLimit\": false, \"providerLoadError\": false, \"activeAssignmentCount\": 0}, {\"id\": \"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\", \"status\": \"idle\", \"openTabs\": 1, \"profileWorkerConnected\": true, \"profileWorkerRegistrationState\": \"registered\", \"generating\": false, \"draftPresent\": false, \"highMode\": true, \"contextLimit\": false, \"providerLoadError\": false, \"activeAssignmentCount\": 0}, {\"id\": \"tg-curator-owner\", \"status\": \"idle\", \"openTabs\": 1, \"profileWorkerConnected\": true, \"profileWorkerRegistrationState\": \"registered\", \"generating\": false, \"draftPresent\": false, \"highMode\": true, \"contextLimit\": false, \"providerLoadError\": false, \"activeAssignmentCount\": 1}], \"noProviderTextCaptured\": true, \"noSend\": true}\r\n",
+      "stdout_bytes": 2180,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:08:04.984Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:08:04.735Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-live-chats-inspection-once-29"
+    },
+    "request_id": "owner-r41-20261013-live-chats-inspection-once-29",
+    "started_at": "2026-10-13T04:08:03.791Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-live-chats-inspection-once-29",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
