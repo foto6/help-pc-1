@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$from='E:\\WebAIBridge-R61-SHADOW';$dest='E:\\PCControlAutonomyR61-SHADOW';$sha='d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2';if(Test-Path -LiteralPath $dest){throw 'REFUSE_EXISTING_PACKAGE'};$got=((& git.exe -C $from rev-parse HEAD)|Out-String).Trim();if($got -ne $sha){throw 'R61_SOURCE_SHA_MISMATCH'};New-Item -ItemType Directory -Path $dest -ErrorAction Stop|Out-Null;$files=[ordered]@{};$p=Join-Path $from 'app\\autonomy-r45-runner.js';$actual=((& git.exe -C $from hash-object -- $p)|Out-String).Trim();if($actual -ne 'dda6d29dce21040815d09f0a5d0d6e6265f3f427'){throw 'BLOB_DRIFT_autonomy-r45-runner.js'};Copy-Item -LiteralPath $p -Destination (Join-Path $dest 'autonomy-r45-runner.js') -ErrorAction Stop;$files['autonomy-r45-runner.js']='dda6d29dce21040815d09f0a5d0d6e6265f3f427';$p=Join-Path $from 'app\\autonomy-r45-core.js';$actual=((& git.exe -C $from hash-object -- $p)|Out-String).Trim();if($actual -ne '8210d3f0c095fef0da2b68f96117f85a244c241f'){throw 'BLOB_DRIFT_autonomy-r45-core.js'};Copy-Item -LiteralPath $p -Destination (Join-Path $dest 'autonomy-r45-core.js') -ErrorAction Stop;$files['autonomy-r45-core.js']='8210d3f0c095fef0da2b68f96117f85a244c241f';$p=Join-Path $from 'app\\autonomy-r45-git-gate.js';$actual=((& git.exe -C $from hash-object -- $p)|Out-String).Trim();if($actual -ne '0af36e76e478aa6d5d67fb0729b916a9bd5149e0'){throw 'BLOB_DRIFT_autonomy-r45-git-gate.js'};Copy-Item -LiteralPath $p -Destination (Join-Path $dest 'autonomy-r45-git-gate.js') -ErrorAction Stop;$files['autonomy-r45-git-gate.js']='0af36e76e478aa6d5d67fb0729b916a9bd5149e0';$p=Join-Path $from 'app\\autonomy-r45-lock.js';$actual=((& git.exe -C $from hash-object -- $p)|Out-String).Trim();if($actual -ne '08833ff735f13a543e26ca6c70da6f9bccc6681d'){throw 'BLOB_DRIFT_autonomy-r45-lock.js'};Copy-Item -LiteralPath $p -Destination (Join-Path $dest 'autonomy-r45-lock.js') -ErrorAction Stop;$files['autonomy-r45-lock.js']='08833ff735f13a543e26ca6c70da6f9bccc6681d';$p=Join-Path $from 'app\\autonomy-r45-brain.js';$actual=((& git.exe -C $from hash-object -- $p)|Out-String).Trim();if($actual -ne '517abd57b93efb14484fe82eb117093845f48af5'){throw 'BLOB_DRIFT_autonomy-r45-brain.js'};Copy-Item -LiteralPath $p -Destination (Join-Path $dest 'autonomy-r45-brain.js') -ErrorAction Stop;$files['autonomy-r45-brain.js']='517abd57b93efb14484fe82eb117093845f48af5';$p=Join-Path $from 'app\\autonomy-r45-review.js';$actual=((& git.exe -C $from hash-object -- $p)|Out-String).Trim();if($actual -ne 'c1d3ec21aaf201d84cc0eede3932ad2c6239a5c2'){throw 'BLOB_DRIFT_autonomy-r45-review.js'};Copy-Item -LiteralPath $p -Destination (Join-Path $dest 'autonomy-r45-review.js') -ErrorAction Stop;$files['autonomy-r45-review.js']='c1d3ec21aaf201d84cc0eede3932ad2c6239a5c2';$p=Join-Path $from 'app\\autonomy-r57-gpt-git.js';$actual=((& git.exe -C $from hash-object -- $p)|Out-String).Trim();if($actual -ne '29ca62598bfbba936c595a0cb923075cb0bd89b5'){throw 'BLOB_DRIFT_autonomy-r57-gpt-git.js'};Copy-Item -LiteralPath $p -Destination (Join-Path $dest 'autonomy-r57-gpt-git.js') -ErrorAction Stop;$files['autonomy-r57-gpt-git.js']='29ca62598bfbba936c595a0cb923075cb0bd89b5';$p=Join-Path $from 'app\\autonomy-r57-successor.js';$actual=((& git.exe -C $from hash-object -- $p)|Out-String).Trim();if($actual -ne 'e49f491f1380056907d2aab76a1421876250135f'){throw 'BLOB_DRIFT_autonomy-r57-successor.js'};Copy-Item -LiteralPath $p -Destination (Join-Path $dest 'autonomy-r57-successor.js') -ErrorAction Stop;$files['autonomy-r57-successor.js']='e49f491f1380056907d2aab76a1421876250135f';$p=Join-Path $from 'app\\agent-evidence-collector.js';$actual=((& git.exe -C $from hash-object -- $p)|Out-String).Trim();if($actual -ne '2c7aea6fea40bd8547195d1797406dd5ac6431aa'){throw 'BLOB_DRIFT_agent-evidence-collector.js'};Copy-Item -LiteralPath $p -Destination (Join-Path $dest 'agent-evidence-collector.js') -ErrorAction Stop;$files['agent-evidence-collector.js']='2c7aea6fea40bd8547195d1797406dd5ac6431aa';$manifest=@{schema='r45.isolated.release.v1';deployment='SHADOW_ONLY';exactSha=$sha;dispatchEnabled=$false;running=$false;productionModified=$false;files=$files};$json=$manifest|ConvertTo-Json -Depth 6;[System.IO.File]::WriteAllText((Join-Path $dest 'MANIFEST.json'),$json,(New-Object System.Text.UTF8Encoding($false)));foreach($name in $files.Keys){& node.exe --check (Join-Path $dest $name);if($LASTEXITCODE -ne 0){throw ('NODE_SYNTAX_FAILURE '+$name)}};Write-Output ('PACKAGE_SHA='+$sha);Write-Output ('PACKAGE_MODULES='+$files.Count);Write-Output ('PACKAGE_PATH='+$dest);Write-Output ('DEPLOYMENT='+$manifest.deployment);Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "PACKAGE_SHA=d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2\r\nPACKAGE_MODULES=9\r\nPACKAGE_PATH=E:\\PCControlAutonomyR61-SHADOW\r\nDEPLOYMENT=SHADOW_ONLY\r\nPROD_HASH=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 218,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:30:26.340Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:30:26.114Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r61-pccontrol-r41-package-20261014-1eec306d"
+    },
+    "request_id": "r61-pccontrol-r41-package-20261014-1eec306d",
+    "started_at": "2026-10-13T20:30:24.194Z",
+    "status": "completed"
+  },
+  "id": "r61-pccontrol-r41-package-20261014-1eec306d",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
