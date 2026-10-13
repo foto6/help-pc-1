@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$h=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/health' -TimeoutSec 5;Write-Output ('HEALTH='+$h.state);$reasons=@($h.reasons);Write-Output ('REASON_COUNT='+$reasons.Count);foreach($reason in $reasons){Write-Output ('REASON='+([string]$reason).Substring(0,[Math]::Min(180,([string]$reason).Length)))};Write-Output ('QUEUE_ACTIVE='+$h.assignmentQueue.active);Write-Output ('QUEUE_QUEUED='+$h.assignmentQueue.queued);Write-Output ('QUEUE_PAUSED='+$h.assignmentQueue.paused)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "HEALTH=DEGRADED\r\nREASON_COUNT=1\r\nREASON=git_baseline:health_probe_stale\r\nQUEUE_ACTIVE=0\r\nQUEUE_QUEUED=0\r\nQUEUE_PAUSED=\r\n",
+      "stdout_bytes": 120,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:44:44.143Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:44:43.888Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-health-compact-20261014-c7e82019"
+    },
+    "request_id": "r63-health-compact-20261014-c7e82019",
+    "started_at": "2026-10-13T21:44:43.060Z",
+    "status": "completed"
+  },
+  "id": "r63-health-compact-20261014-c7e82019",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
