@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r60-json-encoding-regression-20261014-4f0be962",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014\\app\\r42-json-encoding.test.ps1"
+    ],
+    "cwd": "E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014\\app"
+  },
+  "timeout_ms": 18000,
+  "note": "Run reviewed isolated R42 JSON UTF8 roundtrip fixture (temporary file only) against merged R60 scripts; no live cutover or server mutation"
+}
