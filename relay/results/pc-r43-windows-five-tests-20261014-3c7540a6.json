@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $root='E:\\PCControlR43-SHADOW'; $log='E:\\PCControlR43_TESTS.log'; $got=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($got -ne 'a55cb8fb61e7e0c8b99fd13fe5310ad4c6dee65f'){throw 'R43_SHA_DRIFT'}; if(Test-Path -LiteralPath $log){throw 'R43_TEST_LOG_ALREADY_EXISTS'}; $env:PYTHONPATH='src'; Push-Location -LiteralPath $root; try{& py.exe -3 -m pytest tests\\test_shell_pipe_drain.py *> $log;$rc=$LASTEXITCODE}finally{Pop-Location}; Write-Output ('PYTEST_EXIT='+$rc); Write-Output ('PYTEST_LOG_BYTES='+(Get-Item -LiteralPath $log).Length); Get-Content -LiteralPath $log -Tail 7; if($rc -ne 0){exit $rc}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "PYTEST_EXIT=0\r\nPYTEST_LOG_BYTES=202\r\n.....                                                                    [100%]\r\n5 passed in 0.80s\r\n",
+      "stdout_bytes": 137,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:07:08.245Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:07:07.987Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-r43-windows-five-tests-20261014-3c7540a6"
+    },
+    "request_id": "pc-r43-windows-five-tests-20261014-3c7540a6",
+    "started_at": "2026-10-13T21:07:05.776Z",
+    "status": "completed"
+  },
+  "id": "pc-r43-windows-five-tests-20261014-3c7540a6",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
