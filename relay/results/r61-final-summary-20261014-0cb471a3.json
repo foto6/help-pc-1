@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$f='E:\\WebAIBridge-R61-SHADOW\\R61_FINAL_TESTS.log';Write-Output ('BYTES='+(Get-Item -LiteralPath $f).Length);Get-Content -LiteralPath $f -Tail 9;Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "BYTES=29235\r\n1..142\r\n# tests 142\r\n# suites 0\r\n# pass 142\r\n# fail 0\r\n# cancelled 0\r\n# skipped 0\r\n# todo 0\r\n# duration_ms 528.6302\r\nPROD_HASH=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 206,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:28:38.841Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:28:38.618Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r61-final-summary-20261014-0cb471a3"
+    },
+    "request_id": "r61-final-summary-20261014-0cb471a3",
+    "started_at": "2026-10-13T20:28:37.703Z",
+    "status": "completed"
+  },
+  "id": "r61-final-summary-20261014-0cb471a3",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
