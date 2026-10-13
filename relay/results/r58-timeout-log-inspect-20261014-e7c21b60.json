@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R58-SHADOW'; $log=Join-Path $root 'R58_R50_R56_TESTS.log'; Write-Output ('LOG_EXISTS='+(Test-Path -LiteralPath $log -PathType Leaf)); if(Test-Path -LiteralPath $log -PathType Leaf){$f=Get-Item -LiteralPath $log; Write-Output ('LOG_BYTES='+$f.Length);Write-Output ('LOG_MODIFIED='+$f.LastWriteTimeUtc.ToString('o')); Write-Output 'LOG_TAIL_BEGIN'; Get-Content -LiteralPath $log -Tail 45; Write-Output 'LOG_TAIL_END'}; $ps=Get-CimInstance Win32_Process -Filter \"Name='node.exe'\" -ErrorAction SilentlyContinue; $ids=@($ps | Where-Object { $_.CommandLine -like '*WebAIBridge-R58-SHADOW*' } | Select-Object -ExpandProperty ProcessId); Write-Output ('ACTIVE_R58_NODE_PROCESSES='+$ids.Count); Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "LOG_EXISTS=True\r\nLOG_BYTES=11556\r\nLOG_MODIFIED=2026-10-13T19:33:28.7771374Z\r\nLOG_TAIL_BEGIN\r\n✔ R56 CDP missing first document epoch cannot bypass a sticky pin (1.9294ms)\r\n✔ R56 CDP F5 on same target ID fails without pin replacement or new tab (1.4463ms)\r\n✔ R56 CDP missing, duplicate, and replaced targets fail closed (1.5024ms)\r\n✔ R56 broker rejects creation of a ChatGPT target even when labeled Gemini (1.9088ms)\r\n✔ providerConversationId is the authoritative routing identity (1.1723ms)\r\n✔ sticky tab id that navigated to another chat is rejected (0.5442ms)\r\n✔ project slug is only a URL hint; exact conversation id remains authority (0.3172ms)\r\n✔ no title, last-open, or only-open fallback can select a conversation (0.4814ms)\r\n✔ composer insert and Send scripts reject wrong conversation before DOM mutation (1.1008ms)\r\n✔ wrong sticky tab blocks before DOM.setFileInputFiles (14.6855ms)\r\n✔ server review flow binds providerConversationId before upload, composer and send (2.6013ms)\r\n✔ sidecar mutation lanes block discovery-only title routing (45.4571ms)\r\n✔ R56 sticky mode refuses creating a new offline ChatGPT Chrome (2.5236ms)\r\n✔ R56 emergency shutdown and PAUSED_ALL quiescence remain separate (0.8481ms)\r\n✔ R56 accepts R42 release only from explicit holdActive:false (1.7133ms)\r\n✔ R56 missing/malformed/unknown R42 cutover state blocks provider Send (8.7275ms)\r\n✔ R56 release is still blocked by independent R50 gates (2.8642ms)\r\n✔ R56 server keeps the unknown-as-HOLD authority helper (0.2608ms)\r\n✔ R56 inspector is never authority to send or restart even on green read-only candidate (1.0293ms)\r\n✔ R56 inspector blocks if R42 HOLD or queue pause is lost (1.1316ms)\r\n✔ R56 inspector refuses incomplete source and unknown side effects (0.2845ms)\r\n✔ R56 missing files fail closed (0.9486ms)\r\n✔ R56 reads an isolated fixture without changing any files (14.5742ms)\r\n✔ R56 preflight implementation contains no browser or mutation calls (0.5646ms)\r\n✔ R56 preflight never echoes unknown assignment state strings or approves unresolved work (0.2414ms)\r\n✔ R56 missing staged source or auto-continue enabled blocks read-only staging readiness (0.1674ms)\r\n✔ R56 worker refuses creating ChatGPT tabs even if broker is skipped (2.1092ms)\r\n✔ R56 worker reuses exact ChatGPT page without reload or navigation (1.5331ms)\r\n✔ R56 worker refuses wrong URL and login-required surface before mutations (1.459ms)\r\n✔ R56 worker refuses managed_agent_instruction before acquiring any broker lease (1.1743ms)\r\n✔ R56 worker does not enter Google login recovery when preserving tabs (0.7701ms)\r\n✔ R56 worker broker target check rejects missing or ambiguous same URL (0.9024ms)\r\n✔ R56 worker refuses broker swapping an exact pinned target (0.8253ms)\r\n✔ R56 worker guards all direct Chrome reload/navigation and login routes (0.3177ms)\r\n✔ R58 shadow rehearsal cannot overwrite the existing working-tree or manhwa (1.0831ms)\r\n✔ R58 shadow evidence never claims authority to dispatch or promote (0.1966ms)\r\n✔ R58 shadow runs all guarded tests, not an unattended npm installation (0.3775ms)\r\nℹ tests 68\r\nℹ suites 0\r\nℹ pass 68\r\nℹ fail 0\r\nℹ cancelled 0\r\nℹ skipped 0\r\nℹ todo 0\r\nℹ duration_ms 835.5544\r\nLOG_TAIL_END\r\nACTIVE_R58_NODE_PROCESSES=0\r\nPROD_HASH=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 3389,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T19:36:40.537Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T19:36:40.300Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r58-timeout-log-inspect-20261014-e7c21b60"
+    },
+    "request_id": "r58-timeout-log-inspect-20261014-e7c21b60",
+    "started_at": "2026-10-13T19:36:39.329Z",
+    "status": "completed"
+  },
+  "id": "r58-timeout-log-inspect-20261014-e7c21b60",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
