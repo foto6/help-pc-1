@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r59-windows-summary-20261014-e713d2ac",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "cd /d E:\\WebAIBridge-R59-SHADOW && findstr /C:\"# tests\" /C:\"# pass\" /C:\"# fail\" /C:\"# duration_ms\" R59_TESTS.log && git.exe rev-parse HEAD"
+    ],
+    "cwd": "E:\\WebAIBridge-R59-SHADOW"
+  },
+  "timeout_ms": 12000,
+  "note": "Read only summary counts and exact HEAD from completed pipe-safe R59 Node tests"
+}
