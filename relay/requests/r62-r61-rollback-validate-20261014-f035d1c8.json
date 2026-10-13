@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-r61-rollback-validate-20261014-f035d1c8",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $s=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 2; $m=[string]$s.cutoverState.rollbackManifest; if(-not (Test-Path -LiteralPath $m -PathType Leaf)){throw 'ABORT_MISSING_ORIGINAL_ROLLBACK_MANIFEST'}; & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File 'E:\\WebAIBridge\\app\\r42-rollback.ps1' -Manifest $m -ValidateOnly 2>&1|ForEach-Object { Write-Output ($_ -replace '[^\\x20-\\x7E]','') }; Write-Output ('ROLLBACK_PREFLIGHT_RC='+$LASTEXITCODE)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only original R42 rollback -ValidateOnly using actual partial-cutover manifest; strictly no real rollback, no service stop, no provider action"
+}
