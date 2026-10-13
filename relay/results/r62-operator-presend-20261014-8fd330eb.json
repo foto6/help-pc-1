@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$u='http://127.0.0.1:17448';$h=Invoke-RestMethod ($u+'/api/health') -TimeoutSec 5;$c=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 5;$a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 5;$head=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim();Write-Output ('HEAD='+$head);Write-Output ('HEALTH='+$h.state);Write-Output ('R42_HOLD='+$c.cutoverState.holdActive);Write-Output ('ASSIGNMENTS='+@($a.assignments).Count);Write-Output ('QUEUED='+@($a.assignments|Where-Object {$_.state -eq 'queued'}).Count);Write-Output ('ACTIVE='+@($a.assignments|Where-Object {$_.state -in @('running','dispatching','awaiting_evidence')}).Count);Write-Output ('BACKUP_EXISTS='+(Test-Path -LiteralPath 'E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\MANIFEST.json'))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "HEAD=d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2\r\nHEALTH=PAUSED\r\nR42_HOLD=True\r\nASSIGNMENTS=69\r\nQUEUED=1\r\nACTIVE=0\r\nBACKUP_EXISTS=True\r\n",
+      "stdout_bytes": 133,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:18:09.271Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:18:09.029Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-operator-presend-20261014-8fd330eb"
+    },
+    "request_id": "r62-operator-presend-20261014-8fd330eb",
+    "started_at": "2026-10-13T21:18:08.041Z",
+    "status": "completed"
+  },
+  "id": "r62-operator-presend-20261014-8fd330eb",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
