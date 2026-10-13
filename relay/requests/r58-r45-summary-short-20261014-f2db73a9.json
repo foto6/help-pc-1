@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r58-r45-summary-short-20261014-f2db73a9",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $f='E:\\WebAIBridge-R58-SHADOW\\R58_R45_R57_TESTS.log'; if(-not (Test-Path -LiteralPath $f -PathType Leaf)){Write-Output 'LOG_MISSING';exit 2}; Write-Output ('BYTES='+(Get-Item -LiteralPath $f).Length); Get-Content -LiteralPath $f -Tail 13 | Where-Object { $_ -match 'tests|pass|fail|duration_ms|skipped|todo|cancelled' } | ForEach-Object { Write-Output ([regex]::Replace($_,'[^\\x20-\\x7E]','')) }; Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Only short (<500 bytes) read of already finished R45/R57 Node test summary and prod checksum; no retest/replay"
+}
