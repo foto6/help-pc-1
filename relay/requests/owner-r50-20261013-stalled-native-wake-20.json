@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r50-20261013-stalled-native-wake-20",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,urllib.error,json\nurl='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-pc-control/wake'\nbody={'confirm':'WAKE_EXISTING_TAB_ONLY','expectedTargetId':'F7A2D32B34B5F309AF6B6D899CFFBA1F'}\nreq=urllib.request.Request(url,data=json.dumps(body).encode(),headers={'Content-Type':'application/json'},method='POST')\ntry:\n with urllib.request.urlopen(req,timeout=15) as r:d=json.load(r)\n print(json.dumps({'status':d.get('state'),'target':d.get('exactTargetId'),'pageResponds':d.get('pageResponds'),'navigationPerformed':d.get('navigationPerformed'),'reloadPerformed':d.get('reloadPerformed'),'tabCreated':d.get('tabCreated'),'promptSent':d.get('promptSent'),'assignmentDispatched':d.get('assignmentDispatched'),'queueResumed':d.get('queueResumed'),'reason':d.get('reason')},ensure_ascii=True))\nexcept urllib.error.HTTPError as e:\n print(json.dumps({'status':'DENIED','http':e.code,'code':json.load(e).get('code'),'noRetry':True}))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 24000,
+  "note": "User-authorized bounded R46 wake exact only already open frozen Native MCP chat, exact target id verified in prior R46 preview. Brings one tab to foreground and evaluates 2+2, no navigation, no reload, no provider messages, no queue changes. No blind replay unknown."
+}
