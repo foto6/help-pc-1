@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $dest='E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014'; $old='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03'; $new='c7ef06be94e8ada0119c226628a08c2c6d052ea4'; $patch='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\tracked-local-changes.patch'; if(Test-Path -LiteralPath $dest){throw 'REFUSE_EXISTING_MERGE_CANDIDATE'}; & git.exe clone --depth 1 --single-branch --no-tags --branch agent/bridge-r59-autonomy-release-gates-20261014 https://github.com/foto6/WebAIBridge.git $dest; if($LASTEXITCODE -ne 0){throw 'CANDIDATE_CLONE_FAILED'}; $got=((& git.exe -C $dest rev-parse HEAD)|Out-String).Trim(); if($got -ne $new){throw 'CANDIDATE_HEAD_DRIFT'}; & git.exe -C $dest fetch --no-tags --depth 1 origin $old; if($LASTEXITCODE -ne 0){throw 'BASE_FETCH_FAILED'}; $ErrorActionPreference='Continue'; & git.exe -C $dest apply --3way $patch 2>&1 | ForEach-Object { Write-Output ('APPLY='+($_ -replace '[^\\x20-\\x7E]','')) }; Write-Output ('APPLY_EXIT='+$LASTEXITCODE); $unmerged=@(& git.exe -C $dest diff --name-only --diff-filter=U); Write-Output ('UNMERGED_FILES='+($unmerged -join ',')); $stat=@(& git.exe -C $dest status --short --untracked-files=no); Write-Output ('TRACKED_STATUS_LINES='+$stat.Count); Write-Output ('PRODUCTION_SERVER_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Cloning into 'E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014'...\nFrom https://github.com/foto6/WebAIBridge\n * branch            5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03 -> FETCH_HEAD\n",
+      "stderr_bytes": 180,
+      "stderr_truncated": false,
+      "stdout": "APPLY=Applied patch to 'app/ensure-supervisor-watchdog.ps1' cleanly.\r\nAPPLY=Applied patch to 'app/r42-cutover.ps1' cleanly.\r\nAPPLY=Applied patch to 'app/r42-json-encoding.test.ps1' cleanly.\r\nAPPLY=Applied patch to 'app/r42-rollback.ps1' cleanly.\r\nAPPLY=Applied patch to 'app/server.js' with conflicts.\r\nAPPLY=Applied patch to 'app/start.ps1' cleanly.\r\nAPPLY=U app/server.js\r\nAPPLY_EXIT=1\r\nUNMERGED_FILES=app/server.js\r\nTRACKED_STATUS_LINES=6\r\nPRODUCTION_SERVER_SHA256=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 534,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:07:53.811Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:07:53.584Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r59-isolated-merge-worktree-20261014-dd5bbfe2"
+    },
+    "request_id": "r59-isolated-merge-worktree-20261014-dd5bbfe2",
+    "started_at": "2026-10-13T20:07:45.738Z",
+    "status": "completed"
+  },
+  "id": "r59-isolated-merge-worktree-20261014-dd5bbfe2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
