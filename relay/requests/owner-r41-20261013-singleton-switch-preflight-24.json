@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-singleton-switch-preflight-24",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import pathlib,json,subprocess,os\nroot=pathlib.Path('E:/PCControlAutonomyR41')\nold='6f03a58c7c29adfbb8dbe936274d147f45404418'\nnew='d5c2ac399b3dc71cb9f83f28c2fc86ed942878bd'\nfile=root/'data/pc-control-supervisor.json'\nj=json.loads(file.read_text('utf8'))\nowner=json.loads((root/'WATCHER_R41.json').read_text('utf8'))\ncfg=json.loads((root/'config.r41-integrated.json').read_text('utf8'))\nmeta=json.loads((root/'releases'/new/'MANIFEST.json').read_text('utf8'))\ncode=\"$a=@(Get-CimInstance Win32_Process | Where-Object {$_.Name -ieq 'node.exe' -and $_.CommandLine -like '*PCControlAutonomyR41*pc-autonomy-daemon.js*'} | Select-Object ProcessId,CommandLine);$a | ConvertTo-Json -Compress\"\np=subprocess.run(['powershell.exe','-NoProfile','-Command',code],capture_output=True,text=True,timeout=8)\nrows=json.loads(p.stdout) if p.stdout.strip() and p.returncode==0 else []\nif isinstance(rows,dict):rows=[rows]\nrows=[{'pid':x.get('ProcessId'),'old':str(root/'releases'/old/'bin/pc-autonomy-daemon.js') in x.get('CommandLine',''),'new':str(root/'releases'/new/'bin/pc-autonomy-daemon.js') in x.get('CommandLine',''),'watch':'--watch' in x.get('CommandLine',''),'dispatch':'--dispatch' in x.get('CommandLine','')} for x in rows]\nstart=(root/'START_R41_OBSERVER.cmd').read_text('utf8')\nstop=(root/'STOP_R41_USER_OBSERVER.ps1').read_text('utf8')\nstartup=pathlib.Path(os.environ['APPDATA'])/'Microsoft/Windows/Start Menu/Programs/Startup/PCControl_R41_Observer.cmd'\nprint(json.dumps({'owner':owner.get('pid'),'ownerSha':owner.get('source'),'rows':rows,'journalRevision':j.get('revision'),'status':j.get('lastDecision',{}).get('status'),'dispatch':j.get('lastDecision',{}).get('dispatched'),'pendingUnknown':len(j.get('pendingUnknown',[])),'cfgMode':cfg.get('mode'),'cfgApproved':cfg.get('operatorApproved'),'startOld':old in start,'startNew':new in start,'stopOld':old in stop,'startupExists':startup.exists(),'releaseVerified':meta.get('sha')==new and meta.get('tests')=='PASS','readOnly':True},ensure_ascii=True))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Read-only preflight before swapping exact observer-only process from 6f03 to d5c2. Confirm one PID, startup config, journal and source manifest; no side effects."
+}
