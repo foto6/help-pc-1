@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r50-20261013-stalled-native-wake-preview-19",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json\nurl='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-pc-control/wake-preview'\ntry:\n with urllib.request.urlopen(url,timeout=10) as r:d=json.load(r)\n print(json.dumps({'status':'PREVIEW','policy':{k:d.get(k) for k in ('state','previewOnly','requiredConfirmation','exactTargetId','exactTargetCount','navigationPerformed','reloadPerformed','tabCreated','tabClosed','promptSent','assignmentDispatched','queueResumed','replayAuthorized')},'readOnly':True}))\nexcept urllib.error.HTTPError as e:print(json.dumps({'status':'DENIED','code':e.code,'reason':json.load(e).get('code')}))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "R46 read-only wake preview only for stalled Native MCP exact existing Chrome tab. No focus/navigation or Send."
+}
