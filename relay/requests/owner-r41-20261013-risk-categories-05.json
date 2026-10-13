@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-risk-categories-05",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json,collections\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments',timeout=5) as r:j=json.load(r)\ncat=collections.Counter(); examples=[]\nfor a in j.get('assignments',[]):\n if a.get('state') in ('blocked','failed') and (a.get('dispatchSubmitAttempted') is True or (a.get('dispatchCount') or 0)>0):\n  code=str(a.get('dispatchFailureCode') or a.get('lastDiagnostic') or '')\n  cat[code[:100]]+=1\n  if len(examples)<24:examples.append({'id':a.get('id'),'state':a.get('state'),'count':a.get('dispatchCount'),'attempted':a.get('dispatchSubmitAttempted'),'code':code[:90],'preflight':a.get('lastPreflightReason'),'hasFingerprint':bool(a.get('dispatchFingerprint'))})\nprint(json.dumps({'categories':dict(cat),'sample':examples,'readOnly':True},ensure_ascii=True)[:6000])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only categorization of historically blocked/failed attempted assignments; classify unknown effects without provider text, no replay."
+}
