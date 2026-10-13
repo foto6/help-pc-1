@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-managed-chats-readonly-inspect-20261014-872f0cc6",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "curl.exe --noproxy \"*\" --max-time 4 -sS -o E:\\WebAIBridge-R63-OPERATOR-BACKUP-20261014-v1\\R63_MANAGED_INSPECT.json -w \"INSPECTION_HTTP=%{http_code}\" \"http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1\""
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 11000,
+  "note": "Read-only fresh managed GPT High/original-tab CDP inspection. Write response only to private local backup; print HTTP code not chat identities; no Chrome navigation or Sends"
+}
