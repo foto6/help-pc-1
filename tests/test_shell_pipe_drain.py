@@ -57,3 +57,48 @@ def test_small_exit_status_and_stderr_are_preserved() -> None:
     assert result.stderr.strip() == "diagnostic"
     assert not result.stdout_truncated
     assert not result.stderr_truncated
+
+
+def test_cleanup_timeout_does_not_mask_original_when_parent_already_exited() -> None:
+    import subprocess
+    from pc_executor.shell import _drain_process_pipes
+
+    class ExitedParentWithInheritedPipes:
+        calls = 0
+
+        def communicate(self, timeout: float):
+            self.calls += 1
+            raise subprocess.TimeoutExpired(cmd="fake", timeout=timeout)
+
+        def poll(self):
+            return 0
+
+    process = ExitedParentWithInheritedPipes()
+    assert _drain_process_pipes(process) == (b"", b"")
+    # A second communicate() would block on the child-held pipes again.
+    assert process.calls == 1
+
+
+def test_cleanup_timeout_kills_active_parent_but_does_not_retry_communicate(
+    monkeypatch,
+) -> None:
+    import subprocess
+    import pc_executor.shell as shell
+
+    class LiveParentWithInheritedPipes:
+        calls = 0
+        stopped = False
+
+        def communicate(self, timeout: float):
+            self.calls += 1
+            raise subprocess.TimeoutExpired(cmd="fake", timeout=timeout)
+
+        def poll(self):
+            return 0 if self.stopped else None
+
+    process = LiveParentWithInheritedPipes()
+    monkeypatch.setattr(shell, "_terminate_process_tree",
+                        lambda candidate: setattr(candidate, "stopped", True))
+    assert shell._drain_process_pipes(process) == (b"", b"")
+    assert process.stopped is True
+    assert process.calls == 1
