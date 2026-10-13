@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,subprocess,json,base64,hashlib,shutil,datetime,concurrent.futures\nSHA='72516d937e0f390a718b2d2b71084bd7d6d039f3';OLD='fab9d1756e00eaad5e65c67982d9763afa5f328d'\nEXPECTED=json.loads(r'''{\".github/workflows/pc-autonomy-r41.yml\":\"a7383509cdcb06fe819dc7c9b47922797d9d6b60\",\"bin/pc-autonomy-daemon.js\":\"a75475cbb079d4c5bd8f86bdf3030f8eaadf4964\",\"docs/PC_AUTONOMY_R41.md\":\"c6d0810f82a8cca8ddbdb558dd093a89f064d2a4\",\"examples/pc-autonomy.example.json\":\"f466092133e6afa395a1482f8dc28da0aee0e92e\",\"package.json\":\"1910b8b290ff4da84eb0445bf3c5187d487d645e\",\"src/pc-autonomy-supervisor.js\":\"59aa9ae7d476c045611e60d6a3cfdda78726b72d\",\"test/pc-autonomy.test.js\":\"abf82bb72bdf7b914acbecf8296f146fd2516ec0\"}''')\nROOT=pathlib.Path('E:/PCControlAutonomyR41')\nS=ROOT/'releases'/OLD\nST=ROOT/'staging'/SHA\nD=ROOT/'releases'/SHA\nif not S.is_dir() or ST.exists() or D.exists():raise RuntimeError('BAD_OR_ALREADY_EXISTS_SHADOW')\nold=json.loads((S/'MANIFEST.json').read_text('utf8'))\nif old.get('sha')!=OLD or set(old['files'])!=set(EXPECTED):raise RuntimeError('OLD_MANIFEST_INVALID')\ndef bh(body):return hashlib.sha1(b'blob '+str(len(body)).encode()+bytes([0])+body).hexdigest()\nfor name,h in old['files'].items():\n if bh((S/name).read_bytes())!=h:raise RuntimeError('OLD_MANIFEST_BLOB_DRIFT_'+name)\nchanged=[n for n,h in EXPECTED.items() if old['files'][n]!=h]\nif sorted(changed)!=['bin/pc-autonomy-daemon.js','test/pc-autonomy.test.js']:raise RuntimeError('UNEXPECTED_DIFF_'+str(changed))\ndef get(name):\n r=subprocess.run(['gh','api',f'repos/foto6/help-pc-2/contents/{name}?ref={SHA}'],capture_output=True,text=True,timeout=12)\n if r.returncode:raise RuntimeError('GH_FETCH_FAILED_'+name)\n j=json.loads(r.stdout);b=base64.b64decode(j['content'])\n if bh(b)!=EXPECTED[name] or j.get('sha')!=EXPECTED[name]:raise RuntimeError('BLOB_MISMATCH_'+name)\n return name,b\nwith concurrent.futures.ThreadPoolExecutor(max_workers=2) as p: downloaded=dict(p.map(get,changed))\nST.mkdir(parents=True,exist_ok=False)\nfor name,h in EXPECTED.items():\n b=downloaded[name] if name in downloaded else (S/name).read_bytes()\n if bh(b)!=h:raise RuntimeError('EXACT_SHA_FAILED_'+name)\n p=ST/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b)\nt=subprocess.run(['node','--test','test/pc-autonomy.test.js'],cwd=ST,capture_output=True,text=True,timeout=20)\nif t.returncode:raise RuntimeError('LOCAL_TEST_FAIL_'+(t.stdout+t.stderr)[-1800:])\nmetadata={'schema':'pc.control.autonomy.shadow.v1','sourceRepo':'foto6/help-pc-2','sha':SHA,'parent':OLD,'files':EXPECTED,'installedAt':datetime.datetime.now().isoformat(),'tests':'PASS','enabled':False,'mode':'OBSERVE_ONLY'}\n(ST/'MANIFEST.json').write_text(json.dumps(metadata,indent=2),encoding='utf8')\nST.rename(D)\nobserver=subprocess.run(['node','bin/pc-autonomy-daemon.js','--config',str(ROOT/'config.json'),'--once'],cwd=D,capture_output=True,text=True,timeout=16)\nout=json.loads(observer.stdout.strip()) if observer.returncode==0 else {}\nprint(json.dumps({'status':'R41_SHADOW_UPGRADE','sha':SHA,'oldReleasePreserved':S.is_dir(),'verifiedBlobs':len(EXPECTED),'changed':changed,'nodeTests':'PASS','observerExit':observer.returncode,'observer':out,'error':observer.stderr[-600:] if observer.returncode else '', 'releasePath':str(D),'providerSend':False,'productionTouched':False,'watchStarted':False},ensure_ascii=True)[:8500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"status\": \"R41_SHADOW_UPGRADE\", \"sha\": \"72516d937e0f390a718b2d2b71084bd7d6d039f3\", \"oldReleasePreserved\": true, \"verifiedBlobs\": 7, \"changed\": [\"bin/pc-autonomy-daemon.js\", \"test/pc-autonomy.test.js\"], \"nodeTests\": \"PASS\", \"observerExit\": 0, \"observer\": {\"contract\": \"pc.control.autonomy.v1\", \"revision\": 1, \"at\": \"2026-10-13T03:21:18.134Z\", \"dispatchEnabled\": false, \"decision\": {\"admitted\": false, \"blocks\": [\"observer_mode\", \"operator_approval_missing\", \"bridge_unhealthy\", \"bridge_health_reasons_present\", \"r42_cutover_hold\", \"operator_reconciliation_unknown\", \"autonomous_send_disabled\", \"pc_control_relay_unverified\"], \"status\": \"OBSERVE_FAILED\", \"dispatched\": 0, \"probeError\": null}, \"cooldownUntil\": 0, \"unknownEffects\": 0, \"taskCounts\": {\"PENDING\": 1}, \"bridgeHealth\": \"BLOCKED\"}, \"error\": \"\", \"releasePath\": \"E:\\\\PCControlAutonomyR41\\\\releases\\\\72516d937e0f390a718b2d2b71084bd7d6d039f3\", \"providerSend\": false, \"productionTouched\": false, \"watchStarted\": false}\r\n",
+      "stdout_bytes": 974,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:21:18.521Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:21:18.299Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-autonomy-shadow-update-04"
+    },
+    "request_id": "owner-r41-20261013-autonomy-shadow-update-04",
+    "started_at": "2026-10-13T03:21:16.041Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-autonomy-shadow-update-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
