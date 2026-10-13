@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-chat-readonly-inspect-20261014-6e93304f",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1'; $res=Invoke-RestMethod -Uri $u -Method Get -TimeoutSec 12; if($null -eq $res.chats){Write-Output 'MISSING_CHATS_ARRAY';exit 3}; $a=@($res.chats); Write-Output ('INSPECTED_CHAT_COUNT='+$a.Count); Write-Output ('INSPECTED_TRUE='+@($a|Where-Object {$_.inspected -eq $true}).Count); Write-Output ('IDLE='+@($a|Where-Object {$_.status -eq 'idle'}).Count); Write-Output ('ONE_TAB='+@($a|Where-Object {$_.openTabs -eq 1}).Count); Write-Output ('HIGH_MODE='+@($a|Where-Object {$_.highMode -eq $true}).Count); Write-Output ('ORIGINAL_STICKY='+@($a|Where-Object {$_.stickyPinned -eq $true}).Count); Write-Output ('CONTEXT_LIMIT='+@($a|Where-Object {$_.contextLimit -eq $true}).Count); Write-Output ('GENERATING='+@($a|Where-Object {$_.generating -eq $true}).Count); Write-Output ('DRAFT_PRESENT='+@($a|Where-Object {$_.draftPresent -eq $true}).Count); Write-Output ('PROVIDER_LOAD_ERROR='+@($a|Where-Object {$_.providerLoadError -eq $true}).Count); Write-Output ('RATE_LIMITED='+@($a|Where-Object {$_.providerRateLimited -eq $true}).Count); Write-Output ('ACTIVE_ASSIGNMENT='+@($a|Where-Object {$_.activeAssignmentCount -gt 0}).Count); Write-Output ('BROWSER_TARGET_PINNED='+@($a|Where-Object {$_.targetId -or $_.cdpTargetId}).Count); Write-Output ('SCHEMA_KEYS='+ ((@($a)|Select-Object -First 1|Get-Member -MemberType NoteProperty|Select-Object -ExpandProperty Name|Where-Object {$_ -in @('status','inspected','openTabs','highMode','stickyPinned','documentEpoch','contextLimit','providerLoadError','providerRateLimited')}) -join ','))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 24000,
+  "note": "Read-only source-managed CDP inspection via existing Bridge API, print ONLY counts of safety fields, no chat identities, Chrome navigation, sends or screenshots"
+}
