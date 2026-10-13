@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $dst='E:\\PCControlR43-SHADOW'; $log='E:\\PCControlR43_CLONE.log'; if(Test-Path -LiteralPath $dst){throw 'R43_SHADOW_ALREADY_EXISTS'}; & git.exe clone --depth 1 --single-branch --no-tags --branch agent/pc-r43-bounded-child-pipe-cleanup-20261014 https://github.com/foto6/help-pc-1.git $dst *> $log; $rc=$LASTEXITCODE; if($rc -ne 0){throw ('R43_CLONE_EXIT_'+$rc)}; $sha=((& git.exe -C $dst rev-parse HEAD)|Out-String).Trim(); if($sha -ne 'a55cb8fb61e7e0c8b99fd13fe5310ad4c6dee65f'){throw ('R43_EXACT_SHA_DRIFT_'+$sha)}; Write-Output ('R43_ISOLATED_HEAD='+$sha); Write-Output ('R43_SOURCE_EXISTS='+(Test-Path -LiteralPath (Join-Path $dst 'src\\pc_executor\\shell.py') -PathType Leaf))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "R43_ISOLATED_HEAD=a55cb8fb61e7e0c8b99fd13fe5310ad4c6dee65f\r\nR43_SOURCE_EXISTS=True\r\n",
+      "stdout_bytes": 84,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:06:39.922Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:06:39.659Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-r43-windows-corrected-clone-20261014-83c475bb"
+    },
+    "request_id": "pc-r43-windows-corrected-clone-20261014-83c475bb",
+    "started_at": "2026-10-13T21:06:22.949Z",
+    "status": "completed"
+  },
+  "id": "pc-r43-windows-corrected-clone-20261014-83c475bb",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
