@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,subprocess,json,base64,hashlib,shutil,datetime,concurrent.futures\nSHA='506f9a951f9b782e27b0d886e441b6747095e3fc';OLD='72516d937e0f390a718b2d2b71084bd7d6d039f3'\nEXPECTED=json.loads(r'''{\".github/workflows/pc-autonomy-r41.yml\":\"a7383509cdcb06fe819dc7c9b47922797d9d6b60\",\"bin/pc-autonomy-daemon.js\":\"1a87f455989614baa6f7baca426af9a1de40527f\",\"docs/PC_AUTONOMY_R41.md\":\"a7d696a64df38a2d53ed4919640e50130508c917\",\"examples/pc-autonomy.example.json\":\"a7827c4e92c6693847d3ff041eb83043d61810fb\",\"package.json\":\"1910b8b290ff4da84eb0445bf3c5187d487d645e\",\"src/pc-autonomy-supervisor.js\":\"195e2e0b07aeb46e7b5cf8bdff13ee1977a3327b\",\"test/pc-autonomy.test.js\":\"1fa0ed3cc22f4f900677dbc84540daa095ea0cde\"}''')\nROOT=pathlib.Path('E:/PCControlAutonomyR41');S=ROOT/'releases'/OLD;ST=ROOT/'staging'/SHA;D=ROOT/'releases'/SHA\nif not S.is_dir() or ST.exists() or D.exists():raise RuntimeError('SOURCE_MISSING_OR_EXISTING_RELEASE')\nold=json.loads((S/'MANIFEST.json').read_text('utf8'))\nif old['sha']!=OLD or set(old['files'])!=set(EXPECTED):raise RuntimeError('OLD_MANIFEST_UNTRUSTED')\ndef blob(b):return hashlib.sha1(b'blob '+str(len(b)).encode()+bytes([0])+b).hexdigest()\nfor n,h in old['files'].items():\n if blob((S/n).read_bytes())!=h:raise RuntimeError('SOURCE_BLOB_TAMPER_'+n)\nCHANGED=[n for n,h in EXPECTED.items() if old['files'][n]!=h]\nif sorted(CHANGED)!=sorted(['bin/pc-autonomy-daemon.js','docs/PC_AUTONOMY_R41.md','examples/pc-autonomy.example.json','src/pc-autonomy-supervisor.js','test/pc-autonomy.test.js']):raise RuntimeError('UNEXPECTED_CHANGES_'+str(CHANGED))\ndef load(n):\n r=subprocess.run(['gh','api',f'repos/foto6/help-pc-2/contents/{n}?ref={SHA}'],capture_output=True,text=True,timeout=15)\n if r.returncode:raise RuntimeError('GITHUB_SOURCE_FETCH_FAILED_'+n)\n j=json.loads(r.stdout);body=base64.b64decode(j['content'])\n if blob(body)!=EXPECTED[n] or j.get('sha')!=EXPECTED[n]:raise RuntimeError('BLOB_CHECK_FAILED_'+n)\n return n,body\nwith concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:data=dict(pool.map(load,CHANGED))\nST.mkdir(parents=True,exist_ok=False)\nfor n,h in EXPECTED.items():\n b=data[n] if n in data else (S/n).read_bytes()\n if blob(b)!=h:raise RuntimeError('SOURCE_COPY_MISMATCH_'+n)\n p=ST/n;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b)\nresult=subprocess.run(['node','--test','test/pc-autonomy.test.js'],cwd=ST,capture_output=True,text=True,timeout=20)\nif result.returncode:raise RuntimeError('LOCAL_REGRESSION_FAILED_'+(result.stdout+result.stderr)[-1300:])\nmeta={'schema':'pc.control.autonomy.shadow.v1','sha':SHA,'parent':OLD,'files':EXPECTED,'tests':'PASS','installedAt':datetime.datetime.now().isoformat(),'mode':'OBSERVE_ONLY','sendEnabled':False}\n(ST/'MANIFEST.json').write_text(json.dumps(meta,indent=2),encoding='utf8')\nST.rename(D)\ncfg=json.loads((D/'examples/pc-autonomy.example.json').read_text('utf8'))\ncfg['state']=str(ROOT/'data/pc-control-supervisor.json');cfg['r45']['state']=str(ROOT/'data/r45-coordinator.json')\nnewcfg=ROOT/'config.r41-integrated.json'\nif newcfg.exists():raise RuntimeError('CONFIG_ALREADY_EXISTS_DO_NOT_OVERWRITE')\nnewcfg.write_text(json.dumps(cfg,indent=2),encoding='utf8')\nrun=subprocess.run(['node','bin/pc-autonomy-daemon.js','--config',str(newcfg),'--once'],cwd=D,capture_output=True,text=True,timeout=20)\nj=json.loads(run.stdout.strip()) if run.returncode==0 else {}\nprint(json.dumps({'status':'R41_NATIVE_RELAY_BRIDGE_SHADOW','sha':SHA,'verifiedFiles':len(EXPECTED),'localTests':'PASS','oldRelease':S.is_dir(),'newRelease':str(D),'config':str(newcfg),'observerExit':run.returncode,'observer':j,'observerError':run.stderr[-650:] if run.returncode else '', 'sent':False,'persistentWatchStarted':False,'productionUntouched':True},ensure_ascii=True)[:8500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"status\": \"R41_NATIVE_RELAY_BRIDGE_SHADOW\", \"sha\": \"506f9a951f9b782e27b0d886e441b6747095e3fc\", \"verifiedFiles\": 7, \"localTests\": \"PASS\", \"oldRelease\": true, \"newRelease\": \"E:\\\\PCControlAutonomyR41\\\\releases\\\\506f9a951f9b782e27b0d886e441b6747095e3fc\", \"config\": \"E:\\\\PCControlAutonomyR41\\\\config.r41-integrated.json\", \"observerExit\": 0, \"observer\": {\"contract\": \"pc.control.autonomy.v1\", \"revision\": 2, \"at\": \"2026-10-13T03:26:45.366Z\", \"dispatchEnabled\": false, \"decision\": {\"admitted\": false, \"blocks\": [\"observer_mode\", \"operator_approval_missing\", \"bridge_unhealthy\", \"bridge_health_reasons_present\", \"r42_cutover_hold\", \"operator_reconciliation_unknown\", \"autonomous_send_disabled\"], \"status\": \"READ_ONLY\", \"dispatched\": 0, \"probeError\": null}, \"cooldownUntil\": 0, \"unknownEffects\": 0, \"taskCounts\": {\"PENDING\": 1}, \"bridgeHealth\": \"BLOCKED\"}, \"observerError\": \"\", \"sent\": false, \"persistentWatchStarted\": false, \"productionUntouched\": true}\r\n",
+      "stdout_bytes": 948,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:26:45.741Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:26:45.515Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-native-relay-integration-shadow-10"
+    },
+    "request_id": "owner-r41-20261013-native-relay-integration-shadow-10",
+    "started_at": "2026-10-13T03:26:42.101Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-native-relay-integration-shadow-10",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
