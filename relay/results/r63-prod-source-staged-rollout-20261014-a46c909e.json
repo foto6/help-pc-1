@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$root='E:\\WebAIBridge';$data=Join-Path $root 'app\\data';$original='d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2';$target='01e5db790f50b5eb42588b8942f3dd1de4f0a6bf';$backup='E:\\WebAIBridge-R63-OPERATOR-BACKUP-20261014-v1';if(Test-Path -LiteralPath $backup){throw 'REFUSE_EXISTING_BACKUP'};$head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim();if($head -ne $original){throw ('SOURCE_DRIFT='+$head)};$dirty=@(& git.exe -C $root status --porcelain=v1 --untracked-files=no);if($dirty.Count -ne 0){throw 'SOURCE_TRACKED_DIRTY'};$health=Invoke-RestMethod 'http://127.0.0.1:17448/api/health' -TimeoutSec 5;if($health.state -ne 'PAUSED'){throw 'HEALTH_NOT_PAUSED'};$cut=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 5;if($cut.cutoverState.holdActive -ne $true){throw 'R42_NOT_HELD'};$queue=Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 5;if(@($queue.assignments|Where-Object {$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count -ne 0){throw 'UNSETTLED_ASSIGNMENTS'};$critical=@('state.json','supervisor-watchdog.json','supervisor-watchdog-state.json','managed-chat-status.json','managed-project-status.json','managed-project-timeline.json','managed-project-rotation-state.json','projects-live-control-plane-r41.json','projects-operation-ledger-r41.json','projects-live-control-plane-cutover-r42.json','projects-live-control-plane-cutover-r42-reconcile.json');New-Item -ItemType Directory -Path $backup -ErrorAction Stop|Out-Null;$entries=@();foreach($name in $critical){$src=Join-Path $data $name;if(-not(Test-Path -LiteralPath $src -PathType Leaf)){continue};$h=(Get-FileHash -LiteralPath $src -Algorithm SHA256).Hash;$dst=Join-Path $backup $name;Copy-Item -LiteralPath $src -Destination $dst -ErrorAction Stop;$copied=(Get-FileHash -LiteralPath $dst -Algorithm SHA256).Hash;$current=(Get-FileHash -LiteralPath $src -Algorithm SHA256).Hash;if($h -ne $copied -or $h -ne $current){throw ('STATE_BACKUP_UNSTABLE_'+$name)};$entries+=@{name=$name;sha256=$h;bytes=(Get-Item -LiteralPath $dst).Length}};$srcServer=Join-Path $root 'app\\server.js';$serverHash=(Get-FileHash -LiteralPath $srcServer -Algorithm SHA256).Hash;Copy-Item -LiteralPath $srcServer -Destination (Join-Path $backup 'server-r61.js') -ErrorAction Stop;if((Get-FileHash -LiteralPath (Join-Path $backup 'server-r61.js') -Algorithm SHA256).Hash -ne $serverHash){throw 'SOURCE_SERVER_COPY_MISMATCH'};$manifest=@{contract='bridge.r63.local_operator_backup.v1';atUtc=[DateTime]::UtcNow.ToString('o');originalGitHead=$original;targetGitHead=$target;serverSha256=$serverHash;entries=$entries;purpose='Local rollback only: do not upload contents or replay assignments'};$manifest|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $backup 'MANIFEST.json') -Encoding UTF8;$env:GIT_TERMINAL_PROMPT='0';& git.exe -C $root fetch --no-tags origin refs/heads/agent/bridge-r63-r42-staged-paused-20261014;if($LASTEXITCODE -ne 0){throw 'TARGET_FETCH_FAILED'};$remote=((& git.exe -C $root rev-parse FETCH_HEAD)|Out-String).Trim();if($remote -ne $target){throw 'R63_REMOTE_SHA_DRIFT'};$check=@(& git.exe -C $root status --porcelain=v1 --untracked-files=no);if($check.Count -ne 0){throw 'PRE_SWITCH_DIRTY'};& git.exe -C $root switch --detach $target;if($LASTEXITCODE -ne 0){throw 'GIT_SWITCH_FAILED'};$installed=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim();if($installed -ne $target){throw 'POST_SWITCH_SHA_MISMATCH'};& node.exe --check (Join-Path $root 'app\\server.js');if($LASTEXITCODE -ne 0){throw 'R63_INSTALLED_SYNTAX_FAILURE'};Write-Output ('SOURCE_INSTALLED='+$installed);Write-Output ('BACKUP_FILES='+$entries.Count);Write-Output ('BACKUP_MANIFEST='+ (Join-Path $backup 'MANIFEST.json'));Write-Output ('SERVER_RESTART_PERFORMED=False');Write-Output ('CHROME_MUTATED=False');Write-Output ('SOURCE_OLD_HASH='+$serverHash);Write-Output ('SOURCE_NEW_HASH='+(Get-FileHash -LiteralPath $srcServer -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "HEALTH_NOT_PAUSED\r\nAt line:1 char:664\r\n+ ... ec 5;if($health.state -ne 'PAUSED'){throw 'HEALTH_NOT_PAUSED'};$cut=I ...\r\n+                                         ~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (HEALTH_NOT_PAUSED:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : HEALTH_NOT_PAUSED\r\n \r\n",
+      "stderr_bytes": 338,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:27:27.793Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:27:27.525Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-prod-source-staged-rollout-20261014-a46c909e"
+    },
+    "request_id": "r63-prod-source-staged-rollout-20261014-a46c909e",
+    "started_at": "2026-10-13T21:27:26.481Z",
+    "status": "completed"
+  },
+  "id": "r63-prod-source-staged-rollout-20261014-a46c909e",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
