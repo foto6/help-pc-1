@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $d='E:\\WebAIBridge-R62-CUTOVER-DRYRUN'; $b='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\tracked-local-changes.patch'; $old='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03'; $target='d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2'; $ref='agent/bridge-r61-failclosed-dispatch-inspection-20261014'; if(-not (Test-Path -LiteralPath (Join-Path $d '.git'))){throw 'EXACT_PREVIOUS_CLONE_NOT_FOUND'}; $got=((& git.exe -C $d rev-parse HEAD) | Out-String).Trim(); if($got -ne $old){throw 'PREVIOUS_CLONE_WRONG_SOURCE_SHA'}; & git.exe -C $d switch --detach $old 2>$null; if($LASTEXITCODE -ne 0){throw 'CHECKOUT_FAILED'}; & git.exe -C $d apply --check $b 2>&1|Out-Null; if($LASTEXITCODE -ne 0){throw 'OWNER_PATCH_NOT_APPLICABLE'}; & git.exe -C $d apply $b 2>&1|Out-Null; if($LASTEXITCODE -ne 0){throw 'OWNER_PATCH_FAILED'}; & git.exe -C $d switch -c 'audit/r62-original-hotfix-preflight' 2>$null; if($LASTEXITCODE -ne 0){throw 'LOCAL_AUDIT_BRANCH_FAILED'}; & git.exe -C $d add -- app/ensure-supervisor-watchdog.ps1 app/r42-cutover.ps1 app/r42-json-encoding.test.ps1 app/r42-rollback.ps1 app/server.js app/start.ps1; if($LASTEXITCODE -ne 0){throw 'STAGE_FAILED'}; & git.exe -C $d -c 'user.name=PC Control audit' -c 'user.email=pc-control@users.noreply.github.com' -c 'commit.gpgsign=false' commit -m 'Local only audit original owner six-file hotfix' *> $null; if($LASTEXITCODE -ne 0){throw 'AUDIT_COMMIT_FAILED'}; Write-Output ('AUDIT_COMMIT='+((& git.exe -C $d rev-parse HEAD)|Out-String).Trim()); & git.exe -C $d remote set-url origin 'https://github.com/foto6/WebAIBridge.git'; if($LASTEXITCODE -ne 0){throw 'REMOTE_PROVENANCE_FAILED'}; $report=Join-Path $d 'R62_CUTOVER_PREFLIGHT.log'; & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $d 'app\\r42-cutover.ps1') -RepoPath $d -TargetSha $target -TargetBranch $ref -PreflightOnly *> $report; $rc=$LASTEXITCODE; Write-Output ('PREFLIGHT_RC='+$rc); Write-Output ('PREFLIGHT_REPORT_BYTES='+(Get-Item $report).Length); Get-Content -LiteralPath $report -Tail 13; Write-Output ('DRYRUN_REMAINS_SOURCE='+((& git.exe -C $d rev-parse HEAD)|Out-String).Trim()); Write-Output ('DRYRUN_TRACKED_CHANGES='+@(& git.exe -C $d status --porcelain=v1 --untracked-files=no).Count); Write-Output ('PRODUCTION_HASH='+(Get-FileHash 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "AUDIT_COMMIT=ebf2a4ea37a057e673e8cb69c54d3f440b389af8\r\nPREFLIGHT_RC=0\r\nPREFLIGHT_REPORT_BYTES=1716\r\n{\"object\":\"bridge.projects_live_control_plane_cutover_preflight.r42.v1\",\"status\":\"PREFLIGHT_OK\",\"repoPath\":\"E:\\\\WebAIBridge-R62-CUTOVER-DRYRUN\",\"preCutoverHead\":\"ebf2a4ea37a057e673e8cb69c54d3f440b389af8\",\"preCutoverBranch\":\"audit/r62-original-hotfix-preflight\",\"targetSha\":\"d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2\",\"targetBranch\":\"agent/bridge-r61-failclosed-dispatch-inspection-20261014\",\"parentSha\":\"e4ee875db5ad62b514a8d1edeff85888ef83fb8c\",\"gitExecutable\":\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\",\"externalGitResolved\":true,\"porcelainParserSource\":\"TARGET_SHA_GIT_BLOB\",\"porcelainParserBlob\":\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\",\"porcelainParserExpectedBlob\":\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\",\"porcelainParserProductionFileRequired\":false,\"callDepthOverflowDetected\":false,\"liveMutationPerformed\":false,\"providerMutationPerformed\":false}\r\nDRYRUN_REMAINS_SOURCE=ebf2a4ea37a057e673e8cb69c54d3f440b389af8\r\nDRYRUN_TRACKED_CHANGES=0\r\nPRODUCTION_HASH=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 1129,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:44:49.083Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:44:48.806Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-rehearsal-resume-20261014-c839a41d"
+    },
+    "request_id": "r62-rehearsal-resume-20261014-c839a41d",
+    "started_at": "2026-10-13T20:44:42.674Z",
+    "status": "completed"
+  },
+  "id": "r62-rehearsal-resume-20261014-c839a41d",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
