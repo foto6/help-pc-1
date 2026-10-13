@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r58-r45-log-read-20261014-d21046fc",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R58-SHADOW'; $log=Join-Path $root 'R58_R45_R57_TESTS.log'; $err=Join-Path $root 'R58_R45_R57_TESTS.stderr.log'; Write-Output ('LOG_EXISTS='+(Test-Path -LiteralPath $log -PathType Leaf)); if(Test-Path -LiteralPath $log -PathType Leaf){$x=Get-Item -LiteralPath $log;Write-Output ('LOG_BYTES='+$x.Length);Write-Output 'TAIL_START';Get-Content -LiteralPath $log -Tail 85;Write-Output 'TAIL_END'}; if(Test-Path -LiteralPath $err -PathType Leaf){Write-Output ('STDERR_BYTES='+(Get-Item -LiteralPath $err).Length);Get-Content -LiteralPath $err -Tail 30}; $procs=Get-CimInstance Win32_Process -Filter \"Name='node.exe'\" -ErrorAction SilentlyContinue; Write-Output ('ACTIVE_SHADOW_NODES='+(@($procs | Where-Object { $_.CommandLine -like '*WebAIBridge-R58-SHADOW*' }).Count)); Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only R45/R57 test log and process reconciliation after original timed-out request; no rerun, no browser actions"
+}
