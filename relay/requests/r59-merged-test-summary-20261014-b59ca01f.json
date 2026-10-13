@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r59-merged-test-summary-20261014-b59ca01f",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014'; $f=Join-Path $root 'R59_MERGED_TESTS.log'; Write-Output ('LOG_BYTES='+(Get-Item -LiteralPath $f).Length); Get-Content -LiteralPath $f -Tail 9; $names=@(& git.exe -C $root diff --cached --name-only); Write-Output ('MERGED_FILES='+($names -join ',')); Write-Output ('UNMERGED='+(@(& git.exe -C $root diff --name-only --diff-filter=U).Count)); Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash); Write-Output ('MERGE_SERVER_HASH='+(Get-FileHash -LiteralPath (Join-Path $root 'app\\server.js') -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read completed merged hotfix R59 test summary and staged changed file names/hashes only; no code content or process modifications"
+}
