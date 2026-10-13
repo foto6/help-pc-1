@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r60-staged-hotfix-audit-20261014-7cf415a0",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014'; $allow=@('app/ensure-supervisor-watchdog.ps1','app/r42-cutover.ps1','app/r42-json-encoding.test.ps1','app/r42-rollback.ps1','app/start.ps1'); $files=@(& git.exe -C $root diff --cached --name-only); if($files.Count -ne 5 -or @($files | Where-Object {$allow -notcontains $_}).Count -ne 0){throw 'STAGED_ALLOWLIST_MISMATCH'}; $errors=@(); foreach($rel in $files){$tok=$null;$err=$null;[void][System.Management.Automation.Language.Parser]::ParseFile((Join-Path $root $rel),[ref]$tok,[ref]$err);if(@($err).Count -gt 0){$errors+=@($rel)}}; Write-Output ('STAGED_FILES='+$files.Count); Write-Output ('POWERSHELL_PARSE_FAILURES='+$errors.Count); if($errors.Count -gt 0){throw 'PARSER_FAILURE'}; $diff=@(& git.exe -C $root diff --cached --no-ext-diff --unified=0); $adds=@($diff | Where-Object {$_.StartsWith('+') -and -not $_.StartsWith('+++')}); $unsafe=@($adds | Where-Object {$_ -match '(?i)(sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9_]{20,}|github_pat_[A-Za-z0-9_]{20,}|bearer\\s+[A-Za-z0-9_.-]{22,}|password\\s*[:=]\\s*\\S{16,})'}); Write-Output ('HIGH_CONFIDENCE_SECRET_LINES='+$unsafe.Count); if($unsafe.Count -gt 0){throw 'POSSIBLE_SECRET_IN_STAGED_PATCH'}; $check=@(& git.exe -C $root diff --cached --check 2>&1); Write-Output ('GIT_WHITESPACE_CHECK_LINES='+$check.Count); if($LASTEXITCODE -ne 0){throw 'WHITESPACE_CHECK_FAILED'}; Write-Output ('ORIGINAL_SERVER_GUARDS='+((Get-Content -LiteralPath (Join-Path $root 'app\\server.js') -Raw).Contains('r56_pinned_page_not_ready'))); Write-Output 'STAGED_HOTFIX_AUDIT_PASS'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Offline isolated R59 merged patch audit: explicit five-file allowlist, PowerShell parser, high-confidence secret-pattern count only, whitespace check; no source content output or production writes"
+}
