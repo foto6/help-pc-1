@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json,subprocess,datetime\nB='http://127.0.0.1:17448'\ndef get(p):\n try:\n  with urllib.request.urlopen(B+p,timeout=2.5) as r:return json.load(r)\n except Exception as e:return {'error':type(e).__name__}\nh=get('/api/health');op=get('/api/operator-lifecycle');wd=get('/api/supervisor-watchdog?detect=0');mc=get('/api/supervisor-watchdog/managed-chats?inspect=0');a=get('/api/supervisor-watchdog/agent-assignments')\ntry:\n r=subprocess.run(['git','-C','E:/WebAIBridge','rev-parse','HEAD'],capture_output=True,text=True,timeout=3);head=r.stdout.strip() if r.returncode==0 else 'UNAVAILABLE'\nexcept Exception:head='UNAVAILABLE'\nprint(json.dumps({'observed':datetime.datetime.now().isoformat(timespec='seconds'),'sourceHead':head,'health':h.get('state'),'healthReasons':h.get('reasons'),'queue':h.get('assignmentQueue'),'operator':{'state':op.get('state'),'mode':op.get('mode'),'queuePaused':op.get('queuePaused')},'watchdog':{'enabled':wd.get('config',{}).get('enabled'),'mode':wd.get('config',{}).get('mode')},'chatsCount':len(mc.get('chats',[])),'assignmentsCount':len(a.get('assignments',[])),'assignmentCounts':a.get('counts'),'readOnly':True},ensure_ascii=True))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"observed\": \"2026-10-13T09:30:58\", \"sourceHead\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"health\": \"BLOCKED\", \"healthReasons\": [\"git_evidence:health_probe_stale\", \"timeline_io:health_probe_stale\", \"assignment_queue:oldest_queued_over_60s\"], \"queue\": {\"total\": 69, \"active\": 0, \"queued\": 1, \"counts\": {\"cancelled\": 11, \"blocked\": 35, \"failed\": 12, \"completed\": 10, \"queued\": 1}, \"oldestQueuedAgeMs\": 30762585, \"lastProgressAt\": \"2026-10-13T02:30:56.512Z\", \"lastProgressAgeMs\": 2023}, \"operator\": {\"state\": null, \"mode\": \"RUNNING_MANAGED\", \"queuePaused\": false}, \"watchdog\": {\"enabled\": false, \"mode\": \"off\"}, \"chatsCount\": 7, \"assignmentsCount\": 69, \"assignmentCounts\": {\"cancelled\": 11, \"blocked\": 35, \"failed\": 12, \"completed\": 10, \"queued\": 1}, \"readOnly\": true}\r\n",
+      "stdout_bytes": 771,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T02:30:58.892Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T02:30:58.681Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r45-20261013-readonly-live-gate-0934-01"
+    },
+    "request_id": "owner-r45-20261013-readonly-live-gate-0934-01",
+    "started_at": "2026-10-13T02:30:57.672Z",
+    "status": "completed"
+  },
+  "id": "owner-r45-20261013-readonly-live-gate-0934-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
