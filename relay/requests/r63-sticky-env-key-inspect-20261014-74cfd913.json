@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-sticky-env-key-inspect-20261014-74cfd913",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$f='E:\\WebAIBridge\\app\\.env';Write-Output ('ENV_FILE_EXISTS='+(Test-Path -LiteralPath $f -PathType Leaf));if(Test-Path -LiteralPath $f -PathType Leaf){$lines=Get-Content -LiteralPath $f -Encoding UTF8; $found=@($lines|Where-Object{$_ -match '^\\s*BRIDGE_EXISTING_TABS_ONLY\\s*='});Write-Output ('STICKY_KEY_ENTRIES='+$found.Count);Write-Output ('STICKY_KEY_ALREADY_TRUE='+(@($found|Where-Object{$_ -match '^\\s*BRIDGE_EXISTING_TABS_ONLY\\s*=\\s*(1|true|yes|on)\\s*$'}).Count -gt 0))}else{Write-Output 'STICKY_KEY_ENTRIES=0'};Write-Output ('DATA_BACKUP_EXISTS='+(Test-Path -LiteralPath 'E:\\WebAIBridge-R63-OPERATOR-BACKUP-20261014-v1\\MANIFEST.json'))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Inspect only existence/count/truthiness of non-secret BRIDGE_EXISTING_TABS_ONLY key; never print .env contents or credentials"
+}
