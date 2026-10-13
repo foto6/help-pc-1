@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r50-20261013-stalled-stop-button-readonly-17",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,json\njs=\"const id='F7A2D32B34B5F309AF6B6D899CFFBA1F';const expected='https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810';const t=await (await fetch('http://127.0.0.1:17410/json/list')).json();const matches=t.filter(x=>x.id===id&&x.url===expected&&x.type==='page');if(matches.length!==1)throw Error('EXACT_TARGET_DRIFT');const ws=new WebSocket(matches[0].webSocketDebuggerUrl);await Promise.race([new Promise((r,j)=>{ws.onopen=r;ws.onerror=j}),new Promise((_,j)=>setTimeout(()=>j(Error('CDP_CONNECTION_TIMEOUT')),4500))]);const exp=\\\"(()=>{const b=[...document.querySelectorAll('button')].filter(x=>{const t=String(x.getAttribute('data-testid')||'')+' '+String(x.getAttribute('aria-label')||'');return /stop[-_ ]?(button|generat|response)|остановить/i.test(t)});return {url:location.href,matchCount:b.length,buttons:b.map(x=>({testid:x.getAttribute('data-testid'),label:x.getAttribute('aria-label'),disabled:x.disabled,visible:!!x.getClientRects().length})).slice(0,6)}})()\\\";const out=await Promise.race([new Promise((resolve,reject)=>{ws.onmessage=e=>{try{const d=JSON.parse(e.data);if(d.id===91)resolve(d)}catch(err){reject(err)}};ws.send(JSON.stringify({id:91,method:'Runtime.evaluate',params:{expression:exp,returnByValue:true,awaitPromise:false}}))}),new Promise((_,j)=>setTimeout(()=>j(Error('CDP_EVAL_TIMEOUT')),6000))]);ws.close();console.log(JSON.stringify({status:'READ_ONLY_STOP_CONTROL_PREFLIGHT',value:out.result?.result?.value||null,error:out.error?.message||null,noClicked:true}));\"\np=subprocess.run(['node.exe','--input-type=module','-e',js],cwd='E:/WebAIBridge/app',capture_output=True,text=True,timeout=13)\nprint(json.dumps({'exit':p.returncode,'stdout':p.stdout[-1300:],'stderr':p.stderr[-650:]},ensure_ascii=True))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 21000,
+  "note": "One safe read-only CDP current-tab Stop control inspection: policy-blocked 16 never started; run Node under authorized Python relay to inspect button semantics, no click, no Send, no user text."
+}
