@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $root='E:\\WebAIBridge'; $want='8646d55a309417ee147dbe5773e48b9dec11cbdb'; $target='d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2'; $ref='agent/bridge-r61-failclosed-dispatch-inspection-20261014'; if(((& git.exe -C $root rev-parse HEAD)|Out-String).Trim() -ne $want){throw 'PRODUCTION_HEAD_DRIFT'}; if(@(& git.exe -C $root status --porcelain=v1 --untracked-files=all).Count -ne 0){throw 'WORKTREE_NOT_CLEAN'}; $log='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\R62_REAL_PREFLIGHT_AFTER_PRESERVATION.log'; & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $root 'app\\r42-cutover.ps1') -RepoPath $root -TargetSha $target -TargetBranch $ref -PreflightOnly *> $log; $rc=$LASTEXITCODE; Write-Output ('PREFLIGHT_EXIT='+$rc); Get-Content -LiteralPath $log -Tail 3; Write-Output ('HEAD_UNCHANGED='+((& git.exe -C $root rev-parse HEAD)|Out-String).Trim()); Write-Output ('SERVER_SHA256='+(Get-FileHash -LiteralPath (Join-Path $root 'app\\server.js') -Algorithm SHA256).Hash); if($rc -ne 0){exit $rc}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "PREFLIGHT_EXIT=0\r\n{\"object\":\"bridge.projects_live_control_plane_cutover_preflight.r42.v1\",\"status\":\"PREFLIGHT_OK\",\"repoPath\":\"E:\\\\WebAIBridge\",\"preCutoverHead\":\"8646d55a309417ee147dbe5773e48b9dec11cbdb\",\"preCutoverBranch\":\"preserve/owner-six-hotfixes-r62-20261014\",\"targetSha\":\"d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2\",\"targetBranch\":\"agent/bridge-r61-failclosed-dispatch-inspection-20261014\",\"parentSha\":\"e4ee875db5ad62b514a8d1edeff85888ef83fb8c\",\"gitExecutable\":\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\",\"externalGitResolved\":true,\"porcelainParserSource\":\"TARGET_SHA_GIT_BLOB\",\"porcelainParserBlob\":\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\",\"porcelainParserExpectedBlob\":\"d9ac826fa87acd44a6e595cac0635df99a5fdacb\",\"porcelainParserProductionFileRequired\":false,\"callDepthOverflowDetected\":false,\"liveMutationPerformed\":false,\"providerMutationPerformed\":false}\r\nHEAD_UNCHANGED=8646d55a309417ee147dbe5773e48b9dec11cbdb\r\nSERVER_SHA256=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 998,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:47:50.004Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:47:49.777Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-real-preflight-clean-20261014-82cd1ae7"
+    },
+    "request_id": "r62-real-preflight-clean-20261014-82cd1ae7",
+    "started_at": "2026-10-13T20:47:47.673Z",
+    "status": "completed"
+  },
+  "id": "r62-real-preflight-clean-20261014-82cd1ae7",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
