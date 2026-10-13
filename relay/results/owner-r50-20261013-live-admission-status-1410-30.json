@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,pathlib,subprocess\nB='http://127.0.0.1:17448'\ndef api(s):\n try:\n  with urllib.request.urlopen(B+s,timeout=5) as f:return json.load(f)\n except Exception as e:return {'error':type(e).__name__}\nh=api('/api/health');o=api('/api/operator-lifecycle');c=api('/api/projects/control-plane/cutover-r42/status');w=api('/api/supervisor-watchdog?detect=0');a=api('/api/supervisor-watchdog/agent-assignments');pr=api('/api/ai-profiles')\nq=a.get('assignments',[])\nrc=pathlib.Path('E:/PCControlAutonomyR41/data/pc-control-supervisor.json')\nj=json.loads(rc.read_text('utf8')) if rc.exists() else {}\nnow={'health':h.get('state'),'healthReasons':h.get('reasons'),'queuePaused':o.get('queuePaused'),'operator':o.get('mode'),'r42Hold':c.get('cutoverState',{}).get('holdActive'),'r42Status':c.get('cutoverState',{}).get('status'),'watchdog':{k:(w.get('config') or {}).get(k) for k in ('mode','enabled','allowAutonomousSend','enforceHighMode','autoContinueEnabled')},'assignments':{'total':len(q),'queued':[{'id':x.get('id'),'target':x.get('targetChatId'),'attempted':x.get('dispatchSubmitAttempted'),'dispatchCount':x.get('dispatchCount')} for x in q if x.get('state')=='queued'],'active':[x.get('id') for x in q if x.get('state') in ('dispatching','running','awaiting_evidence')]},'profiles':[{'port':x.get('debugPort'),'connected':x.get('workerConnected')} for x in pr.get('aiProfiles',[]) if x.get('workerConnected') is True],'r41':{'revision':j.get('revision'),'state':(j.get('lastDecision') or {}).get('status'),'unknown':len(j.get('pendingUnknown',[]))},'readOnly':True}\nprint(json.dumps(now,ensure_ascii=True)[:3500])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"health\": \"PAUSED\", \"healthReasons\": [], \"queuePaused\": true, \"operator\": \"RUNNING_MANAGED\", \"r42Hold\": true, \"r42Status\": \"CUTOVER_HOLD_PREPARED\", \"watchdog\": {\"mode\": \"off\", \"enabled\": false, \"allowAutonomousSend\": false, \"enforceHighMode\": true, \"autoContinueEnabled\": false}, \"assignments\": {\"total\": 69, \"queued\": [{\"id\": \"bd455cb4-a1e8-4b77-845f-abdbe17ae476\", \"target\": \"tg-curator-owner\", \"attempted\": false, \"dispatchCount\": 0}], \"active\": []}, \"profiles\": [{\"port\": 17410, \"connected\": true}], \"r41\": {\"revision\": 226, \"state\": \"READ_ONLY\", \"unknown\": 0}, \"readOnly\": true}\r\n",
+      "stdout_bytes": 586,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T07:11:07.450Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T07:11:07.230Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r50-20261013-live-admission-status-1410-30"
+    },
+    "request_id": "owner-r50-20261013-live-admission-status-1410-30",
+    "started_at": "2026-10-13T07:11:05.976Z",
+    "status": "completed"
+  },
+  "id": "owner-r50-20261013-live-admission-status-1410-30",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
