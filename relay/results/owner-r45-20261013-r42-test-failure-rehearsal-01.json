@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "shell execution timed out",
+    "error_kind": "timeout",
+    "finished_at": "2026-10-13T02:54:38.058Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "unknown",
+      "observed_at": "2026-10-13T02:54:37.720Z",
+      "reason": "timeout",
+      "reconciliation_required": true,
+      "reexecution_safe": false,
+      "request_id": "owner-r45-20261013-r42-test-failure-rehearsal-01"
+    },
+    "request_id": "owner-r45-20261013-r42-test-failure-rehearsal-01",
+    "started_at": "2026-10-13T02:53:47.008Z",
+    "status": "timeout"
+  },
+  "id": "owner-r45-20261013-r42-test-failure-rehearsal-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
