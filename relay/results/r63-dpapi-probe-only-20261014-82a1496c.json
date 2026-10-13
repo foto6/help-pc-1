@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; Add-Type -AssemblyName System.Security; $sample=[byte[]](1,2,3,4); $cipher=[Security.Cryptography.ProtectedData]::Protect($sample,$null,[Security.Cryptography.DataProtectionScope]::CurrentUser); $plain=[Security.Cryptography.ProtectedData]::Unprotect($cipher,$null,[Security.Cryptography.DataProtectionScope]::CurrentUser); Write-Output ('DPAPI_AVAILABLE='+([Convert]::ToBase64String($sample) -ceq [Convert]::ToBase64String($plain))); Write-Output ('STICKY_BACKUP_EXISTS='+(Test-Path -LiteralPath 'E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\R63_ENV_ORIGINAL_CURRENT_USER_DPAPI.bin')); Write-Output ('ENV_STICKY_LINE_EXISTS='+([regex]::IsMatch(([IO.File]::ReadAllText('E:\\WebAIBridge\\app\\.env')),'(?m)^\\s*(?:export\\s+)?BRIDGE_EXISTING_TABS_ONLY\\s*=')))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "DPAPI_AVAILABLE=True\r\nSTICKY_BACKUP_EXISTS=False\r\nENV_STICKY_LINE_EXISTS=False\r\n",
+      "stdout_bytes": 80,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:01:15.873Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:01:15.632Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-dpapi-probe-only-20261014-82a1496c"
+    },
+    "request_id": "r63-dpapi-probe-only-20261014-82a1496c",
+    "started_at": "2026-10-13T21:01:14.826Z",
+    "status": "completed"
+  },
+  "id": "r63-dpapi-probe-only-20261014-82a1496c",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
