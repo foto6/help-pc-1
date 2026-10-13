@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r60-commit-isolated-hotfix-20261014-9b0e82f3",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014'; $branch='agent/bridge-r60-production-hotfix-integration-20261014'; $base='c7ef06be94e8ada0119c226628a08c2c6d052ea4'; $head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($head -ne $base){throw 'SOURCE_HEAD_DRIFT'}; $staged=@(& git.exe -C $root diff --cached --name-only); if($staged.Count -ne 5){throw 'NOT_FIVE_VERIFIED_STAGED_FILES'}; $unmerged=@(& git.exe -C $root diff --name-only --diff-filter=U); if($unmerged.Count -ne 0){throw 'UNMERGED_FILES_PRESENT'}; & git.exe -C $root switch -c $branch; if($LASTEXITCODE -ne 0){throw 'NEW_BRANCH_FAILED'}; & git.exe -C $root -c 'user.name=ChatGPT PC Control' -c 'user.email=pc-control@users.noreply.github.com' -c 'commit.gpgsign=false' commit -m 'R60 integrate preserved R42 operator hotfix files with guarded R59 GPT bridge'; if($LASTEXITCODE -ne 0){throw 'COMMIT_FAILED'}; $sha=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); $parent=((& git.exe -C $root rev-parse HEAD^)|Out-String).Trim(); if($parent -ne $base){throw 'PARENT_SHA_MISMATCH'}; Write-Output ('R60_LOCAL_COMMIT='+$sha); Write-Output ('R60_PARENT='+$parent); Write-Output ('R60_SOURCE_FILES='+(@(& git.exe -C $root diff-tree --no-commit-id --name-only -r HEAD).Count)); Write-Output ('PRODUCTION_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22000,
+  "note": "Commit only five reviewed PowerShell hotfix integration files on a new isolated R60 branch after 137 passing tests and secret/syntax audit; NEVER commit or mutate live E:\\WebAIBridge"
+}
