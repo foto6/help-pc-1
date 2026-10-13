@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json,subprocess,pathlib,hashlib\nB='http://127.0.0.1:17448'\ndef get(p):\n try:\n  with urllib.request.urlopen(B+p,timeout=6) as f:return json.load(f)\n except Exception as e:return {'error':type(e).__name__}\nh=get('/api/health');op=get('/api/operator-lifecycle');cv=get('/api/projects/control-plane/cutover-r42/status');a=get('/api/supervisor-watchdog/agent-assignments');s=get('/api/supervisor-watchdog?detect=0');w=(s.get('config') or {})\nt=a.get('assignments',[])\nqt=[x for x in t if x.get('state')=='queued']\nactive=[x for x in t if x.get('state') in ('dispatching','running','awaiting_evidence')]\ndef bh(p):\n x=p.read_bytes();return hashlib.sha1(b'blob '+str(len(x)).encode()+bytes([0])+x).hexdigest()\np=pathlib.Path('E:/WebAIBridge/app/server.js')\nout={'healthState':h.get('state'),'healthReasons':h.get('reasons'),'healthError':h.get('error'),'queuePaused':op.get('queuePaused'),'lifecycleMode':op.get('mode'),'operatorError':op.get('error'),'r42Hold':cv.get('cutoverState',{}).get('holdActive'),'r42Status':cv.get('cutoverState',{}).get('status'),'r42Error':cv.get('error'),'autonomyMode':w.get('mode'),'autonomyEnabled':w.get('enabled'),'allowAutonomousSend':w.get('allowAutonomousSend'),'queuedCount':len(qt),'queued':[{k:x.get(k) for k in ('id','targetChatId','state','dispatchSubmitAttempted','dispatchCount')} for x in qt[:4]],'activeCount':len(active),'active':[{k:x.get(k) for k in ('id','targetChatId','state','dispatchSubmitAttempted')} for x in active[:3]],'serverBlob':bh(p),'r50PatchFilePresent':pathlib.Path('E:/WebAIBridge/app/autonomous-send-gate-r50.js').is_file(),'readOnly':True}\nprint(json.dumps(out,ensure_ascii=True)[:3700])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"healthState\": \"BLOCKED\", \"healthReasons\": [\"code_reload:server_source_changed_since_boot\"], \"healthError\": null, \"queuePaused\": true, \"lifecycleMode\": \"RUNNING_MANAGED\", \"operatorError\": null, \"r42Hold\": true, \"r42Status\": \"CUTOVER_HOLD_PREPARED\", \"r42Error\": null, \"autonomyMode\": \"off\", \"autonomyEnabled\": false, \"allowAutonomousSend\": false, \"queuedCount\": 1, \"queued\": [{\"id\": \"bd455cb4-a1e8-4b77-845f-abdbe17ae476\", \"targetChatId\": \"tg-curator-owner\", \"state\": \"queued\", \"dispatchSubmitAttempted\": false, \"dispatchCount\": 0}], \"activeCount\": 0, \"active\": [], \"serverBlob\": \"2079e3bd3dd3d26787e8b468f626b18f12cc5a11\", \"r50PatchFilePresent\": true, \"readOnly\": true}\r\n",
+      "stdout_bytes": 672,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:49:33.145Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:49:32.915Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r50-20261013-held-drift-reconcile-24"
+    },
+    "request_id": "owner-r50-20261013-held-drift-reconcile-24",
+    "started_at": "2026-10-13T04:49:32.084Z",
+    "status": "completed"
+  },
+  "id": "owner-r50-20261013-held-drift-reconcile-24",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
