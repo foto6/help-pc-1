@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,subprocess,json,base64,hashlib,concurrent.futures\nSHA='6e7f6b1de49c7add74c81e6ec93c0096db7b3eb2'\nFILES=json.loads(r'''{\"autonomy-r45-core.js\":\"676f9fe0091f73e5a0830c2cee9ee0a3757c14eb\",\"autonomy-r45-runner.js\":\"2cb920b1516a866bc19ecf9d0e410b65c663c5b6\",\"autonomy-r45-brain.js\":\"476b760d11851b7831000d6b0de1bf0d3383054d\",\"autonomy-r45-git-gate.js\":\"0af36e76e478aa6d5d67fb0729b916a9bd5149e0\",\"autonomy-r45-lock.js\":\"08833ff735f13a543e26ca6c70da6f9bccc6681d\",\"autonomy-r45-review.js\":\"398dedae164265a7783104ddfcd12811ca29302c\",\"agent-evidence-collector.js\":\"2c7aea6fea40bd8547195d1797406dd5ac6431aa\",\"autonomy-r45-plan.example.json\":\"d807b1dce10968a38c221b68e79b1a566e40bc7f\"}''')\nROOT=pathlib.Path('E:/WebAIBridge/app/data/operator-tools/r45-durable-autonomy')\nSTAGE=ROOT/'staging'/SHA\nDEST=ROOT/'releases'/SHA\nif DEST.exists() or STAGE.exists():raise RuntimeError('R45_ABORT_EXISTING_STAGE_OR_RELEASE_NO_OVERWRITE')\ndef get(k):\n r=subprocess.run(['gh','api',f'repos/foto6/WebAIBridge/contents/app/{k}?ref={SHA}'],capture_output=True,text=True,timeout=12)\n if r.returncode:raise RuntimeError('GH_FETCH_FAILED_'+k)\n z=json.loads(r.stdout)\n body=base64.b64decode(z['content'])\n h=hashlib.sha1(b'blob '+str(len(body)).encode()+b'\\x00'+body).hexdigest()\n if h!=FILES[k] or z.get('sha')!=h:raise RuntimeError('R45_BLOB_MISMATCH_'+k)\n return k,body\nwith concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:\n data=dict(pool.map(get,FILES))\nSTAGE.mkdir(parents=True,exist_ok=False)\nfor k,v in data.items():(STAGE/k).write_bytes(v)\nprint(json.dumps({'stageCreated':True,'exactCommit':SHA,'verifiedFileCount':len(data),'files':sorted(data),'providerSend':False,'productionUntouched':True}))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"stageCreated\": true, \"exactCommit\": \"6e7f6b1de49c7add74c81e6ec93c0096db7b3eb2\", \"verifiedFileCount\": 8, \"files\": [\"agent-evidence-collector.js\", \"autonomy-r45-brain.js\", \"autonomy-r45-core.js\", \"autonomy-r45-git-gate.js\", \"autonomy-r45-lock.js\", \"autonomy-r45-plan.example.json\", \"autonomy-r45-review.js\", \"autonomy-r45-runner.js\"], \"providerSend\": false, \"productionUntouched\": true}\r\n",
+      "stdout_bytes": 388,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T02:39:55.479Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T02:39:55.181Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r45-20261013-install-shadow-source-a-0948-05"
+    },
+    "request_id": "owner-r45-20261013-install-shadow-source-a-0948-05",
+    "started_at": "2026-10-13T02:39:50.808Z",
+    "status": "completed"
+  },
+  "id": "owner-r45-20261013-install-shadow-source-a-0948-05",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
