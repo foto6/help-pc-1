@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-post-stage-gates-20261014-cf60298d",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$u='http://127.0.0.1:17448';$c=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 5;$op=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 5;$a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 5;Write-Output ('R42_STATUS='+$c.cutoverState.status);Write-Output ('R42_HOLD='+$c.cutoverState.holdActive);Write-Output ('QUEUE_PAUSED='+$op.queuePaused);Write-Output ('QUEUED='+@($a.assignments|Where-Object{$_.state -eq 'queued'}).Count);Write-Output ('ACTIVE='+@($a.assignments|Where-Object{$_.state -in @('running','dispatching','awaiting_evidence','unknown')}).Count);Write-Output ('SOURCE_HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only authoritative post-R63 staged HOLD-release status and zero-queue; no provider mutations"
+}
