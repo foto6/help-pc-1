@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,pathlib,base64,hashlib,subprocess,concurrent.futures,datetime\nsha='f4f59c973a07d11d38257b2f2d7f0e5f33778e54';EXPECTED=json.loads(r'''{\"autonomous-send-gate-r50.js\":\"4b1fb7ba970ce03fff025a4a240a18334ad42546\",\"autonomous-send-gate-r50.test.js\":\"6f849704f9938a9893753372c3d2bde5d4ae8121\",\"dormant-operational-health-r49.test.js\":\"672e9b479c861ea4e76fcc5446104293c2b23e17\",\"operational-health.js\":\"ba2c40e4ff2a1189d19a0c87b3a296f51eef6f50\",\"paused-queue-health-r48.js\":\"46f82fdd69380017906139d51ce2f99fa3c0e15f\",\"paused-queue-health-r48.test.js\":\"5b1a0238b89ff319528fc9f0cc39e6eb61b5676d\",\"server.js\":\"2079e3bd3dd3d26787e8b468f626b18f12cc5a11\"}''')\nroot=pathlib.Path('E:/PCControlAutonomyR41/bridge-r50-shadow')\ndir=root/sha\nif dir.exists():raise RuntimeError('R50_SHADOW_SOURCE_ALREADY_EXISTS_NO_OVERWRITE')\ndef get(n):\n r=subprocess.run(['gh','api',f'repos/foto6/WebAIBridge/contents/app/{n}?ref={sha}'],capture_output=True,text=True,timeout=17)\n if r.returncode:raise RuntimeError('GITHUB_FETCH_FAILED_'+n)\n j=json.loads(r.stdout)\n raw=base64.b64decode(j['content'])\n git=hashlib.sha1(b'blob '+str(len(raw)).encode()+bytes([0])+raw).hexdigest()\n if git!=EXPECTED[n] or j['sha']!=git:raise RuntimeError('SOURCE_BLOB_MISMATCH_'+n)\n return n,raw\nwith concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:\n blobs=dict(pool.map(get,EXPECTED))\ndir.mkdir(parents=True,exist_ok=False)\nfor n,b in blobs.items():\n with (dir/n).open('xb') as f:f.write(b)\nchecks=[['node','--check','server.js'],['node','--test','autonomous-send-gate-r50.test.js','paused-queue-health-r48.test.js','dormant-operational-health-r49.test.js']]\nresults=[]\nfor cmd in checks:\n p=subprocess.run(cmd,cwd=dir,capture_output=True,text=True,timeout=20)\n results.append({'command':' '.join(cmd),'exit':p.returncode,'tail':(p.stdout+p.stderr)[-1150:] if p.returncode else '\\n'.join((p.stdout+p.stderr).splitlines()[-8:])})\n if p.returncode:raise RuntimeError('R50_TEST_FAILURE_'+json.dumps(results)[-2800:])\nmetadata={'schema':'r50.no_provider_send_shadow.v1','sourceSha':sha,'files':EXPECTED,'installedAt':datetime.datetime.now().isoformat(),'passed':True,'deploy':False}\n(dir/'MANIFEST.json').write_text(json.dumps(metadata,indent=2),encoding='utf8')\nprint(json.dumps({'status':'R50_LOCAL_SOURCE_TESTS_PASS','sha':sha,'verifiedGitBlobs':len(blobs),'checks':results,'shadowDir':str(dir),'productionUntouched':True,'providerSend':False},ensure_ascii=True)[:3500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"status\": \"R50_LOCAL_SOURCE_TESTS_PASS\", \"sha\": \"f4f59c973a07d11d38257b2f2d7f0e5f33778e54\", \"verifiedGitBlobs\": 7, \"checks\": [{\"command\": \"node --check server.js\", \"exit\": 0, \"tail\": \"\"}, {\"command\": \"node --test autonomous-send-gate-r50.test.js paused-queue-health-r48.test.js dormant-operational-health-r49.test.js\", \"exit\": 0, \"tail\": \"\\u0432\\u201e\\u2116 tests 20\\n\\u0432\\u201e\\u2116 suites 0\\n\\u0432\\u201e\\u2116 pass 20\\n\\u0432\\u201e\\u2116 fail 0\\n\\u0432\\u201e\\u2116 cancelled 0\\n\\u0432\\u201e\\u2116 skipped 0\\n\\u0432\\u201e\\u2116 todo 0\\n\\u0432\\u201e\\u2116 duration_ms 157.8393\"}], \"shadowDir\": \"E:\\\\PCControlAutonomyR41\\\\bridge-r50-shadow\\\\f4f59c973a07d11d38257b2f2d7f0e5f33778e54\", \"productionUntouched\": true, \"providerSend\": false}\r\n",
+      "stdout_bytes": 741,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:21:09.436Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:21:09.195Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r50-20261013-source-exact-local-ci-06"
+    },
+    "request_id": "owner-r50-20261013-source-exact-local-ci-06",
+    "started_at": "2026-10-13T04:21:02.879Z",
+    "status": "completed"
+  },
+  "id": "owner-r50-20261013-source-exact-local-ci-06",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
