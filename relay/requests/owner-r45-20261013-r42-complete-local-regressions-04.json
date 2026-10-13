@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r45-20261013-r42-complete-local-regressions-04",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import pathlib,subprocess,json\nroot=pathlib.Path('E:/WebAIBridge/app/data/operator-tools/r45-durable-autonomy/scratch/28e4accf59e37e767c37585b85cdacbdbac62120')\ntests=sorted(x.name for x in root.glob('*.test.js'))\nif len(tests)!=6:raise RuntimeError('SOURCE_SCRATCH_INCOMPLETE')\ntry:\n r=subprocess.run(['node','--test',*tests],cwd=root,capture_output=True,text=True,timeout=18)\n ls=(r.stdout+'\\n'+r.stderr).splitlines()\n print(json.dumps({'finished':True,'exitCode':r.returncode,'testFiles':tests,'summary':[x for x in ls if any(w in x for w in (' tests ',' pass ',' fail ','duration_ms'))][-12:],'failureTail':'\\n'.join(ls[-45:])[-9000:] if r.returncode else '', 'productionTouched':False,'sentMessages':False},ensure_ascii=True))\nexcept subprocess.TimeoutExpired:print(json.dumps({'finished':False,'error':'timeout','sentMessages':False}))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "New focused operation: run full six R45 source-only tests in already verified exact SHA isolated scratch. Prior unknown staging operation is not replayed. No provider/Bridge/queue changes or Send."
+}
