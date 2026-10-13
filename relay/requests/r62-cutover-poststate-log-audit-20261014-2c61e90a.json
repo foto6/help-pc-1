@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-cutover-poststate-log-audit-20261014-2c61e90a",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $log='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\R62_LIVE_CUTOVER_OUTPUT.log'; Write-Output ('OUTPUT_LOG_EXISTS='+(Test-Path -LiteralPath $log -PathType Leaf)); if(Test-Path -LiteralPath $log){Write-Output ('OUTPUT_LOG_BYTES='+(Get-Item $log).Length);Get-Content -LiteralPath $log -Tail 9 | ForEach-Object {$_ -replace '(?i)(password|token|secret|cookie|bearer|api.key).*','[filtered sensitive line]'}}; try{$s=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 2;$c=$s.cutoverState;Write-Output ('CUTOVER_PHASE='+$c.status);Write-Output ('CUTOVER_HOLD='+$c.holdActive);Write-Output ('CUTOVER_TARGET='+$c.targetSha);Write-Output ('ROLLBACK_MANIFEST_EXISTS='+(Test-Path -LiteralPath ([string]$c.rollbackManifest) -PathType Leaf));Write-Output ('CUTOVER_EVENTS='+@($c.events).Count)}catch{Write-Output 'CUTOVER_API_FAILED'}; Write-Output ('SOURCE_HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only inspect original R42 partial cutover log last nine filtered lines and presence of locally stored rollback manifest; no writes/restarts/Send"
+}
