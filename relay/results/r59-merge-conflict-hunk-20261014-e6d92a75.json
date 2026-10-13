@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $f='E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014\\app\\server.js'; $lines=[System.IO.File]::ReadAllLines($f); $starts=@();$ends=@(); for($i=0;$i -lt $lines.Length;$i++){if($lines[$i].StartsWith('<<<<<<< ')){$starts+=($i)};if($lines[$i].StartsWith('>>>>>>> ')){$ends+=($i)}}; Write-Output ('CONFLICT_BLOCK_COUNT='+$starts.Count); $printed=0; for($n=0;$n -lt [Math]::Min($starts.Count,$ends.Count);$n++){ $from=[Math]::Max(0,$starts[$n]-6);$to=[Math]::Min($lines.Length-1,$ends[$n]+6); Write-Output ('BLOCK_LINES='+($from+1)+'-'+($to+1)); for($j=$from;$j -le $to;$j++){ $line=$lines[$j];if($line -match '(?i)(token|secret|password|credential|cookie|authorization|api[_-]?key|bearer|session)'){$line='[redacted sensitive-pattern line]'}; $line=$line.Substring(0,[Math]::Min(220,$line.Length)); $printed+=$line.Length;if($printed -gt 7200){Write-Output 'TRUNCATED';break};Write-Output ('L'+($j+1)+':'+$line)} }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "CONFLICT_BLOCK_COUNT=1\r\nBLOCK_LINES=19069-19092\r\nL19069:            409, 'managed_assignment_composer_focus_failed');\r\nL19070:        }\r\nL19071:        await cdp.send('Input.insertText', { text });\r\nL19072:        await waitManagedProject(250);\r\nL19073:      },\r\nL19074:      submit:async () => {\r\nL19075:<<<<<<< ours\r\nL19076:        // Re-observe the exact pinned page epoch immediately before Enter.\r\nL19077:        // R50 authority is independently rechecked below without any shortcut.\r\nL19078:        if (existingTabsOnlyEnabled()) {\r\nL19079:          const current = await readManaged();\r\nL19080:          if (current.providerLoadError || current.providerRateLimited\r\nL19081:            || current.contextLimit || current.generating || !current.highMode)\r\nL19082:            throw apiError('R56 pinned page not ready for Send',\r\nL19083:              409,'r56_pinned_page_not_ready');\r\nL19084:        }\r\nL19085:=======\r\nL19086:>>>>>>> theirs\r\nL19087:        // R50: last reversible gate before actual provider-side Enter.\r\nL19088:        const beforeEnter=r50ManagedDispatchAuthority(assignment);\r\nL19089:        if (!beforeEnter.allowed) {\r\nL19090:          throw apiError('R50 browser Send denied: '+beforeEnter.reason,\r\nL19091:            409,'r50_autonomous_send_hold');\r\nL19092:        }\r\n",
+      "stdout_bytes": 1299,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:08:35.967Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:08:35.737Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r59-merge-conflict-hunk-20261014-e6d92a75"
+    },
+    "request_id": "r59-merge-conflict-hunk-20261014-e6d92a75",
+    "started_at": "2026-10-13T20:08:34.736Z",
+    "status": "completed"
+  },
+  "id": "r59-merge-conflict-hunk-20261014-e6d92a75",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
