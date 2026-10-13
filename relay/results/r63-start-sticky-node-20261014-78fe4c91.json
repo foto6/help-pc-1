@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "TimeoutExpired: Command '['powershell.exe', '-NoProfile', '-NonInteractive', '-Command', '$ErrorActionPreference=\\'Stop\\';$root=\\'E:\\\\WebAIBridge\\';$sha=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim();if($sha -ne \\'01e5db790f50b5eb42588b8942f3dd1de4f0a6bf\\'){throw \\'HEAD_DRIFT\\'};$listener=Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction SilentlyContinue|Select-Object -First 1;if($listener){Write-Output (\\'SERVER_ALREADY_LISTENING_PID=\\'+$listener.OwningProcess);exit 0};$dir=\\'E:\\\\WebAIBridge-R63-OPERATOR-BACKUP-20261014-v1\\';if(-not(Test-Path -LiteralPath (Join-Path $dir \\'STICKY_ENV_APPEND_MANIFEST.json\\'))){throw \\'STICKY_CONFIG_NOT_PINNED\\'};$script=Join-Path $root \\'app\\\\server.js\\';$p=Start-Process -FilePath \\'C:\\\\Program Files\\\\nodejs\\\\node.exe\\' -ArgumentList (\\'\"\\'+$script+\\'\"\\') -WorkingDirectory (Join-Path $root \\'app\\') -WindowStyle Hidden -PassThru -RedirectStandardOutput (Join-Path $dir \\'r63-sticky-node.stdout.log\\') -RedirectStandardError (Join-Path $dir \\'r63-sticky-node.stderr.log\\') -ErrorAction Stop;Write-Output (\\'STARTED_R63_STICKY_NODE_PID=\\'+$p.Id);Write-Output \\'CHROME_NOT_LAUNCHED\\'']' timed out after 5 seconds",
+    "error_kind": "executor_failure",
+    "finished_at": "2026-10-13T21:39:19.770Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "unknown",
+      "observed_at": "2026-10-13T21:39:19.522Z",
+      "reason": "executor_failure",
+      "reconciliation_required": true,
+      "reexecution_safe": false,
+      "request_id": "r63-start-sticky-node-20261014-78fe4c91"
+    },
+    "request_id": "r63-start-sticky-node-20261014-78fe4c91",
+    "started_at": "2026-10-13T21:38:58.028Z",
+    "status": "error"
+  },
+  "id": "r63-start-sticky-node-20261014-78fe4c91",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
