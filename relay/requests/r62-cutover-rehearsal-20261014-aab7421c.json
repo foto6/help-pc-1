@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-cutover-rehearsal-20261014-aab7421c",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $orig='E:\\WebAIBridge'; $dest='E:\\WebAIBridge-R62-CUTOVER-DRYRUN'; $backup='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\tracked-local-changes.patch'; $old='5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03'; $target='d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2'; $branch='agent/bridge-r61-failclosed-dispatch-inspection-20261014'; if(Test-Path -LiteralPath $dest){throw 'ISOLATED_DEST_ALREADY_EXISTS'}; if(-not (Test-Path -LiteralPath $backup -PathType Leaf)){throw 'ORIGINAL_BACKUP_ABSENT'}; $current=((& git.exe -C $orig rev-parse HEAD)|Out-String).Trim(); if($current -ne $old){throw 'LIVE_OLD_SHA_CHANGED'}; & git.exe clone --local --no-hardlinks --no-checkout $orig $dest 2>$null; if($LASTEXITCODE -ne 0){throw 'LOCAL_CLONE_FAILED'}; & git.exe -C $dest switch --detach $old 2>$null; if($LASTEXITCODE -ne 0){throw 'DETACHED_ORIGINAL_CHECKOUT_FAILED'}; & git.exe -C $dest apply --check $backup; if($LASTEXITCODE -ne 0){throw 'ORIGINAL_PATCH_NOT_APPLICABLE'}; & git.exe -C $dest apply $backup; if($LASTEXITCODE -ne 0){throw 'ORIGINAL_PATCH_APPLY_FAILED'}; & git.exe -C $dest switch -c 'audit/r62-original-production-hotfix-base'; if($LASTEXITCODE -ne 0){throw 'AUDIT_BRANCH_FAILED'}; & git.exe -C $dest add -- app/ensure-supervisor-watchdog.ps1 app/r42-cutover.ps1 app/r42-json-encoding.test.ps1 app/r42-rollback.ps1 app/server.js app/start.ps1; if($LASTEXITCODE -ne 0){throw 'AUDIT_STAGE_FAILED'}; & git.exe -C $dest -c 'user.name=PC Control audit' -c 'user.email=pc-control@users.noreply.github.com' -c 'commit.gpgsign=false' commit -m 'Local-only dry-run snapshot original R49 owner hotfixes' *> $null; if($LASTEXITCODE -ne 0){throw 'LOCAL_AUDIT_COMMIT_FAILED'}; $commit=((& git.exe -C $dest rev-parse HEAD)|Out-String).Trim(); Write-Output ('DRYRUN_LOCAL_HOTFIX_SHA='+$commit); & git.exe -C $dest remote set-url origin 'https://github.com/foto6/WebAIBridge.git'; if($LASTEXITCODE -ne 0){throw 'REMOTE_CONFIG_FAILED'}; & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $dest 'app\\r42-cutover.ps1') -RepoPath $dest -TargetSha $target -TargetBranch $branch -PreflightOnly 2>&1|ForEach-Object {Write-Output ($_ -replace '[^\\x20-\\x7E]','')}; Write-Output ('R42_PREFLIGHT_EXIT='+$LASTEXITCODE); Write-Output ('DRYRUN_HEAD='+((& git.exe -C $dest rev-parse HEAD)|Out-String).Trim()); Write-Output ('DRYRUN_TRACKED_CHANGES='+@(& git.exe -C $dest status --porcelain=v1 --untracked-files=no).Count); Write-Output ('LIVE_SERVER_SHA256='+(Get-FileHash -LiteralPath (Join-Path $orig 'app\\server.js') -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 105000,
+  "note": "Isolated R62 cutover preflight rehearsal on COPY of original R49 + owner tracked hotfixes, local-only audit commit then R42 -PreflightOnly target R61; no production/process/provider modification"
+}
