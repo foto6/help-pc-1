@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$u='http://127.0.0.1:17448';$r=Invoke-RestMethod ($u+'/api/health/subsystems?refresh=1') -TimeoutSec 18;Write-Output ('REFRESHED='+$r.refreshed);Write-Output ('HEALTH='+$r.health.state);Write-Output ('REASONS='+(@($r.health.reasons)-join ','));$c=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 5;Write-Output ('R42_HOLD='+$c.cutoverState.holdActive);$a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 5;Write-Output ('QUEUED='+@($a.assignments|Where-Object{$_.state -eq 'queued'}).Count);Write-Output ('ACTIVE='+@($a.assignments|Where-Object{$_.state -in @('running','dispatching','awaiting_evidence','unknown')}).Count)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "REFRESHED=True\r\nHEALTH=DEGRADED\r\nREASONS=git_baseline:health_probe_stale\r\nR42_HOLD=True\r\nQUEUED=0\r\nACTIVE=0\r\n",
+      "stdout_bytes": 109,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:28:57.513Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:28:57.230Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-health-refresh-readonly-20261014-ced1a845"
+    },
+    "request_id": "r63-health-refresh-readonly-20261014-ced1a845",
+    "started_at": "2026-10-13T21:28:56.315Z",
+    "status": "completed"
+  },
+  "id": "r63-health-refresh-readonly-20261014-ced1a845",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
