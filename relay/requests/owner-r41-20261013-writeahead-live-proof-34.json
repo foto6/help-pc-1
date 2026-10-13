@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-writeahead-live-proof-34",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import pathlib,json,subprocess,urllib.request,os\nr=pathlib.Path('E:/PCControlAutonomyR41');expected='195cc8acc9faddfcca1e14e7a4c5063f109ffb4a'\nj=json.loads((r/'data/pc-control-supervisor.json').read_text('utf8'))\nowner=json.loads((r/'WATCHER_R41.json').read_text('utf8'))\nlease=json.loads((r/'data/pc-control-supervisor.json.watcher.lock/owner.json').read_text('utf8'))\ncfg=json.loads((r/'config.r41-integrated.json').read_text('utf8'))\nq=subprocess.run(['powershell.exe','-NoProfile','-Command',\"\"\"$p=@(Get-CimInstance Win32_Process|Where-Object {$_.Name -ieq 'node.exe' -and $_.CommandLine -like '*PCControlAutonomyR41*pc-autonomy-daemon.js*'}|Select-Object ProcessId,CommandLine);$p|ConvertTo-Json -Compress\"\"\"],capture_output=True,text=True,timeout=8)\nrows=json.loads(q.stdout) if q.returncode==0 and q.stdout.strip() else []\nif isinstance(rows,dict):rows=[rows]\ndef api(p):\n with urllib.request.urlopen('http://127.0.0.1:17448'+p,timeout=6) as f:return json.load(f)\nh=api('/api/health');o=api('/api/operator-lifecycle');c=api('/api/projects/control-plane/cutover-r42/status');w=api('/api/supervisor-watchdog?detect=0').get('config',{});a=api('/api/supervisor-watchdog/agent-assignments')\nqueued=[x for x in a.get('assignments',[]) if x.get('state')=='queued']\nstartup=r/'START_R41_OBSERVER.cmd';stop=r/'STOP_R41_USER_OBSERVER.ps1'\nprint(json.dumps({'verifiedSingleObserver':len(rows)==1 and rows[0].get('ProcessId')==owner.get('pid')==lease.get('pid') and expected in rows[0].get('CommandLine',''),'watcherPid':owner.get('pid'),'releaseSha':owner.get('source'),'watchMode':'--watch' in rows[0].get('CommandLine','') if rows else False,'dispatchFlagAbsent':all('--dispatch' not in x.get('CommandLine','') for x in rows),'startupPinned':expected in startup.read_text('utf8'),'stopPinned':expected in stop.read_text('utf8'),'journalRevision':j.get('revision'),'lastStatus':(j.get('lastDecision') or {}).get('status'),'unknownCount':len(j.get('pendingUnknown',[])),'pendingDispatch':j.get('pendingDispatch'),'bridgeHealth':h.get('state'),'bridgeReasons':h.get('reasons',[]),'r42Hold':c.get('cutoverState',{}).get('holdActive'),'queuePaused':o.get('queuePaused'),'supervisorMode':w.get('mode'),'allowAutonomousSend':w.get('allowAutonomousSend'),'curatorQueuedUnsent':len(queued)==1 and queued[0].get('targetChatId')=='tg-curator-owner' and queued[0].get('dispatchSubmitAttempted') is False,'readOnly':True},ensure_ascii=True)[:3700])"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 21000,
+  "note": "Post-rollout independent read-only R41 writeahead version exact singleton PID owner lease and R50 paused/HOLD/Curator no-Send proof. No side effects."
+}
