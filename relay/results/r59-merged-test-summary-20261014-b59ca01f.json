@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014'; $f=Join-Path $root 'R59_MERGED_TESTS.log'; Write-Output ('LOG_BYTES='+(Get-Item -LiteralPath $f).Length); Get-Content -LiteralPath $f -Tail 9; $names=@(& git.exe -C $root diff --cached --name-only); Write-Output ('MERGED_FILES='+($names -join ',')); Write-Output ('UNMERGED='+(@(& git.exe -C $root diff --name-only --diff-filter=U).Count)); Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash); Write-Output ('MERGE_SERVER_HASH='+(Get-FileHash -LiteralPath (Join-Path $root 'app\\server.js') -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "LOG_BYTES=28173\r\n1..137\r\n# tests 137\r\n# suites 0\r\n# pass 137\r\n# fail 0\r\n# cancelled 0\r\n# skipped 0\r\n# todo 0\r\n# duration_ms 647.7207\r\nMERGED_FILES=app/ensure-supervisor-watchdog.ps1,app/r42-cutover.ps1,app/r42-json-encoding.test.ps1,app/r42-rollback.ps1,app/start.ps1\r\nUNMERGED=0\r\nPROD_HASH=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\nMERGE_SERVER_HASH=DF69095E52999A207D53C0A98CE57A8BDA7FE341BDF493335FF7434EEDF6865E\r\n",
+      "stdout_bytes": 441,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:10:20.953Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:10:20.706Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r59-merged-test-summary-20261014-b59ca01f"
+    },
+    "request_id": "r59-merged-test-summary-20261014-b59ca01f",
+    "started_at": "2026-10-13T20:10:19.801Z",
+    "status": "completed"
+  },
+  "id": "r59-merged-test-summary-20261014-b59ca01f",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
