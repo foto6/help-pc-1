@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $root='E:\\WebAIBridge'; $raw=@(& git.exe -C $root status --porcelain=v1 --untracked-files=all); $untracked=@($raw|Where-Object {$_.StartsWith('?? ')}); $other=@($raw|Where-Object {-not $_.StartsWith('?? ')}); Write-Output ('UNTRACKED_COUNT='+$untracked.Count); Write-Output ('OTHER_STATUS_COUNT='+$other.Count); foreach($row in @($untracked|Select-Object -First 35)){ $p=$row.Substring(3);if($p -match '(?i)(secret|token|credential|key|cookie|password|env|backup|session|data/)'){Write-Output 'UNTRACKED=[sensitive filename omitted]'}else{Write-Output ('UNTRACKED='+$p)}}; $fp='E:\\WebAIBridge\\app\\autonomous-send-gate-r50.js'; Write-Output ('R50_UNTRACKED_EXISTS='+(Test-Path -LiteralPath $fp -PathType Leaf)); if(Test-Path -LiteralPath $fp -PathType Leaf){Write-Output ('R50_BLOB_SHA='+((& git.exe -C $root hash-object --no-filters -- $fp)|Out-String).Trim());Write-Output ('R50_BYTES='+(Get-Item -LiteralPath $fp).Length)}; Write-Output ('PROD_SERVER_HASH='+(Get-FileHash -LiteralPath (Join-Path $root 'app\\server.js') -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "UNTRACKED_COUNT=1\r\nOTHER_STATUS_COUNT=0\r\nUNTRACKED=app/autonomous-send-gate-r50.js\r\nR50_UNTRACKED_EXISTS=True\r\nR50_BLOB_SHA=4b1fb7ba970ce03fff025a4a240a18334ad42546\r\nR50_BYTES=1234\r\nPROD_SERVER_HASH=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 265,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:46:51.955Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:46:51.704Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-untracked-inventory-20261014-fce82371"
+    },
+    "request_id": "r62-untracked-inventory-20261014-fce82371",
+    "started_at": "2026-10-13T20:46:50.735Z",
+    "status": "completed"
+  },
+  "id": "r62-untracked-inventory-20261014-fce82371",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
