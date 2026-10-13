@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge\\app'; $f='E:\\WebAIBridge-R61-SHADOW\\app\\r56-sticky-readonly-preflight.js'; if(-not (Test-Path -LiteralPath $f)){throw 'NO_PREFLIGHT'}; $result=(& node.exe $f --app $root | Out-String | ConvertFrom-Json); Write-Output ('STAGING_CANDIDATE='+$result.readOnlyStagingCandidate); Write-Output ('SAFE_SEND='+$result.safeToLiveDispatch); Write-Output ('R50='+$result.observations.r50GuardPresent); Write-Output ('R56='+$result.observations.r56Installed); Write-Output ('R42_HOLD='+$result.observations.holdActive); Write-Output ('PAUSED='+$result.observations.queuePaused); Write-Output ('BLOCKERS='+($result.blockers -join ',')); $u='http://127.0.0.1:17448'; $status=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 5; Write-Output ('CODE_RELOAD_REQUIRED='+$status.codeReloadRequired); Write-Output ('SERVER_SHA256='+(Get-FileHash -LiteralPath (Join-Path $root 'server.js') -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "STAGING_CANDIDATE=True\r\nSAFE_SEND=False\r\nR50=True\r\nR56=True\r\nR42_HOLD=True\r\nPAUSED=True\r\nBLOCKERS=\r\nCODE_RELOAD_REQUIRED=\r\nSERVER_SHA256=DF69095E52999A207D53C0A98CE57A8BDA7FE341BDF493335FF7434EEDF6865E\r\n",
+      "stdout_bytes": 203,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:09:34.754Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:09:34.522Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-running-code-preflight-20261014-1a56d3c8"
+    },
+    "request_id": "r62-running-code-preflight-20261014-1a56d3c8",
+    "started_at": "2026-10-13T21:09:33.182Z",
+    "status": "completed"
+  },
+  "id": "r62-running-code-preflight-20261014-1a56d3c8",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
