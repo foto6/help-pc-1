@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014'; $file=Join-Path $root 'app\\server.js'; $text=[System.IO.File]::ReadAllText($file); $re=[regex]::new('(?s)<<<<<<< ours\\r?\\n(.*?)=======\\r?\\n>>>>>>> theirs\\r?\\n'); $matches=$re.Matches($text); if($matches.Count -ne 1){throw 'EXPECTED_ONE_CONFLICT_BLOCK'}; $ours=$matches[0].Groups[1].Value; if(-not $ours.Contains('Re-observe the exact pinned page epoch immediately before Enter') -or -not $ours.Contains('existingTabsOnlyEnabled()') -or -not $ours.Contains('r56_pinned_page_not_ready')){throw 'UNRECOGNIZED_CONFLICT_HUNK'}; $next=$text.Remove($matches[0].Index,$matches[0].Length).Insert($matches[0].Index,$ours); if($next.Contains('<<<<<<<') -or $next.Contains('>>>>>>>')){throw 'REMAINING_CONFLICT_MARKERS'}; [System.IO.File]::WriteAllText($file,$next,(New-Object System.Text.UTF8Encoding($false))); & git.exe -C $root add -- app/server.js; if($LASTEXITCODE -ne 0){throw 'MERGED_FILE_STAGE_FAILED'}; $unmerged=@(& git.exe -C $root diff --name-only --diff-filter=U); Write-Output ('UNMERGED_COUNT='+$unmerged.Count); $modified=@(& git.exe -C $root diff --cached --name-only); Write-Output ('STAGED_FILE_COUNT='+$modified.Count); Write-Output ('MERGED_R56_GUARD_PRESERVED='+($next.Contains('r56_pinned_page_not_ready'))); Write-Output ('MERGED_R50_GUARD_PRESERVED='+($next.Contains('r50_autonomous_send_hold'))); Write-Output ('PRODUCTION_SERVER_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "UNMERGED_COUNT=0\r\nSTAGED_FILE_COUNT=5\r\nMERGED_R56_GUARD_PRESERVED=True\r\nMERGED_R50_GUARD_PRESERVED=True\r\nPRODUCTION_SERVER_SHA256=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 196,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:09:27.317Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:09:27.090Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r59-merge-resolve-r56-r50-20261014-6c60bb9f"
+    },
+    "request_id": "r59-merge-resolve-r56-r50-20261014-6c60bb9f",
+    "started_at": "2026-10-13T20:09:26.146Z",
+    "status": "completed"
+  },
+  "id": "r59-merge-resolve-r56-r50-20261014-6c60bb9f",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
