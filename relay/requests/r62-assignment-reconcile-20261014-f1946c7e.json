@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-assignment-reconcile-20261014-f1946c7e",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -Method GET -TimeoutSec 8; $rows=@($r.assignments); $ids=@{};$unknown=0;$active=0;$queued=0;$bad=@{}; foreach($a in $rows){$id=[string]$a.id;if([string]::IsNullOrWhiteSpace($id) -or $ids.ContainsKey($id)){$unknown++;$bad['duplicate_or_missing_id']=[int]$bad['duplicate_or_missing_id']+1;continue};$ids[$id]=$true;$s=[string]$a.state;if($s -eq 'queued'){$queued++;if($a.dispatchSubmitAttempted -cne $false -or [int]$a.dispatchCount -ne 0){$unknown++;$bad['queued_send_uncertain']=[int]$bad['queued_send_uncertain']+1}}elseif($s -in @('dispatching','running','awaiting_evidence')){$active++;$unknown++;$bad['active_unknown']=[int]$bad['active_unknown']+1}elseif($s -in @('completed','cancelled','blocked','failed')){if($a.dispatchSubmitAttempted -ceq $true -and -not $a.dispatchFingerprint){$unknown++;$bad['terminal_missing_fingerprint']=[int]$bad['terminal_missing_fingerprint']+1}}else{$unknown++;$bad['unknown_state']=[int]$bad['unknown_state']+1}}; Write-Output ('LEDGER_TOTAL='+$rows.Count); Write-Output ('LEDGER_UNKNOWN_EFFECTS='+$unknown); Write-Output ('LEDGER_ACTIVE='+$active); Write-Output ('LEDGER_QUEUED='+$queued); foreach($key in $bad.Keys){Write-Output ('LEDGER_REASON_'+$key+'='+$bad[$key])}; $snapshot=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=0' -TimeoutSec 6; Write-Output ('CACHED_CHAT_COUNT='+@($snapshot.chats).Count)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 24000,
+  "note": "Read-only verify original 69 assignment idempotency/dispatch fingerprint reconciliation with same R41 policy; no IDs or contents output; no effects"
+}
