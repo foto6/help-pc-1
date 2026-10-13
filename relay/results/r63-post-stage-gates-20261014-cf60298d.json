@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$u='http://127.0.0.1:17448';$c=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 5;$op=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 5;$a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 5;Write-Output ('R42_STATUS='+$c.cutoverState.status);Write-Output ('R42_HOLD='+$c.cutoverState.holdActive);Write-Output ('QUEUE_PAUSED='+$op.queuePaused);Write-Output ('QUEUED='+@($a.assignments|Where-Object{$_.state -eq 'queued'}).Count);Write-Output ('ACTIVE='+@($a.assignments|Where-Object{$_.state -in @('running','dispatching','awaiting_evidence','unknown')}).Count);Write-Output ('SOURCE_HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "R42_STATUS=R63_HOLD_RELEASED_PAUSED\r\nR42_HOLD=False\r\nQUEUE_PAUSED=True\r\nQUEUED=0\r\nACTIVE=0\r\nSOURCE_HEAD=01e5db790f50b5eb42588b8942f3dd1de4f0a6bf\r\n",
+      "stdout_bytes": 146,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:41:26.289Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:41:26.053Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-post-stage-gates-20261014-cf60298d"
+    },
+    "request_id": "r63-post-stage-gates-20261014-cf60298d",
+    "started_at": "2026-10-13T21:41:25.211Z",
+    "status": "completed"
+  },
+  "id": "r63-post-stage-gates-20261014-cf60298d",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
