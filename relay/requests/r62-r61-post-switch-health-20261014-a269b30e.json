@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-r61-post-switch-health-20261014-a269b30e",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $url='http://127.0.0.1:17448'; try{$r=Invoke-RestMethod -Uri ($url+'/api/health') -TimeoutSec 2;Write-Output ('BRIDGE_HTTP_OK=True');Write-Output ('BRIDGE_HEALTH='+$r.state)}catch{Write-Output 'BRIDGE_HTTP_OK=False'}; try{$r=Invoke-RestMethod -Uri ($url+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 2;Write-Output ('R42_HOLD='+$r.cutoverState.holdActive);Write-Output ('CUTOVER_STATUS='+$r.cutoverState.status)}catch{Write-Output 'CUTOVER_API_UNAVAILABLE'}; try{$r=Invoke-RestMethod -Uri ($url+'/api/operator-lifecycle') -TimeoutSec 2;Write-Output ('OP_MODE='+$r.mode);Write-Output ('QUEUE_PAUSED='+$r.queuePaused)}catch{Write-Output 'LIFECYCLE_API_UNAVAILABLE'}; Write-Output ('HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "READ ONLY reconcile partial cutover exact R61: short localhost health/R42 hold/operator lifecycle checks only; no restart, no rollback, no provider sends."
+}
