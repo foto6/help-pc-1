@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import subprocess,pathlib,json\nsha='28e4accf59e37e767c37585b85cdacbdbac62120'\nbase=pathlib.Path('E:/WebAIBridge/app/data/operator-tools/r45-durable-autonomy')\nrelease=base/'releases'/sha\ngatejs=\"const r=require('./autonomy-r45-runner');r.readR42CutoverGate({api:r.api},'http://127.0.0.1:17448').then(x=>process.stdout.write(JSON.stringify(x))).catch(e=>{process.stdout.write(JSON.stringify({ok:false,error:String(e.message)}));process.exitCode=2})\"\ng=subprocess.run(['node','-e',gatejs],cwd=release,capture_output=True,text=True,timeout=8)\nstatus=subprocess.run(['node','autonomy-r45-runner.js','--plan',str(release/'autonomy-r45-plan.example.json'),'--state',str(base/'data'/'readonly-r42-validation.state.json'),'--once'],cwd=release,capture_output=True,text=True,timeout=9)\nprint(json.dumps({'r42GateExit':g.returncode,'r42Gate':json.loads(g.stdout or '{}'),'monitorExit':status.returncode,'monitor':json.loads(status.stdout.splitlines()[-1]) if status.returncode==0 else {'error':status.stderr[-250:]},'readOnly':True,'providerSend':False,'activated':False},ensure_ascii=True)[:6500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"r42GateExit\": 0, \"r42Gate\": {\"ok\": false, \"reason\": \"r42_cutover_hold_active_or_unknown\"}, \"monitorExit\": 0, \"monitor\": {\"at\": \"2026-10-13T02:58:36.355Z\", \"planId\": \"r45-edit-me\", \"revision\": 1, \"counts\": {\"PENDING\": 1}, \"checkpointDue\": [], \"reconciliationRequired\": [], \"bridge\": {\"health\": \"BLOCKED\", \"reasons\": [\"git_evidence:health_probe_stale\", \"timeline_io:health_probe_stale\", \"assignment_queue:oldest_queued_over_60s\"], \"assignmentCount\": 69, \"assignmentStates\": {\"cancelled\": 11, \"blocked\": 35, \"failed\": 12, \"completed\": 10, \"queued\": 1}, \"queue\": {\"active\": 0, \"queued\": 1, \"oldestQueuedAgeMs\": 32420362}, \"codeReloadRequired\": false}, \"dispatched\": [], \"status\": \"READ_ONLY\", \"brainReason\": \"disabled\"}, \"readOnly\": true, \"providerSend\": false, \"activated\": false}\r\n",
+      "stdout_bytes": 781,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T02:58:36.635Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T02:58:36.404Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r45-20261013-r42-source-live-readonly-06"
+    },
+    "request_id": "owner-r45-20261013-r42-source-live-readonly-06",
+    "started_at": "2026-10-13T02:58:35.552Z",
+    "status": "completed"
+  },
+  "id": "owner-r45-20261013-r42-source-live-readonly-06",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
