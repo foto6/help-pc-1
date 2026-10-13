@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,importlib.util,subprocess,os\nB='http://127.0.0.1:17448'\ndef get(route,t=6):\n with urllib.request.urlopen(B+route,timeout=t) as r:return json.load(r)\nrows=get('/api/supervisor-watchdog/managed-chats?inspect=1',16).get('chats',[])\np=next((x for x in rows if x.get('id')=='agent-pc-control'),{})\nprofiles=get('/api/ai-profiles').get('aiProfiles',[])\ndef clean(x,fields):return {k:x.get(k) for k in fields if k in x}\nport=17410\ntry:\n with urllib.request.urlopen(f'http://127.0.0.1:{port}/json/list',timeout=3) as r:tabs=json.load(r)\nexcept Exception:tabs=[]\nmatch=[clean(x,['id','url','title','type']) for x in tabs if str(p.get('url','')) and x.get('url')==p.get('url')]\nprint(json.dumps({'pcChat':clean(p,['id','name','status','url','generating','draftPresent','openTabs','highMode','profileWorkerConnected','lastObservedAt','activeAssignmentCount']),'matches':match,'tabCount':len(tabs),'websocketClientInstalled':importlib.util.find_spec('websocket') is not None,'websocketsInstalled':importlib.util.find_spec('websockets') is not None,'heldQueue':get('/api/operator-lifecycle').get('queuePaused'),'r42Hold':get('/api/projects/control-plane/cutover-r42/status').get('cutoverState',{}).get('holdActive'),'readonly':True},ensure_ascii=True)[:4900])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"pcChat\": {\"id\": \"agent-pc-control\", \"name\": \"Native MCP\", \"status\": \"stalled\", \"url\": \"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\", \"generating\": true, \"draftPresent\": false, \"openTabs\": 1, \"highMode\": true, \"profileWorkerConnected\": true, \"activeAssignmentCount\": 0}, \"matches\": [{\"id\": \"F7A2D32B34B5F309AF6B6D899CFFBA1F\", \"url\": \"https://chatgpt.com/g/g-p-6ab839fa4f8c81919adad01c4a5497dc-sv/c/6ab946b7-46f0-83ed-bc98-dc74acc6e810\", \"title\": \"Native Connector Implementation\", \"type\": \"page\"}], \"tabCount\": 41, \"websocketClientInstalled\": false, \"websocketsInstalled\": false, \"heldQueue\": true, \"r42Hold\": true, \"readonly\": true}\r\n",
+      "stdout_bytes": 693,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:42:50.486Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:42:50.139Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r50-20261013-stalled-target-preflight-15"
+    },
+    "request_id": "owner-r50-20261013-stalled-target-preflight-15",
+    "started_at": "2026-10-13T04:42:49.311Z",
+    "status": "completed"
+  },
+  "id": "owner-r50-20261013-stalled-target-preflight-15",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
