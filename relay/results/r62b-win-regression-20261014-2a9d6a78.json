@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R62b-SHADOW'; $sha='2a9d6a781990ed32e1df8fc0e16a93f1ba7b3237'; if(Test-Path -LiteralPath $root){throw 'EXISTS'}; & git.exe clone --depth 1 --single-branch --no-tags --branch agent/bridge-r62-r42-sticky-safe-release-20261014 https://github.com/foto6/WebAIBridge.git $root; if($LASTEXITCODE -ne 0){throw 'CLONE_FAILED'}; $got=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($got -ne $sha){throw 'SHA_MISMATCH'}; $tests='r62-r42-sticky-release-gate.test.js autonomy-r45.test.js autonomy-r45-brain.test.js autonomy-r45-git-gate.test.js autonomy-r45-lock.test.js autonomy-r45-review.test.js autonomy-r57-gpt-git.test.js autonomy-r57-successor.test.js autonomous-send-gate-r50.test.js existing-tab-session-r55.test.js existing-tab-session-r56-cdp.test.js r56-worker-sticky.test.js r56-r42-hold-failclosed.test.js r56-launch-preservation.test.js r56-sticky-readonly-preflight.test.js r34-sticky-chat-exact-id.test.js r58-shadow-rehearsal-contract.test.js'; $cmd='cd /d '+$root+'\\app && node.exe --check server.js && node.exe --test --test-reporter=tap '+$tests+' > '+$root+'\\R62b_TESTS.log 2>&1'; & cmd.exe /d /c $cmd; if($LASTEXITCODE -ne 0){throw 'R62_TEST_FAILED'}; Write-Output ('R62b_SHA='+$got); Get-Content -LiteralPath (Join-Path $root 'R62b_TESTS.log') -Tail 9; Write-Output ('PRODUCTION_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Cloning into 'E:\\WebAIBridge-R62b-SHADOW'...\n",
+      "stderr_bytes": 45,
+      "stderr_truncated": false,
+      "stdout": "R62b_SHA=2a9d6a781990ed32e1df8fc0e16a93f1ba7b3237\r\n1..145\r\n# tests 145\r\n# suites 0\r\n# pass 145\r\n# fail 0\r\n# cancelled 0\r\n# skipped 0\r\n# todo 0\r\n# duration_ms 638.6292\r\nPRODUCTION_HASH=DF69095E52999A207D53C0A98CE57A8BDA7FE341BDF493335FF7434EEDF6865E\r\n",
+      "stdout_bytes": 250,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:14:48.558Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:14:48.308Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62b-win-regression-20261014-2a9d6a78"
+    },
+    "request_id": "r62b-win-regression-20261014-2a9d6a78",
+    "started_at": "2026-10-13T21:14:42.124Z",
+    "status": "completed"
+  },
+  "id": "r62b-win-regression-20261014-2a9d6a78",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
