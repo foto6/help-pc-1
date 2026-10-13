@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-original-chat-audit-20261014-b3f9672e",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$url='http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/reconcile-live';$s=Invoke-RestMethod -Method POST -Uri $url -ContentType 'application/json' -Body '{}' -TimeoutSec 20;Write-Output ('CONTRACT='+$s.object);Write-Output ('DIFF_COUNT='+$s.diff.count);Write-Output ('CONFLICT_COUNT='+@($s.conflicts).Count);Write-Output ('UNMANAGED_COUNT='+@($s.unmanagedDiscovered).Count);Write-Output ('PROVIDER_MUTATION='+$s.providerMutationPerformed);Write-Output ('APPLY_SAFE='+$s.applySafe)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Single original R42 documented read-only live chat/CDP reconciliation. Audit persisted only locally. Never replay if effect unknown; no Send, no navigation"
+}
