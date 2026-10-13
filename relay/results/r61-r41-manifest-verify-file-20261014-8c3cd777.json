@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$root='E:\\PCControlR41-R61-VERIFY';$sha='5d46ed23cfc72350663fe8adf66255f584f2ab1a';if(-not (Test-Path -LiteralPath $root)){throw 'ISOLATED_R41_MISSING'};$head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim();if($head -ne $sha){throw 'SOURCE_DRIFT'};$code=@'\nimport { verifyR45Release } from './bin/pc-autonomy-daemon.js';\nconst runner = 'E:\\\\PCControlAutonomyR61-SHADOW\\\\autonomy-r45-runner.js';\nconst sha = 'd17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2';\nconst resolved = verifyR45Release({r45:{runner,sha}});\nif (resolved !== runner) throw Error('RUNNER_PATH_MISMATCH: '+resolved);\nconsole.log('R61_R41_NINE_BLOB_MANIFEST_VALID');\n'@;$out=Join-Path $root 'R61_MANIFEST_VERIFY.mjs';if(Test-Path $out){throw 'VERIFY_SCRIPT_ALREADY_EXISTS'};[IO.File]::WriteAllText($out,$code,(New-Object System.Text.UTF8Encoding($false)));Push-Location $root;try{& node.exe $out;if($LASTEXITCODE -ne 0){throw 'R61_R41_VERIFIER_FAILED'}}finally{Pop-Location};Write-Output ('R41_SOURCE_HEAD='+$sha)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "R61_R41_NINE_BLOB_MANIFEST_VALID\nR41_SOURCE_HEAD=5d46ed23cfc72350663fe8adf66255f584f2ab1a\r\n",
+      "stdout_bytes": 91,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:31:50.439Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:31:50.212Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r61-r41-manifest-verify-file-20261014-8c3cd777"
+    },
+    "request_id": "r61-r41-manifest-verify-file-20261014-8c3cd777",
+    "started_at": "2026-10-13T20:31:49.290Z",
+    "status": "completed"
+  },
+  "id": "r61-r41-manifest-verify-file-20261014-8c3cd777",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
