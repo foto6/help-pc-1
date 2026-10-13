@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-nodetests-win-20261014-0f81cc32",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "cd /d E:\\WebAIBridge-R62-SHADOW\\app && node.exe --check server.js && node.exe --test --test-reporter=tap r62-r42-sticky-release-gate.test.js autonomy-r45.test.js autonomy-r45-brain.test.js autonomy-r45-git-gate.test.js autonomy-r45-lock.test.js autonomy-r45-review.test.js autonomy-r57-gpt-git.test.js autonomy-r57-successor.test.js autonomous-send-gate-r50.test.js existing-tab-session-r55.test.js existing-tab-session-r56-cdp.test.js r56-worker-sticky.test.js r56-r42-hold-failclosed.test.js r56-launch-preservation.test.js r56-sticky-readonly-preflight.test.js r34-sticky-chat-exact-id.test.js r58-shadow-rehearsal-contract.test.js > E:\\WebAIBridge-R62-SHADOW\\R62_TESTS.log 2>&1"
+    ],
+    "cwd": "E:\\WebAIBridge-R62-SHADOW\\app"
+  },
+  "timeout_ms": 45000,
+  "note": "Isolated R62 source activation fail-closed regression, R50/R56 and GPT coordinator full target tests with redirected logs; no service or browser changes"
+}
