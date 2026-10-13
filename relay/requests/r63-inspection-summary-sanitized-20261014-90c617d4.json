@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-inspection-summary-sanitized-20261014-90c617d4",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$f='E:\\WebAIBridge-R63-OPERATOR-BACKUP-20261014-v1\\R63_MANAGED_INSPECT.json';if(-not(Test-Path -LiteralPath $f -PathType Leaf)){throw 'INSPECTION_FILE_MISSING'};$o=Get-Content -LiteralPath $f -Raw -Encoding UTF8|ConvertFrom-Json;$c=@($o.chats);Write-Output ('INSPECTED='+$o.inspected);Write-Output ('CHAT_COUNT='+$c.Count);Write-Output ('HIGH_MODE='+@($c|Where-Object {$_.highMode -eq $true}).Count);Write-Output ('IDLE='+@($c|Where-Object {$_.status -eq 'idle'}).Count);Write-Output ('IDLE_HIGH='+@($c|Where-Object {$_.status -eq 'idle' -and $_.highMode -eq $true -and $_.openTabs -eq 1 -and -not $_.draftPresent -and -not $_.generating -and -not $_.providerLoadError -and -not $_.contextLimit}).Count);for($i=0;$i -lt $c.Count;$i++){$x=$c[$i];Write-Output ('CHAT_'+($i+1)+'='+($x.status)+',high='+$x.highMode+',tabs='+$x.openTabs+',sticky='+$x.stickySession.status+',draft='+$x.draftPresent+',gen='+$x.generating+',limit='+$x.contextLimit+',error='+$x.providerLoadError)}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Read only aggregate High/idle/exact original-tab readiness from locally saved managed-chat inspection, never output chat identities, URLs or messages"
+}
