@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-observer-switch-reconcile-18",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import pathlib,json,subprocess\nR=pathlib.Path('E:/PCControlAutonomyR41')\nOLD='506f9a951f9b782e27b0d886e441b6747095e3fc'\nNEW='6f03a58c7c29adfbb8dbe936274d147f45404418'\ncmd=\"\"\"Get-CimInstance Win32_Process | Where-Object { $_.Name -ieq 'node.exe' -and $_.CommandLine -like '*PCControlAutonomyR41*pc-autonomy-daemon.js*' } | ForEach-Object { [pscustomobject]@{pid=$_.ProcessId;old=($_.CommandLine -like '*%s*');new=($_.CommandLine -like '*%s*');watch=($_.CommandLine -like '*--watch*');hasDispatch=($_.CommandLine -like '*--dispatch*')} } | ConvertTo-Json -Compress\"\"\"%(OLD,NEW)\np=subprocess.run(['powershell.exe','-NoProfile','-Command',cmd],capture_output=True,text=True,timeout=8)\nps=json.loads(p.stdout) if p.stdout.strip() and p.returncode==0 else []\ns=json.loads((R/'data/pc-control-supervisor.json').read_text('utf8'))\nowner=json.loads((R/'WATCHER_R41.json').read_text('utf8'))\nbackup=R/'backups/r41-fenced-observer-switch-20261013'\nprint(json.dumps({'processes':ps if isinstance(ps,list) else [ps],'revision':s.get('revision'),'decision':s.get('lastDecision'),'storedPid':owner.get('pid'),'oldStart':OLD in (R/'START_R41_OBSERVER.cmd').read_text('utf8'),'oldStop':OLD in (R/'STOP_R41_USER_OBSERVER.ps1').read_text('utf8'),'backups':backup.is_dir(),'readOnly':True},ensure_ascii=True))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Independent READ-ONLY reconcile exact R41 source switch 17 partial effect after no-Send guard false positive. No replay, no killing/creating processes, no provider Send."
+}
