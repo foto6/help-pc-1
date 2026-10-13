@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R62-SHADOW'; $sha='cb6b061351b44a902df1827b0c8b94155f9f3312'; if(Test-Path -LiteralPath $root){throw 'NO_OVERWRITE_SHADOW'}; & git.exe clone --single-branch --no-tags --depth 1 --branch agent/bridge-r62-r42-sticky-safe-release-20261014 https://github.com/foto6/WebAIBridge.git $root; if($LASTEXITCODE -ne 0){throw 'CLONE_FAILED'}; $got=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($got -ne $sha){throw 'SHA_MISMATCH'}; Write-Output ('EXACT_SHA='+$got); Write-Output ('PROD_SERVER_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Cloning into 'E:\\WebAIBridge-R62-SHADOW'...\n",
+      "stderr_bytes": 44,
+      "stderr_truncated": false,
+      "stdout": "EXACT_SHA=cb6b061351b44a902df1827b0c8b94155f9f3312\r\nPROD_SERVER_SHA256=DF69095E52999A207D53C0A98CE57A8BDA7FE341BDF493335FF7434EEDF6865E\r\n",
+      "stdout_bytes": 137,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:12:23.757Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:12:23.490Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-exact-sha-win-tests-20261014-6c4a90ef"
+    },
+    "request_id": "r62-exact-sha-win-tests-20261014-6c4a90ef",
+    "started_at": "2026-10-13T21:12:15.811Z",
+    "status": "completed"
+  },
+  "id": "r62-exact-sha-win-tests-20261014-6c4a90ef",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
