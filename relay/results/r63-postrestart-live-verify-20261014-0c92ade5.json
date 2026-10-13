@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$u='http://127.0.0.1:17448';$h=Invoke-RestMethod ($u+'/api/health') -TimeoutSec 5;$c=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 5;$o=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 5;$a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 5;Write-Output ('HTTP_OK=True');Write-Output ('HEALTH='+$h.state);Write-Output ('HOLD='+$c.cutoverState.holdActive);Write-Output ('R42_STATUS='+$c.cutoverState.status);Write-Output ('QUEUE_PAUSED='+$o.queuePaused);Write-Output ('ASSIGNMENT_TOTAL='+@($a.assignments).Count);Write-Output ('QUEUED='+@($a.assignments|Where-Object{$_.state -eq 'queued'}).Count);Write-Output ('ACTIVE='+@($a.assignments|Where-Object{$_.state -in @('running','dispatching','awaiting_evidence','unknown')}).Count);Write-Output ('PRODUCTION_SERVER_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "HTTP_OK=True\r\nHEALTH=DEGRADED\r\nHOLD=True\r\nR42_STATUS=CUTOVER_HOLD_PREPARED\r\nQUEUE_PAUSED=True\r\nASSIGNMENT_TOTAL=69\r\nQUEUED=0\r\nACTIVE=0\r\nPRODUCTION_SERVER_SHA256=55528794D1D84551ACC7465C00E781984B99B0AB88384AA2EDFC180CD1FC8EB8\r\n",
+      "stdout_bytes": 227,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:34:28.247Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:34:28.014Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-postrestart-live-verify-20261014-0c92ade5"
+    },
+    "request_id": "r63-postrestart-live-verify-20261014-0c92ade5",
+    "started_at": "2026-10-13T21:34:27.089Z",
+    "status": "completed"
+  },
+  "id": "r63-postrestart-live-verify-20261014-0c92ade5",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
