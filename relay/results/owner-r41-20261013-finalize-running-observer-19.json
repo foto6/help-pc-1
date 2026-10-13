@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,subprocess,json,os,datetime,hashlib\nR=pathlib.Path('E:/PCControlAutonomyR41')\nOLD='506f9a951f9b782e27b0d886e441b6747095e3fc'\nNEW='6f03a58c7c29adfbb8dbe936274d147f45404418'\noldPath=str(R/'releases'/OLD/'bin/pc-autonomy-daemon.js')\nnewPath=str(R/'releases'/NEW/'bin/pc-autonomy-daemon.js')\nstarter=R/'START_R41_OBSERVER.cmd'\nstopper=R/'STOP_R41_USER_OBSERVER.ps1'\nownerFile=R/'WATCHER_R41.json'\nbackup=R/'backups/r41-fenced-observer-switch-20261013'\nstart=starter.read_text('utf8');stop=stopper.read_text('utf8')\nowner=json.loads(ownerFile.read_text('utf8'));journal=json.loads((R/'data/pc-control-supervisor.json').read_text('utf8'))\nconfig=json.loads((R/'config.r41-integrated.json').read_text('utf8'))\nmanifest=json.loads((R/'releases'/NEW/'MANIFEST.json').read_text('utf8'))\nif manifest.get('sha')!=NEW or manifest.get('tests')!='PASS':raise RuntimeError('EXACT_RELEASE_NOT_VERIFIED')\nif config.get('mode')!='observe' or config.get('operatorApproved') is not False or journal.get('pendingUnknown'):raise RuntimeError('UNSAFE_CONFIGURATION')\nif owner.get('pid')!=21436 or owner.get('source')!=OLD:raise RuntimeError('OWNER_CHANGED')\nif oldPath not in start or oldPath not in stop or newPath in start or newPath in stop:raise RuntimeError('SOURCE_MISMATCH')\nif '--dispatch' in start or '--i-accept-real-send' in start:raise RuntimeError('UNSAFE_START_SCRIPT')\nif not backup.is_dir():raise RuntimeError('MISSING_ROLLBACK_BACKUP')\nfor fname, actual in [('START_R41_OBSERVER.cmd',start),('STOP_R41_USER_OBSERVER.ps1',stop)]:\n if (backup/fname).read_bytes()!= (starter if fname.startswith('START') else stopper).read_bytes():raise RuntimeError('OLD_FILE_CHANGED_'+fname)\ncmd=\"\"\"$ps=@(Get-CimInstance Win32_Process | Where-Object {$_.Name -ieq 'node.exe' -and $_.CommandLine -like '*PCControlAutonomyR41*pc-autonomy-daemon.js*'} | Select-Object ProcessId,CommandLine); $ps | ConvertTo-Json -Compress\"\"\"\nx=subprocess.run(['powershell.exe','-NoProfile','-Command',cmd],capture_output=True,text=True,timeout=8)\nif x.returncode:raise RuntimeError('CANNOT_RECONCILE_EXACT_PROCESS')\nrows=json.loads(x.stdout) if x.stdout.strip() else []\nif isinstance(rows,dict):rows=[rows]\nif len(rows)!=1 or rows[0].get('ProcessId')!=16400 or newPath not in rows[0].get('CommandLine','') or '--watch' not in rows[0].get('CommandLine','') or '--dispatch' in rows[0].get('CommandLine',''):raise RuntimeError('ACTUAL_PROCESS_IDENTITY_DRIFT')\nstartup=pathlib.Path(os.environ['APPDATA'])/'Microsoft/Windows/Start Menu/Programs/Startup/PCControl_R41_Observer.cmd'\nif not startup.is_file() or str(starter) not in startup.read_text('utf8'):raise RuntimeError('STARTUP_AUTHORITY_MISMATCH')\nstartNew=start.replace(oldPath,newPath)\nstopNew=stop.replace(oldPath,newPath)\nif '--dispatch' in startNew or '--i-accept-real-send' in startNew:raise RuntimeError('UNSAFE_START_AFTER_REPLACE')\nif newPath not in stopNew or newPath not in startNew:raise RuntimeError('SWITCH_INCOMPLETE')\ndef atomicReplace(path,contents):\n temp=path.with_name(path.name+'.fix19.tmp')\n if temp.exists():raise RuntimeError('EXISTING_TEMP_'+path.name)\n with temp.open('x',encoding='utf8') as f:f.write(contents)\n temp.replace(path)\natomicReplace(stopper,stopNew)\natomicReplace(starter,startNew)\nowner['pid']=16400\nowner['source']=NEW\nowner['switchedAt']=datetime.datetime.now().isoformat()\nowner['runningAtInstall']=True\natomicReplace(ownerFile,json.dumps(owner,indent=2))\nprint(json.dumps({'status':'R41_RUNNING_OBSERVER_REFERENCES_RECONCILED','actualPid':16400,'source':NEW,'oldSourcePreserved':(R/'releases'/OLD).is_dir(),'startupEntryPreserved':startup.is_file(),'watcherStillReadOnly':True,'journalRevision':journal.get('revision'),'processNotRestarted':True,'stopScriptUpdated':True,'noProviderSend':True,'r49Untouched':True},ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"status\": \"R41_RUNNING_OBSERVER_REFERENCES_RECONCILED\", \"actualPid\": 16400, \"source\": \"6f03a58c7c29adfbb8dbe936274d147f45404418\", \"oldSourcePreserved\": true, \"startupEntryPreserved\": true, \"watcherStillReadOnly\": true, \"journalRevision\": 31, \"processNotRestarted\": true, \"stopScriptUpdated\": true, \"noProviderSend\": true, \"r49Untouched\": true}\r\n",
+      "stdout_bytes": 346,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:56:48.912Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:56:48.689Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-finalize-running-observer-19"
+    },
+    "request_id": "owner-r41-20261013-finalize-running-observer-19",
+    "started_at": "2026-10-13T03:56:47.511Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-finalize-running-observer-19",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
