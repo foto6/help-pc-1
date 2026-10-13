@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-final-production-safe-state-20261014-a5e70f8c",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Continue'; Write-Output ('SOURCE_SHA='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim()); try{$h=Invoke-RestMethod 'http://127.0.0.1:17448/api/health' -TimeoutSec 3;Write-Output ('BRIDGE_HEALTH='+$h.state)}catch{Write-Output 'BRIDGE_HEALTH=UNAVAILABLE'}; try{$c=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 3;Write-Output ('R42_HOLD='+$c.cutoverState.holdActive);Write-Output ('R42_STATUS='+$c.cutoverState.status)}catch{Write-Output 'R42_STATUS=UNAVAILABLE'}; try{$a=Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 4;Write-Output ('ACTIVE_ASSIGNMENTS='+@($a.assignments|Where-Object {$_.state -in @('dispatching','running','awaiting_evidence')}).Count);Write-Output ('QUEUED_ASSIGNMENTS='+@($a.assignments|Where-Object {$_.state -eq 'queued'}).Count)}catch{Write-Output 'ASSIGNMENT_STATE=UNAVAILABLE'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Final current R61 installed source/HTTP/R42 HOLD and queued/active counts only; no secrets, browser, .env, or side effects beyond harmless read-only command"
+}
