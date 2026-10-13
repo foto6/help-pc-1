@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-stop-old-node-for-sticky-20261014-129a7b6f",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$sha=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim();if($sha -ne '01e5db790f50b5eb42588b8942f3dd1de4f0a6bf'){throw 'SHA_CHANGED'};$conn=Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction Stop|Select-Object -First 1;if([int]$conn.OwningProcess -ne 24272){throw ('OLD_PIN_CHANGED '+$conn.OwningProcess)};$p=Get-CimInstance Win32_Process -Filter 'ProcessId=24272';if($p.Name -ne 'node.exe' -or $p.CommandLine -notmatch 'WebAIBridge.+server\\.js'){throw 'PROCESS_NOT_BRIDGE'};Stop-Process -Id 24272 -Force -ErrorAction Stop;Write-Output 'ORIGINAL_NODE_STOPPED_FOR_STICKY_RESTART';Write-Output 'CHROME_NOT_TOUCHED'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13000,
+  "note": "Stop only exact previously verified R63 node server PID 24272 under pinned Git SHA so it can reload BRIDGE_EXISTING_TABS_ONLY. Never touch Chrome or tasks. Unknown => reconcile no retry."
+}
