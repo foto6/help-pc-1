@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R59-SHADOW'; $patch='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\tracked-local-changes.patch'; if(-not (Test-Path -LiteralPath $patch -PathType Leaf)){throw 'PATCH_MISSING'}; $head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($head -ne 'c7ef06be94e8ada0119c226628a08c2c6d052ea4'){throw 'SHADOW_SOURCE_DRIFT'}; $dirty=@(& git.exe -C $root status --porcelain=v1 --untracked-files=no); if(@($dirty).Count -ne 0){throw 'SHADOW_NOT_CLEAN'}; & git.exe -C $root apply --check --verbose $patch 2>&1|ForEach-Object {Write-Output ($_ -replace '[^\\x20-\\x7E]','')}; $code=$LASTEXITCODE; Write-Output ('DIRECT_PATCH_APPLICABLE='+($code -eq 0)); Write-Output ('APPLY_CHECK_EXIT='+$code); Write-Output ('SHADOW_TRACKED_CHANGES='+(@(& git.exe -C $root status --porcelain=v1 --untracked-files=no).Count)); Write-Output ('PRODUCTION_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "git.exe : Checking patch app/ensure-supervisor-watchdog.ps1...\r\nAt line:1 char:505\r\n+ ... OT_CLEAN'}; & git.exe -C $root apply --check --verbose $patch 2>&1|Fo ...\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (Checking patch ...watchdog.ps1...:String) [], RemoteException\r\n    + FullyQualifiedErrorId : NativeCommandError\r\n \r\n",
+      "stderr_bytes": 400,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:04:50.242Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:04:50.015Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r59-merge-conflict-preflight-20261014-3ee750ac"
+    },
+    "request_id": "r59-merge-conflict-preflight-20261014-3ee750ac",
+    "started_at": "2026-10-13T20:04:49.024Z",
+    "status": "completed"
+  },
+  "id": "r59-merge-conflict-preflight-20261014-3ee750ac",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
