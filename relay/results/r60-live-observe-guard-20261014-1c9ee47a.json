@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $health=Invoke-RestMethod -Uri ($u+'/api/health') -Method Get -TimeoutSec 5; $cut=Invoke-RestMethod -Uri ($u+'/api/projects/control-plane/cutover-r42/status') -Method Get -TimeoutSec 5; $op=Invoke-RestMethod -Uri ($u+'/api/operator-lifecycle') -Method Get -TimeoutSec 5; $assign=Invoke-RestMethod -Uri ($u+'/api/supervisor-watchdog/agent-assignments') -Method Get -TimeoutSec 5; $a=@($assign.assignments); $q=@($a|Where-Object {$_.state -eq 'queued'}); Write-Output ('HEALTH_STATE='+$health.state); Write-Output ('HEALTH_REASON_COUNT='+@($health.reasons).Count); Write-Output ('QUEUE_PAUSED='+$op.queuePaused); Write-Output ('OPERATOR_MODE='+$op.mode); Write-Output ('R42_HOLD='+$cut.cutoverState.holdActive); Write-Output ('ASSIGNMENT_COUNT='+$a.Count); Write-Output ('QUEUED_COUNT='+$q.Count); Write-Output ('QUEUED_ZERO_SEND='+(@($q|Where-Object {$_.dispatchSubmitAttempted -eq $false -and [int]$_.dispatchCount -eq 0}).Count)); Write-Output ('ACTIVE_COUNT='+(@($a|Where-Object {$_.state -in @('dispatching','running','awaiting_evidence')}).Count)); Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "HEALTH_STATE=PAUSED\r\nHEALTH_REASON_COUNT=0\r\nQUEUE_PAUSED=True\r\nOPERATOR_MODE=RUNNING_MANAGED\r\nR42_HOLD=True\r\nASSIGNMENT_COUNT=69\r\nQUEUED_COUNT=1\r\nQUEUED_ZERO_SEND=1\r\nACTIVE_COUNT=0\r\nPROD_HASH=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 258,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:15:14.946Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:15:14.719Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r60-live-observe-guard-20261014-1c9ee47a"
+    },
+    "request_id": "r60-live-observe-guard-20261014-1c9ee47a",
+    "started_at": "2026-10-13T20:15:13.702Z",
+    "status": "completed"
+  },
+  "id": "r60-live-observe-guard-20261014-1c9ee47a",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
