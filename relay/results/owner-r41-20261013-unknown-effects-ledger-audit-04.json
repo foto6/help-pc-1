@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json,collections\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments',timeout=6) as response:j=json.load(response)\nitems=j.get('assignments',[])\ncounts=collections.Counter();sus=[]\nfor x in items:\n st=x.get('state');attempt=x.get('dispatchSubmitAttempted') is True;cnt=int(x.get('dispatchCount') or 0)\n if attempt:counts[str(st)+'_send_attempted']+=1\n if cnt>0:counts[str(st)+'_dispatch_nonzero']+=1\n if st in ('queued','dispatching','running','awaiting_evidence') and (attempt or cnt):\n  sus.append({'id':x.get('id'),'state':st,'attempted':attempt,'count':cnt})\n if st in ('blocked','failed') and attempt and not x.get('dispatchFingerprint'):\n  sus.append({'id':x.get('id'),'state':st,'attempted':attempt,'reasonCategory':str(x.get('dispatchFailureCode',''))[:60]})\nprint(json.dumps({'total':len(items),'attempts':dict(counts),'potentialUnknown':sus[:16],'potentialUnknownCount':len(sus),'readOnly':True},ensure_ascii=True)[:4200])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"total\": 69, \"attempts\": {\"cancelled_dispatch_nonzero\": 1, \"blocked_dispatch_nonzero\": 19, \"completed_send_attempted\": 9, \"completed_dispatch_nonzero\": 10, \"blocked_send_attempted\": 13}, \"potentialUnknown\": [], \"potentialUnknownCount\": 0, \"readOnly\": true}\r\n",
+      "stdout_bytes": 259,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:16:25.450Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:16:25.224Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-unknown-effects-ledger-audit-04"
+    },
+    "request_id": "owner-r41-20261013-unknown-effects-ledger-audit-04",
+    "started_at": "2026-10-13T04:16:24.584Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-unknown-effects-ledger-audit-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
