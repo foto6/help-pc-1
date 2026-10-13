@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r58-production-readonly-preflight-20261014-abe5237d",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $source='E:\\WebAIBridge-R58-SHADOW\\app\\r56-sticky-readonly-preflight.js'; $prod='E:\\WebAIBridge\\app'; if(-not (Test-Path -LiteralPath $source -PathType Leaf)){throw 'R58_PREFLIGHT_MISSING'}; $raw=& node.exe $source --app $prod; if($LASTEXITCODE -ne 0){throw 'R56_PREFLIGHT_COMMAND_FAILED'}; $result=($raw | Out-String | ConvertFrom-Json); Write-Output ('PREFLIGHT_CONTRACT='+$result.contract); Write-Output ('READONLY_CANDIDATE='+$result.readOnlyStagingCandidate); Write-Output ('SAFE_TO_DISPATCH='+$result.safeToLiveDispatch); Write-Output ('BLOCKERS='+($result.blockers -join ',')); Write-Output ('SOURCE_R50='+$result.observations.r50GuardPresent); Write-Output ('SOURCE_R56='+$result.observations.r56Installed); Write-Output ('R42_HOLD='+$result.observations.holdActive); Write-Output ('QUEUE_PAUSED='+$result.observations.queuePaused); Write-Output ('UNKNOWN_COUNTERS='+($result.observations.assignmentCounts | ConvertTo-Json -Compress)); Write-Output ('PRODUCTION_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only compare actual production R42/R50/R56 guards against staged R58; summarize only, never restart or send"
+}
