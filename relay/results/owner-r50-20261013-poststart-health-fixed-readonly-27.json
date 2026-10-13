@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,subprocess,pathlib,hashlib,time\nB='http://127.0.0.1:17448'\ndef get(route,timeout=6):\n with urllib.request.urlopen(B+route,timeout=timeout) as f:return json.load(f)\nobserved=[]\nfor k in range(3):\n try:\n  h=get('/api/health')\n  observed.append({'state':h.get('state'),'reasons':h.get('reasons',[])[:8],'codeReload':(h.get('codeReload') or {}).get('state')})\n  if h.get('state')=='PAUSED' and not h.get('reasons'):break\n except Exception as e:observed.append({'error':type(e).__name__})\n if k<2:time.sleep(2)\nop=get('/api/operator-lifecycle');c=get('/api/projects/control-plane/cutover-r42/status');q=get('/api/supervisor-watchdog/agent-assignments');s=get('/api/supervisor-watchdog?detect=0').get('config',{})\nprof=get('/api/ai-profiles').get('aiProfiles',[])\nqueued=[x for x in q.get('assignments',[]) if x.get('state')=='queued']\nrunning=[x for x in q.get('assignments',[]) if x.get('state') in ('dispatching','running','awaiting_evidence')]\nps=subprocess.run(['powershell.exe','-NoProfile','-Command',\"\"\"$x=Get-CimInstance Win32_Process -Filter 'ProcessId = 18996'; if($x){[pscustomobject]@{Pid=$x.ProcessId;Name=$x.Name;CommandLine=$x.CommandLine}|ConvertTo-Json -Compress}\"\"\"],capture_output=True,text=True,timeout=6)\nlive=json.loads(ps.stdout) if ps.returncode==0 and ps.stdout.strip() else {}\np=pathlib.Path('E:/WebAIBridge/app/server.js')\nraw=p.read_bytes();blob=hashlib.sha1(b'blob '+str(len(raw)).encode()+bytes([0])+raw).hexdigest()\nprint(json.dumps({'healthChecks':observed,'pid18996Matches':live.get('Pid')==18996 and live.get('Name')=='node.exe' and 'WebAIBridge' in live.get('CommandLine',''),'r50SourceExact':blob=='2079e3bd3dd3d26787e8b468f626b18f12cc5a11','queuePaused':op.get('queuePaused'),'r42Hold':c.get('cutoverState',{}).get('holdActive'),'watchdogMode':s.get('mode'),'allowAutonomousSend':s.get('allowAutonomousSend'),'curatorQueuedUnsent':len(queued)==1 and queued[0].get('targetChatId')=='tg-curator-owner' and queued[0].get('dispatchSubmitAttempted') is False,'activeAssignments':len(running),'profileWorkersConnected':sum(x.get('workerConnected') is True for x in prof),'profileCount':len(prof),'readOnly':True},ensure_ascii=True)[:4100])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"healthChecks\": [{\"state\": \"PAUSED\", \"reasons\": [], \"codeReload\": null}], \"pid18996Matches\": true, \"r50SourceExact\": true, \"queuePaused\": true, \"r42Hold\": true, \"watchdogMode\": \"off\", \"allowAutonomousSend\": false, \"curatorQueuedUnsent\": true, \"activeAssignments\": 0, \"profileWorkersConnected\": 1, \"profileCount\": 4, \"readOnly\": true}\r\n",
+      "stdout_bytes": 336,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:51:01.780Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:51:01.553Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r50-20261013-poststart-health-fixed-readonly-27"
+    },
+    "request_id": "owner-r50-20261013-poststart-health-fixed-readonly-27",
+    "started_at": "2026-10-13T04:51:00.108Z",
+    "status": "completed"
+  },
+  "id": "owner-r50-20261013-poststart-health-fixed-readonly-27",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
