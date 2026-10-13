@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-final-supervisor-flags-20261014-f4278c95",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$u='http://127.0.0.1:17448';$s=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 5;$c=$s.config;Write-Output ('SUPERVISOR_ENABLED='+$c.enabled);Write-Output ('ALLOW_AUTONOMOUS_SEND='+$c.allowAutonomousSend);Write-Output ('AUTO_CONTINUE='+$c.autoContinueEnabled);Write-Output ('MIGRATION='+$c.migrationEnabled);Write-Output ('CHROME_OPEN_IF_MISSING='+$c.openExistingChatIfMissing);Write-Output ('PROFILE_RECOVERY='+$c.allowProfileRecovery);Write-Output ('CLOSE_CHAT_ON_BACKOFF='+$c.closeChatDuringProviderBackoff);Write-Output ('HIGH_ENFORCED='+$c.enforceHighMode)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Read-only public supervisor config flags after R63 staged hold release. Exclude any chat identities, credentials or text"
+}
