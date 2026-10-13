@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json,subprocess,pathlib,hashlib\nb='http://127.0.0.1:17448'\ndef get(p):\n with urllib.request.urlopen(b+p,timeout=6) as r:return json.load(r)\nh=get('/api/health');c=get('/api/projects/control-plane/cutover-r42/status');o=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{});a=get('/api/supervisor-watchdog/agent-assignments');q=[x for x in a.get('assignments',[]) if x.get('state')=='queued'];act=[x for x in a.get('assignments',[]) if x.get('state') in ('running','dispatching','awaiting_evidence')];p=pathlib.Path('E:/PCControlAutonomyR41/data/pc-control-supervisor.json');s=json.loads(p.read_text('utf8'));print(json.dumps({'bridgeHealth':h.get('state'),'bridgeReasons':h.get('reasons',[]),'r42Hold':c.get('cutoverState',{}).get('holdActive'),'r42Status':c.get('cutoverState',{}).get('status'),'queuePaused':o.get('queuePaused'),'watchdogMode':w.get('mode'),'watchdogEnabled':w.get('enabled'),'autonomousSendEnabled':w.get('allowAutonomousSend'),'queued':[{'id':x.get('id'),'target':x.get('targetChatId'),'attempted':x.get('dispatchSubmitAttempted'),'dispatchCount':x.get('dispatchCount')} for x in q],'inflight':len(act),'r41JournalRevision':s.get('revision'),'r41LastStatus':(s.get('lastDecision') or {}).get('status'),'r41Unknown':len(s.get('pendingUnknown',[])),'readOnly':True},ensure_ascii=True)[:3300])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"bridgeHealth\": \"PAUSED\", \"bridgeReasons\": [], \"r42Hold\": true, \"r42Status\": \"CUTOVER_HOLD_PREPARED\", \"queuePaused\": true, \"watchdogMode\": \"off\", \"watchdogEnabled\": false, \"autonomousSendEnabled\": false, \"queued\": [{\"id\": \"bd455cb4-a1e8-4b77-845f-abdbe17ae476\", \"target\": \"tg-curator-owner\", \"attempted\": false, \"dispatchCount\": 0}], \"inflight\": 0, \"r41JournalRevision\": 91, \"r41LastStatus\": \"READ_ONLY\", \"r41Unknown\": 0, \"readOnly\": true}\r\n",
+      "stdout_bytes": 442,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:55:15.074Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:55:14.854Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r50-20261013-held-boundary-final-audit-29"
+    },
+    "request_id": "owner-r50-20261013-held-boundary-final-audit-29",
+    "started_at": "2026-10-13T04:55:14.160Z",
+    "status": "completed"
+  },
+  "id": "owner-r50-20261013-held-boundary-final-audit-29",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
