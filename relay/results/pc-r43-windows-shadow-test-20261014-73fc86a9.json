@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "if exist E:\\PCControlR43-SHADOW exit /b 9 & git.exe clone --depth 1 --single-branch --branch agent/pc-r43-bounded-child-pipe-cleanup-20261014 https://github.com/foto6/help-pc-1.git E:\\PCControlR43-SHADOW > E:\\PCControlR43_CLONE.log 2>&1 & if errorlevel 1 exit /b 7 & cd /d E:\\PCControlR43-SHADOW & set PYTHONPATH=src&& py.exe -3 -m pytest tests\\test_shell_pipe_drain.py > E:\\PCControlR43_TESTS.log 2>&1"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:05:37.198Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:05:36.965Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "pc-r43-windows-shadow-test-20261014-73fc86a9"
+    },
+    "request_id": "pc-r43-windows-shadow-test-20261014-73fc86a9",
+    "started_at": "2026-10-13T21:05:36.431Z",
+    "status": "completed"
+  },
+  "id": "pc-r43-windows-shadow-test-20261014-73fc86a9",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
