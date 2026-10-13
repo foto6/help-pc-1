@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "cd /d E:\\WebAIBridge-R59-SHADOW && findstr /C:\"# tests\" /C:\"# pass\" /C:\"# fail\" /C:\"# duration_ms\" R59_TESTS.log && git.exe rev-parse HEAD"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "FINDSTR: Cannot open tests\"\r\nFINDSTR: Cannot open /C:\"#\r\nFINDSTR: Cannot open pass\"\r\nFINDSTR: Cannot open /C:\"#\r\nFINDSTR: Cannot open fail\"\r\nFINDSTR: Cannot open /C:\"#\r\nFINDSTR: Cannot open duration_ms\"\r\n",
+      "stderr_bytes": 204,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T19:57:30.612Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T19:57:30.374Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r59-windows-summary-20261014-e713d2ac"
+    },
+    "request_id": "r59-windows-summary-20261014-e713d2ac",
+    "started_at": "2026-10-13T19:57:29.846Z",
+    "status": "completed"
+  },
+  "id": "r59-windows-summary-20261014-e713d2ac",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
