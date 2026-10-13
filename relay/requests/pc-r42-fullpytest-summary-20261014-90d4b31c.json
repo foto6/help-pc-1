@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-r42-fullpytest-summary-20261014-90d4b31c",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$f='E:\\PCControlR42-SHADOW\\R42_ALL_TESTS.log';Write-Output ('BYTES='+(Get-Item -LiteralPath $f).Length);Get-Content -LiteralPath $f -Tail 30"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read only bounded pytest failure summary from isolated PC Executor R42 suite"
+}
