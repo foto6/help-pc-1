@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,subprocess,json,hashlib,os,urllib.request,urllib.error,time,re,shutil,datetime,urllib.parse\nAPP=pathlib.Path('E:/WebAIBridge/app')\nB=pathlib.Path('E:/PCControlAutonomyR41/backups/r50-held-live-hotpatch-20261013')\nm=json.loads((B/'MANIFEST.json').read_text('utf8'))\ndef blob(p):\n data=p.read_bytes();return hashlib.sha1(b'blob '+str(len(data)).encode()+bytes([0])+data).hexdigest()\nif m.get('sourceSha')!='f4f59c973a07d11d38257b2f2d7f0e5f33778e54':raise RuntimeError('BACKUP_AUTHORITY_MISMATCH')\nif blob(APP/'server.js')!=m['newServerBlob'] or blob(APP/'autonomous-send-gate-r50.js')!=m['newGateBlob']:raise RuntimeError('HOTPATCH_FILES_CHANGED')\nif blob(B/'server.js.R49.original')!=m['originalServerBlob']:raise RuntimeError('ROLLBACK_BACKUP_CORRUPT')\nresult= subprocess.run(['git','status','--porcelain','--','app/server.js','app/autonomous-send-gate-r50.js'],cwd='E:/WebAIBridge',capture_output=True,text=True,timeout=7)\nif result.returncode or 'app/server.js' not in result.stdout or 'app/autonomous-send-gate-r50.js' not in result.stdout:raise RuntimeError('EXPECTED_WORKTREE_PATCH_MISSING')\ndef get(p):\n with urllib.request.urlopen('http://127.0.0.1:17448'+p,timeout=4) as f:return json.load(f)\nh=get('/api/health');op=get('/api/operator-lifecycle');cv=get('/api/projects/control-plane/cutover-r42/status');assign=get('/api/supervisor-watchdog/agent-assignments');sup=get('/api/supervisor-watchdog?detect=0').get('config',{})\nqueued=[x for x in assign.get('assignments',[]) if x.get('state')=='queued']\ninflight=[x for x in assign.get('assignments',[]) if x.get('state') in ('dispatching','running','awaiting_evidence')]\nif h.get('state')!='PAUSED' or op.get('queuePaused') is not True or cv.get('cutoverState',{}).get('holdActive') is not True:raise RuntimeError('HELD_STATE_DRIFT_NO_RESTART')\nif sup.get('enabled') is not False or sup.get('allowAutonomousSend') is not False or inflight:raise RuntimeError('WATCHDOG_OR_ACTIVE_WORK_REJECT')\nif len(queued)!=1 or queued[0].get('id')!=m.get('queuedAssignmentId') or queued[0].get('dispatchSubmitAttempted') is not False:raise RuntimeError('QUEUE_DRIFT_NO_RESTART')\npid=6400\nquery=\"$p=Get-CimInstance Win32_Process -Filter 'ProcessId = %s' -ErrorAction SilentlyContinue;if($p){[pscustomobject]@{Pid=$p.ProcessId;Name=$p.Name;CommandLine=$p.CommandLine}|ConvertTo-Json -Compress}\"%pid\nproc=subprocess.run(['powershell.exe','-NoProfile','-Command',query],capture_output=True,text=True,timeout=8)\nrow=json.loads(proc.stdout) if proc.returncode==0 and proc.stdout.strip() else {}\nif row.get('Pid')!=pid or row.get('Name','').lower()!='node.exe' or str(APP/'server.js').lower() not in row.get('CommandLine','').lower():raise RuntimeError('R49_PROCESS_IDENTITY_CHANGED')\nnode=pathlib.Path('C:/Program Files/nodejs/node.exe')\nif not node.is_file():raise RuntimeError('EXACT_NODE_EXE_NOT_FOUND')\nenv=dict(os.environ)\ndot=APP/'.env'\nif dot.exists():\n for raw in dot.read_text(encoding='utf-8-sig',errors='replace').splitlines():\n  x=raw.strip()\n  if not x or x.startswith('#'):continue\n  if x.startswith('export '):x=x[7:].strip()\n  if '=' not in x:continue\n  key,val=x.split('=',1);key=key.strip();val=val.strip()\n  if not re.fullmatch(r'[A-Za-z_][A-Za-z0-9_]*',key):continue\n  if len(val)>=2 and val[0]==val[-1] and val[0] in ('\"',\"'\"):val=val[1:-1]\n  env[key]=val\nif not env.get('WEB_AI_BRIDGE_PROXY_SERVER') and env.get('WEB_AI_BRIDGE_PROXY_URL'):\n try:\n  u=urllib.parse.urlsplit(env['WEB_AI_BRIDGE_PROXY_URL'])\n  if u.hostname:\n   env['WEB_AI_BRIDGE_PROXY_SERVER']=u.scheme+'://'+u.hostname+(':'+str(u.port) if u.port else '')\n   if u.username:env.setdefault('WEB_AI_BRIDGE_PROXY_USERNAME',urllib.parse.unquote(u.username))\n   if u.password:env.setdefault('WEB_AI_BRIDGE_PROXY_PASSWORD',urllib.parse.unquote(u.password))\n except Exception:pass\nenv['NO_PROXY']='127.0.0.1,localhost,::1';env['no_proxy']='127.0.0.1,localhost,::1'\nbeforeHash=m['newServerBlob']\nstopcmd=\"\"\"$p=Get-CimInstance Win32_Process -Filter 'ProcessId = 6400' -ErrorAction Stop;if (!$p -or $p.Name -ine 'node.exe' -or $p.CommandLine -notlike '*WebAIBridge*app*server.js*'){throw 'R50_EXACT_SERVER_PID_CHANGED'};Stop-Process -Id $p.ProcessId -Force -ErrorAction Stop\"\"\"\nk=subprocess.run(['powershell.exe','-NoProfile','-Command',stopcmd],capture_output=True,text=True,timeout=10)\nif k.returncode:raise RuntimeError('R49_EXACT_SERVER_STOP_FAILED_'+k.stderr[-300:])\nout=(B/'r50-server.stdout.log').open('ab');err=(B/'r50-server.stderr.log').open('ab')\ntry:\n p=subprocess.Popen([str(node),str(APP/'server.js')],cwd=str(APP),env=env,creationflags=subprocess.DETACHED_PROCESS|subprocess.CREATE_NEW_PROCESS_GROUP,stdin=subprocess.DEVNULL,stdout=out,stderr=err,close_fds=True)\nfinally:out.close();err.close()\nobserved=None\nfor _ in range(25):\n time.sleep(0.5)\n if p.poll() is not None:break\n try:\n  status=get('/api/health')\n  if status.get('state') in ('PAUSED','OK','BLOCKED','DEGRADED'):\n   observed=status;break\n except Exception:pass\nif observed is None:\n print(json.dumps({'status':'R50_NEW_SERVER_HEALTH_NOT_OBSERVED','oldPid':pid,'attemptPid':p.pid,'newProcessAlive':p.poll() is None,'backup':str(B),'manualRollbackRequired':True,'noSend':True},ensure_ascii=True))\n raise SystemExit(3)\ncv2=get('/api/projects/control-plane/cutover-r42/status');op2=get('/api/operator-lifecycle');q2=get('/api/supervisor-watchdog/agent-assignments');s2=get('/api/supervisor-watchdog?detect=0').get('config',{})\nqueued2=[x for x in q2.get('assignments',[]) if x.get('state')=='queued']\nok=observed.get('state')=='PAUSED' and op2.get('queuePaused') is True and cv2.get('cutoverState',{}).get('holdActive') is True and s2.get('allowAutonomousSend') is False and len(queued2)==1 and queued2[0].get('id')==m['queuedAssignmentId'] and queued2[0].get('dispatchSubmitAttempted') is False\nresult={'status':'R50_NEW_BRIDGE_LIVE_SAFE' if ok else 'R50_NEW_BRIDGE_POSTCHECK_UNSAFE','oldPid':pid,'newPid':p.pid,'newPidAlive':p.poll() is None,'health':observed.get('state'),'healthReasons':observed.get('reasons',[])[:6],'r42Hold':cv2.get('cutoverState',{}).get('holdActive'),'queuePaused':op2.get('queuePaused'),'curatorPreserved':len(queued2)==1 and queued2[0].get('id')==m['queuedAssignmentId'],'noProviderSend':True,'chromeOrWorkersRestarted':False,'backup':str(B),'rollbackAvailable':True}\n(B/'post_restart_observation.json').write_text(json.dumps(result,indent=2),encoding='utf8')\nprint(json.dumps(result,ensure_ascii=True)[:3100])\nif not ok:raise SystemExit(4)\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\r\n  File \"<string>\", line 17, in <module>\r\n    if h.get('state')!='PAUSED' or op.get('queuePaused') is not True or cv.get('cutoverState',{}).get('holdActive') is not True:raise RuntimeError('HELD_STATE_DRIFT_NO_RESTART')\r\n                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nRuntimeError: HELD_STATE_DRIFT_NO_RESTART\r\n",
+      "stderr_bytes": 478,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:49:03.559Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:49:03.320Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r50-20261013-controlled-bridge-restart-23"
+    },
+    "request_id": "owner-r50-20261013-controlled-bridge-restart-23",
+    "started_at": "2026-10-13T04:49:01.861Z",
+    "status": "completed"
+  },
+  "id": "owner-r50-20261013-controlled-bridge-restart-23",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
