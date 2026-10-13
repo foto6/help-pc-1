@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-live-drift-after-abort-20261014-71b5c3e0",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p='E:\\WebAIBridge';$h=Invoke-RestMethod 'http://127.0.0.1:17448/api/health' -TimeoutSec 6;$cut=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 6;$op=Invoke-RestMethod 'http://127.0.0.1:17448/api/operator-lifecycle' -TimeoutSec 6;$a=Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 6;Write-Output ('GIT_HEAD='+((& git.exe -C $p rev-parse HEAD)|Out-String).Trim());Write-Output ('GIT_TRACKED_DIRTY='+(@(& git.exe -C $p status --porcelain=v1 --untracked-files=no).Count));Write-Output ('HEALTH='+$h.state);Write-Output ('HEALTH_REASONS='+(@($h.reasons)-join ','));Write-Output ('R42_HOLD='+$cut.cutoverState.holdActive);Write-Output ('R42_STATUS='+$cut.cutoverState.status);Write-Output ('OP_MODE='+$op.mode);Write-Output ('QUEUE_PAUSED='+$op.queuePaused);Write-Output ('QUEUED='+@($a.assignments|Where-Object {$_.state -eq 'queued'}).Count);Write-Output ('ACTIVE='+@($a.assignments|Where-Object {$_.state -in @('dispatching','running','awaiting_evidence','unknown')}).Count);Write-Output ('SERVER_HASH='+(Get-FileHash -LiteralPath (Join-Path $p 'app\\server.js') -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only reconcile current unexpected live bridge health transition after fail-closed source installer aborted; no writes or browser actions"
+}
