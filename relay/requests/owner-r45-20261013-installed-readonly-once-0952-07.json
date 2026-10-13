@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r45-20261013-installed-readonly-once-0952-07",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,json,pathlib\nsha='6e7f6b1de49c7add74c81e6ec93c0096db7b3eb2'\nroot=pathlib.Path('E:/WebAIBridge/app/data/operator-tools/r45-durable-autonomy')\nrelease=root/'releases'/sha\njournal=root/'data'/'read-only-diagnostics.state.json'\ncmd=['node','autonomy-r45-runner.js','--plan',str(release/'autonomy-r45-plan.example.json'),'--state',str(journal),'--once']\ntry:\n r=subprocess.run(cmd,cwd=release,capture_output=True,text=True,timeout=18)\n print(json.dumps({'exitCode':r.returncode,'output':r.stdout[-6000:],'error':r.stderr[-600:],'sourceRelease':sha,'statePath':str(journal),'readOnly':True,'sentMessages':False,'startedMonitor':False}))\nexcept subprocess.TimeoutExpired:\n print(json.dumps({'error':'isolated_read_only_probe_timeout','sourceRelease':sha,'noProviderSideEffects':True}))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Run installed R45 source exact read-only --once with disabled example plan, isolated state journal and local cached Bridge APIs. No --dispatch/--brain, provider Send, tab opening, service start or production code modification."
+}
