@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json\nurl='http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats/agent-pc-control/wake-preview'\ntry:\n with urllib.request.urlopen(url,timeout=10) as r:d=json.load(r)\n print(json.dumps({'status':'PREVIEW','policy':{k:d.get(k) for k in ('state','previewOnly','requiredConfirmation','exactTargetId','exactTargetCount','navigationPerformed','reloadPerformed','tabCreated','tabClosed','promptSent','assignmentDispatched','queueResumed','replayAuthorized')},'readOnly':True}))\nexcept urllib.error.HTTPError as e:print(json.dumps({'status':'DENIED','code':e.code,'reason':json.load(e).get('code')}))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"status\": \"PREVIEW\", \"policy\": {\"state\": \"READY_FOR_EXPLICIT_TAB_WAKE\", \"previewOnly\": true, \"requiredConfirmation\": \"WAKE_EXISTING_TAB_ONLY\", \"exactTargetId\": \"F7A2D32B34B5F309AF6B6D899CFFBA1F\", \"exactTargetCount\": 1, \"navigationPerformed\": false, \"reloadPerformed\": false, \"tabCreated\": false, \"tabClosed\": false, \"promptSent\": false, \"assignmentDispatched\": false, \"queueResumed\": false, \"replayAuthorized\": false}, \"readOnly\": true}\r\n",
+      "stdout_bytes": 439,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:45:24.178Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:45:23.919Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r50-20261013-stalled-native-wake-preview-19"
+    },
+    "request_id": "owner-r50-20261013-stalled-native-wake-preview-19",
+    "started_at": "2026-10-13T04:45:23.105Z",
+    "status": "completed"
+  },
+  "id": "owner-r50-20261013-stalled-native-wake-preview-19",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
