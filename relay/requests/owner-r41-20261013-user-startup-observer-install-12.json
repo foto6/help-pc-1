@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-user-startup-observer-install-12",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import pathlib,os,subprocess,json,time,shutil\nR=pathlib.Path('E:/PCControlAutonomyR41')\nSHA='506f9a951f9b782e27b0d886e441b6747095e3fc'\nREL=R/'releases'/SHA\nCFG=R/'config.r41-integrated.json'\nSRC=R/'START_R41_OBSERVER.cmd'\nS=pathlib.Path(os.environ['APPDATA'])/'Microsoft/Windows/Start Menu/Programs/Startup'\nENTRY=S/'PCControl_R41_Observer.cmd'\nif not REL.is_dir() or not CFG.is_file() or not SRC.is_file() or not S.is_dir():raise RuntimeError('R41_OBSERVER_BOOTSTRAP_NOT_READY')\nif ENTRY.exists() or (R/'WATCHER_R41.json').exists():raise RuntimeError('R41_STARTUP_ALREADY_OWNED_ABORT')\ncfg=json.loads(CFG.read_text('utf8'))\nif cfg.get('mode')!='observe' or cfg.get('operatorApproved') is not False:raise RuntimeError('R41_ARMED_CONFIG_FORBIDDEN')\ncontents=SRC.read_text(encoding='utf8')\nif '--dispatch' in contents or '--i-accept-real-send' in contents or '--watch' not in contents:raise RuntimeError('STARTUP_SCRIPT_NOT_READ_ONLY')\nnode=shutil.which('node')\nif not node:raise RuntimeError('NO_NODE')\nwith ENTRY.open('x',encoding='utf8') as f:f.write('@echo off\\r\\ncall \"'+str(SRC)+'\"\\r\\n')\nlogs=R/'logs';logs.mkdir(exist_ok=True)\nfd=(logs/'observer.live.log').open('a',encoding='utf8')\nflags=subprocess.DETACHED_PROCESS|subprocess.CREATE_NEW_PROCESS_GROUP\np=subprocess.Popen([node,str(REL/'bin/pc-autonomy-daemon.js'),'--config',str(CFG),'--watch'],cwd=str(REL),creationflags=flags,stdin=subprocess.DEVNULL,stdout=fd,stderr=fd,close_fds=True)\nfd.close()\ntime.sleep(2.5)\nrunning=p.poll() is None\nstatus={'version':'r41.autostart.v1','source':SHA,'pid':p.pid,'runningAtInstall':running,'entry':str(ENTRY),'observerOnly':True,'sendEnabled':False}\n(R/'WATCHER_R41.json').write_text(json.dumps(status,indent=2),encoding='utf8')\ntail=(logs/'observer.live.log').read_text(encoding='utf8',errors='replace')[-1800:]\nprint(json.dumps({'mode':'READ_ONLY_LOGON_STARTUP','registered':True,'pid':p.pid,'processRunning':running,'root':str(R),'startupEntryName':ENTRY.name,'lastLog':tail[-900:],'noProviderSend':True,'otherScheduledTasksUnmodified':True},ensure_ascii=True)[:3400])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "Owner-directed user-level Startup read-only PC Control R41 observer; no admin, no schtasks; launch exact pinned observer WITHOUT --dispatch, no provider Send/chat/browser mutations; separate E:/PCControlAutonomyR41 only. No blind replay on unknown."
+}
