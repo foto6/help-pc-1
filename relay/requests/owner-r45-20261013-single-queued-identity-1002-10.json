@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r45-20261013-single-queued-identity-1002-10",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json\ntry:\n with urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments',timeout=4) as r:d=json.load(r)\n q=[{'id':x.get('id'),'state':x.get('state'),'idempotencyKey':x.get('idempotencyKey'),'managedChatId':x.get('targetChatId'),'createdAt':x.get('createdAt'),'dispatchSubmitAttempted':x.get('dispatchSubmitAttempted'),'repo':x.get('repository'),'branch':x.get('branch')} for x in d.get('assignments',[]) if x.get('state')=='queued']\n print(json.dumps({'success':True,'count':len(d.get('assignments',[])),'queued':q[:4],'noTextCaptured':True},ensure_ascii=True))\nexcept Exception as e:print(json.dumps({'success':False,'error':type(e).__name__}))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Independent fresh single endpoint READ_ONLY queue identity for one stale assignment; no provider content, no mutation/Send, not a replay of prior unknown multi-endpoint request."
+}
