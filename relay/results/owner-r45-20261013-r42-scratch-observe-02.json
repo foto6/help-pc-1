@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,json\np=pathlib.Path('E:/WebAIBridge/app/data/operator-tools/r45-durable-autonomy/scratch/28e4accf59e37e767c37585b85cdacbdbac62120')\nif not p.exists():print(json.dumps({'exists':False}))\nelse:print(json.dumps({'exists':True,'count':len(list(p.iterdir())),'testCount':len(list(p.glob('*.test.js'))),'runner':(p/'autonomy-r45-runner.js').exists(),'readOnly':True}))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"exists\": true, \"count\": 16, \"testCount\": 6, \"runner\": true, \"readOnly\": true}\r\n",
+      "stdout_bytes": 81,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T02:55:31.977Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T02:55:31.758Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r45-20261013-r42-scratch-observe-02"
+    },
+    "request_id": "owner-r45-20261013-r42-scratch-observe-02",
+    "started_at": "2026-10-13T02:55:31.111Z",
+    "status": "completed"
+  },
+  "id": "owner-r45-20261013-r42-scratch-observe-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
