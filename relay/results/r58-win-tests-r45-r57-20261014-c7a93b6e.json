@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "shell execution timed out",
+    "error_kind": "timeout",
+    "finished_at": "2026-10-13T19:39:10.136Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "unknown",
+      "observed_at": "2026-10-13T19:39:09.897Z",
+      "reason": "timeout",
+      "reconciliation_required": true,
+      "reexecution_safe": false,
+      "request_id": "r58-win-tests-r45-r57-20261014-c7a93b6e"
+    },
+    "request_id": "r58-win-tests-r45-r57-20261014-c7a93b6e",
+    "started_at": "2026-10-13T19:37:49.180Z",
+    "status": "timeout"
+  },
+  "id": "r58-win-tests-r45-r57-20261014-c7a93b6e",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
