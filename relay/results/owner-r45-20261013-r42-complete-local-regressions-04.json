@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,subprocess,json\nroot=pathlib.Path('E:/WebAIBridge/app/data/operator-tools/r45-durable-autonomy/scratch/28e4accf59e37e767c37585b85cdacbdbac62120')\ntests=sorted(x.name for x in root.glob('*.test.js'))\nif len(tests)!=6:raise RuntimeError('SOURCE_SCRATCH_INCOMPLETE')\ntry:\n r=subprocess.run(['node','--test',*tests],cwd=root,capture_output=True,text=True,timeout=18)\n ls=(r.stdout+'\\n'+r.stderr).splitlines()\n print(json.dumps({'finished':True,'exitCode':r.returncode,'testFiles':tests,'summary':[x for x in ls if any(w in x for w in (' tests ',' pass ',' fail ','duration_ms'))][-12:],'failureTail':'\\n'.join(ls[-45:])[-9000:] if r.returncode else '', 'productionTouched':False,'sentMessages':False},ensure_ascii=True))\nexcept subprocess.TimeoutExpired:print(json.dumps({'finished':False,'error':'timeout','sentMessages':False}))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"finished\": true, \"exitCode\": 0, \"testFiles\": [\"autonomy-r45-brain.test.js\", \"autonomy-r45-git-gate.test.js\", \"autonomy-r45-launcher.test.js\", \"autonomy-r45-lock.test.js\", \"autonomy-r45-review.test.js\", \"autonomy-r45.test.js\"], \"summary\": [\"\\u0432\\u201e\\u2116 tests 50\", \"\\u0432\\u201e\\u2116 pass 50\", \"\\u0432\\u201e\\u2116 fail 0\", \"\\u0432\\u201e\\u2116 duration_ms 276.7737\"], \"failureTail\": \"\", \"productionTouched\": false, \"sentMessages\": false}\r\n",
+      "stdout_bytes": 446,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T02:56:58.812Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T02:56:58.534Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r45-20261013-r42-complete-local-regressions-04"
+    },
+    "request_id": "owner-r45-20261013-r42-complete-local-regressions-04",
+    "started_at": "2026-10-13T02:56:57.452Z",
+    "status": "completed"
+  },
+  "id": "owner-r45-20261013-r42-complete-local-regressions-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
