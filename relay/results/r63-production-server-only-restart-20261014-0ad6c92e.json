@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "TimeoutExpired: Command '['powershell.exe', '-NoProfile', '-NonInteractive', '-Command', '$ErrorActionPreference=\\'Stop\\';$root=\\'E:\\\\WebAIBridge\\';$oldSha=\\'d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2\\';$targetSha=\\'01e5db790f50b5eb42588b8942f3dd1de4f0a6bf\\';$backup=\\'E:\\\\WebAIBridge-R63-OPERATOR-BACKUP-20261014-v1\\';if(-not(Test-Path -LiteralPath (Join-Path $backup \\'MANIFEST.json\\'))){throw \\'BACKUP_MANIFEST_MISSING\\'};$head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim();if($head -ne $targetSha){throw \\'R63_SOURCE_NOT_INSTALLED\\'};if(@(& git.exe -C $root status --porcelain=v1 --untracked-files=no).Count -ne 0){throw \\'SOURCE_TRACKED_DRIFT\\'};$u=\\'http://127.0.0.1:17448\\';$c=Invoke-RestMethod ($u+\\'/api/projects/control-plane/cutover-r42/status\\') -TimeoutSec 5;$op=Invoke-RestMethod ($u+\\'/api/operator-lifecycle\\') -TimeoutSec 5;$a=Invoke-RestMethod ($u+\\'/api/supervisor-watchdog/agent-assignments\\') -TimeoutSec 5;if($c.cutoverState.holdActive -ne $true -or $op.queuePaused -ne $true -or @($a.assignments|Where-Object{$_.state -in @(\\'queued\\',\\'running\\',\\'dispatching\\',\\'awaiting_evidence\\',\\'unknown\\')}).Count -ne 0){throw \\'R63_PRE_RESTART_SAFETY_GATE\\'};$conn=Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction Stop|Select-Object -First 1;$oldPid=[int]$conn.OwningProcess;$proc=Get-CimInstance Win32_Process -Filter (\\'ProcessId=\\'+$oldPid);if($oldPid -ne 28348 -or $proc.Name -ne \\'node.exe\\' -or $proc.CommandLine -notmatch \\'WebAIBridge.+server\\\\.js\\'){throw \\'OLD_RUNNING_PROCESS_NOT_PINNED\\'};$beforeChrome=@(Get-CimInstance Win32_Process -Filter \"Name=\\'chrome.exe\\'\" -ErrorAction SilentlyContinue|Select-Object -ExpandProperty ProcessId);$script=Join-Path $root \\'app\\\\server.js\\';$out=Join-Path $backup \\'r63-node-server.stdout.log\\';$err=Join-Path $backup \\'r63-node-server.stderr.log\\';Stop-Process -Id $oldPid -Force -ErrorAction Stop;$newPid=0;for($i=0;$i -lt 30;$i++){Start-Sleep -Milliseconds 300;$cx=Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction SilentlyContinue|Select-Object -First 1;if($cx){$newPid=[int]$cx.OwningProcess;break}};if($newPid -eq 0){$started=Start-Process -FilePath \\'C:\\\\Program Files\\\\nodejs\\\\node.exe\\' -ArgumentList (\\'\"\\'+$script+\\'\"\\') -WorkingDirectory (Join-Path $root \\'app\\') -PassThru -WindowStyle Hidden -RedirectStandardOutput $out -RedirectStandardError $err -ErrorAction Stop;for($i=0;$i -lt 50;$i++){Start-Sleep -Milliseconds 300;$cx=Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction SilentlyContinue|Select-Object -First 1;if($cx){$newPid=[int]$cx.OwningProcess;break}}};if($newPid -eq 0){Write-Output \\'R63_RESTART_NO_LISTENER_ROLLBACK_REQUIRED\\';throw \\'NEW_BRIDGE_PORT_NOT_LISTENING\\'};$newProcess=Get-CimInstance Win32_Process -Filter (\\'ProcessId=\\'+$newPid);if($newPid -eq $oldPid -or $newProcess.Name -ne \\'node.exe\\' -or $newProcess.CommandLine -notmatch \\'WebAIBridge.+server\\\\.js\\'){throw \\'NEW_PROCESS_IDENTITY_MISMATCH\\'};$health=$null;for($i=0;$i -lt 15;$i++){try{$health=Invoke-RestMethod ($u+\\'/api/health\\') -TimeoutSec 3;break}catch{Start-Sleep -Milliseconds 500}};if(-not $health){throw \\'NEW_BRIDGE_NO_HTTP_HEALTH\\'};$afterCut=Invoke-RestMethod ($u+\\'/api/projects/control-plane/cutover-r42/status\\') -TimeoutSec 6;$afterOp=Invoke-RestMethod ($u+\\'/api/operator-lifecycle\\') -TimeoutSec 6;$afterAssignments=Invoke-RestMethod ($u+\\'/api/supervisor-watchdog/agent-assignments\\') -TimeoutSec 6;$afterChrome=@(Get-CimInstance Win32_Process -Filter \"Name=\\'chrome.exe\\'\" -ErrorAction SilentlyContinue|Select-Object -ExpandProperty ProcessId);$survived=@($beforeChrome|Where-Object {$afterChrome -contains $_});Write-Output (\\'R63_NEW_NODE_PID=\\'+$newPid);Write-Output (\\'PREVIOUS_NODE_PID=\\'+$oldPid);Write-Output (\\'HEALTH=\\'+$health.state);Write-Output (\\'R42_HOLD=\\'+$afterCut.cutoverState.holdActive);Write-Output (\\'QUEUE_PAUSED=\\'+$afterOp.queuePaused);Write-Output (\\'QUEUED=\\'+@($afterAssignments.assignments|Where-Object{$_.state -eq \\'queued\\'}).Count);Write-Output (\\'ACTIVE=\\'+@($afterAssignments.assignments|Where-Object{$_.state -in @(\\'running\\',\\'dispatching\\',\\'awaiting_evidence\\',\\'unknown\\')}).Count);Write-Output (\\'CHROME_PIDS_BEFORE=\\'+$beforeChrome.Count);Write-Output (\\'CHROME_PIDS_STILL_PRESENT=\\'+$survived.Count);Write-Output (\\'R63_DISK_SHA=\\'+((& git.exe -C $root rev-parse HEAD)|Out-String).Trim());Write-Output (\\'R63_SERVER_RELOADED=true\\');if($afterCut.cutoverState.holdActive -ne $true -or $afterOp.queuePaused -ne $true){throw \\'POST_RESTART_HOLD_OR_PAUSE_CHANGED\\'}']' timed out after 5 seconds",
+    "error_kind": "executor_failure",
+    "finished_at": "2026-10-13T21:32:49.971Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "unknown",
+      "observed_at": "2026-10-13T21:32:49.706Z",
+      "reason": "executor_failure",
+      "reconciliation_required": true,
+      "reexecution_safe": false,
+      "request_id": "r63-production-server-only-restart-20261014-0ad6c92e"
+    },
+    "request_id": "r63-production-server-only-restart-20261014-0ad6c92e",
+    "started_at": "2026-10-13T21:32:09.976Z",
+    "status": "error"
+  },
+  "id": "r63-production-server-only-restart-20261014-0ad6c92e",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
