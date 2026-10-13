@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $s=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 2; $m=[string]$s.cutoverState.rollbackManifest; if(-not (Test-Path -LiteralPath $m -PathType Leaf)){throw 'ABORT_MISSING_ORIGINAL_ROLLBACK_MANIFEST'}; & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File 'E:\\WebAIBridge\\app\\r42-rollback.ps1' -Manifest $m -ValidateOnly 2>&1|ForEach-Object { Write-Output ($_ -replace '[^\\x20-\\x7E]','') }; Write-Output ('ROLLBACK_PREFLIGHT_RC='+$LASTEXITCODE)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"object\":\"bridge.projects_live_control_plane_rollback_preflight.r42.v1\",\"status\":\"PREFLIGHT_OK\",\"repoPath\":\"E:\\\\WebAIBridge\",\"preCutoverHead\":\"8646d55a309417ee147dbe5773e48b9dec11cbdb\",\"gitExecutable\":\"C:\\\\Program Files\\\\Git\\\\cmd\\\\git.exe\",\"externalGitResolved\":true,\"callDepthOverflowDetected\":false,\"liveMutationPerformed\":false,\"providerMutationPerformed\":false}\r\nROLLBACK_PREFLIGHT_RC=0\r\n",
+      "stdout_bytes": 393,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:54:01.510Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:54:01.218Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-r61-rollback-validate-20261014-f035d1c8"
+    },
+    "request_id": "r62-r61-rollback-validate-20261014-f035d1c8",
+    "started_at": "2026-10-13T20:53:59.801Z",
+    "status": "completed"
+  },
+  "id": "r62-r61-rollback-validate-20261014-f035d1c8",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
