@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r58-win-tests-r45-r57-20261014-c7a93b6e",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R58-SHADOW'; $app=Join-Path $root 'app'; $log=Join-Path $root 'R58_R45_R57_TESTS.log'; $err=Join-Path $root 'R58_R45_R57_TESTS.stderr.log'; $expect='86d643c6105caf906aa29125aace38320946ef95'; $head=((& git.exe -C $root rev-parse HEAD) | Out-String).Trim(); if($head -ne $expect){throw 'EXACT_SHA_MISMATCH'}; $argsList=@('--test','--test-concurrency=2','--test-reporter=spec','autonomy-r45.test.js','autonomy-r45-brain.test.js','autonomy-r45-git-gate.test.js','autonomy-r45-lock.test.js','autonomy-r45-review.test.js','autonomy-r57-gpt-git.test.js','autonomy-r57-successor.test.js'); $proc=Start-Process -FilePath 'node.exe' -ArgumentList $argsList -WorkingDirectory $app -PassThru -RedirectStandardOutput $log -RedirectStandardError $err -WindowStyle Hidden; if(-not $proc.WaitForExit(60000)){Write-Output ('TEST_STILL_RUNNING_PID='+$proc.Id);exit 4}; Write-Output ('NODE_RC='+$proc.ExitCode); Write-Output ('TEST_LOG='+$log); Get-Content -LiteralPath $log -Tail 60; if(Test-Path -LiteralPath $err){$errorSize=(Get-Item -LiteralPath $err).Length;Write-Output ('STDERR_BYTES='+$errorSize); if($errorSize -gt 0){Get-Content -LiteralPath $err -Tail 15}}; Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash); if($proc.ExitCode -ne 0){exit $proc.ExitCode}"
+    ],
+    "cwd": "E:\\WebAIBridge-R58-SHADOW"
+  },
+  "timeout_ms": 80000,
+  "note": "Separate R45/R57 isolated Node test suite, child process capped 60s; never retry prior R56 test request; no production or browser effect"
+}
