@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $p='E:\\WebAIBridge\\app\\server.js'; $shadow='E:\\WebAIBridge-R58-SHADOW'; Write-Output ('SHADOW_EXISTS='+(Test-Path -LiteralPath $shadow)); Write-Output ('PROD_EXISTS='+(Test-Path -LiteralPath $p -PathType Leaf)); if(Test-Path -LiteralPath $p -PathType Leaf){ Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath $p -Algorithm SHA256).Hash) }; Write-Output ('NODE='+(& node.exe --version)); Write-Output ('GIT='+(& git.exe --version)); $head=& git.exe ls-remote https://github.com/foto6/WebAIBridge.git refs/heads/agent/bridge-r58-gpt-warm-sticky-integration-20261014; if($LASTEXITCODE -ne 0){throw 'R58_REMOTE_UNAVAILABLE'}; Write-Output ('R58_REMOTE='+($head -join ' '))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "SHADOW_EXISTS=False\r\nPROD_EXISTS=True\r\nPROD_HASH=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\nNODE=v24.18.0\r\nGIT=git version 2.55.0.windows.5\r\nR58_REMOTE=86d643c6105caf906aa29125aace38320946ef95\trefs/heads/agent/bridge-r58-gpt-warm-sticky-integration-20261014\r\n",
+      "stdout_bytes": 282,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T19:32:06.339Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T19:32:06.097Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r58-shadow-preflight-20261014-9b741ac2"
+    },
+    "request_id": "r58-shadow-preflight-20261014-9b741ac2",
+    "started_at": "2026-10-13T19:32:02.556Z",
+    "status": "completed"
+  },
+  "id": "r58-shadow-preflight-20261014-9b741ac2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
