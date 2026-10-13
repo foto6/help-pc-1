@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "cd /d E:\\WebAIBridge-R59-SHADOW && git.exe apply --3way --check E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\tracked-local-changes.patch"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Applied patch to 'app/ensure-supervisor-watchdog.ps1' cleanly.\nApplied patch to 'app/r42-cutover.ps1' cleanly.\nApplied patch to 'app/r42-json-encoding.test.ps1' cleanly.\nApplied patch to 'app/r42-rollback.ps1' cleanly.\nerror: repository lacks the necessary blob to perform 3-way merge.\nFalling back to direct application...\nerror: patch failed: app/server.js:2\nerror: app/server.js: patch does not apply\nApplied patch to 'app/start.ps1' cleanly.\n",
+      "stderr_bytes": 446,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:06:16.643Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:06:16.302Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r59-threeway-check-only-20261014-04726d6d"
+    },
+    "request_id": "r59-threeway-check-only-20261014-04726d6d",
+    "started_at": "2026-10-13T20:06:15.751Z",
+    "status": "completed"
+  },
+  "id": "r59-threeway-check-only-20261014-04726d6d",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
