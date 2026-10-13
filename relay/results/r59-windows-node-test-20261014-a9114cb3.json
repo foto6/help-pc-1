@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "cd /d E:\\WebAIBridge-R59-SHADOW\\app && node.exe --test --test-reporter=tap autonomy-r45.test.js autonomy-r45-brain.test.js autonomy-r45-git-gate.test.js autonomy-r45-lock.test.js autonomy-r45-review.test.js autonomy-r57-gpt-git.test.js autonomy-r57-successor.test.js autonomous-send-gate-r50.test.js existing-tab-session-r55.test.js existing-tab-session-r56-cdp.test.js r56-worker-sticky.test.js r56-r42-hold-failclosed.test.js r56-launch-preservation.test.js r56-sticky-readonly-preflight.test.js r34-sticky-chat-exact-id.test.js r58-shadow-rehearsal-contract.test.js > E:\\WebAIBridge-R59-SHADOW\\R59_TESTS.log 2>&1"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T19:57:10.379Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T19:57:10.144Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r59-windows-node-test-20261014-a9114cb3"
+    },
+    "request_id": "r59-windows-node-test-20261014-a9114cb3",
+    "started_at": "2026-10-13T19:57:08.795Z",
+    "status": "completed"
+  },
+  "id": "r59-windows-node-test-20261014-a9114cb3",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
