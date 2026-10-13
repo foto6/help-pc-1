@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r58-win-tests-r50-r56-20261014-a872d1c6",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $app='E:\\WebAIBridge-R58-SHADOW\\app'; $log='E:\\WebAIBridge-R58-SHADOW\\R58_R50_R56_TESTS.log'; $names=@('r56-worker-sticky.test.js','existing-tab-session-r55.test.js','existing-tab-session-r56-cdp.test.js','r56-r42-hold-failclosed.test.js','r56-launch-preservation.test.js','r56-sticky-readonly-preflight.test.js','autonomous-send-gate-r50.test.js','r34-sticky-chat-exact-id.test.js','r58-shadow-rehearsal-contract.test.js'); if(-not (Test-Path -LiteralPath $app -PathType Container)){throw 'R58_SHADOW_MISSING'}; $head=((& git.exe -C 'E:\\WebAIBridge-R58-SHADOW' rev-parse HEAD) | Out-String).Trim(); if($head -ne '86d643c6105caf906aa29125aace38320946ef95'){throw 'SHA_MISMATCH_NO_TEST'}; Push-Location -LiteralPath $app; try { & node.exe --test --test-concurrency=2 --test-reporter=spec @names *> $log; $rc=$LASTEXITCODE } finally { Pop-Location }; Write-Output ('NODE_RC='+$rc); Write-Output ('LOG='+$log); Get-Content -LiteralPath $log -Tail 55; Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash); if($rc -ne 0){exit $rc}"
+    ],
+    "cwd": "E:\\WebAIBridge-R58-SHADOW"
+  },
+  "timeout_ms": 115000,
+  "note": "Run nine R50/R56 sticky tab and fail-closed isolated Node regressions; save log under R58 shadow; no production sends or changes"
+}
