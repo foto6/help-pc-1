@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-live-r56-r50-source-preflight-20261014-d0f83ca1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $app='E:\\WebAIBridge\\app'; $raw=& node.exe (Join-Path $app 'r56-sticky-readonly-preflight.js') --app $app; $r=($raw|Out-String|ConvertFrom-Json); Write-Output ('R56_SOURCE_PRESENT='+$r.observations.r56Installed); Write-Output ('R50_GUARD_PRESENT='+$r.observations.r50GuardPresent); Write-Output ('R42_HOLD='+$r.observations.holdActive); Write-Output ('QUEUE_PAUSED='+$r.observations.queuePaused); Write-Output ('SUPERVISOR_OFF='+$r.observations.supervisorOff); Write-Output ('READONLY_STAGING_CANDIDATE='+$r.readOnlyStagingCandidate); Write-Output ('BLOCKER_CODES='+($r.blockers -join ',')); Write-Output ('SOURCE_HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only post-cutover R61 source R50/R56 guard and R42 HOLD verification from installed real app; never mutate config/Chrome/provider"
+}
