@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r50-20261013-post-wake-chat-safety-21",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json\nB='http://127.0.0.1:17448'\ndef get(s,t=12):\n with urllib.request.urlopen(B+s,timeout=t) as r:return json.load(r)\nc=get('/api/supervisor-watchdog/managed-chats?inspect=1').get('chats',[])\nrows=[{k:x.get(k) for k in ('id','status','generating','draftPresent','openTabs','highMode','profileWorkerConnected') if k in x} for x in c]\nh=get('/api/health');q=get('/api/supervisor-watchdog/agent-assignments');op=get('/api/operator-lifecycle');cut=get('/api/projects/control-plane/cutover-r42/status')\nprint(json.dumps({'rows':rows,'allTabsQuiet':not any(x.get('generating') or x.get('draftPresent') for x in c),'health':h.get('state'),'queuePaused':op.get('queuePaused'),'r42Hold':cut.get('cutoverState',{}).get('holdActive'),'activeAssignments':sum(x.get('state') in ('dispatching','running','awaiting_evidence') for x in q.get('assignments',[])),'readOnly':True},ensure_ascii=True)[:3700])"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 19000,
+  "note": "Read-only exact all-chat reinspection after R46 tab wake. Determine no active provider generation, no drafts, no in-flight, PAUSED/HOLD preserved before isolated R50 hotfix, no Send."
+}
