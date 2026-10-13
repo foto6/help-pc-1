@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-summary-20261014-1d6e9fa7",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$f='E:\\WebAIBridge-R62-SHADOW\\R62_TESTS.log';Write-Output ('LOG_BYTES='+(Get-Item -LiteralPath $f).Length);Get-Content -LiteralPath $f -Tail 9;Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read only R62 passed tests summary and unchanged installed server checksum"
+}
