@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $root='E:\\WebAIBridge'; $target='d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2'; $branch='agent/bridge-r61-failclosed-dispatch-inspection-20261014'; $expected='5853a5a8dd0677c1d8ea2a23e16c98d85f6d5592'; $before=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($before -ne $expected){throw 'PRODUCTION_PRESERVE_COMMIT_MISMATCH'}; $log='E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\R62_REAL_R42_PREFLIGHT.log'; & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $root 'app\\r42-cutover.ps1') -RepoPath $root -TargetSha $target -TargetBranch $branch -PreflightOnly *> $log; $rc=$LASTEXITCODE; Write-Output ('PREFLIGHT_RC='+$rc); if(Test-Path -LiteralPath $log){Get-Content -LiteralPath $log -Tail 10}; Write-Output ('UNCHANGED_PRODUCTION_HEAD='+((& git.exe -C $root rev-parse HEAD)|Out-String).Trim()); Write-Output ('TRACKED_CHANGES='+@(& git.exe -C $root status --porcelain=v1 --untracked-files=no).Count); Write-Output ('SERVER_SHA256='+(Get-FileHash -LiteralPath (Join-Path $root 'app\\server.js') -Algorithm SHA256).Hash); if($rc -ne 0){exit $rc}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "PREFLIGHT_RC=1\r\n+                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : NotSpecified: (R42 cutover ref...end-gate-r50.js:String) [], RemoteException\r\n    + FullyQualifiedErrorId : NativeCommandError\r\n \r\nAt E:\\WebAIBridge\\app\\r42-cutover.ps1:285 char:3\r\n+   throw \"R42 cutover refuses material worktree changes: $($materialDi ...\r\n+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (R42 cutover ref...end-gate-r50.js:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : R42 cutover refuses material worktree changes: app/autonomous-send-gate-r50.js\r\n \r\nUNCHANGED_PRODUCTION_HEAD=5853a5a8dd0677c1d8ea2a23e16c98d85f6d5592\r\nTRACKED_CHANGES=0\r\nSERVER_SHA256=F56A55E12BAF75775FD40A88EAC665B0CDF21720F864EAD8386B4D3D503AA5DA\r\n",
+      "stdout_bytes": 847,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:46:12.528Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:46:12.251Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-real-r42-preflight-20261014-e472a58b"
+    },
+    "request_id": "r62-real-r42-preflight-20261014-e472a58b",
+    "started_at": "2026-10-13T20:46:06.484Z",
+    "status": "completed"
+  },
+  "id": "r62-real-r42-preflight-20261014-e472a58b",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
