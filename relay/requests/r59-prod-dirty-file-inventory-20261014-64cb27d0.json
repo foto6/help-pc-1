@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r59-prod-dirty-file-inventory-20261014-64cb27d0",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "git.exe -C E:\\WebAIBridge diff --name-status --no-ext-diff && git.exe -C E:\\WebAIBridge rev-parse HEAD"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Read-only six tracked modified production path names and exact original Git HEAD; no diff content or config reads"
+}
