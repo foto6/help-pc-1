@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014'; $sha='41ae7146b397353495dd4d8b3ddddc00a8ea434a'; $branch='agent/bridge-r60-production-hotfix-integration-20261014'; $head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($head -ne $sha){throw 'COMMIT_DRIFT'}; $env:GIT_TERMINAL_PROMPT='0'; $env:GCM_INTERACTIVE='Never'; & git.exe -C $root push origin ('HEAD:refs/heads/'+$branch); if($LASTEXITCODE -ne 0){throw 'PUSH_FAILED_NO_REPLAY'}; $remote=@(& git.exe -C $root ls-remote origin ('refs/heads/'+$branch)); if($LASTEXITCODE -ne 0 -or -not ($remote[0] -match ('^'+$sha))){throw 'REMOTE_SHA_NOT_VERIFIED'}; Write-Output ('R60_REMOTE_SHA_VERIFIED='+$sha)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "remote: \nremote: Create a pull request for 'agent/bridge-r60-production-hotfix-integration-20261014' on GitHub by visiting:        \nremote:      https://github.com/foto6/WebAIBridge/pull/new/agent/bridge-r60-production-hotfix-integration-20261014        \nremote: \nTo https://github.com/foto6/WebAIBridge.git\n * [new branch]      HEAD -> agent/bridge-r60-production-hotfix-integration-20261014\n",
+      "stderr_bytes": 393,
+      "stderr_truncated": false,
+      "stdout": "R60_REMOTE_SHA_VERIFIED=41ae7146b397353495dd4d8b3ddddc00a8ea434a\r\n",
+      "stdout_bytes": 66,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:12:45.892Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:12:45.649Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r60-github-push-newbranch-20261014-f419b9a3"
+    },
+    "request_id": "r60-github-push-newbranch-20261014-f419b9a3",
+    "started_at": "2026-10-13T20:12:39.352Z",
+    "status": "completed"
+  },
+  "id": "r60-github-push-newbranch-20261014-f419b9a3",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
