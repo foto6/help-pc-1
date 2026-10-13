@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r50-20261013-held-boundary-final-audit-29",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json,subprocess,pathlib,hashlib\nb='http://127.0.0.1:17448'\ndef get(p):\n with urllib.request.urlopen(b+p,timeout=6) as r:return json.load(r)\nh=get('/api/health');c=get('/api/projects/control-plane/cutover-r42/status');o=get('/api/operator-lifecycle');w=get('/api/supervisor-watchdog?detect=0').get('config',{});a=get('/api/supervisor-watchdog/agent-assignments');q=[x for x in a.get('assignments',[]) if x.get('state')=='queued'];act=[x for x in a.get('assignments',[]) if x.get('state') in ('running','dispatching','awaiting_evidence')];p=pathlib.Path('E:/PCControlAutonomyR41/data/pc-control-supervisor.json');s=json.loads(p.read_text('utf8'));print(json.dumps({'bridgeHealth':h.get('state'),'bridgeReasons':h.get('reasons',[]),'r42Hold':c.get('cutoverState',{}).get('holdActive'),'r42Status':c.get('cutoverState',{}).get('status'),'queuePaused':o.get('queuePaused'),'watchdogMode':w.get('mode'),'watchdogEnabled':w.get('enabled'),'autonomousSendEnabled':w.get('allowAutonomousSend'),'queued':[{'id':x.get('id'),'target':x.get('targetChatId'),'attempted':x.get('dispatchSubmitAttempted'),'dispatchCount':x.get('dispatchCount')} for x in q],'inflight':len(act),'r41JournalRevision':s.get('revision'),'r41LastStatus':(s.get('lastDecision') or {}).get('status'),'r41Unknown':len(s.get('pendingUnknown',[])),'readOnly':True},ensure_ascii=True)[:3300])"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only final R50 protected queue and R41 journal audit after host refused activation request; no side-effect actions and no use of blocked tool path."
+}
