@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-r42-pytest-20261014-a4d83f70",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "set PYTHONPATH=src&& py.exe -3 -m pytest tests\\test_shell_pipe_drain.py > E:\\PCControlR42-SHADOW\\R42_PIPE_TESTS.log 2>&1"
+    ],
+    "cwd": "E:\\PCControlR42-SHADOW"
+  },
+  "timeout_ms": 22000,
+  "note": "Windows pytest isolated R42 shell pipe-drain regression; stdout/stderr redirected to standalone shadow log; live executor unchanged"
+}
