@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,subprocess,json,base64,hashlib,concurrent.futures,datetime\nSHA='fab9d1756e00eaad5e65c67982d9763afa5f328d'\nEXPECTED=json.loads(r'''{\".github/workflows/pc-autonomy-r41.yml\":\"a7383509cdcb06fe819dc7c9b47922797d9d6b60\",\"bin/pc-autonomy-daemon.js\":\"d7b5593dba6aa99f36563b5db04b833ae35a0d2f\",\"docs/PC_AUTONOMY_R41.md\":\"c6d0810f82a8cca8ddbdb558dd093a89f064d2a4\",\"examples/pc-autonomy.example.json\":\"f466092133e6afa395a1482f8dc28da0aee0e92e\",\"package.json\":\"1910b8b290ff4da84eb0445bf3c5187d487d645e\",\"src/pc-autonomy-supervisor.js\":\"59aa9ae7d476c045611e60d6a3cfdda78726b72d\",\"test/pc-autonomy.test.js\":\"d1b54e5913acfc5618babb42f032480d6336f82d\"}''')\nROOT=pathlib.Path('E:/PCControlAutonomyR41')\nSTAGE=ROOT/'staging'/SHA\nDEST=ROOT/'releases'/SHA\nif ROOT.exists():raise RuntimeError('R41_INSTALL_ROOT_EXISTS_ABORT_NO_OVERWRITE')\ndef ghfetch(name):\n r=subprocess.run(['gh','api',f'repos/foto6/help-pc-2/contents/{name}?ref={SHA}'],capture_output=True,text=True,timeout=14)\n if r.returncode:raise RuntimeError('GH_FETCH_FAILED_'+name)\n j=json.loads(r.stdout)\n if j.get('encoding')!='base64':raise RuntimeError('UNEXPECTED_GH_ENCODING')\n body=base64.b64decode(j['content'])\n h=hashlib.sha1(b'blob '+str(len(body)).encode()+b'\\\\x00'+body).hexdigest()\n if h!=EXPECTED[name] or j.get('sha')!=h:raise RuntimeError('EXACT_GIT_BLOB_MISMATCH_'+name)\n return name,body\nwith concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:\n data=dict(pool.map(ghfetch,EXPECTED))\nSTAGE.mkdir(parents=True,exist_ok=False)\nfor name,body in data.items():\n p=STAGE/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(body)\ntest=subprocess.run(['node','--test','test/pc-autonomy.test.js'],cwd=STAGE,capture_output=True,text=True,timeout=18)\nif test.returncode:raise RuntimeError('R41_LOCAL_NODE_TESTS_FAILED_'+(test.stdout+test.stderr)[-1500:])\nmeta={'schema':'pc.control.autonomy.shadow.v1','sourceRepo':'foto6/help-pc-2','sha':SHA,'files':EXPECTED,'installedAt':datetime.datetime.now().isoformat(),'tests':'PASS','enabled':False,'mode':'OBSERVE_ONLY'}\n(STAGE/'MANIFEST.json').write_text(json.dumps(meta,indent=2),encoding='utf8')\nDEST.parent.mkdir(parents=True,exist_ok=True);STAGE.rename(DEST)\ncfg=json.loads((DEST/'examples/pc-autonomy.example.json').read_text('utf8'))\ncfg['state']=str(ROOT/'data/pc-control-supervisor.json')\ncfg['r45']['state']=str(ROOT/'data/r45-coordinator.json')\nROOT.joinpath('config.json').write_text(json.dumps(cfg,indent=2),encoding='utf8')\nrun=subprocess.run(['node','bin/pc-autonomy-daemon.js','--config',str(ROOT/'config.json'),'--once'],cwd=DEST,capture_output=True,text=True,timeout=18)\noutput=json.loads(run.stdout.strip()) if run.returncode==0 else {}\nprint(json.dumps({'status':'PC_CONTROL_R41_SHADOW_INSTALLED','exactSha':SHA,'blobCount':len(EXPECTED),'testExit':test.returncode,'localObserverExit':run.returncode,'observer':output,'observerErrorCode':run.stderr[-350:] if run.returncode else '', 'releasePath':str(DEST),'noSend':True,'noBrowserTabCreation':True,'productionUntouched':True},ensure_ascii=True)[:7500])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\r\n  File \"<string>\", line 18, in <module>\r\n    data=dict(pool.map(ghfetch,EXPECTED))\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\concurrent\\futures\\_base.py\", line 625, in result_iterator\r\n    yield _result_or_cancel(fs.pop())\r\n          ~~~~~~~~~~~~~~~~~^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\concurrent\\futures\\_base.py\", line 318, in _result_or_cancel\r\n    return fut.result(timeout)\r\n           ~~~~~~~~~~^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\concurrent\\futures\\_base.py\", line 460, in result\r\n    return self.__get_result()\r\n           ~~~~~~~~~~~~~~~~~^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\concurrent\\futures\\_base.py\", line 402, in __get_result\r\n    raise self._exception\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\concurrent\\futures\\thread.py\", line 59, in run\r\n    result = self.fn(*self.args, **self.kwargs)\r\n  File \"<string>\", line 15, in ghfetch\r\n    if h!=EXPECTED[name] or j.get('sha')!=h:raise RuntimeError('EXACT_GIT_BLOB_MISMATCH_'+name)\r\n                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nRuntimeError: EXACT_GIT_BLOB_MISMATCH_.github/workflows/pc-autonomy-r41.yml\r\n",
+      "stderr_bytes": 1536,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:18:58.952Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:18:58.721Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-native-shadow-install-02"
+    },
+    "request_id": "owner-r41-20261013-native-shadow-install-02",
+    "started_at": "2026-10-13T03:18:55.722Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-native-shadow-install-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
