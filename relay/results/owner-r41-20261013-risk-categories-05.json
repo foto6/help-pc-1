@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json,collections\nwith urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments',timeout=5) as r:j=json.load(r)\ncat=collections.Counter(); examples=[]\nfor a in j.get('assignments',[]):\n if a.get('state') in ('blocked','failed') and (a.get('dispatchSubmitAttempted') is True or (a.get('dispatchCount') or 0)>0):\n  code=str(a.get('dispatchFailureCode') or a.get('lastDiagnostic') or '')\n  cat[code[:100]]+=1\n  if len(examples)<24:examples.append({'id':a.get('id'),'state':a.get('state'),'count':a.get('dispatchCount'),'attempted':a.get('dispatchSubmitAttempted'),'code':code[:90],'preflight':a.get('lastPreflightReason'),'hasFingerprint':bool(a.get('dispatchFingerprint'))})\nprint(json.dumps({'categories':dict(cat),'sample':examples,'readOnly':True},ensure_ascii=True)[:6000])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"categories\": {\"evidence_timeout\": 14, \"ci_failed\": 5}, \"sample\": [{\"id\": \"1bd59e1b-a015-4681-b70a-c71e82ee3c72\", \"state\": \"blocked\", \"count\": 1, \"attempted\": false, \"code\": \"evidence_timeout\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"5dad5dfc-5563-40ce-ac13-656c5e9156f7\", \"state\": \"blocked\", \"count\": 1, \"attempted\": false, \"code\": \"evidence_timeout\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"822c4b50-8023-4e6f-9cd9-6b9f77675f16\", \"state\": \"blocked\", \"count\": 1, \"attempted\": false, \"code\": \"evidence_timeout\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"35a3f08c-49b7-4cc1-a0fa-6e59a6179424\", \"state\": \"blocked\", \"count\": 1, \"attempted\": false, \"code\": \"evidence_timeout\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"73bdc7e8-3d3f-49ad-b95a-86ec9f0a77bb\", \"state\": \"blocked\", \"count\": 1, \"attempted\": false, \"code\": \"evidence_timeout\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"d6480d83-ab55-41c9-b106-c1de9f23c93e\", \"state\": \"blocked\", \"count\": 1, \"attempted\": true, \"code\": \"evidence_timeout\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"206ba7e8-dc96-478b-b386-3d6ce4e216a2\", \"state\": \"blocked\", \"count\": 1, \"attempted\": false, \"code\": \"evidence_timeout\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"79be4e80-c621-4ab9-a376-385dfe60dd21\", \"state\": \"blocked\", \"count\": 1, \"attempted\": true, \"code\": \"evidence_timeout\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"a2f55963-4f10-413c-a0a4-8113ff261c19\", \"state\": \"blocked\", \"count\": 1, \"attempted\": true, \"code\": \"ci_failed\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"c71cacdb-267b-4176-bb4c-39582c6d2a03\", \"state\": \"blocked\", \"count\": 1, \"attempted\": true, \"code\": \"ci_failed\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"66c0cf2c-57f3-424d-9b93-431b3cbd4eaa\", \"state\": \"blocked\", \"count\": 1, \"attempted\": true, \"code\": \"evidence_timeout\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"9f184693-c0e1-4228-a9ca-6d3a881b6a5a\", \"state\": \"blocked\", \"count\": 1, \"attempted\": true, \"code\": \"evidence_timeout\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"755062a5-9ee1-4971-8653-0a9c636c6c74\", \"state\": \"blocked\", \"count\": 1, \"attempted\": true, \"code\": \"ci_failed\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"1b6417bf-6e3e-4c60-b7ef-ed1fae543de7\", \"state\": \"blocked\", \"count\": 1, \"attempted\": true, \"code\": \"evidence_timeout\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"f3799077-0fd5-4668-8fef-4402fcb43671\", \"state\": \"blocked\", \"count\": 1, \"attempted\": true, \"code\": \"ci_failed\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"e908ffdf-f5b0-4537-b290-5ecfd3dfa966\", \"state\": \"blocked\", \"count\": 1, \"attempted\": true, \"code\": \"evidence_timeout\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"c1df9edf-6da6-4388-a39a-7fe773728013\", \"state\": \"blocked\", \"count\": 1, \"attempted\": true, \"code\": \"evidence_timeout\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"e27a8cf2-fcb4-45f0-8134-3ca5632c9611\", \"state\": \"blocked\", \"count\": 1, \"attempted\": true, \"code\": \"ci_failed\", \"preflight\": \"ready\", \"hasFingerprint\": true}, {\"id\": \"f1bc42fe-ecd8-408a-9d70-84ec2bb4a3ab\", \"state\": \"blocked\", \"count\": 1, \"attempted\": true, \"code\": \"evidence_timeout\", \"preflight\": \"ready\", \"hasFingerprint\": true}], \"readOnly\": true}\r\n",
+      "stdout_bytes": 3346,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:16:50.957Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:16:50.722Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-risk-categories-05"
+    },
+    "request_id": "owner-r41-20261013-risk-categories-05",
+    "started_at": "2026-10-13T04:16:50.058Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-risk-categories-05",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
