@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$f='E:\\WebAIBridge-R61-SHADOW\\R61_TESTS.log';$m=Select-String -LiteralPath $f -Pattern '^not ok' -Context 1,25;foreach($x in $m){Write-Output ($x.Context.PreContext -join \"`n\");Write-Output $x.Line;Write-Output ($x.Context.PostContext -join \"`n\")}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "# Subtest: R45 runner blocks new dispatch when remote baseline SHA has moved\r\nnot ok 23 - R45 runner blocks new dispatch when remote baseline SHA has moved\r\n  ---\n  duration_ms: 46.6148\n  type: 'test'\n  location: 'E:\\\\WebAIBridge-R61-SHADOW\\\\app\\\\autonomy-r45-git-gate.test.js:71:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + 'PENDING'\n    - 'BLOCKED'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'BLOCKED'\n  actual: 'PENDING'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (E:\\WebAIBridge-R61-SHADOW\\app\\autonomy-r45-git-gate.test.js:85:10)\n    async Test.run (node:internal/test_runner/test:1332:7)\n    async Test.processPendingSubtests (node:internal/test_runner/test:911:7)\n  ...\n# Subtest: R45 runner quarantines apparently completed Bridge task until independently confirmed\nok 24 - R45 runner quarantines apparently completed Bridge task until independently confirmed\n  ---\r\n",
+      "stdout_bytes": 1001,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:27:45.134Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:27:44.902Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r61-failure-detail-20261014-81b82f2d"
+    },
+    "request_id": "r61-failure-detail-20261014-81b82f2d",
+    "started_at": "2026-10-13T20:27:44.200Z",
+    "status": "completed"
+  },
+  "id": "r61-failure-detail-20261014-81b82f2d",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
