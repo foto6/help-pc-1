@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r58-log-cmdtype-20261014-b9d30f72",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "type E:\\WebAIBridge-R58-SHADOW\\R58_R45_R57_TESTS.log"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Read-only retrieve existing R45/R57 test log with cmd.type; never replay tests or inspect unrelated files"
+}
