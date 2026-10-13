@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r58-outcome-lookup-r45-20261014-f2853ab4",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "r58-win-tests-r45-r57-20261014-c7a93b6e",
+    "action": "shell.run"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only original R45/R57 test outcome reconciliation; never replay"
+}
