@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,pathlib\np=pathlib.Path('E:/pc-github-relay/.pc-relay/health.json')\nd=json.loads(p.read_text('utf-8-sig'))\nsafe=lambda x: {k:x.get(k) for k in ('schema','version','status','state','observedAt','updatedAt','checkedAt','reconciliationRequired','reconciliation_required','syncState','lastPollAt','lastProgressAt','live','relayState','ready','runtime','producer') if k in x}\nprint(json.dumps({'topKeys':sorted(d.keys()),'top':safe(d),'nested':{k:safe(v) for k,v in d.items() if k in ('relay','executor','github','liveness','health','status') and isinstance(v,dict)}},ensure_ascii=True)[:3600])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"topKeys\": [\"backlog_count\", \"backlog_high_watermark\", \"branch\", \"current_request_id\", \"health_version\", \"last_backlog_change_at_unix\", \"last_cycle_completed_at_unix\", \"last_error\", \"last_fetch_success_at_unix\", \"last_reconciliation_request_id\", \"last_request_processed_at_unix\", \"last_request_processed_id\", \"last_result_published_at_unix\", \"last_result_published_id\", \"last_sync_at_unix\", \"live\", \"local_head\", \"phase\", \"pid\", \"reconciliation_required\", \"remote_head\", \"remote_head_observed_at_unix\", \"request_count\", \"result_count\", \"started_at_unix\", \"status\", \"updated_at_unix\"], \"top\": {\"status\": \"healthy\", \"reconciliation_required\": false, \"live\": true}, \"nested\": {}}\r\n",
+      "stdout_bytes": 679,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:23:53.503Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:23:53.257Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-pc-relay-health-fields-fixed-08"
+    },
+    "request_id": "owner-r41-20261013-pc-relay-health-fields-fixed-08",
+    "started_at": "2026-10-13T03:23:52.675Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-pc-relay-health-fields-fixed-08",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
