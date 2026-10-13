@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-local-ai-availability-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,subprocess,shutil\nout={'ollamaInstalled':bool(shutil.which('ollama')),'readOnly':True}\nfor p in ('http://127.0.0.1:11434/api/tags','http://127.0.0.1:11434/api/ps'):\n try:\n  with urllib.request.urlopen(p,timeout=3) as x:d=json.load(x)\n  if p.endswith('/tags'):out['installedModels']=[str(x.get('name',''))[:80] for x in d.get('models',[])][:12]\n  else:out['loadedModels']=[str(x.get('name',''))[:80] for x in d.get('models',[])][:12]\n except Exception as e:out['error_'+p.rsplit('/',1)[-1]]=type(e).__name__\nprint(json.dumps(out,ensure_ascii=True)[:2600])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only installed and loaded Ollama model inventory, local loopback, no generation or network transfer, no Send."
+}
