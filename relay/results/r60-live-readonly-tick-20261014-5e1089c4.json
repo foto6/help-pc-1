@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "cmd.exe",
+        "/d",
+        "/c",
+        "cd /d E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014\\app && node.exe autonomy-r45-runner.js --plan autonomy-r45-plan.example.json --state E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014\\R60_READONLY_ONCE.state.json --once"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"at\":\"2026-10-13T20:15:54.033Z\",\"planId\":\"r45-edit-me\",\"revision\":1,\"counts\":{\"PENDING\":1},\"checkpointDue\":[],\"reconciliationRequired\":[],\"bridge\":{\"health\":\"PAUSED\",\"reasons\":[],\"assignmentCount\":69,\"assignmentStates\":{\"cancelled\":11,\"blocked\":35,\"failed\":12,\"completed\":10,\"queued\":1},\"queue\":{\"active\":0,\"queued\":1,\"oldestQueuedAgeMs\":94658029},\"codeReloadRequired\":false},\"dispatched\":[],\"status\":\"READ_ONLY\",\"brainReason\":\"disabled\"}\n",
+      "stdout_bytes": 440,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:15:54.322Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:15:54.080Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r60-live-readonly-tick-20261014-5e1089c4"
+    },
+    "request_id": "r60-live-readonly-tick-20261014-5e1089c4",
+    "started_at": "2026-10-13T20:15:53.386Z",
+    "status": "completed"
+  },
+  "id": "r60-live-readonly-tick-20261014-5e1089c4",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
