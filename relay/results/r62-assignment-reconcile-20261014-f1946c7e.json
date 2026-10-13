@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $r=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -Method GET -TimeoutSec 8; $rows=@($r.assignments); $ids=@{};$unknown=0;$active=0;$queued=0;$bad=@{}; foreach($a in $rows){$id=[string]$a.id;if([string]::IsNullOrWhiteSpace($id) -or $ids.ContainsKey($id)){$unknown++;$bad['duplicate_or_missing_id']=[int]$bad['duplicate_or_missing_id']+1;continue};$ids[$id]=$true;$s=[string]$a.state;if($s -eq 'queued'){$queued++;if($a.dispatchSubmitAttempted -cne $false -or [int]$a.dispatchCount -ne 0){$unknown++;$bad['queued_send_uncertain']=[int]$bad['queued_send_uncertain']+1}}elseif($s -in @('dispatching','running','awaiting_evidence')){$active++;$unknown++;$bad['active_unknown']=[int]$bad['active_unknown']+1}elseif($s -in @('completed','cancelled','blocked','failed')){if($a.dispatchSubmitAttempted -ceq $true -and -not $a.dispatchFingerprint){$unknown++;$bad['terminal_missing_fingerprint']=[int]$bad['terminal_missing_fingerprint']+1}}else{$unknown++;$bad['unknown_state']=[int]$bad['unknown_state']+1}}; Write-Output ('LEDGER_TOTAL='+$rows.Count); Write-Output ('LEDGER_UNKNOWN_EFFECTS='+$unknown); Write-Output ('LEDGER_ACTIVE='+$active); Write-Output ('LEDGER_QUEUED='+$queued); foreach($key in $bad.Keys){Write-Output ('LEDGER_REASON_'+$key+'='+$bad[$key])}; $snapshot=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=0' -TimeoutSec 6; Write-Output ('CACHED_CHAT_COUNT='+@($snapshot.chats).Count)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "LEDGER_TOTAL=69\r\nLEDGER_UNKNOWN_EFFECTS=0\r\nLEDGER_ACTIVE=0\r\nLEDGER_QUEUED=1\r\nCACHED_CHAT_COUNT=7\r\n",
+      "stdout_bytes": 98,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:43:04.044Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:43:03.784Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-assignment-reconcile-20261014-f1946c7e"
+    },
+    "request_id": "r62-assignment-reconcile-20261014-f1946c7e",
+    "started_at": "2026-10-13T20:43:02.897Z",
+    "status": "completed"
+  },
+  "id": "r62-assignment-reconcile-20261014-f1946c7e",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
