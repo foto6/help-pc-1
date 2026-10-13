@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$sha=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim();if($sha -ne '01e5db790f50b5eb42588b8942f3dd1de4f0a6bf'){throw 'SHA_CHANGED'};$conn=Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction Stop|Select-Object -First 1;if([int]$conn.OwningProcess -ne 24272){throw ('OLD_PIN_CHANGED '+$conn.OwningProcess)};$p=Get-CimInstance Win32_Process -Filter 'ProcessId=24272';if($p.Name -ne 'node.exe' -or $p.CommandLine -notmatch 'WebAIBridge.+server\\.js'){throw 'PROCESS_NOT_BRIDGE'};Stop-Process -Id 24272 -Force -ErrorAction Stop;Write-Output 'ORIGINAL_NODE_STOPPED_FOR_STICKY_RESTART';Write-Output 'CHROME_NOT_TOUCHED'"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "ORIGINAL_NODE_STOPPED_FOR_STICKY_RESTART\r\nCHROME_NOT_TOUCHED\r\n",
+      "stdout_bytes": 62,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:38:29.152Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:38:28.911Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-stop-old-node-for-sticky-20261014-129a7b6f"
+    },
+    "request_id": "r63-stop-old-node-for-sticky-20261014-129a7b6f",
+    "started_at": "2026-10-13T21:38:27.044Z",
+    "status": "completed"
+  },
+  "id": "r63-stop-old-node-for-sticky-20261014-129a7b6f",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
