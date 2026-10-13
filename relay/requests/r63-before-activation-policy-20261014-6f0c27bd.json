@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-before-activation-policy-20261014-6f0c27bd",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $s=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 3; $o=$s.cutoverState.originalAutonomy; Write-Output ('ORIG_SUPERVISOR_ENABLED='+$o.enabled); Write-Output ('ORIG_OPEN_IF_MISSING='+$o.openExistingChatIfMissing); Write-Output ('ORIG_AUTOCONTINUE='+$o.autoContinueEnabled); Write-Output ('ORIG_ALLOW_AUTOSEND='+$o.allowAutonomousSend); Write-Output ('ORIG_MODE='+$o.mode); Write-Output ('ORIG_HIGH='+$o.enforceHighMode); Write-Output ('ORIG_LIFECYCLE='+$s.cutoverState.originalOperatorLifecycleMode); Write-Output ('ORIG_QUEUE_PAUSED='+$s.cutoverState.originalQueuePaused); Write-Output ('HOLD_STATUS='+$s.cutoverState.status); $f='E:\\WebAIBridge\\app\\.env'; Write-Output ('ENV_EXISTS='+(Test-Path -LiteralPath $f -PathType Leaf)); if(Test-Path -LiteralPath $f -PathType Leaf){$lines=[IO.File]::ReadAllLines($f);$matches=@($lines | Where-Object {$_ -match '^\\s*(export\\s+)?BRIDGE_EXISTING_TABS_ONLY\\s*='});Write-Output ('ENV_STICKY_MATCH_COUNT='+$matches.Count);Write-Output ('ENV_STICKY_ENABLED='+(@($matches|Where-Object {$_ -match '(?i)=\\s*[''\\\"]?(1|true|on|yes)[''\\\"]?\\s*$'}).Count -eq 1))}; Write-Output ('HOLD='+$s.cutoverState.holdActive)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read only original R42 restored-autoSend/profile browser policy booleans, private .env sticky flag existence only, no secret values or mutations."
+}
