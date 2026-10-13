@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $r=Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1' -TimeoutSec 6; $a=@($r.chats); Write-Output ('FRESH_INSPECTION='+$r.inspected); Write-Output ('REGISTERED='+$a.Count); Write-Output ('STICKY_ENABLED='+@($a|Where-Object {$_.stickySession.enabled -eq $true}).Count); Write-Output ('STICKY_PRESERVED='+@($a|Where-Object {$_.stickySession.status -eq 'PRESERVED'}).Count); Write-Output ('STICKY_UNPINNED='+@($a|Where-Object {$_.stickySession.status -eq 'UNPINNED'}).Count); Write-Output ('STICKY_OTHER='+@($a|Where-Object {$_.stickySession.enabled -eq $true -and $_.stickySession.status -notin @('PRESERVED','UNPINNED')}).Count); Write-Output ('ONE_TAB='+@($a|Where-Object {$_.openTabs -eq 1}).Count); Write-Output ('HIGH='+@($a|Where-Object {$_.highMode -eq $true}).Count); Write-Output ('GENERATING='+@($a|Where-Object {$_.generating -eq $true}).Count); Write-Output ('RATE_LIMITED='+@($a|Where-Object {$_.providerRateLimited -eq $true}).Count); Write-Output ('DRAFTS='+@($a|Where-Object {$_.draftPresent -eq $true}).Count); Write-Output ('CONTEXT_EXHAUSTED='+@($a|Where-Object {$_.contextLimit -eq $true}).Count)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "FRESH_INSPECTION=True\r\nREGISTERED=7\r\nSTICKY_ENABLED=0\r\nSTICKY_PRESERVED=0\r\nSTICKY_UNPINNED=0\r\nSTICKY_OTHER=0\r\nONE_TAB=6\r\nHIGH=6\r\nGENERATING=1\r\nRATE_LIMITED=0\r\nDRAFTS=0\r\nCONTEXT_EXHAUSTED=0\r\n",
+      "stdout_bytes": 190,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:56:03.712Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:56:03.464Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r62-r61-sticky-chat-audit-20261014-c1e0af63"
+    },
+    "request_id": "r62-r61-sticky-chat-audit-20261014-c1e0af63",
+    "started_at": "2026-10-13T20:56:02.501Z",
+    "status": "completed"
+  },
+  "id": "r62-r61-sticky-chat-audit-20261014-c1e0af63",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
