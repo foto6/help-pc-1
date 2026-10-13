@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,subprocess,json,os,datetime,time,shutil\nroot=pathlib.Path('E:/PCControlAutonomyR41')\nold='6f03a58c7c29adfbb8dbe936274d147f45404418'\nnew='d5c2ac399b3dc71cb9f83f28c2fc86ed942878bd'\nsrcOld=str(root/'releases'/old/'bin/pc-autonomy-daemon.js')\nsrcNew=str(root/'releases'/new/'bin/pc-autonomy-daemon.js')\ncfg=root/'config.r41-integrated.json'\ns=root/'START_R41_OBSERVER.cmd';stop=root/'STOP_R41_USER_OBSERVER.ps1';ownerFile=root/'WATCHER_R41.json'\njfile=root/'data/pc-control-supervisor.json'\nmeta=json.loads((root/'releases'/new/'MANIFEST.json').read_text('utf8'))\nconfig=json.loads(cfg.read_text('utf8'));owner=json.loads(ownerFile.read_text('utf8'));j=json.loads(jfile.read_text('utf8'))\nif meta.get('sha')!=new or meta.get('tests')!='PASS':raise RuntimeError('NEW_RELEASE_NOT_VERIFIED')\nif config.get('mode')!='observe' or config.get('operatorApproved') is not False or j.get('pendingUnknown'):raise RuntimeError('FAIL_CLOSED_OPERATOR')\na=s.read_text('utf8');b=stop.read_text('utf8')\nif srcOld not in a or srcNew in a or srcOld not in b or srcNew in b or '--dispatch' in a or '--i-accept-real-send' in a:raise RuntimeError('LAUNCHER_DRIFT')\nif owner.get('pid')!=16400 or owner.get('source')!=old:raise RuntimeError('OWNER_IDENTITY_DRIFT')\nstartref=pathlib.Path(os.environ['APPDATA'])/'Microsoft/Windows/Start Menu/Programs/Startup/PCControl_R41_Observer.cmd'\nif not startref.is_file() or str(s) not in startref.read_text('utf8'):raise RuntimeError('STARTUP_POINTER_DRIFT')\npsGet=\"$a=@(Get-CimInstance Win32_Process | Where-Object {$_.Name -ieq 'node.exe' -and $_.CommandLine -like '*PCControlAutonomyR41*pc-autonomy-daemon.js*'} | Select-Object ProcessId,CommandLine);$a | ConvertTo-Json -Compress\"\nprobe=subprocess.run(['powershell.exe','-NoProfile','-Command',psGet],capture_output=True,text=True,timeout=8)\nif probe.returncode:raise RuntimeError('PROCESS_ENUMERATION_FAILED')\nrows=json.loads(probe.stdout) if probe.stdout.strip() else []\nif isinstance(rows,dict):rows=[rows]\nif len(rows)!=1 or rows[0].get('ProcessId')!=16400 or srcOld not in rows[0].get('CommandLine','') or '--watch' not in rows[0].get('CommandLine','') or '--dispatch' in rows[0].get('CommandLine',''):raise RuntimeError('PID_DRIFT_OR_DUPLICATE')\nrev=j.get('revision')\nbackup=root/'backups/r41-singleton-switch-20261013'\nif backup.exists():raise RuntimeError('BACKUP_PATH_ALREADY_OWNED')\nbackup.mkdir(parents=True)\nfor p in (s,stop,ownerFile):shutil.copy2(p,backup/p.name)\ntask=\"\"\"$x=Get-CimInstance Win32_Process -Filter 'ProcessId = 16400' -ErrorAction Stop; if (!$x -or $x.Name -ine 'node.exe' -or $x.CommandLine -notlike '*PCControlAutonomyR41*pc-autonomy-daemon.js*' -or $x.CommandLine -notlike '*--watch*' -or $x.CommandLine -like '*--dispatch*') {throw 'PID_CHANGED_NO_STOP'}; Stop-Process -Id 16400 -Force -ErrorAction Stop\"\"\"\nst=subprocess.run(['powershell.exe','-NoProfile','-Command',task],capture_output=True,text=True,timeout=10)\nif st.returncode:raise RuntimeError('OLD_STOP_FAILED_'+st.stderr[-300:])\nlog=root/'logs/observer.live.log';fd=log.open('a',encoding='utf8')\nproc=subprocess.Popen(['node.exe',srcNew,'--config',str(cfg),'--watch'],cwd=str(root/'releases'/new),creationflags=subprocess.DETACHED_PROCESS|subprocess.CREATE_NEW_PROCESS_GROUP,stdin=subprocess.DEVNULL,stdout=fd,stderr=fd,close_fds=True)\nfd.close()\ntime.sleep(3)\nstate=json.loads(jfile.read_text('utf8'))\nif proc.poll() is not None or int(state.get('revision',0))<=int(rev) or state.get('lastDecision',{}).get('status')!='READ_ONLY':\n print(json.dumps({'status':'INDETERMINATE_SWITCH','oldStopped':True,'newPid':proc.pid,'alive':proc.poll() is None,'revisionBefore':rev,'revisionAfter':state.get('revision'),'reconciliationRequired':True,'backup':str(backup)},ensure_ascii=True));raise SystemExit(3)\ndef atomic(path,content):\n t=path.with_name(path.name+'.switch25.tmp')\n if t.exists():raise RuntimeError('TEMP_ALREADY_EXISTS_'+path.name)\n with t.open('x',encoding='utf8') as file:file.write(content)\n os.replace(t,path)\nstartNew=a.replace(srcOld,srcNew)\nstopNew=b.replace(srcOld,srcNew)\nif srcNew not in startNew or srcNew not in stopNew or '--dispatch' in startNew:raise RuntimeError('NEW_LAUNCHER_UNSAFE')\natomic(stop,stopNew)\natomic(s,startNew)\nowner['pid']=proc.pid;owner['source']=new;owner['runningAtInstall']=True;owner['switchedAt']=datetime.datetime.now().isoformat()\natomic(ownerFile,json.dumps(owner,indent=2))\nprint(json.dumps({'status':'PC_R41_SINGLETON_LIVE_OBSERVER_PASS','newPid':proc.pid,'oldPid':16400,'exactSource':new,'revisionBefore':rev,'revisionAfter':state.get('revision'),'observerState':state.get('lastDecision',{}).get('status'),'noSend':True,'startupCorrected':True,'stopControlCorrected':True,'backupsPreserved':True,'productionUntouched':True},ensure_ascii=True))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"status\": \"PC_R41_SINGLETON_LIVE_OBSERVER_PASS\", \"newPid\": 8276, \"oldPid\": 16400, \"exactSource\": \"d5c2ac399b3dc71cb9f83f28c2fc86ed942878bd\", \"revisionBefore\": 38, \"revisionAfter\": 39, \"observerState\": \"READ_ONLY\", \"noSend\": true, \"startupCorrected\": true, \"stopControlCorrected\": true, \"backupsPreserved\": true, \"productionUntouched\": true}\r\n",
+      "stdout_bytes": 343,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:03:46.394Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:03:46.121Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-singleton-observer-cutover-25"
+    },
+    "request_id": "owner-r41-20261013-singleton-observer-cutover-25",
+    "started_at": "2026-10-13T04:03:41.606Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-singleton-observer-cutover-25",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
