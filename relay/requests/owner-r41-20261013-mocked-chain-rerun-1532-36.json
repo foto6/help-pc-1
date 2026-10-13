@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-mocked-chain-rerun-1532-36",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import pathlib,subprocess,base64,json,hashlib,concurrent.futures\nsha='5d46ed23cfc72350663fe8adf66255f584f2ab1a'\nfiles=json.loads(r'''{\"bin/pc-autonomy-daemon.js\":\"58b90319589a4984b7a37b7c0e59f99c49cb1afe\",\"package.json\":\"1910b8b290ff4da84eb0445bf3c5187d487d645e\",\"src/pc-autonomy-supervisor.js\":\"13ed3040bcbd28c4f9012c117788dca1670d35d2\",\"rehearsals/pc-autonomy-integration.mjs\":\"b7385800b23f7decdb5e0fc3ba768bf6e38e4a74\"}''')\nroot=pathlib.Path('E:/PCControlAutonomyR41/rehearsals/r41-r45-r50-mocked-1532-20261013')\nif root.exists():raise RuntimeError('ISOLATED_REHEARSAL_EXISTS_NO_OVERWRITE')\ndef blob(b):return hashlib.sha1(b'blob '+str(len(b)).encode()+bytes([0])+b).hexdigest()\ndef get(n):\n p=subprocess.run(['gh','api',f'repos/foto6/help-pc-2/contents/{n}?ref={sha}'],capture_output=True,text=True,timeout=16)\n if p.returncode:raise RuntimeError('GH_FETCH_'+n)\n j=json.loads(p.stdout);b=base64.b64decode(j['content'])\n if blob(b)!=files[n] or j['sha']!=files[n]:raise RuntimeError('GIT_SOURCE_BLOB_DRIFT_'+n)\n return n,b\nwith concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:src=dict(pool.map(get,files))\nroot.mkdir(parents=True)\nfor n,b in src.items():\n f=root/n;f.parent.mkdir(parents=True,exist_ok=True);f.write_bytes(b)\nr45=pathlib.Path('E:/WebAIBridge/app/data/operator-tools/r45-durable-autonomy/releases/28e4accf59e37e767c37585b85cdacbdbac62120/autonomy-r45-runner.js')\nr50=pathlib.Path('E:/PCControlAutonomyR41/bridge-r50-shadow/f4f59c973a07d11d38257b2f2d7f0e5f33778e54/autonomous-send-gate-r50.js')\nif not r45.is_file() or not r50.is_file():raise RuntimeError('PREVIOUS_VERIFIED_BRIDGE_COMPONENT_MISSING')\ncmd=['node.exe','rehearsals/pc-autonomy-integration.mjs',str(r45),str(r50)]\np=subprocess.run(cmd,cwd=root,capture_output=True,text=True,timeout=22)\nprint(json.dumps({'status':'R41_R45_R50_ISOLATED_MOCK_REHEARSAL','sourceSha':sha,'verifiedFiles':len(files),'exit':p.returncode,'stdout':p.stdout[-4200:],'stderr':p.stderr[-2600:],'realNetworkRequests':0,'realChatGPTMessages':0,'runningBridgeUntouched':True},ensure_ascii=True)[:6800])\nif p.returncode:raise SystemExit(3)\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 58000,
+  "note": "Corrected exact-source offline MOCK full-chain R41->R45->R50 with repo/branch/head identifiers; fresh E:/PCControlAutonomyR41/rehearsals scratch, blob verification, no live server/queue/profiles mutations, no network API hooks or provider Send. No replay unknown."
+}
