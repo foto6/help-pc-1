@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,pathlib\np=pathlib.Path('E:/pc-github-relay/.pc-relay/health.json')\nd=json.loads(p.read_text('utf8-sig'))\nsafe=lambda x: {k:x.get(k) for k in ('schema','version','status','state','observedAt','updatedAt','checkedAt','reconciliationRequired','reconciliation_required','syncState','lastPollAt','lastProgressAt','live','relayState','ready','runtime','producer') if k in x}\nprint(json.dumps({'topKeys':sorted(d.keys()),'top':safe(d),'nested':{k:safe(v) for k,v in d.items() if k in ('relay','executor','github','liveness','health','status') and isinstance(v,dict)}},ensure_ascii=True)[:3600])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\r\n  File \"<string>\", line 3, in <module>\r\n    d=json.loads(p.read_text('utf8-sig'))\r\n                 ~~~~~~~~~~~^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\pathlib\\_local.py\", line 546, in read_text\r\n    return PathBase.read_text(self, encoding, errors, newline)\r\n           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\pathlib\\_abc.py\", line 632, in read_text\r\n    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:\r\n         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n  File \"C:\\Program Files\\WindowsApps\\PythonSoftwareFoundation.Python.3.13_3.13.3824.0_x64__qbz5n2kfra8p0\\Lib\\pathlib\\_local.py\", line 537, in open\r\n    return io.open(self, mode, buffering, encoding, errors, newline)\r\n           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\nLookupError: unknown encoding: utf8-sig\r\n",
+      "stderr_bytes": 1090,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T03:23:27.282Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T03:23:27.073Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-pc-relay-health-fields-07"
+    },
+    "request_id": "owner-r41-20261013-pc-relay-health-fields-07",
+    "started_at": "2026-10-13T03:23:26.484Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-pc-relay-health-fields-07",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
