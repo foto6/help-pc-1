@@ -73,11 +73,21 @@ def _terminate_process_tree(process: subprocess.Popen[bytes]) -> None:
 
 
 def _drain_process_pipes(process: subprocess.Popen[bytes]) -> tuple[bytes, bytes]:
+    # Exception-path cleanup only. This helper must never replace the
+    # original timeout/cancellation outcome with its own TimeoutExpired.
+    # A spawned Windows descendant may outlive the direct process while
+    # inheriting stdout/stderr pipe handles; communicate() then cannot see
+    # EOF, even after the parent process has exited successfully.
     try:
-        return process.communicate(timeout=5)
+        return process.communicate(timeout=1)
     except subprocess.TimeoutExpired:
-        _terminate_process_tree(process)
-        return process.communicate(timeout=5)
+        if process.poll() is None:
+            _terminate_process_tree(process)
+        # Never call communicate() again. A grandchild that retained the
+        # inherited pipe handles can hold this open indefinitely. The caller
+        # will re-raise the original timeout/cancellation and keep its
+        # side effect UNKNOWN rather than incorrectly reporting success.
+        return b"", b""
 
 
 class SafeShellAdapter:
