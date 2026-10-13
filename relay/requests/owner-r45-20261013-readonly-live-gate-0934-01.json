@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r45-20261013-readonly-live-gate-0934-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json,subprocess,datetime\nB='http://127.0.0.1:17448'\ndef get(p):\n try:\n  with urllib.request.urlopen(B+p,timeout=2.5) as r:return json.load(r)\n except Exception as e:return {'error':type(e).__name__}\nh=get('/api/health');op=get('/api/operator-lifecycle');wd=get('/api/supervisor-watchdog?detect=0');mc=get('/api/supervisor-watchdog/managed-chats?inspect=0');a=get('/api/supervisor-watchdog/agent-assignments')\ntry:\n r=subprocess.run(['git','-C','E:/WebAIBridge','rev-parse','HEAD'],capture_output=True,text=True,timeout=3);head=r.stdout.strip() if r.returncode==0 else 'UNAVAILABLE'\nexcept Exception:head='UNAVAILABLE'\nprint(json.dumps({'observed':datetime.datetime.now().isoformat(timespec='seconds'),'sourceHead':head,'health':h.get('state'),'healthReasons':h.get('reasons'),'queue':h.get('assignmentQueue'),'operator':{'state':op.get('state'),'mode':op.get('mode'),'queuePaused':op.get('queuePaused')},'watchdog':{'enabled':wd.get('config',{}).get('enabled'),'mode':wd.get('config',{}).get('mode')},'chatsCount':len(mc.get('chats',[])),'assignmentsCount':len(a.get('assignments',[])),'assignmentCounts':a.get('counts'),'readOnly':True},ensure_ascii=True))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 26000,
+  "note": "Owner-authorized R45 read-only minimal local Bridge & exact source SHA attestation. No send, no Chrome action, no files written; no replay."
+}
