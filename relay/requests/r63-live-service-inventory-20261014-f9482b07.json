@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-live-service-inventory-20261014-f9482b07",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$root='E:\\WebAIBridge';$head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim();$dirty=@(& git.exe -C $root status --porcelain=v1 --untracked-files=no);$port=Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction Stop|Select-Object -First 1;$p=Get-CimInstance Win32_Process -Filter ('ProcessId='+$port.OwningProcess) -ErrorAction Stop;Write-Output ('BRIDGE_HEAD='+$head);Write-Output ('BRIDGE_TRACKED_DIRTY='+$dirty.Count);Write-Output ('BRIDGE_PID='+$p.ProcessId);Write-Output ('BRIDGE_PROCESS='+$p.Name);Write-Output ('BRIDGE_SERVERJS_CMDLINE='+([bool]($p.CommandLine -match 'server\\.js')));Write-Output ('BRIDGE_EXE_NODE='+($p.Name -eq 'node.exe'));$data='E:\\WebAIBridge\\app\\data';$files=@(Get-ChildItem -LiteralPath $data -File -Recurse -Force -ErrorAction SilentlyContinue);Write-Output ('DATA_FILES='+$files.Count);Write-Output ('DATA_MB='+[Math]::Round((($files|Measure-Object Length -Sum).Sum/1MB),2));$a=Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 5;Write-Output ('QUEUED='+@($a.assignments|Where-Object {$_.state -eq 'queued'}).Count);$c=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 5;Write-Output ('HOLD='+$c.cutoverState.holdActive)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Read-only process identity and bounded user data size before R63 reversible exact-SHA server-only rollout. No secret/data content"
+}
