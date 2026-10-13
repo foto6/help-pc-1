@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r61-native-r41-focused-tests-20261014-f6a9e3dd",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "cd /d E:\\PCControlR41-R61-VERIFY && node.exe --test test\\pc-autonomy.test.js > E:\\PCControlR41-R61-VERIFY\\R41_R61_INTEGRATION_TESTS.log 2>&1"
+    ],
+    "cwd": "E:\\PCControlR41-R61-VERIFY"
+  },
+  "timeout_ms": 25000,
+  "note": "One-time focused R41 native supervisor offline regressions on isolated exact clone; no scheduled monitoring or provider side effects"
+}
