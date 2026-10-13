@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r59-merge-resolve-r56-r50-20261014-6c60bb9f",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014'; $file=Join-Path $root 'app\\server.js'; $text=[System.IO.File]::ReadAllText($file); $re=[regex]::new('(?s)<<<<<<< ours\\r?\\n(.*?)=======\\r?\\n>>>>>>> theirs\\r?\\n'); $matches=$re.Matches($text); if($matches.Count -ne 1){throw 'EXPECTED_ONE_CONFLICT_BLOCK'}; $ours=$matches[0].Groups[1].Value; if(-not $ours.Contains('Re-observe the exact pinned page epoch immediately before Enter') -or -not $ours.Contains('existingTabsOnlyEnabled()') -or -not $ours.Contains('r56_pinned_page_not_ready')){throw 'UNRECOGNIZED_CONFLICT_HUNK'}; $next=$text.Remove($matches[0].Index,$matches[0].Length).Insert($matches[0].Index,$ours); if($next.Contains('<<<<<<<') -or $next.Contains('>>>>>>>')){throw 'REMAINING_CONFLICT_MARKERS'}; [System.IO.File]::WriteAllText($file,$next,(New-Object System.Text.UTF8Encoding($false))); & git.exe -C $root add -- app/server.js; if($LASTEXITCODE -ne 0){throw 'MERGED_FILE_STAGE_FAILED'}; $unmerged=@(& git.exe -C $root diff --name-only --diff-filter=U); Write-Output ('UNMERGED_COUNT='+$unmerged.Count); $modified=@(& git.exe -C $root diff --cached --name-only); Write-Output ('STAGED_FILE_COUNT='+$modified.Count); Write-Output ('MERGED_R56_GUARD_PRESERVED='+($next.Contains('r56_pinned_page_not_ready'))); Write-Output ('MERGED_R50_GUARD_PRESERVED='+($next.Contains('r50_autonomous_send_hold'))); Write-Output ('PRODUCTION_SERVER_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Resolve exactly one known safe R56-before-Enter guard conflict in separate merge candidate only, preserving R50 and owner hotfix files; no running bridge mutation"
+}
