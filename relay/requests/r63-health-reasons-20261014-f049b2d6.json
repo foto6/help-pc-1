@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-health-reasons-20261014-f049b2d6",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$h=Invoke-RestMethod 'http://127.0.0.1:17448/api/health' -TimeoutSec 7;Write-Output ('STATE='+$h.state);Write-Output ('REASONS='+(@($h.reasons)|ForEach-Object {[string]$_ -replace '[^a-zA-Z0-9_:\\-/.]','_'} -join ','}));Write-Output ('QUEUE='+($h.assignmentQueue|ConvertTo-Json -Compress -Depth 3));$s=Invoke-RestMethod 'http://127.0.0.1:17448/api/status' -TimeoutSec 7;Write-Output ('OPERATOR='+$s.operatorLifecycle.mode);Write-Output ('PAUSED='+$s.settings.paused)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only sanitized health reasons and operator pause state for R63; no provider mutation"
+}
