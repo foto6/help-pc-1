@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import urllib.request,json,pathlib,subprocess\nresult={'noMutations':True}\ntry:\n with urllib.request.urlopen('http://127.0.0.1:17448/api/supervisor-watchdog/managed-chats?inspect=1',timeout=15) as f:r=json.load(f)\n result['chats']=[{'id':x.get('id'),'status':x.get('status'),'generating':x.get('generating'),'draftPresent':x.get('draftPresent'),'openTabs':x.get('openTabs'),'high':x.get('highMode'),'pending':x.get('activeAssignmentCount')} for x in r.get('chats',[])]\nexcept Exception as e:result['inspectionError']=type(e).__name__\nsrc=pathlib.Path('E:/WebAIBridge')\nresult['restartLaunchers']=[p.name for p in src.glob('*.cmd') if any(w in p.name.upper() for w in ('START','STOP','RESTART'))][:28]\nresult['serverPath']=str(src/'app/server.js')\nprint(json.dumps(result,ensure_ascii=True)[:4000])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"noMutations\": true, \"chats\": [{\"id\": \"chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982\", \"status\": \"idle\", \"generating\": false, \"draftPresent\": false, \"openTabs\": 1, \"high\": true, \"pending\": 0}, {\"id\": \"agent-media\", \"status\": \"idle\", \"generating\": false, \"draftPresent\": false, \"openTabs\": 1, \"high\": true, \"pending\": 0}, {\"id\": \"chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c\", \"status\": \"idle\", \"generating\": false, \"draftPresent\": false, \"openTabs\": 1, \"high\": true, \"pending\": 0}, {\"id\": \"chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0\", \"status\": \"closed\", \"generating\": false, \"draftPresent\": false, \"openTabs\": 0, \"high\": false, \"pending\": 0}, {\"id\": \"agent-pc-control\", \"status\": \"working\", \"generating\": true, \"draftPresent\": false, \"openTabs\": 1, \"high\": true, \"pending\": 0}, {\"id\": \"chat-6ac45fb0-9074-83eb-99eb-397265b228e7\", \"status\": \"idle\", \"generating\": false, \"draftPresent\": false, \"openTabs\": 1, \"high\": true, \"pending\": 0}, {\"id\": \"tg-curator-owner\", \"status\": \"idle\", \"generating\": false, \"draftPresent\": false, \"openTabs\": 1, \"high\": true, \"pending\": 1}], \"restartLaunchers\": [], \"serverPath\": \"E:\\\\WebAIBridge\\\\app\\\\server.js\"}\r\n",
+      "stdout_bytes": 1138,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:22:42.374Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:22:42.142Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r50-20261013-live-restart-quiescence-08"
+    },
+    "request_id": "owner-r50-20261013-live-restart-quiescence-08",
+    "started_at": "2026-10-13T04:22:41.378Z",
+    "status": "completed"
+  },
+  "id": "owner-r50-20261013-live-restart-quiescence-08",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
