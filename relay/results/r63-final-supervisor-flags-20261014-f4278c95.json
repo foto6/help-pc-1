@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$u='http://127.0.0.1:17448';$s=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 5;$c=$s.config;Write-Output ('SUPERVISOR_ENABLED='+$c.enabled);Write-Output ('ALLOW_AUTONOMOUS_SEND='+$c.allowAutonomousSend);Write-Output ('AUTO_CONTINUE='+$c.autoContinueEnabled);Write-Output ('MIGRATION='+$c.migrationEnabled);Write-Output ('CHROME_OPEN_IF_MISSING='+$c.openExistingChatIfMissing);Write-Output ('PROFILE_RECOVERY='+$c.allowProfileRecovery);Write-Output ('CLOSE_CHAT_ON_BACKOFF='+$c.closeChatDuringProviderBackoff);Write-Output ('HIGH_ENFORCED='+$c.enforceHighMode)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "SUPERVISOR_ENABLED=False\r\nALLOW_AUTONOMOUS_SEND=False\r\nAUTO_CONTINUE=False\r\nMIGRATION=False\r\nCHROME_OPEN_IF_MISSING=False\r\nPROFILE_RECOVERY=False\r\nCLOSE_CHAT_ON_BACKOFF=False\r\nHIGH_ENFORCED=True\r\n",
+      "stdout_bytes": 196,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:47:41.747Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:47:41.516Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-final-supervisor-flags-20261014-f4278c95"
+    },
+    "request_id": "r63-final-supervisor-flags-20261014-f4278c95",
+    "started_at": "2026-10-13T21:47:40.741Z",
+    "status": "completed"
+  },
+  "id": "r63-final-supervisor-flags-20261014-f4278c95",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
