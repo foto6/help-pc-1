@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-post-unknown-short-read-20261014-e913a0c7",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "git.exe -C E:\\WebAIBridge rev-parse HEAD & if exist E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\R62_LIVE_CUTOVER_REPORT.json (echo CUTOVER_REPORT_PRESENT) else (echo CUTOVER_REPORT_MISSING) & if exist E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\R62_LIVE_CUTOVER_OUTPUT.log (echo CUTOVER_LOG_PRESENT) else (echo CUTOVER_LOG_MISSING)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "READ ONLY reconcile UNKNOWN original cutover: exact local Git head and existence of original report/log. No restart, rollback, mutation or retry."
+}
