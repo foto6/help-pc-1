@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-r43-windows-shadow-test-20261014-73fc86a9",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "if exist E:\\PCControlR43-SHADOW exit /b 9 & git.exe clone --depth 1 --single-branch --branch agent/pc-r43-bounded-child-pipe-cleanup-20261014 https://github.com/foto6/help-pc-1.git E:\\PCControlR43-SHADOW > E:\\PCControlR43_CLONE.log 2>&1 & if errorlevel 1 exit /b 7 & cd /d E:\\PCControlR43-SHADOW & set PYTHONPATH=src&& py.exe -3 -m pytest tests\\test_shell_pipe_drain.py > E:\\PCControlR43_TESTS.log 2>&1"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 32000,
+  "note": "Isolated new exact-source R43 Windows Python test run, private log redirection, never touch running PC Control relay or WebAIBridge"
+}
