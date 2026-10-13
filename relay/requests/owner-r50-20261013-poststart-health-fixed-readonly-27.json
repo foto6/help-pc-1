@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r50-20261013-poststart-health-fixed-readonly-27",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import json,urllib.request,subprocess,pathlib,hashlib,time\nB='http://127.0.0.1:17448'\ndef get(route,timeout=6):\n with urllib.request.urlopen(B+route,timeout=timeout) as f:return json.load(f)\nobserved=[]\nfor k in range(3):\n try:\n  h=get('/api/health')\n  observed.append({'state':h.get('state'),'reasons':h.get('reasons',[])[:8],'codeReload':(h.get('codeReload') or {}).get('state')})\n  if h.get('state')=='PAUSED' and not h.get('reasons'):break\n except Exception as e:observed.append({'error':type(e).__name__})\n if k<2:time.sleep(2)\nop=get('/api/operator-lifecycle');c=get('/api/projects/control-plane/cutover-r42/status');q=get('/api/supervisor-watchdog/agent-assignments');s=get('/api/supervisor-watchdog?detect=0').get('config',{})\nprof=get('/api/ai-profiles').get('aiProfiles',[])\nqueued=[x for x in q.get('assignments',[]) if x.get('state')=='queued']\nrunning=[x for x in q.get('assignments',[]) if x.get('state') in ('dispatching','running','awaiting_evidence')]\nps=subprocess.run(['powershell.exe','-NoProfile','-Command',\"\"\"$x=Get-CimInstance Win32_Process -Filter 'ProcessId = 18996'; if($x){[pscustomobject]@{Pid=$x.ProcessId;Name=$x.Name;CommandLine=$x.CommandLine}|ConvertTo-Json -Compress}\"\"\"],capture_output=True,text=True,timeout=6)\nlive=json.loads(ps.stdout) if ps.returncode==0 and ps.stdout.strip() else {}\np=pathlib.Path('E:/WebAIBridge/app/server.js')\nraw=p.read_bytes();blob=hashlib.sha1(b'blob '+str(len(raw)).encode()+bytes([0])+raw).hexdigest()\nprint(json.dumps({'healthChecks':observed,'pid18996Matches':live.get('Pid')==18996 and live.get('Name')=='node.exe' and 'WebAIBridge' in live.get('CommandLine',''),'r50SourceExact':blob=='2079e3bd3dd3d26787e8b468f626b18f12cc5a11','queuePaused':op.get('queuePaused'),'r42Hold':c.get('cutoverState',{}).get('holdActive'),'watchdogMode':s.get('mode'),'allowAutonomousSend':s.get('allowAutonomousSend'),'curatorQueuedUnsent':len(queued)==1 and queued[0].get('targetChatId')=='tg-curator-owner' and queued[0].get('dispatchSubmitAttempted') is False,'activeAssignments':len(running),'profileWorkersConnected':sum(x.get('workerConnected') is True for x in prof),'profileCount':len(prof),'readOnly':True},ensure_ascii=True)[:4100])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 27000,
+  "note": "Read-only post-boot R50 health probe corrected Python local bytes shadowing error; previous 26 completed before printing without any side effects. Verify new PID, source, pause/HOLD/curator and profiles."
+}
