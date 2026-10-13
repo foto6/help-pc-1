@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; Write-Output ('SOURCE_SHA='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim()); try{$h=Invoke-RestMethod 'http://127.0.0.1:17448/api/health' -TimeoutSec 3;Write-Output ('BRIDGE_HEALTH='+$h.state)}catch{Write-Output 'BRIDGE_HEALTH=UNAVAILABLE'}; try{$c=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 3;Write-Output ('R42_HOLD='+$c.cutoverState.holdActive);Write-Output ('R42_STATUS='+$c.cutoverState.status)}catch{Write-Output 'R42_STATUS=UNAVAILABLE'}; try{$a=Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 4;Write-Output ('ACTIVE_ASSIGNMENTS='+@($a.assignments|Where-Object {$_.state -in @('dispatching','running','awaiting_evidence')}).Count);Write-Output ('QUEUED_ASSIGNMENTS='+@($a.assignments|Where-Object {$_.state -eq 'queued'}).Count)}catch{Write-Output 'ASSIGNMENT_STATE=UNAVAILABLE'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "SOURCE_SHA=d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2\r\nBRIDGE_HEALTH=PAUSED\r\nR42_HOLD=True\r\nR42_STATUS=CUTOVER_HOLD_PREPARED\r\nACTIVE_ASSIGNMENTS=0\r\nQUEUED_ASSIGNMENTS=1\r\n",
+      "stdout_bytes": 168,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:08:22.391Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:08:22.151Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-final-production-safe-state-20261014-a5e70f8c"
+    },
+    "request_id": "r63-final-production-safe-state-20261014-a5e70f8c",
+    "started_at": "2026-10-13T21:08:21.269Z",
+    "status": "completed"
+  },
+  "id": "r63-final-production-safe-state-20261014-a5e70f8c",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
