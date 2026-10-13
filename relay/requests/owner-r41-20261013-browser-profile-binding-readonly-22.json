@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-browser-profile-binding-readonly-22",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json\nbase='http://127.0.0.1:17448'\ntry:\n with urllib.request.urlopen(base+'/api/ai-profiles',timeout=6) as r:d=json.load(r)\n rows=d.get('aiProfiles',[])\n def r(x):\n  return {k:x.get(k) for k in ['id','name','provider','debugPort','chromeLaunchMode','attachAutoStart','workerConnected','workerLastSeenAt','enabled','lastLaunchAt','launchError','chromeProfilePath','status'] if k in x and k!='chromeProfilePath'}\n print(json.dumps({'profiles':[r(x) for x in rows],'count':len(rows),'systemKeys':sorted((d.get('system') or {}).keys())[:30],'readOnly':True},ensure_ascii=True)[:3600])\nexcept Exception as e:print(json.dumps({'errorType':type(e).__name__}))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Read-only Bridge Chrome profile debugPort/lifecycle identity only; no cookies, credentials, content, changes or provider Send."
+}
