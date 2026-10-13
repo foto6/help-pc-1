@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-observer-cutover-preflight-16",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import pathlib,os,subprocess,json\nroot=pathlib.Path('E:/PCControlAutonomyR41')\nold='506f9a951f9b782e27b0d886e441b6747095e3fc'\nnew='6f03a58c7c29adfbb8dbe936274d147f45404418'\nsource=root/'releases'/new\nm=json.loads((source/'MANIFEST.json').read_text('utf8')) if (source/'MANIFEST.json').is_file() else {}\ncfg=json.loads((root/'config.r41-integrated.json').read_text('utf8'))\nstate=json.loads((root/'data/pc-control-supervisor.json').read_text('utf8'))\nowner=json.loads((root/'WATCHER_R41.json').read_text('utf8'))\np=owner['pid']\nq=\"\"\"$a=Get-CimInstance Win32_Process -Filter 'ProcessId = %s'; if ($a) {[pscustomobject]@{name=$a.Name;cmd=$a.CommandLine} | ConvertTo-Json -Compress}\"\"\"%p\nr=subprocess.run(['powershell.exe','-NoProfile','-Command',q],capture_output=True,text=True,timeout=8)\nd=json.loads(r.stdout.strip()) if r.returncode==0 and r.stdout.strip() else {}\ns=(root/'START_R41_OBSERVER.cmd').read_text(encoding='utf8')\nentry=pathlib.Path(os.environ['APPDATA'])/'Microsoft/Windows/Start Menu/Programs/Startup/PCControl_R41_Observer.cmd'\nprint(json.dumps({'sourceVerified':m.get('sha')==new and m.get('tests')=='PASS','mode':cfg.get('mode'),'operatorApproved':cfg.get('operatorApproved'),'plan':cfg['r45']['plan'],'pendingUnknown':state.get('pendingUnknown'),'journalRevision':state.get('revision'),'oldPid':p,'liveNode':d.get('name')=='node.exe' and str(root/'releases'/old/'bin/pc-autonomy-daemon.js') in str(d.get('cmd','')) and '--watch' in str(d.get('cmd','')),'startOldSource':str(root/'releases'/old/'bin/pc-autonomy-daemon.js') in s,'startHasDispatch':'--dispatch' in s,'startupOwned':entry.exists(),'r49Untouched':True,'readOnly':True},ensure_ascii=True))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only preflight for exact source R41 observer no-Send live switchover. Verify real PID, old launcher, exact latest tests, journal state. Do not restart anything in this request."
+}
