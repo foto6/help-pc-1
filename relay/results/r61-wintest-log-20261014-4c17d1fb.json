@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$f='E:\\WebAIBridge-R61-SHADOW\\R61_TESTS.log';Write-Output ('BYTES='+(Get-Item -LiteralPath $f).Length);Get-Content -LiteralPath $f -Tail 90"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "BYTES=29844\r\n  duration_ms: 0.6049\r\n  type: 'test'\r\n  ...\r\n# Subtest: R56 preflight never echoes unknown assignment state strings or approves unresolved work\r\nok 130 - R56 preflight never echoes unknown assignment state strings or approves unresolved work\r\n  ---\r\n  duration_ms: 0.2772\r\n  type: 'test'\r\n  ...\r\n# Subtest: R56 missing staged source or auto-continue enabled blocks read-only staging readiness\r\nok 131 - R56 missing staged source or auto-continue enabled blocks read-only staging readiness\r\n  ---\r\n  duration_ms: 0.2293\r\n  type: 'test'\r\n  ...\r\n# Subtest: R56 worker refuses creating ChatGPT tabs even if broker is skipped\r\nok 132 - R56 worker refuses creating ChatGPT tabs even if broker is skipped\r\n  ---\r\n  duration_ms: 3.3021\r\n  type: 'test'\r\n  ...\r\n# Subtest: R56 worker reuses exact ChatGPT page without reload or navigation\r\nok 133 - R56 worker reuses exact ChatGPT page without reload or navigation\r\n  ---\r\n  duration_ms: 2.5957\r\n  type: 'test'\r\n  ...\r\n# Subtest: R56 worker refuses wrong URL and login-required surface before mutations\r\nok 134 - R56 worker refuses wrong URL and login-required surface before mutations\r\n  ---\r\n  duration_ms: 2.5052\r\n  type: 'test'\r\n  ...\r\n# Subtest: R56 worker refuses managed_agent_instruction before acquiring any broker lease\r\nok 135 - R56 worker refuses managed_agent_instruction before acquiring any broker lease\r\n  ---\r\n  duration_ms: 1.9309\r\n  type: 'test'\r\n  ...\r\n# Subtest: R56 worker does not enter Google login recovery when preserving tabs\r\nok 136 - R56 worker does not enter Google login recovery when preserving tabs\r\n  ---\r\n  duration_ms: 1.1733\r\n  type: 'test'\r\n  ...\r\n# Subtest: R56 worker broker target check rejects missing or ambiguous same URL\r\nok 137 - R56 worker broker target check rejects missing or ambiguous same URL\r\n  ---\r\n  duration_ms: 1.2987\r\n  type: 'test'\r\n  ...\r\n# Subtest: R56 worker refuses broker swapping an exact pinned target\r\nok 138 - R56 worker refuses broker swapping an exact pinned target\r\n  ---\r\n  duration_ms: 1.2392\r\n  type: 'test'\r\n  ...\r\n# Subtest: R56 worker guards all direct Chrome reload/navigation and login routes\r\nok 139 - R56 worker guards all direct Chrome reload/navigation and login routes\r\n  ---\r\n  duration_ms: 0.5358\r\n  type: 'test'\r\n  ...\r\n# Subtest: R58 shadow rehearsal cannot overwrite the existing working-tree or manhwa\r\nok 140 - R58 shadow rehearsal cannot overwrite the existing working-tree or manhwa\r\n  ---\r\n  duration_ms: 1.7666\r\n  type: 'test'\r\n  ...\r\n# Subtest: R58 shadow evidence never claims authority to dispatch or promote\r\nok 141 - R58 shadow evidence never claims authority to dispatch or promote\r\n  ---\r\n  duration_ms: 0.3006\r\n  type: 'test'\r\n  ...\r\n# Subtest: R58 shadow runs all guarded tests, not an unattended npm installation\r\nok 142 - R58 shadow runs all guarded tests, not an unattended npm installation\r\n  ---\r\n  duration_ms: 0.3659\r\n  type: 'test'\r\n  ...\r\n1..142\r\n# tests 142\r\n# suites 0\r\n# pass 141\r\n# fail 1\r\n# cancelled 0\r\n# skipped 0\r\n# todo 0\r\n# duration_ms 701.8861\r\n",
+      "stdout_bytes": 3023,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T20:27:24.944Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T20:27:24.717Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r61-wintest-log-20261014-4c17d1fb"
+    },
+    "request_id": "r61-wintest-log-20261014-4c17d1fb",
+    "started_at": "2026-10-13T20:27:23.946Z",
+    "status": "completed"
+  },
+  "id": "r61-wintest-log-20261014-4c17d1fb",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
