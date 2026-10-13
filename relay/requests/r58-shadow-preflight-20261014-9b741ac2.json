@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r58-shadow-preflight-20261014-9b741ac2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $p='E:\\WebAIBridge\\app\\server.js'; $shadow='E:\\WebAIBridge-R58-SHADOW'; Write-Output ('SHADOW_EXISTS='+(Test-Path -LiteralPath $shadow)); Write-Output ('PROD_EXISTS='+(Test-Path -LiteralPath $p -PathType Leaf)); if(Test-Path -LiteralPath $p -PathType Leaf){ Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath $p -Algorithm SHA256).Hash) }; Write-Output ('NODE='+(& node.exe --version)); Write-Output ('GIT='+(& git.exe --version)); $head=& git.exe ls-remote https://github.com/foto6/WebAIBridge.git refs/heads/agent/bridge-r58-gpt-warm-sticky-integration-20261014; if($LASTEXITCODE -ne 0){throw 'R58_REMOTE_UNAVAILABLE'}; Write-Output ('R58_REMOTE='+($head -join ' '))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "R58 staging read-only preflight; no restart, no edits, no tab actions"
+}
