@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r59-patchcheck-cmd-20261014-9a8164de",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "cd /d E:\\WebAIBridge-R59-SHADOW && git.exe apply --check E:\\WebAIBridge-R59-OWNER-BACKUP-20261014-v1\\tracked-local-changes.patch"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Non-mutating git apply --check only on backed up owner's six-file patch against isolated R59, diagnose conflicts via stderr"
+}
