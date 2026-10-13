@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r62-untracked-inventory-20261014-fce82371",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Continue'; $root='E:\\WebAIBridge'; $raw=@(& git.exe -C $root status --porcelain=v1 --untracked-files=all); $untracked=@($raw|Where-Object {$_.StartsWith('?? ')}); $other=@($raw|Where-Object {-not $_.StartsWith('?? ')}); Write-Output ('UNTRACKED_COUNT='+$untracked.Count); Write-Output ('OTHER_STATUS_COUNT='+$other.Count); foreach($row in @($untracked|Select-Object -First 35)){ $p=$row.Substring(3);if($p -match '(?i)(secret|token|credential|key|cookie|password|env|backup|session|data/)'){Write-Output 'UNTRACKED=[sensitive filename omitted]'}else{Write-Output ('UNTRACKED='+$p)}}; $fp='E:\\WebAIBridge\\app\\autonomous-send-gate-r50.js'; Write-Output ('R50_UNTRACKED_EXISTS='+(Test-Path -LiteralPath $fp -PathType Leaf)); if(Test-Path -LiteralPath $fp -PathType Leaf){Write-Output ('R50_BLOB_SHA='+((& git.exe -C $root hash-object --no-filters -- $fp)|Out-String).Trim());Write-Output ('R50_BYTES='+(Get-Item -LiteralPath $fp).Length)}; Write-Output ('PROD_SERVER_HASH='+(Get-FileHash -LiteralPath (Join-Path $root 'app\\server.js') -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Read-only bounded git untracked inventory, omit sensitive filenames and values, hash only specific observed untracked R50 module; no edits"
+}
