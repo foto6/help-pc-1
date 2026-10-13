@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,subprocess,json,os\nr=pathlib.Path('E:/PCControlAutonomyR41');old='155b63e097ddf65c82554f517be0551e319d0517';new='195cc8acc9faddfcca1e14e7a4c5063f109ffb4a'\nowner=json.loads((r/'WATCHER_R41.json').read_text('utf8'))\nj=json.loads((r/'data/pc-control-supervisor.json').read_text('utf8'))\ncfg=json.loads((r/'config.r41-integrated.json').read_text('utf8'))\nrelease=json.loads((r/'releases'/new/'MANIFEST.json').read_text('utf8'))\np=subprocess.run(['powershell.exe','-NoProfile','-Command',\"\"\"$x=@(Get-CimInstance Win32_Process|Where-Object {$_.Name -ieq 'node.exe' -and $_.CommandLine -like '*PCControlAutonomyR41*pc-autonomy-daemon.js*'}|Select-Object ProcessId,CommandLine);$x|ConvertTo-Json -Compress\"\"\"],capture_output=True,text=True,timeout=8)\nrows=json.loads(p.stdout) if p.returncode==0 and p.stdout.strip() else []\nif isinstance(rows,dict):rows=[rows]\nout={'ownerPid':owner.get('pid'),'ownerSha':owner.get('source'),'processes':[{'pid':x.get('ProcessId'),'old':old in x.get('CommandLine',''),'new':new in x.get('CommandLine',''),'watch':'--watch' in x.get('CommandLine',''),'dispatch':'--dispatch' in x.get('CommandLine','')} for x in rows],'journalRevision':j.get('revision'),'lastStatus':(j.get('lastDecision') or {}).get('status'),'pendingUnknown':len(j.get('pendingUnknown',[])),'pendingDispatch':j.get('pendingDispatch'),'mode':cfg.get('mode'),'approved':cfg.get('operatorApproved'),'startOld':old in (r/'START_R41_OBSERVER.cmd').read_text('utf8'),'stopOld':old in (r/'STOP_R41_USER_OBSERVER.ps1').read_text('utf8'),'newReleaseVerified':release.get('sha')==new and release.get('tests')=='PASS','startupOwned':(pathlib.Path(os.environ['APPDATA'])/'Microsoft/Windows/Start Menu/Programs/Startup/PCControl_R41_Observer.cmd').is_file(),'readOnly':True}\nprint(json.dumps(out,ensure_ascii=True)[:2400])"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"ownerPid\": 13384, \"ownerSha\": \"155b63e097ddf65c82554f517be0551e319d0517\", \"processes\": [{\"pid\": 13384, \"old\": true, \"new\": false, \"watch\": true, \"dispatch\": false}], \"journalRevision\": 232, \"lastStatus\": \"READ_ONLY\", \"pendingUnknown\": 0, \"pendingDispatch\": null, \"mode\": \"observe\", \"approved\": false, \"startOld\": true, \"stopOld\": true, \"newReleaseVerified\": true, \"startupOwned\": true, \"readOnly\": true}\r\n",
+      "stdout_bytes": 407,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T07:17:19.686Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T07:17:19.456Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-writeahead-live-preflight-32"
+    },
+    "request_id": "owner-r41-20261013-writeahead-live-preflight-32",
+    "started_at": "2026-10-13T07:17:18.104Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-writeahead-live-preflight-32",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
