@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r58-outcome-lookup-20261014-c34d49f8",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "r58-win-tests-r50-r56-20261014-a872d1c6",
+    "action": "shell.run"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only durable outcome reconciliation for original timed-out R58 test request, never replay execution"
+}
