@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,pathlib,subprocess,urllib.request\nr=pathlib.Path('E:/WebAIBridge')\ntarget=r/'app/server.js'\ndef proc(args,timeout=4):\n try:\n  p=subprocess.run(args,cwd=r,capture_output=True,text=True,timeout=timeout)\n  return p.stdout.strip() if p.returncode==0 else 'UNAVAILABLE'\n except Exception:return 'UNAVAILABLE'\nhashValue=proc(['git','hash-object',str(target)])\nstatus=proc(['git','status','--porcelain','--','app/server.js','app/autonomous-send-gate-r50.js'])\nhead=proc(['git','rev-parse','HEAD'])\ndef api(route):\n try:\n  with urllib.request.urlopen('http://127.0.0.1:17448'+route,timeout=4) as f:return json.load(f)\n except Exception as e:return {'error':type(e).__name__}\nop=api('/api/operator-lifecycle');hold=api('/api/projects/control-plane/cutover-r42/status')\nhealth=api('/api/health')\ncurrent=api('/api/supervisor-watchdog/agent-assignments')\nactive=[x.get('id') for x in current.get('assignments',[]) if x.get('state') in ('dispatching','running','awaiting_evidence')]\npreviews=api('/api/supervisor-watchdog/managed-chats')\np=subprocess.run(['powershell.exe','-NoProfile','-Command',\"\"\"Get-CimInstance Win32_Process | Where-Object {$_.CommandLine -like '*WebAIBridge*' -and ($_.Name -match 'node|python|powershell')} | Select-Object -First 9 ProcessId,Name,CommandLine | ConvertTo-Json -Compress\"\"\"],capture_output=True,text=True,timeout=8)\nrows=json.loads(p.stdout) if p.returncode==0 and p.stdout.strip() else []\nif isinstance(rows,dict):rows=[rows]\nps=[{'pid':x.get('ProcessId'),'process':x.get('Name'),'serverJs':('server.js' in (x.get('CommandLine') or '')),'sourceRepo':'WebAIBridge' in (x.get('CommandLine') or '')} for x in rows]\nprint(json.dumps({'serverGitBlob':hashValue,'expectedR49Blob':'702708f54a2570962be0a6839c4eb419ab8b9805','serverSourceExact':hashValue=='702708f54a2570962be0a6839c4eb419ab8b9805','targetPathsPorcelain':status[:300],'head':head,'hold':hold.get('cutoverState',{}).get('holdActive'),'queuePaused':op.get('queuePaused'),'health':health.get('state'),'activeAssignments':active,'cachedChats':len(previews.get('chats',[])),'serverProcesses':ps,'readOnly':True},ensure_ascii=True)[:3600])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"serverGitBlob\": \"702708f54a2570962be0a6839c4eb419ab8b9805\", \"expectedR49Blob\": \"702708f54a2570962be0a6839c4eb419ab8b9805\", \"serverSourceExact\": true, \"targetPathsPorcelain\": \"\", \"head\": \"5da11c6b2a3eedea1878c9fe17f3af3aa6d8bd03\", \"hold\": true, \"queuePaused\": true, \"health\": \"PAUSED\", \"activeAssignments\": [], \"cachedChats\": 7, \"serverProcesses\": [{\"pid\": 6400, \"process\": \"node.exe\", \"serverJs\": true, \"sourceRepo\": true}, {\"pid\": 8168, \"process\": \"node.exe\", \"serverJs\": false, \"sourceRepo\": true}, {\"pid\": 9904, \"process\": \"node.exe\", \"serverJs\": false, \"sourceRepo\": true}, {\"pid\": 8352, \"process\": \"python.exe\", \"serverJs\": true, \"sourceRepo\": true}, {\"pid\": 6340, \"process\": \"powershell.exe\", \"serverJs\": false, \"sourceRepo\": true}], \"readOnly\": true}\r\n",
+      "stdout_bytes": 761,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:22:13.063Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:22:12.783Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r50-20261013-production-hotfix-readiness-07"
+    },
+    "request_id": "owner-r50-20261013-production-hotfix-readiness-07",
+    "started_at": "2026-10-13T04:22:11.311Z",
+    "status": "completed"
+  },
+  "id": "owner-r50-20261013-production-hotfix-readiness-07",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
