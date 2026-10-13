@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r61-r41-native-compat-20261014-7bf946c2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $dst='E:\\PCControlR41-R61-VERIFY'; $expect='5d46ed23cfc72350663fe8adf66255f584f2ab1a'; if(Test-Path -LiteralPath $dst){throw 'ISOLATED_R41_EXISTS'}; & git.exe clone --depth 1 --single-branch --no-tags --branch agent/pc-autonomy-r41-native-supervisor-20261013 https://github.com/foto6/help-pc-2.git $dst; if($LASTEXITCODE -ne 0){throw 'R41_CLONE_FAILED'}; $got=((& git.exe -C $dst rev-parse HEAD)|Out-String).Trim(); if($got -ne $expect){throw 'R41_EXACT_SHA_DRIFT'}; $env:PC_R61_PACKAGE='E:\\PCControlAutonomyR61-SHADOW\\autonomy-r45-runner.js'; $env:PC_R61_SHA='d17d0cfe8037b157cc28cef2f8cd3ad3420f6fa2'; Push-Location $dst; try {& node.exe --input-type=module -e 'import {verifyR45Release} from \"./bin/pc-autonomy-daemon.js\"; const p=verifyR45Release({r45:{runner:process.env.PC_R61_PACKAGE,sha:process.env.PC_R61_SHA}});if(p!==process.env.PC_R61_PACKAGE)throw Error(\"PATH_MISMATCH\"); console.log(\"R61_MANIFEST_VERIFIED_NINE_FILES\");'; if($LASTEXITCODE -ne 0){throw 'R41_RELEASE_VERIFICATION_FAILED'}} finally {Pop-Location}; Write-Output ('R41_VERIFIER_HEAD='+$got); Write-Output ('R61_PACKAGE_SHA='+$env:PC_R61_SHA); Write-Output ('PROD_HASH='+(Get-FileHash 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 42000,
+  "note": "Test isolated exact R41 native release-manifest validator against nine-module immutable R61 package. No existing supervisor config read/restart and no production or Chrome mutation"
+}
