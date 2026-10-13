@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r41-20261013-exact-chat-queue-authority-21",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import urllib.request,json\nbase='http://127.0.0.1:17448'\nresult={}\nfor route,key in [('/api/supervisor-watchdog/managed-chats','chats'),('/api/supervisor-watchdog/agent-assignments','assignments')]:\n try:\n  with urllib.request.urlopen(base+route,timeout=6) as f:d=json.load(f)\n  result[key]={'keys':sorted(d)[:24],'error':None}\n  if key=='chats':\n   rows=d.get('chats',d.get('managedChats',[]))\n   result[key]['count']=len(rows) if isinstance(rows,list) else None\n   result[key]['rows']=[{k:x.get(k) for k in ['id','managedChatId','chatId','title','profileId','provider','status','url','tabCount','activeAssignmentCount','lastSeenAt'] if x.get(k) is not None} for x in rows[:12]] if isinstance(rows,list) else []\n  else:\n   rows=d.get('assignments',[])\n   statuses={}\n   for x in rows:statuses[str(x.get('state'))]=statuses.get(str(x.get('state')),0)+1\n   result[key]['count']=len(rows)\n   result[key]['statuses']=statuses\n   result[key]['queued']=[{k:x.get(k) for k in ['id','state','managedChatId','targetChatId','targetProfileId','dispatchCount','dispatchSubmitAttempted','lastPreflightReason','lastPreflightAt'] if x.get(k) is not None} for x in rows if x.get('state')=='queued'][:3]\n except Exception as e:result[key]={'error':type(e).__name__}\nprint(json.dumps({'result':result,'readOnly':True,'noProviderTextRead':True},ensure_ascii=True)[:7000])\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22000,
+  "note": "R41 read-only managed-chat registry and assignment queue exact identity, no CDP page inspection or user message content, no Send/mutation."
+}
