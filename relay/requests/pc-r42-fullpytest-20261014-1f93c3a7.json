@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "pc-r42-fullpytest-20261014-1f93c3a7",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "set PYTHONPATH=src&& py.exe -3 -m pytest > E:\\PCControlR42-SHADOW\\R42_ALL_TESTS.log 2>&1"
+    ],
+    "cwd": "E:\\PCControlR42-SHADOW"
+  },
+  "timeout_ms": 60000,
+  "note": "Isolated full PC Executor R42 Python test suite, output redirected to shadow file, no production/PC relay updates"
+}
