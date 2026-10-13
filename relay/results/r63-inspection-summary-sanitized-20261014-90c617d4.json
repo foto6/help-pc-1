@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$f='E:\\WebAIBridge-R63-OPERATOR-BACKUP-20261014-v1\\R63_MANAGED_INSPECT.json';if(-not(Test-Path -LiteralPath $f -PathType Leaf)){throw 'INSPECTION_FILE_MISSING'};$o=Get-Content -LiteralPath $f -Raw -Encoding UTF8|ConvertFrom-Json;$c=@($o.chats);Write-Output ('INSPECTED='+$o.inspected);Write-Output ('CHAT_COUNT='+$c.Count);Write-Output ('HIGH_MODE='+@($c|Where-Object {$_.highMode -eq $true}).Count);Write-Output ('IDLE='+@($c|Where-Object {$_.status -eq 'idle'}).Count);Write-Output ('IDLE_HIGH='+@($c|Where-Object {$_.status -eq 'idle' -and $_.highMode -eq $true -and $_.openTabs -eq 1 -and -not $_.draftPresent -and -not $_.generating -and -not $_.providerLoadError -and -not $_.contextLimit}).Count);for($i=0;$i -lt $c.Count;$i++){$x=$c[$i];Write-Output ('CHAT_'+($i+1)+'='+($x.status)+',high='+$x.highMode+',tabs='+$x.openTabs+',sticky='+$x.stickySession.status+',draft='+$x.draftPresent+',gen='+$x.generating+',limit='+$x.contextLimit+',error='+$x.providerLoadError)}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "INSPECTED=True\r\nCHAT_COUNT=7\r\nHIGH_MODE=6\r\nIDLE=5\r\nIDLE_HIGH=5\r\nCHAT_1=idle,high=True,tabs=1,sticky=UNPINNED,draft=False,gen=False,limit=False,error=False\r\nCHAT_2=idle,high=True,tabs=1,sticky=UNPINNED,draft=False,gen=False,limit=False,error=False\r\nCHAT_3=idle,high=True,tabs=1,sticky=UNPINNED,draft=False,gen=False,limit=False,error=False\r\nCHAT_4=closed,high=False,tabs=0,sticky=TARGET_MISSING,draft=False,gen=False,limit=False,error=False\r\nCHAT_5=stalled,high=True,tabs=1,sticky=UNPINNED,draft=False,gen=True,limit=False,error=False\r\nCHAT_6=idle,high=True,tabs=1,sticky=UNPINNED,draft=False,gen=False,limit=False,error=False\r\nCHAT_7=idle,high=True,tabs=1,sticky=UNPINNED,draft=False,gen=False,limit=False,error=False\r\n",
+      "stdout_bytes": 719,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T21:43:39.461Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T21:43:39.210Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r63-inspection-summary-sanitized-20261014-90c617d4"
+    },
+    "request_id": "r63-inspection-summary-sanitized-20261014-90c617d4",
+    "started_at": "2026-10-13T21:43:38.258Z",
+    "status": "completed"
+  },
+  "id": "r63-inspection-summary-sanitized-20261014-90c617d4",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
