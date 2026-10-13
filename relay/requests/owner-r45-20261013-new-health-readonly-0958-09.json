@@ -1,0 +1,15 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "owner-r45-20261013-new-health-readonly-0958-09",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "python.exe",
+      "-c",
+      "import subprocess,json,pathlib\nsha='b2b6e468050d929abc9e1d364c27d831a0ea89e6';base=pathlib.Path('E:/WebAIBridge/app/data/operator-tools/r45-durable-autonomy');release=base/'releases'/sha\ncmd=['node','autonomy-r45-runner.js','--plan',str(release/'autonomy-r45-plan.example.json'),'--state',str(base/'data'/'read-only-diagnostics.state.json'),'--once']\ntry:\n r=subprocess.run(cmd,cwd=release,capture_output=True,text=True,timeout=18)\n output=json.loads(r.stdout.strip().splitlines()[-1]) if r.returncode==0 else {}\n print(json.dumps({'exitCode':r.returncode,'status':output.get('status'),'bridge':output.get('bridge'),'dispatched':output.get('dispatched'),'source':sha,'sent':False,'monitorStarted':False,'error':r.stderr[-300:]},ensure_ascii=True))\nexcept subprocess.TimeoutExpired:print(json.dumps({'error':'bounded_read_only_timeout','sent':False}))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 28000,
+  "note": "Read-only v2 R45 installed coordinator one-shot against current local cached Bridge. Sanitized Bridge HEALTH/queue output, no assignment text, no --dispatch or --brain, no Chrome or service mutation."
+}
