@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r61-wintest-log-20261014-4c17d1fb",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$f='E:\\WebAIBridge-R61-SHADOW\\R61_TESTS.log';Write-Output ('BYTES='+(Get-Item -LiteralPath $f).Length);Get-Content -LiteralPath $f -Tail 90"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read only last 90 lines of R61 test log after completed failing run; no rerun, no production changes"
+}
