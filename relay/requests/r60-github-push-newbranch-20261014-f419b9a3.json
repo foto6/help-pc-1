@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r60-github-push-newbranch-20261014-f419b9a3",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R59-MERGE-CANDIDATE-20261014'; $sha='41ae7146b397353495dd4d8b3ddddc00a8ea434a'; $branch='agent/bridge-r60-production-hotfix-integration-20261014'; $head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($head -ne $sha){throw 'COMMIT_DRIFT'}; $env:GIT_TERMINAL_PROMPT='0'; $env:GCM_INTERACTIVE='Never'; & git.exe -C $root push origin ('HEAD:refs/heads/'+$branch); if($LASTEXITCODE -ne 0){throw 'PUSH_FAILED_NO_REPLAY'}; $remote=@(& git.exe -C $root ls-remote origin ('refs/heads/'+$branch)); if($LASTEXITCODE -ne 0 -or -not ($remote[0] -match ('^'+$sha))){throw 'REMOTE_SHA_NOT_VERIFIED'}; Write-Output ('R60_REMOTE_SHA_VERIFIED='+$sha)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 35000,
+  "note": "Push one NEW non-force R60 code branch commit, never production branch or live publish, verify exact remote SHA; immutable request ID/no blind replay"
+}
