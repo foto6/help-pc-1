@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import json,urllib.request,pathlib,datetime\nbase='http://127.0.0.1:17448'\ndef get(p):\n with urllib.request.urlopen(base+p,timeout=4) as f:return json.load(f)\nhealth=get('/api/health')\noperator=get('/api/operator-lifecycle')\ncut=get('/api/projects/control-plane/cutover-r42/status')\nwatch=get('/api/supervisor-watchdog?detect=0')\na=get('/api/supervisor-watchdog/agent-assignments')\nqueue=[x for x in a.get('assignments',[]) if x.get('state')=='queued']\nactive=[x for x in a.get('assignments',[]) if x.get('state') in ('dispatching','running','awaiting_evidence')]\ncv=cut.get('cutoverState') or {}\nwc=watch.get('config') or {}\nif cv.get('holdActive') is not True:raise RuntimeError('R42_HOLD_NO_LONGER_ACTIVE_ABORT')\nif operator.get('mode')!='RUNNING_MANAGED' or operator.get('queuePaused') is not False:raise RuntimeError('OPERATOR_BASELINE_CHANGED_ABORT')\nif wc.get('mode')!='off' or wc.get('enabled') is not False or wc.get('allowAutonomousSend') is not False:raise RuntimeError('WATCHDOG_NOT_HOLD_SAFE_ABORT')\nif len(queue)!=1 or queue[0].get('dispatchSubmitAttempted') is not False or len(active):raise RuntimeError('QUEUE_BASELINE_CHANGED_ABORT')\nif queue[0].get('targetChatId')!='tg-curator-owner':raise RuntimeError('UNRECOGNIZED_QUEUED_TASK_ABORT')\nif health.get('state') not in ('BLOCKED','PAUSED'):raise RuntimeError('UNEXPECTED_HEALTH_ABORT')\nbackup=pathlib.Path('E:/PCControlAutonomyR41/backups/r49-queue-hold-alignment-20261013.json')\nif backup.exists():raise RuntimeError('AUDIT_ALREADY_EXISTS_ABORT_NO_OVERWRITE')\nsnapshot={'contract':'r49.paused_queue_owner_gate.v1','createdAt':datetime.datetime.now().isoformat(),'oldPaused':False,'r42Hold':True,'operatorMode':operator.get('mode'),'watchdogMode':wc.get('mode'),'queuedIds':[x.get('id') for x in queue],'activeCount':0,'oldHealth':health.get('state'),'restorable':True,'restoreMethod':'POST /api/pause {paused:false} only after separate explicit R42 recovery gate; NOT automatic'}\nbackup.parent.mkdir(parents=True,exist_ok=True)\nwith backup.open('x',encoding='utf8') as f:json.dump(snapshot,f,indent=2)\npayload=json.dumps({'paused':True}).encode()\nreq=urllib.request.Request(base+'/api/pause',data=payload,headers={'Content-Type':'application/json'},method='POST')\nwith urllib.request.urlopen(req,timeout=5) as f:resp=json.load(f)\nafter=get('/api/health')\nafterQueue=get('/api/supervisor-watchdog/agent-assignments')\nentries=[x for x in afterQueue.get('assignments',[]) if x.get('state')=='queued']\nprint(json.dumps({'status':'R49_HELD_QUEUE_ALIGNED','newPaused':resp.get('paused'),'operatorMode':resp.get('operatorLifecycle',{}).get('mode'),'healthBefore':health.get('state'),'healthAfter':after.get('state'),'reasonsAfter':after.get('reasons',[])[:8],'queuePreserved':len(entries)==len(queue) and entries[0].get('id')==queue[0].get('id'),'queueDispatchSubmitAttempted':entries[0].get('dispatchSubmitAttempted') if entries else None,'audit':str(backup),'chromeTouched':False,'providerSend':False,'cutoverHoldPreserved':True},ensure_ascii=True)[:3800])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"status\": \"R49_HELD_QUEUE_ALIGNED\", \"newPaused\": true, \"operatorMode\": \"RUNNING_MANAGED\", \"healthBefore\": \"BLOCKED\", \"healthAfter\": \"PAUSED\", \"reasonsAfter\": [], \"queuePreserved\": true, \"queueDispatchSubmitAttempted\": false, \"audit\": \"E:\\\\PCControlAutonomyR41\\\\backups\\\\r49-queue-hold-alignment-20261013.json\", \"chromeTouched\": false, \"providerSend\": false, \"cutoverHoldPreserved\": true}\r\n",
+      "stdout_bytes": 390,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:13:36.447Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:13:36.223Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r49-20261013-align-r42-held-queue-01"
+    },
+    "request_id": "owner-r49-20261013-align-r42-held-queue-01",
+    "started_at": "2026-10-13T04:13:35.317Z",
+    "status": "completed"
+  },
+  "id": "owner-r49-20261013-align-r42-held-queue-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
