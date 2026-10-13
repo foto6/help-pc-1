@@ -1,0 +1,47 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "python.exe",
+        "-c",
+        "import pathlib,subprocess,json,os\nr=pathlib.Path('E:/PCControlAutonomyR41')\nsha='d5c2ac399b3dc71cb9f83f28c2fc86ed942878bd'\nentry=r/'releases'/sha/'bin/pc-autonomy-daemon.js'\ncfg=r/'config.r41-integrated.json'\nstatus=json.loads((r/'data/pc-control-supervisor.json').read_text('utf8'))\nowner=json.loads((r/'WATCHER_R41.json').read_text('utf8'))\nget=\"$p=@(Get-CimInstance Win32_Process | Where-Object {$_.Name -ieq 'node.exe' -and $_.CommandLine -like '*PCControlAutonomyR41*pc-autonomy-daemon.js*'} | Select-Object ProcessId,CommandLine);$p | ConvertTo-Json -Compress\"\nps=subprocess.run(['powershell.exe','-NoProfile','-Command',get],capture_output=True,text=True,timeout=8)\nrows=json.loads(ps.stdout) if ps.returncode==0 and ps.stdout.strip() else []\nif isinstance(rows,dict):rows=[rows]\nitems=[{'pid':p.get('ProcessId'),'exact':str(entry) in p.get('CommandLine',''),'watch':'--watch' in p.get('CommandLine',''),'dispatch':'--dispatch' in p.get('CommandLine','')} for p in rows]\nrun=subprocess.run(['node.exe',str(entry),'--config',str(cfg),'--watch'],cwd=str(entry.parent.parent),capture_output=True,text=True,timeout=7)\nlock=r/'data/pc-control-supervisor.json.watcher.lock/owner.json'\nlockdata=json.loads(lock.read_text('utf8')) if lock.is_file() else {}\nstartup=(r/'START_R41_OBSERVER.cmd').read_text('utf8')\nstop=(r/'STOP_R41_USER_OBSERVER.ps1').read_text('utf8')\nprint(json.dumps({'onlyOneWatcher':len(items)==1,'watchers':items,'ownerPid':owner.get('pid'),'lockPid':lockdata.get('pid'),'secondWatcherRejected':run.returncode!=0 and 'AUTONOMY_LOCK_BUSY_OR_UNVERIFIED' in run.stderr,'secondWatcherExit':run.returncode,'startupSourcePinned':str(entry) in startup,'stopScriptMatches':str(entry) in stop,'revision':status.get('revision'),'lastCycle':status.get('lastCycle'),'lastDecision':status.get('lastDecision',{}).get('status'),'dispatched':status.get('lastDecision',{}).get('dispatched'),'unknown':len(status.get('pendingUnknown',[])),'providerSend':False,'readOnly':True},ensure_ascii=True)[:3200])\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "{\"onlyOneWatcher\": true, \"watchers\": [{\"pid\": 8276, \"exact\": true, \"watch\": true, \"dispatch\": false}], \"ownerPid\": 8276, \"lockPid\": 8276, \"secondWatcherRejected\": true, \"secondWatcherExit\": 1, \"startupSourcePinned\": true, \"stopScriptMatches\": true, \"revision\": 39, \"lastCycle\": \"2026-10-13T04:03:43.164Z\", \"lastDecision\": \"READ_ONLY\", \"dispatched\": 0, \"unknown\": 0, \"providerSend\": false, \"readOnly\": true}\r\n",
+      "stdout_bytes": 408,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-13T04:04:19.836Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-13T04:04:19.604Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "owner-r41-20261013-singleton-real-pc-proof-26"
+    },
+    "request_id": "owner-r41-20261013-singleton-real-pc-proof-26",
+    "started_at": "2026-10-13T04:04:18.189Z",
+    "status": "completed"
+  },
+  "id": "owner-r41-20261013-singleton-real-pc-proof-26",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
