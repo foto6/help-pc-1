@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r63-live-pid-after-unknown-20261014-d4f50a3c",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p=Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction SilentlyContinue|Select-Object -First 1;Write-Output ('LISTENER='+(!!$p));if($p){Write-Output ('LISTENER_PID='+$p.OwningProcess);$x=Get-CimInstance Win32_Process -Filter ('ProcessId='+[int]$p.OwningProcess);Write-Output ('PROCESS='+$x.Name)};Write-Output ('OLD_PID_ALIVE='+[bool](Get-Process -Id 28348 -ErrorAction SilentlyContinue));Write-Output ('GIT_HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only reconcile exact original R63 unknown server restart: TCP listener PID, old PID presence and Git SHA; never restart or rerun"
+}
