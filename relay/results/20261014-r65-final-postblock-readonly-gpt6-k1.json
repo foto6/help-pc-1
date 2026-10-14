@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$base='http://127.0.0.1:17448'\n$s=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog?detect=0') -TimeoutSec 12\n$q=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 12\n$st=Get-Content -LiteralPath 'E:\\WebAIBridge\\app\\data\\state.json' -Raw | ConvertFrom-Json\nWrite-Output ('AUTONOMOUS_SEND_ALLOWED='+$s.config.allowAutonomousSend)\nWrite-Output ('AUTO_CONTINUE='+$s.config.autoContinueEnabled)\nWrite-Output ('QUEUE_PAUSED='+$st.settings.paused)\nWrite-Output ('ASSIGNMENT_COUNT='+@($q.assignments).Count)\nWrite-Output ('UNSETTLED='+@($q.assignments|Where-Object{$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count)\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nWrite-Output ('BACKUP_EXISTS='+(Test-Path -LiteralPath 'E:\\WebAIBridge-R65-SAFETY-BACKUP-20261014-GPT6-I1\\BACKUP_MANIFEST.json'))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "AUTONOMOUS_SEND_ALLOWED=False\r\nAUTO_CONTINUE=False\r\nQUEUE_PAUSED=True\r\nASSIGNMENT_COUNT=70\r\nUNSETTLED=0\r\nPRODUCTION_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\nBACKUP_EXISTS=True\r\n",
+      "stdout_bytes": 183,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:23:52.220Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:23:51.968Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r65-final-postblock-readonly-gpt6-k1"
+    },
+    "request_id": "20261014-r65-final-postblock-readonly-gpt6-k1",
+    "started_at": "2026-10-14T05:23:50.645Z",
+    "status": "completed"
+  },
+  "id": "20261014-r65-final-postblock-readonly-gpt6-k1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
