@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r65-autonomy-readonly-inventory-gpt6-b2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge'; $app=Join-Path $root 'app'\nWrite-Output '=== GIT ==='\nWrite-Output ('HEAD='+(& git.exe -C $root rev-parse HEAD))\n$br=& git.exe -C $root branch --show-current\nWrite-Output ('BRANCH='+[string]$br)\n$chg=@(& git.exe -C $root status --porcelain=v1 --untracked-files=no)\nWrite-Output ('TRACKED_CHANGES='+$chg.Count)\n& git.exe -C $root log -9 --format='%h %s'\nWrite-Output '=== PRODUCTION ==='\nWrite-Output ('APP_EXISTS='+(Test-Path $app))\nWrite-Output ('SERVER_SHA256='+((Get-FileHash -LiteralPath (Join-Path $app 'server.js') -Algorithm SHA256).Hash))\nforeach($port in @(17448,17410)) { Write-Output (\"LISTEN_$port=\"+[bool](Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue)) }\nforeach($f in @('autonomy-r45-core.js','autonomy-r57-gpt-git.js','autonomy-r57-successor.js','existing-tab-session-r55.js','r65-global-canary-cap.test.js')) { Write-Output ($f+'='+(Test-Path (Join-Path $app $f))) }\nWrite-Output '=== STATE SAFE FIELDS ==='\n$dp=Join-Path $app 'data'\nforeach($file in @('state.json','supervisor-watchdog.json','projects-live-control-plane-cutover-r42.json')) {\n $fp=Join-Path $dp $file\n if(-not (Test-Path $fp)){Write-Output ($file+'=MISSING');continue}\n try {\n  $j=Get-Content -LiteralPath $fp -Raw | ConvertFrom-Json\n  if($file -eq 'state.json'){\n    Write-Output (\"paused=\"+$j.settings.paused)\n    $as=@($j.agentAssignments)\n    Write-Output ('assignments='+$as.Count)\n    $as|Group-Object state|ForEach-Object{Write-Output ('assignment_'+$_.Name+'='+$_.Count)}\n    Write-Output ('sticky_pin_count='+@($j.stickyExistingTabPins.PSObject.Properties).Count)\n  }elseif($file -eq 'supervisor-watchdog.json'){\n   Write-Output (\"supervisor_enabled=\"+$j.enabled)\n   Write-Output (\"supervisor_mode=\"+$j.mode)\n   Write-Output (\"allow_autonomous_send=\"+$j.allowAutonomousSend)\n   Write-Output (\"auto_continue=\"+$j.autoContinueEnabled)\n   Write-Output (\"max_parallel=\"+$j.maxParallelAgents)\n  }else{\n   Write-Output (\"r42_hold_active=\"+$j.holdActive)\n  }\n }catch{Write-Output ($file+'=INVALID_OR_UNREADABLE')}\n}\nWrite-Output '=== END ==='"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only R65 git, listener and sanitized operator state checks, detached git branch safe."
+}
