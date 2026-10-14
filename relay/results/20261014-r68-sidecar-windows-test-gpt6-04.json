@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6'\n$sha='01893cd6d729aa3c4779298c42553c5e9f9170f2'\nif(@(& git.exe -C $root status --porcelain=v1 --untracked-files=no).Count -ne 0){throw 'ISOLATED_TREE_DIRTY'}\n& git.exe -C $root fetch --quiet --no-tags origin agent/r68-live-chat-observability-20261014\nif($LASTEXITCODE -ne 0){throw 'FETCH_FAIL'}\n& git.exe -C $root checkout --quiet --detach $sha\nif($LASTEXITCODE -ne 0){throw 'CHECKOUT_FAIL'}\nif(([string](& git.exe -C $root rev-parse HEAD)).Trim() -ne $sha){throw 'SHA_MISMATCH'}\n$log=Join-Path $root 'R68_SIDECAR_TESTS.txt'\nPush-Location (Join-Path $root 'app')\ntry{\n & node.exe --test r68-live-chat-observability.test.js r68-live-viewer.test.js autonomous-send-gate-r50.test.js r65-global-canary-cap.test.js *> $log\n $rc=$LASTEXITCODE\n & node.exe --check r68-live-viewer.js\n $checkRc=$LASTEXITCODE\n $html=Get-Content -LiteralPath 'r68-live-viewer.html' -Raw\n $match=[regex]::Match($html,'(?s)<script>(.*?)</script>')\n if(-not $match.Success){throw 'SIDECAR_INLINE_JS_MISSING'}\n $temp=Join-Path $root 'R68_SIDE_UI_SCRIPT_CHECK.js'\n [IO.File]::WriteAllText($temp,$match.Groups[1].Value,[Text.UTF8Encoding]::new($false))\n & node.exe --check $temp\n $uiRc=$LASTEXITCODE\n}finally{Pop-Location}\nWrite-Output ('R68_SOURCE_SHA='+$sha)\nWrite-Output ('TEST_EXIT='+$rc)\nWrite-Output ('NODE_SOURCE_EXIT='+$checkRc)\nWrite-Output ('HTML_INLINE_JS_EXIT='+$uiRc)\nSelect-String -LiteralPath $log -Pattern '^ℹ (?:tests|pass|fail|skipped)|^✖'|Select-Object -Last 12|ForEach-Object{Write-Output $_.Line}\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($rc -ne 0 -or $checkRc -ne 0 -or $uiRc -ne 0){throw 'R68_SIDECAR_VERIFICATION_FAILED'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "R68_SIDECAR_VERIFICATION_FAILED\r\nAt line:31 char:50\r\n+ ... eckRc -ne 0 -or $uiRc -ne 0){throw 'R68_SIDECAR_VERIFICATION_FAILED'}\r\n+                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (R68_SIDECAR_VERIFICATION_FAILED:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : R68_SIDECAR_VERIFICATION_FAILED\r\n \r\n",
+      "stderr_bytes": 383,
+      "stderr_truncated": false,
+      "stdout": "R68_SOURCE_SHA=01893cd6d729aa3c4779298c42553c5e9f9170f2\r\nTEST_EXIT=1\r\nNODE_SOURCE_EXIT=0\r\nHTML_INLINE_JS_EXIT=0\r\n✖ sidecar rejects POST actions, unexpected host and unknown routes (18.4926ms)\r\nℹ tests 24\r\nℹ pass 23\r\nℹ fail 1\r\nℹ skipped 0\r\n✖ failing tests:\r\n✖ sidecar rejects POST actions, unexpected host and unknown routes (18.4926ms)\r\nPRODUCTION_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n",
+      "stdout_bytes": 409,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T06:12:25.715Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T06:12:25.461Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r68-sidecar-windows-test-gpt6-04"
+    },
+    "request_id": "20261014-r68-sidecar-windows-test-gpt6-04",
+    "started_at": "2026-10-14T06:12:20.754Z",
+    "status": "completed"
+  },
+  "id": "20261014-r68-sidecar-windows-test-gpt6-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
