@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r67-qa-fixture-fix-exacthead-test-gpt6-k1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$dst='E:\\boss-R67-QA-VERIFY-20261014-GPT6'\n$sha='b88a80f930add09de9de6d4d7d1866dedfbf65be'\nif(Test-Path -LiteralPath $dst){throw 'REFUSE_EXISTING_PATH'}\n& git.exe clone --quiet --depth 1 --single-branch --no-tags --branch 'agent/qa-r67-portable-canary-regressions-20261014' 'https://github.com/foto6/boss.git' $dst\nif($LASTEXITCODE -ne 0){throw 'QA_CLONE_FAILED'}\n$h=([string](& git.exe -C $dst rev-parse HEAD)).Trim()\nif($h -ne $sha){throw ('WRONG_HEAD '+$h)}\n$log=Join-Path $dst 'QA_R67_NODE_RESULT.txt'\nPush-Location -LiteralPath $dst\ntry{& node.exe --test tests/r65_autonomy_canary.test.cjs 2>&1|Out-File -LiteralPath $log -Encoding UTF8;$rc=$LASTEXITCODE}finally{Pop-Location}\nWrite-Output ('VERIFIED_SOURCE_SHA='+$h)\nWrite-Output ('NODE_EXIT='+$rc)\nSelect-String -LiteralPath $log -Pattern '^ℹ (?:tests|pass|fail|skipped)|^✖'|Select-Object -Last 15|ForEach-Object{Write-Output $_.Line}\nWrite-Output ('RESULT_LOG='+$log)\nWrite-Output ('PRODUCTION_BRIDGE_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($rc -ne 0){throw 'CORRECTED_QA_NODE_TEST_FAILED'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 100000,
+  "note": "Fresh isolated QA correction branch exact SHA; run deterministic read-only Node tests, no changes to agent original branch or Bridge."
+}
