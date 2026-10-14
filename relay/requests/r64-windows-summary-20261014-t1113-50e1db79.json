@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r64-windows-summary-20261014-t1113-50e1db79",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$root='E:\\WebAIBridge-R64-SHADOW';$f=Join-Path $root 'R64_TESTS.log';Write-Output ('LOG_BYTES='+(Get-Item -LiteralPath $f).Length);Get-Content -LiteralPath $f -Tail 9;Write-Output ('R64_HEAD='+((& git.exe -C $root rev-parse HEAD)|Out-String).Trim());Write-Output ('PROD_SERVER_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13000,
+  "note": "Read-only R64 exact SHA Node regression summary and unchanged production hash; no effects"
+}
