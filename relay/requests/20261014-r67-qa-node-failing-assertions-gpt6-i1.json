@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r67-qa-node-failing-assertions-gpt6-i1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$log='E:\\boss-R65-CANARY-VERIFY-20261014-GPT6\\QA_NODE_TEST_RESULT_GPT6_20261014.txt'\n$lines=@(Get-Content -LiteralPath $log)\nfor($i=0;$i -lt $lines.Count;$i++){\n if($lines[$i] -match '^test at .+:'){Write-Output ('=== DETAIL '+$lines[$i]+' ===');$stop=[Math]::Min($lines.Count-1,$i+15);for($j=$i;$j -le $stop;$j++){Write-Output $lines[$j]}}\n}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13000,
+  "note": "Read-only extract local node test failing assertions from previously created isolated report."
+}
