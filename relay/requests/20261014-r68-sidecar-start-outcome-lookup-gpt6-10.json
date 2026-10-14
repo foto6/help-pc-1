@@ -1,0 +1,10 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r68-sidecar-start-outcome-lookup-gpt6-10",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "20261014-r68-start-viewer-17450-gpt6-09"
+  },
+  "timeout_ms": 10000,
+  "note": "Reconcile exact original timed-out R68 sidecar start before any retry or process action."
+}
