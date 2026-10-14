@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $head=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim(); if($head -ne '66e2ca7681b5e4c4affde9641b69e5582b718f99'){throw 'HEAD_DRIFT'}; $op=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 6; $sv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; $c=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 6; $a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6; if($op.mode -ne 'PAUSED_BROWSER' -or $op.queuePaused -ne $true){throw 'NOT_QUIESCENT'}; if($sv.config.enabled -ne $false -or $sv.config.allowAutonomousSend -ne $false -or $sv.config.maxParallelAgents -ne 1){throw 'AUTONOMY_NOT_SAFE'}; if($c.cutoverState.holdActive -ne $true -or $c.cutoverState.lastReadOnlyReconcileDiffCount -ne 6){throw 'R42_UNVERIFIED_HOLD'}; if(@($a.assignments|Where-Object{$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count -gt 0){throw 'UNSETTLED_WORK'}; $result=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/activate') -Method Post -ContentType 'application/json' -Body '{}' -TimeoutSec 35; Write-Output ('ACTIVATION_CONTRACT='+$result.object); Write-Output ('ACTIVATION_CHANGED='+$result.changed); Write-Output ('ACTIVATION_STATUS='+$result.status); Write-Output ('ACTIVATION_QUEUE_PAUSED='+$result.queuePaused); Write-Output ('PROVIDER_CHAT_DELETED='+$result.providerChatDeletionPerformed); $post=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 6; $postSv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; $postOp=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 6; Write-Output ('POST_HOLD='+$post.cutoverState.holdActive); Write-Output ('POST_STATUS='+$post.cutoverState.status); Write-Output ('POST_WATCHDOG_ENABLED='+$postSv.config.enabled); Write-Output ('POST_SEND_ALLOWED='+$postSv.config.allowAutonomousSend); Write-Output ('POST_PARALLEL_CAP='+$postSv.config.maxParallelAgents); Write-Output ('POST_OPERATOR_MODE='+$postOp.mode); Write-Output ('POST_SOURCE_HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "ACTIVATION_CONTRACT=bridge.projects_live_control_plane_activation.r42.v1\r\nACTIVATION_CHANGED=True\r\nACTIVATION_STATUS=R63_HOLD_RELEASED_PAUSED\r\nACTIVATION_QUEUE_PAUSED=True\r\nPROVIDER_CHAT_DELETED=False\r\nPOST_HOLD=False\r\nPOST_STATUS=R63_HOLD_RELEASED_PAUSED\r\nPOST_WATCHDOG_ENABLED=False\r\nPOST_SEND_ALLOWED=False\r\nPOST_PARALLEL_CAP=1\r\nPOST_OPERATOR_MODE=PAUSED_BROWSER\r\nPOST_SOURCE_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n",
+      "stdout_bytes": 426,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T04:42:33.493Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T04:42:33.256Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r65-controlled-r42-hold-release-20261014-d7ae20c4"
+    },
+    "request_id": "r65-controlled-r42-hold-release-20261014-d7ae20c4",
+    "started_at": "2026-10-14T04:42:32.157Z",
+    "status": "completed"
+  },
+  "id": "r65-controlled-r42-hold-release-20261014-d7ae20c4",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
