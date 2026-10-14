@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r70-current-coordinator-gates-gpt6-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$b='http://127.0.0.1:17448'\n$health=Invoke-RestMethod -Uri ($b+'/api/health') -TimeoutSec 3\n$control=Invoke-RestMethod -Uri ($b+'/api/supervisor-watchdog?detect=0') -TimeoutSec 3\n$chats=Invoke-RestMethod -Uri ($b+'/api/supervisor-watchdog/managed-chats?inspect=0') -TimeoutSec 3\n$tasks=Invoke-RestMethod -Uri ($b+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 3\nWrite-Output ('BRIDGE_HEALTH='+$health.state)\nWrite-Output ('BRIDGE_HEALTH_REASON_COUNT='+@($health.reasons).Count)\nWrite-Output ('MANAGED_TOTAL='+@($chats.chats).Count)\nforeach($role in @('qa','bridge','media','creator','growth','native-mcp','owner-curator')){\n $targets=@($chats.chats|Where-Object {$_.role -eq $role -and $_.enabled -ne $false})\n Write-Output ('ROLE_'+$role+'_COUNT='+$targets.Count)\n if($targets.Count -eq 1){\n  $z=$targets[0]\n  Write-Output ('ROLE_'+$role+'_CHAT_ID_PRESENT='+[bool]$z.id)\n  Write-Output ('ROLE_'+$role+'_REPOSITORY='+[string]$z.repository)\n  Write-Output ('ROLE_'+$role+'_BRANCH='+[string]$z.branch)\n }\n}\nWrite-Output ('ACTIVE_ASSIGNMENTS='+@($tasks.assignments|Where-Object {$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count)\nWrite-Output ('AUTO_CONTINUE='+$control.config.autoContinueEnabled)\nWrite-Output ('MAX_PARALLEL='+$control.config.maxParallelAgents)\nWrite-Output ('R45_RUNNER_PID_COUNT='+@((Get-CimInstance Win32_Process -Filter \"Name='node.exe'\")|Where-Object {$_.CommandLine -match 'autonomy-r45-runner\\.js'}).Count)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only live R45 planner health, managed role binding presence and unsettled queue audit; no chat URLs, IDs or private credentials printed."
+}
