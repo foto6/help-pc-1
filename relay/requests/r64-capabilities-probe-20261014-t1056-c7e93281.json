@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r64-capabilities-probe-20261014-t1056-c7e93281",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "R64 harmless read-only PC Control executor capability and GitHub relay transport check, no mutation"
+}
