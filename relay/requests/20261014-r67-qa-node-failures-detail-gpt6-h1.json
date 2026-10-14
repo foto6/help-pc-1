@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r67-qa-node-failures-detail-gpt6-h1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$path='E:\\boss-R65-CANARY-VERIFY-20261014-GPT6\\QA_NODE_TEST_RESULT_GPT6_20261014.txt'\nif(!(Test-Path -LiteralPath $path)){throw 'MISSING_VERIFICATION_LOG'}\n$lines=@(Get-Content -LiteralPath $path)\nforeach($needle in @('not ok 1 - 00 ','not ok 13 - 12 ','not ok 15 - 14 ','✖ 00','✖ 12','✖ 14')){\n for($i=0;$i -lt $lines.Count;$i++){\n  if($lines[$i].Contains($needle)){\n   Write-Output ('=== FAILURE '+$needle+' AT '+($i+1)+' ===')\n   $end=[Math]::Min($lines.Count-1,$i+22)\n   for($k=$i;$k -le $end;$k++){Write-Output $lines[$k]}\n   break\n  }\n }\n}\nWrite-Output ('LOG_LINE_COUNT='+$lines.Count)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Inspect bounded specific QA unit-test failures in isolated local log, no mutations or unrelated files."
+}
