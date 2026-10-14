@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\nfunction Read-Local($p){return Invoke-RestMethod -Uri ('http://127.0.0.1:17448'+$p) -Method Get -TimeoutSec 15}\nWrite-Output '=== READONLY CONTROL STATUS ==='\ntry {\n $s=Read-Local '/api/supervisor-watchdog?detect=0'\n Write-Output ('SUPERVISOR_RUNNING='+$s.runtime.processRunning)\n Write-Output ('SUPERVISOR_MODE='+$s.config.mode)\n Write-Output ('SUPERVISOR_ALLOW_SEND='+$s.config.allowAutonomousSend)\n Write-Output ('SUPERVISOR_AUTO_CONTINUE='+$s.config.autoContinueEnabled)\n Write-Output ('SUPERVISOR_ENFORCE_HIGH='+$s.config.enforceHighMode)\n Write-Output ('SUPERVISOR_HIGH_STRATEGY='+$s.config.highModeStrategy)\n Write-Output ('SUPERVISOR_PARALLEL='+$s.config.maxParallelAgents)\n Write-Output ('SUPERVISOR_CLOSE_ON_BACKOFF='+$s.config.closeChatDuringProviderBackoff)\n Write-Output ('SUPERVISOR_OPEN_MISSING='+$s.config.openExistingChatIfMissing)\n}catch{Write-Output ('SUPERVISOR_GET_FAILED='+$_.Exception.Message.Substring(0,[Math]::Min(90,$_.Exception.Message.Length)))}\ntry{\n $r=Read-Local '/api/projects/control-plane/cutover-r42/status'\n Write-Output ('R42_HOLD='+$r.cutoverState.holdActive)\n Write-Output ('R42_STATUS='+$r.cutoverState.status)\n Write-Output ('R42_VALIDATION_OK='+$r.autonomy.validation.ok)\n}catch{Write-Output ('R42_GET_FAILED='+$_.Exception.Message.Substring(0,[Math]::Min(90,$_.Exception.Message.Length)))}\ntry{\n $d=Read-Local '/api/supervisor-watchdog/agent-assignments/dry-run'\n $rows=@($d.rows)\n Write-Output ('DRYRUN_ROWS='+$rows.Count)\n $n=0\n foreach($row in $rows){\n  $n++\n  $sn=@($row.snapshots)\n  $high=@($sn|Where-Object {$_.highMode -eq $true}).Count\n  $generating=@($sn|Where-Object {$_.generating -eq $true}).Count\n  $bad=@($sn|Where-Object {$_.providerLoadError -eq $true}).Count\n  Write-Output ('ROW_'+$n+' preflight='+$row.preflightReason+' high_snapshots='+$high+' generating='+$generating+' provider_errors='+$bad+' openTabs='+$row.openTabs+' schedulerSelected='+$row.schedulerSelected)\n }\n}catch{Write-Output ('DRYRUN_GET_FAILED='+$_.Exception.Message.Substring(0,[Math]::Min(90,$_.Exception.Message.Length)))}\nWrite-Output '=== END ==='"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "=== READONLY CONTROL STATUS ===\r\nSUPERVISOR_RUNNING=True\r\nSUPERVISOR_MODE=full\r\nSUPERVISOR_ALLOW_SEND=False\r\nSUPERVISOR_AUTO_CONTINUE=False\r\nSUPERVISOR_ENFORCE_HIGH=True\r\nSUPERVISOR_HIGH_STRATEGY=verify_only\r\nSUPERVISOR_PARALLEL=1\r\nSUPERVISOR_CLOSE_ON_BACKOFF=False\r\nSUPERVISOR_OPEN_MISSING=False\r\nR42_HOLD=False\r\nR42_STATUS=R63_HOLD_RELEASED_PAUSED\r\nR42_VALIDATION_OK=False\r\nDRYRUN_ROWS=7\r\nROW_1 preflight=ready high_snapshots=1 generating=0 provider_errors=0 openTabs=1 schedulerSelected=True\r\nROW_2 preflight=ready high_snapshots=1 generating=0 provider_errors=0 openTabs=1 schedulerSelected=False\r\nROW_3 preflight=ready high_snapshots=1 generating=0 provider_errors=0 openTabs=1 schedulerSelected=False\r\nROW_4 preflight=target_chat_unavailable high_snapshots=0 generating=0 provider_errors=0 openTabs=0 schedulerSelected=False\r\nROW_5 preflight=active_generation high_snapshots=1 generating=1 provider_errors=0 openTabs=1 schedulerSelected=False\r\nROW_6 preflight=ready high_snapshots=1 generating=0 provider_errors=0 openTabs=1 schedulerSelected=False\r\nROW_7 preflight=ready high_snapshots=1 generating=0 provider_errors=0 openTabs=1 schedulerSelected=False\r\n=== END ===\r\n",
+      "stdout_bytes": 1175,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:17:47.270Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:17:47.026Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r65-operator-browser-readiness-gpt6-d1"
+    },
+    "request_id": "20261014-r65-operator-browser-readiness-gpt6-d1",
+    "started_at": "2026-10-14T05:17:45.947Z",
+    "status": "completed"
+  },
+  "id": "20261014-r65-operator-browser-readiness-gpt6-d1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
