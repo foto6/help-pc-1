@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$base='http://127.0.0.1:17448'\nWrite-Output '=== MANAGED AGENT METADATA ==='\n$s=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog?detect=0') -TimeoutSec 12\n$i=0\nforeach($c in @($s.config.managedChats)){\n $i++\n $role=[string]$c.role\n $repo=[string]$c.repository\n $proj=[string]$c.projectId\n $branch=[string]$c.branch\n Write-Output (\"AGENT_\"+$i+\" enabled=\"+$c.enabled+\" role=\"+$role+\" repo=\"+$repo+\" branch=\"+$branch+\" project=\"+$proj+\" has_url=\"+[bool]$c.url)\n}\nWrite-Output ('CONFIG_MANAGED_COUNT='+$i)\nWrite-Output '=== LOCATE CODE ROUTES ==='\n$src='E:\\WebAIBridge\\app\\server.js'\n$patterns=@('function queueManagedAgentTask','function queueManagedAgentBatch','operator-lifecycle','settings/pause','settings/resume','queue/pause','queue/resume','agent-assignments/dry-run')\nforeach($p in $patterns){\n $ms=@(Select-String -LiteralPath $src -SimpleMatch -Pattern $p | Select-Object -First 8)\n foreach($m in $ms){Write-Output ('CODE '+$m.LineNumber+' '+$m.Line.Trim().Substring(0,[Math]::Min(150,$m.Line.Trim().Length)))}\n}\nWrite-Output '=== END ==='"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "=== MANAGED AGENT METADATA ===\r\nAGENT_1 enabled=True role=bridge repo=foto6/WebAIBridge branch=agent/bridge-r44-hotfix-r43-integration-20261007 project= has_url=True\r\nAGENT_2 enabled=True role=media repo=foto6/video2 branch=agent/media-r27-real-input-local-rehearsal-20261006 project=project-g-p-6ab839fa4f8c81919adad01c4a5497dc has_url=True\r\nAGENT_3 enabled=True role=creator repo=foto6/video1 branch=agent/creator-r40-media-qa-bind-20261007 project=project-g-p-6ab839fa4f8c81919adad01c4a5497dc has_url=True\r\nAGENT_4 enabled=True role=growth repo=foto6/video3 branch=agent/growth-r39-media-qa-bind-20261007 project=project-g-p-6ab839fa4f8c81919adad01c4a5497dc has_url=True\r\nAGENT_5 enabled=True role=native-mcp repo=foto6/help-pc-2 branch=agent/native-mcp-r40-staged-local-canary-20261007 project=project-g-p-6ab839fa4f8c81919adad01c4a5497dc has_url=True\r\nAGENT_6 enabled=True role=qa repo=foto6/boss branch=agent/integration-r8-final-local-stack-20261006 project=project-g-p-6ab839fa4f8c81919adad01c4a5497dc has_url=True\r\nAGENT_7 enabled=True role=owner-curator repo=foto6/boss branch=agent/telegram-curator-authority-20261012 project= has_url=True\r\nCONFIG_MANAGED_COUNT=7\r\n=== LOCATE CODE ROUTES ===\r\nCODE 18311 function queueManagedAgentTask(managedChatId, body = {}) {\r\nCODE 18437 function queueManagedAgentBatch(body = {}) {\r\nCODE 87 } = require('./operator-lifecycle-r40');\r\nCODE 22230 if (req.method === 'GET' && url.pathname === '/api/operator-lifecycle') {\r\nCODE 22235 if (req.method === 'POST' && url.pathname === '/api/operator-lifecycle') {\r\nCODE 20613 && url.pathname === '/api/supervisor-watchdog/agent-assignments/dry-run') {\r\n=== END ===\r\n",
+      "stdout_bytes": 1656,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:19:07.547Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:19:07.308Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r65-canary-configuration-scan-gpt6-f1"
+    },
+    "request_id": "20261014-r65-canary-configuration-scan-gpt6-f1",
+    "started_at": "2026-10-14T05:19:06.139Z",
+    "status": "completed"
+  },
+  "id": "20261014-r65-canary-configuration-scan-gpt6-f1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
