@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r70-readonly-one-shot-proof-gpt6-07",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R70-GPT-PLANNER-20261014-GPT6'\n$plan=Join-Path $root 'app\\data\\r70-qa-verified-wave-plan.json'\n$state=Join-Path $root 'app\\data\\r70-qa-verified-wave-state.json'\nif(-not(Test-Path -LiteralPath $plan)){throw 'PLAN_NOT_STAGED'}\nif(Test-Path -LiteralPath $state){throw 'STATE_EXISTS_REFUSE_REPLAY'}\n$line=& node.exe (Join-Path $root 'app\\r70-stage-gpt-planner.js') --observe-once $plan $state 2>&1\n$rc=$LASTEXITCODE\nWrite-Output ('READONLY_PROCESS_EXIT='+$rc)\nif($rc -eq 0){$j=($line|Out-String|ConvertFrom-Json);Write-Output ('COORDINATOR_STATUS='+$j.status);Write-Output ('BRIDGE_HEALTH='+$j.bridgeHealth);Write-Output ('TASK_COUNT='+$j.taskCount);Write-Output ('RECONCILIATION_REQUIRED='+$j.reconciliationRequired)}\nWrite-Output ('COORDINATOR_STATE_WRITTEN='+(Test-Path -LiteralPath $state))\nWrite-Output ('REAL_ASSIGNMENT_COUNT='+@((Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 3).assignments).Count)\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($rc -ne 0){throw 'R70_READONLY_OBSERVATION_FAILED'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Run one single R45 local coordinator observation using freshly staged immutable no-dispatch GPT Git plan. Never Send or navigate ChatGPT."
+}
