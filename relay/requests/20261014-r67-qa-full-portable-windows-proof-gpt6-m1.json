@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r67-qa-full-portable-windows-proof-gpt6-m1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$dst='E:\\boss-R67-QA-PORTABLE-VERIFY-20261014-GPT6'\n$sha='f737a35ad9ea8463cdc59d6a92a0a0f7a2a80f93'\nif(Test-Path -LiteralPath $dst){throw 'REFUSE_EXISTING_PATH'}\n& git.exe clone --quiet --depth 1 --single-branch --no-tags --branch 'agent/qa-r67-portable-canary-regressions-20261014' 'https://github.com/foto6/boss.git' $dst\nif($LASTEXITCODE -ne 0){throw 'QA_CLONE_FAILED'}\n$head=([string](& git.exe -C $dst rev-parse HEAD)).Trim()\nif($head -ne $sha){throw ('QA_BRANCH_MOVED '+$head)}\n$nodeLog=Join-Path $dst 'R67_NODE_TEST.txt'\n$pyLog=Join-Path $dst 'R67_PYTHON_TEST.txt'\nPush-Location $dst\ntry{\n & node.exe --test tests/r65_autonomy_canary.test.cjs 2>&1|Out-File -LiteralPath $nodeLog -Encoding UTF8\n $nodeRc=$LASTEXITCODE\n $ErrorActionPreference='Continue'\n & python.exe -m unittest discover -s tests -v 2>&1|Out-File -LiteralPath $pyLog -Encoding UTF8\n $pyRc=$LASTEXITCODE\n}finally{$ErrorActionPreference='Stop';Pop-Location}\nWrite-Output ('EXACT_SHA='+$head)\nWrite-Output ('NODE_RC='+$nodeRc)\nSelect-String -LiteralPath $nodeLog -Pattern '^ℹ (?:tests|pass|fail)|^✖'|Select-Object -Last 8|ForEach-Object{Write-Output $_.Line}\nWrite-Output ('PYTHON_RC='+$pyRc)\nGet-Content -LiteralPath $pyLog -Tail 6\nWrite-Output ('PRODUCTION_BRIDGE_SHA='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nWrite-Output ('LOCAL_LOGS='+$nodeLog+' '+$pyLog)\nif($nodeRc -ne 0 -or $pyRc -ne 0){throw 'R67_TESTS_NOT_GREEN'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 120000,
+  "note": "Clean exact-head Windows QA source clone, Node 18 cases plus all boss Python tests; preserve user production and browser."
+}
