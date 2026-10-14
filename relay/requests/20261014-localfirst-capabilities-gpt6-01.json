@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-localfirst-capabilities-gpt6-01",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read-only capabilities probe for a local-only Markdown task ledger demonstration."
+}
