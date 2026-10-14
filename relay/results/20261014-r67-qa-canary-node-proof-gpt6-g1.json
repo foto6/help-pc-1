@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$dir='E:\\boss-R65-CANARY-VERIFY-20261014-GPT6'\n$sha=([string](& git.exe -C $dir rev-parse HEAD)).Trim()\nif($sha -ne 'ff6b105fde40e3e292c883073f741b4970523ff2'){throw ('EXACT_SHA_MISMATCH '+$sha)}\nif(-not(Test-Path -LiteralPath (Join-Path $dir 'tests\\r65_autonomy_canary.test.cjs'))){throw 'MISSING_TEST'}\n$log=Join-Path $dir 'QA_NODE_TEST_RESULT_GPT6_20261014.txt'\nPush-Location -LiteralPath $dir\ntry { & node.exe --test tests/r65_autonomy_canary.test.cjs 2>&1 | Out-File -LiteralPath $log -Encoding UTF8; $rc=$LASTEXITCODE } finally { Pop-Location }\nWrite-Output ('EXACT_SHA='+$sha)\nWrite-Output ('NODE_EXIT='+$rc)\nSelect-String -LiteralPath $log -Pattern '^ℹ (?:tests|pass|fail|skipped)|^✖'|Select-Object -Last 16|ForEach-Object {Write-Output $_.Line}\nWrite-Output ('LOG='+$log)\nif($rc -ne 0){throw 'QA_NODE_TEST_FAILED'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "QA_NODE_TEST_FAILED\r\nAt line:13 char:15\r\n+ if($rc -ne 0){throw 'QA_NODE_TEST_FAILED'}\r\n+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (QA_NODE_TEST_FAILED:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : QA_NODE_TEST_FAILED\r\n \r\n",
+      "stderr_bytes": 285,
+      "stderr_truncated": false,
+      "stdout": "EXACT_SHA=ff6b105fde40e3e292c883073f741b4970523ff2\r\nNODE_EXIT=1\r\n✖ 00 exact pinned producer fixture blobs are byte-verified, with no mutable branch authority (3.4395ms)\r\n✖ 12 R45 durable UNKNOWN dispatch intent becomes reconciliation not fresh pending (1.0291ms)\r\n✖ 14 unverified completed event cannot become accepted without exact SHA and successful CI (0.2532ms)\r\nℹ tests 18\r\nℹ pass 15\r\nℹ fail 3\r\nℹ skipped 0\r\n✖ failing tests:\r\n✖ 00 exact pinned producer fixture blobs are byte-verified, with no mutable branch authority (3.4395ms)\r\n✖ 12 R45 durable UNKNOWN dispatch intent becomes reconciliation not fresh pending (1.0291ms)\r\n✖ 14 unverified completed event cannot become accepted without exact SHA and successful CI (0.2532ms)\r\nLOG=E:\\boss-R65-CANARY-VERIFY-20261014-GPT6\\QA_NODE_TEST_RESULT_GPT6_20261014.txt\r\n",
+      "stdout_bytes": 838,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:48:32.346Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:48:32.089Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r67-qa-canary-node-proof-gpt6-g1"
+    },
+    "request_id": "20261014-r67-qa-canary-node-proof-gpt6-g1",
+    "started_at": "2026-10-14T05:48:30.738Z",
+    "status": "completed"
+  },
+  "id": "20261014-r67-qa-canary-node-proof-gpt6-g1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
