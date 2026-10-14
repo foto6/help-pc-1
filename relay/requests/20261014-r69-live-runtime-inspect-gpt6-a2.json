@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r69-live-runtime-inspect-gpt6-a2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$head=([string](& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)).Trim()\nWrite-Output ('PROD_HEAD='+$head)\nWrite-Output ('R68_HEAD='+([string](& git.exe -C 'E:\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6' rev-parse HEAD)).Trim())\nWrite-Output ('R68_TRACKED_DIRTY='+@(& git.exe -C 'E:\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6' status --porcelain=v1 --untracked-files=no).Count)\nforeach($port in @(17448,17450)) {\ntry { $t=Invoke-RestMethod -Uri ('http://127.0.0.1:'+ $port + $(if($port -eq 17450){'/api/live'}else{'/api/operator-lifecycle'})) -TimeoutSec 2\nif($port -eq 17450){\nWrite-Output ('VIEWER_CONTRACT='+$t.contract)\nWrite-Output ('VIEWER_OPEN='+$t.openCount)\nWrite-Output ('VIEWER_UNKNOWN='+$t.unregisteredOpenCount)\nWrite-Output ('VIEWER_SCAN_OK='+$t.scanComplete)\n}else{ Write-Output ('PROD_LIFECYCLE='+$t.mode) }\n}catch{Write-Output ('HTTP_'+$port+'_UNAVAILABLE='+$_.Exception.GetType().Name)}\n}\n$startup=[Environment]::GetFolderPath('Startup')\nWrite-Output ('STARTUP_DIR_AVAILABLE='+[bool](Test-Path $startup))\nWrite-Output ('VIEWER_STARTUP_EXISTS='+(Test-Path (Join-Path $startup 'WebAIBridge-R68-Live.lnk')))\n"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Quick read-only production/isolated source and R68 current service snapshot; check per-user Startup shortcut only."
+}
