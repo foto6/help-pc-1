@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014T1305-r66-one-canary-authorized-capabilities-gpt6",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read-only PC Control health probe for authorized one-canary live run."
+}
