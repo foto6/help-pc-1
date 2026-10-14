@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R64-SHADOW'; $sha='2466e0a0af704a3eefed6a7f4108f6926ee70d1a'; if(Test-Path -LiteralPath $root){throw 'NO_OVERWRITE_EXISTING_SHADOW'}; & git.exe clone --depth 1 --single-branch --no-tags --branch agent/bridge-r64-truthful-idle-health-and-send-dryrun-20261014 https://github.com/foto6/WebAIBridge.git $root; if($LASTEXITCODE -ne 0){throw 'R64_CLONE_FAILED'}; $got=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($got -ne $sha){throw 'R64_SHA_MISMATCH'}; Write-Output ('R64_SOURCE_SHA='+$got); Write-Output ('NODE_VERSION='+((& node.exe --version)|Out-String).Trim()); Write-Output ('PROD_SERVER_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash); Write-Output ('PROD_HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Cloning into 'E:\\WebAIBridge-R64-SHADOW'...\n",
+      "stderr_bytes": 44,
+      "stderr_truncated": false,
+      "stdout": "R64_SOURCE_SHA=2466e0a0af704a3eefed6a7f4108f6926ee70d1a\r\nNODE_VERSION=v24.18.0\r\nPROD_SERVER_SHA256=55528794D1D84551ACC7465C00E781984B99B0AB88384AA2EDFC180CD1FC8EB8\r\nPROD_HEAD=01e5db790f50b5eb42588b8942f3dd1de4f0a6bf\r\n",
+      "stdout_bytes": 217,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T04:03:01.827Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T04:03:01.497Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r64-win-exact-shadow-20261014-t1110-f19a7c35"
+    },
+    "request_id": "r64-win-exact-shadow-20261014-t1110-f19a7c35",
+    "started_at": "2026-10-14T04:02:56.368Z",
+    "status": "completed"
+  },
+  "id": "r64-win-exact-shadow-20261014-t1110-f19a7c35",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
