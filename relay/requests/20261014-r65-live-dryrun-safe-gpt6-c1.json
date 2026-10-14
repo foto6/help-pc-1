@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r65-live-dryrun-safe-gpt6-c1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\nWrite-Output '=== DRYRUN HTTP ONLY ==='\ntry {\n  $uri='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/dry-run'\n  $d=Invoke-RestMethod -Uri $uri -Method Get -TimeoutSec 12\n  Write-Output ('DRY_RUN='+$d.dryRun)\n  Write-Output ('SEND_ATTEMPTED='+$d.sendAttempted)\n  Write-Output ('REPLACEMENT_ATTEMPTED='+$d.replacementAttempted)\n  Write-Output ('OPENED_CLOSED='+$d.openedClosedChats)\n  Write-Output ('AUTO_CONTINUE='+$d.autoContinueEnabled)\n  Write-Output ('SELECTED_COUNT='+@($d.selectedChatIds).Count)\n  Write-Output ('ROWS_COUNT='+@($d.rows).Count)\n  foreach($g in @($d.rows)|Group-Object preflightReason) { Write-Output ('PREFLIGHT_REASON='+$g.Name+' COUNT='+$g.Count) }\n  Write-Output ('WOULD_DISPATCH_COUNT='+@($d.rows|Where-Object { $_.wouldDispatch -eq $true }).Count)\n} catch { Write-Output ('HTTP_DRY_RUN_FAILED='+$_.Exception.GetType().Name+' '+$_.Exception.Message.Substring(0,[Math]::Min(200,$_.Exception.Message.Length))) }\nWrite-Output '=== ACTIVE OPERATOR ROUTE MARKERS ==='\n$src='E:\\WebAIBridge\\app\\server.js'\n$matches=Select-String -LiteralPath $src -Pattern \"agent-assignments/dry-run|supervisor-watchdog/agent-assignments|r42ActivateAfterControlledRecovery|allowAutonomousSend\" | Select-Object -First 25\nforeach($m in $matches){Write-Output ('SOURCE_LINE '+$m.LineNumber+' '+$m.Line.Trim().Substring(0,[Math]::Min(160,$m.Line.Trim().Length)))}\nWrite-Output '=== END ==='"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "Sanitized live read-only dry-run for provider Send readiness: never send, never reveal chat IDs."
+}
