@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r67-qa-canary-node-proof-gpt6-g1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$dir='E:\\boss-R65-CANARY-VERIFY-20261014-GPT6'\n$sha=([string](& git.exe -C $dir rev-parse HEAD)).Trim()\nif($sha -ne 'ff6b105fde40e3e292c883073f741b4970523ff2'){throw ('EXACT_SHA_MISMATCH '+$sha)}\nif(-not(Test-Path -LiteralPath (Join-Path $dir 'tests\\r65_autonomy_canary.test.cjs'))){throw 'MISSING_TEST'}\n$log=Join-Path $dir 'QA_NODE_TEST_RESULT_GPT6_20261014.txt'\nPush-Location -LiteralPath $dir\ntry { & node.exe --test tests/r65_autonomy_canary.test.cjs 2>&1 | Out-File -LiteralPath $log -Encoding UTF8; $rc=$LASTEXITCODE } finally { Pop-Location }\nWrite-Output ('EXACT_SHA='+$sha)\nWrite-Output ('NODE_EXIT='+$rc)\nSelect-String -LiteralPath $log -Pattern '^ℹ (?:tests|pass|fail|skipped)|^✖'|Select-Object -Last 16|ForEach-Object {Write-Output $_.Line}\nWrite-Output ('LOG='+$log)\nif($rc -ne 0){throw 'QA_NODE_TEST_FAILED'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 55000,
+  "note": "Run agent-authored deterministic Node R65 QA fixture tests at exact pinned SHA in previously reconciled isolated checkout; no provider sends."
+}
