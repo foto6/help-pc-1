@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r66-r45-local-observe-smoke-gpt6-06",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R66-R45-READONLY-TEST-20261014'\n$head=([string](& git.exe -C $root rev-parse HEAD)).Trim()\nif($head -ne 'c332d6eb5ac754deea43f169ebb191f087ced844'){throw 'ISOLATED_SHA_MISMATCH'}\n$plan=Join-Path $root 'app\\autonomy-r45-plan.example.json'\n$p=Get-Content -LiteralPath $plan -Raw|ConvertFrom-Json\nif($p.allowDispatch -ne $false -or $p.brain.enabled -ne $false){throw 'EXAMPLE_PLAN_MUST_REMAIN_DISABLED'}\n$stateFile=Join-Path $root 'R45_OBSERVE_ONLY_20261014.json'\nif(Test-Path -LiteralPath $stateFile){throw 'STATE_FILE_ALREADY_EXISTS'}\n$raw=(& node.exe (Join-Path $root 'app\\autonomy-r45-runner.js') --plan $plan --state $stateFile --bridge 'http://127.0.0.1:17448' --once 2>&1)\n$exit=$LASTEXITCODE\nif($exit -ne 0){Write-Output ('R45_OBSERVE_NODE_EXIT='+$exit);Write-Output (($raw|Out-String).Substring(0,[Math]::Min(1200,($raw|Out-String).Length)));throw 'OBSERVATION_FAILED'}\n$j=($raw|Out-String|ConvertFrom-Json)\nWrite-Output ('RUN_STATUS='+$j.status)\nWrite-Output ('DISPATCHED_COUNT='+@($j.dispatched).Count)\nWrite-Output ('STATE_FILE_WRITTEN='+(Test-Path -LiteralPath $stateFile))\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif(@($j.dispatched).Count -ne 0){throw 'UNEXPECTED_DISPATCH'}\nif($j.status -ne 'READ_ONLY'){throw ('OBSERVE_STATUS_NOT_READONLY '+$j.status)}\nWrite-Output 'READONLY_LIVE_BRIDGE_SMOKE_PASS=True'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "Run one read-only R45 coordinator observation against existing local bridge using disabled example plan and isolated state, no provider sends."
+}
