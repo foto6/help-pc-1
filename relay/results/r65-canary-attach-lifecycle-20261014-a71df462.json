@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $head=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim(); if($head -ne '66e2ca7681b5e4c4affde9641b69e5582b718f99'){throw 'SHA_DRIFT'}; $sv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; $status=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6; $cut=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 6; $rows=@((Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6).assignments); $queued=@($rows|Where-Object{$_.state -eq 'queued'}); if($status.operatorLifecycle.mode -ne 'PAUSED_BROWSER' -or $status.queue.paused -ne $true -or $cut.cutoverState.holdActive -ne $false){throw 'LIFECYCLE_PRECONDITION_MISSING'}; if($sv.config.enabled -ne $true -or $sv.config.allowAutonomousSend -ne $false -or $sv.config.autoContinueEnabled -ne $false -or $sv.config.maxParallelAgents -ne 1){throw 'SAFE_SUPERVISOR_CONFIG_DRIFT'}; if($queued.Count -ne 1 -or $queued[0].id -ne 'ca38c113-c272-4a71-8130-4a57619c334e'){throw 'CANARY_QUEUE_DRIFT'}; $json='{\"mode\":\"RUNNING_ATTACH\",\"changedBy\":\"r65_one_qa_canary\",\"reason\":\"Owner-authorized exactly-one QA Git CI canary, attach existing Chrome only; queue remains paused\"}'; $result=Invoke-RestMethod ($u+'/api/operator-lifecycle') -Method Post -Body ([Text.Encoding]::UTF8.GetBytes($json)) -ContentType 'application/json; charset=utf-8' -TimeoutSec 16; Write-Output ('LIFECYCLE_CHANGED='+$result.changed); $after=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 6; $stat=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6; Write-Output ('POST_MODE='+$after.mode); Write-Output ('POST_QUEUE_PAUSED='+$stat.queue.paused); Write-Output ('POST_SEND_ALLOWED='+((Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6).config.allowAutonomousSend)); Write-Output ('POST_HEALTH='+$stat.operational.state)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "LIFECYCLE_CHANGED=True\r\nPOST_MODE=RUNNING_ATTACH\r\nPOST_QUEUE_PAUSED=True\r\nPOST_SEND_ALLOWED=False\r\nPOST_HEALTH=BLOCKED\r\n",
+      "stdout_bytes": 120,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T04:48:20.516Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T04:48:20.278Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r65-canary-attach-lifecycle-20261014-a71df462"
+    },
+    "request_id": "r65-canary-attach-lifecycle-20261014-a71df462",
+    "started_at": "2026-10-14T04:48:18.958Z",
+    "status": "completed"
+  },
+  "id": "r65-canary-attach-lifecycle-20261014-a71df462",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
