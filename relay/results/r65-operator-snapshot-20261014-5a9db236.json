@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge'; $git=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); $dirty=@(& git.exe -C $root status --porcelain=v1 --untracked-files=no); $h=Invoke-RestMethod 'http://127.0.0.1:17448/api/health' -TimeoutSec 7; $op=Invoke-RestMethod 'http://127.0.0.1:17448/api/operator-lifecycle' -TimeoutSec 7; $hold=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 7; $a=Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 7; $sv=Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog?detect=0' -TimeoutSec 10; Write-Output ('PRODUCTION_HEAD='+$git); Write-Output ('PRODUCTION_DIRTY='+$dirty.Count); Write-Output ('PROD_SERVER_HASH='+(Get-FileHash -LiteralPath (Join-Path $root 'app\\server.js') -Algorithm SHA256).Hash); Write-Output ('HEALTH='+$h.state); Write-Output ('HEALTH_REASON_COUNT='+@($h.reasons).Count); Write-Output ('HOLD='+$hold.cutoverState.holdActive); Write-Output ('OPERATOR_MODE='+$op.mode); Write-Output ('SUPERVISOR_ENABLED='+$sv.config.enabled); Write-Output ('SUPERVISOR_MODE='+$sv.config.mode); Write-Output ('SUPERVISOR_ALLOW_SEND='+$sv.config.allowAutonomousSend); Write-Output ('SUPERVISOR_AUTO_CONTINUE='+$sv.config.autoContinueEnabled); Write-Output ('ASSIGNMENTS='+@($a.assignments).Count); Write-Output ('QUEUED='+@($a.assignments|Where-Object{$_.state -eq 'queued'}).Count); Write-Output ('ACTIVE='+@($a.assignments|Where-Object{$_.state -in @('running','dispatching','awaiting_evidence')}).Count)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "PRODUCTION_HEAD=01e5db790f50b5eb42588b8942f3dd1de4f0a6bf\r\nPRODUCTION_DIRTY=0\r\nPROD_SERVER_HASH=55528794D1D84551ACC7465C00E781984B99B0AB88384AA2EDFC180CD1FC8EB8\r\nHEALTH=DEGRADED\r\nHEALTH_REASON_COUNT=2\r\nHOLD=False\r\nOPERATOR_MODE=PAUSED_BROWSER\r\nSUPERVISOR_ENABLED=False\r\nSUPERVISOR_MODE=off\r\nSUPERVISOR_ALLOW_SEND=False\r\nSUPERVISOR_AUTO_CONTINUE=False\r\nASSIGNMENTS=69\r\nQUEUED=0\r\nACTIVE=0\r\n",
+      "stdout_bytes": 387,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T04:30:01.563Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T04:30:01.302Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r65-operator-snapshot-20261014-5a9db236"
+    },
+    "request_id": "r65-operator-snapshot-20261014-5a9db236",
+    "started_at": "2026-10-14T04:29:59.958Z",
+    "status": "completed"
+  },
+  "id": "r65-operator-snapshot-20261014-5a9db236",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
