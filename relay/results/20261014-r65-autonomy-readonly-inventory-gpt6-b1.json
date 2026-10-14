@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge'; $app=Join-Path $root 'app'\nWrite-Output '=== GIT ==='\nWrite-Output ('HEAD='+((& git.exe -C $root rev-parse HEAD).Trim()))\nWrite-Output ('BRANCH='+((& git.exe -C $root branch --show-current).Trim()))\n$chg=@(& git.exe -C $root status --porcelain=v1 --untracked-files=no)\nWrite-Output ('TRACKED_CHANGES='+$chg.Count)\n& git.exe -C $root log -9 --format='%h %s'\nWrite-Output '=== PRODUCTION ==='\nWrite-Output ('APP_EXISTS='+(Test-Path $app))\nWrite-Output ('SERVER_SHA256='+((Get-FileHash -LiteralPath (Join-Path $app 'server.js') -Algorithm SHA256).Hash))\nforeach($port in @(17448,17410)) { Write-Output (\"LISTEN_$port=\"+[bool](Get-NetTCPConnection -LocalPort $port -State Listen -ErrorAction SilentlyContinue)) }\nforeach($f in @('autonomy-r45-core.js','autonomy-r57-gpt-git.js','autonomy-r57-successor.js','existing-tab-session-r55.js','r65-global-canary-cap.test.js')) { Write-Output ($f+'='+(Test-Path (Join-Path $app $f))) }\nWrite-Output '=== STATE SAFE FIELDS ==='\n$dp=Join-Path $app 'data'\nforeach($file in @('state.json','supervisor-watchdog.json','projects-live-control-plane-cutover-r42.json')) {\n $fp=Join-Path $dp $file\n if(-not (Test-Path $fp)){Write-Output ($file+'=MISSING');continue}\n try {\n  $j=Get-Content -LiteralPath $fp -Raw | ConvertFrom-Json\n  if($file -eq 'state.json'){\n    Write-Output (\"paused=\"+$j.settings.paused)\n    $as=@($j.agentAssignments)\n    Write-Output ('assignments='+$as.Count)\n    $as|Group-Object state|ForEach-Object{Write-Output ('assignment_'+$_.Name+'='+$_.Count)}\n    Write-Output ('sticky_pin_count='+@($j.stickyExistingTabPins.PSObject.Properties).Count)\n  }elseif($file -eq 'supervisor-watchdog.json'){\n   Write-Output (\"supervisor_enabled=\"+$j.enabled)\n   Write-Output (\"supervisor_mode=\"+$j.mode)\n   Write-Output (\"allow_autonomous_send=\"+$j.allowAutonomousSend)\n   Write-Output (\"auto_continue=\"+$j.autoContinueEnabled)\n   Write-Output (\"max_parallel=\"+$j.maxParallelAgents)\n  }else{\n   Write-Output (\"r42_hold_active=\"+$j.holdActive)\n  }\n }catch{Write-Output ($file+'=INVALID_OR_UNREADABLE')}\n}\nWrite-Output '=== END ==='"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "You cannot call a method on a null-valued expression.\r\nAt line:5 char:1\r\n+ Write-Output ('BRANCH='+((& git.exe -C $root branch --show-current).T ...\r\n+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : InvalidOperation: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : InvokeMethodOnNull\r\n \r\n",
+      "stderr_bytes": 368,
+      "stderr_truncated": false,
+      "stdout": "=== GIT ===\r\nHEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n",
+      "stdout_bytes": 60,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:15:26.021Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:15:25.780Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r65-autonomy-readonly-inventory-gpt6-b1"
+    },
+    "request_id": "20261014-r65-autonomy-readonly-inventory-gpt6-b1",
+    "started_at": "2026-10-14T05:15:24.780Z",
+    "status": "completed"
+  },
+  "id": "20261014-r65-autonomy-readonly-inventory-gpt6-b1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
