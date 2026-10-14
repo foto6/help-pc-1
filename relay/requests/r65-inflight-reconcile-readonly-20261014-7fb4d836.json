@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-inflight-reconcile-readonly-20261014-7fb4d836",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$u='http://127.0.0.1:17448';$a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 7;$rows=@($a.assignments|Where-Object{$_.state -in @('running','dispatching','awaiting_evidence','unknown')});Write-Output ('NONTERMINAL='+$rows.Count);foreach($x in $rows){Write-Output ('STATE='+$x.state);Write-Output ('DISPATCHCOUNT='+$x.dispatchCount);Write-Output ('SUBMIT_ATTEMPTED='+$x.dispatchSubmitAttempted);Write-Output ('LAST_DIAGNOSTIC_CLASS='+([string]$x.lastDiagnostic -replace '[^a-zA-Z0-9_:.-]','_').Substring(0,[Math]::Min(110,([string]$x.lastDiagnostic).Length)));Write-Output ('HAS_CI='+([bool]$x.ciRunId))};$h=Invoke-RestMethod ($u+'/api/health') -TimeoutSec 7;Write-Output ('QUEUE_SAFETY='+$h.queueSafety.queueDisposition);Write-Output ('HEALTH='+$h.state)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only nonterminal assignment effect count and gate; no ids, text, secrets, Sends or mutation"
+}
