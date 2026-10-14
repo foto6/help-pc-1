@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r68-isolated-windows-build-gpt6-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$target='E:\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6'\n$expected='f328f7b9deb517402a55374734be3d011dd9d0b7'\nif(Test-Path -LiteralPath $target){throw 'R68_AUDIT_TARGET_EXISTS'}\n& git.exe clone --quiet --depth 1 --single-branch --no-tags --branch agent/r68-live-chat-observability-20261014 https://github.com/foto6/WebAIBridge.git $target\nif($LASTEXITCODE -ne 0){throw 'R68_CLONE_FAILED'}\n$head=([string](& git.exe -C $target rev-parse HEAD)).Trim()\nif($head -ne $expected){throw ('R68_EXACT_HEAD_DIFFERENT '+$head)}\n$log=Join-Path $target 'R68_WINDOWS_TESTS.txt'\n$uiLog=Join-Path $target 'R68_HTML_SYNTAX.txt'\nPush-Location (Join-Path $target 'app')\ntry{\n & node.exe --check server.js *> $uiLog\n if($LASTEXITCODE -ne 0){throw 'SERVER_SYNTAX_FAIL'}\n $html=Get-Content -LiteralPath 'ui.html' -Raw\n $match=[regex]::Match($html,'(?s)<script>(.*?)</script>')\n if(-not $match.Success){throw 'UI_SCRIPT_NOT_FOUND'}\n $uiJs=Join-Path $target 'R68_ui_syntax.js'\n [System.IO.File]::WriteAllText($uiJs,$match.Groups[1].Value,[System.Text.UTF8Encoding]::new($false))\n & node.exe --check $uiJs *>> $uiLog\n if($LASTEXITCODE -ne 0){throw 'UI_SCRIPT_SYNTAX_FAIL'}\n & node.exe --test r68-live-chat-observability.test.js autonomous-send-gate-r50.test.js existing-tab-session-r55.test.js r65-global-canary-cap.test.js *> $log\n $rc=$LASTEXITCODE\n & node.exe ui-static.test.js *> (Join-Path $target 'R68_UI_STATIC_TEST.txt')\n $uiRc=$LASTEXITCODE\n}finally{Pop-Location}\nWrite-Output ('EXACT_SHA='+$head)\nWrite-Output ('NODE_EXIT='+$rc)\nWrite-Output ('UI_STATIC_EXIT='+$uiRc)\nSelect-String -LiteralPath $log -Pattern '^ℹ (?:tests|pass|fail|skipped)|^✖'|Select-Object -Last 20|ForEach-Object {Write-Output $_.Line}\nWrite-Output ('UI_LOG='+$uiLog)\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($rc -ne 0 -or $uiRc -ne 0){throw 'R68_REGRESSION_FAILURE'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 110000,
+  "note": "Only isolated R68 checkout. Test new all-chat scan and R50/R65 safety plus server/UI syntax; no running Bridge or Chrome change."
+}
