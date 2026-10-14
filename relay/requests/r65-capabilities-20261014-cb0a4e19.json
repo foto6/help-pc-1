@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-capabilities-20261014-cb0a4e19",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "R65 read-only PC Control transport capability verification"
+}
