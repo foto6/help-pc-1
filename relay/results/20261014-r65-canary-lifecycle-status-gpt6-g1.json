@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$base='http://127.0.0.1:17448'\nWrite-Output '=== OPERATOR LIFECYCLE ==='\ntry {\n $j=Invoke-RestMethod -Uri ($base+'/api/operator-lifecycle') -TimeoutSec 12\n Write-Output ('LIFECYCLE_KEYS='+(@($j.PSObject.Properties.Name) -join ','))\n foreach($k in @('mode','state','status','operatorMode','effectiveMode','canDispatch','dispatchAllowed','reconciliationRequired','running','reason')) {\n  if($j.PSObject.Properties.Name -contains $k){Write-Output ($k+'='+[string]$j.$k)}\n }\n if($j.lifecycle){foreach($k in @('mode','state','status','reconciliationRequired')){if($j.lifecycle.PSObject.Properties.Name -contains $k){Write-Output ('lifecycle_'+$k+'='+[string]$j.lifecycle.$k)}}}\n} catch { Write-Output ('LIFECYCLE_ERROR='+$_.Exception.Message.Substring(0,[Math]::Min(150,$_.Exception.Message.Length)))}\nWrite-Output '=== ACTIVE CURRENT ASSIGNMENTS ==='\n$a=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 12\n$live=@($a.assignments|Where-Object {$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')})\nWrite-Output ('UNSETTLED_COUNT='+$live.Count)\nWrite-Output ('COUNTS='+($a.counts|ConvertTo-Json -Compress -Depth 2))\nWrite-Output '=== AGENT MATCHING ==='\n$s=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog?detect=0') -TimeoutSec 12\n$d=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog/agent-assignments/dry-run') -TimeoutSec 12\n$n=0\nforeach($row in @($d.rows)){\n $n++\n $match=@($s.config.managedChats|Where-Object{$_.id -eq $row.chatId})|Select-Object -First 1\n $role=if($match){[string]$match.role}else{'NONE'}\n Write-Output ('AGENT_'+$n+' role='+$role+' preflight='+$row.preflightReason+' allowed='+$row.preflightAllowed+' scheduler='+$row.schedulerSelected+' high='+[bool](@($row.snapshots|Where-Object {$_.highMode}).Count))\n}\nWrite-Output '=== END ==='"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "=== OPERATOR LIFECYCLE ===\r\nLIFECYCLE_KEYS=contract,mode,revision,changedAt,changedBy,reason,previousMode,queuePausedBeforeAll,quiescence,startup,queuePaused,profiles\r\nmode=RUNNING_ATTACH\r\nreason=Owner-authorized exactly-one QA Git CI canary, attach existing Chrome only; queue remains paused\r\n=== ACTIVE CURRENT ASSIGNMENTS ===\r\nUNSETTLED_COUNT=0\r\nCOUNTS={\"cancelled\":12,\"blocked\":36,\"failed\":12,\"completed\":10}\r\n=== AGENT MATCHING ===\r\nAGENT_1 role=bridge preflight=ready allowed=True scheduler=True high=True\r\nAGENT_2 role=media preflight=ready allowed=True scheduler=False high=True\r\nAGENT_3 role=creator preflight=ready allowed=True scheduler=False high=True\r\nAGENT_4 role=growth preflight=target_chat_unavailable allowed=False scheduler=False high=False\r\nAGENT_5 role=native-mcp preflight=active_generation allowed=False scheduler=False high=True\r\nAGENT_6 role=qa preflight=ready allowed=True scheduler=False high=True\r\nAGENT_7 role=owner-curator preflight=ready allowed=True scheduler=False high=True\r\n=== END ===\r\n",
+      "stdout_bytes": 1022,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:19:58.833Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:19:58.583Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r65-canary-lifecycle-status-gpt6-g1"
+    },
+    "request_id": "20261014-r65-canary-lifecycle-status-gpt6-g1",
+    "started_at": "2026-10-14T05:19:57.579Z",
+    "status": "completed"
+  },
+  "id": "20261014-r65-canary-lifecycle-status-gpt6-g1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
