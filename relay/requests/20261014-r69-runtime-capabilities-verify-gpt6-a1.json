@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r69-runtime-capabilities-verify-gpt6-a1",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read-only health/capability verification before R69 live viewer lifecycle and audit changes."
+}
