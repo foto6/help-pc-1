@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r67-qa-source-blob-normalization-check-gpt6-j1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$js=@'\nconst fs=require('node:fs'),crypto=require('node:crypto'),path=require('node:path');\nconst root='E:\\\\boss-R65-CANARY-VERIFY-20261014-GPT6';\nconst dir=path.join(root,'hardwave_qa','fixtures','r65_autonomy');\nconst m=JSON.parse(fs.readFileSync(path.join(dir,'source_manifest.json'),'utf8'));\nfunction blob(b){return crypto.createHash('sha1').update('blob '+b.length+'\\0').update(b).digest('hex')}\nfor(const r of m.sources){let b=fs.readFileSync(path.join(dir,path.basename(r.fixture_path)));let x=Buffer.from(b.toString('utf8').replace(/\\r\\n/g,'\\n'));console.log(path.basename(r.fixture_path)+' raw='+String(blob(b)===r.source_blob_sha1)+' normalized='+String(blob(x)===r.source_blob_sha1)+' crlf='+String(b.includes(Buffer.from('\\r\\n'))))}\n'@\n& node.exe -e $js\nif($LASTEXITCODE -ne 0){throw 'BLOB_CHECK_FAILED'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only cross-platform Git blob verification of isolated QA source fixtures; no mutation or provider activity."
+}
