@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R69-OBSERVABILITY-20261014-GPT6'\n$sha='03e8ec94e59ef4efbb748afed418eafada844add'\nif(([string](& git.exe -C $root rev-parse HEAD)).Trim() -ne $sha){throw 'ISOLATED_HEAD_CHANGED'}\n$tests=@('autonomy-r45.test.js','autonomy-r45-brain.test.js','autonomy-r45-git-gate.test.js','autonomy-r45-lock.test.js','autonomy-r45-review.test.js','autonomy-r45-launcher.test.js','autonomy-r57-gpt-git.test.js','autonomy-r57-successor.test.js','operator-lifecycle-r40.test.js','projects-live-control-plane-r41.test.js','live-control-plane-cutover-r42.test.js','autonomous-send-gate-r50.test.js','existing-tab-session-r55.test.js','existing-tab-session-r56-cdp.test.js','r56-worker-sticky.test.js','r62-r42-sticky-release-gate.test.js','r63-r42-staged-activation.test.js','r64-idle-health-and-dryrun.test.js','r65-global-canary-cap.test.js','r68-live-chat-observability.test.js','r68-live-viewer.test.js','r69-viewer-bootstrap.test.js')\n$missing=@($tests|Where-Object{-not(Test-Path -LiteralPath (Join-Path $root ('app\\'+$_)))})\nif($missing.Count){throw ('MISSING_TESTS '+($missing -join ','))}\n$log=Join-Path $root 'R69_COMPLETE_AUTONOMY_REGRESSION.txt'\nPush-Location -LiteralPath (Join-Path $root 'app')\ntry{& node.exe --test @tests 2>&1|Out-File -LiteralPath $log -Encoding UTF8;$rc=$LASTEXITCODE}finally{Pop-Location}\nWrite-Output ('EXACT_SHA='+$sha)\nWrite-Output ('TEST_FILES='+$tests.Count)\nWrite-Output ('RESULT='+$rc)\nSelect-String -LiteralPath $log -Pattern '^ℹ (?:tests|pass|fail|skipped|cancelled)|^✖'|Select-Object -Last 17|ForEach-Object{Write-Output $_.Line}\nWrite-Output ('PROD_UNMODIFIED_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($rc -ne 0){throw 'R69_WIDE_AUTONOMY_REGRESSION_FAILED'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "R69_WIDE_AUTONOMY_REGRESSION_FAILED\r\nAt line:16 char:15\r\n+ if($rc -ne 0){throw 'R69_WIDE_AUTONOMY_REGRESSION_FAILED'}\r\n+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (R69_WIDE_AUTONOMY_REGRESSION_FAILED:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : R69_WIDE_AUTONOMY_REGRESSION_FAILED\r\n \r\n",
+      "stderr_bytes": 365,
+      "stderr_truncated": false,
+      "stdout": "EXACT_SHA=03e8ec94e59ef4efbb748afed418eafada844add\r\nTEST_FILES=22\r\nRESULT=1\r\n✖ R45 Windows R45_CHECK_READONLY.cmd is strictly read-only (2.6635ms)\r\n✖ R45 Windows R45_MONITOR_READONLY.cmd is strictly read-only (0.3508ms)\r\nℹ tests 194\r\nℹ pass 192\r\nℹ fail 2\r\nℹ cancelled 0\r\nℹ skipped 0\r\n✖ failing tests:\r\n✖ R45 Windows R45_CHECK_READONLY.cmd is strictly read-only (2.6635ms)\r\n✖ R45 Windows R45_MONITOR_READONLY.cmd is strictly read-only (0.3508ms)\r\nPROD_UNMODIFIED_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n",
+      "stdout_bytes": 529,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T06:44:26.565Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T06:44:26.320Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r69-comprehensive-autonomy-regressions-gpt6-e1"
+    },
+    "request_id": "20261014-r69-comprehensive-autonomy-regressions-gpt6-e1",
+    "started_at": "2026-10-14T06:44:24.236Z",
+    "status": "completed"
+  },
+  "id": "20261014-r69-comprehensive-autonomy-regressions-gpt6-e1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
