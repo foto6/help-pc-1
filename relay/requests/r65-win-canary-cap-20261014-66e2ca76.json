@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-win-canary-cap-20261014-66e2ca76",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R65-SHADOW'; $expected='66e2ca7681b5e4c4affde9641b69e5582b718f99'; if(Test-Path -LiteralPath $root){throw 'SHADOW_ALREADY_EXISTS'}; & git.exe clone --depth 1 --single-branch --no-tags --branch agent/bridge-r65-global-canary-dispatch-cap-20261014 https://github.com/foto6/WebAIBridge.git $root; if($LASTEXITCODE -ne 0){throw 'R65_CLONE_FAILED'}; $sha=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($sha -ne $expected){throw 'R65_EXACT_HEAD_MISMATCH'}; $command=\"cd /d E:\\\\WebAIBridge-R65-SHADOW\\\\app && node.exe --check server.js && node.exe --check supervisor-control.js && node.exe --check agent-execution-control.js && node.exe --test --test-reporter=tap r65-global-canary-cap.test.js r64-idle-health-and-dryrun.test.js supervisor-control.test.js agent-execution-control.test.js operational-health.test.js r63-r42-staged-activation.test.js r62-r42-sticky-release-gate.test.js autonomous-send-gate-r50.test.js autonomy-r45.test.js autonomy-r45-brain.test.js autonomy-r45-git-gate.test.js autonomy-r45-lock.test.js autonomy-r45-review.test.js autonomy-r57-gpt-git.test.js autonomy-r57-successor.test.js existing-tab-session-r55.test.js existing-tab-session-r56-cdp.test.js r56-worker-sticky.test.js r56-r42-hold-failclosed.test.js r56-launch-preservation.test.js r56-sticky-readonly-preflight.test.js r34-sticky-chat-exact-id.test.js r58-shadow-rehearsal-contract.test.js > E:\\\\WebAIBridge-R65-SHADOW\\\\R65_TESTS.log 2>&1\"; & cmd.exe /d /c $command; $code=$LASTEXITCODE; Write-Output ('R65_EXACT_SHA='+$sha); Write-Output ('R65_NODE_RC='+$code); Write-Output ('R65_LOG='+(Join-Path $root 'R65_TESTS.log')); if(Test-Path -LiteralPath (Join-Path $root 'R65_TESTS.log')){Get-Content -LiteralPath (Join-Path $root 'R65_TESTS.log') -Tail 15}; Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash); if($code -ne 0){exit $code}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 80000,
+  "note": "One-time exact-SHA new R65 shadow checkout and targeted Windows Node tests of global one-agent across projects, R50/R56/R63/R64. No production/Chrome mutation, redirect output to local shadow log"
+}
