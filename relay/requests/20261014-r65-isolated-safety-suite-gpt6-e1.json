@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r65-isolated-safety-suite-gpt6-e1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R65-AUDIT-20261014'\n$expect='66e2ca7681b5e4c4affde9641b69e5582b718f99'\nif(-not(Test-Path -LiteralPath (Join-Path $root 'app\\r65-global-canary-cap.test.js'))){throw 'AUDIT_COPY_MISSING'}\n$sha=[string](& git.exe -C $root rev-parse HEAD)\nif($sha.Trim() -ne $expect){throw 'AUDIT_SHA_CHANGED'}\n$files=@('autonomous-send-gate-r50.test.js','existing-tab-session-r55.test.js','r56-r42-hold-failclosed.test.js','r56-worker-sticky.test.js','r62-r42-sticky-release-gate.test.js','r63-r42-staged-activation.test.js','r64-idle-health-and-dryrun.test.js','r65-global-canary-cap.test.js','autonomy-r57-successor.test.js','autonomy-r57-gpt-git.test.js')\n$log=Join-Path $root 'R65_SAFETY_SUITE_GPT6_20261014.log'\nPush-Location -LiteralPath (Join-Path $root 'app')\ntry { & node.exe --test @files 2>&1 | Out-File -LiteralPath $log -Encoding utf8; $exit=$LASTEXITCODE } finally{Pop-Location}\nWrite-Output ('AUDIT_SHA='+$sha)\nWrite-Output ('TEST_EXIT='+$exit)\nGet-Content -LiteralPath $log -Tail 21\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($exit -ne 0){throw 'ISOLATED_SAFETY_SUITE_FAILED'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 100000,
+  "note": "Only isolated R65 audit checkout; run guarded-send, sticky-tab, activation, lifecycle and planner tests; log locally."
+}
