@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R65-AUDIT-20261014'\n$expect='66e2ca7681b5e4c4affde9641b69e5582b718f99'\nif(-not(Test-Path -LiteralPath (Join-Path $root 'app\\r65-global-canary-cap.test.js'))){throw 'AUDIT_COPY_MISSING'}\n$sha=[string](& git.exe -C $root rev-parse HEAD)\nif($sha.Trim() -ne $expect){throw 'AUDIT_SHA_CHANGED'}\n$files=@('autonomous-send-gate-r50.test.js','existing-tab-session-r55.test.js','r56-r42-hold-failclosed.test.js','r56-worker-sticky.test.js','r62-r42-sticky-release-gate.test.js','r63-r42-staged-activation.test.js','r64-idle-health-and-dryrun.test.js','r65-global-canary-cap.test.js','autonomy-r57-successor.test.js','autonomy-r57-gpt-git.test.js')\n$log=Join-Path $root 'R65_SAFETY_SUITE_GPT6_20261014.log'\nPush-Location -LiteralPath (Join-Path $root 'app')\ntry { & node.exe --test @files 2>&1 | Out-File -LiteralPath $log -Encoding utf8; $exit=$LASTEXITCODE } finally{Pop-Location}\nWrite-Output ('AUDIT_SHA='+$sha)\nWrite-Output ('TEST_EXIT='+$exit)\nGet-Content -LiteralPath $log -Tail 21\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($exit -ne 0){throw 'ISOLATED_SAFETY_SUITE_FAILED'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "AUDIT_SHA=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\nTEST_EXIT=0\r\n✔ R62 R42 recovery never restores unsafe legacy Chrome auto-open/recovery flags (0.388ms)\r\n✔ R63 keeps all provider dispatch controls off during R42 HOLD release (1.0224ms)\r\n✔ R63 has no ChatGPT Chrome, watchdog, lifecycle or startup side effects (0.2295ms)\r\n✔ R63 strict R62 gate precedes any configuration write or pause release (1.0551ms)\r\n✔ R64 paused empty queue makes a stale successful demand probe dormant, not green READY (2.6363ms)\r\n✔ R64 never disguises failed or blocked Git/CDP checks as dormant (0.3521ms)\r\n✔ R64 uses idle-probe exemption only for explicitly paused, fully empty queue (0.3177ms)\r\n✔ R64 dry run uses actual R50 operator/HOLD/pause admission and never claims paused Sends (0.4837ms)\r\n✔ R65 defaults to ONE global coding assignment and clamps operator config (1.757ms)\r\n✔ R65 canary cap spans independent projects even if each project allows twenty (14.0208ms)\r\n✔ R65 existing active assignment consumes the only canary slot globally (0.3597ms)\r\n✔ R65 local project resource quota still applies after global cap (0.4001ms)\r\n✔ R65 real dispatcher and harmless dry-run use same operator configured cap (2.8056ms)\r\nℹ tests 75\r\nℹ suites 0\r\nℹ pass 75\r\nℹ fail 0\r\nℹ cancelled 0\r\nℹ skipped 0\r\nℹ todo 0\r\nℹ duration_ms 359.3178\r\nPRODUCTION_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n",
+      "stdout_bytes": 1412,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:18:23.085Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:18:22.842Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r65-isolated-safety-suite-gpt6-e1"
+    },
+    "request_id": "20261014-r65-isolated-safety-suite-gpt6-e1",
+    "started_at": "2026-10-14T05:18:21.581Z",
+    "status": "completed"
+  },
+  "id": "20261014-r65-isolated-safety-suite-gpt6-e1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
