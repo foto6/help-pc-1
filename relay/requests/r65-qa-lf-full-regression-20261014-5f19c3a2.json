@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-qa-lf-full-regression-20261014-5f19c3a2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\BossR65QA-LF-SHADOW'; $head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($head -ne '78d6266c499ccc8b5e5220ce3a5c29e245c55491'){throw 'SHA_DRIFT'}; $expected='831804bedce4652156ac052e1c50f1e6f3642cd36dadbc58a00907804e646a54'; $file=Join-Path $root 'hardwave_qa\\certificates\\source\\INTEGRATION_R8_FINAL_MATRIX.6ab529846e99e572d77006dee48d6c4b01caea12.json'; if((Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant() -ne $expected){throw 'SIGNED_EVIDENCE_CHANGED'}; $cmd=\"cd /d E:\\\\BossR65QA-LF-SHADOW && py.exe -3 -m unittest discover -s tests -v > E:\\\\BossR65QA-LF-SHADOW\\\\R65_QA_LF_FULL_TESTS.log 2>&1\"; & cmd.exe /d /c $cmd; $rc=$LASTEXITCODE; Write-Output ('QA_ALL_TESTS_RC='+$rc); Get-Content -LiteralPath (Join-Path $root 'R65_QA_LF_FULL_TESTS.log') -Tail 20; if($rc -ne 0){exit $rc}"
+    ],
+    "cwd": "E:\\BossR65QA-LF-SHADOW"
+  },
+  "timeout_ms": 58000,
+  "note": "Read-only source/QA test work in immutable LF-preserving local clone. Full independent unittest suite output redirected; no production/Chrome/provider actions"
+}
