@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$log='E:\\WebAIBridge-R65-AUDIT-20261014\\AUTONOMY_ISOLATED_CHECK_20261014_GPT6.txt'\nif(!(Test-Path -LiteralPath $log)){throw 'NO_ISOLATED_LOG'}\nWrite-Output 'TEST_FAILURE_SUMMARY'\nSelect-String -LiteralPath $log -Pattern '^# (?:tests|pass|fail|cancelled|skipped)|^ℹ (?:tests|pass|fail)|^✖' | Select-Object -Last 45 | ForEach-Object{Write-Output $_.Line}\nWrite-Output 'LAUNCHER_FILE_EXISTENCE'\nforeach($base in @('E:\\WebAIBridge','E:\\WebAIBridge-R65-AUDIT-20261014','E:\\WebAIBridge-R58-SHADOW')){\n foreach($n in @('R45_CHECK_READONLY.cmd','R45_MONITOR_READONLY.cmd')){\n  Write-Output ($base+' '+$n+' exists='+[bool](Test-Path -LiteralPath (Join-Path $base ('app\\'+$n))))\n }\n}\nWrite-Output 'DONE'"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "TEST_FAILURE_SUMMARY\r\n✖ R45 Windows R45_CHECK_READONLY.cmd is strictly read-only (1.969ms)\r\n✖ R45 Windows R45_MONITOR_READONLY.cmd is strictly read-only (0.3613ms)\r\nℹ tests 177\r\nℹ pass 175\r\nℹ fail 2\r\n✖ failing tests:\r\n✖ R45 Windows R45_CHECK_READONLY.cmd is strictly read-only (1.969ms)\r\n✖ R45 Windows R45_MONITOR_READONLY.cmd is strictly read-only (0.3613ms)\r\nLAUNCHER_FILE_EXISTENCE\r\nE:\\WebAIBridge R45_CHECK_READONLY.cmd exists=False\r\nE:\\WebAIBridge R45_MONITOR_READONLY.cmd exists=False\r\nE:\\WebAIBridge-R65-AUDIT-20261014 R45_CHECK_READONLY.cmd exists=False\r\nE:\\WebAIBridge-R65-AUDIT-20261014 R45_MONITOR_READONLY.cmd exists=False\r\nE:\\WebAIBridge-R58-SHADOW R45_CHECK_READONLY.cmd exists=False\r\nE:\\WebAIBridge-R58-SHADOW R45_MONITOR_READONLY.cmd exists=False\r\nDONE\r\n",
+      "stdout_bytes": 786,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:30:44.787Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:30:44.546Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r65-shadow-failure-audit-gpt6-04"
+    },
+    "request_id": "20261014-r65-shadow-failure-audit-gpt6-04",
+    "started_at": "2026-10-14T05:30:43.761Z",
+    "status": "completed"
+  },
+  "id": "20261014-r65-shadow-failure-audit-gpt6-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
