@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r67-qa-python-regression-proof-gpt6-l2",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$dir='E:\\boss-R67-QA-VERIFY-20261014-GPT6'\n$expected='b88a80f930add09de9de6d4d7d1866dedfbf65be'\nif(([string](& git.exe -C $dir rev-parse HEAD)).Trim() -ne $expected){throw 'WRONG_QA_FIX_HEAD'}\n$log=Join-Path $dir 'QA_R67_PYTHON_RESULT.txt'\nif(Test-Path -LiteralPath $log){throw 'EXISTING_PYTHON_LOG_NEEDS_RECONCILIATION'}\nPush-Location -LiteralPath $dir\ntry{$ErrorActionPreference='Continue';& python.exe -m unittest discover -s tests -v 2>&1|Out-File -LiteralPath $log -Encoding UTF8;$rc=$LASTEXITCODE}finally{Pop-Location;$ErrorActionPreference='Stop'}\nWrite-Output ('QA_SHA='+$expected)\nWrite-Output ('PYTHON_EXIT='+$rc)\nGet-Content -LiteralPath $log -Tail 28\nWrite-Output ('LOG='+$log)\nWrite-Output ('BRIDGE_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($rc -ne 0){throw 'QA_PYTHON_REGRESSIONS_FAILED'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 120000,
+  "note": "QA Python tests in exact R67 isolated clone, after original request rejected before execution by timeout schema; no production changes."
+}
