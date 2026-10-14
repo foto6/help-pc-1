@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $expected='66e2ca7681b5e4c4affde9641b69e5582b718f99'; $head=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim(); if($head -ne $expected){throw 'SOURCE_HEAD_DRIFT'}; $op=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 5; $sv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 5; $a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 5; $cut=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 5; if($op.mode -ne 'PAUSED_BROWSER' -or $op.queuePaused -ne $true){throw 'OPERATOR_NOT_PAUSED'}; if($sv.config.enabled -ne $false -or $sv.config.allowAutonomousSend -ne $false){throw 'SUPERVISOR_NOT_DISABLED'}; if($cut.cutoverState.holdActive -ne $true){throw 'R42_HOLD_NOT_ACTIVE'}; $uncertain=@($a.assignments|Where-Object{$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}); if($uncertain.Count -ne 0){throw ('UNSETTLED_ASSIGNMENTS='+$uncertain.Count)}; $reconcile=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/reconcile-live') -Method Post -Body '{}' -ContentType 'application/json' -TimeoutSec 55; Write-Output ('RECONCILE_CONTRACT='+$reconcile.object); Write-Output ('READONLY_APPLY_SAFE='+$reconcile.applySafe); Write-Output ('PROVIDER_MUTATION='+$reconcile.providerMutationPerformed); Write-Output ('DIFF_COUNT='+$reconcile.diff.count); Write-Output ('CONFLICTS='+@($reconcile.conflicts).Count); Write-Output ('UNMANAGED_DISCOVERED='+@($reconcile.unmanagedDiscovered).Count); Write-Output ('BEFORE_AGENTS='+@($reconcile.before.PSObject.Properties).Count); Write-Output ('AFTER_AGENTS='+@($reconcile.after.PSObject.Properties).Count); $after=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 5; Write-Output ('POST_HOLD='+$after.cutoverState.holdActive); Write-Output ('POST_RECONCILE_COUNT='+$after.cutoverState.lastReadOnlyReconcileDiffCount)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "RECONCILE_CONTRACT=bridge.projects_live_control_plane_live_reconcile.r42.v1\r\nREADONLY_APPLY_SAFE=False\r\nPROVIDER_MUTATION=False\r\nDIFF_COUNT=6\r\nCONFLICTS=0\r\nUNMANAGED_DISCOVERED=0\r\nBEFORE_AGENTS=7\r\nAFTER_AGENTS=7\r\nPOST_HOLD=True\r\nPOST_RECONCILE_COUNT=6\r\n",
+      "stdout_bytes": 253,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T04:41:02.737Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T04:41:02.390Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r65-r42-live-readonly-reconcile-20261014-93ab0e51"
+    },
+    "request_id": "r65-r42-live-readonly-reconcile-20261014-93ab0e51",
+    "started_at": "2026-10-14T04:40:48.257Z",
+    "status": "completed"
+  },
+  "id": "r65-r42-live-readonly-reconcile-20261014-93ab0e51",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
