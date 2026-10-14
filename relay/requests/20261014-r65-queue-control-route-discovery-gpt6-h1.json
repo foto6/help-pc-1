@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r65-queue-control-route-discovery-gpt6-h1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$src='E:\\WebAIBridge\\app\\server.js'\nWrite-Output '=== PAUSE/RESUME ROUTE SOURCE ==='\n$patterns=@(\"url.pathname === '/api/settings'\",\"url.pathname === '/api/ai-profiles'\",\"url.pathname === '/api/supervisor-watchdog/queue'\",\"settings.paused =\",\"settings.paused=\",\"paused:\",\"pause-assignments\",\"/api/supervisor-watchdog/agent\")\nforeach($p in $patterns) {\n $m=@(Select-String -LiteralPath $src -SimpleMatch -Pattern $p|Select-Object -First 18)\n Write-Output ('PATTERN '+$p+' COUNT_SHOWN='+$m.Count)\n foreach($hit in $m){Write-Output ('LINE '+$hit.LineNumber+' '+$hit.Line.Trim().Substring(0,[Math]::Min(175,$hit.Line.Trim().Length)))}\n}\nWrite-Output '=== END ==='"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only discover supported queue resume API, never edit production state directly."
+}
