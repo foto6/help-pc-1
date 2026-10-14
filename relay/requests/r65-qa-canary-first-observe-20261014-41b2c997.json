@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-qa-canary-first-observe-20261014-41b2c997",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 7; $c=@($a.assignments|Where-Object{$_.id -eq 'ca38c113-c272-4a71-8130-4a57619c334e'}); if($c.Count -ne 1){throw 'CANARY_NOT_FOUND_OR_DUPLICATE'}; $x=$c[0]; Write-Output ('CANARY_STATE='+$x.state); Write-Output ('CANARY_DISPATCH_COUNT='+$x.dispatchCount); Write-Output ('CANARY_SEND_ATTEMPTED='+$x.dispatchSubmitAttempted); Write-Output ('CANARY_LAST_SEND_PRESENT='+[bool]$x.lastDispatchAt); Write-Output ('CANARY_PREFLIGHT='+$x.lastPreflightReason); Write-Output ('CANARY_DIAGNOSTIC='+([string]$x.lastDiagnostic).Substring(0,[Math]::Min(180,([string]$x.lastDiagnostic).Length))); Write-Output ('CANARY_CI_RUN_PRESENT='+[bool]$x.ciRunId); Write-Output ('OTHERS_QUEUED='+@($a.assignments|Where-Object{$_.state -eq 'queued' -and $_.id -ne $x.id}).Count); Write-Output ('OTHERS_ACTIVE='+@($a.assignments|Where-Object{$_.state -in @('running','dispatching','awaiting_evidence') -and $_.id -ne $x.id}).Count); $s=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 7; Write-Output ('QUEUE_PAUSED='+$s.queue.paused); Write-Output ('HEALTH='+$s.operational.state)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Read-only one single owner-authorized QA canary state and durable provider send/evidence counters. No new Send, no browser mutation or requeue"
+}
