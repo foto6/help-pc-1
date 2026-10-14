@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r64-dry-run-admission-20261014-t1103-89e30cd1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $l=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 7; $sv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 9; $dr=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments/dry-run') -TimeoutSec 24; $rows=@($dr.rows); Write-Output ('OPERATOR_MODE='+$l.mode); Write-Output ('OPERATOR_STATE='+$l.state); Write-Output ('WATCHDOG_ENABLED='+$sv.config.enabled); Write-Output ('WATCHDOG_MODE='+$sv.config.mode); Write-Output ('WATCHDOG_AUTOSEND='+$sv.config.allowAutonomousSend); Write-Output ('WATCHDOG_AUTOCONTINUE='+$sv.config.autoContinueEnabled); Write-Output ('DRY_RUN='+$dr.dryRun); Write-Output ('SEND_ATTEMPTED='+$dr.sendAttempted); Write-Output ('BROWSER_OPEN_ATTEMPTED='+$dr.openedClosedChats); Write-Output ('DRY_CANDIDATES='+$rows.Count); Write-Output ('DRY_HIGH='+(@($rows|Where-Object{@($_.snapshots|Where-Object{$_.highMode}).Count -ge 1}).Count)); Write-Output ('DRY_PREFLIGHT_READY='+@($rows|Where-Object{$_.preflightAllowed}).Count); Write-Output ('DRY_WOULD_DISPATCH='+@($rows|Where-Object{$_.wouldDispatch}).Count); $hist=@{};foreach($row in $rows){$key=([string]$row.preflightReason);if(-not $hist.ContainsKey($key)){$hist[$key]=0};$hist[$key]++};foreach($k in $hist.Keys){Write-Output ('DRY_REASON_'+$k+'='+$hist[$k])}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 42000,
+  "note": "Read-only R64 original-tab GPT High-mode exact binding dispatch dry-run and operator lifecycle. NO provider Send/no new tabs; output aggregate reason counts only"
+}
