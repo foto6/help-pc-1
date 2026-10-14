@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-post-cutover-evidence-20261014-5317d9af",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $root='E:\\WebAIBridge'; $head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($head -ne '66e2ca7681b5e4c4affde9641b69e5582b718f99'){throw 'R65_HEAD_DRIFT'}; $sv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; $h=Invoke-RestMethod ($u+'/api/health') -TimeoutSec 6; $op=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 6; $status=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6; $cut=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 6; $ass=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6; Write-Output ('HEAD='+$head); Write-Output ('SERVER_STARTED='+$status.serverStartedAt); Write-Output ('SERVER_RELOAD_REQUIRED='+$status.operational.codeReload.required); Write-Output ('MAX_PARALLEL='+$sv.config.maxParallelAgents); Write-Output ('WATCHDOG_ENABLED='+$sv.config.enabled); Write-Output ('WATCHDOG_SEND='+$sv.config.allowAutonomousSend); Write-Output ('OPERATOR_MODE='+$op.mode); Write-Output ('QUEUE_PAUSED='+$op.queuePaused); Write-Output ('HOLD='+$cut.cutoverState.holdActive); Write-Output ('CUTOVER_STATUS='+$cut.cutoverState.status); Write-Output ('ASSIGNMENT_TOTAL='+@($ass.assignments).Count); Write-Output ('ASSIGNMENT_ACTIVE='+@($ass.assignments|Where-Object{$_.state -in @('queued','running','dispatching','awaiting_evidence','unknown')}).Count); Write-Output ('HEALTH='+$h.state); Write-Output ('HEALTH_REASON_COUNT='+@($h.reasons).Count); $b='E:\\WebAIBridge\\app\\data\\backups\\r42-cutover-20261014T043545Z\\rollback-manifest.json'; if(-not(Test-Path -LiteralPath $b -PathType Leaf)){throw 'ROLLBACK_MANIFEST_MISSING'}; $m=Get-Content -LiteralPath $b -Raw -Encoding UTF8|ConvertFrom-Json; Write-Output ('ROLLBACK_PRE_SHA='+$m.preCutoverHead); Write-Output ('ROLLBACK_TARGET_SHA='+$m.targetSha); Write-Output ('ROLLBACK_FILE_COUNT='+@($m.backups).Count); Write-Output ('ROLLBACK_MANIFEST_SHA256='+(Get-FileHash -LiteralPath $b -Algorithm SHA256).Hash); Write-Output ('CHROME_PROCESS_COUNT='+@((Get-CimInstance Win32_Process -Filter \"Name='chrome.exe'\"|Select-Object -ExpandProperty ProcessId -Unique)).Count)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 36000,
+  "note": "Read-only interrupted R65 R42 transaction verification: running R65 code/config, HOLD/PAUSE, rollback manifest metadata and Chrome process count, no private content or provider Send"
+}
