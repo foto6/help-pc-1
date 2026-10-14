@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R65-SHADOW'; $expected='66e2ca7681b5e4c4affde9641b69e5582b718f99'; if(Test-Path -LiteralPath $root){throw 'SHADOW_ALREADY_EXISTS'}; & git.exe clone --depth 1 --single-branch --no-tags --branch agent/bridge-r65-global-canary-dispatch-cap-20261014 https://github.com/foto6/WebAIBridge.git $root; if($LASTEXITCODE -ne 0){throw 'R65_CLONE_FAILED'}; $sha=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($sha -ne $expected){throw 'R65_EXACT_HEAD_MISMATCH'}; $command=\"cd /d E:\\\\WebAIBridge-R65-SHADOW\\\\app && node.exe --check server.js && node.exe --check supervisor-control.js && node.exe --check agent-execution-control.js && node.exe --test --test-reporter=tap r65-global-canary-cap.test.js r64-idle-health-and-dryrun.test.js supervisor-control.test.js agent-execution-control.test.js operational-health.test.js r63-r42-staged-activation.test.js r62-r42-sticky-release-gate.test.js autonomous-send-gate-r50.test.js autonomy-r45.test.js autonomy-r45-brain.test.js autonomy-r45-git-gate.test.js autonomy-r45-lock.test.js autonomy-r45-review.test.js autonomy-r57-gpt-git.test.js autonomy-r57-successor.test.js existing-tab-session-r55.test.js existing-tab-session-r56-cdp.test.js r56-worker-sticky.test.js r56-r42-hold-failclosed.test.js r56-launch-preservation.test.js r56-sticky-readonly-preflight.test.js r34-sticky-chat-exact-id.test.js r58-shadow-rehearsal-contract.test.js > E:\\\\WebAIBridge-R65-SHADOW\\\\R65_TESTS.log 2>&1\"; & cmd.exe /d /c $command; $code=$LASTEXITCODE; Write-Output ('R65_EXACT_SHA='+$sha); Write-Output ('R65_NODE_RC='+$code); Write-Output ('R65_LOG='+(Join-Path $root 'R65_TESTS.log')); if(Test-Path -LiteralPath (Join-Path $root 'R65_TESTS.log')){Get-Content -LiteralPath (Join-Path $root 'R65_TESTS.log') -Tail 15}; Write-Output ('PROD_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash); if($code -ne 0){exit $code}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Cloning into 'E:\\WebAIBridge-R65-SHADOW'...\n",
+      "stderr_bytes": 44,
+      "stderr_truncated": false,
+      "stdout": "R65_EXACT_SHA=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\nR65_NODE_RC=0\r\nR65_LOG=E:\\WebAIBridge-R65-SHADOW\\R65_TESTS.log\r\n# Subtest: supervisor-control.test.js\r\nok 23 - supervisor-control.test.js\r\n  ---\r\n  duration_ms: 131.5957\r\n  type: 'test'\r\n  ...\r\n1..190\r\n# tests 190\r\n# suites 0\r\n# pass 190\r\n# fail 0\r\n# cancelled 0\r\n# skipped 0\r\n# todo 0\r\n# duration_ms 1122.4309\r\nPROD_HASH=55528794D1D84551ACC7465C00E781984B99B0AB88384AA2EDFC180CD1FC8EB8\r\n",
+      "stdout_bytes": 444,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T04:33:04.513Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T04:33:04.271Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r65-win-canary-cap-20261014-66e2ca76"
+    },
+    "request_id": "r65-win-canary-cap-20261014-66e2ca76",
+    "started_at": "2026-10-14T04:32:57.065Z",
+    "status": "completed"
+  },
+  "id": "r65-win-canary-cap-20261014-66e2ca76",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
