@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$base='http://127.0.0.1:17448'\n$state=Get-Content -LiteralPath 'E:\\WebAIBridge\\app\\data\\state.json' -Raw|ConvertFrom-Json\n$cut=Get-Content -LiteralPath 'E:\\WebAIBridge\\app\\data\\projects-live-control-plane-cutover-r42.json' -Raw|ConvertFrom-Json\n$cfg=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog?detect=0') -TimeoutSec 12\n$life=Invoke-RestMethod -Uri ($base+'/api/operator-lifecycle') -TimeoutSec 12\n$as=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 12\n$dry=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog/agent-assignments/dry-run') -TimeoutSec 15\nif (([string](& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)).Trim() -ne '66e2ca7681b5e4c4affde9641b69e5582b718f99') {throw 'BRIDGE_SHA_CHANGED'}\nif($life.mode -ne 'RUNNING_ATTACH' -or $state.settings.paused -ne $false -or $cut.holdActive -ne $false) {throw 'OPERATOR_QUEUE_HOLD_BLOCKED'}\nif($cfg.config.enabled -ne $true -or $cfg.config.mode -ne 'full' -or $cfg.config.allowAutonomousSend -ne $true -or $cfg.config.enforceHighMode -ne $true -or $cfg.config.maxParallelAgents -ne 1) {throw 'SEND_AUTHORITY_BLOCKED'}\nif($cfg.config.autoContinueEnabled -ne $false -or $cfg.config.openExistingChatIfMissing -ne $false) {throw 'UNWANTED_BROWSER_AUTOMATION'}\nif(@($as.assignments|Where-Object {$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count -ne 0) {throw 'UNSETTLED_ASSIGNMENTS_PRESENT'}\nif($dry.dryRun -ne $true -or $dry.sendAttempted -ne $false -or $dry.replacementAttempted -ne $false -or $dry.openedClosedChats -ne $false) {throw 'PREFLIGHT_NOT_READONLY'}\n$qa=@($cfg.config.managedChats|Where-Object {$_.enabled -eq $true -and $_.role -eq 'qa' -and $_.repository -eq 'foto6/boss'})\nif($qa.Count -ne 1) {throw 'QA_NOT_UNIQUE'}\n$row=@($dry.rows|Where-Object {$_.chatId -eq $qa[0].id})\nif($row.Count -ne 1 -or $row[0].preflightAllowed -ne $true -or $row[0].preflightReason -ne 'ready' -or $row[0].openTabs -ne 1) {throw 'QA_CHAT_UNAVAILABLE'}\nif(@($row[0].snapshots|Where-Object {$_.highMode -eq $true -and $_.generating -ne $true -and $_.providerLoadError -ne $true}).Count -ne 1){throw 'QA_HIGH_IDLE_NOT_PROVEN'}\n$body=@{\n text=\"R65 AUTONOMY CANARY — QA, SINGLE ASSIGNMENT. You are the QA agent working ONLY in foto6/boss, on dedicated branch agent/qa-r65-autonomy-single-canary-20261014, exact starting head ea97137b3dd6077e9c330989a4e629a862e2cbf8. Do not reset or overwrite other branches; inspect current branch HEAD before edits and reconcile if changed. Independent task: verify R65/R66 bridge autonomy release claims with a meaningful, deterministic QA regression/test artifact and a short audit report, using the existing boss repository tests/patterns. Focus on R50 single-send authority gating, R65 global canary cap, current R66 read-only Windows launchers, refusal to replay UNKNOWN effects, preserving existing ChatGPT tabs, and distinction between mock safety tests and real live acceptance. You may add a narrowly scoped test in tests/ and a workflow specifically for THIS canary branch so the actual new commit has real GitHub CI evidence. Run relevant tests; commit and push only your dedicated branch; report exact new HEAD, changed paths, test counts, real workflow run ID and conclusion. If provider/API limits, GitHub workflow, project files, or exact branch authority prevent valid proof, report BLOCKED and DO NOT fake evidence. Never navigate or refresh old ChatGPT sessions to circumvent limits; no provider chat deletion, social publishing, PC safety changes, global sends, production WebAIBridge edits, or access to E:\\\\manhwa. Stop after this ONE milestone.\";\n repository='foto6/boss';\n branch='agent/qa-r65-autonomy-single-canary-20261014';\n expectedHead='ea97137b3dd6077e9c330989a4e629a862e2cbf8';\n idempotencyKey='r65-qa-live-single-canary-20261014-gpt6-001';\n priority=500;\n evidenceTimeoutMinutes=120;\n supervisorVerificationRequired=$false\n} | ConvertTo-Json -Compress -Depth 7\n$u=$base+'/api/supervisor-watchdog/managed-chats/'+[uri]::EscapeDataString($qa[0].id)+'/assignments'\n$r=Invoke-RestMethod -Method Post -Uri $u -Body $body -ContentType 'application/json' -TimeoutSec 15\nif(-not $r.id){throw 'QUEUED_RESPONSE_NO_ID'}\nWrite-Output ('CANARY_ASSIGNMENT_ID='+$r.id)\nWrite-Output ('CANARY_ASSIGNMENT_STATE='+$r.state)\nWrite-Output ('CANARY_REPOSITORY='+$r.repository)\nWrite-Output ('CANARY_BRANCH='+$r.branch)\nWrite-Output ('CANARY_EXPECTED_HEAD='+$r.expectedHead)\nWrite-Output ('CANARY_IDEMPOTENCY='+$r.idempotencyKey)\nWrite-Output 'CANARY_ENQUEUE_ONCE_COMPLETED=True'"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "CANARY_ASSIGNMENT_ID=9f434c35-9e28-4807-8d5f-18569e8bdcf5\r\nCANARY_ASSIGNMENT_STATE=queued\r\nCANARY_REPOSITORY=foto6/boss\r\nCANARY_BRANCH=agent/qa-r65-autonomy-single-canary-20261014\r\nCANARY_EXPECTED_HEAD=ea97137b3dd6077e9c330989a4e629a862e2cbf8\r\nCANARY_IDEMPOTENCY=r65-qa-live-single-canary-20261014-gpt6-001\r\nCANARY_ENQUEUE_ONCE_COMPLETED=True\r\n",
+      "stdout_bytes": 344,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:41:22.002Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:41:21.740Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r67-qa-live-one-enqueue-gpt6-b1"
+    },
+    "request_id": "20261014-r67-qa-live-one-enqueue-gpt6-b1",
+    "started_at": "2026-10-14T05:41:20.123Z",
+    "status": "completed"
+  },
+  "id": "20261014-r67-qa-live-one-enqueue-gpt6-b1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
