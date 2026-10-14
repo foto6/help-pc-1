@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$h=Invoke-WebRequest -UseBasicParsing -Uri 'http://127.0.0.1:17450/' -TimeoutSec 3\nWrite-Output ('DASHBOARD_HTTP='+$h.StatusCode)\nWrite-Output ('DASHBOARD_HAS_TITLE='+$h.Content.Contains('Живые чаты и задачи агентов'))\nWrite-Output ('DASHBOARD_HAS_5SEC_REFRESH='+$h.Content.Contains('setInterval(refresh,5000)'))\nWrite-Output ('DASHBOARD_BYTES='+$h.RawContentLength)\n$api=Invoke-RestMethod -Uri 'http://127.0.0.1:17450/api/live' -TimeoutSec 3\nWrite-Output ('API_CONTRACT='+$api.contract)\nWrite-Output ('API_READONLY='+$api.readOnly)\nWrite-Output ('API_SCAN_COMPLETE='+$api.scanComplete)\nWrite-Output ('OPEN_CHATS='+$api.openCount)\nWrite-Output ('UNREGISTERED='+$api.unregisteredOpenCount)\nWrite-Output ('ASSIGNMENTS='+@($api.assignments).Count)\nWrite-Output ('BRIDGE_17448_LISTENS='+[bool](Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction SilentlyContinue))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "DASHBOARD_HTTP=200\r\nDASHBOARD_HAS_TITLE=True\r\nDASHBOARD_HAS_5SEC_REFRESH=True\r\nDASHBOARD_BYTES=12914\r\nAPI_CONTRACT=bridge.r68.live_chat_observability.v1\r\nAPI_READONLY=True\r\nAPI_SCAN_COMPLETE=True\r\nOPEN_CHATS=11\r\nUNREGISTERED=5\r\nASSIGNMENTS=71\r\nBRIDGE_17448_LISTENS=True\r\n",
+      "stdout_bytes": 271,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T06:20:29.264Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T06:20:29.012Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r68-live-url-final-http-check-gpt6-13"
+    },
+    "request_id": "20261014-r68-live-url-final-http-check-gpt6-13",
+    "started_at": "2026-10-14T06:20:26.888Z",
+    "status": "completed"
+  },
+  "id": "20261014-r68-live-url-final-http-check-gpt6-13",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
