@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference = 'Stop'; Write-Output '=== R58 READ ONLY INVENTORY ==='; foreach ($r in @('E:\\WebAIBridge','E:\\WebAIBridge-R58-SHADOW','E:\\PC-Control')) {;   if (!(Test-Path -LiteralPath $r)) { Write-Output ('MISSING ' + $r); continue };   Write-Output ('FOUND ' + $r);   if (Test-Path -LiteralPath (Join-Path $r '.git')) {;     $head = git -C $r rev-parse HEAD 2>$null;     $branch = git -C $r branch --show-current 2>$null;     $dirty = @(git -C $r status --porcelain=v1 --untracked-files=no 2>$null).Count;     Write-Output ('GIT ' + $r + ' head=' + $head + ' branch=' + $branch + ' tracked_changes=' + $dirty);   }; }; $live = 'E:\\WebAIBridge\\app\\server.js'; if (Test-Path -LiteralPath $live) { Write-Output ('PROD_SERVER_SHA256=' + (Get-FileHash -LiteralPath $live -Algorithm SHA256).Hash) }; $pre = 'E:\\WebAIBridge-R58-SHADOW\\app\\r56-sticky-readonly-preflight.js'; Write-Output ('R56_PREFLIGHT_EXISTS=' + (Test-Path -LiteralPath $pre)); Write-Output ('R58_REHEARSAL_EXISTS=' + (Test-Path -LiteralPath 'E:\\WebAIBridge-R58-SHADOW\\app\\r58-shadow-rehearsal.ps1')); Write-Output ('PORT_17448_LISTEN=' + [bool](Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction SilentlyContinue)); Write-Output '=== END ==='"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "=== R58 READ ONLY INVENTORY ===\r\nFOUND E:\\WebAIBridge\r\nGIT E:\\WebAIBridge head=66e2ca7681b5e4c4affde9641b69e5582b718f99 branch= tracked_changes=0\r\nFOUND E:\\WebAIBridge-R58-SHADOW\r\nGIT E:\\WebAIBridge-R58-SHADOW head=86d643c6105caf906aa29125aace38320946ef95 branch=agent/bridge-r58-gpt-warm-sticky-integration-20261014 tracked_changes=0\r\nFOUND E:\\PC-Control\r\nPROD_SERVER_SHA256=69B39C28D474290448B820141C870CA3C9055379296F53106A0A6637886FA6D9\r\nR56_PREFLIGHT_EXISTS=True\r\nR58_REHEARSAL_EXISTS=True\r\nPORT_17448_LISTEN=True\r\n=== END ===\r\n",
+      "stdout_bytes": 533,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:10:01.089Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:10:00.845Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014T1218-r58-local-readonly-state-gpt6-01"
+    },
+    "request_id": "20261014T1218-r58-local-readonly-state-gpt6-01",
+    "started_at": "2026-10-14T05:09:58.040Z",
+    "status": "completed"
+  },
+  "id": "20261014T1218-r58-local-readonly-state-gpt6-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
