@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-canary-arm-one-send-20261014-52e4ac73",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $head=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim(); if($head -ne '66e2ca7681b5e4c4affde9641b69e5582b718f99'){throw 'HEAD_DRIFT'}; $op=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 6; $st=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6; $sv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; $c=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 6; $a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6; $q=@($a.assignments|Where-Object{$_.state -eq 'queued'}); if($op.mode -ne 'RUNNING_ATTACH' -or $st.queue.paused -ne $true -or $c.cutoverState.holdActive -ne $false){throw 'SAFETY_PAUSE_PRECONDITION_FAILED'}; if($sv.config.mode -ne 'full' -or $sv.config.enabled -ne $true -or $sv.config.allowAutonomousSend -ne $false -or $sv.config.maxParallelAgents -ne 1 -or $sv.config.autoContinueEnabled -ne $false -or $sv.config.sendProtectedDraftEnabled -ne $false){throw 'WATCHDOG_GUARDS_DRIFT'}; if($q.Count -ne 1 -or $q[0].id -ne 'ca38c113-c272-4a71-8130-4a57619c334e' -or $q[0].dispatchSubmitAttempted -eq $true){throw 'CANARY_QUEUE_CHANGED'}; $dry=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments/dry-run') -TimeoutSec 28; $qa=@($dry.rows|Where-Object{$_.chatId -eq 'chat-6ac45fb0-9074-83eb-99eb-397265b228e7'}); if($qa.Count -ne 1 -or $qa[0].preflightAllowed -ne $true -or @($qa[0].snapshots|Where-Object{$_.highMode -eq $true}).Count -ne 1){throw 'HIGH_TAB_NOT_READY'}; $r=Invoke-RestMethod ($u+'/api/supervisor-watchdog') -Method Put -ContentType 'application/json; charset=utf-8' -Body '{\"allowAutonomousSend\":true,\"maxParallelAgents\":1,\"autoContinueEnabled\":false,\"sendProtectedDraftEnabled\":false,\"migrationEnabled\":false,\"allowProfileRecovery\":false,\"openExistingChatIfMissing\":false,\"closeChatDuringProviderBackoff\":false}' -TimeoutSec 15; $after=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; $state=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6; Write-Output ('ARMED_SEND='+$after.config.allowAutonomousSend); Write-Output ('ARMED_CAP='+$after.config.maxParallelAgents); Write-Output ('ARMED_AUTOCONTINUE='+$after.config.autoContinueEnabled); Write-Output ('ARMED_PROFILE_RECOVERY='+$after.config.allowProfileRecovery); Write-Output ('ARMED_QUEUE_PAUSED='+$state.queue.paused); Write-Output ('ARMED_OPERATOR='+$state.operatorLifecycle.mode)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 59000,
+  "note": "Allow autonomous coding assignment only in a ONE-chat global cap while queue remains explicitly PAUSED and R50 still forbids Send. QA High ready, no other work, no autoContinue/Chrome recovery or provider mutation in this step."
+}
