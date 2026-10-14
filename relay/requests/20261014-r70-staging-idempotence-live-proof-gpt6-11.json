@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r70-staging-idempotence-live-proof-gpt6-11",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R70-GPT-PLANNER-20261014-GPT6'\n$expected='14c085251a63411d5c50349dac0e124a82ef3766'\nif(([string](& git.exe -C $root rev-parse HEAD)).Trim() -ne $expected){throw 'SOURCE_SHA_DRIFT'}\n$plan=Join-Path $root 'app\\data\\r70-qa-verified-wave-plan.json'\n$state=Join-Path $root 'app\\data\\r70-qa-verified-wave-state.json'\nif(!(Test-Path -LiteralPath $plan) -or !(Test-Path -LiteralPath $state)){throw 'R70_PLAN_STATE_MISSING'}\n$before=(Get-FileHash -LiteralPath $plan -Algorithm SHA256).Hash\n$result=& node.exe (Join-Path $root 'app\\r70-stage-gpt-planner.js') --stage $plan $state\nif($LASTEXITCODE -ne 0){throw 'STAGING_REPEAT_REFUSED_OR_FAILED'}\n$v=($result|Out-String)|ConvertFrom-Json\n$after=(Get-FileHash -LiteralPath $plan -Algorithm SHA256).Hash\nWrite-Output ('STAGE_REPEAT_NO_NEW_PLAN='+($v.created -eq $false))\nWrite-Output ('IDENTICAL_PLAN_HASH='+($before -eq $after))\nWrite-Output ('PLAN_DISPATCH_DISABLED='+(-not (Get-Content -LiteralPath $plan -Raw|ConvertFrom-Json).allowDispatch))\nWrite-Output ('CURRENT_ASSIGNMENTS='+@((Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 3).assignments).Count)\nWrite-Output ('SOURCE_SHA='+(& git.exe -C $root rev-parse HEAD))\nif($v.created -ne $false -or $before -ne $after){throw 'STAGING_NOT_IDEMPOTENT'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Idempotence proof that repeated staging with unchanged authority does not overwrite plan, queue tasks or Send providers."
+}
