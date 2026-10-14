@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R69-OBSERVABILITY-20261014-GPT6'\n$sha='03e8ec94e59ef4efbb748afed418eafada844add'\nif(([string](& git.exe -C $root rev-parse HEAD)).Trim() -ne $sha){throw 'R69_SOURCE_MOVED'}\n$node=(Get-Command node.exe -ErrorAction Stop).Source\n$script=Join-Path $root 'app\\r69-viewer-bootstrap.js'\nif(-not (Test-Path -LiteralPath $script)){throw 'STARTUP_SCRIPT_MISSING'}\n$startup=[Environment]::GetFolderPath('Startup')\nif(-not (Test-Path -LiteralPath $startup)){throw 'STARTUP_DIR_MISSING'}\n$link=Join-Path $startup 'WebAIBridge-R69-Live.lnk'\nif(Test-Path -LiteralPath $link){throw 'STARTUP_LINK_EXISTS_REFUSE_OVERWRITE'}\n$probe=& $node $script --status 2>&1\nif($LASTEXITCODE -ne 0){throw ('VIEWER_NOT_READY '+($probe|Out-String).Substring(0,[Math]::Min(150,($probe|Out-String).Length)))}\n$reading=$probe|Out-String|ConvertFrom-Json\nif($reading.state -ne 'RUNNING' -or $reading.healthy -ne $true){throw 'CURRENT_VIEWER_NOT_HEALTHY'}\n$w=New-Object -ComObject WScript.Shell\n$shortcut=$w.CreateShortcut($link)\n$shortcut.TargetPath=$node\n$shortcut.Arguments='\"'+$script+'\" --start'\n$shortcut.WorkingDirectory=(Join-Path $root 'app')\n$shortcut.WindowStyle=7\n$shortcut.Description='Read-only WebAIBridge R69 live viewer at localhost:17450; idempotent on login'\n$shortcut.Save()\n$check=$w.CreateShortcut($link)\nif($check.TargetPath -ne $node -or $check.Arguments -ne ('\"'+$script+'\" --start')){throw 'SHORTCUT_FAILED_VALIDATION'}\nWrite-Output 'AUTOSTART_INSTALLED=True'\nWrite-Output ('SOURCE_SHA='+$sha)\nWrite-Output ('VIEWER_CURRENT_STATE='+$reading.state)\nWrite-Output ('VIEWER_RESTART_REQUIRED=False')\nWrite-Output ('STARTUP_SHORTCUT=WebAIBridge-R69-Live.lnk')\nWrite-Output ('VIEWER_URL=http://127.0.0.1:17450/')\nWrite-Output ('PROD_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "AUTOSTART_INSTALLED=True\r\nSOURCE_SHA=03e8ec94e59ef4efbb748afed418eafada844add\r\nVIEWER_CURRENT_STATE=RUNNING\r\nVIEWER_RESTART_REQUIRED=False\r\nSTARTUP_SHORTCUT=WebAIBridge-R69-Live.lnk\r\nVIEWER_URL=http://127.0.0.1:17450/\r\nPROD_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n",
+      "stdout_bytes": 271,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T06:39:46.309Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T06:39:46.043Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r69-install-per-user-logon-startup-gpt6-c1"
+    },
+    "request_id": "20261014-r69-install-per-user-logon-startup-gpt6-c1",
+    "started_at": "2026-10-14T06:39:44.795Z",
+    "status": "completed"
+  },
+  "id": "20261014-r69-install-per-user-logon-startup-gpt6-c1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
