@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014T1227-r65-history-and-safety-readonly-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; Write-Output '=== R65 RECENT HISTORY ==='; git -C 'E:\\WebAIBridge' log -12 --pretty=format:'%h %s'; Write-Output ''; Write-Output '=== CURRENT SOURCE/STATE FLAGS ==='; $app='E:\\WebAIBridge\\app'; foreach($name in @('existing-tab-session-r55.js','autonomy-r45-core.js','autonomy-r45-runner.js','autonomy-r57-gpt-git.js','autonomy-r57-successor.js','r65-global-canary-cap.test.js')) {Write-Output ($name + '=' + (Test-Path -LiteralPath (Join-Path $app $name)))}; Write-Output '=== PORT CHECK ==='; Write-Output ('BRIDGE_LISTENER=' + [bool](Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction SilentlyContinue)); Write-Output '=== END ==='"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only recent deployment lineage, no credentials or state payloads."
+}
