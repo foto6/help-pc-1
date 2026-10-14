@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "TimeoutExpired: Command '['powershell.exe', '-NoProfile', '-Command', \"$ErrorActionPreference='Stop'\\n$root='E:\\\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6'\\n$expected='1173e893a0b4ded2f92e27b72e99f36f1a96f2ab'\\nif(([string](& git.exe -C $root rev-parse HEAD)).Trim() -ne $expected){throw 'SOURCE_MOVED'}\\nif(([string](& git.exe -C 'E:\\\\WebAIBridge' rev-parse HEAD)).Trim() -ne '66e2ca7681b5e4c4affde9641b69e5582b718f99'){throw 'PRODUCTION_CHANGED'}\\nif(Get-NetTCPConnection -LocalPort 17450 -State Listen -ErrorAction SilentlyContinue){throw 'PORT_NOW_TAKEN'}\\n$node=(Get-Command node.exe -ErrorAction Stop).Source\\n$script=Join-Path $root 'app\\\\r68-live-viewer.js'\\n$out=Join-Path $root 'R68_VIEWER_17450_STDOUT.log'\\n$err=Join-Path $root 'R68_VIEWER_17450_STDERR.log'\\nif((Test-Path $out) -or (Test-Path $err)){throw 'OBSERVER_LOG_ALREADY_EXISTS'}\\n$env:R68_OBSERVER_DATA_DIR='E:\\\\WebAIBridge\\\\app\\\\data'\\n$env:R68_OBSERVER_PORT='17450'\\n$proc=Start-Process -FilePath $node -ArgumentList @($script) -WorkingDirectory (Join-Path $root 'app') -WindowStyle Hidden -RedirectStandardOutput $out -RedirectStandardError $err -PassThru\\nWrite-Output ('OBSERVER_PID='+$proc.Id)\\n$ready=$false\\nfor($i=0;$i -lt 10;$i++){\\n Start-Sleep -Milliseconds 650\\n try {\\n  $d=Invoke-RestMethod -Uri 'http://127.0.0.1:17450/api/live' -Method Get -TimeoutSec 3\\n  if($d.contract -eq 'bridge.r68.live_chat_observability.v1' -and $d.readOnly -eq $true -and $d.guardrails.noSend -eq $true){\\n   Write-Output 'VIEWER_READY=True'\\n   Write-Output ('CHATS_OPEN='+$d.openCount)\\n   Write-Output ('CHATS_NOT_REGISTERED='+$d.unregisteredOpenCount)\\n   Write-Output ('ASSIGNMENTS='+@($d.assignments).Count)\\n   Write-Output ('SOURCE_COMPLETE='+$d.scanComplete)\\n   $ready=$true\\n   break\\n  }\\n }catch{}\\n}\\nif(-not $ready){throw 'START_EFFECT_UNKNOWN_RECONCILE_PID'}\\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\\\WebAIBridge' rev-parse HEAD))\\nWrite-Output ('BRIDGE_17448_LISTEN='+[bool](Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction SilentlyContinue))\\nWrite-Output 'LIVE_URL=http://127.0.0.1:17450/'\"]' timed out after 5 seconds",
+    "error_kind": "executor_failure",
+    "finished_at": "2026-10-14T06:16:25.966Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "unknown",
+      "observed_at": "2026-10-14T06:16:25.600Z",
+      "reason": "executor_failure",
+      "reconciliation_required": true,
+      "reexecution_safe": false,
+      "request_id": "20261014-r68-start-viewer-17450-gpt6-09"
+    },
+    "request_id": "20261014-r68-start-viewer-17450-gpt6-09",
+    "started_at": "2026-10-14T06:16:01.666Z",
+    "status": "error"
+  },
+  "id": "20261014-r68-start-viewer-17450-gpt6-09",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
