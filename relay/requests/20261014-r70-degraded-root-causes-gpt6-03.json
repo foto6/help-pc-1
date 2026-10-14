@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r70-degraded-root-causes-gpt6-03",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$h=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/health' -TimeoutSec 4\nWrite-Output ('HEALTH='+$h.state)\nforeach($r in @($h.reasons)){Write-Output ('REASON='+([string]$r).Substring(0,[Math]::Min(180,([string]$r).Length)))}\nWrite-Output ('QUEUE_ACTIVE='+[string]$h.assignmentQueue.active)\nWrite-Output ('QUEUE_QUEUED='+[string]$h.assignmentQueue.queued)\n$cut=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 4\nWrite-Output ('R42_HOLD='+[string]$cut.cutoverState.holdActive)\nWrite-Output ('BRIDGE_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only bounded reasons for DEGRADED WebAIBridge health and R42 hold gate."
+}
