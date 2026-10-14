@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $rows=@((Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6).assignments); $x=@($rows|Where-Object{$_.id -eq 'ca38c113-c272-4a71-8130-4a57619c334e'}); if($x.Count -ne 1){throw 'ORIGINAL_CANARY_NOT_FOUND'}; $c=$x[0]; Write-Output ('CANARY_STATE='+$c.state); Write-Output ('SEND_COUNT='+$c.dispatchCount); Write-Output ('CANARY_CURRENT_HEAD='+$c.currentHead); Write-Output ('CANARY_EXACT_SHA='+$c.exactCommitSha); Write-Output ('CANARY_CI_RUN='+$c.ciRunId); Write-Output ('CANARY_CI='+$c.ciConclusion); Write-Output ('CANARY_SUPERVISOR_VERIFIED='+$c.supervisorVerified); Write-Output ('CANARY_LAST_DIAGNOSTIC='+([string]$c.lastDiagnostic).Substring(0,[Math]::Min(240,([string]$c.lastDiagnostic).Length))); Write-Output ('OTHERS_QUEUED='+@($rows|Where-Object{$_.state -eq 'queued' -and $_.id -ne $c.id}).Count); Write-Output ('OTHERS_ACTIVE='+@($rows|Where-Object{$_.state -in @('running','dispatching','awaiting_evidence') -and $_.id -ne $c.id}).Count); $st=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6; Write-Output ('PAUSED='+$st.queue.paused); $sv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; Write-Output ('SEND_ALLOWED='+$sv.config.allowAutonomousSend)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "CANARY_STATE=blocked\r\nSEND_COUNT=1\r\nCANARY_CURRENT_HEAD=78d6266c499ccc8b5e5220ce3a5c29e245c55491\r\nCANARY_EXACT_SHA=78d6266c499ccc8b5e5220ce3a5c29e245c55491\r\nCANARY_CI_RUN=38513824019\r\nCANARY_CI=failure\r\nCANARY_SUPERVISOR_VERIFIED=False\r\nCANARY_LAST_DIAGNOSTIC=ci_failed\r\nOTHERS_QUEUED=0\r\nOTHERS_ACTIVE=0\r\nPAUSED=True\r\nSEND_ALLOWED=False\r\n",
+      "stdout_bytes": 338,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T04:56:06.137Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T04:56:05.902Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r65-qa-commit-evidence-check-20261014-c8a04db1"
+    },
+    "request_id": "r65-qa-commit-evidence-check-20261014-c8a04db1",
+    "started_at": "2026-10-14T04:56:04.812Z",
+    "status": "completed"
+  },
+  "id": "r65-qa-commit-evidence-check-20261014-c8a04db1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
