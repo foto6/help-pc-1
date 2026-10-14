@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\ntry{\n $checks=& gh.exe api --method GET 'repos/foto6/WebAIBridge/check-suites/104386851325/check-runs' 2>$null|ConvertFrom-Json\n foreach($c in @($checks.check_runs)){\n  Write-Output ('CHECK='+[string]$c.name)\n  Write-Output ('CHECK_ID='+[string]$c.id)\n  $a=& gh.exe api --method GET ('repos/foto6/WebAIBridge/check-runs/'+[string]$c.id+'/annotations?per_page=10') 2>$null|ConvertFrom-Json\n  foreach($row in @($a)){\n   $msg=[string]$row.message\n   $msg=$msg.Replace([char]13,' ').Replace([char]10,' ')\n   Write-Output ('ANNOTATION_LEVEL='+[string]$row.annotation_level)\n   Write-Output ('ANNOTATION_TITLE='+[string]$row.title)\n   Write-Output ('ANNOTATION_MESSAGE='+$msg.Substring(0,[Math]::Min($msg.Length,550)))\n  }\n }\n}catch{Write-Output ('CHECK_ANNOTATION_UNAVAILABLE='+[string]$_.Exception.GetType().Name)}\nWrite-Output 'NO_RUNNER_MODIFICATION=True'"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "CHECK=npm test (ubuntu-latest)\r\nCHECK_ID=115736593519\r\nANNOTATION_LEVEL=failure\r\nANNOTATION_TITLE=\r\nANNOTATION_MESSAGE=The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings\r\nANNOTATION_LEVEL=notice\r\nANNOTATION_TITLE=\r\nANNOTATION_MESSAGE=\"The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748\"\r\nCHECK=npm test (windows-latest)\r\nCHECK_ID=115736593638\r\nANNOTATION_LEVEL=failure\r\nANNOTATION_TITLE=\r\nANNOTATION_MESSAGE=The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings\r\nNO_RUNNER_MODIFICATION=True\r\n",
+      "stdout_bytes": 842,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T07:42:20.120Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T07:42:19.878Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r70-hosted-ci-annotations-gpt6-09"
+    },
+    "request_id": "20261014-r70-hosted-ci-annotations-gpt6-09",
+    "started_at": "2026-10-14T07:42:12.310Z",
+    "status": "completed"
+  },
+  "id": "20261014-r70-hosted-ci-annotations-gpt6-09",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
