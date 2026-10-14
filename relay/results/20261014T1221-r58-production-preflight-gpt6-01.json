@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference = 'Stop'; $prod='E:\\WebAIBridge'; $shadow='E:\\WebAIBridge-R58-SHADOW'; Write-Output '=== LIVE GIT COMMIT ==='; git -C $prod log -1 --format='commit=%H%nsubject=%s%ncommitted=%cI'; Write-Output '=== READ ONLY R56 PREFLIGHT ==='; & node.exe (Join-Path $shadow 'app\\r56-sticky-readonly-preflight.js') --app (Join-Path $prod 'app'); Write-Output '=== AVAILABLE MODULES ==='; foreach ($p in @('existing-tab-session-r55.js','autonomy-r45-runner.js','autonomy-r57-successor.js','r56-sticky-readonly-preflight.js','autonomous-send-gate-r50.js')) { Write-Output ($p + '=' + (Test-Path -LiteralPath (Join-Path $prod ('app\\'+$p)))) }; Write-Output '=== END ==='"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "=== LIVE GIT COMMIT ===\r\ncommit=66e2ca7681b5e4c4affde9641b69e5582b718f99\nsubject=R65 real cross-project single-canary concurrency regression and configurable safe ramp\ncommitted=2026-10-14T11:32:27+07:00\n=== READ ONLY R56 PREFLIGHT ===\r\n{\n  \"contract\": \"bridge.r56.sticky_production_readonly_preflight.v1\",\n  \"mode\": \"READ_ONLY_NO_MUTATION\",\n  \"noLiveProviderSend\": true,\n  \"browserTouched\": false,\n  \"writesPerformed\": false,\n  \"safeToLiveDispatch\": false,\n  \"safeToRestartChrome\": false,\n  \"readOnlyStagingCandidate\": false,\n  \"blockers\": [\n    \"r42_hold_not_confirmed\",\n    \"supervisor_off_not_confirmed\"\n  ],\n  \"observations\": {\n    \"queuePaused\": true,\n    \"holdActive\": false,\n    \"autonomousSendDisabled\": true,\n    \"autoContinueDisabled\": true,\n    \"supervisorOff\": false,\n    \"r50GuardPresent\": true,\n    \"r56Installed\": true,\n    \"assignmentCounts\": {\n      \"cancelled\": 12,\n      \"blocked\": 36,\n      \"failed\": 12,\n      \"completed\": 10\n    },\n    \"persistedStickyPinCount\": 1\n  },\n  \"note\": \"A read-only candidate is not authorization for deployment, cutover, or autonomous provider Send.\",\n  \"sourceServerSHA256\": \"69b39c28d474290448b820141c870ca3c9055379296f53106a0a6637886fa6d9\",\n  \"dataFilesPresent\": {\n    \"state\": true,\n    \"supervisor\": true,\n    \"cutover\": true\n  }\n}\n=== AVAILABLE MODULES ===\r\nexisting-tab-session-r55.js=True\r\nautonomy-r45-runner.js=True\r\nautonomy-r57-successor.js=True\r\nr56-sticky-readonly-preflight.js=True\r\nautonomous-send-gate-r50.js=True\r\n=== END ===\r\n",
+      "stdout_bytes": 1496,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:10:36.318Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:10:36.078Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014T1221-r58-production-preflight-gpt6-01"
+    },
+    "request_id": "20261014T1221-r58-production-preflight-gpt6-01",
+    "started_at": "2026-10-14T05:10:35.149Z",
+    "status": "completed"
+  },
+  "id": "20261014T1221-r58-production-preflight-gpt6-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
