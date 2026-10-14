@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r67-qa-canary-final-evidence-readonly-gpt6-n1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$b='http://127.0.0.1:17448'\n$as=Invoke-RestMethod -Uri ($b+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 15\n$r=@($as.assignments|Where-Object {$_.id -eq '9f434c35-9e28-4807-8d5f-18569e8bdcf5'})\nif($r.Count -ne 1){throw 'ASSIGNMENT_ID_MISSING'}\n$t=$r[0]\nforeach($k in @('state','dispatchCount','dispatchSubmitAttempted','lastPreflightReason','lastDiagnostic','currentHead','ciRunId','ciConclusion','evidenceCollectorStatus','completedAt','blockedAt','failedAt','evidenceDeadlineAt')){Write-Output ($k+'='+[string]$t.$k)}\nWrite-Output ('OTHER_ACTIVE='+@($as.assignments|Where-Object {$_.id -ne $t.id -and $_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count)\nWrite-Output ('BRIDGE_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nWrite-Output ('R67_NODE_LOG_EXISTS='+(Test-Path 'E:\\boss-R67-QA-PORTABLE-VERIFY-20261014-GPT6\\R67_NODE_TEST.txt'))\nWrite-Output ('R67_PYTHON_LOG_EXISTS='+(Test-Path 'E:\\boss-R67-QA-PORTABLE-VERIFY-20261014-GPT6\\R67_PYTHON_TEST.txt'))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 19000,
+  "note": "Read-only closeout of original single QA canary and offline evidence; do not dispatch or alter queue settings."
+}
