@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$js=@'\nconst fs=require('node:fs'),crypto=require('node:crypto'),path=require('node:path');\nconst root='E:\\\\boss-R65-CANARY-VERIFY-20261014-GPT6';\nconst dir=path.join(root,'hardwave_qa','fixtures','r65_autonomy');\nconst m=JSON.parse(fs.readFileSync(path.join(dir,'source_manifest.json'),'utf8'));\nfunction blob(b){return crypto.createHash('sha1').update('blob '+b.length+'\\0').update(b).digest('hex')}\nfor(const r of m.sources){let b=fs.readFileSync(path.join(dir,path.basename(r.fixture_path)));let x=Buffer.from(b.toString('utf8').replace(/\\r\\n/g,'\\n'));console.log(path.basename(r.fixture_path)+' raw='+String(blob(b)===r.source_blob_sha1)+' normalized='+String(blob(x)===r.source_blob_sha1)+' crlf='+String(b.includes(Buffer.from('\\r\\n'))))}\n'@\n& node.exe -e $js\nif($LASTEXITCODE -ne 0){throw 'BLOB_CHECK_FAILED'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "agent-execution-control.js raw=false normalized=true crlf=true\nmanaged-composer-readback.js raw=false normalized=true crlf=true\nautonomous-send-gate-r50.js raw=false normalized=true crlf=true\nexisting-tab-session-r55.js raw=false normalized=true crlf=true\nsupervisor-control.js raw=false normalized=true crlf=true\nautonomy-r45-core.js raw=false normalized=true crlf=true\nautonomy-r45-runner.js raw=false normalized=true crlf=true\nR45_CHECK_READONLY.cmd raw=false normalized=true crlf=true\nR45_MONITOR_READONLY.cmd raw=false normalized=true crlf=true\nproject-control.js raw=false normalized=true crlf=true\n",
+      "stdout_bytes": 605,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:51:44.669Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:51:44.429Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r67-qa-source-blob-normalization-check-gpt6-j1"
+    },
+    "request_id": "20261014-r67-qa-source-blob-normalization-check-gpt6-j1",
+    "started_at": "2026-10-14T05:51:43.600Z",
+    "status": "completed"
+  },
+  "id": "20261014-r67-qa-source-blob-normalization-check-gpt6-j1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
