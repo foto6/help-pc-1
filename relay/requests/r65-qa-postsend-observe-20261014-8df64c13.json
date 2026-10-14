@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-qa-postsend-observe-20261014-8df64c13",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $m=Invoke-RestMethod ($u+'/api/supervisor-watchdog/managed-chats?inspect=1') -TimeoutSec 25; $qa=@($m.chats|Where-Object{$_.id -eq 'chat-6ac45fb0-9074-83eb-99eb-397265b228e7'}); Write-Output ('MANAGED_QA_MATCHES='+$qa.Count); if($qa.Count -eq 1){$r=$qa[0];Write-Output ('QA_SURFACE_STATUS='+$r.status);Write-Output ('QA_GENERATING='+$r.generating);Write-Output ('QA_HIGH='+$r.highMode);Write-Output ('QA_STICKY_STATUS='+$r.stickySession.status);Write-Output ('QA_TARGET_COUNT='+$r.openTabs);Write-Output ('QA_RATE_OR_LOAD_ERROR='+$r.providerLoadError);Write-Output ('QA_CONTEXT_LIMIT='+$r.contextLimit);Write-Output ('QA_DRAFT='+$r.draftPresent)}; $a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6; $v=@($a.assignments|Where-Object{$_.id -eq 'ca38c113-c272-4a71-8130-4a57619c334e'}); Write-Output ('CANARY_MATCHES='+$v.Count); if($v.Count -eq 1){$x=$v[0];Write-Output ('CANARY_STATE='+$x.state);Write-Output ('CANARY_DISPATCH_COUNT='+$x.dispatchCount);Write-Output ('CANARY_HEAD='+$x.currentHead);Write-Output ('CANARY_EXACT_COMMIT='+$x.exactCommitSha);Write-Output ('CANARY_CI_RUN='+$x.ciRunId);Write-Output ('CANARY_CI='+$x.ciConclusion);Write-Output ('CANARY_DIAGNOSTIC='+([string]$x.lastDiagnostic).Substring(0,[Math]::Min(200,([string]$x.lastDiagnostic).Length)))}; $st=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6; Write-Output ('QUEUE_PAUSED='+$st.queue.paused); Write-Output ('OUTBOX_COUNT='+$st.counts.outbox)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 42000,
+  "note": "Read-only existing QA High tab and original one-send assignment progress after queue disarm, no private conversation text, no Send/Chrome focus/navigation"
+}
