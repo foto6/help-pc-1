@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-one-qa-dispatch-resume-20261014-fb208a1d",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $head=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim(); if($head -ne '66e2ca7681b5e4c4affde9641b69e5582b718f99'){throw 'HEAD_DRIFT'}; $op=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 6; $st=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6; $sv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; $cut=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 6; $a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6; $q=@($a.assignments|Where-Object{$_.state -eq 'queued'}); if($op.mode -ne 'RUNNING_ATTACH' -or $st.queue.paused -ne $true -or $cut.cutoverState.holdActive -ne $false){throw 'ATTACH_PAUSE_OR_HOLD_DRIFT'}; if($sv.config.enabled -ne $true -or $sv.config.mode -ne 'full' -or $sv.config.allowAutonomousSend -ne $true -or $sv.config.maxParallelAgents -ne 1 -or $sv.config.autoContinueEnabled -ne $false -or $sv.config.allowProfileRecovery -ne $false -or $sv.config.openExistingChatIfMissing -ne $false){throw 'SINGLE_CANARY_GUARD_DRIFT'}; if($q.Count -ne 1 -or $q[0].id -ne 'ca38c113-c272-4a71-8130-4a57619c334e' -or $q[0].dispatchSubmitAttempted -eq $true -or [int]$q[0].dispatchCount -gt 0){throw 'CANARY_UNKNOWN_OR_DUPLICATE'}; if(@($a.assignments|Where-Object{$_.state -in @('dispatching','running','awaiting_evidence','unknown')}).Count -gt 0){throw 'OTHER_ACTIVE_ASSIGNMENTS'}; if(@($st.queue.tasks.PSObject.Properties|Where-Object{$_.Name -notin @('completed','cancelled') -and [int]$_.Value -gt 0}).Count -ne 0 -or [int]$st.counts.outbox -gt 0){throw 'NON_AGENT_QUEUE_NOT_EMPTY'}; $dry=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments/dry-run') -TimeoutSec 30; $qa=@($dry.rows|Where-Object{$_.chatId -eq 'chat-6ac45fb0-9074-83eb-99eb-397265b228e7'}); if($qa.Count -ne 1 -or $qa[0].preflightAllowed -ne $true -or @($qa[0].snapshots|Where-Object{$_.highMode -eq $true}).Count -ne 1){throw 'QA_PROVIDER_NOT_READY_OR_HIGH'}; $r=Invoke-RestMethod ($u+'/api/pause') -Method Post -ContentType 'application/json; charset=utf-8' -Body '{\"paused\":false}' -TimeoutSec 8; Write-Output ('QUEUED_CANARY_ID='+$q[0].id); Write-Output ('QUEUE_PAUSED_AFTER='+$r.paused); Write-Output ('LIFECYCLE_AFTER='+$r.operatorLifecycle.mode); Write-Output ('OTHER_TASKS='+$st.counts.tasks); Write-Output ('SINGLE_GLOBAL_CAP='+$sv.config.maxParallelAgents); $res=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6; $canary=@($res.assignments|Where-Object{$_.id -eq 'ca38c113-c272-4a71-8130-4a57619c334e'}); Write-Output ('IMMEDIATE_CANARY_STATE='+$canary[0].state); Write-Output ('IMMEDIATE_DISPATCH_COUNT='+$canary[0].dispatchCount)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 68000,
+  "note": "One-time owner-authorized queue resume for EXACTLY ONE previously queued High-mode QA assignment, R65 global limit=1, attach-only Chrome, no autoContinue/migration. Preconditions require no non-agent pending work, zero prior Send, original idempotency. Never repeat this side effect on unknown outcome."
+}
