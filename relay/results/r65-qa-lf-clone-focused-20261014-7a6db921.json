@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $dest='E:\\BossR65QA-LF-SHADOW'; $expected='78d6266c499ccc8b5e5220ce3a5c29e245c55491'; if(Test-Path -LiteralPath $dest){throw 'QA_LF_SHADOW_EXISTS'}; & git.exe -c core.autocrlf=false clone --depth 1 --single-branch --no-tags --branch agent/integration-r8-final-local-stack-20261006 https://github.com/foto6/boss.git $dest; if($LASTEXITCODE -ne 0){throw 'QA_LF_CLONE_FAILED'}; $head=((& git.exe -C $dest rev-parse HEAD)|Out-String).Trim(); if($head -ne $expected){throw 'QA_LF_SHA_DRIFT'}; $matrix=Join-Path $dest 'hardwave_qa\\certificates\\source\\INTEGRATION_R8_FINAL_MATRIX.6ab529846e99e572d77006dee48d6c4b01caea12.json'; $hash=(Get-FileHash -LiteralPath $matrix -Algorithm SHA256).Hash.ToLowerInvariant(); if($hash -ne '831804bedce4652156ac052e1c50f1e6f3642cd36dadbc58a00907804e646a54'){throw ('QA_LF_MATRIX_HASH_FAILED='+$hash)}; Write-Output ('QA_EXACT_SOURCE_SHA='+$head); Write-Output ('SIGNED_MATRIX_SHA256='+$hash); & cmd.exe /d /c ('cd /d '+$dest+' && py.exe -3 -m unittest discover -s tests -p \"test_integration_r8*.py\" -v > '+$dest+'\\R65_QA_LF_FOCUSED.log 2>&1'); $rc=$LASTEXITCODE; Write-Output ('QA_FOCUSED_TEST_RC='+$rc); Get-Content -LiteralPath (Join-Path $dest 'R65_QA_LF_FOCUSED.log') -Tail 10; if($rc -ne 0){exit $rc}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Cloning into 'E:\\BossR65QA-LF-SHADOW'...\n",
+      "stderr_bytes": 41,
+      "stderr_truncated": false,
+      "stdout": "QA_EXACT_SOURCE_SHA=78d6266c499ccc8b5e5220ce3a5c29e245c55491\r\nSIGNED_MATRIX_SHA256=831804bedce4652156ac052e1c50f1e6f3642cd36dadbc58a00907804e646a54\r\nQA_FOCUSED_TEST_RC=0\r\ntest_creator_certificate_matches_r39_schema_exactly (test_integration_r8_media_qa_certificates.IntegrationR8MediaQaCertificateTests.test_creator_certificate_matches_r39_schema_exactly) ... ok\r\ntest_growth_certificate_matches_validate_media_qa_exact_field_set (test_integration_r8_media_qa_certificates.IntegrationR8MediaQaCertificateTests.test_growth_certificate_matches_validate_media_qa_exact_field_set) ... ok\r\ntest_growth_certificate_satisfies_current_validate_media_qa_tuple (test_integration_r8_media_qa_certificates.IntegrationR8MediaQaCertificateTests.test_growth_certificate_satisfies_current_validate_media_qa_tuple) ... ok\r\ntest_source_matrix_digest_is_exact_r8_acceptance_matrix (test_integration_r8_media_qa_certificates.IntegrationR8MediaQaCertificateTests.test_source_matrix_digest_is_exact_r8_acceptance_matrix) ... ok\r\ntest_two_certificates_are_semantically_identical_acceptance (test_integration_r8_media_qa_certificates.IntegrationR8MediaQaCertificateTests.test_two_certificates_are_semantically_identical_acceptance) ... ok\r\n\r\n----------------------------------------------------------------------\r\nRan 17 tests in 0.028s\r\n\r\nOK\r\n",
+      "stdout_bytes": 1320,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:01:22.950Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:01:22.711Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r65-qa-lf-clone-focused-20261014-7a6db921"
+    },
+    "request_id": "r65-qa-lf-clone-focused-20261014-7a6db921",
+    "started_at": "2026-10-14T05:01:15.964Z",
+    "status": "completed"
+  },
+  "id": "r65-qa-lf-clone-focused-20261014-7a6db921",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
