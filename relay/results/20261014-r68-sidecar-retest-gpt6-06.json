@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6'\n$sha='1173e893a0b4ded2f92e27b72e99f36f1a96f2ab'\nif(@(& git.exe -C $root status --porcelain=v1 --untracked-files=no).Count -ne 0){throw 'DIRTY_CHECKOUT'}\n& git.exe -C $root fetch --quiet --no-tags origin agent/r68-live-chat-observability-20261014\nif($LASTEXITCODE -ne 0){throw 'FETCH_FAIL'}\n& git.exe -C $root checkout --quiet --detach $sha\nif($LASTEXITCODE -ne 0){throw 'CHECKOUT_FAIL'}\n$log=Join-Path $root 'R68_RETEST_RESULTS.txt'\nPush-Location (Join-Path $root 'app')\ntry{& node.exe --test r68-live-chat-observability.test.js r68-live-viewer.test.js autonomous-send-gate-r50.test.js r65-global-canary-cap.test.js *> $log; $rc=$LASTEXITCODE}finally{Pop-Location}\nWrite-Output ('EXACT_HEAD='+(& git.exe -C $root rev-parse HEAD))\nWrite-Output ('RESULT='+$rc)\nSelect-String -LiteralPath $log -Pattern '^ℹ (?:tests|pass|fail)|^✖'|Select-Object -Last 12|ForEach-Object{Write-Output $_.Line}\nif($rc -ne 0){Write-Output 'FAILURE_DETAILS';Get-Content -LiteralPath $log -Tail 55}\nif($rc -ne 0){throw 'R68_RETEST_FAILURE'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "EXACT_HEAD=1173e893a0b4ded2f92e27b72e99f36f1a96f2ab\r\nRESULT=0\r\nℹ tests 24\r\nℹ pass 24\r\nℹ fail 0\r\n",
+      "stdout_bytes": 102,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T06:13:57.000Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T06:13:56.726Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r68-sidecar-retest-gpt6-06"
+    },
+    "request_id": "20261014-r68-sidecar-retest-gpt6-06",
+    "started_at": "2026-10-14T06:13:51.896Z",
+    "status": "completed"
+  },
+  "id": "20261014-r68-sidecar-retest-gpt6-06",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
