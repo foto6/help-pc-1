@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$head=([string](& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)).Trim()\nWrite-Output ('PROD_HEAD='+$head)\nWrite-Output ('R68_HEAD='+([string](& git.exe -C 'E:\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6' rev-parse HEAD)).Trim())\nWrite-Output ('R68_TRACKED_DIRTY='+@(& git.exe -C 'E:\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6' status --porcelain=v1 --untracked-files=no).Count)\nforeach($port in @(17448,17450)) {\ntry { $t=Invoke-RestMethod -Uri ('http://127.0.0.1:'+ $port + $(if($port -eq 17450){'/api/live'}else{'/api/operator-lifecycle'})) -TimeoutSec 2\nif($port -eq 17450){\nWrite-Output ('VIEWER_CONTRACT='+$t.contract)\nWrite-Output ('VIEWER_OPEN='+$t.openCount)\nWrite-Output ('VIEWER_UNKNOWN='+$t.unregisteredOpenCount)\nWrite-Output ('VIEWER_SCAN_OK='+$t.scanComplete)\n}else{ Write-Output ('PROD_LIFECYCLE='+$t.mode) }\n}catch{Write-Output ('HTTP_'+$port+'_UNAVAILABLE='+$_.Exception.GetType().Name)}\n}\n$startup=[Environment]::GetFolderPath('Startup')\nWrite-Output ('STARTUP_DIR_AVAILABLE='+[bool](Test-Path $startup))\nWrite-Output ('VIEWER_STARTUP_EXISTS='+(Test-Path (Join-Path $startup 'WebAIBridge-R68-Live.lnk')))\n"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "PROD_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\nR68_HEAD=1173e893a0b4ded2f92e27b72e99f36f1a96f2ab\r\nR68_TRACKED_DIRTY=0\r\nPROD_LIFECYCLE=RUNNING_ATTACH\r\nVIEWER_CONTRACT=bridge.r68.live_chat_observability.v1\r\nVIEWER_OPEN=11\r\nVIEWER_UNKNOWN=5\r\nVIEWER_SCAN_OK=True\r\nSTARTUP_DIR_AVAILABLE=True\r\nVIEWER_STARTUP_EXISTS=False\r\n",
+      "stdout_bytes": 322,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T06:34:34.035Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T06:34:33.792Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r69-live-runtime-inspect-gpt6-a2"
+    },
+    "request_id": "20261014-r69-live-runtime-inspect-gpt6-a2",
+    "started_at": "2026-10-14T06:34:32.517Z",
+    "status": "completed"
+  },
+  "id": "20261014-r69-live-runtime-inspect-gpt6-a2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
