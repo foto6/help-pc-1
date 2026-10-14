@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $h=Invoke-RestMethod 'http://127.0.0.1:17448/api/health' -TimeoutSec 7; Write-Output ('HEALTH='+$h.state); Write-Output ('OPERATIONAL_MODE='+$h.operationalMode); Write-Output ('QUEUE_DISPOSITION='+$h.queueSafety.queueDisposition); foreach($r in @($h.reasons)){Write-Output ('REASON='+([string]$r).Substring(0,[Math]::Min(180,([string]$r).Length)))}; foreach($r in @($h.blockers)){Write-Output ('BLOCKER='+([string]$r).Substring(0,[Math]::Min(180,([string]$r).Length)))}; foreach($r in @($h.degraded)){Write-Output ('DEGRADED='+([string]$r).Substring(0,[Math]::Min(180,([string]$r).Length)))}; Write-Output ('QUEUE_PAUSED='+((Invoke-RestMethod 'http://127.0.0.1:17448/api/status' -TimeoutSec 7).queue.paused)); Write-Output ('HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "HEALTH=BLOCKED\r\nOPERATIONAL_MODE=PAUSED\r\nQUEUE_DISPOSITION=PAUSED_UNSAFE\r\nREASON=git_evidence:health_probe_stale\r\nREASON=timeline_io:health_probe_stale\r\nREASON=assignment_queue:pause_autonomy_inconsistent\r\nBLOCKER=assignment_queue:pause_autonomy_inconsistent\r\nDEGRADED=git_evidence:health_probe_stale\r\nDEGRADED=timeline_io:health_probe_stale\r\nQUEUE_PAUSED=True\r\nHEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n",
+      "stdout_bytes": 409,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T04:48:48.062Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T04:48:47.798Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r65-canary-blocker-diagnosis-20261014-d83be510"
+    },
+    "request_id": "r65-canary-blocker-diagnosis-20261014-d83be510",
+    "started_at": "2026-10-14T04:48:46.648Z",
+    "status": "completed"
+  },
+  "id": "r65-canary-blocker-diagnosis-20261014-d83be510",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
