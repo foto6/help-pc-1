@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-qa-windows-exact-tests-20261014-41c2e0bd",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $dest='E:\\BossR65QA-SHADOW'; $expected='78d6266c499ccc8b5e5220ce3a5c29e245c55491'; if(Test-Path -LiteralPath $dest){throw 'EXISTING_QA_SHADOW_NOT_OVERWRITTEN'}; & git.exe clone --depth 1 --single-branch --no-tags --branch agent/integration-r8-final-local-stack-20261006 https://github.com/foto6/boss.git $dest; if($LASTEXITCODE -ne 0){throw 'QA_CLONE_FAILED'}; $sha=((& git.exe -C $dest rev-parse HEAD)|Out-String).Trim(); if($sha -ne $expected){throw ('QA_SHA_MISMATCH='+$sha)}; $cmd='cd /d '+$dest+' && py.exe -3 -m unittest discover -s tests -p \"test_integration_r8*.py\" -v > '+$dest+'\\R65_QA_FOCUSED_TESTS.log 2>&1'; & cmd.exe /d /c $cmd; $rc=$LASTEXITCODE; Write-Output ('QA_HEAD='+$sha); Write-Output ('QA_FOCUSED_PYTHON_RC='+$rc); Write-Output ('QA_PYTHON_VERSION='+((& py.exe -3 --version)|Out-String).Trim()); Write-Output ('QA_LOG='+ (Join-Path $dest 'R65_QA_FOCUSED_TESTS.log')); if(Test-Path -LiteralPath (Join-Path $dest 'R65_QA_FOCUSED_TESTS.log')){Get-Content -LiteralPath (Join-Path $dest 'R65_QA_FOCUSED_TESTS.log') -Tail 22}; if($rc -ne 0){exit $rc}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 100000,
+  "note": "Isolated exact QA commit Windows Python focused Integration R8 unit tests in new directory; no production/chat/Chrome changes, no GitHub CI fake success; output only short log tail"
+}
