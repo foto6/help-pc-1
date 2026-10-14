@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\nWrite-Output '=== DRYRUN HTTP ONLY ==='\ntry {\n  $uri='http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments/dry-run'\n  $d=Invoke-RestMethod -Uri $uri -Method Get -TimeoutSec 12\n  Write-Output ('DRY_RUN='+$d.dryRun)\n  Write-Output ('SEND_ATTEMPTED='+$d.sendAttempted)\n  Write-Output ('REPLACEMENT_ATTEMPTED='+$d.replacementAttempted)\n  Write-Output ('OPENED_CLOSED='+$d.openedClosedChats)\n  Write-Output ('AUTO_CONTINUE='+$d.autoContinueEnabled)\n  Write-Output ('SELECTED_COUNT='+@($d.selectedChatIds).Count)\n  Write-Output ('ROWS_COUNT='+@($d.rows).Count)\n  foreach($g in @($d.rows)|Group-Object preflightReason) { Write-Output ('PREFLIGHT_REASON='+$g.Name+' COUNT='+$g.Count) }\n  Write-Output ('WOULD_DISPATCH_COUNT='+@($d.rows|Where-Object { $_.wouldDispatch -eq $true }).Count)\n} catch { Write-Output ('HTTP_DRY_RUN_FAILED='+$_.Exception.GetType().Name+' '+$_.Exception.Message.Substring(0,[Math]::Min(200,$_.Exception.Message.Length))) }\nWrite-Output '=== ACTIVE OPERATOR ROUTE MARKERS ==='\n$src='E:\\WebAIBridge\\app\\server.js'\n$matches=Select-String -LiteralPath $src -Pattern \"agent-assignments/dry-run|supervisor-watchdog/agent-assignments|r42ActivateAfterControlledRecovery|allowAutonomousSend\" | Select-Object -First 25\nforeach($m in $matches){Write-Output ('SOURCE_LINE '+$m.LineNumber+' '+$m.Line.Trim().Substring(0,[Math]::Min(160,$m.Line.Trim().Length)))}\nWrite-Output '=== END ==='"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "=== DRYRUN HTTP ONLY ===\r\nDRY_RUN=True\r\nSEND_ATTEMPTED=False\r\nREPLACEMENT_ATTEMPTED=False\r\nOPENED_CLOSED=False\r\nAUTO_CONTINUE=False\r\nSELECTED_COUNT=0\r\nROWS_COUNT=7\r\nPREFLIGHT_REASON=ready COUNT=5\r\nPREFLIGHT_REASON=target_chat_unavailable COUNT=1\r\nPREFLIGHT_REASON=active_generation COUNT=1\r\nWOULD_DISPATCH_COUNT=0\r\n=== ACTIVE OPERATOR ROUTE MARKERS ===\r\nSOURCE_LINE 1180 allowAutonomousSend:supervisorConfigCache?.allowAutonomousSend,\r\nSOURCE_LINE 16461 'allowAutonomousSend',\r\nSOURCE_LINE 17882 autonomousSendDisabled:config.allowAutonomousSend === false\r\nSOURCE_LINE 20007 async function r42ActivateAfterControlledRecovery() {\r\nSOURCE_LINE 20052 allowAutonomousSend:false,\r\nSOURCE_LINE 20124 allowAutonomousSend:config.allowAutonomousSend === true,\r\nSOURCE_LINE 20139 allowAutonomousSend:config.allowAutonomousSend === true,\r\nSOURCE_LINE 20594 if (req.method === 'GET' && url.pathname === '/api/supervisor-watchdog/agent-assignments') {\r\nSOURCE_LINE 20613 && url.pathname === '/api/supervisor-watchdog/agent-assignments/dry-run') {\r\nSOURCE_LINE 22089 json(res,200,await r42ActivateAfterControlledRecovery());\r\n=== END ===\r\n",
+      "stdout_bytes": 1125,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:16:42.796Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:16:42.547Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r65-live-dryrun-safe-gpt6-c1"
+    },
+    "request_id": "20261014-r65-live-dryrun-safe-gpt6-c1",
+    "started_at": "2026-10-14T05:16:41.505Z",
+    "status": "completed"
+  },
+  "id": "20261014-r65-live-dryrun-safe-gpt6-c1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
