@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R70-GPT-PLANNER-20261014-GPT6'\n$expected='14c085251a63411d5c50349dac0e124a82ef3766'\nif(([string](& git.exe -C $root rev-parse HEAD)).Trim() -ne $expected){throw 'SOURCE_SHA_DRIFT'}\n$plan=Join-Path $root 'app\\data\\r70-qa-verified-wave-plan.json'\n$state=Join-Path $root 'app\\data\\r70-qa-verified-wave-state.json'\nif(!(Test-Path -LiteralPath $plan) -or !(Test-Path -LiteralPath $state)){throw 'R70_PLAN_STATE_MISSING'}\n$before=(Get-FileHash -LiteralPath $plan -Algorithm SHA256).Hash\n$result=& node.exe (Join-Path $root 'app\\r70-stage-gpt-planner.js') --stage $plan $state\nif($LASTEXITCODE -ne 0){throw 'STAGING_REPEAT_REFUSED_OR_FAILED'}\n$v=($result|Out-String)|ConvertFrom-Json\n$after=(Get-FileHash -LiteralPath $plan -Algorithm SHA256).Hash\nWrite-Output ('STAGE_REPEAT_NO_NEW_PLAN='+($v.created -eq $false))\nWrite-Output ('IDENTICAL_PLAN_HASH='+($before -eq $after))\nWrite-Output ('PLAN_DISPATCH_DISABLED='+(-not (Get-Content -LiteralPath $plan -Raw|ConvertFrom-Json).allowDispatch))\nWrite-Output ('CURRENT_ASSIGNMENTS='+@((Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 3).assignments).Count)\nWrite-Output ('SOURCE_SHA='+(& git.exe -C $root rev-parse HEAD))\nif($v.created -ne $false -or $before -ne $after){throw 'STAGING_NOT_IDEMPOTENT'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "STAGE_REPEAT_NO_NEW_PLAN=True\r\nIDENTICAL_PLAN_HASH=True\r\nPLAN_DISPATCH_DISABLED=True\r\nCURRENT_ASSIGNMENTS=71\r\nSOURCE_SHA=14c085251a63411d5c50349dac0e124a82ef3766\r\n",
+      "stdout_bytes": 163,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T07:49:31.318Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T07:49:31.071Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r70-staging-idempotence-live-proof-gpt6-11"
+    },
+    "request_id": "20261014-r70-staging-idempotence-live-proof-gpt6-11",
+    "started_at": "2026-10-14T07:49:22.888Z",
+    "status": "completed"
+  },
+  "id": "20261014-r70-staging-idempotence-live-proof-gpt6-11",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
