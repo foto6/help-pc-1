@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$b='http://127.0.0.1:17448'\n$c=Invoke-RestMethod -Uri ($b+'/api/supervisor-watchdog?detect=0') -TimeoutSec 12\n$l=Invoke-RestMethod -Uri ($b+'/api/operator-lifecycle') -TimeoutSec 12\n$a=Invoke-RestMethod -Uri ($b+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 12\n$d=Invoke-RestMethod -Uri ($b+'/api/supervisor-watchdog/agent-assignments/dry-run') -TimeoutSec 12\n$s=Get-Content 'E:\\WebAIBridge\\app\\data\\state.json' -Raw|ConvertFrom-Json\n$cut=Get-Content 'E:\\WebAIBridge\\app\\data\\projects-live-control-plane-cutover-r42.json' -Raw|ConvertFrom-Json\nWrite-Output ('HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nWrite-Output ('LIFECYCLE='+$l.mode)\nWrite-Output ('PAUSED='+$s.settings.paused)\nWrite-Output ('HOLD='+$cut.holdActive)\nWrite-Output ('SEND_ENABLED='+$c.config.allowAutonomousSend)\nWrite-Output ('CONTINUE_ENABLED='+$c.config.autoContinueEnabled)\nWrite-Output ('HIGH_REQUIRED='+$c.config.enforceHighMode)\nWrite-Output ('PARALLEL='+$c.config.maxParallelAgents)\nWrite-Output ('CHROME_REOPEN='+$c.config.openExistingChatIfMissing)\nWrite-Output ('ASSIGNMENTS_TOTAL='+@($a.assignments).Count)\nWrite-Output ('UNSETTLED='+@($a.assignments|Where-Object {$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count)\nWrite-Output ('DRY_SEND='+$d.sendAttempted)\nWrite-Output ('DRY_WOULD_SEND='+@($d.rows|Where-Object {$_.wouldDispatch -eq $true}).Count)\nWrite-Output ('DRY_READY='+@($d.rows|Where-Object {$_.preflightReason -eq 'ready'}).Count)\n$qa=@($c.config.managedChats|Where-Object {$_.role -eq 'qa' -and $_.repository -eq 'foto6/boss' -and $_.enabled -eq $true})\nWrite-Output ('QA_COUNT='+$qa.Count)\nif($qa.Count -eq 1){$r=@($d.rows|Where-Object {$_.chatId -eq $qa[0].id});Write-Output ('QA_ROWS='+$r.Count);if($r.Count -eq 1){Write-Output ('QA_PREFLIGHT='+$r[0].preflightReason);Write-Output ('QA_TABS='+$r[0].openTabs);Write-Output ('QA_HIGH='+@($r[0].snapshots|Where-Object {$_.highMode -eq $true}).Count);Write-Output ('QA_GENERATING='+@($r[0].snapshots|Where-Object {$_.generating -eq $true}).Count)}}\nWrite-Output ('BACKUP_EXISTS='+(Test-Path 'E:\\WebAIBridge-R65-SAFETY-BACKUP-20261014-GPT6-I1\\BACKUP_MANIFEST.json'))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\nLIFECYCLE=RUNNING_ATTACH\r\nPAUSED=False\r\nHOLD=False\r\nSEND_ENABLED=True\r\nCONTINUE_ENABLED=False\r\nHIGH_REQUIRED=True\r\nPARALLEL=1\r\nCHROME_REOPEN=False\r\nASSIGNMENTS_TOTAL=70\r\nUNSETTLED=0\r\nDRY_SEND=False\r\nDRY_WOULD_SEND=1\r\nDRY_READY=5\r\nQA_COUNT=1\r\nQA_ROWS=1\r\nQA_PREFLIGHT=ready\r\nQA_TABS=1\r\nQA_HIGH=1\r\nQA_GENERATING=0\r\nBACKUP_EXISTS=True\r\n",
+      "stdout_bytes": 379,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:39:44.433Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:39:44.174Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r67-qa-canary-readiness-gpt6-a2"
+    },
+    "request_id": "20261014-r67-qa-canary-readiness-gpt6-a2",
+    "started_at": "2026-10-14T05:39:42.586Z",
+    "status": "completed"
+  },
+  "id": "20261014-r67-qa-canary-readiness-gpt6-a2",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
