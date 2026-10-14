@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r69-autonomy-planner-runtime-audit-gpt6-g1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge'\n$cfg=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog?detect=0' -TimeoutSec 3\n$as=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 3\nWrite-Output ('AUTOCONTINUE='+$cfg.config.autoContinueEnabled)\nWrite-Output ('AUTOSEND='+$cfg.config.allowAutonomousSend)\nWrite-Output ('PARALLEL='+$cfg.config.maxParallelAgents)\nWrite-Output ('ACTIVE_ASSIGNMENTS='+@($as.assignments|Where-Object {$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count)\nWrite-Output ('BLOCKED_ASSIGNMENTS='+@($as.assignments|Where-Object {$_.state -eq 'blocked'}).Count)\nWrite-Output ('R45_RUNNER_SOURCE_EXISTS='+(Test-Path (Join-Path $root 'app\\autonomy-r45-runner.js')))\nWrite-Output ('R57_GPT_GIT_SOURCE_EXISTS='+(Test-Path (Join-Path $root 'app\\autonomy-r57-gpt-git.js')))\nWrite-Output ('R57_SUCCESSOR_SOURCE_EXISTS='+(Test-Path (Join-Path $root 'app\\autonomy-r57-successor.js')))\n$procs=@(Get-CimInstance Win32_Process -Filter \"Name='node.exe'\"|Where-Object {$_.CommandLine -match 'autonomy-r45-runner\\.js'})\nWrite-Output ('ACTUAL_R45_RUNNER_PROCESSES='+$procs.Count)\n$planPaths=@((Join-Path $root 'app\\data\\autonomy-r45-plan.json'),(Join-Path $root 'app\\autonomy-r45-plan.json'))\nWrite-Output ('PLAN_FILES_AT_STANDARD_PATHS='+@($planPaths|Where-Object {Test-Path -LiteralPath $_}).Count)\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C $root rev-parse HEAD))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only exact production autonomous planner runtime and safe lifecycle flags; no process arguments, no provider/chat details."
+}
