@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$b='http://127.0.0.1:17448'\n$a=Invoke-RestMethod -Uri ($b+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 12\n$t=@($a.assignments|Where-Object {$_.id -eq '9f434c35-9e28-4807-8d5f-18569e8bdcf5'})\nif($t.Count -ne 1){throw 'ORIGINAL_ASSIGNMENT_MISSING'}\n$t=$t[0]\nforeach($k in @('state','dispatchCount','dispatchSubmitAttempted','lastPreflightReason','lastDiagnostic','currentHead','ciRunId','ciConclusion','evidenceCollectorStatus','evidenceCollectorError','completedAt','blockedAt','failedAt','evidenceDeadlineAt')){\n $v=$t.$k\n if($k -eq 'evidenceCollectorError' -or $k -eq 'lastDiagnostic'){$v=([string]$v).Substring(0,[math]::Min(210,([string]$v).Length))}\n Write-Output ($k+'='+[string]$v)\n}\nWrite-Output ('OTHER_ACTIVE='+@($a.assignments|Where-Object {$_.id -ne $t.id -and $_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "state=awaiting_evidence\r\ndispatchCount=1\r\ndispatchSubmitAttempted=True\r\nlastPreflightReason=ready\r\nlastDiagnostic=ci_run_missing\r\ncurrentHead=c20459e9c109b27883308cab876027d247a41422\r\nciRunId=\r\nciConclusion=\r\nevidenceCollectorStatus=ci_missing\r\nevidenceCollectorError=\r\ncompletedAt=\r\nblockedAt=\r\nfailedAt=\r\nevidenceDeadlineAt=2026-10-14T07:41:31.034Z\r\nOTHER_ACTIVE=0\r\n",
+      "stdout_bytes": 368,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:45:56.448Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:45:56.197Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r67-qa-canary-progress-readonly-gpt6-d1"
+    },
+    "request_id": "20261014-r67-qa-canary-progress-readonly-gpt6-d1",
+    "started_at": "2026-10-14T05:45:55.132Z",
+    "status": "completed"
+  },
+  "id": "20261014-r67-qa-canary-progress-readonly-gpt6-d1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
