@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r70-gated-planner-isolated-tests-gpt6-05",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R70-GPT-PLANNER-20261014-GPT6'\n$expect='042a519f91446c5e96fd165c6e224f78e196b41d'\nif(Test-Path -LiteralPath $root){throw 'TARGET_ALREADY_EXISTS'}\n& git.exe clone --quiet --depth 1 --single-branch --no-tags --branch agent/r70-gated-gpt-planner-staging-20261014 https://github.com/foto6/WebAIBridge.git $root\nif($LASTEXITCODE -ne 0){throw 'R70_CLONE_FAILED'}\n$sha=([string](& git.exe -C $root rev-parse HEAD)).Trim()\nif($sha -ne $expect){throw ('SHA_MISMATCH '+$sha)}\n$tests=@('r70-stage-gpt-planner.test.js','autonomy-r45.test.js','autonomy-r45-brain.test.js','autonomy-r45-git-gate.test.js','autonomy-r45-lock.test.js','autonomy-r45-review.test.js','autonomy-r45-launcher.test.js','autonomy-r57-gpt-git.test.js','autonomy-r57-successor.test.js','autonomous-send-gate-r50.test.js','r65-global-canary-cap.test.js','r68-live-chat-observability.test.js','r68-live-viewer.test.js','r69-viewer-bootstrap.test.js')\n$log=Join-Path $root 'R70_GATE_AND_AUTONOMY_TESTS.txt'\nPush-Location (Join-Path $root 'app')\ntry{\n& node.exe --test @tests 2>&1|Out-File -LiteralPath $log -Encoding UTF8\n$rc=$LASTEXITCODE\n& node.exe --check r70-stage-gpt-planner.js\n$syntax=$LASTEXITCODE\n}finally{Pop-Location}\nWrite-Output ('EXACT_SHA='+$sha)\nWrite-Output ('TEST_EXIT='+$rc)\nWrite-Output ('SYNTAX_EXIT='+$syntax)\nSelect-String -LiteralPath $log -Pattern '^ℹ (?:tests|pass|fail|skipped)|^✖'|Select-Object -Last 18|ForEach-Object{Write-Output $_.Line}\nWrite-Output ('PROD_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($rc -ne 0 -or $syntax -ne 0){throw 'R70_TESTS_FAILED'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 100000,
+  "note": "Fresh isolated exact Git SHA R70 planner tests and R45/R57/R50/R65/R68/R69 regressions. No provider Send, production unchanged."
+}
