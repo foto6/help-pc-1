@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$c=@(Get-NetTCPConnection -LocalPort 17449 -State Listen -ErrorAction SilentlyContinue)\nWrite-Output ('LISTENER_COUNT='+$c.Count)\nforeach($e in $c){\n Write-Output ('PORT_OWNER_PID='+$e.OwningProcess)\n $proc=Get-Process -Id $e.OwningProcess -ErrorAction SilentlyContinue\n Write-Output ('PORT_OWNER_PROCESS='+[string]$proc.ProcessName)\n}\ntry {\n $x=Invoke-RestMethod -Uri 'http://127.0.0.1:17449/api/live' -TimeoutSec 5\n Write-Output ('ENDPOINT_CONTRACT='+[string]$x.contract)\n Write-Output ('ENDPOINT_READONLY='+[string]$x.readOnly)\n Write-Output ('ENDPOINT_OPEN_COUNT='+[string]$x.openCount)\n Write-Output ('ENDPOINT_NO_SEND='+[string]$x.guardrails.noSend)\n} catch {\n Write-Output ('ENDPOINT_NOT_VERIFIED='+[string]$_.Exception.GetType().Name)\n}\nWrite-Output ('CHECK_ANOTHER_PORT_17450='+[bool](Get-NetTCPConnection -LocalPort 17450 -State Listen -ErrorAction SilentlyContinue))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "LISTENER_COUNT=1\r\nPORT_OWNER_PID=2144\r\nPORT_OWNER_PROCESS=node\r\nENDPOINT_NOT_VERIFIED=WebException\r\nCHECK_ANOTHER_PORT_17450=False\r\n",
+      "stdout_bytes": 132,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T06:15:28.979Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T06:15:28.702Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r68-port17449-owner-reconcile-gpt6-08"
+    },
+    "request_id": "20261014-r68-port17449-owner-reconcile-gpt6-08",
+    "started_at": "2026-10-14T06:15:24.080Z",
+    "status": "completed"
+  },
+  "id": "20261014-r68-port17449-owner-reconcile-gpt6-08",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
