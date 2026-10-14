@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $base='http://127.0.0.1:17448'; $before=Invoke-RestMethod ($base+'/api/health') -TimeoutSec 6; Write-Output ('BEFORE='+$before.state); Write-Output ('BEFORE_REASONS='+(@($before.reasons) -join ',')); try{$chat=Invoke-RestMethod ($base+'/api/supervisor-watchdog/managed-chats?inspect=1') -TimeoutSec 18;Write-Output ('MANAGED_INSPECT='+([string]$chat.inspected));Write-Output ('MANAGED_COUNT='+@($chat.chats).Count);Write-Output ('MANAGED_PROVIDER_ERRORS='+@($chat.chats|Where-Object {$_.providerLoadError}).Count)}catch{Write-Output 'MANAGED_INSPECT_ERROR'}; try{$control=Invoke-RestMethod ($base+'/api/projects/control-plane?inspect=1') -TimeoutSec 22;Write-Output ('CONTROL_CONFLICTS='+@($control.conflicts).Count);Write-Output ('CONTROL_AGENTS='+@($control.agents).Count)}catch{Write-Output 'CONTROL_INSPECT_ERROR'}; $after=Invoke-RestMethod ($base+'/api/health') -TimeoutSec 6; Write-Output ('AFTER='+$after.state); Write-Output ('AFTER_REASONS='+(@($after.reasons) -join ',')); foreach($name in @('git_baseline','browser_cdp')){$r=$after.components.$name;Write-Output ($name+'_STATE='+$r.state);Write-Output ($name+'_AGE_MS='+$r.ageMs);Write-Output ($name+'_FAILURES='+$r.consecutiveFailures)}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "BEFORE=DEGRADED\r\nBEFORE_REASONS=browser_cdp:health_probe_stale,git_baseline:health_probe_stale\r\nMANAGED_INSPECT=True\r\nMANAGED_COUNT=7\r\nMANAGED_PROVIDER_ERRORS=0\r\nCONTROL_CONFLICTS=0\r\nCONTROL_AGENTS=7\r\nAFTER=PAUSED\r\nAFTER_REASONS=\r\ngit_baseline_STATE=healthy\r\ngit_baseline_AGE_MS=33\r\ngit_baseline_FAILURES=0\r\nbrowser_cdp_STATE=healthy\r\nbrowser_cdp_AGE_MS=12604\r\nbrowser_cdp_FAILURES=0\r\n",
+      "stdout_bytes": 385,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T03:58:57.597Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T03:58:57.271Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r64-readonly-live-probe-20261014-t1101-51e3bde9"
+    },
+    "request_id": "r64-readonly-live-probe-20261014-t1101-51e3bde9",
+    "started_at": "2026-10-14T03:58:43.674Z",
+    "status": "completed"
+  },
+  "id": "r64-readonly-live-probe-20261014-t1101-51e3bde9",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
