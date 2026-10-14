@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-controlled-r42-hold-release-20261014-d7ae20c4",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $head=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim(); if($head -ne '66e2ca7681b5e4c4affde9641b69e5582b718f99'){throw 'HEAD_DRIFT'}; $op=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 6; $sv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; $c=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 6; $a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6; if($op.mode -ne 'PAUSED_BROWSER' -or $op.queuePaused -ne $true){throw 'NOT_QUIESCENT'}; if($sv.config.enabled -ne $false -or $sv.config.allowAutonomousSend -ne $false -or $sv.config.maxParallelAgents -ne 1){throw 'AUTONOMY_NOT_SAFE'}; if($c.cutoverState.holdActive -ne $true -or $c.cutoverState.lastReadOnlyReconcileDiffCount -ne 6){throw 'R42_UNVERIFIED_HOLD'}; if(@($a.assignments|Where-Object{$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count -gt 0){throw 'UNSETTLED_WORK'}; $result=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/activate') -Method Post -ContentType 'application/json' -Body '{}' -TimeoutSec 35; Write-Output ('ACTIVATION_CONTRACT='+$result.object); Write-Output ('ACTIVATION_CHANGED='+$result.changed); Write-Output ('ACTIVATION_STATUS='+$result.status); Write-Output ('ACTIVATION_QUEUE_PAUSED='+$result.queuePaused); Write-Output ('PROVIDER_CHAT_DELETED='+$result.providerChatDeletionPerformed); $post=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 6; $postSv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; $postOp=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 6; Write-Output ('POST_HOLD='+$post.cutoverState.holdActive); Write-Output ('POST_STATUS='+$post.cutoverState.status); Write-Output ('POST_WATCHDOG_ENABLED='+$postSv.config.enabled); Write-Output ('POST_SEND_ALLOWED='+$postSv.config.allowAutonomousSend); Write-Output ('POST_PARALLEL_CAP='+$postSv.config.maxParallelAgents); Write-Output ('POST_OPERATOR_MODE='+$postOp.mode); Write-Output ('POST_SOURCE_HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 65000,
+  "note": "One-time original R42 authenticated local activate endpoint AFTER verified zero chat identity drift/zero conflicts and backups, with R65 HEAD and all sends OFF; POST restores held administrative state only. No assignment queued or provider Send; original request id, no replay."
+}
