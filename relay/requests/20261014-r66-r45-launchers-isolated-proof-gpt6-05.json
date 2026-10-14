@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r66-r45-launchers-isolated-proof-gpt6-05",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$dir='E:\\WebAIBridge-R66-R45-READONLY-TEST-20261014'\n$expected='c332d6eb5ac754deea43f169ebb191f087ced844'\nif(Test-Path -LiteralPath $dir){throw 'TARGET_ALREADY_EXISTS_NO_OVERWRITE'}\n& git.exe clone --depth 1 --single-branch --no-tags --branch 'agent/r66-r45-readonly-launchers-20261014' 'https://github.com/foto6/WebAIBridge.git' $dir | Out-Null\nif($LASTEXITCODE -ne 0){throw 'ISOLATED_CLONE_FAILED'}\n$head=([string](& git.exe -C $dir rev-parse HEAD)).Trim()\nif($head -ne $expected){throw ('REFUSE_SHA_MISMATCH '+$head)}\n$tests=@('autonomy-r45.test.js','autonomy-r45-brain.test.js','autonomy-r45-git-gate.test.js','autonomy-r45-lock.test.js','autonomy-r45-review.test.js','autonomy-r45-launcher.test.js','autonomy-r57-gpt-git.test.js','autonomy-r57-successor.test.js','operator-lifecycle-r40.test.js','projects-live-control-plane-r41.test.js','live-control-plane-cutover-r42.test.js','autonomous-send-gate-r50.test.js','existing-tab-session-r55.test.js','existing-tab-session-r56-cdp.test.js','r56-worker-sticky.test.js','r62-r42-sticky-release-gate.test.js','r63-r42-staged-activation.test.js','r64-idle-health-and-dryrun.test.js','r65-global-canary-cap.test.js')\n$log=Join-Path $dir 'R66_AUTONOMY_VERIFICATION.txt'\nPush-Location -LiteralPath (Join-Path $dir 'app')\ntry { & node.exe --test @tests 2>&1 | Out-File -LiteralPath $log -Encoding UTF8; $exit=$LASTEXITCODE } finally{Pop-Location}\nWrite-Output ('SOURCE_COMMIT='+$head)\nWrite-Output ('TEST_EXIT='+$exit)\nSelect-String -LiteralPath $log -Pattern '^ℹ (?:tests|pass|fail|skipped)|^✖' | Select-Object -Last 14|ForEach-Object{Write-Output $_.Line}\nWrite-Output ('PRODUCTION_UNMODIFIED_SHA='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nWrite-Output ('TEST_LOG='+$log)\nif($exit -ne 0){throw 'R66_TESTS_FAILED'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 95000,
+  "note": "Verify exact R66 GitHub source in brand-new Windows isolated clone; 19 read-only/non-provider regression suites; no production modifications."
+}
