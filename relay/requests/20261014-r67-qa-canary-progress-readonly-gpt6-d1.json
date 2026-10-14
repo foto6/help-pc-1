@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r67-qa-canary-progress-readonly-gpt6-d1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$b='http://127.0.0.1:17448'\n$a=Invoke-RestMethod -Uri ($b+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 12\n$t=@($a.assignments|Where-Object {$_.id -eq '9f434c35-9e28-4807-8d5f-18569e8bdcf5'})\nif($t.Count -ne 1){throw 'ORIGINAL_ASSIGNMENT_MISSING'}\n$t=$t[0]\nforeach($k in @('state','dispatchCount','dispatchSubmitAttempted','lastPreflightReason','lastDiagnostic','currentHead','ciRunId','ciConclusion','evidenceCollectorStatus','evidenceCollectorError','completedAt','blockedAt','failedAt','evidenceDeadlineAt')){\n $v=$t.$k\n if($k -eq 'evidenceCollectorError' -or $k -eq 'lastDiagnostic'){$v=([string]$v).Substring(0,[math]::Min(210,([string]$v).Length))}\n Write-Output ($k+'='+[string]$v)\n}\nWrite-Output ('OTHER_ACTIVE='+@($a.assignments|Where-Object {$_.id -ne $t.id -and $_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Observe original one-canary Bridge evidence gate, no new submits or provider/browser mutations."
+}
