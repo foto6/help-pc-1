@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r65-current-hold-snapshot-gpt6-02",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge'; $data='E:\\WebAIBridge\\app\\data'; $base='http://127.0.0.1:17448'\nWrite-Output ('GIT_HEAD='+[string](& git.exe -C $root rev-parse HEAD))\nWrite-Output ('TRACKED_DIRTY='+@(& git.exe -C $root status --porcelain=v1 --untracked-files=no).Count)\n$s=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog?detect=0') -TimeoutSec 12\n$d=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog/agent-assignments/dry-run') -TimeoutSec 12\n$q=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 12\n$l=Invoke-RestMethod -Uri ($base+'/api/operator-lifecycle') -TimeoutSec 12\n$state=Get-Content -LiteralPath (Join-Path $data 'state.json') -Raw|ConvertFrom-Json\n$r42=Get-Content -LiteralPath (Join-Path $data 'projects-live-control-plane-cutover-r42.json') -Raw|ConvertFrom-Json\nWrite-Output ('LIFECYCLE='+$l.mode)\nWrite-Output ('QUEUE_PAUSED='+$state.settings.paused)\nWrite-Output ('R42_HOLD='+$r42.holdActive)\nWrite-Output ('ALLOW_AUTONOMOUS_SEND='+$s.config.allowAutonomousSend)\nWrite-Output ('AUTO_CONTINUE='+$s.config.autoContinueEnabled)\nWrite-Output ('OPEN_MISSING='+$s.config.openExistingChatIfMissing)\nWrite-Output ('HIGH_ENFORCED='+$s.config.enforceHighMode)\nWrite-Output ('PARALLEL='+$s.config.maxParallelAgents)\nWrite-Output ('UNSETTLED='+@($q.assignments|Where-Object{$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count)\nWrite-Output ('ASSIGNMENT_TOTAL='+@($q.assignments).Count)\nWrite-Output ('DRYRUN_SEND_ATTEMPTED='+$d.sendAttempted)\nWrite-Output ('DRYRUN_WOULD_DISPATCH='+@($d.rows|Where-Object{$_.wouldDispatch -eq $true}).Count)\nWrite-Output ('DRYRUN_READY='+@($d.rows|Where-Object{$_.preflightReason -eq 'ready'}).Count)\nWrite-Output ('BACKUP_EXISTS='+(Test-Path 'E:\\WebAIBridge-R65-SAFETY-BACKUP-20261014-GPT6-I1\\BACKUP_MANIFEST.json'))\nWrite-Output 'READ_ONLY_DONE'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "Read-only status of owner-managed bridge feature holds; no mutation, provider sends, credentials, or tab changes."
+}
