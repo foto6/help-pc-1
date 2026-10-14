@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$bootstrap='E:\\WebAIBridge-R69-OBSERVABILITY-20261014-GPT6\\app\\r69-viewer-bootstrap.js'\n$a=Get-NetTCPConnection -LocalPort 17450 -State Listen -ErrorAction Stop|Select-Object -First 1\n$before=$a.OwningProcess\n$x=& node.exe $bootstrap --start\nif($LASTEXITCODE -ne 0){throw 'R69_BOOTSTRAP_NOT_HEALTHY'}\n$j=$x|Out-String|ConvertFrom-Json\n$after=(Get-NetTCPConnection -LocalPort 17450 -State Listen|Select-Object -First 1).OwningProcess\n$live1=Invoke-RestMethod 'http://127.0.0.1:17450/api/live' -TimeoutSec 3\n$live2=Invoke-RestMethod 'http://127.0.0.1:17450/api/live' -TimeoutSec 3\nWrite-Output ('BOOTSTRAP_STATUS='+$j.state)\nWrite-Output ('BOOTSTRAP_DUPLICATE_STARTED='+$j.started)\nWrite-Output ('SAME_PID='+($before -eq $after))\nWrite-Output ('API_TIMESTAMP_CHANGED='+($live1.checkedAt -ne $live2.checkedAt))\nWrite-Output ('NO_PROVIDER_SEND='+($live2.guardrails.noSend -eq $true))\nWrite-Output ('MONITOR_UNREGISTERED='+$live2.unregisteredOpenCount)\nWrite-Output ('MONITOR_ASSIGNMENTS='+@($live2.assignments).Count)\n$w=New-Object -ComObject WScript.Shell\n$link=Join-Path ([Environment]::GetFolderPath('Startup')) 'WebAIBridge-R69-Live.lnk'\n$shortcut=$w.CreateShortcut($link)\nWrite-Output ('STARTUP_LINK_VALID='+($shortcut.Arguments -match 'r69-viewer-bootstrap.js'))\nif($j.started -ne $false -or $before -ne $after){throw 'BOOTSTRAP_DUPLICATED_RUNNING_VIEWER'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "BOOTSTRAP_STATUS=RUNNING\r\nBOOTSTRAP_DUPLICATE_STARTED=False\r\nSAME_PID=True\r\nAPI_TIMESTAMP_CHANGED=True\r\nNO_PROVIDER_SEND=True\r\nMONITOR_UNREGISTERED=5\r\nMONITOR_ASSIGNMENTS=71\r\nSTARTUP_LINK_VALID=True\r\n",
+      "stdout_bytes": 200,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T06:41:07.176Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T06:41:06.931Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r69-startup-idempotence-and-live-poll-gpt6-d1"
+    },
+    "request_id": "20261014-r69-startup-idempotence-and-live-poll-gpt6-d1",
+    "started_at": "2026-10-14T06:41:03.036Z",
+    "status": "completed"
+  },
+  "id": "20261014-r69-startup-idempotence-and-live-poll-gpt6-d1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
