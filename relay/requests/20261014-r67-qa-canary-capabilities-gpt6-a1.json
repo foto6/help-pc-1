@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r67-qa-canary-capabilities-gpt6-a1",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read-only liveness check ahead of owner-enabled single QA canary"
+}
