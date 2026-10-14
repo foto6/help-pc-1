@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r64-git-health-readonly-20261014-t1058-193f0d2c",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge'; $git=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); $branch=((& git.exe -C $root branch --show-current)|Out-String).Trim(); $dirty=@(& git.exe -C $root status --porcelain=v1 --untracked-files=no); $h=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/health' -TimeoutSec 8; $o=$h.components.git_baseline; Write-Output ('HEAD='+$git); Write-Output ('BRANCH='+$branch); Write-Output ('DIRTY_TRACKED='+$dirty.Count); Write-Output ('HEALTH='+$h.state); Write-Output ('REASONS='+(@($h.reasons) -join ',')); Write-Output ('GIT_PROBE_STATE='+$o.state); Write-Output ('GIT_PROBE_REASON='+$o.reason); Write-Output ('GIT_PROBE_LASTSTART='+$o.lastStartedAt); Write-Output ('GIT_PROBE_LASTCOMPLETED='+$o.lastCompletedAt); Write-Output ('GIT_PROBE_LASTSUCCESS='+$o.lastSuccessAt); Write-Output ('GIT_PROBE_FAILURES='+$o.consecutiveFailures); Write-Output ('GIT_PROBE_AGE_MS='+$o.ageMs); Write-Output ('HEALTH_EVENTLOOP='+$h.eventLoop.state); Write-Output ('HEALTH_COMPONENT_COUNT='+@($h.components.PSObject.Properties).Count); Write-Output ('SERVER_HASH='+(Get-FileHash -LiteralPath (Join-Path $root 'app\\server.js') -Algorithm SHA256).Hash)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 23000,
+  "note": "Read-only exact owner Git HEAD and operational component git_baseline timestamps/health via R64 PC Control; no runtime mutations, no secrets"
+}
