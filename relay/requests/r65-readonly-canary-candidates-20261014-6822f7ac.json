@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-readonly-canary-candidates-20261014-6822f7ac",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $d=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments/dry-run') -TimeoutSec 30; Write-Output ('DRY_RUN='+$d.dryRun); Write-Output ('SEND_ATTEMPTED='+$d.sendAttempted); Write-Output ('OPENED_BROWSER='+$d.openedClosedChats); Write-Output ('GLOBAL_ADMISSION='+$d.globalAdmission.reason); $rows=@($d.rows); Write-Output ('CANDIDATES='+$rows.Count); foreach($x in $rows){;   $high=@($x.snapshots|Where-Object{$_.highMode -eq $true}).Count;   $errors=@($x.snapshots|Where-Object{$_.providerLoadError -eq $true -or $_.inspectionError}).Count;   $n=([string]$x.name) -replace '[^a-zA-Z0-9_ .-]','_';   Write-Output ('CANDIDATE='+($x.chatId+'|'+$n+'|'+$x.repository+'|'+$x.branch+'|ready='+$x.preflightAllowed+'|high='+$high+'|error='+$errors+'|reason='+$x.preflightReason+'|worker='+$x.profileWorkerConnected)); }"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 44000,
+  "note": "Read-only list of local managed coding-chat aliases and Git branches with high/readiness only for selecting ONE authorized live canary, no provider URLs/messages, no Send"
+}
