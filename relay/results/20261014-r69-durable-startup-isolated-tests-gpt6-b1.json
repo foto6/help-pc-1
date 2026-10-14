@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$dir='E:\\WebAIBridge-R69-OBSERVABILITY-20261014-GPT6'\n$sha='03e8ec94e59ef4efbb748afed418eafada844add'\nif(Test-Path -LiteralPath $dir){throw 'R69_DESTINATION_ALREADY_EXISTS'}\n& git.exe clone --quiet --depth 1 --single-branch --no-tags --branch 'agent/r69-durable-viewer-lifecycle-20261014' 'https://github.com/foto6/WebAIBridge.git' $dir\nif($LASTEXITCODE -ne 0){throw 'R69_CLONE_FAILED'}\n$head=([string](& git.exe -C $dir rev-parse HEAD)).Trim()\nif($head -ne $sha){throw ('R69_SHA_MISMATCH '+$head)}\n$log=Join-Path $dir 'R69_STARTUP_TESTS.txt'\n$syntax=Join-Path $dir 'R69_UI_CHECK.js'\nPush-Location -LiteralPath (Join-Path $dir 'app')\ntry {\n & node.exe --test r69-viewer-bootstrap.test.js r68-live-chat-observability.test.js r68-live-viewer.test.js autonomous-send-gate-r50.test.js r65-global-canary-cap.test.js *> $log\n $rc=$LASTEXITCODE\n & node.exe --check server.js\n $srcRc=$LASTEXITCODE\n $view=Get-Content -LiteralPath 'ui.html' -Raw\n $match=[regex]::Match($view,'(?s)<script>(.*?)</script>')\n if(-not $match.Success){throw 'DASHBOARD_SCRIPT_MISSING'}\n [IO.File]::WriteAllText($syntax,$match.Groups[1].Value,[Text.UTF8Encoding]::new($false))\n & node.exe --check $syntax\n $uiRc=$LASTEXITCODE\n}finally{Pop-Location}\nWrite-Output ('R69_SHA='+$head)\nWrite-Output ('TEST_EXIT='+$rc)\nWrite-Output ('SERVER_SYNTAX_EXIT='+$srcRc)\nWrite-Output ('INTEGRATED_UI_SYNTAX_EXIT='+$uiRc)\nSelect-String -LiteralPath $log -Pattern '^ℹ (?:tests|pass|fail|skipped)|^✖'|Select-Object -Last 12|ForEach-Object{Write-Output $_.Line}\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($rc -ne 0 -or $srcRc -ne 0 -or $uiRc -ne 0){throw 'R69_TESTS_FAILED'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "R69_SHA=03e8ec94e59ef4efbb748afed418eafada844add\r\nTEST_EXIT=0\r\nSERVER_SYNTAX_EXIT=0\r\nINTEGRATED_UI_SYNTAX_EXIT=0\r\nℹ tests 30\r\nℹ pass 30\r\nℹ fail 0\r\nℹ skipped 0\r\nPRODUCTION_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n",
+      "stdout_bytes": 226,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T06:38:59.134Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T06:38:58.850Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r69-durable-startup-isolated-tests-gpt6-b1"
+    },
+    "request_id": "20261014-r69-durable-startup-isolated-tests-gpt6-b1",
+    "started_at": "2026-10-14T06:38:51.017Z",
+    "status": "completed"
+  },
+  "id": "20261014-r69-durable-startup-isolated-tests-gpt6-b1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
