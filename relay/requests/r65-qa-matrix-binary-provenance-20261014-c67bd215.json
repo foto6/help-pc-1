@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-qa-matrix-binary-provenance-20261014-c67bd215",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "cmd.exe",
+      "/d",
+      "/c",
+      "py.exe -3 -c \"import subprocess,hashlib,pathlib; root=pathlib.Path(r'E:\\\\BossR65QA-SHADOW'); rel='hardwave_qa/certificates/source/INTEGRATION_R8_FINAL_MATRIX.6ab529846e99e572d77006dee48d6c4b01caea12.json'; p=root/rel; raw=p.read_bytes(); git=subprocess.run(['git.exe','-C',str(root),'show','HEAD:'+rel],capture_output=True,check=True).stdout; sha=lambda b:hashlib.sha256(b).hexdigest(); print('WORK_SHA256='+sha(raw)); print('GIT_OBJECT_SHA256='+sha(git)); print('WORK_LEN='+str(len(raw))); print('GIT_LEN='+str(len(git))); print('GIT_CRLF_SHA256='+sha(git.replace(b'\\\\n',b'\\\\r\\\\n'))); print('WORK_LF_SHA256='+sha(raw.replace(b'\\\\r\\\\n',b'\\\\n'))); print('CRLF_WORK='+str(raw.count(b'\\\\r\\\\n'))); print('CRLF_GIT='+str(git.count(b'\\\\r\\\\n'))); print('EQUAL='+str(raw==git))\""
+    ],
+    "cwd": "E:\\BossR65QA-SHADOW"
+  },
+  "timeout_ms": 13000,
+  "note": "Read-only compare exact Git object bytes vs Windows working-tree QA acceptance matrix SHA256, CRLF/LF normalization only; no edits or secrets"
+}
