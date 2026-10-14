@@ -1,0 +1,11 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-cutover-outcome-lookup-20261014-1b6f3a80",
+  "action": "outcome.lookup",
+  "params": {
+    "request_id": "r65-controlled-live-cutover-20261014-98df7b2a",
+    "action": "shell.run"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only durable original result reconciliation after long-running R65 exact release; never replay live cutover"
+}
