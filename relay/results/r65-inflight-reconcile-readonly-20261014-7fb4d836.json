@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$u='http://127.0.0.1:17448';$a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 7;$rows=@($a.assignments|Where-Object{$_.state -in @('running','dispatching','awaiting_evidence','unknown')});Write-Output ('NONTERMINAL='+$rows.Count);foreach($x in $rows){Write-Output ('STATE='+$x.state);Write-Output ('DISPATCHCOUNT='+$x.dispatchCount);Write-Output ('SUBMIT_ATTEMPTED='+$x.dispatchSubmitAttempted);Write-Output ('LAST_DIAGNOSTIC_CLASS='+([string]$x.lastDiagnostic -replace '[^a-zA-Z0-9_:.-]','_').Substring(0,[Math]::Min(110,([string]$x.lastDiagnostic).Length)));Write-Output ('HAS_CI='+([bool]$x.ciRunId))};$h=Invoke-RestMethod ($u+'/api/health') -TimeoutSec 7;Write-Output ('QUEUE_SAFETY='+$h.queueSafety.queueDisposition);Write-Output ('HEALTH='+$h.state)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "NONTERMINAL=1\r\nSTATE=awaiting_evidence\r\nDISPATCHCOUNT=1\r\nSUBMIT_ATTEMPTED=True\r\nLAST_DIAGNOSTIC_CLASS=git_head_unchanged\r\nHAS_CI=True\r\nQUEUE_SAFETY=PAUSED_UNSAFE\r\nHEALTH=BLOCKED\r\n",
+      "stdout_bytes": 179,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T04:53:52.311Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T04:53:52.043Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r65-inflight-reconcile-readonly-20261014-7fb4d836"
+    },
+    "request_id": "r65-inflight-reconcile-readonly-20261014-7fb4d836",
+    "started_at": "2026-10-14T04:53:51.124Z",
+    "status": "completed"
+  },
+  "id": "r65-inflight-reconcile-readonly-20261014-7fb4d836",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
