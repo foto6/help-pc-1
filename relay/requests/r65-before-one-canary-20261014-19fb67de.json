@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-before-one-canary-20261014-19fb67de",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $head=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim(); $status=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6; $sv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; $op=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 6; $c=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 6; Write-Output ('HEAD='+$head); Write-Output ('HEALTH='+$status.operational.state); Write-Output ('QUEUE_PAUSED='+$status.queue.paused); foreach($p in $status.queue.tasks.PSObject.Properties){Write-Output ('NON_AGENT_TASK_'+$p.Name+'='+$p.Value)}; Write-Output ('NON_AGENT_TASK_TOTAL='+$status.counts.tasks); Write-Output ('OUTBOX_TOTAL='+$status.counts.outbox); Write-Output ('OPERATOR_MODE='+$op.mode); Write-Output ('R42_HOLD='+$c.cutoverState.holdActive); Write-Output ('WATCHDOG_ENABLED='+$sv.config.enabled); Write-Output ('AUTOSEND='+$sv.config.allowAutonomousSend); Write-Output ('GLOBAL_CAP='+$sv.config.maxParallelAgents)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Read-only non-agent queue/task/outbox counts and R65 pause/HOLD before one QA canary; no chat IDs or user content, no Send"
+}
