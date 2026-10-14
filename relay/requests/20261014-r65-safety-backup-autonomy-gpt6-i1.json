@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r65-safety-backup-autonomy-gpt6-i1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge';$app=Join-Path $root 'app';$data=Join-Path $app 'data'\n$backup='E:\\WebAIBridge-R65-SAFETY-BACKUP-20261014-GPT6-I1'\nif(Test-Path -LiteralPath $backup){throw 'REFUSE_EXISTING_BACKUP'}\n$head=[string](& git.exe -C $root rev-parse HEAD)\nif($head.Trim() -ne '66e2ca7681b5e4c4affde9641b69e5582b718f99'){throw 'REFUSE_HEAD_CHANGED'}\nif(@(& git.exe -C $root status --porcelain=v1 --untracked-files=no).Count -ne 0){throw 'REFUSE_DIRTY_TRACKED_FILES'}\n$s=Get-Content -LiteralPath (Join-Path $data 'state.json') -Raw|ConvertFrom-Json\n$c=Get-Content -LiteralPath (Join-Path $data 'supervisor-watchdog.json') -Raw|ConvertFrom-Json\n$h=Get-Content -LiteralPath (Join-Path $data 'projects-live-control-plane-cutover-r42.json') -Raw|ConvertFrom-Json\nif($s.settings.paused -ne $true -or $c.allowAutonomousSend -ne $false -or $h.holdActive -ne $false){throw 'REFUSE_PRECONDITION_CHANGED'}\nif(@($s.agentAssignments|Where-Object{$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count -ne 0){throw 'REFUSE_UNSETTLED_ASSIGNMENTS'}\n$life=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/operator-lifecycle' -TimeoutSec 12\nif($life.mode -ne 'RUNNING_ATTACH'){throw 'REFUSE_OPERATOR_MODE_CHANGED'}\nNew-Item -ItemType Directory -Path $backup -ErrorAction Stop|Out-Null\n$manifest=[ordered]@{contract='bridge.r65.private_safety_backup.v1';timestampUtc=[DateTime]::UtcNow.ToString('o');productionHead=$head.Trim();backupPath=$backup;files=@()}\nforeach($name in @('state.json','supervisor-watchdog.json','projects-live-control-plane-cutover-r42.json')){\n $src=Join-Path $data $name; $dst=Join-Path $backup $name\n $before=(Get-FileHash -LiteralPath $src -Algorithm SHA256).Hash\n Copy-Item -LiteralPath $src -Destination $dst -ErrorAction Stop\n $copied=(Get-FileHash -LiteralPath $dst -Algorithm SHA256).Hash\n $after=(Get-FileHash -LiteralPath $src -Algorithm SHA256).Hash\n if($before -ne $copied -or $before -ne $after){throw ('BACKUP_SOURCE_CHANGED_DURING_COPY '+$name)}\n $manifest.files+=@{name=$name;sha256=$copied}\n}\n$manifest.serverSha256=(Get-FileHash -LiteralPath (Join-Path $app 'server.js') -Algorithm SHA256).Hash\n$manifest|ConvertTo-Json -Depth 5|Set-Content -LiteralPath (Join-Path $backup 'BACKUP_MANIFEST.json') -Encoding UTF8\nWrite-Output ('BACKUP_VERIFIED=True')\nWrite-Output ('FILE_COUNT='+$manifest.files.Count)\nWrite-Output ('BACKUP_ROOT='+$backup)\nWrite-Output ('PRODUCTION_HEAD='+$head.Trim())\nWrite-Output ('SERVER_SHA256='+$manifest.serverSha256)\nWrite-Output 'BACKUP_NOT_COMMITTED_TO_GIT=True'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Create private local verified rollback snapshots; no API changes, Chrome changes or credential output."
+}
