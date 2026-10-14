@@ -1,0 +1,8 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r65-autonomy-capabilities-verify-gpt6-b1",
+  "action": "capabilities.get",
+  "params": {},
+  "timeout_ms": 10000,
+  "note": "Read-only authorized PC Control capability probe before autonomy integration."
+}
