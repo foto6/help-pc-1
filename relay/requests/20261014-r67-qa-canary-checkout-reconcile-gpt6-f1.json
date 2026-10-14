@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r67-qa-canary-checkout-reconcile-gpt6-f1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$dir='E:\\boss-R65-CANARY-VERIFY-20261014-GPT6'\nWrite-Output ('DIRECTORY_EXISTS='+(Test-Path -LiteralPath $dir))\nWrite-Output ('GIT_EXISTS='+(Test-Path -LiteralPath (Join-Path $dir '.git')))\nWrite-Output ('TEST_EXISTS='+(Test-Path -LiteralPath (Join-Path $dir 'tests\\r65_autonomy_canary.test.cjs')))\nif(Test-Path -LiteralPath (Join-Path $dir '.git')){$ErrorActionPreference='Continue';$h=& git.exe -C $dir rev-parse HEAD 2>$null;Write-Output ('EXACT_HEAD='+[string]$h);Write-Output ('GIT_RC='+$LASTEXITCODE)}\nWrite-Output ('BRIDGE_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Read-only reconcile original isolated QA checkout after native Git output aborted PowerShell; do not clone or overwrite."
+}
