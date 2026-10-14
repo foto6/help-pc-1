@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge'\n$cfg=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog?detect=0' -TimeoutSec 3\n$as=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 3\nWrite-Output ('AUTOCONTINUE='+$cfg.config.autoContinueEnabled)\nWrite-Output ('AUTOSEND='+$cfg.config.allowAutonomousSend)\nWrite-Output ('PARALLEL='+$cfg.config.maxParallelAgents)\nWrite-Output ('ACTIVE_ASSIGNMENTS='+@($as.assignments|Where-Object {$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count)\nWrite-Output ('BLOCKED_ASSIGNMENTS='+@($as.assignments|Where-Object {$_.state -eq 'blocked'}).Count)\nWrite-Output ('R45_RUNNER_SOURCE_EXISTS='+(Test-Path (Join-Path $root 'app\\autonomy-r45-runner.js')))\nWrite-Output ('R57_GPT_GIT_SOURCE_EXISTS='+(Test-Path (Join-Path $root 'app\\autonomy-r57-gpt-git.js')))\nWrite-Output ('R57_SUCCESSOR_SOURCE_EXISTS='+(Test-Path (Join-Path $root 'app\\autonomy-r57-successor.js')))\n$procs=@(Get-CimInstance Win32_Process -Filter \"Name='node.exe'\"|Where-Object {$_.CommandLine -match 'autonomy-r45-runner\\.js'})\nWrite-Output ('ACTUAL_R45_RUNNER_PROCESSES='+$procs.Count)\n$planPaths=@((Join-Path $root 'app\\data\\autonomy-r45-plan.json'),(Join-Path $root 'app\\autonomy-r45-plan.json'))\nWrite-Output ('PLAN_FILES_AT_STANDARD_PATHS='+@($planPaths|Where-Object {Test-Path -LiteralPath $_}).Count)\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C $root rev-parse HEAD))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "AUTOCONTINUE=False\r\nAUTOSEND=True\r\nPARALLEL=1\r\nACTIVE_ASSIGNMENTS=0\r\nBLOCKED_ASSIGNMENTS=37\r\nR45_RUNNER_SOURCE_EXISTS=True\r\nR57_GPT_GIT_SOURCE_EXISTS=True\r\nR57_SUCCESSOR_SOURCE_EXISTS=True\r\nACTUAL_R45_RUNNER_PROCESSES=0\r\nPLAN_FILES_AT_STANDARD_PATHS=0\r\nPRODUCTION_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n",
+      "stdout_bytes": 311,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T06:47:36.782Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T06:47:36.531Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r69-autonomy-planner-runtime-audit-gpt6-g1"
+    },
+    "request_id": "20261014-r69-autonomy-planner-runtime-audit-gpt6-g1",
+    "started_at": "2026-10-14T06:47:35.386Z",
+    "status": "completed"
+  },
+  "id": "20261014-r69-autonomy-planner-runtime-audit-gpt6-g1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
