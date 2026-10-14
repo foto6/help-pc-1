@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Continue'; $root='E:\\WebAIBridge'; $head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); Write-Output ('LIVE_HEAD='+$head); Write-Output ('DIRTY_TRACKED='+(@(& git.exe -C $root status --porcelain=v1 --untracked-files=no).Count)); Write-Output ('SERVER_HASH='+(Get-FileHash -LiteralPath (Join-Path $root 'app\\server.js') -Algorithm SHA256).Hash); try{$h=Invoke-RestMethod 'http://127.0.0.1:17448/api/health' -TimeoutSec 3;Write-Output ('HTTP_HEALTH='+$h.state)}catch{Write-Output 'HTTP_HEALTH=UNAVAILABLE'}; try{$c=Invoke-RestMethod 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 3;Write-Output ('R42_HOLD='+$c.cutoverState.holdActive);Write-Output ('R42_STATUS='+$c.cutoverState.status)}catch{Write-Output 'R42_STATUS=UNAVAILABLE'}; try{$a=Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 3;Write-Output ('ASSIGNMENT_QUEUED='+@($a.assignments|Where-Object {$_.state -eq 'queued'}).Count)}catch{Write-Output 'ASSIGNMENTS=UNAVAILABLE'}; $backupDir=Join-Path $root 'app\\data\\backups'; if(Test-Path -LiteralPath $backupDir){$d=Get-ChildItem -LiteralPath $backupDir -Directory -Filter 'r42-cutover-*' | Sort-Object LastWriteTimeUtc -Descending | Select-Object -First 1; if($d){Write-Output ('LATEST_BACKUP_MANIFEST_EXISTS='+(Test-Path -LiteralPath (Join-Path $d.FullName 'rollback-manifest.json')));Write-Output ('LATEST_BACKUP_NAME='+$d.Name)}}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "LIVE_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\nDIRTY_TRACKED=0\r\nSERVER_HASH=69B39C28D474290448B820141C870CA3C9055379296F53106A0A6637886FA6D9\r\nHTTP_HEALTH=PAUSED\r\nR42_HOLD=True\r\nR42_STATUS=CUTOVER_HOLD_PREPARED\r\nASSIGNMENT_QUEUED=0\r\nLATEST_BACKUP_MANIFEST_EXISTS=True\r\nLATEST_BACKUP_NAME=r42-cutover-20261014T043545Z\r\n",
+      "stdout_bytes": 322,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T04:39:11.291Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T04:39:11.031Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r65-cutover-readonly-reconcile-20261014-473be9af"
+    },
+    "request_id": "r65-cutover-readonly-reconcile-20261014-473be9af",
+    "started_at": "2026-10-14T04:39:09.917Z",
+    "status": "completed"
+  },
+  "id": "r65-cutover-readonly-reconcile-20261014-473be9af",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
