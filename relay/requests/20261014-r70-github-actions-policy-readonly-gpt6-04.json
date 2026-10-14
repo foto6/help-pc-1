@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r70-github-actions-policy-readonly-gpt6-04",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$gh=Get-Command gh.exe -ErrorAction SilentlyContinue\nWrite-Output ('GH_CLI_AVAILABLE='+[bool]$gh)\nif($gh){\n try{\n  $p=& gh.exe api --method GET 'repos/foto6/WebAIBridge/actions/permissions' 2>$null|ConvertFrom-Json\n  Write-Output ('GITHUB_ACTIONS_ENABLED='+$p.enabled)\n  Write-Output ('GITHUB_ACTIONS_ALLOWED='+$p.allowed_actions)\n  Write-Output ('GITHUB_SELECTED_ACTIONS_URL_SET='+[bool]$p.selected_actions_url)\n }catch{Write-Output 'GITHUB_ACTIONS_POLICY_UNAVAILABLE=True'}\n}\nWrite-Output ('GITHUB_HOSTED_STEP_RUN_COUNT=0')\nWrite-Output ('RESULT_READ_ONLY=True')"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read only actions permissions for own WebAIBridge repo via existing gh CLI, no tokens or private data printed."
+}
