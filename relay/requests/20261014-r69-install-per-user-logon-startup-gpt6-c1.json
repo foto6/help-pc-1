@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r69-install-per-user-logon-startup-gpt6-c1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R69-OBSERVABILITY-20261014-GPT6'\n$sha='03e8ec94e59ef4efbb748afed418eafada844add'\nif(([string](& git.exe -C $root rev-parse HEAD)).Trim() -ne $sha){throw 'R69_SOURCE_MOVED'}\n$node=(Get-Command node.exe -ErrorAction Stop).Source\n$script=Join-Path $root 'app\\r69-viewer-bootstrap.js'\nif(-not (Test-Path -LiteralPath $script)){throw 'STARTUP_SCRIPT_MISSING'}\n$startup=[Environment]::GetFolderPath('Startup')\nif(-not (Test-Path -LiteralPath $startup)){throw 'STARTUP_DIR_MISSING'}\n$link=Join-Path $startup 'WebAIBridge-R69-Live.lnk'\nif(Test-Path -LiteralPath $link){throw 'STARTUP_LINK_EXISTS_REFUSE_OVERWRITE'}\n$probe=& $node $script --status 2>&1\nif($LASTEXITCODE -ne 0){throw ('VIEWER_NOT_READY '+($probe|Out-String).Substring(0,[Math]::Min(150,($probe|Out-String).Length)))}\n$reading=$probe|Out-String|ConvertFrom-Json\nif($reading.state -ne 'RUNNING' -or $reading.healthy -ne $true){throw 'CURRENT_VIEWER_NOT_HEALTHY'}\n$w=New-Object -ComObject WScript.Shell\n$shortcut=$w.CreateShortcut($link)\n$shortcut.TargetPath=$node\n$shortcut.Arguments='\"'+$script+'\" --start'\n$shortcut.WorkingDirectory=(Join-Path $root 'app')\n$shortcut.WindowStyle=7\n$shortcut.Description='Read-only WebAIBridge R69 live viewer at localhost:17450; idempotent on login'\n$shortcut.Save()\n$check=$w.CreateShortcut($link)\nif($check.TargetPath -ne $node -or $check.Arguments -ne ('\"'+$script+'\" --start')){throw 'SHORTCUT_FAILED_VALIDATION'}\nWrite-Output 'AUTOSTART_INSTALLED=True'\nWrite-Output ('SOURCE_SHA='+$sha)\nWrite-Output ('VIEWER_CURRENT_STATE='+$reading.state)\nWrite-Output ('VIEWER_RESTART_REQUIRED=False')\nWrite-Output ('STARTUP_SHORTCUT=WebAIBridge-R69-Live.lnk')\nWrite-Output ('VIEWER_URL=http://127.0.0.1:17450/')\nWrite-Output ('PROD_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22000,
+  "note": "Install owner per-user Windows Startup shortcut for existing validated R69 read-only viewer bootstrap. No Chrome/Bridge restart, no process spawn."
+}
