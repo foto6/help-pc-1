@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r67-qa-canary-offline-verify-gpt6-e1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$dst='E:\\boss-R65-CANARY-VERIFY-20261014-GPT6'\n$sha='ff6b105fde40e3e292c883073f741b4970523ff2'\nif(Test-Path -LiteralPath $dst){throw 'REFUSE_OVERWRITE_EXISTING_CHECKOUT'}\n& git.exe clone --depth 1 --single-branch --no-tags --branch 'agent/qa-r65-autonomy-single-canary-20261014' 'https://github.com/foto6/boss.git' $dst 2>&1|Out-Null\nif($LASTEXITCODE -ne 0){throw 'QA_CLONE_FAILED'}\n$head=([string](& git.exe -C $dst rev-parse HEAD)).Trim()\nif($head -ne $sha){throw ('QA_BRANCH_SHA_MOVED '+$head)}\n$log=Join-Path $dst 'R65_NODE_CANARY_GPT6.txt'\nPush-Location -LiteralPath $dst\ntry{\n & node.exe --test tests/r65_autonomy_canary.test.cjs 2>&1|Out-File -LiteralPath $log -Encoding UTF8\n $rc=$LASTEXITCODE\n}finally{Pop-Location}\nWrite-Output ('QA_EXACT_SOURCE='+$head)\nWrite-Output ('NODE_TEST_EXIT='+$rc)\nSelect-String -LiteralPath $log -Pattern '^ℹ (?:tests|pass|fail|skipped)|^✖'|Select-Object -Last 25|ForEach-Object{Write-Output $_.Line}\nWrite-Output ('QA_TEST_LOG='+$log)\nWrite-Output ('PRODUCTION_BRIDGE_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($rc -ne 0){throw 'QA_OFFLINE_NODE_TEST_FAIL'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 90000,
+  "note": "Run agent-authored offline R65 QA tests in new isolated boss checkout at exact canary SHA; no production changes or provider sends."
+}
