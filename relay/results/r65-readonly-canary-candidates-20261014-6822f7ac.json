@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $d=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments/dry-run') -TimeoutSec 30; Write-Output ('DRY_RUN='+$d.dryRun); Write-Output ('SEND_ATTEMPTED='+$d.sendAttempted); Write-Output ('OPENED_BROWSER='+$d.openedClosedChats); Write-Output ('GLOBAL_ADMISSION='+$d.globalAdmission.reason); $rows=@($d.rows); Write-Output ('CANDIDATES='+$rows.Count); foreach($x in $rows){;   $high=@($x.snapshots|Where-Object{$_.highMode -eq $true}).Count;   $errors=@($x.snapshots|Where-Object{$_.providerLoadError -eq $true -or $_.inspectionError}).Count;   $n=([string]$x.name) -replace '[^a-zA-Z0-9_ .-]','_';   Write-Output ('CANDIDATE='+($x.chatId+'|'+$n+'|'+$x.repository+'|'+$x.branch+'|ready='+$x.preflightAllowed+'|high='+$high+'|error='+$errors+'|reason='+$x.preflightReason+'|worker='+$x.profileWorkerConnected)); }"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "DRY_RUN=True\r\nSEND_ATTEMPTED=False\r\nOPENED_BROWSER=False\r\nGLOBAL_ADMISSION=queue_paused_or_unknown\r\nCANDIDATES=7\r\nCANDIDATE=chat-6ac45836-87a0-83ed-bea4-0ad0f99c8982|Bridge|foto6/WebAIBridge|agent/bridge-r44-hotfix-r43-integration-20261007|ready=True|high=1|error=0|reason=ready|worker=False\r\nCANDIDATE=agent-media|Media|foto6/video2|agent/media-r27-real-input-local-rehearsal-20261006|ready=True|high=1|error=0|reason=ready|worker=False\r\nCANDIDATE=chat-6ac455e9-bea0-83eb-aa94-fd3dde516c0c|Creator|foto6/video1|agent/creator-r40-media-qa-bind-20261007|ready=True|high=1|error=0|reason=ready|worker=False\r\nCANDIDATE=chat-6abf3eb2-40ec-83eb-9f7f-c4a32ad11fc0|Growth|foto6/video3|agent/growth-r39-media-qa-bind-20261007|ready=False|high=0|error=0|reason=target_chat_unavailable|worker=False\r\nCANDIDATE=agent-pc-control|Native MCP|foto6/help-pc-2|agent/native-mcp-r40-staged-local-canary-20261007|ready=False|high=1|error=0|reason=active_generation|worker=False\r\nCANDIDATE=chat-6ac45fb0-9074-83eb-99eb-397265b228e7|QA|foto6/boss|agent/integration-r8-final-local-stack-20261006|ready=True|high=1|error=0|reason=ready|worker=False\r\nCANDIDATE=tg-curator-owner|Owner Telegram curator|foto6/boss|agent/telegram-curator-authority-20261012|ready=True|high=1|error=0|reason=ready|worker=False\r\n",
+      "stdout_bytes": 1283,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T04:43:19.752Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T04:43:19.517Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r65-readonly-canary-candidates-20261014-6822f7ac"
+    },
+    "request_id": "r65-readonly-canary-candidates-20261014-6822f7ac",
+    "started_at": "2026-10-14T04:43:18.582Z",
+    "status": "completed"
+  },
+  "id": "r65-readonly-canary-candidates-20261014-6822f7ac",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
