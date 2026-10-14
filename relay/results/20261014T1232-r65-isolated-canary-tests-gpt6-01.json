@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $src='E:\\WebAIBridge'; $dst='E:\\WebAIBridge-R65-AUDIT-20261014'; $expected='66e2ca7681b5e4c4affde9641b69e5582b718f99'; if (Test-Path -LiteralPath $dst) { throw 'REFUSE: R65 audit target exists; no overwrite' }; $liveHead=(& git.exe -C $src rev-parse HEAD).Trim(); if ($liveHead -ne $expected) { throw ('REFUSE: production HEAD changed: '+$liveHead) }; $before=(Get-FileHash -LiteralPath (Join-Path $src 'app\\server.js') -Algorithm SHA256).Hash; & git.exe clone --no-hardlinks --no-checkout $src $dst | Out-Null; if($LASTEXITCODE -ne 0){throw 'clone failed'}; & git.exe -C $dst checkout --detach $expected | Out-Null; if($LASTEXITCODE -ne 0){throw 'checkout failed'}; $auditHead=(& git.exe -C $dst rev-parse HEAD).Trim(); if($auditHead -ne $expected){throw 'audit SHA mismatch'}; Write-Output ('AUDIT_COMMIT='+$auditHead); Push-Location -LiteralPath (Join-Path $dst 'app'); try { & node.exe --test r65-global-canary-cap.test.js; $testCode=$LASTEXITCODE } finally { Pop-Location }; Write-Output ('NODE_TEST_EXIT='+$testCode); $after=(Get-FileHash -LiteralPath (Join-Path $src 'app\\server.js') -Algorithm SHA256).Hash; Write-Output ('PRODUCTION_SERVER_UNCHANGED_DURING_TEST='+($before -eq $after)); Write-Output ('PRODUCTION_HEAD_NOW='+((& git.exe -C $src rev-parse HEAD).Trim())); if($testCode -ne 0){throw 'R65 isolated test failed'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "Cloning into 'E:\\WebAIBridge-R65-AUDIT-20261014'...\ndone.\nHEAD is now at 66e2ca7 R65 real cross-project single-canary concurrency regression and configurable safe ramp\n",
+      "stderr_bytes": 168,
+      "stderr_truncated": false,
+      "stdout": "AUDIT_COMMIT=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n✔ R65 defaults to ONE global coding assignment and clamps operator config (1.8954ms)\n✔ R65 canary cap spans independent projects even if each project allows twenty (13.7063ms)\n✔ R65 existing active assignment consumes the only canary slot globally (0.3752ms)\n✔ R65 local project resource quota still applies after global cap (0.5059ms)\n✔ R65 real dispatcher and harmless dry-run use same operator configured cap (174.7521ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 355.7714\nNODE_TEST_EXIT=0\r\nPRODUCTION_SERVER_UNCHANGED_DURING_TEST=True\r\nPRODUCTION_HEAD_NOW=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n",
+      "stdout_bytes": 729,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:12:44.076Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:12:43.801Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014T1232-r65-isolated-canary-tests-gpt6-01"
+    },
+    "request_id": "20261014T1232-r65-isolated-canary-tests-gpt6-01",
+    "started_at": "2026-10-14T05:12:41.969Z",
+    "status": "completed"
+  },
+  "id": "20261014T1232-r65-isolated-canary-tests-gpt6-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
