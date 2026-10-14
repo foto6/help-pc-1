@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014T1221-r58-production-preflight-gpt6-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference = 'Stop'; $prod='E:\\WebAIBridge'; $shadow='E:\\WebAIBridge-R58-SHADOW'; Write-Output '=== LIVE GIT COMMIT ==='; git -C $prod log -1 --format='commit=%H%nsubject=%s%ncommitted=%cI'; Write-Output '=== READ ONLY R56 PREFLIGHT ==='; & node.exe (Join-Path $shadow 'app\\r56-sticky-readonly-preflight.js') --app (Join-Path $prod 'app'); Write-Output '=== AVAILABLE MODULES ==='; foreach ($p in @('existing-tab-session-r55.js','autonomy-r45-runner.js','autonomy-r57-successor.js','r56-sticky-readonly-preflight.js','autonomous-send-gate-r50.js')) { Write-Output ($p + '=' + (Test-Path -LiteralPath (Join-Path $prod ('app\\'+$p)))) }; Write-Output '=== END ==='"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "Read-only R56 preflight in current production; report safety blockers and deployed module presence, never expose private state."
+}
