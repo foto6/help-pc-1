@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R70-GPT-PLANNER-20261014-GPT6'\n$plan=Join-Path $root 'app\\data\\r70-qa-verified-wave-plan.json'\n$state=Join-Path $root 'app\\data\\r70-qa-verified-wave-state.json'\nif(-not(Test-Path -LiteralPath $plan)){throw 'PLAN_NOT_STAGED'}\nif(Test-Path -LiteralPath $state){throw 'STATE_EXISTS_REFUSE_REPLAY'}\n$line=& node.exe (Join-Path $root 'app\\r70-stage-gpt-planner.js') --observe-once $plan $state 2>&1\n$rc=$LASTEXITCODE\nWrite-Output ('READONLY_PROCESS_EXIT='+$rc)\nif($rc -eq 0){$j=($line|Out-String|ConvertFrom-Json);Write-Output ('COORDINATOR_STATUS='+$j.status);Write-Output ('BRIDGE_HEALTH='+$j.bridgeHealth);Write-Output ('TASK_COUNT='+$j.taskCount);Write-Output ('RECONCILIATION_REQUIRED='+$j.reconciliationRequired)}\nWrite-Output ('COORDINATOR_STATE_WRITTEN='+(Test-Path -LiteralPath $state))\nWrite-Output ('REAL_ASSIGNMENT_COUNT='+@((Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 3).assignments).Count)\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($rc -ne 0){throw 'R70_READONLY_OBSERVATION_FAILED'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "READONLY_PROCESS_EXIT=0\r\nCOORDINATOR_STATUS=READ_ONLY\r\nBRIDGE_HEALTH=DEGRADED\r\nTASK_COUNT=\r\nRECONCILIATION_REQUIRED=0\r\nCOORDINATOR_STATE_WRITTEN=True\r\nREAL_ASSIGNMENT_COUNT=71\r\nPRODUCTION_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n",
+      "stdout_bytes": 235,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T07:40:45.190Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T07:40:44.943Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r70-readonly-one-shot-proof-gpt6-07"
+    },
+    "request_id": "20261014-r70-readonly-one-shot-proof-gpt6-07",
+    "started_at": "2026-10-14T07:40:43.903Z",
+    "status": "completed"
+  },
+  "id": "20261014-r70-readonly-one-shot-proof-gpt6-07",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
