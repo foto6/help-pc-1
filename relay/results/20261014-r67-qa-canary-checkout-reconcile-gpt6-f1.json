@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$dir='E:\\boss-R65-CANARY-VERIFY-20261014-GPT6'\nWrite-Output ('DIRECTORY_EXISTS='+(Test-Path -LiteralPath $dir))\nWrite-Output ('GIT_EXISTS='+(Test-Path -LiteralPath (Join-Path $dir '.git')))\nWrite-Output ('TEST_EXISTS='+(Test-Path -LiteralPath (Join-Path $dir 'tests\\r65_autonomy_canary.test.cjs')))\nif(Test-Path -LiteralPath (Join-Path $dir '.git')){$ErrorActionPreference='Continue';$h=& git.exe -C $dir rev-parse HEAD 2>$null;Write-Output ('EXACT_HEAD='+[string]$h);Write-Output ('GIT_RC='+$LASTEXITCODE)}\nWrite-Output ('BRIDGE_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "DIRECTORY_EXISTS=True\r\nGIT_EXISTS=True\r\nTEST_EXISTS=True\r\nEXACT_HEAD=ff6b105fde40e3e292c883073f741b4970523ff2\r\nGIT_RC=0\r\nBRIDGE_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n",
+      "stdout_bytes": 175,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:48:05.706Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:48:05.457Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r67-qa-canary-checkout-reconcile-gpt6-f1"
+    },
+    "request_id": "20261014-r67-qa-canary-checkout-reconcile-gpt6-f1",
+    "started_at": "2026-10-14T05:48:04.599Z",
+    "status": "completed"
+  },
+  "id": "20261014-r67-qa-canary-checkout-reconcile-gpt6-f1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
