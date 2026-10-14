@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014T1218-r58-local-readonly-state-gpt6-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference = 'Stop'; Write-Output '=== R58 READ ONLY INVENTORY ==='; foreach ($r in @('E:\\WebAIBridge','E:\\WebAIBridge-R58-SHADOW','E:\\PC-Control')) {;   if (!(Test-Path -LiteralPath $r)) { Write-Output ('MISSING ' + $r); continue };   Write-Output ('FOUND ' + $r);   if (Test-Path -LiteralPath (Join-Path $r '.git')) {;     $head = git -C $r rev-parse HEAD 2>$null;     $branch = git -C $r branch --show-current 2>$null;     $dirty = @(git -C $r status --porcelain=v1 --untracked-files=no 2>$null).Count;     Write-Output ('GIT ' + $r + ' head=' + $head + ' branch=' + $branch + ' tracked_changes=' + $dirty);   }; }; $live = 'E:\\WebAIBridge\\app\\server.js'; if (Test-Path -LiteralPath $live) { Write-Output ('PROD_SERVER_SHA256=' + (Get-FileHash -LiteralPath $live -Algorithm SHA256).Hash) }; $pre = 'E:\\WebAIBridge-R58-SHADOW\\app\\r56-sticky-readonly-preflight.js'; Write-Output ('R56_PREFLIGHT_EXISTS=' + (Test-Path -LiteralPath $pre)); Write-Output ('R58_REHEARSAL_EXISTS=' + (Test-Path -LiteralPath 'E:\\WebAIBridge-R58-SHADOW\\app\\r58-shadow-rehearsal.ps1')); Write-Output ('PORT_17448_LISTEN=' + [bool](Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction SilentlyContinue)); Write-Output '=== END ==='"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 20000,
+  "note": "Read-only, short-output inventory: production bridge, shadow R58 source, SHA, listener; no browser changes."
+}
