@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$h=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/health' -TimeoutSec 4\nWrite-Output ('HEALTH='+$h.state)\nforeach($r in @($h.reasons)){Write-Output ('REASON='+([string]$r).Substring(0,[Math]::Min(180,([string]$r).Length)))}\nWrite-Output ('QUEUE_ACTIVE='+[string]$h.assignmentQueue.active)\nWrite-Output ('QUEUE_QUEUED='+[string]$h.assignmentQueue.queued)\n$cut=Invoke-RestMethod -Uri 'http://127.0.0.1:17448/api/projects/control-plane/cutover-r42/status' -TimeoutSec 4\nWrite-Output ('R42_HOLD='+[string]$cut.cutoverState.holdActive)\nWrite-Output ('BRIDGE_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "HEALTH=DEGRADED\r\nREASON=browser_cdp:health_probe_stale\r\nREASON=git_evidence:health_probe_stale\r\nREASON=git_baseline:health_probe_stale\r\nREASON=timeline_io:health_probe_stale\r\nQUEUE_ACTIVE=0\r\nQUEUE_QUEUED=0\r\nR42_HOLD=False\r\nBRIDGE_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n",
+      "stdout_bytes": 277,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T07:33:33.397Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T07:33:33.148Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r70-degraded-root-causes-gpt6-03"
+    },
+    "request_id": "20261014-r70-degraded-root-causes-gpt6-03",
+    "started_at": "2026-10-14T07:33:32.316Z",
+    "status": "completed"
+  },
+  "id": "20261014-r70-degraded-root-causes-gpt6-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
