@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $head=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim(); $status=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6; $sv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; $op=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 6; $c=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 6; Write-Output ('HEAD='+$head); Write-Output ('HEALTH='+$status.operational.state); Write-Output ('QUEUE_PAUSED='+$status.queue.paused); foreach($p in $status.queue.tasks.PSObject.Properties){Write-Output ('NON_AGENT_TASK_'+$p.Name+'='+$p.Value)}; Write-Output ('NON_AGENT_TASK_TOTAL='+$status.counts.tasks); Write-Output ('OUTBOX_TOTAL='+$status.counts.outbox); Write-Output ('OPERATOR_MODE='+$op.mode); Write-Output ('R42_HOLD='+$c.cutoverState.holdActive); Write-Output ('WATCHDOG_ENABLED='+$sv.config.enabled); Write-Output ('AUTOSEND='+$sv.config.allowAutonomousSend); Write-Output ('GLOBAL_CAP='+$sv.config.maxParallelAgents)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\nHEALTH=PAUSED\r\nQUEUE_PAUSED=True\r\nNON_AGENT_TASK_completed=315\r\nNON_AGENT_TASK_cancelled=9\r\nNON_AGENT_TASK_TOTAL=324\r\nOUTBOX_TOTAL=0\r\nOPERATOR_MODE=PAUSED_BROWSER\r\nR42_HOLD=False\r\nWATCHDOG_ENABLED=False\r\nAUTOSEND=False\r\nGLOBAL_CAP=1\r\n",
+      "stdout_bytes": 281,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T04:45:55.199Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T04:45:54.961Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r65-before-one-canary-20261014-19fb67de"
+    },
+    "request_id": "r65-before-one-canary-20261014-19fb67de",
+    "started_at": "2026-10-14T04:45:53.868Z",
+    "status": "completed"
+  },
+  "id": "r65-before-one-canary-20261014-19fb67de",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
