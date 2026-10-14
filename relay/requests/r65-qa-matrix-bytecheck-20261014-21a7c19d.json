@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-qa-matrix-bytecheck-20261014-21a7c19d",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$script=@'\nimport subprocess,hashlib,pathlib\nroot=pathlib.Path(r'E:\\BossR65QA-SHADOW')\nrel='hardwave_qa/certificates/source/INTEGRATION_R8_FINAL_MATRIX.6ab529846e99e572d77006dee48d6c4b01caea12.json'\nwork=(root/rel).read_bytes()\nr=subprocess.run(['git.exe','-C',str(root),'show','HEAD:'+rel],capture_output=True,check=True)\nblob=r.stdout\nsha=lambda b: hashlib.sha256(b).hexdigest()\nprint('WORK_SHA256='+sha(work))\nprint('GIT_BLOB_SHA256='+sha(blob))\nprint('GIT_BLOB_CRLF_SHA256='+sha(blob.replace(b'\\n',b'\\r\\n')))\nprint('WORK_TO_LF_SHA256='+sha(work.replace(b'\\r\\n',b'\\n')))\nprint('GIT_BYTES='+str(len(blob)))\nprint('WORK_BYTES='+str(len(work)))\nprint('GIT_CRLF_COUNT='+str(blob.count(b'\\r\\n')))\nprint('WORK_CRLF_COUNT='+str(work.count(b'\\r\\n')))\nprint('BLOB_EQUALS_WORK='+str(blob==work))\n'@\n& py.exe -3 -c $script\nif($LASTEXITCODE -ne 0){exit $LASTEXITCODE}"
+    ],
+    "cwd": "E:\\BossR65QA-SHADOW"
+  },
+  "timeout_ms": 15000,
+  "note": "Only read original QA matrix bytes and exact HEAD Git object, compare SHA256 and line endings, no files written"
+}
