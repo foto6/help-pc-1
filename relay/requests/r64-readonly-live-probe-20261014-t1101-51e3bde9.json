@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r64-readonly-live-probe-20261014-t1101-51e3bde9",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $base='http://127.0.0.1:17448'; $before=Invoke-RestMethod ($base+'/api/health') -TimeoutSec 6; Write-Output ('BEFORE='+$before.state); Write-Output ('BEFORE_REASONS='+(@($before.reasons) -join ',')); try{$chat=Invoke-RestMethod ($base+'/api/supervisor-watchdog/managed-chats?inspect=1') -TimeoutSec 18;Write-Output ('MANAGED_INSPECT='+([string]$chat.inspected));Write-Output ('MANAGED_COUNT='+@($chat.chats).Count);Write-Output ('MANAGED_PROVIDER_ERRORS='+@($chat.chats|Where-Object {$_.providerLoadError}).Count)}catch{Write-Output 'MANAGED_INSPECT_ERROR'}; try{$control=Invoke-RestMethod ($base+'/api/projects/control-plane?inspect=1') -TimeoutSec 22;Write-Output ('CONTROL_CONFLICTS='+@($control.conflicts).Count);Write-Output ('CONTROL_AGENTS='+@($control.agents).Count)}catch{Write-Output 'CONTROL_INSPECT_ERROR'}; $after=Invoke-RestMethod ($base+'/api/health') -TimeoutSec 6; Write-Output ('AFTER='+$after.state); Write-Output ('AFTER_REASONS='+(@($after.reasons) -join ',')); foreach($name in @('git_baseline','browser_cdp')){$r=$after.components.$name;Write-Output ($name+'_STATE='+$r.state);Write-Output ($name+'_AGE_MS='+$r.ageMs);Write-Output ($name+'_FAILURES='+$r.consecutiveFailures)}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 60000,
+  "note": "Single read-only managed Chrome CDP and R41 Git authority inspection to refresh stale operational probes, then health check. No Send/nav/restart, no IDs/content/secrets output"
+}
