@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014T1232-r65-isolated-canary-tests-gpt6-01",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $src='E:\\WebAIBridge'; $dst='E:\\WebAIBridge-R65-AUDIT-20261014'; $expected='66e2ca7681b5e4c4affde9641b69e5582b718f99'; if (Test-Path -LiteralPath $dst) { throw 'REFUSE: R65 audit target exists; no overwrite' }; $liveHead=(& git.exe -C $src rev-parse HEAD).Trim(); if ($liveHead -ne $expected) { throw ('REFUSE: production HEAD changed: '+$liveHead) }; $before=(Get-FileHash -LiteralPath (Join-Path $src 'app\\server.js') -Algorithm SHA256).Hash; & git.exe clone --no-hardlinks --no-checkout $src $dst | Out-Null; if($LASTEXITCODE -ne 0){throw 'clone failed'}; & git.exe -C $dst checkout --detach $expected | Out-Null; if($LASTEXITCODE -ne 0){throw 'checkout failed'}; $auditHead=(& git.exe -C $dst rev-parse HEAD).Trim(); if($auditHead -ne $expected){throw 'audit SHA mismatch'}; Write-Output ('AUDIT_COMMIT='+$auditHead); Push-Location -LiteralPath (Join-Path $dst 'app'); try { & node.exe --test r65-global-canary-cap.test.js; $testCode=$LASTEXITCODE } finally { Pop-Location }; Write-Output ('NODE_TEST_EXIT='+$testCode); $after=(Get-FileHash -LiteralPath (Join-Path $src 'app\\server.js') -Algorithm SHA256).Hash; Write-Output ('PRODUCTION_SERVER_UNCHANGED_DURING_TEST='+($before -eq $after)); Write-Output ('PRODUCTION_HEAD_NOW='+((& git.exe -C $src rev-parse HEAD).Trim())); if($testCode -ne 0){throw 'R65 isolated test failed'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 90000,
+  "note": "Create isolated pinned R65 audit checkout and run five source-only Node canary tests, never mutate active bridge/browser."
+}
