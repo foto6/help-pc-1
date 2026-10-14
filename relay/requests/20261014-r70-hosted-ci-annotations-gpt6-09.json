@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r70-hosted-ci-annotations-gpt6-09",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\ntry{\n $checks=& gh.exe api --method GET 'repos/foto6/WebAIBridge/check-suites/104386851325/check-runs' 2>$null|ConvertFrom-Json\n foreach($c in @($checks.check_runs)){\n  Write-Output ('CHECK='+[string]$c.name)\n  Write-Output ('CHECK_ID='+[string]$c.id)\n  $a=& gh.exe api --method GET ('repos/foto6/WebAIBridge/check-runs/'+[string]$c.id+'/annotations?per_page=10') 2>$null|ConvertFrom-Json\n  foreach($row in @($a)){\n   $msg=[string]$row.message\n   $msg=$msg.Replace([char]13,' ').Replace([char]10,' ')\n   Write-Output ('ANNOTATION_LEVEL='+[string]$row.annotation_level)\n   Write-Output ('ANNOTATION_TITLE='+[string]$row.title)\n   Write-Output ('ANNOTATION_MESSAGE='+$msg.Substring(0,[Math]::Min($msg.Length,550)))\n  }\n }\n}catch{Write-Output ('CHECK_ANNOTATION_UNAVAILABLE='+[string]$_.Exception.GetType().Name)}\nWrite-Output 'NO_RUNNER_MODIFICATION=True'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only actual GitHub Actions check-run annotations for zero-step Windows/Linux job failure, bound/truncated, no credentials."
+}
