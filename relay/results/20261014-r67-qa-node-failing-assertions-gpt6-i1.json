@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$log='E:\\boss-R65-CANARY-VERIFY-20261014-GPT6\\QA_NODE_TEST_RESULT_GPT6_20261014.txt'\n$lines=@(Get-Content -LiteralPath $log)\nfor($i=0;$i -lt $lines.Count;$i++){\n if($lines[$i] -match '^test at .+:'){Write-Output ('=== DETAIL '+$lines[$i]+' ===');$stop=[Math]::Min($lines.Count-1,$i+15);for($j=$i;$j -le $stop;$j++){Write-Output $lines[$j]}}\n}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "=== DETAIL test at tests\\r65_autonomy_canary.test.cjs:37:1 ===\r\ntest at tests\\r65_autonomy_canary.test.cjs:37:1\r\n✖ 00 exact pinned producer fixture blobs are byte-verified, with no mutable branch authority (3.4395ms)\r\n  AssertionError [ERR_ASSERTION]: app/agent-execution-control.js\r\n  + actual - expected\r\n  \r\n  + '09b49967735843646d087c80bda9dd29239a8c01'\r\n  - 'b666cb97737e1de5e7d0d3b3a9f65080316f2c98'\r\n  \r\n      at TestContext.<anonymous> (E:\\boss-R65-CANARY-VERIFY-20261014-GPT6\\tests\\r65_autonomy_canary.test.cjs:48:12)\r\n      at Test.runInAsyncScope (node:async_hooks:227:14)\r\n      at Test.run (node:internal/test_runner/test:1325:25)\r\n      at Test.start (node:internal/test_runner/test:1191:17)\r\n      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {\r\n    generatedMessage: false,\r\n    code: 'ERR_ASSERTION',\r\n    actual: '09b49967735843646d087c80bda9dd29239a8c01',\r\n=== DETAIL test at tests\\r65_autonomy_canary.test.cjs:122:1 ===\r\ntest at tests\\r65_autonomy_canary.test.cjs:122:1\r\n✖ 12 R45 durable UNKNOWN dispatch intent becomes reconciliation not fresh pending (1.0291ms)\r\n  Error: R45_INVALID_PLAN: task must begin EXECUTE NOW: one\r\n      at assert (E:\\boss-R65-CANARY-VERIFY-20261014-GPT6\\hardwave_qa\\fixtures\\r65_autonomy\\autonomy-r45-core.js:13:18)\r\n      at validatePlan (E:\\boss-R65-CANARY-VERIFY-20261014-GPT6\\hardwave_qa\\fixtures\\r65_autonomy\\autonomy-r45-core.js:38:5)\r\n      at Object.initialize (E:\\boss-R65-CANARY-VERIFY-20261014-GPT6\\hardwave_qa\\fixtures\\r65_autonomy\\autonomy-r45-core.js:61:3)\r\n      at TestContext.<anonymous> (E:\\boss-R65-CANARY-VERIFY-20261014-GPT6\\tests\\r65_autonomy_canary.test.cjs:123:24)\r\n      at Test.runInAsyncScope (node:async_hooks:227:14)\r\n      at Test.run (node:internal/test_runner/test:1325:25)\r\n      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)\r\n      at Test.postRun (node:internal/test_runner/test:1465:19)\r\n      at Test.run (node:internal/test_runner/test:1390:12)\r\n      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7)\r\n\r\ntest at tests\\r65_autonomy_canary.test.cjs:138:1\r\n✖ 14 unverified completed event cannot become accepted without exact SHA and successful CI (0.2532ms)\r\n=== DETAIL test at tests\\r65_autonomy_canary.test.cjs:138:1 ===\r\ntest at tests\\r65_autonomy_canary.test.cjs:138:1\r\n✖ 14 unverified completed event cannot become accepted without exact SHA and successful CI (0.2532ms)\r\n  Error: R45_INVALID_PLAN: task must begin EXECUTE NOW: one\r\n      at assert (E:\\boss-R65-CANARY-VERIFY-20261014-GPT6\\hardwave_qa\\fixtures\\r65_autonomy\\autonomy-r45-core.js:13:18)\r\n      at validatePlan (E:\\boss-R65-CANARY-VERIFY-20261014-GPT6\\hardwave_qa\\fixtures\\r65_autonomy\\autonomy-r45-core.js:38:5)\r\n      at Object.initialize (E:\\boss-R65-CANARY-VERIFY-20261014-GPT6\\hardwave_qa\\fixtures\\r65_autonomy\\autonomy-r45-core.js:61:3)\r\n      at TestContext.<anonymous> (E:\\boss-R65-CANARY-VERIFY-20261014-GPT6\\tests\\r65_autonomy_canary.test.cjs:139:24)\r\n      at Test.runInAsyncScope (node:async_hooks:227:14)\r\n      at Test.run (node:internal/test_runner/test:1325:25)\r\n      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)\r\n      at Test.postRun (node:internal/test_runner/test:1465:19)\r\n      at Test.run (node:internal/test_runner/test:1390:12)\r\n      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7)\r\n",
+      "stdout_bytes": 3406,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:50:38.270Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:50:38.011Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r67-qa-node-failing-assertions-gpt6-i1"
+    },
+    "request_id": "20261014-r67-qa-node-failing-assertions-gpt6-i1",
+    "started_at": "2026-10-14T05:50:37.241Z",
+    "status": "completed"
+  },
+  "id": "20261014-r67-qa-node-failing-assertions-gpt6-i1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
