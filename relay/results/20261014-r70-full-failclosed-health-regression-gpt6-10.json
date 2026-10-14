@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R70-GPT-PLANNER-20261014-GPT6'\n$sha='14c085251a63411d5c50349dac0e124a82ef3766'\nif(@(& git.exe -C $root status --porcelain=v1 --untracked-files=no).Count -ne 0){throw 'TRACKED_DIRTY'}\n& git.exe -C $root fetch --quiet --no-tags origin agent/r70-gated-gpt-planner-staging-20261014\nif($LASTEXITCODE -ne 0){throw 'FETCH_FAILED'}\n& git.exe -C $root checkout --quiet --detach $sha\nif($LASTEXITCODE -ne 0){throw 'CHECKOUT_FAILED'}\nif(([string](& git.exe -C $root rev-parse HEAD)).Trim() -ne $sha){throw 'SHA_MISMATCH'}\n$tests=@('autonomy-r45.test.js','autonomy-r45-brain.test.js','autonomy-r45-git-gate.test.js','autonomy-r45-lock.test.js','autonomy-r45-review.test.js','autonomy-r45-launcher.test.js','autonomy-r57-gpt-git.test.js','autonomy-r57-successor.test.js','operator-lifecycle-r40.test.js','projects-live-control-plane-r41.test.js','live-control-plane-cutover-r42.test.js','autonomous-send-gate-r50.test.js','existing-tab-session-r55.test.js','existing-tab-session-r56-cdp.test.js','r56-worker-sticky.test.js','r62-r42-sticky-release-gate.test.js','r63-r42-staged-activation.test.js','r64-idle-health-and-dryrun.test.js','r65-global-canary-cap.test.js','r68-live-chat-observability.test.js','r68-live-viewer.test.js','r69-viewer-bootstrap.test.js','r70-stage-gpt-planner.test.js','r70-idle-health-policy.test.js')\n$log=Join-Path $root 'R70_FULL_FAIL_CLOSED_VERIFICATION.txt'\nPush-Location (Join-Path $root 'app')\ntry {\n & node.exe --check server.js\n $syntax=$LASTEXITCODE\n & node.exe --test @tests 2>&1 |Out-File -LiteralPath $log -Encoding UTF8\n $rc=$LASTEXITCODE\n}finally{Pop-Location}\nWrite-Output ('SOURCE_SHA='+$sha)\nWrite-Output ('SOURCE_SYNTAX_EXIT='+$syntax)\nWrite-Output ('NODE_EXIT='+$rc)\nWrite-Output ('TEST_FILES='+$tests.Count)\nSelect-String -LiteralPath $log -Pattern '^ℹ (?:tests|pass|fail|skipped)|^✖'|Select-Object -Last 22|ForEach-Object{Write-Output $_.Line}\nWrite-Output ('PLAN_DISPATCH_ALLOWED='+((Get-Content (Join-Path $root 'app\\data\\r70-qa-verified-wave-plan.json') -Raw|ConvertFrom-Json).allowDispatch))\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($rc -ne 0 -or $syntax -ne 0){throw 'R70_NEGATIVE_SUITE_NOT_GREEN'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "SOURCE_SHA=14c085251a63411d5c50349dac0e124a82ef3766\r\nSOURCE_SYNTAX_EXIT=0\r\nNODE_EXIT=0\r\nTEST_FILES=24\r\nℹ tests 210\r\nℹ pass 210\r\nℹ fail 0\r\nℹ skipped 0\r\nPLAN_DISPATCH_ALLOWED=False\r\nPRODUCTION_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n",
+      "stdout_bytes": 246,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T07:48:24.258Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T07:48:24.017Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r70-full-failclosed-health-regression-gpt6-10"
+    },
+    "request_id": "20261014-r70-full-failclosed-health-regression-gpt6-10",
+    "started_at": "2026-10-14T07:48:19.093Z",
+    "status": "completed"
+  },
+  "id": "20261014-r70-full-failclosed-health-regression-gpt6-10",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
