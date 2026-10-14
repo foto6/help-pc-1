@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'; Write-Output '=== R65 RECENT HISTORY ==='; git -C 'E:\\WebAIBridge' log -12 --pretty=format:'%h %s'; Write-Output ''; Write-Output '=== CURRENT SOURCE/STATE FLAGS ==='; $app='E:\\WebAIBridge\\app'; foreach($name in @('existing-tab-session-r55.js','autonomy-r45-core.js','autonomy-r45-runner.js','autonomy-r57-gpt-git.js','autonomy-r57-successor.js','r65-global-canary-cap.test.js')) {Write-Output ($name + '=' + (Test-Path -LiteralPath (Join-Path $app $name)))}; Write-Output '=== PORT CHECK ==='; Write-Output ('BRIDGE_LISTENER=' + [bool](Get-NetTCPConnection -LocalPort 17448 -State Listen -ErrorAction SilentlyContinue)); Write-Output '=== END ==='"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "=== R65 RECENT HISTORY ===\r\n66e2ca7 R65 real cross-project single-canary concurrency regression and configurable safe ramp\nf64c95e R65 bound cross-project managed dispatch to operator-configured global cap (agent-execution-control.js)\nba1ffde R65 bound cross-project managed dispatch to operator-configured global cap (server.js)\n08d80af R65 bound cross-project managed dispatch to operator-configured global cap (supervisor-control.js)\n2466e0a R64 regression demand-driven idle health and real R50 operator gate in dry-run\nb882b48 R64 dry-run reports real R50 operator/pause/send admission, never optimistic browser-only Sends\nf45943b R64 classify Git/CDP stale last-success as idle only during explicit quiescent pause\n01e5db7 R63 assert R42 HOLD release stays provider-paused with no browser launch or old-work replay\nd3a22a7 R63 stage R42 HOLD release as provider-paused with no Chrome, watchdog or launcher side effects\n2a9d6a7 R62 assert real pure admission decision rejects missing, malformed and unsettled assignments\n01332e9 R62 invoke tested strict quiescence decision before R42 config and browser changes\n6008d3b R62 pure fail-closed R42 activation gate for missing and unknown assignment states\r\n=== CURRENT SOURCE/STATE FLAGS ===\r\nexisting-tab-session-r55.js=True\r\nautonomy-r45-core.js=True\r\nautonomy-r45-runner.js=True\r\nautonomy-r57-gpt-git.js=True\r\nautonomy-r57-successor.js=True\r\nr65-global-canary-cap.test.js=True\r\n=== PORT CHECK ===\r\nBRIDGE_LISTENER=True\r\n=== END ===\r\n",
+      "stdout_bytes": 1488,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:11:38.055Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:11:37.781Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014T1227-r65-history-and-safety-readonly-01"
+    },
+    "request_id": "20261014T1227-r65-history-and-safety-readonly-01",
+    "started_at": "2026-10-14T05:11:35.995Z",
+    "status": "completed"
+  },
+  "id": "20261014T1227-r65-history-and-safety-readonly-01",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
