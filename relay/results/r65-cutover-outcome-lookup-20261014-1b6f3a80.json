@@ -1,0 +1,127 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {
+      "outcome_evidence": {
+        "action": "shell.run",
+        "contract_version": "pc_executor.outcome_journal.lookup.v1",
+        "execution_attempt": null,
+        "history": [
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-14T04:35:39.864Z",
+              "reason": "dispatch_started",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "r65-controlled-live-cutover-20261014-98df7b2a"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:c9c86143aadda9d9f92f5718f9c72238259c9b7d2f4aed584aaca0fad9d07365",
+            "journal_sequence": 3776,
+            "previous_record_sha256": "5deaf5e272c2711ebd27eedf0f3e59515e803c09030cb593476069fde6b1019a",
+            "record_sha256": "d888bd8729d3d14482fb7575c6d2e9f45a43371f1fee8b9bdc2c47ffbfe45212",
+            "recorded_at": "2026-10-14T04:35:40.104Z",
+            "request_id": "r65-controlled-live-cutover-20261014-98df7b2a",
+            "transition": "dispatch_started"
+          },
+          {
+            "action": "shell.run",
+            "contract_version": "pc_executor.outcome_journal.record.v1",
+            "evidence": {
+              "action": "shell.run",
+              "completion_observed": false,
+              "contract_version": "pc_executor.action_outcome.v1",
+              "dispatch_started": true,
+              "effect_state": "unknown",
+              "observed_at": "2026-10-14T04:37:55.379Z",
+              "reason": "executor_failure",
+              "reconciliation_required": true,
+              "reexecution_safe": false,
+              "request_id": "r65-controlled-live-cutover-20261014-98df7b2a"
+            },
+            "execution_attempt": 1,
+            "execution_id": "exec:c9c86143aadda9d9f92f5718f9c72238259c9b7d2f4aed584aaca0fad9d07365",
+            "journal_sequence": 3777,
+            "previous_record_sha256": "d888bd8729d3d14482fb7575c6d2e9f45a43371f1fee8b9bdc2c47ffbfe45212",
+            "record_sha256": "e50f1e87fa06bd64c1e0150fd75c71ee4d614bf05fa83167480231fed7d9e6aa",
+            "recorded_at": "2026-10-14T04:37:55.736Z",
+            "request_id": "r65-controlled-live-cutover-20261014-98df7b2a",
+            "transition": "terminal"
+          }
+        ],
+        "latest_valid_evidence": {
+          "action": "shell.run",
+          "completion_observed": false,
+          "contract_version": "pc_executor.action_outcome.v1",
+          "dispatch_started": true,
+          "effect_state": "unknown",
+          "observed_at": "2026-10-14T04:37:55.379Z",
+          "reason": "executor_failure",
+          "reconciliation_required": true,
+          "reexecution_safe": false,
+          "request_id": "r65-controlled-live-cutover-20261014-98df7b2a"
+        },
+        "latest_valid_record": {
+          "action": "shell.run",
+          "contract_version": "pc_executor.outcome_journal.record.v1",
+          "evidence": {
+            "action": "shell.run",
+            "completion_observed": false,
+            "contract_version": "pc_executor.action_outcome.v1",
+            "dispatch_started": true,
+            "effect_state": "unknown",
+            "observed_at": "2026-10-14T04:37:55.379Z",
+            "reason": "executor_failure",
+            "reconciliation_required": true,
+            "reexecution_safe": false,
+            "request_id": "r65-controlled-live-cutover-20261014-98df7b2a"
+          },
+          "execution_attempt": 1,
+          "execution_id": "exec:c9c86143aadda9d9f92f5718f9c72238259c9b7d2f4aed584aaca0fad9d07365",
+          "journal_sequence": 3777,
+          "previous_record_sha256": "d888bd8729d3d14482fb7575c6d2e9f45a43371f1fee8b9bdc2c47ffbfe45212",
+          "record_sha256": "e50f1e87fa06bd64c1e0150fd75c71ee4d614bf05fa83167480231fed7d9e6aa",
+          "recorded_at": "2026-10-14T04:37:55.736Z",
+          "request_id": "r65-controlled-live-cutover-20261014-98df7b2a",
+          "transition": "terminal"
+        },
+        "outcome": "unknown",
+        "provenance": {
+          "corruption": null,
+          "integrity": "clean",
+          "journal_sha256": "4e2532cba5adb5fbb491f163126b2c068401a6c1f042be8397c4a62c3a9ffbfa",
+          "matched_records": 2,
+          "record_contract_version": "pc_executor.outcome_journal.record.v1",
+          "total_valid_records": 3777
+        },
+        "reason": "executor_failure",
+        "replay_authorized": false,
+        "requestId": "r65-controlled-live-cutover-20261014-98df7b2a",
+        "request_id": "r65-controlled-live-cutover-20261014-98df7b2a",
+        "source": "help-pc-1.outcome-journal"
+      }
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T04:38:10.029Z",
+    "ok": true,
+    "request_id": "r65-cutover-outcome-lookup-20261014-1b6f3a80",
+    "started_at": "2026-10-14T04:38:09.765Z",
+    "status": "completed"
+  },
+  "id": "r65-cutover-outcome-lookup-20261014-1b6f3a80",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
