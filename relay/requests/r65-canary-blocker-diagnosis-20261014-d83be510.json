@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-canary-blocker-diagnosis-20261014-d83be510",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $h=Invoke-RestMethod 'http://127.0.0.1:17448/api/health' -TimeoutSec 7; Write-Output ('HEALTH='+$h.state); Write-Output ('OPERATIONAL_MODE='+$h.operationalMode); Write-Output ('QUEUE_DISPOSITION='+$h.queueSafety.queueDisposition); foreach($r in @($h.reasons)){Write-Output ('REASON='+([string]$r).Substring(0,[Math]::Min(180,([string]$r).Length)))}; foreach($r in @($h.blockers)){Write-Output ('BLOCKER='+([string]$r).Substring(0,[Math]::Min(180,([string]$r).Length)))}; foreach($r in @($h.degraded)){Write-Output ('DEGRADED='+([string]$r).Substring(0,[Math]::Min(180,([string]$r).Length)))}; Write-Output ('QUEUE_PAUSED='+((Invoke-RestMethod 'http://127.0.0.1:17448/api/status' -TimeoutSec 7).queue.paused)); Write-Output ('HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 15000,
+  "note": "Read-only diagnosis of R65 BLOCKED health after operator switched to RUNNING_ATTACH while queue and Sends remain paused; no mutation"
+}
