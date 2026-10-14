@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-r42-live-readonly-reconcile-20261014-93ab0e51",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $expected='66e2ca7681b5e4c4affde9641b69e5582b718f99'; $head=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim(); if($head -ne $expected){throw 'SOURCE_HEAD_DRIFT'}; $op=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 5; $sv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 5; $a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 5; $cut=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 5; if($op.mode -ne 'PAUSED_BROWSER' -or $op.queuePaused -ne $true){throw 'OPERATOR_NOT_PAUSED'}; if($sv.config.enabled -ne $false -or $sv.config.allowAutonomousSend -ne $false){throw 'SUPERVISOR_NOT_DISABLED'}; if($cut.cutoverState.holdActive -ne $true){throw 'R42_HOLD_NOT_ACTIVE'}; $uncertain=@($a.assignments|Where-Object{$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}); if($uncertain.Count -ne 0){throw ('UNSETTLED_ASSIGNMENTS='+$uncertain.Count)}; $reconcile=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/reconcile-live') -Method Post -Body '{}' -ContentType 'application/json' -TimeoutSec 55; Write-Output ('RECONCILE_CONTRACT='+$reconcile.object); Write-Output ('READONLY_APPLY_SAFE='+$reconcile.applySafe); Write-Output ('PROVIDER_MUTATION='+$reconcile.providerMutationPerformed); Write-Output ('DIFF_COUNT='+$reconcile.diff.count); Write-Output ('CONFLICTS='+@($reconcile.conflicts).Count); Write-Output ('UNMANAGED_DISCOVERED='+@($reconcile.unmanagedDiscovered).Count); Write-Output ('BEFORE_AGENTS='+@($reconcile.before.PSObject.Properties).Count); Write-Output ('AFTER_AGENTS='+@($reconcile.after.PSObject.Properties).Count); $after=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 5; Write-Output ('POST_HOLD='+$after.cutoverState.holdActive); Write-Output ('POST_RECONCILE_COUNT='+$after.cutoverState.lastReadOnlyReconcileDiffCount)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 87000,
+  "note": "Single audited R42 POST reconcile-live provider READ-ONLY observation, writes local immutable evidence without Send. Preconditions exact R65, HOLD true, zero unsettled; no chat identity/content output and no replay"
+}
