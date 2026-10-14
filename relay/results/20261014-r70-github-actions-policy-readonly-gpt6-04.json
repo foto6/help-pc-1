@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$gh=Get-Command gh.exe -ErrorAction SilentlyContinue\nWrite-Output ('GH_CLI_AVAILABLE='+[bool]$gh)\nif($gh){\n try{\n  $p=& gh.exe api --method GET 'repos/foto6/WebAIBridge/actions/permissions' 2>$null|ConvertFrom-Json\n  Write-Output ('GITHUB_ACTIONS_ENABLED='+$p.enabled)\n  Write-Output ('GITHUB_ACTIONS_ALLOWED='+$p.allowed_actions)\n  Write-Output ('GITHUB_SELECTED_ACTIONS_URL_SET='+[bool]$p.selected_actions_url)\n }catch{Write-Output 'GITHUB_ACTIONS_POLICY_UNAVAILABLE=True'}\n}\nWrite-Output ('GITHUB_HOSTED_STEP_RUN_COUNT=0')\nWrite-Output ('RESULT_READ_ONLY=True')"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "GH_CLI_AVAILABLE=True\r\nGITHUB_ACTIONS_ENABLED=True\r\nGITHUB_ACTIONS_ALLOWED=all\r\nGITHUB_SELECTED_ACTIONS_URL_SET=False\r\nGITHUB_HOSTED_STEP_RUN_COUNT=0\r\nRESULT_READ_ONLY=True\r\n",
+      "stdout_bytes": 174,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T07:35:23.635Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T07:35:23.394Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r70-github-actions-policy-readonly-gpt6-04"
+    },
+    "request_id": "20261014-r70-github-actions-policy-readonly-gpt6-04",
+    "started_at": "2026-10-14T07:35:20.127Z",
+    "status": "completed"
+  },
+  "id": "20261014-r70-github-actions-policy-readonly-gpt6-04",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
