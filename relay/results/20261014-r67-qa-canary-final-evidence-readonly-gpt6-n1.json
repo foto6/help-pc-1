@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$b='http://127.0.0.1:17448'\n$as=Invoke-RestMethod -Uri ($b+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 15\n$r=@($as.assignments|Where-Object {$_.id -eq '9f434c35-9e28-4807-8d5f-18569e8bdcf5'})\nif($r.Count -ne 1){throw 'ASSIGNMENT_ID_MISSING'}\n$t=$r[0]\nforeach($k in @('state','dispatchCount','dispatchSubmitAttempted','lastPreflightReason','lastDiagnostic','currentHead','ciRunId','ciConclusion','evidenceCollectorStatus','completedAt','blockedAt','failedAt','evidenceDeadlineAt')){Write-Output ($k+'='+[string]$t.$k)}\nWrite-Output ('OTHER_ACTIVE='+@($as.assignments|Where-Object {$_.id -ne $t.id -and $_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count)\nWrite-Output ('BRIDGE_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nWrite-Output ('R67_NODE_LOG_EXISTS='+(Test-Path 'E:\\boss-R67-QA-PORTABLE-VERIFY-20261014-GPT6\\R67_NODE_TEST.txt'))\nWrite-Output ('R67_PYTHON_LOG_EXISTS='+(Test-Path 'E:\\boss-R67-QA-PORTABLE-VERIFY-20261014-GPT6\\R67_PYTHON_TEST.txt'))"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "state=blocked\r\ndispatchCount=1\r\ndispatchSubmitAttempted=True\r\nlastPreflightReason=ready\r\nlastDiagnostic=ci_failed\r\ncurrentHead=ff6b105fde40e3e292c883073f741b4970523ff2\r\nciRunId=38518409981\r\nciConclusion=failure\r\nevidenceCollectorStatus=observed\r\ncompletedAt=\r\nblockedAt=2026-10-14T05:47:10.394Z\r\nfailedAt=\r\nevidenceDeadlineAt=2026-10-14T07:41:31.034Z\r\nOTHER_ACTIVE=0\r\nBRIDGE_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\nR67_NODE_LOG_EXISTS=True\r\nR67_PYTHON_LOG_EXISTS=True\r\n",
+      "stdout_bytes": 476,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:56:47.114Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:56:46.833Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r67-qa-canary-final-evidence-readonly-gpt6-n1"
+    },
+    "request_id": "20261014-r67-qa-canary-final-evidence-readonly-gpt6-n1",
+    "started_at": "2026-10-14T05:56:45.917Z",
+    "status": "completed"
+  },
+  "id": "20261014-r67-qa-canary-final-evidence-readonly-gpt6-n1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
