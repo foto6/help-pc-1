@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r65-operator-browser-readiness-gpt6-d1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\nfunction Read-Local($p){return Invoke-RestMethod -Uri ('http://127.0.0.1:17448'+$p) -Method Get -TimeoutSec 15}\nWrite-Output '=== READONLY CONTROL STATUS ==='\ntry {\n $s=Read-Local '/api/supervisor-watchdog?detect=0'\n Write-Output ('SUPERVISOR_RUNNING='+$s.runtime.processRunning)\n Write-Output ('SUPERVISOR_MODE='+$s.config.mode)\n Write-Output ('SUPERVISOR_ALLOW_SEND='+$s.config.allowAutonomousSend)\n Write-Output ('SUPERVISOR_AUTO_CONTINUE='+$s.config.autoContinueEnabled)\n Write-Output ('SUPERVISOR_ENFORCE_HIGH='+$s.config.enforceHighMode)\n Write-Output ('SUPERVISOR_HIGH_STRATEGY='+$s.config.highModeStrategy)\n Write-Output ('SUPERVISOR_PARALLEL='+$s.config.maxParallelAgents)\n Write-Output ('SUPERVISOR_CLOSE_ON_BACKOFF='+$s.config.closeChatDuringProviderBackoff)\n Write-Output ('SUPERVISOR_OPEN_MISSING='+$s.config.openExistingChatIfMissing)\n}catch{Write-Output ('SUPERVISOR_GET_FAILED='+$_.Exception.Message.Substring(0,[Math]::Min(90,$_.Exception.Message.Length)))}\ntry{\n $r=Read-Local '/api/projects/control-plane/cutover-r42/status'\n Write-Output ('R42_HOLD='+$r.cutoverState.holdActive)\n Write-Output ('R42_STATUS='+$r.cutoverState.status)\n Write-Output ('R42_VALIDATION_OK='+$r.autonomy.validation.ok)\n}catch{Write-Output ('R42_GET_FAILED='+$_.Exception.Message.Substring(0,[Math]::Min(90,$_.Exception.Message.Length)))}\ntry{\n $d=Read-Local '/api/supervisor-watchdog/agent-assignments/dry-run'\n $rows=@($d.rows)\n Write-Output ('DRYRUN_ROWS='+$rows.Count)\n $n=0\n foreach($row in $rows){\n  $n++\n  $sn=@($row.snapshots)\n  $high=@($sn|Where-Object {$_.highMode -eq $true}).Count\n  $generating=@($sn|Where-Object {$_.generating -eq $true}).Count\n  $bad=@($sn|Where-Object {$_.providerLoadError -eq $true}).Count\n  Write-Output ('ROW_'+$n+' preflight='+$row.preflightReason+' high_snapshots='+$high+' generating='+$generating+' provider_errors='+$bad+' openTabs='+$row.openTabs+' schedulerSelected='+$row.schedulerSelected)\n }\n}catch{Write-Output ('DRYRUN_GET_FAILED='+$_.Exception.Message.Substring(0,[Math]::Min(90,$_.Exception.Message.Length)))}\nWrite-Output '=== END ==='"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 30000,
+  "note": "Read-only sanitized bridge supervisor runtime and per-chat High-mode readiness. No chat identities transmitted."
+}
