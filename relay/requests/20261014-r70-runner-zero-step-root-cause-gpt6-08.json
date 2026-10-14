@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r70-runner-zero-step-root-cause-gpt6-08",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\ntry{\n $data=& gh.exe api --method GET 'repos/foto6/WebAIBridge/check-suites/104386851325/check-runs' 2>$null |ConvertFrom-Json\n if($LASTEXITCODE -ne 0){throw 'GH_API_FAIL'}\n foreach($r in @($data.check_runs)){\n  Write-Output ('CHECK_NAME='+[string]$r.name)\n  Write-Output ('CHECK_STATUS='+[string]$r.status)\n  Write-Output ('CHECK_CONCLUSION='+[string]$r.conclusion)\n  $message=[string]$r.output.summary\n  Write-Output ('CHECK_SUMMARY='+$message.Replace([Environment]::NewLine,' ').Substring(0,[Math]::Min(500,$message.Length)))\n  Write-Output ('CHECK_ANNOTATIONS_COUNT='+[string]$r.output.annotations_count)\n }\n}catch{Write-Output ('CHECK_RUN_DETAILS_UNAVAILABLE='+[string]$_.Exception.GetType().Name)}\nWrite-Output 'READ_ONLY=True'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 12000,
+  "note": "Read-only GitHub check-suite annotations and short status summary of zero-step hosted jobs, no secrets."
+}
