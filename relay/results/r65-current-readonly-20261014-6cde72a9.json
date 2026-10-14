@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$p='E:\\WebAIBridge';Write-Output ('HEAD='+((& git.exe -C $p rev-parse HEAD)|Out-String).Trim());Write-Output ('DIRTY='+@(& git.exe -C $p status --porcelain=v1 --untracked-files=no).Count);$h=Invoke-RestMethod 'http://127.0.0.1:17448/api/health' -TimeoutSec 6;Write-Output ('HEALTH='+$h.state);Write-Output ('REASONS='+(@($h.reasons) -join ','));$o=Invoke-RestMethod 'http://127.0.0.1:17448/api/operator-lifecycle' -TimeoutSec 6;Write-Output ('OPERATOR='+$o.mode);$a=Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 6;Write-Output ('QUEUED='+@($a.assignments|Where-Object{$_.state -eq 'queued'}).Count);Write-Output ('ACTIVE='+@($a.assignments|Where-Object{$_.state -in @('running','dispatching','awaiting_evidence')}).Count)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\nDIRTY=0\r\nHEALTH=BLOCKED\r\nREASONS=browser_cdp:health_probe_stale,git_baseline:health_probe_stale,timeline_io:health_probe_stale,assignment_queue:pause_autonomy_inconsistent,assignment_queue:paused_with_inflight_assignments\r\nOPERATOR=RUNNING_ATTACH\r\nQUEUED=0\r\nACTIVE=1\r\n",
+      "stdout_bytes": 315,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T04:53:24.703Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T04:53:24.439Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r65-current-readonly-20261014-6cde72a9"
+    },
+    "request_id": "r65-current-readonly-20261014-6cde72a9",
+    "started_at": "2026-10-14T04:53:23.383Z",
+    "status": "completed"
+  },
+  "id": "r65-current-readonly-20261014-6cde72a9",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
