@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$dst='E:\\boss-R67-QA-PORTABLE-VERIFY-20261014-GPT6'\n$sha='f737a35ad9ea8463cdc59d6a92a0a0f7a2a80f93'\nif(Test-Path -LiteralPath $dst){throw 'REFUSE_EXISTING_PATH'}\n& git.exe clone --quiet --depth 1 --single-branch --no-tags --branch 'agent/qa-r67-portable-canary-regressions-20261014' 'https://github.com/foto6/boss.git' $dst\nif($LASTEXITCODE -ne 0){throw 'QA_CLONE_FAILED'}\n$head=([string](& git.exe -C $dst rev-parse HEAD)).Trim()\nif($head -ne $sha){throw ('QA_BRANCH_MOVED '+$head)}\n$nodeLog=Join-Path $dst 'R67_NODE_TEST.txt'\n$pyLog=Join-Path $dst 'R67_PYTHON_TEST.txt'\nPush-Location $dst\ntry{\n & node.exe --test tests/r65_autonomy_canary.test.cjs 2>&1|Out-File -LiteralPath $nodeLog -Encoding UTF8\n $nodeRc=$LASTEXITCODE\n $ErrorActionPreference='Continue'\n & python.exe -m unittest discover -s tests -v 2>&1|Out-File -LiteralPath $pyLog -Encoding UTF8\n $pyRc=$LASTEXITCODE\n}finally{$ErrorActionPreference='Stop';Pop-Location}\nWrite-Output ('EXACT_SHA='+$head)\nWrite-Output ('NODE_RC='+$nodeRc)\nSelect-String -LiteralPath $nodeLog -Pattern '^ℹ (?:tests|pass|fail)|^✖'|Select-Object -Last 8|ForEach-Object{Write-Output $_.Line}\nWrite-Output ('PYTHON_RC='+$pyRc)\nGet-Content -LiteralPath $pyLog -Tail 6\nWrite-Output ('PRODUCTION_BRIDGE_SHA='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nWrite-Output ('LOCAL_LOGS='+$nodeLog+' '+$pyLog)\nif($nodeRc -ne 0 -or $pyRc -ne 0){throw 'R67_TESTS_NOT_GREEN'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "EXACT_SHA=f737a35ad9ea8463cdc59d6a92a0a0f7a2a80f93\r\nNODE_RC=0\r\nℹ tests 18\r\nℹ pass 18\r\nℹ fail 0\r\nPYTHON_RC=0\r\niaQaCertificateTests.test_two_certificates_are_semantically_identical_acceptance) ... ok\r\n\r\n----------------------------------------------------------------------\r\nRan 77 tests in 0.118s\r\n\r\nOK\r\nPRODUCTION_BRIDGE_SHA=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\nLOCAL_LOGS=E:\\boss-R67-QA-PORTABLE-VERIFY-20261014-GPT6\\R67_NODE_TEST.txt E:\\boss-R67-QA-PORTABLE-VERIFY-20261014-GPT6\\R67_PYTHON_TEST.txt\r\n",
+      "stdout_bytes": 513,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:55:35.876Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:55:35.628Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r67-qa-full-portable-windows-proof-gpt6-m1"
+    },
+    "request_id": "20261014-r67-qa-full-portable-windows-proof-gpt6-m1",
+    "started_at": "2026-10-14T05:55:28.576Z",
+    "status": "completed"
+  },
+  "id": "20261014-r67-qa-full-portable-windows-proof-gpt6-m1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
