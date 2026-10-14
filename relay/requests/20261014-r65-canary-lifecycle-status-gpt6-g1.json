@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r65-canary-lifecycle-status-gpt6-g1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$base='http://127.0.0.1:17448'\nWrite-Output '=== OPERATOR LIFECYCLE ==='\ntry {\n $j=Invoke-RestMethod -Uri ($base+'/api/operator-lifecycle') -TimeoutSec 12\n Write-Output ('LIFECYCLE_KEYS='+(@($j.PSObject.Properties.Name) -join ','))\n foreach($k in @('mode','state','status','operatorMode','effectiveMode','canDispatch','dispatchAllowed','reconciliationRequired','running','reason')) {\n  if($j.PSObject.Properties.Name -contains $k){Write-Output ($k+'='+[string]$j.$k)}\n }\n if($j.lifecycle){foreach($k in @('mode','state','status','reconciliationRequired')){if($j.lifecycle.PSObject.Properties.Name -contains $k){Write-Output ('lifecycle_'+$k+'='+[string]$j.lifecycle.$k)}}}\n} catch { Write-Output ('LIFECYCLE_ERROR='+$_.Exception.Message.Substring(0,[Math]::Min(150,$_.Exception.Message.Length)))}\nWrite-Output '=== ACTIVE CURRENT ASSIGNMENTS ==='\n$a=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 12\n$live=@($a.assignments|Where-Object {$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')})\nWrite-Output ('UNSETTLED_COUNT='+$live.Count)\nWrite-Output ('COUNTS='+($a.counts|ConvertTo-Json -Compress -Depth 2))\nWrite-Output '=== AGENT MATCHING ==='\n$s=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog?detect=0') -TimeoutSec 12\n$d=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog/agent-assignments/dry-run') -TimeoutSec 12\n$n=0\nforeach($row in @($d.rows)){\n $n++\n $match=@($s.config.managedChats|Where-Object{$_.id -eq $row.chatId})|Select-Object -First 1\n $role=if($match){[string]$match.role}else{'NONE'}\n Write-Output ('AGENT_'+$n+' role='+$role+' preflight='+$row.preflightReason+' allowed='+$row.preflightAllowed+' scheduler='+$row.schedulerSelected+' high='+[bool](@($row.snapshots|Where-Object {$_.highMode}).Count))\n}\nWrite-Output '=== END ==='"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "Read-only R40 lifecycle, unsettled work and managed-chat readiness role matching, no provider messages."
+}
