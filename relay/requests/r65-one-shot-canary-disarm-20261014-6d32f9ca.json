@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-one-shot-canary-disarm-20261014-6d32f9ca",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $head=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim(); if($head -ne '66e2ca7681b5e4c4affde9641b69e5582b718f99'){throw 'PRODUCTION_HEAD_DRIFT'}; $a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6; $rows=@($a.assignments); $target=@($rows|Where-Object{$_.id -eq 'ca38c113-c272-4a71-8130-4a57619c334e'}); if($target.Count -ne 1 -or $target[0].dispatchCount -ne 1 -or $target[0].state -notin @('awaiting_evidence','completed','blocked','failed')){throw 'CANARY_PROVEN_SINGLE_SEND_NOT_CONFIRMED'}; if(@($rows|Where-Object{$_.state -eq 'queued'}).Count -gt 0){throw 'UNEXPECTED_SECOND_QUEUE'}; $pause=Invoke-RestMethod ($u+'/api/pause') -Method Post -ContentType 'application/json' -Body '{\"paused\":true}' -TimeoutSec 7; Write-Output ('QUEUE_PAUSED_FIRST='+$pause.paused); $sv=Invoke-RestMethod ($u+'/api/supervisor-watchdog') -Method Put -ContentType 'application/json' -Body '{\"allowAutonomousSend\":false,\"maxParallelAgents\":1,\"autoContinueEnabled\":false,\"sendProtectedDraftEnabled\":false,\"migrationEnabled\":false,\"allowProfileRecovery\":false,\"openExistingChatIfMissing\":false,\"closeChatDuringProviderBackoff\":false}' -TimeoutSec 14; $after=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; $s=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6; Write-Output ('FINAL_PAUSED='+$s.queue.paused); Write-Output ('FINAL_AUTOSEND='+$after.config.allowAutonomousSend); Write-Output ('FINAL_AUTO_CONTINUE='+$after.config.autoContinueEnabled); Write-Output ('FINAL_GLOBAL_CAP='+$after.config.maxParallelAgents); Write-Output ('FINAL_WATCHDOG_ENABLED='+$after.config.enabled); Write-Output ('FINAL_OPERATOR_MODE='+$s.operatorLifecycle.mode); Write-Output ('CANARY_FINAL_STATE='+$target[0].state); Write-Output ('CANARY_SEND_COUNT='+$target[0].dispatchCount)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 39000,
+  "note": "Immediately close one-shot R65 canary provider Send admission after durable exactly-one dispatch confirmation; PAUSE queue then disable auto Send, keep passive watchdog for independent Git/CI evidence. Do not cancel active GPT generation/replay/chrome."
+}
