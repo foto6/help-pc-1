@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r65-shadow-failure-audit-gpt6-04",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$log='E:\\WebAIBridge-R65-AUDIT-20261014\\AUTONOMY_ISOLATED_CHECK_20261014_GPT6.txt'\nif(!(Test-Path -LiteralPath $log)){throw 'NO_ISOLATED_LOG'}\nWrite-Output 'TEST_FAILURE_SUMMARY'\nSelect-String -LiteralPath $log -Pattern '^# (?:tests|pass|fail|cancelled|skipped)|^ℹ (?:tests|pass|fail)|^✖' | Select-Object -Last 45 | ForEach-Object{Write-Output $_.Line}\nWrite-Output 'LAUNCHER_FILE_EXISTENCE'\nforeach($base in @('E:\\WebAIBridge','E:\\WebAIBridge-R65-AUDIT-20261014','E:\\WebAIBridge-R58-SHADOW')){\n foreach($n in @('R45_CHECK_READONLY.cmd','R45_MONITOR_READONLY.cmd')){\n  Write-Output ($base+' '+$n+' exists='+[bool](Test-Path -LiteralPath (Join-Path $base ('app\\'+$n))))\n }\n}\nWrite-Output 'DONE'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 13000,
+  "note": "Read-only inspection of isolated Node suite failures and missing bundled R45 launchers."
+}
