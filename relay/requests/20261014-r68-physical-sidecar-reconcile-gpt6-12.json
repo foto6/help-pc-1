@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r68-physical-sidecar-reconcile-gpt6-12",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$ports=@(Get-NetTCPConnection -LocalPort 17450 -State Listen -ErrorAction SilentlyContinue)\nWrite-Output ('PORT17450_LISTENERS='+$ports.Count)\nforeach($conn in $ports){\n Write-Output ('PORT17450_PID='+$conn.OwningProcess)\n $p=Get-Process -Id $conn.OwningProcess -ErrorAction SilentlyContinue\n Write-Output ('PORT17450_PROCESS='+[string]$p.ProcessName)\n}\ntry{$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17450/api/live' -TimeoutSec 2\n Write-Output ('OBSERVER_CONTRACT='+$r.contract)\n Write-Output ('OBSERVER_READONLY='+$r.readOnly)\n Write-Output ('OBSERVER_NO_SEND='+$r.guardrails.noSend)\n Write-Output ('OBSERVER_OPEN='+$r.openCount)\n Write-Output ('OBSERVER_UNREGISTERED='+$r.unregisteredOpenCount)\n Write-Output ('OBSERVER_ASSIGNMENTS='+@($r.assignments).Count)\n}catch{Write-Output ('API_NOT_VERIFIED='+$_.Exception.GetType().Name)}\nWrite-Output ('SIDECAR_STDOUT_EXISTS='+(Test-Path 'E:\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6\\R68_VIEWER_17450_STDOUT.log'))\nWrite-Output ('SIDECAR_STDERR_EXISTS='+(Test-Path 'E:\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6\\R68_VIEWER_17450_STDERR.log'))\nWrite-Output 'READ_ONLY_RECONCILIATION_DONE'"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 10000,
+  "note": "Read-only reconcile actual R68 process after original launch timed out. No restart, retry, process kill or browser mutation."
+}
