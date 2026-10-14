@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r64-win-exact-shadow-20261014-t1110-f19a7c35",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $root='E:\\WebAIBridge-R64-SHADOW'; $sha='2466e0a0af704a3eefed6a7f4108f6926ee70d1a'; if(Test-Path -LiteralPath $root){throw 'NO_OVERWRITE_EXISTING_SHADOW'}; & git.exe clone --depth 1 --single-branch --no-tags --branch agent/bridge-r64-truthful-idle-health-and-send-dryrun-20261014 https://github.com/foto6/WebAIBridge.git $root; if($LASTEXITCODE -ne 0){throw 'R64_CLONE_FAILED'}; $got=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($got -ne $sha){throw 'R64_SHA_MISMATCH'}; Write-Output ('R64_SOURCE_SHA='+$got); Write-Output ('NODE_VERSION='+((& node.exe --version)|Out-String).Trim()); Write-Output ('PROD_SERVER_SHA256='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash); Write-Output ('PROD_HEAD='+((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim())"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 45000,
+  "note": "Read-only production, create ONLY independent exact SHA R64 source test clone; no Chrome/process/service changes"
+}
