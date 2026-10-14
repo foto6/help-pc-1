@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge'; $data='E:\\WebAIBridge\\app\\data'; $base='http://127.0.0.1:17448'\nWrite-Output ('GIT_HEAD='+[string](& git.exe -C $root rev-parse HEAD))\nWrite-Output ('TRACKED_DIRTY='+@(& git.exe -C $root status --porcelain=v1 --untracked-files=no).Count)\n$s=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog?detect=0') -TimeoutSec 12\n$d=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog/agent-assignments/dry-run') -TimeoutSec 12\n$q=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 12\n$l=Invoke-RestMethod -Uri ($base+'/api/operator-lifecycle') -TimeoutSec 12\n$state=Get-Content -LiteralPath (Join-Path $data 'state.json') -Raw|ConvertFrom-Json\n$r42=Get-Content -LiteralPath (Join-Path $data 'projects-live-control-plane-cutover-r42.json') -Raw|ConvertFrom-Json\nWrite-Output ('LIFECYCLE='+$l.mode)\nWrite-Output ('QUEUE_PAUSED='+$state.settings.paused)\nWrite-Output ('R42_HOLD='+$r42.holdActive)\nWrite-Output ('ALLOW_AUTONOMOUS_SEND='+$s.config.allowAutonomousSend)\nWrite-Output ('AUTO_CONTINUE='+$s.config.autoContinueEnabled)\nWrite-Output ('OPEN_MISSING='+$s.config.openExistingChatIfMissing)\nWrite-Output ('HIGH_ENFORCED='+$s.config.enforceHighMode)\nWrite-Output ('PARALLEL='+$s.config.maxParallelAgents)\nWrite-Output ('UNSETTLED='+@($q.assignments|Where-Object{$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count)\nWrite-Output ('ASSIGNMENT_TOTAL='+@($q.assignments).Count)\nWrite-Output ('DRYRUN_SEND_ATTEMPTED='+$d.sendAttempted)\nWrite-Output ('DRYRUN_WOULD_DISPATCH='+@($d.rows|Where-Object{$_.wouldDispatch -eq $true}).Count)\nWrite-Output ('DRYRUN_READY='+@($d.rows|Where-Object{$_.preflightReason -eq 'ready'}).Count)\nWrite-Output ('BACKUP_EXISTS='+(Test-Path 'E:\\WebAIBridge-R65-SAFETY-BACKUP-20261014-GPT6-I1\\BACKUP_MANIFEST.json'))\nWrite-Output 'READ_ONLY_DONE'"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "GIT_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\nTRACKED_DIRTY=0\r\nLIFECYCLE=RUNNING_ATTACH\r\nQUEUE_PAUSED=True\r\nR42_HOLD=False\r\nALLOW_AUTONOMOUS_SEND=False\r\nAUTO_CONTINUE=False\r\nOPEN_MISSING=False\r\nHIGH_ENFORCED=True\r\nPARALLEL=1\r\nUNSETTLED=0\r\nASSIGNMENT_TOTAL=70\r\nDRYRUN_SEND_ATTEMPTED=False\r\nDRYRUN_WOULD_DISPATCH=0\r\nDRYRUN_READY=5\r\nBACKUP_EXISTS=True\r\nREAD_ONLY_DONE\r\n",
+      "stdout_bytes": 371,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:29:23.928Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:29:23.684Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r65-current-hold-snapshot-gpt6-02"
+    },
+    "request_id": "20261014-r65-current-hold-snapshot-gpt6-02",
+    "started_at": "2026-10-14T05:29:22.247Z",
+    "status": "completed"
+  },
+  "id": "20261014-r65-current-hold-snapshot-gpt6-02",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
