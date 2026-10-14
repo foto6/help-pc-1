@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$dir='E:\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6'\n$head='2b595a7ff7e57da61ad511ea8e5e7b9532da602a'\nif(@(& git.exe -C $dir status --porcelain=v1 --untracked-files=no).Count -ne 0){throw 'ISOLATED_TRACKED_FILES_CHANGED'}\n& git.exe -C $dir fetch --quiet --no-tags origin agent/r68-live-chat-observability-20261014\nif($LASTEXITCODE -ne 0){throw 'R68_FETCH_FAIL'}\n& git.exe -C $dir checkout --quiet --detach $head\nif($LASTEXITCODE -ne 0){throw 'R68_CHECKOUT_FAIL'}\nif(([string](& git.exe -C $dir rev-parse HEAD)).Trim() -ne $head){throw 'R68_HEAD_MISMATCH'}\nPush-Location (Join-Path $dir 'app')\ntry{\n & node.exe --test r68-live-chat-observability.test.js autonomous-send-gate-r50.test.js r65-global-canary-cap.test.js *> (Join-Path $dir 'R68_FINAL_NODE_TEST.txt')\n $rc=$LASTEXITCODE\n & node.exe --check server.js\n $codeRc=$LASTEXITCODE\n}finally{Pop-Location}\nWrite-Output ('EXACT_SOURCE_SHA='+$head)\nWrite-Output ('TEST_EXIT='+$rc)\nSelect-String -LiteralPath (Join-Path $dir 'R68_FINAL_NODE_TEST.txt') -Pattern '^ℹ (?:tests|pass|fail)|^✖'|Select-Object -Last 12|ForEach-Object{Write-Output $_.Line}\nWrite-Output ('SERVER_SYNTAX_EXIT='+$codeRc)\n$js=@'\n'use strict';\nconst fs=require('node:fs');\nconst {liveChatObservation}=require('E:\\\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6\\\\app\\\\r68-live-chat-observability.js');\n(async()=>{\n const state=JSON.parse(fs.readFileSync('E:\\\\WebAIBridge\\\\app\\\\data\\\\state.json','utf8'));\n const cfg=JSON.parse(fs.readFileSync('E:\\\\WebAIBridge\\\\app\\\\data\\\\supervisor-watchdog.json','utf8'));\n const scanned=await liveChatObservation({\n  profiles:state.aiProfiles||[],supervisor:cfg,managedChats:cfg.managedChats||[],\n  assignments:state.agentAssignments||[],\n  getTargets:async port=>{\n   const response=await fetch('http://127.0.0.1:'+port+'/json/list',{signal:AbortSignal.timeout(3000)});\n   if(!response.ok) throw new Error('CDP_STATUS_'+response.status);\n   return response.json();\n  }\n });\n console.log(JSON.stringify({contract:scanned.contract,scanComplete:scanned.scanComplete,configuredPortCount:scanned.configuredPortCount,openCount:scanned.openCount,unregisteredOpenCount:scanned.unregisteredOpenCount,registeredCount:scanned.chats.filter(x=>x.registered).length,assignmentCount:scanned.assignments.length,timelineCount:scanned.timeline.length,sourceOk:scanned.sources.map(p=>({port:p.port,ok:p.ok,pageCount:p.pageCount,error:p.ok?'':p.error})),unknownVisible:scanned.chats.filter(x=>x.visibility==='open_unregistered').length,allNoMutation:scanned.guardrails.noSend && !scanned.guardrails.providerMutation}));\n})().catch(e=>{console.error('R68_SMOKE_FAILED '+String(e.message||e));process.exitCode=1});\n\n'@\n& node.exe -e $js\n$smokeRc=$LASTEXITCODE\nWrite-Output ('REAL_CDP_SMOKE_EXIT='+$smokeRc)\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($rc -ne 0 -or $codeRc -ne 0 -or $smokeRc -ne 0){throw 'R68_FINAL_VERIFICATION_FAIL'}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "EXACT_SOURCE_SHA=2b595a7ff7e57da61ad511ea8e5e7b9532da602a\r\nTEST_EXIT=0\r\nℹ tests 22\r\nℹ pass 22\r\nℹ fail 0\r\nSERVER_SYNTAX_EXIT=0\r\n{\"contract\":\"bridge.r68.live_chat_observability.v1\",\"scanComplete\":true,\"configuredPortCount\":1,\"openCount\":11,\"unregisteredOpenCount\":5,\"registeredCount\":7,\"assignmentCount\":71,\"timelineCount\":200,\"sourceOk\":[{\"port\":17410,\"ok\":true,\"pageCount\":16,\"error\":\"\"}],\"unknownVisible\":5,\"allNoMutation\":true}\nREAL_CDP_SMOKE_EXIT=0\r\nPRODUCTION_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\n",
+      "stdout_bytes": 517,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T06:08:55.497Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T06:08:55.166Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r68-final-isolated-live-source-smoke-gpt6-03"
+    },
+    "request_id": "20261014-r68-final-isolated-live-source-smoke-gpt6-03",
+    "started_at": "2026-10-14T06:08:46.148Z",
+    "status": "completed"
+  },
+  "id": "20261014-r68-final-isolated-live-source-smoke-gpt6-03",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
