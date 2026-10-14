@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r70-stage-real-private-plan-gpt6-06",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R70-GPT-PLANNER-20261014-GPT6'\n$sha='042a519f91446c5e96fd165c6e224f78e196b41d'\nif(([string](& git.exe -C $root rev-parse HEAD)).Trim() -ne $sha){throw 'R70_SOURCE_SHA_CHANGED'}\n$plan=Join-Path $root 'app\\data\\r70-qa-verified-wave-plan.json'\n$state=Join-Path $root 'app\\data\\r70-qa-verified-wave-state.json'\nif(Test-Path -LiteralPath $state){throw 'R70_STATE_EXISTS_RECONCILE_FIRST'}\n$log=& node.exe (Join-Path $root 'app\\r70-stage-gpt-planner.js') --stage $plan $state 2>&1\n$rc=$LASTEXITCODE\nif($rc -ne 0){Write-Output ('STAGE_EXIT='+$rc);Write-Output ('SAFE_STAGE_REASON='+[string]($log|Out-String).Substring(0,[Math]::Min(240,([string]($log|Out-String)).Length)));throw 'R70_STAGING_REFUSED'}\n$j=($log|Out-String)|ConvertFrom-Json\n$p=Get-Content -LiteralPath $plan -Raw|ConvertFrom-Json\nWrite-Output ('STAGE_STATUS='+$j.status)\nWrite-Output ('PLAN_ID='+$p.id)\nWrite-Output ('PLAN_DISPATCH_ALLOWED='+$p.allowDispatch)\nWrite-Output ('PLAN_MAX_PARALLEL='+$p.maxParallel)\nWrite-Output ('PLANNER_PROVIDER='+$p.brain.provider)\nWrite-Output ('PLANNER_AUTO_ACCEPT='+$p.brain.autoAccept)\nWrite-Output ('PLAN_GITHUB_REPOSITORY='+$p.agents[0].repository)\nWrite-Output ('PLAN_BRANCH='+$p.agents[0].branch)\nWrite-Output ('START_SHA='+$p.tasks[0].expectedHead)\nWrite-Output ('TARGET_CHAT_BOUND='+[bool]$p.agents[0].chatId)\nWrite-Output ('PLAN_LOCAL_EXISTS='+[bool](Test-Path $plan))\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($p.allowDispatch -ne $false){throw 'UNSAFE_PLAN_SHOULD_NEVER_DISPATCH'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 22000,
+  "note": "Stage one immutable local non-dispatching GPT Git planner with exact QA branch HEAD and existing bound chat, no provider Send. Do not print chat identity."
+}
