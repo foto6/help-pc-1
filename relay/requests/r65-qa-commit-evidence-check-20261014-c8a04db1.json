@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-qa-commit-evidence-check-20261014-c8a04db1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $rows=@((Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6).assignments); $x=@($rows|Where-Object{$_.id -eq 'ca38c113-c272-4a71-8130-4a57619c334e'}); if($x.Count -ne 1){throw 'ORIGINAL_CANARY_NOT_FOUND'}; $c=$x[0]; Write-Output ('CANARY_STATE='+$c.state); Write-Output ('SEND_COUNT='+$c.dispatchCount); Write-Output ('CANARY_CURRENT_HEAD='+$c.currentHead); Write-Output ('CANARY_EXACT_SHA='+$c.exactCommitSha); Write-Output ('CANARY_CI_RUN='+$c.ciRunId); Write-Output ('CANARY_CI='+$c.ciConclusion); Write-Output ('CANARY_SUPERVISOR_VERIFIED='+$c.supervisorVerified); Write-Output ('CANARY_LAST_DIAGNOSTIC='+([string]$c.lastDiagnostic).Substring(0,[Math]::Min(240,([string]$c.lastDiagnostic).Length))); Write-Output ('OTHERS_QUEUED='+@($rows|Where-Object{$_.state -eq 'queued' -and $_.id -ne $c.id}).Count); Write-Output ('OTHERS_ACTIVE='+@($rows|Where-Object{$_.state -in @('running','dispatching','awaiting_evidence') -and $_.id -ne $c.id}).Count); $st=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6; Write-Output ('PAUSED='+$st.queue.paused); $sv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; Write-Output ('SEND_ALLOWED='+$sv.config.allowAutonomousSend)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 17000,
+  "note": "Read-only reconcile original QA canary exact new Git commit and 2026-10-14 GitHub 0-step CI failure, verify bridge never replayed Send"
+}
