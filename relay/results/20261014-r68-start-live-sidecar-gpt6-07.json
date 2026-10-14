@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6'\n$expected='1173e893a0b4ded2f92e27b72e99f36f1a96f2ab'\nif(([string](& git.exe -C $root rev-parse HEAD)).Trim() -ne $expected){throw 'R68_SOURCE_NOT_EXACT'}\n$prod='E:\\WebAIBridge'\nif(([string](& git.exe -C $prod rev-parse HEAD)).Trim() -ne '66e2ca7681b5e4c4affde9641b69e5582b718f99'){throw 'PRODUCTION_SOURCE_CHANGED'}\n$script=Join-Path $root 'app\\r68-live-viewer.js'\nif(-not(Test-Path -LiteralPath $script)){throw 'R68_VIEWER_MISSING'}\n$port=Get-NetTCPConnection -LocalPort 17449 -State Listen -ErrorAction SilentlyContinue\nif($port){throw 'R68_PORT_ALREADY_BOUND_MANUAL_RECONCILE'}\n$node=(Get-Command node.exe -ErrorAction Stop).Source\n$stdout=Join-Path $root 'R68_VIEWER_STDOUT.log'\n$stderr=Join-Path $root 'R68_VIEWER_STDERR.log'\nif((Test-Path $stdout) -or (Test-Path $stderr)){throw 'OLD_OBSERVER_LOG_EXISTS'}\n$env:R68_OBSERVER_DATA_DIR='E:\\WebAIBridge\\app\\data'\n$env:R68_OBSERVER_PORT='17449'\n$p=Start-Process -FilePath $node -ArgumentList @($script) -WorkingDirectory (Join-Path $root 'app') -RedirectStandardOutput $stdout -RedirectStandardError $stderr -WindowStyle Hidden -PassThru\nWrite-Output ('OBSERVER_PID='+$p.Id)\n$healthy=$false\nfor($i=0;$i -lt 8;$i++){\n Start-Sleep -Milliseconds 500\n try {\n  $j=Invoke-RestMethod -Uri 'http://127.0.0.1:17449/api/live' -Method Get -TimeoutSec 4\n  if($j.contract -eq 'bridge.r68.live_chat_observability.v1' -and $j.readOnly -eq $true -and $j.guardrails.noSend -eq $true){\n   Write-Output ('R68_HEALTHY='+$true)\n   Write-Output ('R68_OPEN_CHATS='+$j.openCount)\n   Write-Output ('R68_UNREGISTERED='+$j.unregisteredOpenCount)\n   Write-Output ('R68_ASSIGNMENTS='+@($j.assignments).Count)\n   Write-Output ('R68_CONFIGURED_CDP_PORTS='+$j.configuredPortCount)\n   Write-Output ('R68_SCAN_COMPLETE='+$j.scanComplete)\n   $healthy=$true\n   break\n  }\n } catch {}\n}\nif(-not $healthy){throw 'R68_OBSERVER_NOT_READY_RECONCILE_PROCESS'}\nWrite-Output ('PRODUCTION_HEAD_POST='+(& git.exe -C $prod rev-parse HEAD))\nWrite-Output 'CHROME_NOT_RESTARTED=True'\nWrite-Output 'BRIDGE_PROCESS_NOT_RESTARTED=True'"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 1,
+      "stderr": "R68_PORT_ALREADY_BOUND_MANUAL_RECONCILE\r\nAt line:10 char:11\r\n+ if($port){throw 'R68_PORT_ALREADY_BOUND_MANUAL_RECONCILE'}\r\n+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\r\n    + CategoryInfo          : OperationStopped: (R68_PORT_ALREADY_BOUND_MANUAL_RECONCILE:String) [], RuntimeException\r\n    + FullyQualifiedErrorId : R68_PORT_ALREADY_BOUND_MANUAL_RECONCILE\r\n \r\n",
+      "stderr_bytes": 377,
+      "stderr_truncated": false,
+      "stdout": "",
+      "stdout_bytes": 0,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T06:14:56.358Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T06:14:56.106Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r68-start-live-sidecar-gpt6-07"
+    },
+    "request_id": "20261014-r68-start-live-sidecar-gpt6-07",
+    "started_at": "2026-10-14T06:14:53.640Z",
+    "status": "completed"
+  },
+  "id": "20261014-r68-start-live-sidecar-gpt6-07",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
