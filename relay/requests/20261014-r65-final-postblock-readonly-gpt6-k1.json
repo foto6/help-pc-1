@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r65-final-postblock-readonly-gpt6-k1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$base='http://127.0.0.1:17448'\n$s=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog?detect=0') -TimeoutSec 12\n$q=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 12\n$st=Get-Content -LiteralPath 'E:\\WebAIBridge\\app\\data\\state.json' -Raw | ConvertFrom-Json\nWrite-Output ('AUTONOMOUS_SEND_ALLOWED='+$s.config.allowAutonomousSend)\nWrite-Output ('AUTO_CONTINUE='+$s.config.autoContinueEnabled)\nWrite-Output ('QUEUE_PAUSED='+$st.settings.paused)\nWrite-Output ('ASSIGNMENT_COUNT='+@($q.assignments).Count)\nWrite-Output ('UNSETTLED='+@($q.assignments|Where-Object{$_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count)\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nWrite-Output ('BACKUP_EXISTS='+(Test-Path -LiteralPath 'E:\\WebAIBridge-R65-SAFETY-BACKUP-20261014-GPT6-I1\\BACKUP_MANIFEST.json'))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 16000,
+  "note": "Read-only postblocked-action confirmation: no sends enabled, queue remains paused and branch untouched."
+}
