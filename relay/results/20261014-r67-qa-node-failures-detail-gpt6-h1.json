@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$path='E:\\boss-R65-CANARY-VERIFY-20261014-GPT6\\QA_NODE_TEST_RESULT_GPT6_20261014.txt'\nif(!(Test-Path -LiteralPath $path)){throw 'MISSING_VERIFICATION_LOG'}\n$lines=@(Get-Content -LiteralPath $path)\nforeach($needle in @('not ok 1 - 00 ','not ok 13 - 12 ','not ok 15 - 14 ','✖ 00','✖ 12','✖ 14')){\n for($i=0;$i -lt $lines.Count;$i++){\n  if($lines[$i].Contains($needle)){\n   Write-Output ('=== FAILURE '+$needle+' AT '+($i+1)+' ===')\n   $end=[Math]::Min($lines.Count-1,$i+22)\n   for($k=$i;$k -le $end;$k++){Write-Output $lines[$k]}\n   break\n  }\n }\n}\nWrite-Output ('LOG_LINE_COUNT='+$lines.Count)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "=== FAILURE ✖ 00 AT 1 ===\r\n✖ 00 exact pinned producer fixture blobs are byte-verified, with no mutable branch authority (3.4395ms)\r\n✔ 01 R65 default one; invalid config falls back to one; operator ramp is explicitly bounded (0.8205ms)\r\n✔ 02 global cap one does not admit one assignment per project (14.6375ms)\r\n✔ 03 existing p1 awaiting_evidence consumes only slot and blocks p2 despite separate project quota (0.4049ms)\r\n✔ 04 dispatching and running in other projects both consume global slots (0.5493ms)\r\n✔ 05 global cap=2 still enforces per-project cpu quota and target uniqueness (0.3899ms)\r\n✔ 06 R50 only allows the explicit fresh admission tuple (0.2281ms)\r\n✔ 07 R50 unknown HOLD, paused queue, disabled supervisor, High off, and paused lifecycle veto Send (0.1862ms)\r\n✔ 08 admission before a pause cannot authorize Enter after pause (0.7242ms)\r\n✔ 09 R56 original target retains exact URL, profile, CDP identity, and document epoch (0.8094ms)\r\n✔ 10 R56 F5 same CDP id, missing epoch, new target id, wrong URL, duplicate target block (0.401ms)\r\n✔ 11 strict existing-tab mode rejects new page and automatic replacement (0.4264ms)\r\n✖ 12 R45 durable UNKNOWN dispatch intent becomes reconciliation not fresh pending (1.0291ms)\r\n✔ 13 restart after send intent cannot requeue an unknown effect (1.1818ms)\r\n✖ 14 unverified completed event cannot become accepted without exact SHA and successful CI (0.2532ms)\r\n✔ 15 R66 Windows launcher sources use only read-only flags and no Send or browser mutation commands (1.887ms)\r\n✔ 16 R66 runner retains explicit dispatch opt-in and durable unknown-result block; no inferred SEND from launcher (25.7866ms)\r\n✔ 17 original test semantics are mocks, not proof of live Chrome/Send or production release (1.0245ms)\r\nℹ tests 18\r\nℹ suites 0\r\nℹ pass 15\r\nℹ fail 3\r\nℹ cancelled 0\r\n=== FAILURE ✖ 12 AT 13 ===\r\n✖ 12 R45 durable UNKNOWN dispatch intent becomes reconciliation not fresh pending (1.0291ms)\r\n✔ 13 restart after send intent cannot requeue an unknown effect (1.1818ms)\r\n✖ 14 unverified completed event cannot become accepted without exact SHA and successful CI (0.2532ms)\r\n✔ 15 R66 Windows launcher sources use only read-only flags and no Send or browser mutation commands (1.887ms)\r\n✔ 16 R66 runner retains explicit dispatch opt-in and durable unknown-result block; no inferred SEND from launcher (25.7866ms)\r\n✔ 17 original test semantics are mocks, not proof of live Chrome/Send or production release (1.0245ms)\r\nℹ tests 18\r\nℹ suites 0\r\nℹ pass 15\r\nℹ fail 3\r\nℹ cancelled 0\r\nℹ skipped 0\r\nℹ todo 0\r\nℹ duration_ms 356.4603\r\n\r\n✖ failing tests:\r\n\r\ntest at tests\\r65_autonomy_canary.test.cjs:37:1\r\n✖ 00 exact pinned producer fixture blobs are byte-verified, with no mutable branch authority (3.4395ms)\r\n  AssertionError [ERR_ASSERTION]: app/agent-execution-control.js\r\n  + actual - expected\r\n  \r\n  + '09b49967735843646d087c80bda9dd29239a8c01'\r\n=== FAILURE ✖ 14 AT 15 ===\r\n✖ 14 unverified completed event cannot become accepted without exact SHA and successful CI (0.2532ms)\r\n✔ 15 R66 Windows launcher sources use only read-only flags and no Send or browser mutation commands (1.887ms)\r\n✔ 16 R66 runner retains explicit dispatch opt-in and durable unknown-result block; no inferred SEND from launcher (25.7866ms)\r\n✔ 17 original test semantics are mocks, not proof of live Chrome/Send or production release (1.0245ms)\r\nℹ tests 18\r\nℹ suites 0\r\nℹ pass 15\r\nℹ fail 3\r\nℹ cancelled 0\r\nℹ skipped 0\r\nℹ todo 0\r\nℹ duration_ms 356.4603\r\n\r\n✖ failing tests:\r\n\r\ntest at tests\\r65_autonomy_canary.test.cjs:37:1\r\n✖ 00 exact pinned producer fixture blobs are byte-verified, with no mutable branch authority (3.4395ms)\r\n  AssertionError [ERR_ASSERTION]: app/agent-execution-control.js\r\n  + actual - expected\r\n  \r\n  + '09b49967735843646d087c80bda9dd29239a8c01'\r\n  - 'b666cb97737e1de5e7d0d3b3a9f65080316f2c98'\r\n  \r\nLOG_LINE_COUNT=77\r\n",
+      "stdout_bytes": 3957,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:49:01.110Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:49:00.847Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r67-qa-node-failures-detail-gpt6-h1"
+    },
+    "request_id": "20261014-r67-qa-node-failures-detail-gpt6-h1",
+    "started_at": "2026-10-14T05:48:59.946Z",
+    "status": "completed"
+  },
+  "id": "20261014-r67-qa-node-failures-detail-gpt6-h1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
