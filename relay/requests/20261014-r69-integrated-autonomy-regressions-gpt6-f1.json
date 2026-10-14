@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r69-integrated-autonomy-regressions-gpt6-f1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R69-OBSERVABILITY-20261014-GPT6'\n$sha='0f7d430a210a4016c4bb022cf51939639c106e0b'\nif(@(& git.exe -C $root status --porcelain=v1 --untracked-files=no).Count -ne 0){throw 'R69_TRACKED_WORK_CHANGED'}\n& git.exe -C $root fetch --quiet --no-tags origin agent/r69-durable-viewer-lifecycle-20261014\nif($LASTEXITCODE -ne 0){throw 'R69_FETCH_FAILED'}\n& git.exe -C $root checkout --quiet --detach $sha\nif($LASTEXITCODE -ne 0){throw 'R69_CHECKOUT_FAILED'}\nif(([string](& git.exe -C $root rev-parse HEAD)).Trim() -ne $sha){throw 'R69_HEAD_MISMATCH'}\n$tests=@('autonomy-r45.test.js','autonomy-r45-brain.test.js','autonomy-r45-git-gate.test.js','autonomy-r45-lock.test.js','autonomy-r45-review.test.js','autonomy-r45-launcher.test.js','autonomy-r57-gpt-git.test.js','autonomy-r57-successor.test.js','operator-lifecycle-r40.test.js','projects-live-control-plane-r41.test.js','live-control-plane-cutover-r42.test.js','autonomous-send-gate-r50.test.js','existing-tab-session-r55.test.js','existing-tab-session-r56-cdp.test.js','r56-worker-sticky.test.js','r62-r42-sticky-release-gate.test.js','r63-r42-staged-activation.test.js','r64-idle-health-and-dryrun.test.js','r65-global-canary-cap.test.js','r68-live-chat-observability.test.js','r68-live-viewer.test.js','r69-viewer-bootstrap.test.js')\n$log=Join-Path $root 'R69_INTEGRATED_AUTONOMY_REGRESSION.txt'\nPush-Location (Join-Path $root 'app')\ntry{& node.exe --test @tests 2>&1|Out-File -LiteralPath $log -Encoding UTF8;$rc=$LASTEXITCODE}finally{Pop-Location}\nWrite-Output ('SOURCE_SHA='+$sha)\nWrite-Output ('EXIT='+$rc)\nSelect-String -LiteralPath $log -Pattern '^ℹ (?:tests|pass|fail|skipped)|^✖'|Select-Object -Last 16|ForEach-Object{Write-Output $_.Line}\nWrite-Output ('PROD_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($rc -ne 0){throw 'R69_INTEGRATED_TEST_FAILURE'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 110000,
+  "note": "Integrate R66 R45 launchers in R69 isolated checkout and rerun 194 comprehensive autonomy tests, without production mutation."
+}
