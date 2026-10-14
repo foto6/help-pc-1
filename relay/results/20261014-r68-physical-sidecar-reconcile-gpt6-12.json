@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$ports=@(Get-NetTCPConnection -LocalPort 17450 -State Listen -ErrorAction SilentlyContinue)\nWrite-Output ('PORT17450_LISTENERS='+$ports.Count)\nforeach($conn in $ports){\n Write-Output ('PORT17450_PID='+$conn.OwningProcess)\n $p=Get-Process -Id $conn.OwningProcess -ErrorAction SilentlyContinue\n Write-Output ('PORT17450_PROCESS='+[string]$p.ProcessName)\n}\ntry{$r=Invoke-RestMethod -Uri 'http://127.0.0.1:17450/api/live' -TimeoutSec 2\n Write-Output ('OBSERVER_CONTRACT='+$r.contract)\n Write-Output ('OBSERVER_READONLY='+$r.readOnly)\n Write-Output ('OBSERVER_NO_SEND='+$r.guardrails.noSend)\n Write-Output ('OBSERVER_OPEN='+$r.openCount)\n Write-Output ('OBSERVER_UNREGISTERED='+$r.unregisteredOpenCount)\n Write-Output ('OBSERVER_ASSIGNMENTS='+@($r.assignments).Count)\n}catch{Write-Output ('API_NOT_VERIFIED='+$_.Exception.GetType().Name)}\nWrite-Output ('SIDECAR_STDOUT_EXISTS='+(Test-Path 'E:\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6\\R68_VIEWER_17450_STDOUT.log'))\nWrite-Output ('SIDECAR_STDERR_EXISTS='+(Test-Path 'E:\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6\\R68_VIEWER_17450_STDERR.log'))\nWrite-Output 'READ_ONLY_RECONCILIATION_DONE'"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "PORT17450_LISTENERS=1\r\nPORT17450_PID=16324\r\nPORT17450_PROCESS=node\r\nOBSERVER_CONTRACT=bridge.r68.live_chat_observability.v1\r\nOBSERVER_READONLY=True\r\nOBSERVER_NO_SEND=True\r\nOBSERVER_OPEN=11\r\nOBSERVER_UNREGISTERED=5\r\nOBSERVER_ASSIGNMENTS=71\r\nSIDECAR_STDOUT_EXISTS=True\r\nSIDECAR_STDERR_EXISTS=True\r\nREAD_ONLY_RECONCILIATION_DONE\r\n",
+      "stdout_bytes": 327,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T06:18:05.631Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T06:18:05.303Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r68-physical-sidecar-reconcile-gpt6-12"
+    },
+    "request_id": "20261014-r68-physical-sidecar-reconcile-gpt6-12",
+    "started_at": "2026-10-14T06:18:03.222Z",
+    "status": "completed"
+  },
+  "id": "20261014-r68-physical-sidecar-reconcile-gpt6-12",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
