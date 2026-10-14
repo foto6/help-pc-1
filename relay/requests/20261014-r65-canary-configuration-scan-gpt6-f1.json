@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r65-canary-configuration-scan-gpt6-f1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$base='http://127.0.0.1:17448'\nWrite-Output '=== MANAGED AGENT METADATA ==='\n$s=Invoke-RestMethod -Uri ($base+'/api/supervisor-watchdog?detect=0') -TimeoutSec 12\n$i=0\nforeach($c in @($s.config.managedChats)){\n $i++\n $role=[string]$c.role\n $repo=[string]$c.repository\n $proj=[string]$c.projectId\n $branch=[string]$c.branch\n Write-Output (\"AGENT_\"+$i+\" enabled=\"+$c.enabled+\" role=\"+$role+\" repo=\"+$repo+\" branch=\"+$branch+\" project=\"+$proj+\" has_url=\"+[bool]$c.url)\n}\nWrite-Output ('CONFIG_MANAGED_COUNT='+$i)\nWrite-Output '=== LOCATE CODE ROUTES ==='\n$src='E:\\WebAIBridge\\app\\server.js'\n$patterns=@('function queueManagedAgentTask','function queueManagedAgentBatch','operator-lifecycle','settings/pause','settings/resume','queue/pause','queue/resume','agent-assignments/dry-run')\nforeach($p in $patterns){\n $ms=@(Select-String -LiteralPath $src -SimpleMatch -Pattern $p | Select-Object -First 8)\n foreach($m in $ms){Write-Output ('CODE '+$m.LineNumber+' '+$m.Line.Trim().Substring(0,[Math]::Min(150,$m.Line.Trim().Length)))}\n}\nWrite-Output '=== END ==='"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 25000,
+  "note": "Read-only managed agent role/repo metadata and canary route discovery. No chat URLs, tokens or IDs in results."
+}
