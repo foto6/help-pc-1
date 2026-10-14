@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-current-readonly-20261014-6cde72a9",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop';$p='E:\\WebAIBridge';Write-Output ('HEAD='+((& git.exe -C $p rev-parse HEAD)|Out-String).Trim());Write-Output ('DIRTY='+@(& git.exe -C $p status --porcelain=v1 --untracked-files=no).Count);$h=Invoke-RestMethod 'http://127.0.0.1:17448/api/health' -TimeoutSec 6;Write-Output ('HEALTH='+$h.state);Write-Output ('REASONS='+(@($h.reasons) -join ','));$o=Invoke-RestMethod 'http://127.0.0.1:17448/api/operator-lifecycle' -TimeoutSec 6;Write-Output ('OPERATOR='+$o.mode);$a=Invoke-RestMethod 'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments' -TimeoutSec 6;Write-Output ('QUEUED='+@($a.assignments|Where-Object{$_.state -eq 'queued'}).Count);Write-Output ('ACTIVE='+@($a.assignments|Where-Object{$_.state -in @('running','dispatching','awaiting_evidence')}).Count)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 18000,
+  "note": "Read-only R65 concurrent-deployment and real operator status check; no browser actions"
+}
