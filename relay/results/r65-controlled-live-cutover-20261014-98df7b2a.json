@@ -1,0 +1,33 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {},
+    "dry_run": false,
+    "error": "TimeoutExpired: Command '['powershell.exe', '-NoProfile', '-NonInteractive', '-Command', '$ErrorActionPreference=\\'Stop\\'; $root=\\'E:\\\\WebAIBridge\\'; $old=\\'01e5db790f50b5eb42588b8942f3dd1de4f0a6bf\\'; $target=\\'66e2ca7681b5e4c4affde9641b69e5582b718f99\\'; $head=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($head -ne $old){throw (\\'PRODUCTION_SHA_DRIFT=\\'+$head)}; if(@(& git.exe -C $root status --porcelain=v1 --untracked-files=no).Count -gt 0){throw \\'PRODUCTION_DIRTY_ABORT\\'}; $op=Invoke-RestMethod \\'http://127.0.0.1:17448/api/operator-lifecycle\\' -TimeoutSec 6; if($op.mode -ne \\'PAUSED_BROWSER\\'){throw (\\'OPERATOR_NOT_QUIESCENT=\\'+$op.mode)}; $a=Invoke-RestMethod \\'http://127.0.0.1:17448/api/supervisor-watchdog/agent-assignments\\' -TimeoutSec 6; $unfinished=@($a.assignments|Where-Object{$_.state -in @(\\'queued\\',\\'running\\',\\'dispatching\\',\\'awaiting_evidence\\',\\'unknown\\')}); if($unfinished.Count -ne 0){throw (\\'UNSETTLED_ASSIGNMENTS=\\'+$unfinished.Count)}; $sv=Invoke-RestMethod \\'http://127.0.0.1:17448/api/supervisor-watchdog?detect=0\\' -TimeoutSec 7; if($sv.config.allowAutonomousSend -ne $false -or $sv.config.enabled -ne $false){throw \\'AUTONOMY_NOT_DISABLED_ABORT\\'}; Write-Output (\\'PRE_HEAD=\\'+$head); Write-Output (\\'PRE_CHROME_PIDS=\\'+@((Get-CimInstance Win32_Process -Filter \"Name=\\'chrome.exe\\'\"|Select-Object -ExpandProperty ProcessId -Unique)).Count); & powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File (Join-Path $root \\'app\\\\r42-cutover.ps1\\') -TargetSha $target -TargetBranch \\'agent/bridge-r65-global-canary-dispatch-cap-20261014\\' -RepoPath $root; if($LASTEXITCODE -ne 0){throw (\\'R65_CUTOVER_FAILED=\\'+$LASTEXITCODE)}; $newHead=((& git.exe -C $root rev-parse HEAD)|Out-String).Trim(); if($newHead -ne $target){throw \\'POST_CUTOVER_SHA_MISMATCH\\'}; Write-Output (\\'R65_POST_HEAD=\\'+$newHead); Write-Output (\\'POST_CHROME_PIDS=\\'+@((Get-CimInstance Win32_Process -Filter \"Name=\\'chrome.exe\\'\"|Select-Object -ExpandProperty ProcessId -Unique)).Count); Write-Output (\\'R65_SERVER_HASH=\\'+(Get-FileHash -LiteralPath (Join-Path $root \\'app\\\\server.js\\') -Algorithm SHA256).Hash)']' timed out after 5 seconds",
+    "error_kind": "executor_failure",
+    "finished_at": "2026-10-14T04:37:55.741Z",
+    "ok": false,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": false,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "unknown",
+      "observed_at": "2026-10-14T04:37:55.379Z",
+      "reason": "executor_failure",
+      "reconciliation_required": true,
+      "reexecution_safe": false,
+      "request_id": "r65-controlled-live-cutover-20261014-98df7b2a"
+    },
+    "request_id": "r65-controlled-live-cutover-20261014-98df7b2a",
+    "started_at": "2026-10-14T04:35:39.600Z",
+    "status": "error"
+  },
+  "id": "r65-controlled-live-cutover-20261014-98df7b2a",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
