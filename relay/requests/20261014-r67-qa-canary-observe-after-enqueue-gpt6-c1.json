@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r67-qa-canary-observe-after-enqueue-gpt6-c1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$b='http://127.0.0.1:17448'\n$a=Invoke-RestMethod -Uri ($b+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 15\n$r=@($a.assignments|Where-Object {$_.id -eq '9f434c35-9e28-4807-8d5f-18569e8bdcf5'})\nif($r.Count -ne 1){throw 'CANARY_NOT_FOUND_OR_DUPLICATE'}\n$t=$r[0]\nWrite-Output ('ASSIGNMENT_STATE='+$t.state)\nWrite-Output ('ASSIGNMENT_ID='+$t.id)\nWrite-Output ('DISPATCH_COUNT='+$t.dispatchCount)\nWrite-Output ('DISPATCH_SUBMIT_ATTEMPTED='+$t.dispatchSubmitAttempted)\nWrite-Output ('DISPATCH_FAILURE_CODE='+$t.dispatchFailureCode)\nWrite-Output ('PREFLIGHT_REASON='+$t.lastPreflightReason)\nWrite-Output ('LAST_DIAGNOSTIC='+([string]$t.lastDiagnostic).Substring(0,[Math]::Min(([string]$t.lastDiagnostic).Length,230)))\nWrite-Output ('QUEUED_AT='+$t.queuedAt)\nWrite-Output ('DISPATCH_STARTED_AT='+$t.dispatchStartedAt)\nWrite-Output ('RUNNING_AT='+$t.runningAt)\nWrite-Output ('AWAITING_EVIDENCE_AT='+$t.awaitingEvidenceAt)\nWrite-Output ('COMPLETED_AT='+$t.completedAt)\nWrite-Output ('CURRENT_HEAD='+$t.currentHead)\nWrite-Output ('CI_CONCLUSION='+$t.ciConclusion)\nWrite-Output ('OTHER_UNSETTLED='+@($a.assignments|Where-Object {$_.id -ne $t.id -and $_.state -in @('queued','dispatching','running','awaiting_evidence','unknown')}).Count)\n$d=Invoke-RestMethod -Uri ($b+'/api/supervisor-watchdog/agent-assignments/dry-run') -TimeoutSec 15\nWrite-Output ('DRY_NO_SEND='+($d.sendAttempted -eq $false))\nWrite-Output ('SELECTED_CHAT_COUNT='+@($d.selectedChatIds).Count)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 26000,
+  "note": "Observe exact original QA canary assignment only, no duplicate dispatch, no chat IDs or credentials."
+}
