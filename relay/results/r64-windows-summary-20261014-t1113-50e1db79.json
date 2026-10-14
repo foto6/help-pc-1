@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop';$root='E:\\WebAIBridge-R64-SHADOW';$f=Join-Path $root 'R64_TESTS.log';Write-Output ('LOG_BYTES='+(Get-Item -LiteralPath $f).Length);Get-Content -LiteralPath $f -Tail 9;Write-Output ('R64_HEAD='+((& git.exe -C $root rev-parse HEAD)|Out-String).Trim());Write-Output ('PROD_SERVER_HASH='+(Get-FileHash -LiteralPath 'E:\\WebAIBridge\\app\\server.js' -Algorithm SHA256).Hash)"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "LOG_BYTES=32473\r\n1..157\r\n# tests 157\r\n# suites 0\r\n# pass 157\r\n# fail 0\r\n# cancelled 0\r\n# skipped 0\r\n# todo 0\r\n# duration_ms 912.7598\r\nR64_HEAD=2466e0a0af704a3eefed6a7f4108f6926ee70d1a\r\nPROD_SERVER_HASH=55528794D1D84551ACC7465C00E781984B99B0AB88384AA2EDFC180CD1FC8EB8\r\n",
+      "stdout_bytes": 268,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T04:03:46.169Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T04:03:45.918Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r64-windows-summary-20261014-t1113-50e1db79"
+    },
+    "request_id": "r64-windows-summary-20261014-t1113-50e1db79",
+    "started_at": "2026-10-14T04:03:44.889Z",
+    "status": "completed"
+  },
+  "id": "r64-windows-summary-20261014-t1113-50e1db79",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
