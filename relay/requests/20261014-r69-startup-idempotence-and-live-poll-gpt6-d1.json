@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r69-startup-idempotence-and-live-poll-gpt6-d1",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$bootstrap='E:\\WebAIBridge-R69-OBSERVABILITY-20261014-GPT6\\app\\r69-viewer-bootstrap.js'\n$a=Get-NetTCPConnection -LocalPort 17450 -State Listen -ErrorAction Stop|Select-Object -First 1\n$before=$a.OwningProcess\n$x=& node.exe $bootstrap --start\nif($LASTEXITCODE -ne 0){throw 'R69_BOOTSTRAP_NOT_HEALTHY'}\n$j=$x|Out-String|ConvertFrom-Json\n$after=(Get-NetTCPConnection -LocalPort 17450 -State Listen|Select-Object -First 1).OwningProcess\n$live1=Invoke-RestMethod 'http://127.0.0.1:17450/api/live' -TimeoutSec 3\n$live2=Invoke-RestMethod 'http://127.0.0.1:17450/api/live' -TimeoutSec 3\nWrite-Output ('BOOTSTRAP_STATUS='+$j.state)\nWrite-Output ('BOOTSTRAP_DUPLICATE_STARTED='+$j.started)\nWrite-Output ('SAME_PID='+($before -eq $after))\nWrite-Output ('API_TIMESTAMP_CHANGED='+($live1.checkedAt -ne $live2.checkedAt))\nWrite-Output ('NO_PROVIDER_SEND='+($live2.guardrails.noSend -eq $true))\nWrite-Output ('MONITOR_UNREGISTERED='+$live2.unregisteredOpenCount)\nWrite-Output ('MONITOR_ASSIGNMENTS='+@($live2.assignments).Count)\n$w=New-Object -ComObject WScript.Shell\n$link=Join-Path ([Environment]::GetFolderPath('Startup')) 'WebAIBridge-R69-Live.lnk'\n$shortcut=$w.CreateShortcut($link)\nWrite-Output ('STARTUP_LINK_VALID='+($shortcut.Arguments -match 'r69-viewer-bootstrap.js'))\nif($j.started -ne $false -or $before -ne $after){throw 'BOOTSTRAP_DUPLICATED_RUNNING_VIEWER'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 14000,
+  "note": "Validate installed startup shortcut and idempotent one-shot node bootstrap while existing R68 observer runs; read-only effect on processes."
+}
