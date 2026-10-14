@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r68-port17449-owner-reconcile-gpt6-08",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$c=@(Get-NetTCPConnection -LocalPort 17449 -State Listen -ErrorAction SilentlyContinue)\nWrite-Output ('LISTENER_COUNT='+$c.Count)\nforeach($e in $c){\n Write-Output ('PORT_OWNER_PID='+$e.OwningProcess)\n $proc=Get-Process -Id $e.OwningProcess -ErrorAction SilentlyContinue\n Write-Output ('PORT_OWNER_PROCESS='+[string]$proc.ProcessName)\n}\ntry {\n $x=Invoke-RestMethod -Uri 'http://127.0.0.1:17449/api/live' -TimeoutSec 5\n Write-Output ('ENDPOINT_CONTRACT='+[string]$x.contract)\n Write-Output ('ENDPOINT_READONLY='+[string]$x.readOnly)\n Write-Output ('ENDPOINT_OPEN_COUNT='+[string]$x.openCount)\n Write-Output ('ENDPOINT_NO_SEND='+[string]$x.guardrails.noSend)\n} catch {\n Write-Output ('ENDPOINT_NOT_VERIFIED='+[string]$_.Exception.GetType().Name)\n}\nWrite-Output ('CHECK_ANOTHER_PORT_17450='+[bool](Get-NetTCPConnection -LocalPort 17450 -State Listen -ErrorAction SilentlyContinue))"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 19000,
+  "note": "Read-only reconcile preexisting listener on R68 observer port; no termination, no server changes."
+}
