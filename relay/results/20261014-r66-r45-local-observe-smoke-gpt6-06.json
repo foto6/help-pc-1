@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R66-R45-READONLY-TEST-20261014'\n$head=([string](& git.exe -C $root rev-parse HEAD)).Trim()\nif($head -ne 'c332d6eb5ac754deea43f169ebb191f087ced844'){throw 'ISOLATED_SHA_MISMATCH'}\n$plan=Join-Path $root 'app\\autonomy-r45-plan.example.json'\n$p=Get-Content -LiteralPath $plan -Raw|ConvertFrom-Json\nif($p.allowDispatch -ne $false -or $p.brain.enabled -ne $false){throw 'EXAMPLE_PLAN_MUST_REMAIN_DISABLED'}\n$stateFile=Join-Path $root 'R45_OBSERVE_ONLY_20261014.json'\nif(Test-Path -LiteralPath $stateFile){throw 'STATE_FILE_ALREADY_EXISTS'}\n$raw=(& node.exe (Join-Path $root 'app\\autonomy-r45-runner.js') --plan $plan --state $stateFile --bridge 'http://127.0.0.1:17448' --once 2>&1)\n$exit=$LASTEXITCODE\nif($exit -ne 0){Write-Output ('R45_OBSERVE_NODE_EXIT='+$exit);Write-Output (($raw|Out-String).Substring(0,[Math]::Min(1200,($raw|Out-String).Length)));throw 'OBSERVATION_FAILED'}\n$j=($raw|Out-String|ConvertFrom-Json)\nWrite-Output ('RUN_STATUS='+$j.status)\nWrite-Output ('DISPATCHED_COUNT='+@($j.dispatched).Count)\nWrite-Output ('STATE_FILE_WRITTEN='+(Test-Path -LiteralPath $stateFile))\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif(@($j.dispatched).Count -ne 0){throw 'UNEXPECTED_DISPATCH'}\nif($j.status -ne 'READ_ONLY'){throw ('OBSERVE_STATUS_NOT_READONLY '+$j.status)}\nWrite-Output 'READONLY_LIVE_BRIDGE_SMOKE_PASS=True'"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "RUN_STATUS=READ_ONLY\r\nDISPATCHED_COUNT=0\r\nSTATE_FILE_WRITTEN=True\r\nPRODUCTION_HEAD=66e2ca7681b5e4c4affde9641b69e5582b718f99\r\nREADONLY_LIVE_BRIDGE_SMOKE_PASS=True\r\n",
+      "stdout_bytes": 163,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:34:08.177Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:34:07.933Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r66-r45-local-observe-smoke-gpt6-06"
+    },
+    "request_id": "20261014-r66-r45-local-observe-smoke-gpt6-06",
+    "started_at": "2026-10-14T05:34:06.892Z",
+    "status": "completed"
+  },
+  "id": "20261014-r66-r45-local-observe-smoke-gpt6-06",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
