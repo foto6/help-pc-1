@@ -1,0 +1,17 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "r65-canary-stage-disabled-watchdog-20261014-e4b19f6a",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-NonInteractive",
+      "-Command",
+      "$ErrorActionPreference='Stop'; $u='http://127.0.0.1:17448'; $head=((& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD)|Out-String).Trim(); if($head -ne '66e2ca7681b5e4c4affde9641b69e5582b718f99'){throw 'HEAD_DRIFT'}; $op=Invoke-RestMethod ($u+'/api/operator-lifecycle') -TimeoutSec 6; $st=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6; $cut=Invoke-RestMethod ($u+'/api/projects/control-plane/cutover-r42/status') -TimeoutSec 6; $a=Invoke-RestMethod ($u+'/api/supervisor-watchdog/agent-assignments') -TimeoutSec 6; $sv=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; $q=@($a.assignments|Where-Object{$_.state -eq 'queued'}); if($op.mode -ne 'PAUSED_BROWSER' -or $st.queue.paused -ne $true -or $cut.cutoverState.holdActive -ne $false){throw 'HOLD_OR_PAUSE_PRECONDITION_FAILED'}; if($sv.config.enabled -ne $false -or $sv.config.allowAutonomousSend -ne $false -or $sv.config.maxParallelAgents -ne 1){throw 'SUPERVISOR_STAGE_PRECONDITION_FAILED'}; if($q.Count -ne 1 -or $q[0].id -ne 'ca38c113-c272-4a71-8130-4a57619c334e' -or $q[0].dispatchSubmitAttempted -eq $true -or [int]$q[0].dispatchCount -gt 0){throw 'ORIGINAL_QA_CANARY_NOT_UNSENT'}; if(@($a.assignments|Where-Object{$_.state -in @('running','dispatching','awaiting_evidence','unknown')}).Count -gt 0){throw 'ACTIVE_WORK_EXISTS'}; $json='{\"mode\":\"full\",\"allowAutonomousSend\":false,\"enforceHighMode\":true,\"highModeStrategy\":\"verify_only\",\"maxParallelAgents\":1,\"autoContinueEnabled\":false,\"sendProtectedDraftEnabled\":false,\"stopStaleGenerationEnabled\":false,\"migrationEnabled\":false,\"allowProfileRecovery\":false,\"closeChatDuringProviderBackoff\":false,\"openExistingChatIfMissing\":false,\"autoDetectProfile\":false,\"autoDetectChat\":false}'; $r=Invoke-RestMethod -Uri ($u+'/api/supervisor-watchdog') -Method Put -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($json)) -TimeoutSec 18; $verify=Invoke-RestMethod ($u+'/api/supervisor-watchdog?detect=0') -TimeoutSec 6; Write-Output ('STAGED_MODE='+$verify.config.mode); Write-Output ('STAGED_ENABLED='+$verify.config.enabled); Write-Output ('STAGED_SEND_ALLOWED='+$verify.config.allowAutonomousSend); Write-Output ('STAGED_AUTO_CONTINUE='+$verify.config.autoContinueEnabled); Write-Output ('STAGED_MAX_PARALLEL='+$verify.config.maxParallelAgents); Write-Output ('STAGED_PROFILE_RECOVERY='+$verify.config.allowProfileRecovery); Write-Output ('STAGED_EXISTING_CHAT_OPEN='+$verify.config.openExistingChatIfMissing); Write-Output ('STAGED_HIGH_ENFORCED='+$verify.config.enforceHighMode); $post=Invoke-RestMethod ($u+'/api/status') -TimeoutSec 6; Write-Output ('POST_QUEUE_PAUSED='+$post.queue.paused); Write-Output ('POST_OPERATOR_MODE='+$post.operatorLifecycle.mode)"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 46000,
+  "note": "Stage managed watchdog full mode with ALL autonomous provider Send and autoContinue explicitly disabled while R65 queue and browser operator are paused. Only one QA canary queued, no new task or Chrome navigation; do not replay unknown result."
+}
