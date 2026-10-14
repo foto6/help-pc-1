@@ -1,0 +1,16 @@
+{
+  "version": "pc_relay.request.v1",
+  "id": "20261014-r68-sidecar-windows-test-gpt6-04",
+  "action": "shell.run",
+  "params": {
+    "argv": [
+      "powershell.exe",
+      "-NoProfile",
+      "-Command",
+      "$ErrorActionPreference='Stop'\n$root='E:\\WebAIBridge-R68-OBSERVABILITY-20261014-GPT6'\n$sha='01893cd6d729aa3c4779298c42553c5e9f9170f2'\nif(@(& git.exe -C $root status --porcelain=v1 --untracked-files=no).Count -ne 0){throw 'ISOLATED_TREE_DIRTY'}\n& git.exe -C $root fetch --quiet --no-tags origin agent/r68-live-chat-observability-20261014\nif($LASTEXITCODE -ne 0){throw 'FETCH_FAIL'}\n& git.exe -C $root checkout --quiet --detach $sha\nif($LASTEXITCODE -ne 0){throw 'CHECKOUT_FAIL'}\nif(([string](& git.exe -C $root rev-parse HEAD)).Trim() -ne $sha){throw 'SHA_MISMATCH'}\n$log=Join-Path $root 'R68_SIDECAR_TESTS.txt'\nPush-Location (Join-Path $root 'app')\ntry{\n & node.exe --test r68-live-chat-observability.test.js r68-live-viewer.test.js autonomous-send-gate-r50.test.js r65-global-canary-cap.test.js *> $log\n $rc=$LASTEXITCODE\n & node.exe --check r68-live-viewer.js\n $checkRc=$LASTEXITCODE\n $html=Get-Content -LiteralPath 'r68-live-viewer.html' -Raw\n $match=[regex]::Match($html,'(?s)<script>(.*?)</script>')\n if(-not $match.Success){throw 'SIDECAR_INLINE_JS_MISSING'}\n $temp=Join-Path $root 'R68_SIDE_UI_SCRIPT_CHECK.js'\n [IO.File]::WriteAllText($temp,$match.Groups[1].Value,[Text.UTF8Encoding]::new($false))\n & node.exe --check $temp\n $uiRc=$LASTEXITCODE\n}finally{Pop-Location}\nWrite-Output ('R68_SOURCE_SHA='+$sha)\nWrite-Output ('TEST_EXIT='+$rc)\nWrite-Output ('NODE_SOURCE_EXIT='+$checkRc)\nWrite-Output ('HTML_INLINE_JS_EXIT='+$uiRc)\nSelect-String -LiteralPath $log -Pattern '^ℹ (?:tests|pass|fail|skipped)|^✖'|Select-Object -Last 12|ForEach-Object{Write-Output $_.Line}\nWrite-Output ('PRODUCTION_HEAD='+(& git.exe -C 'E:\\WebAIBridge' rev-parse HEAD))\nif($rc -ne 0 -or $checkRc -ne 0 -or $uiRc -ne 0){throw 'R68_SIDECAR_VERIFICATION_FAILED'}"
+    ],
+    "cwd": "E:\\"
+  },
+  "timeout_ms": 115000,
+  "note": "Run R68 exact-head localhost viewer HTTP and CDP model tests in isolated checkout, no production or browser mutation."
+}
