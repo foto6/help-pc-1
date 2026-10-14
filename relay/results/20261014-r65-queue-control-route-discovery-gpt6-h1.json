@@ -1,0 +1,48 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$src='E:\\WebAIBridge\\app\\server.js'\nWrite-Output '=== PAUSE/RESUME ROUTE SOURCE ==='\n$patterns=@(\"url.pathname === '/api/settings'\",\"url.pathname === '/api/ai-profiles'\",\"url.pathname === '/api/supervisor-watchdog/queue'\",\"settings.paused =\",\"settings.paused=\",\"paused:\",\"pause-assignments\",\"/api/supervisor-watchdog/agent\")\nforeach($p in $patterns) {\n $m=@(Select-String -LiteralPath $src -SimpleMatch -Pattern $p|Select-Object -First 18)\n Write-Output ('PATTERN '+$p+' COUNT_SHOWN='+$m.Count)\n foreach($hit in $m){Write-Output ('LINE '+$hit.LineNumber+' '+$hit.Line.Trim().Substring(0,[Math]::Min(175,$hit.Line.Trim().Length)))}\n}\nWrite-Output '=== END ==='"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "=== PAUSE/RESUME ROUTE SOURCE ===\r\nPATTERN url.pathname === '/api/settings' COUNT_SHOWN=1\r\nLINE 21727 if (req.method === 'PUT' && url.pathname === '/api/settings') {\r\nPATTERN url.pathname === '/api/ai-profiles' COUNT_SHOWN=2\r\nLINE 22249 if (req.method === 'GET' && url.pathname === '/api/ai-profiles') {\r\nLINE 22297 if (req.method === 'POST' && url.pathname === '/api/ai-profiles') {\r\nPATTERN url.pathname === '/api/supervisor-watchdog/queue' COUNT_SHOWN=0\r\nPATTERN settings.paused = COUNT_SHOWN=10\r\nLINE 1177 paused:state.settings.paused === true,\r\nLINE 6696 state.settings.paused = true;\r\nLINE 6704 state.settings.paused = Boolean(current.queuePausedBeforeAll);\r\nLINE 9215 state.settings.paused = false;\r\nLINE 9218 state.settings.paused = true;\r\nLINE 9263 state.settings.paused = true;\r\nLINE 9306 state.settings.paused = false;\r\nLINE 17880 queuePaused:state.settings.paused === true,\r\nLINE 20070 state.settings.paused = true;\r\nLINE 21119 state.settings.paused = Boolean(body.paused);\r\nPATTERN settings.paused= COUNT_SHOWN=0\r\nPATTERN paused: COUNT_SHOWN=15\r\nLINE 463 paused: false,\r\nLINE 1177 paused:state.settings.paused === true,\r\nLINE 1318 paused:Boolean(state.settings.paused),\r\nLINE 6636 queuePaused:Boolean(state.settings.paused),\r\nLINE 9140 paused: Boolean(state.settings.paused),\r\nLINE 9288 paused: true,\r\nLINE 9299 paused:true,\r\nLINE 9313 paused: false,\r\nLINE 17880 queuePaused:state.settings.paused === true,\r\nLINE 18944 queuePaused:state.settings.paused,\r\nLINE 20084 queuePaused:Boolean(state.settings.paused),\r\nLINE 20092 queuePaused:Boolean(state.settings.paused),\r\nLINE 21112 paused:true,\r\nLINE 21125 paused:state.settings.paused,\r\nLINE 22891 json(res, 200, { task: null, paused: true });\r\nPATTERN pause-assignments COUNT_SHOWN=0\r\nPATTERN /api/supervisor-watchdog/agent COUNT_SHOWN=2\r\nLINE 20594 if (req.method === 'GET' && url.pathname === '/api/supervisor-watchdog/agent-assignments') {\r\nLINE 20613 && url.pathname === '/api/supervisor-watchdog/agent-assignments/dry-run') {\r\n=== END ===\r\n",
+      "stdout_bytes": 2006,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:21:02.096Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:21:01.849Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "20261014-r65-queue-control-route-discovery-gpt6-h1"
+    },
+    "request_id": "20261014-r65-queue-control-route-discovery-gpt6-h1",
+    "started_at": "2026-10-14T05:21:00.792Z",
+    "status": "completed"
+  },
+  "id": "20261014-r65-queue-control-route-discovery-gpt6-h1",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
