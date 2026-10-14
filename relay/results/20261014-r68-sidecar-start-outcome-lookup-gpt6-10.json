@@ -1,0 +1,21 @@
+{
+  "action": "outcome.lookup",
+  "executor_result": {
+    "action": "outcome.lookup",
+    "data": {},
+    "dry_run": false,
+    "error": "outcome.lookup action must be a non-empty string",
+    "error_kind": "policy_blocked",
+    "finished_at": "2026-10-14T06:17:08.644Z",
+    "ok": false,
+    "request_id": "20261014-r68-sidecar-start-outcome-lookup-gpt6-10",
+    "started_at": "2026-10-14T06:17:08.644Z",
+    "status": "blocked"
+  },
+  "id": "20261014-r68-sidecar-start-outcome-lookup-gpt6-10",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
