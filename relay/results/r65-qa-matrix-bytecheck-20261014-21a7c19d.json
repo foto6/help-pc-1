@@ -1,0 +1,49 @@
+{
+  "action": "shell.run",
+  "executor_result": {
+    "action": "shell.run",
+    "data": {
+      "argv": [
+        "powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$ErrorActionPreference='Stop'\n$script=@'\nimport subprocess,hashlib,pathlib\nroot=pathlib.Path(r'E:\\BossR65QA-SHADOW')\nrel='hardwave_qa/certificates/source/INTEGRATION_R8_FINAL_MATRIX.6ab529846e99e572d77006dee48d6c4b01caea12.json'\nwork=(root/rel).read_bytes()\nr=subprocess.run(['git.exe','-C',str(root),'show','HEAD:'+rel],capture_output=True,check=True)\nblob=r.stdout\nsha=lambda b: hashlib.sha256(b).hexdigest()\nprint('WORK_SHA256='+sha(work))\nprint('GIT_BLOB_SHA256='+sha(blob))\nprint('GIT_BLOB_CRLF_SHA256='+sha(blob.replace(b'\\n',b'\\r\\n')))\nprint('WORK_TO_LF_SHA256='+sha(work.replace(b'\\r\\n',b'\\n')))\nprint('GIT_BYTES='+str(len(blob)))\nprint('WORK_BYTES='+str(len(work)))\nprint('GIT_CRLF_COUNT='+str(blob.count(b'\\r\\n')))\nprint('WORK_CRLF_COUNT='+str(work.count(b'\\r\\n')))\nprint('BLOB_EQUALS_WORK='+str(blob==work))\n'@\n& py.exe -3 -c $script\nif($LASTEXITCODE -ne 0){exit $LASTEXITCODE}"
+      ],
+      "output_limit_bytes": 65536,
+      "returncode": 0,
+      "stderr": "",
+      "stderr_bytes": 0,
+      "stderr_truncated": false,
+      "stdout": "WORK_SHA256=12fde56bd483e42f09648d4014f1bbe136b059acbcb7c461a291cc8f7aedc0ef\r\nGIT_BLOB_SHA256=831804bedce4652156ac052e1c50f1e6f3642cd36dadbc58a00907804e646a54\r\nGIT_BLOB_CRLF_SHA256=12fde56bd483e42f09648d4014f1bbe136b059acbcb7c461a291cc8f7aedc0ef\r\nWORK_TO_LF_SHA256=831804bedce4652156ac052e1c50f1e6f3642cd36dadbc58a00907804e646a54\r\nGIT_BYTES=5205\r\nWORK_BYTES=5335\r\nGIT_CRLF_COUNT=0\r\nWORK_CRLF_COUNT=130\r\nBLOB_EQUALS_WORK=False\r\n",
+      "stdout_bytes": 427,
+      "stdout_truncated": false
+    },
+    "dry_run": false,
+    "error": null,
+    "error_kind": null,
+    "finished_at": "2026-10-14T05:00:39.263Z",
+    "ok": true,
+    "outcome_evidence": {
+      "action": "shell.run",
+      "completion_observed": true,
+      "contract_version": "pc_executor.action_outcome.v1",
+      "dispatch_started": true,
+      "effect_state": "completed",
+      "observed_at": "2026-10-14T05:00:39.030Z",
+      "reason": "completed",
+      "reconciliation_required": false,
+      "reexecution_safe": false,
+      "request_id": "r65-qa-matrix-bytecheck-20261014-21a7c19d"
+    },
+    "request_id": "r65-qa-matrix-bytecheck-20261014-21a7c19d",
+    "started_at": "2026-10-14T05:00:38.219Z",
+    "status": "completed"
+  },
+  "id": "r65-qa-matrix-bytecheck-20261014-21a7c19d",
+  "live": true,
+  "reconciliation": null,
+  "reexecuted": false,
+  "relay_status": "completed",
+  "version": "pc_relay.result.v1"
+}
