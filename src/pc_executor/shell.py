@@ -4,7 +4,7 @@ import os
 import signal
 import subprocess
 from dataclasses import dataclass
-from time import monotonic, sleep
+from time import monotonic
 from typing import Sequence
 
 from .cancellation import CancellationToken
@@ -121,17 +121,27 @@ class SafeShellAdapter:
         )
         deadline = monotonic() + timeout
         try:
-            while process.poll() is None:
+            # Draining only after process.poll() reports exit deadlocks on
+            # Windows: a child writing > one pipe buffer blocks in write(),
+            # so it never exits and our poll loop eventually times out.
+            #
+            # communicate() drains stdout AND stderr while the child runs.
+            # Repeated calls after TimeoutExpired are supported by Popen
+            # and keep cancellation checks responsive without threads or
+            # busy-waiting on unconsumed pipes.
+            while True:
                 if token.cancelled:
-                    _terminate_process_tree(process)
-                    _drain_process_pipes(process)
                     raise OperationCancelledError("shell execution cancelled")
-                if monotonic() >= deadline:
-                    _terminate_process_tree(process)
-                    _drain_process_pipes(process)
+                remaining = deadline - monotonic()
+                if remaining <= 0:
                     raise OperationTimeoutError("shell execution timed out")
-                sleep(0.02)
-            stdout_raw, stderr_raw = _drain_process_pipes(process)
+                try:
+                    stdout_raw, stderr_raw = process.communicate(
+                        timeout=min(0.05, remaining)
+                    )
+                    break
+                except subprocess.TimeoutExpired:
+                    continue
         except BaseException:
             if process.poll() is None:
                 _terminate_process_tree(process)
